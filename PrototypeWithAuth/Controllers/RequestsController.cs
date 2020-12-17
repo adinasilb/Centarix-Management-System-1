@@ -534,7 +534,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
             requestItemViewModel.Request = new Request();
-            requestItemViewModel.Request.ExchangeRate = AppUtility.GetExchangeRateFromApi();
+            requestItemViewModel.Request.ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.ParentQuote = new ParentQuote();
             requestItemViewModel.Request.SubProject = new SubProject();
@@ -599,7 +599,6 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
             requestItemViewModel.Request.ApplicationUserCreator = currentUser;
             requestItemViewModel.Request.ParentQuote.ApplicationUser = currentUser;
-            requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
 
             //all new ones will be "new" until actually ordered after the confirm email
@@ -1360,6 +1359,13 @@ namespace PrototypeWithAuth.Controllers
                 parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
                 requestItemViewModel.Request.ParentQuote = parentQuote;
             }
+            else
+            {
+                parentQuote = new ParentQuote();
+                parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
+                parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
+                requestItemViewModel.Request.ParentQuote = parentQuote;
+            }
             //else if(requestItemViewModel.Request.ParentQuote?.QuoteNumber !=null || requestItemViewModel.Request.ParentQuote?.QuoteDate != null)
             //{ 
             //    parentQuote= new ParentQuote();
@@ -1368,10 +1374,7 @@ namespace PrototypeWithAuth.Controllers
             //    requestItemViewModel.Request.ParentQuote = parentQuote;
 
             //}
-            else
-            {
-                requestItemViewModel.Request.ParentQuote = null;
-            }
+    
             var product = _context.Products.Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == requestItemViewModel.Request.ProductID);
             product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
             product.VendorID = requestItemViewModel.Request.Product.VendorID;
@@ -1415,6 +1418,9 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //_context.Update(requestItemViewModel.Request.Product.SubProject);
                     //_context.Update(requestItemViewModel.Request.Product);
+                    _context.Update(requestItemViewModel.Request.ParentQuote);
+                    await _context.SaveChangesAsync();
+                    requestItemViewModel.Request.ParentQuoteID = requestItemViewModel.Request.ParentQuote.ParentQuoteID; 
                     _context.Update(requestItemViewModel.Request);
                     await _context.SaveChangesAsync();
 

@@ -231,7 +231,7 @@
                         <label class="control-label">Sum:</label>
                         <div class="input-group">
                             <span class="input-group-text">&#36;</span>
-                            <input class="form-control-plaintext border-bottom" name="sum-dollars" min="0" id="sum-dollars" disabled />
+                            <input class="form-control-plaintext border-bottom mark-readonly" name="sum-dollars" min="0" id="sum-dollars" disabled />
                         </div>
                     </div>
                 </div>
@@ -240,7 +240,7 @@
                         <label asp-for="Request.Cost" class="control-label"></label>
                         <div class="input-group">
                             <span class="input-group-text">&#x20aa;</span>
-                            <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                            <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom " readonly />
                             <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                         </div>
                     </div>
@@ -250,7 +250,7 @@
                         <label asp-for="Request.VAT" class="control-label"></label>
                         <div class="input-group">
                             <span class="input-group-text">&#x20aa;</span>
-                            <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " />
+                            <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " disabled />
                             <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
                         </div>
                     </div>

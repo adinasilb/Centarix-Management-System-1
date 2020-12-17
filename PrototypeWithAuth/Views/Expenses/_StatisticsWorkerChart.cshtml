@@ -1,5 +1,6 @@
 ﻿@model StatisticsWorkerViewModel
 @using PrototypeWithAuth.ViewModels
+@using PrototypeWithAuth.AppData
 
 @for (int c = 0; c < Model.CategoryTypesSelected.Count; c++)
 {
@@ -35,10 +36,10 @@
                         var src = "/UserImages/user-image-placeholder.png";
                         if (employee.Key.UserImage != null)
                         {
-                            src = employee.Key.UserImage;
+                            src = "\\" + AppUtility.GetLastFiles(employee.Key.UserImage, 2);
                         }
                     }
-                    <div class="btn btn-link p-0 circular-profile-img circular-profile-img-65"><img id="user-image" src="@src" /></div>
+                    <img id="user-image" class="circular-profile-img circular-profile-img-65" src="@src" />
                 </td>
                 <td class="p-0">
                     @employee.Key.FirstName

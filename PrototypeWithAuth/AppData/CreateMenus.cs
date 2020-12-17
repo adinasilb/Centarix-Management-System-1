@@ -283,7 +283,7 @@ namespace PrototypeWithAuth.AppData
             if (MainMenu == AppUtility.UserPageTypeEnum.Workers.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             MainMenuItems.Add(new MenuItems()
             {
-                Description = "Workers",
+                Description = "Employees",
                 Controller = "ApplicationUsers",
                 Action = "Details",
                 RouteValues = new RouteValueDictionary(),
@@ -308,16 +308,16 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 ID = "reports-link"
             });
-            //if (MainMenu == AppUtility.TimeKeeperPageTypeEnum.TimekeeperSummary.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            //MainMenuItems.Add(new MenuItems()
-            //{
-            //    Description = "Summary",
-            //    Controller = "Timekeeper",
-            //    Action = "Documents",
-            //    RouteValues = new RouteValueDictionary(),
-            //    Classes = CurrentClasses,
-            //    ID = "summary-link"
-            //});
+            if (MainMenu == AppUtility.TimeKeeperPageTypeEnum.TimekeeperSummary.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            MainMenuItems.Add(new MenuItems()
+            {
+                Description = "Summary",
+                Controller = "Timekeeper",
+                Action = "SummaryHours",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                ID = "summary-link"
+            });
 
             return MainMenuItems;
         }
@@ -1182,43 +1182,25 @@ namespace PrototypeWithAuth.AppData
             if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.ReportHours.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
-                Description = "Report Hours",
+                Description = "Hours",
                 Controller = "Timekeeper",
                 Action = "ReportHours",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-assignment-24px"
             });
-            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.SummaryHours.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Summary Hours",
-                Controller = "Timekeeper",
-                Action = "SummaryHours",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                IconName = "icon-access_time-24px"
-            });
+   
             if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.ReportDaysOff.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
-                Description = "Report Days Off",
+                Description = "Days Off",
                 Controller = "Timekeeper",
                 Action = "ReportDaysOff",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-event-24px"
             });
-            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.SummaryDaysOff.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Summary Days Off",
-                Controller = "Timekeeper",
-                Action = "SummaryDaysOff",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                IconName = "icon-highlight_off-24px"
-            });
+     
 
             return SidebarMenuItems;
         }
@@ -1226,28 +1208,28 @@ namespace PrototypeWithAuth.AppData
         {
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
             string CurrentClasses = OrigClasses;
-
-            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.Documents.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.SummaryHours.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
-                Description = "Documents",
+                Description = "Hours",
                 Controller = "Timekeeper",
-                Action = "Documents",
+                Action = "SummaryHours",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-description-24px-2"
-            });
-            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.CompanyAbsences.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Company Absences",
-                Controller = "Timekeeper",
-                Action = "CompanyAbsences",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                IconName = "icon-event-24px"
+                IconName = "icon-access_time-24px"
             });
 
+            if (SidebarTitle == AppUtility.TimeKeeperSidebarEnum.SummaryDaysOff.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Days Off",
+                Controller = "Timekeeper",
+                Action = "SummaryDaysOff",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-highlight_off-24px"
+            });
+  
             return SidebarMenuItems;
         }
 

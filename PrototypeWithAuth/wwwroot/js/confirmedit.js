@@ -44,6 +44,17 @@
 			success: function (data) {
 				$.fn.getMenuItems();
 				alert("in success");
+				//reload index pages
+				if ($('.turn-edit-on-off').hasClass('operations')) {
+					ajaxCallToPartial();
+				} else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
+					
+				} else if ($('.turn-edit-on-off').hasClass('users')) {
+					
+
+				} else if ($('.turn-edit-on-off').hasClass('orders')) {
+					ajaxCallToPartial();
+				}
 				//sets up error message if it has the setup in the view
 				if ($(".hasErrorMessage").length > 0) {
 					alert("error message: " + $(".hasErrorMessage").val());

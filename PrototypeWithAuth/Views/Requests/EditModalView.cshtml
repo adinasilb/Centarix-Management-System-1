@@ -33,7 +33,9 @@
                     @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
                     @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
                     @*Requests search view model*@
-
+                    @Html.HiddenFor(model => model.Request.ApplicationUserCreatorID)
+                    @Html.HiddenFor(model => model.Request.ApplicationUserReceiverID)
+                    @Html.HiddenFor(model => model.Request.CreationDate)
                     <input type="hidden" asp-for="@Model.Request.RequestID" />
                     <input type="hidden" asp-for="@Model.Request.ProductID" />
 
@@ -90,7 +92,6 @@
                     @Html.HiddenFor(vm => vm.Request.ProductID)
                     @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
                     @Html.HiddenFor(vm => vm.Request.RequestStatusID)
-                    @Html.HiddenFor(vm => vm.Request.ParentRequestID)
                     @Html.HiddenFor(vm => vm.Request.ParentRequestID)
                     @Html.HiddenFor(vm => vm.Request.ParentQuoteID)
                     @*End Hidden Inputs*@

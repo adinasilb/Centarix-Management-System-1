@@ -45,7 +45,8 @@ namespace PrototypeWithAuth.Models
 
         }
              
-        public EmployeeHoursStatus EmployeeHoursStatus { get; set; } 
-        
+        public EmployeeHoursStatus EmployeeHoursStatus { get; set; }
+        public int? CompanyDayOffID { get; set; }
+        public CompanyDayOff CompanyDayOff { get; set; }
     }
 }
