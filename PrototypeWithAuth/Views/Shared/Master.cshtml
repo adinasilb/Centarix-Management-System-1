@@ -432,22 +432,7 @@
             $('#request-search a:first').tab('show');
         });
 
-        $(".load-product-details").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "";
-            if ($(this).hasClass('operations')) {
-                $itemurl = "/Operations/EditModalView/?id=" + $(this).val();
-            }
-            else {
-                console.log("Requests/EditModalView/?id")
-                //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-                $itemurl = "/Requests/EditModalView/?id=" + $(this).val()+"&SectionType="+$("#SectionType").val();
-            }
-            $.fn.CallPageRequest($itemurl, "details");
-            return false;
-        });
+      
         $(".load-vendor-edit").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -461,34 +446,7 @@
             $.fn.CallPageRequest($itemurl, "details");
             return false;
         });
-        $(".load-product-details-summary").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-            var $itemurl = "/Requests/DetailsSummaryModalView/?id=" + $(this).val();
-            $.fn.CallPageRequest($itemurl, "details");
-            return false;
-        });
-        $(".load-product-edit").on("click", function (e) {
-            console.log("inside of load product edit")
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "";
-            if ($(this).hasClass('operations')) {
-                console.log("/Operations/EditModalView/?id")
-                $itemurl = "/Operations/EditModalView/?id=" + $(this).val();
-            }
-            else {
-                console.log("Requests/EditModalView/?id")
-                //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-                $itemurl = "/Requests/EditModalView/?id=" + $(this).val();
-            }
-            console.log("itemurl: " + $itemurl);
-            $.fn.CallPageRequest($itemurl, "edit");
-            return false;
-        });
+
 
         $(".create-product-details").on("click", function (e) {
             e.preventDefault();
@@ -501,15 +459,6 @@
             return false;
         });
 
-        $(".load-confirm-delete").on("click", function (e) {
-            console.log("in confirm delete");
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "/Requests/DeleteModal/?id=" + $(this).val() + "&SectionType=" + $(this).attr('name');;
-            $.fn.CallPageRequest($itemurl, "delete");
-            return false;
-        });
 
         $(".load-confirm-delete-quote").on("click", function (e) {
             console.log("in confirm delete");
@@ -521,18 +470,7 @@
             return false;
         });
 
-        $(".load-order-details").on("click", function (e) {
-            console.log("in order details");
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var section = $(this).attr('section')
-            //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-            var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true" + "&SectionType=" + section;
-            $.fn.CallPageRequest($itemurl, "reorder");
-            return false;
-        });
-
+      
 
         $(".load-quote-details").on("click", function (e) {
             console.log("in order details");
@@ -544,17 +482,7 @@
             return false;
         });
 
-        $(".load-receive-and-location").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var isOperations = $(this).hasClass('operations');
-            //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-            var $itemurl = "/Requests/ReceivedModal?RequestID=" + $(this).val() + "&IsOperations=" + isOperations;
-            $.fn.CallPageRequest($itemurl, "received");
-            return false;
-        });
-
+       
         $(".js-go-to-controller").on("click", function (e) {
             console.log("inside of js-go-to-controller");
             e.preventDefault();
@@ -563,7 +491,8 @@
             $.fn.CallPageRequest($itemurl, "email");
             return false;
         });
-    $(".order-late").on("click", function (e) {
+
+        $(".order-late").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#loading").show();
@@ -839,13 +768,6 @@
             $('.mdb-select li:nth-child(2)').hide();
         };
 
-        $(".load-request-details").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var $itemurl = "/DetailsModalView?id=" + $(this).val();
-            $.fn.CallPagePayment($itemurl, "details");
-            return false;
-        });
 
         $.fn.DeleteUserModal = function (userid) {
             console.log("in delete user modal function");

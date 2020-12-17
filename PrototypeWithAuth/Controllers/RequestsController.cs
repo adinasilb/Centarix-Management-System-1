@@ -126,7 +126,7 @@ namespace PrototypeWithAuth.Controllers
             var viewmodel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID, PageType, SectionType, requestsSearchViewModel);
             viewmodel.PriceSortEnums = priceSorts;
             viewmodel.currency = AppUtility.CurrencyEnum.NIS;
-            viewmodel.MenuType = AppUtility.MenuItems.Requests;
+            viewmodel.MenuType = SectionType;
             return View(viewmodel);
         }
 
@@ -326,11 +326,12 @@ namespace PrototypeWithAuth.Controllers
            requestsSearchViewModel);
             viewModel.currency = selectedCurrency;
             viewModel.PriceSortEnumsList = selectedPriceSort;
-
+            viewModel.MenuType = SectionType;
             if (ExpensesFilter != null)
             {
                 viewModel.MenuType = AppUtility.MenuItems.Reports;
             }
+            
             return PartialView(viewModel);
         }
 
