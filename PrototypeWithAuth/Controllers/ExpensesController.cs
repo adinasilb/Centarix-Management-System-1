@@ -746,12 +746,16 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]
-        public IActionResult CostsProject()
+        public async Task<IActionResult> CostsProject()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.ExpensesPageTypeEnum.ExpensesCost.ToString();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.ExpensesSidebarEnum.CostsProject.ToString();
-            return View();
+            CostsProjectViewModel costsProjectViewModel = new CostsProjectViewModel();
+            costsProjectViewModel.VendorList =   _context.Vendors;
+            costsProjectViewModel.ParentCategoryList = _context.ParentCategories;
+            costsProjectViewModel.SubCategoryList = _context.ProductSubcategories;
+            return View(costsProjectViewModel);
         }
         [HttpGet]
         [Authorize(Roles = "Admin, CEO, Expenses")]

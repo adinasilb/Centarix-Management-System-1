@@ -1,8 +1,161 @@
-﻿
+﻿@model PrototypeWithAuth.ViewModels.CostsProjectViewModel
 @{
     ViewData["Title"] = "CostsProject";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
-<h1>CostsProject</h1>
+<form action="" method="post" class="container-fluid ml-6 order-inv-form " enctype="multipart/form-data" id="search-form">
+    <div class="row">
+
+        <div class="col-7 offset-2 create-user  on-form-modal ">
+            <div class="on-form-modal-border pb-4">
+
+                <div class="new-modal-body ">
+                    <div class="container-fluid div-tabs no-box-shadow p-0">
+
+                        <div class="modal-sides modal-body-top-p">
+
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <span class="heading-1 modal-tab-name">Advanced Search In Centarix</span>
+                                </div>
+
+                                <div class="col-md-3 text-center">
+                                    <input type="submit" value="Search" asp-action="Search" class="expenses-background-color custom-button custom-button-font" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label asp-for="ItemName" class="control-label">Item Name: </label>
+                                        <input asp-for="ItemName" data-val="false" class="form-control-plaintext border-bottom" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label asp-for="SelectedParentCategory" class="control-label">Category</label>
+                                        <select searchable="Please select a category" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="parentlist" asp-for="SelectedParentCategory">
+                                            <option value="0">Select Category</option>
+                                            @foreach (var parentCategory in Model.ParentCategoryList)
+                                            {
+                                                <option value="@parentCategory.ParentCategoryID">@parentCategory.ParentCategoryDescription</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6 px-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="SelectedProductSubCategory" class="control-label">Subcategory</label>
+                                        <select searchable="Please select a subcategory" asp-for="SelectedProductSubCategory" class="mdb-select-sublist  mdb-select custom select-dropdown form-control-plaintext" id="sublist" data-val="false">
+                                            <option value="0">Select Subcategory</option>
+                                            @foreach (var productSubcategory in Model.SubCategoryList)
+                                            {
+                                                <option value="@productSubcategory.ProductSubcategoryID">@productSubcategory.ProductSubcategoryDescription</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                    </div>
+                            <div class="row">
+                       
+                                <div class="col-6 ">
+                                    <div class="form-group">
+                                        <label asp-for="SelectedVendor" class="control-label">Supplier</label>
+                                        <select searchable="Select A Vendor" asp-for="SelectedVendor" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext" id="vendorList">
+                                            <option value="0">Select Vendor</option>
+                                            @foreach (var vendor in Model.VendorList)
+                                            {
+                                                <option value="@vendor.VendorID">@vendor.VendorEnName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        @* IN MIDDLE *@
+                                        <label class="control-label">Supplier ID</label>
+                                        <select searchable="Select A Vendor ID" asp-for="SelectedVendorNumber" id="vendorBusinessIDList" data-val="false" class="mdb-select custom select-dropdown form-control-plaintext">
+                                            <option value="0">Select Vendor ID</option>
+                                            @foreach (var vendor in Model.VendorList)
+                                            {
+                                                <option value="@vendor.VendorID">@vendor.VendorBuisnessID</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 ">
+                                    <div class="form-group">
+                                        <label asp-for="OrderNumber" class="control-label">Order #</label>
+                                        <input asp-for="OrderNumber" class="form-control-plaintext border-bottom" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label asp-for="OrderDate" class="control-label">Order Date</label>
+                                        <input asp-for="OrderDate" class="form-control-plaintext border-bottom" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 ">
+                                    <div class="form-group">
+                                        <label asp-for="InvoiceNumber" class="control-label">Invoice #</label>
+                                        <input asp-for="InvoiceNumber" class="form-control-plaintext border-bottom" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label asp-for="InvoiceDate" class="control-label">Invoice Date</label>
+                                        <input asp-for="InvoiceDate" class="form-control-plaintext border-bottom" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label asp-for="CatalogNumber" class="control-label">Cataloge #</label>
+                                        <input asp-for="CatalogNumber" class="form-control-plaintext border-bottom" data-val="false" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label asp-for="SerialNumber" class="control-label">Serial #</label>
+                                    <input asp-for="SerialNumber" class="form-control-plaintext border-bottom" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label asp-for="PaymentDate" class="control-label">Payment Date</label>
+                                    <input asp-for="PaymentDate" class="form-control-plaintext border-bottom" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label asp-for="BRNumber" class="control-label">BR #</label>
+                                        <input asp-for="BRNumber" class="form-control-plaintext border-bottom" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label asp-for="Price" class="control-label"></label>
+                                        <input asp-for="Price" class="form-control-plaintext border-bottom" />
+                                    </div>
+                                </div>
+                            </div>
+
+                   
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
 

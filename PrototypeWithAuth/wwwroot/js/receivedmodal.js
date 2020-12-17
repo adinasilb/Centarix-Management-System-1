@@ -1,4 +1,5 @@
 ﻿$(function () {
+
 	//FROM THE RECEIVED MODAL
 	$("input:checkbox.p-c").on('click', function () {
 		// in the handler, 'this' refers to the box clicked on

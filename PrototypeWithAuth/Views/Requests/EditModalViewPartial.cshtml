@@ -4,9 +4,7 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> _userManager
-<script src="~/js/site.js" asp-append-version="true"></script>
-<script src="~/js/validate.js" asp-append-version="true"></script>
-<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
+
 @{
     var color = "order-inv-color";
     var equipment = "";
@@ -374,56 +372,56 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                         <div class="visualView col-6 m-auto text-center">
                             @{ await Html.RenderPartialAsync("ReceivedModalVisual", Model.ReceivedModalVisualViewModel); }
                             @*<table class="table table-sm border">
-                                @{
-                                    int z = -1;
-                                }
-                                @for (int X = 0; X < Model.ReceivedModalVisualViewModel.ParentLocationInstance.Height; X++)
-                                {
-                                    <tr>
-                                        @for (int y = 0; y < Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width; y++)
-                                        {
-                                            z++;
-                                            @if (Model.ReceivedModalVisualViewModel.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                                    @{
+                                        int z = -1;
+                                    }
+                                    @for (int X = 0; X < Model.ReceivedModalVisualViewModel.ParentLocationInstance.Height; X++)
+                                    {
+                                        <tr>
+                                            @for (int y = 0; y < Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width; y++)
                                             {
-                                                @Html.HiddenFor(vm => vm.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].LocationInstanceID);
-                                                @Html.HiddenFor(vm => vm.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].LocationInstanceParentID);
-                                                @Html.HiddenFor(vm => vm.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].Place);
-
-                                                if (Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull)
+                                                z++;
+                                                @if (Model.ReceivedModalVisualViewModel.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                                                 {
-                                                    @if (Model.LocationInstances.Contains(Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z]))
+                                                    @Html.HiddenFor(vm => vm.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].LocationInstanceID);
+                                                    @Html.HiddenFor(vm => vm.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].LocationInstanceParentID);
+                                                    @Html.HiddenFor(vm => vm.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].Place);
+
+                                                    if (Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull)
                                                     {
-                                                        <td class="border" style="padding:0px;">
-                                                            @Html.CheckBoxFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @class = "css-checkbox", @disabled = "disabled" })
-                                                            @Html.LabelFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
-                                                        </td>
+                                                        @if (Model.LocationInstances.Contains(Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z]))
+                                                        {
+                                                            <td class="border" style="padding:0px;">
+                                                                @Html.CheckBoxFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @class = "css-checkbox", @disabled = "disabled" })
+                                                                @Html.LabelFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            var backgroundClass = " order-inv-filter ";
+                                                            <td class="border " style="padding:0px; width:42px; height:42px;">
+
+                                                                @Html.CheckBoxFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @class = "css-checkbox" })
+
+                                                                @Html.LabelFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = backgroundClass + "css-label" })
+                                                            </td>
+                                                        }
+
                                                     }
                                                     else
                                                     {
-                                                        var backgroundClass = " order-inv-filter ";
-                                                        <td class="border " style="padding:0px; width:42px; height:42px;">
-
-                                                            @Html.CheckBoxFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @class = "css-checkbox" })
-
-                                                            @Html.LabelFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = backgroundClass + "css-label" })
+                                                        <td class="border" style="padding:0px;">
+                                                            @Html.CheckBoxFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = "css-checkbox", @disabled = "disabled" })
+                                                            @Html.LabelFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
                                                         </td>
                                                     }
 
                                                 }
-                                                else
-                                                {
-                                                    <td class="border" style="padding:0px;">
-                                                        @Html.CheckBoxFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = "css-checkbox", @disabled = "disabled" })
-                                                        @Html.LabelFor(m => m.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].IsFull, Model.ReceivedModalVisualViewModel.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = "css-label" })
-                                                    </td>
-                                                }
 
                                             }
-
-                                        }
-                                    </tr>
-                                }
-                            </table>*@
+                                        </tr>
+                                    }
+                                </table>*@
                         </div>
                     }
                 </div>
@@ -481,7 +479,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <span class="input-group-text">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom" name="unit-price-dollars" id="unit-price-dollars"  />
+                                        <input class="form-control-plaintext border-bottom" name="unit-price-dollars" id="unit-price-dollars" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -538,13 +536,13 @@ Model.UnitTypeList,
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars"  />
+                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel"  disabled/>
+                                            <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -605,13 +603,13 @@ Model.UnitTypeList,
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
-                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars"  />
+                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel " disabled  /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
+                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel " disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -877,16 +875,21 @@ Model.UnitTypeList,
 
 
 </div>
-</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
+<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 @if (Model.Tab != 0)
 {
     <script>
         $('.mdb-select').materialSelect();
     </script>
 }
+
 <script src="~/js/SubUnit.js"></script>
 <script>
     $(function () {
+        $('input[type = "datetime-local"]').attr("type", "date")
         $("#Request_Cost").trigger('change');
     });
 </script>

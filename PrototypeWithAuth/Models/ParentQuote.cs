@@ -18,7 +18,6 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("ApplicationUserID")]
         public ApplicationUser ApplicationUser { get; set; }
 
-        [DataType(DataType.Date)]
         [Display(Name = "Quote Date")]
         //should not really be null just waiting till figure out how else to do the parentquote in create modal
         public DateTime QuoteDate { get; set; }

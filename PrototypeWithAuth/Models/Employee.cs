@@ -12,9 +12,7 @@ namespace PrototypeWithAuth.Models
     public class Employee : ApplicationUser
     {
         [Display(Name = "Started Working")]
-        [DataType(DataType.Date)]
         public DateTime StartedWorking { get; set; }
-        [DataType(DataType.Date)]
         public DateTime DOB { get; set; }
         public int Age
         {
