@@ -86,6 +86,27 @@ namespace PrototypeWithAuth.Controllers
             return View(await _context.Vendors.ToListAsync());
 
         }
+        // GET: Vendors
+        [Authorize(Roles = "Admin, Accounting,  LabManagement")]
+        public async Task<IActionResult> _IndexForPayment(AppUtility.MenuItems SectionType = AppUtility.MenuItems.LabManagement)
+        {
+            TempData["SectionType"] = SectionType;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
+            if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.AllSuppliers;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Suppliers;
+            }
+            else
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.SuppliersAC;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.AllSuppliersAC;
+            }
+            TempData["Action"] = AppUtility.SuppliersEnum.All;
+
+            return PartialView(await _context.Vendors.ToListAsync());
+
+        }
 
 
         // GET: Vendors/Search

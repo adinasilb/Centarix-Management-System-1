@@ -124,7 +124,7 @@
                 <td width="10%"> @Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.ProductSubcategory.ProductSubcategoryDescription) </td>
                 @if (!Summary)
                 {
-                    <td  width="10%"> @Html.DisplayFor(modelItem => Model.PagedList[itemNum].ApplicationUserCreator.FirstName) @Html.DisplayFor(modelItem => Model.PagedList[itemNum].ApplicationUserCreator.LastName) </td>
+                    <td width="10%"> @Html.DisplayFor(modelItem => Model.PagedList[itemNum].ApplicationUserCreator.FirstName) @Html.DisplayFor(modelItem => Model.PagedList[itemNum].ApplicationUserCreator.LastName) </td>
                 }
                 @{
                     if (Model.PagedList[itemNum].RequestStatusID == 2 || Summary)
@@ -152,8 +152,8 @@
                                 {
                                     if (item is Reorder)
                                     {
-                                        <a class="btn p-0 m-0 no-box-shadow"  data-toggle="tooltip" data-placement="top"
-  title="Approve" href="@Url.Action("ApproveReorder",  "Requests", new { id = item.RequestID })">
+                                        <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
+                                           title="Approve" href="@Url.Action("ApproveReorder",  "Requests", new { id = item.RequestID })">
                                             <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
                                         </a>
                                     }
@@ -162,7 +162,7 @@
                                         @*@Html.ActionLink("Approve", "ConfirmEmailModal", new { id = item.RequestID, IsBeingApproved = true }, new { @class = "btn btn-link" });*@
 
                                         <a class="btn p-0 m-0  no-box-shadow" data-title="Approve" data-toggle="tooltip" data-placement="top"
-  title="Approve" href="@Url.Action("Approve", "Requests", new { id = item.RequestID })">
+                                           title="Approve" href="@Url.Action("Approve", "Requests", new { id = item.RequestID })">
                                             <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
                                         </a>
                                     }
@@ -173,12 +173,14 @@
                             else if (item.RequestStatusID == 2)
                             {
                                 <button class="btn p-0 m-0  load-receive-and-location no-box-shadow operations" data-toggle="tooltip" data-placement="top"
-  title="Recieve" value="@item.RequestID"><i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold "></i></button> // receive
+                                        title="Recieve" value="@item.RequestID">
+                                    <i style="font-size:2rem; color:#00CA72;" class="icon-done-24px hover-bold "></i>
+                                </button> // receive
                             }
                             else if (item.RequestStatusID == 6)
                             {
                                 <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
-  title="Order" href="@Url.Action("Order", "Operations", new { id = item.RequestID })">
+                                   title="Order" href="@Url.Action("Order", "Operations", new { id = item.RequestID })">
                                     <i style="font-size:2rem; color:#00CA72;" class="icon-add_circle_outline-24px1 hover-bold"></i>
                                 </a>
                             }
@@ -187,7 +189,9 @@
 
                         <div class="table-icon-div">
                             <button class="btn p-0 m-0 load-confirm-delete no-box-shadow " data-toggle="tooltip" data-placement="top"
-  title="Delete" value="@item.RequestID" name="@AppUtility.MenuItems.Operations"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button>
+                                    title="Delete" value="@item.RequestID" name="@AppUtility.MenuItems.Operations">
+                                <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
+                            </button>
                         </div>
                     </div>
                 </td>
@@ -195,3 +199,5 @@
         }
     </tbody>
 </table>
+<script src="~/js/IndexTablePartial.js"></script>
+<script src="~/js/ConfirmDeleteScript.js"></script>

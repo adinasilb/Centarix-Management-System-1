@@ -1,0 +1,87 @@
+﻿@*@model IEnumerable<PrototypeWithAuth.Data.ApplicationUser>*@
+@model PrototypeWithAuth.ViewModels.UserIndexViewModel
+@using PrototypeWithAuth.Data
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+
+<table class="table table-headerspaced">
+    <tbody>
+        <tr class="text-center" style="border-color:transparent; border-bottom: 1px solid lightgrey;">
+            <td>
+                @Html.DisplayNameFor(vm => vm.ApplicationUsers.FirstOrDefault().UserNum)
+            </td>
+            <td>
+                Name
+            </td>
+            <td>
+                @Html.DisplayNameFor(vm => vm.ApplicationUsers.FirstOrDefault().Email)
+            </td>
+            <td>
+                @Html.DisplayNameFor(vm => vm.ApplicationUsers.FirstOrDefault().DateCreated)
+            </td>
+            <td></td>
+        </tr>
+        @foreach (var user in Model.ApplicationUsers)
+        {
+            <tr class="text-center users-tr">
+                <td>
+                    @*<a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" style="display:block;">
+                            @Html.DisplayFor(modelItem => user.UserNum)
+                        </a>*@
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                        @Html.DisplayFor(modelItem => user.UserNum)
+                    </a>
+                </td>
+                <td>
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                        @user.FirstName @user.LastName
+                    </a>
+                </td>
+                <td>
+                    <a href="" class="open-user-modal text-lowercase" value="@user.Id" style="display:block;">
+                        @Html.DisplayFor(modelItem => user.Email)
+                    </a>
+                </td>
+                <td>
+                    <a href="" class="open-user-modal" value="@user.Id" style="display:block;">
+                        @Html.DisplayFor(modelItem => user.DateCreated)
+                    </a>
+                </td>
+                <td>
+                    @if (User.IsInRole("CEO"))
+                    {
+
+                        var userid = user.Id;
+
+                        if (userid != UserManager.GetUserId(User) && Model.IsCEO) //Viewing User is a CEO and the User to View is not the one signed in
+                        {
+                            if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now && !user.IsUser)
+                            {
+                                <a href="" class="prevent-js-reload">
+                                    <i class="icon-block-24px text-danger-centarix disabled-filter"></i>
+                                </a>
+                            }
+                            else if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now && user.IsSuspended)
+                            {
+                                <a href="" onclick="$.fn.SuspendUserModal('@userid')" class="prevent-js-reload">
+                                    Unsuspend
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="" onclick="$.fn.SuspendUserModal('@userid')" data-toggle="tooltip" data-placement="top"
+                                   title="Suspend" class="prevent-js-reload">
+                                    <i class="icon-block-24px text-danger-centarix"></i>
+                                </a>
+                            }
+                        }
+
+
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script src="~/js/UserIndexPartial.js"></script>

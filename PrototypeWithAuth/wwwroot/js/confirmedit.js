@@ -48,9 +48,37 @@
 				if ($('.turn-edit-on-off').hasClass('operations')) {
 					ajaxCallToPartial();
 				} else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
+
+					$.ajax({
+						async: true,
+						url: '/Vendors/_IndexForPayment?SectionType='+$('#SectionType').val(),
+						type: 'GET',
+						cache: true,
+						success: function (data) {
+							$('.indexTable').html(data);
+
+						}
+					});
 					
 				} else if ($('.turn-edit-on-off').hasClass('users')) {
-					
+					var url = "";
+					var pageType = $('#PageType').val();
+					if (pageType == "Workers") {
+						url = "/ApplicationUsers/_Details"
+					}
+					else {
+						url = "/Admin/_Index"
+					}
+					$.ajax({
+						async: true,
+						url: url,
+						type: 'GET',
+						cache: true,
+						success: function (data) {
+							$('#usersTable').html(data);
+
+						}
+					});
 
 				} else if ($('.turn-edit-on-off').hasClass('orders')) {
 					ajaxCallToPartial();

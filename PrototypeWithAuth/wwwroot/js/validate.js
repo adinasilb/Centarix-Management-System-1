@@ -64,9 +64,11 @@ $(function () {
 	$.validator.addMethod("selectRequired", function (value, element) {
 		return value != "" && value!=null;
 	}, 'Field is required');
-	$.validator.addMethod("atleastOneHoursField", function (value, element) {
-		return ($("#NewEmployee_SalariedEmployee_WorkScope").val() != "") || ($("#NewEmployee_SalariedEmployee_HoursPerDay").val() != "") || $("#NewEmployee_EmployeeStatusID").val() == "4";
-	}, 'Either Job Scope or Hours Per day is required');
+	//$.validator.addMethod("atleastOneHoursField", function (value, element) {
+	//	console.log($("#NewEmployeeWorkScope").val())
+	//	console.log($("#NewEmployee_SalariedEmployee_HoursPerDay").val())
+	//	return ($("#NewEmployee_SalariedEmployee_WorkScope").val() != "") || ($("#NewEmployee_SalariedEmployee_HoursPerDay").val() != '0') && $("#NewEmployee_EmployeeStatusID").val() == "1";
+	//}, 'Either Job Scope or Hours Per day is required');
 	$.validator.addMethod("atLeastOneTerm", function (value, element) {
 		console.log($("#Terms").val())
 		return (($("#Paid").val() != "false" && $("#Paid").val() != "") || ($("#Terms").val() != "" && $("#Terms").val() != null) || ($("#Installments").val()!=''&&parseInt($("#Installments").val()) > 0)) ;

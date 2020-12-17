@@ -2,7 +2,7 @@
 	rules: {
 		"Vendor.VendorEnName": "required",
 		"Vendor.VendorHeName": "required",
-		"VendorCategoryTypes": "selectRequired",
+		"VendorCategoryTypes": { selectRequired: true },
 		"Vendor.VendorBuisnessID": {
 			required: true,
 			number: true,

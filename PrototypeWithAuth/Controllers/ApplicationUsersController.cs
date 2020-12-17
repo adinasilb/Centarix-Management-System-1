@@ -64,6 +64,20 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersDetails;
+            EmployeeDetailsViewModel employeeDetailsViewModel = GetWorkersDetailsViewModel();
+
+            return View(employeeDetailsViewModel);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin, Users")]
+        public async Task<IActionResult> _Details()
+        {
+            EmployeeDetailsViewModel employeeDetailsViewModel = GetWorkersDetailsViewModel();
+
+            return PartialView(employeeDetailsViewModel);
+        }
+        private EmployeeDetailsViewModel GetWorkersDetailsViewModel()
+        {
             IIncludableQueryable<Employee, JobCategoryType> employees = _context.Users.OfType<Employee>().Where(u => u.EmployeeStatusID != 4).Where(u => !u.IsSuspended)
                 .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobCategoryType);
             EmployeeDetailsViewModel employeeDetailsViewModel = new EmployeeDetailsViewModel
@@ -73,10 +87,8 @@ namespace PrototypeWithAuth.Controllers
                 FreelancerCount = employees.Where(e => e.EmployeeStatusID == 2).Count(),
                 AdvisorCount = employees.Where(e => e.EmployeeStatusID == 3).Count(),
             };
-
-            return View(employeeDetailsViewModel);
+            return employeeDetailsViewModel;
         }
-
 
         [HttpGet]
         [Authorize(Roles = "Admin, Users")]

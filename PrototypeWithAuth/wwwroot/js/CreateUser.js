@@ -75,7 +75,8 @@ $(function () {
 		var hours = Math.floor(hoursPerDay);
 		if (hours < 10) { hours = '0' + hours }
 		var mins = Math.floor(60 * (hoursPerDay - hours));
-		if (mins < 10) { mins = '0' + hours }
+		console.log("mins: "+mins)
+		if (mins <10) { mins = '0' + mins }
 	
 		//var timespanHours = (`${hours}:${mins}`);
 		var timespanHours = hours + ":" + mins;
