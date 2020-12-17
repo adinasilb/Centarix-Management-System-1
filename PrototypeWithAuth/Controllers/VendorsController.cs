@@ -275,7 +275,7 @@ namespace PrototypeWithAuth.Controllers
                 foreach (var vendorContact in createSupplierViewModel.VendorContacts)
                 {
                     vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                    _context.Add(vendorContact);
+                    _context.Add(vendorContact.VendorContact);
 
                 }
                 await _context.SaveChangesAsync();
