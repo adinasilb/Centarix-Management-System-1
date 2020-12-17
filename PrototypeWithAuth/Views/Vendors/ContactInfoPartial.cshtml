@@ -32,7 +32,9 @@
     <div class="row mb-0">
         <div class="col-10 mr-4">@*empty div b/c need same margins as below*@</div>
         <div class="col-1">
-            <button type="button" class="close vendor-contact-close float-right pr-2 pt-2 mark-readonly" @disabled ContactCardID="@Model.Index" aria-label="Close" style="float: right;">X</button>
+            <button type="button" class="close modal-close-padding modal-close-style vendor-contact-close mark-readonly" ContactCardID="@Model.Index" aria-label="Close" @disabled>
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     </div>
     <br />

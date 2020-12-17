@@ -75,7 +75,8 @@
                                     <div class="row mb-3">
                                         <div class="col-6">
                                             <label class="control-label">Category Type</label>
-                                            <select class="mdb-select custom select-dropdown form-control-plaintext" asp-for="VendorCategoryTypes" multiple required id="VendorCategoryTypes">
+                                            <select class="mdb-select custom select-dropdown form-control-plaintext" asp-for="VendorCategoryTypes" multiple id="VendorCategoryTypes">
+                                                <option disabled selected class="d-none" value="">Select Category</option>
                                                 @foreach (var categoryType in Model.CategoryTypes)
                                                 {
                                                     <option value="@categoryType.CategoryTypeID">
