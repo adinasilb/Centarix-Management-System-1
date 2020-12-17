@@ -2147,7 +2147,7 @@ td.visual-box, table.visual-locations-table td {
     border: 1px solid var(--black-87)
 }
 td.visual-shelf {
-    width: 100% !important;
+  
     height: 0;
     border: 1px solid var(--black-87)
 }

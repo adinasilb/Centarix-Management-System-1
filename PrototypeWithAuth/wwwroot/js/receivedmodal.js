@@ -194,6 +194,11 @@
 					$(this).children('div').first().children(".row-1").children("i").addClass("icon-add_circle_outline-24px1");
 					$(this).children('div').first().children(".row-1").children("i").removeClass("icon-delete-24px");
 					$(this).removeClass('location-selected')
+					var hasLocationSelected = $('.liid[value="true"]').length;
+					if (hasLocationSelected <= 0) {
+						$('#locationSelected').val('');
+					}
+
 				}
 				else {
 					console.log("FALSE!");
@@ -202,6 +207,7 @@
 					$(this).children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
 					$(this).children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
 					$(this).addClass('location-selected')
+					$('#locationSelected').val(true);
 				}
 			}
 		}
