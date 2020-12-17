@@ -524,6 +524,7 @@ $(function () {
 	$(".visual-locations-zoom").off("click").on("click", function (e) {
 		console.log("called visual locations zoom with an id of: " + $(this).val());
 		var myDiv = $(".location-modal-view");
+		var sectionType = $("#SectionType").val();
 		console.log("myDiv: " + myDiv);
 		var parentId = $(this).val();
 		$("#visualZoomModal").replaceWith('');
@@ -531,7 +532,7 @@ $(function () {
 		//console.log("about to call ajax with a parentid of: " + parentId);
 		$.ajax({
 			async: true,
-			url: "/Locations/VisualLocationsZoom/?VisualContainerId=" + parentId,
+			url: "/Locations/VisualLocationsZoom/?VisualContainerId=" + parentId+"&SectionType="+sectionType,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
