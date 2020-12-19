@@ -127,7 +127,7 @@ namespace PrototypeWithAuth.AppData
             stringRate = stringRate.Replace("{", "");
             stringRate = stringRate.Replace("}", "");
             Double.TryParse(stringRate, out rate);
-            return rate;
+            return Math.Round(rate, 2);
         }
 
         public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)

@@ -317,7 +317,7 @@
 ">
                                                 <span aria-hidden="true">×</span>
                                             </button>
-                                            <div class="mx-2rem addSubUnitCard mt-4"><div class="row " style="display:initial;"><div class="col-6 offset-3 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem" /></div></div></div>
+                                            <div class="mx-2rem addSubUnitCard mt-4"><div class="row " style="display:initial;"><div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div></div></div>
                                             <div class="mx-2rem  subUnitsCard d-none mt-4">
 
                                                 <div class="row">
@@ -381,7 +381,7 @@
 ">
                                                 <span aria-hidden="true">×</span>
                                             </button>
-                                            <div class="mx-2rem addSubSubUnitCard mt-4"><div class="row " style="display:initial;"><div class="col-6 offset-3 text-center font-weight-light"><input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem" /></div></div></div>
+                                            <div class="mx-2rem addSubSubUnitCard mt-4"><div class="row " style="display:initial;"><div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div> </div></div>
                                             <div class="mx-2rem  subSubUnitsCard mt-4 d-none">
                                                 <div class="row">
                                                     <div class="col-md-4 pl-0 form-group">
@@ -430,7 +430,7 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label"></label>
+                                            <label asp-for="Request.Cost" class="control-label">Total:</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
                                                 <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
@@ -439,7 +439,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label asp-for="Request.Cost" class="control-label">Sum:</label>
+                                            <label class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1" readonly />
@@ -468,7 +468,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="control-label">Sum:</label>
+                                            <label class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
                                                 <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
@@ -637,36 +637,39 @@
 
                         <div id="comments" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
-                                <span class="heading-1 modal-tab-name float-left">Comments and ratings</span>
-                                <div class=" container text-right">
-                                    <ul class="list-unstyled">
-                                        <li>
-                                            <button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 ">
-                                                <i class="order-inv-color icon-add_circle-24px" style="
+                                <div class="row">
+                                    <div class="col-10"><span class="heading-1 modal-tab-name text-le">Comments and ratings</span></div>
+
+                                    <div class="col-2 container text-right">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 ">
+                                                    <i class="order-inv-color icon-add_circle-24px" style="
     font-size: 3rem;
 "></i>
-                                            </button>
-                                        </li>
+                                                </button>
+                                            </li>
 
-                                        <div style="display:none;" id="popover-content">
+                                            <div style="display:none;" id="popover-content">
 
-                                            @foreach (var item in Model.CommentTypes)
-                                            {<div class="row px-3 comment-btn">
-                                                    @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
-                                                    {
-                                                        <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
-                                                    }
-                                                    else
-                                                    {
-                                                        <i class="icon-report_problem-24px" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
-                                                    }
-                                                    <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
+                                                @foreach (var item in Model.CommentTypes)
+                                                {<div class="row px-3 comment-btn">
+                                                        @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
+                                                        {
+                                                            <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="icon-report_problem-24px" style="color: var(--danger-color); padding-top: .55rem; font-size: 1.25rem;"></i>
+                                                        }
+                                                        <button type="button" id="@item" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark" style="font-size:1rem; font-weight:400;" onclick="$.fn.addRequestComment('@item')">@item</button><hr class="m-0" />
 
-                                                </div>
-                                            }
-                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
 
-                                    </ul>
+                                        </ul>
+                                    </div>
                                 </div>
 
                                 <div id="comment-info">
