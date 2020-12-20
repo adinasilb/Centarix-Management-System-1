@@ -1914,7 +1914,7 @@ namespace PrototypeWithAuth.Controllers
                 string ownerEmail = currentUser.Email;
                 string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                 string ownerPassword = currentUser.SecureAppPass;
-                string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ TempData["Email1"]?.ToString() ?? firstRequest.Product.Vendor.OrdersEmail;
+                string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ TempData["Email1"] ==null? firstRequest.Product.Vendor.OrdersEmail : TempData["Email1"].ToString();
                 string vendorName = firstRequest.Product.Vendor.VendorEnName;
 
                 //add a "From" Email

@@ -795,74 +795,74 @@ $(function () {
 	//	//});
 	//});
 
-	$.fn.updateDebt = function () {
-		console.log("in update debt");
-		var sum = $("#Request_Cost").val();
-		var installments = $("#Request_ParentRequest_Installments").val();
-		var tdate = new Date();
-		var dd = tdate.getDate(); //yields day
-		var MM = tdate.getMonth(); //yields month
-		var yyyy = tdate.getFullYear(); //yields year
-		if (dd < 10) {
-			dd = "0" + dd
-		}
-		if (MM < 10) {
-			MM = "0" + (MM + 1)
-		} else {
-			MM = MM + 1;
-		}
-		var today = yyyy + "-" + (MM) + "-" + dd;
-		console.log("today:" + today);
-		//count how many installment dates already passed
-		var count = 0;
-		if (installments != 0) {
-			$(".payments-table .payment-date").each(function (index) {
-				var date = $(this).val();
-				console.log("date: " + date);
-				if (today >= date) {
-					console.log("today > date");
-					//date passed
-					count = count + 1
-				}
-			});
-		}
-		if (count != 0) {
-			var paymentPerMonth = sum / installments;
-			console.log(" paymentPerMonth: " + paymentPerMonth);
-			var amountToSubstractFromDebt = paymentPerMonth * count;
-			console.log(" amountToSubstractFromDebt: " + amountToSubstractFromDebt);
-			var debt = sum - amountToSubstractFromDebt
-			console.log(" sum: " + sum);
-			console.log(" debt: " + debt);
-			$("#Debt").val(debt);
-		} else {
-			$("#Debt").val(sum);
-		}
-		var vatCalc = sum * .17;
-		console.log("vatCalc" + vatCalc);
-		$('#Request_VAT').val(vatCalc.toFixed(2));
-	};
+	//$.fn.updateDebt = function () {
+	//	console.log("in update debt");
+	//	var sum = $("#Request_Cost").val();
+	//	var installments = $("#Request_ParentRequest_Installments").val();
+	//	var tdate = new Date();
+	//	var dd = tdate.getDate(); //yields day
+	//	var MM = tdate.getMonth(); //yields month
+	//	var yyyy = tdate.getFullYear(); //yields year
+	//	if (dd < 10) {
+	//		dd = "0" + dd
+	//	}
+	//	if (MM < 10) {
+	//		MM = "0" + (MM + 1)
+	//	} else {
+	//		MM = MM + 1;
+	//	}
+	//	var today = yyyy + "-" + (MM) + "-" + dd;
+	//	console.log("today:" + today);
+	//	//count how many installment dates already passed
+	//	var count = 0;
+	//	if (installments != 0) {
+	//		$(".payments-table .payment-date").each(function (index) {
+	//			var date = $(this).val();
+	//			console.log("date: " + date);
+	//			if (today >= date) {
+	//				console.log("today > date");
+	//				//date passed
+	//				count = count + 1
+	//			}
+	//		});
+	//	}
+	//	if (count != 0) {
+	//		var paymentPerMonth = sum / installments;
+	//		console.log(" paymentPerMonth: " + paymentPerMonth);
+	//		var amountToSubstractFromDebt = paymentPerMonth * count;
+	//		console.log(" amountToSubstractFromDebt: " + amountToSubstractFromDebt);
+	//		var debt = sum - amountToSubstractFromDebt
+	//		console.log(" sum: " + sum);
+	//		console.log(" debt: " + debt);
+	//		$("#Debt").val(debt);
+	//	} else {
+	//		$("#Debt").val(sum);
+	//	}
+	//	var vatCalc = sum * .17;
+	//	console.log("vatCalc" + vatCalc);
+	//	$('#Request_VAT').val(vatCalc.toFixed(2));
+	//};
 
-	$(".payments-table").on("change", ".payment-date", function (e) {
-		console.log("in change .payments-table ");
-		$.fn.updateDebt();
-	});
+	//$(".payments-table").on("change", ".payment-date", function (e) {
+	//	console.log("in change .payments-table ");
+	//	$.fn.updateDebt();
+	//});
 
-	$("#Request_ExchangeRate").change(function (e) {
-		console.log("in change #Request_ExchangeRate ");
-		$.fn.updateDebt();
-	});
+	//$("#Request_ExchangeRate").change(function (e) {
+	//	console.log("in change #Request_ExchangeRate ");
+	//	$.fn.updateDebt();
+	//});
 
 
-	$("#sum-dollars").change(function (e) {
-		console.log("in change #sum-dollars ");
-		$.fn.updateDebt();
-	});
+	//$("#sum-dollars").change(function (e) {
+	//	console.log("in change #sum-dollars ");
+	//	$.fn.updateDebt();
+	//});
 
-	$("#Request_ParentRequest_Installments").change(function () {
-		console.log("in change Request_ParentRequest_Installments ");
-		$.fn.updateDebt();
-	});
+	//$("#Request_ParentRequest_Installments").change(function () {
+	//	console.log("in change Request_ParentRequest_Installments ");
+	//	$.fn.updateDebt();
+	//});
 
 
 	$(".open-loading").on("click", function (e) {

@@ -3,7 +3,6 @@
 $(function () {
 	$('#myForm input').keydown(function (e) {
 		if (e.keyCode == 13) {
-			alert("enter pressed")
 			e.preventDefault();
 			return false;
 		}
