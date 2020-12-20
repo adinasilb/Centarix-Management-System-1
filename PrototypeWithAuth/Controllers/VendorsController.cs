@@ -284,6 +284,13 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Admin, Accounting")]
         public async Task<IActionResult> Create(CreateSupplierViewModel createSupplierViewModel)
         {
+            foreach (var ms in ModelState.ToArray())
+            {
+                if (ms.Key.StartsWith("VendorContact"))
+                {
+                    ModelState.Remove(ms.Key);
+                }
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(createSupplierViewModel.Vendor);
@@ -293,10 +300,23 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
                 }
                 _context.SaveChanges();
-                foreach (var vendorContact in createSupplierViewModel.VendorContacts)
+                //delete contacts that need to be deleted
+                foreach (var vc in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
+                {
+                    if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
+                    {
+                        var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vc.VendorContactID).FirstOrDefault();
+                        _context.Remove(dvc);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+
+                //update and add contacts
+                foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
                 {
                     vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                    _context.Add(vendorContact.VendorContact);
+                    _context.Update(vendorContact.VendorContact);
 
                 }
                 await _context.SaveChangesAsync();
