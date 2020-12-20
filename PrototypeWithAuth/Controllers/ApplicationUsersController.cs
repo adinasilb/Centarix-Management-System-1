@@ -31,7 +31,7 @@ namespace PrototypeWithAuth.Controllers
         // GET: /<controller>/
         [HttpGet]
 
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1)
         {
             TempData["CategoryType"] = categoryType == 1 ? AppUtility.CategoryTypeEnum.Lab : AppUtility.CategoryTypeEnum.Operations;
@@ -58,7 +58,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> Details()
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
@@ -69,7 +69,7 @@ namespace PrototypeWithAuth.Controllers
             return View(employeeDetailsViewModel);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> _Details()
         {
             EmployeeDetailsViewModel employeeDetailsViewModel = GetWorkersDetailsViewModel();
@@ -91,7 +91,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> Hours(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0)
         {
             WorkersHoursViewModel viewModel = hoursPagePopulate(yearlyMonthlyEnum, month, year);
@@ -99,7 +99,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> _Hours(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0, int amountInYear = 0)
         {
             WorkersHoursViewModel viewModel = hoursPagePopulate(yearlyMonthlyEnum, month, year, amountInYear);
@@ -171,7 +171,7 @@ namespace PrototypeWithAuth.Controllers
             return viewModel;
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> Salary()
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
@@ -181,7 +181,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> AwaitingApproval()
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
@@ -192,7 +192,7 @@ namespace PrototypeWithAuth.Controllers
             return View(awaitingApproval);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> _AwaitingApproval()
         {
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = GetAwaitingApprovalModel();
@@ -245,7 +245,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> ApproveHours(int id)
         {
             EmployeeHours employeeHours = new EmployeeHours();

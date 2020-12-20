@@ -847,7 +847,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         //[HttpPost]
-        //[Authorize(Roles = "Admin, Users")]
+        //[Authorize(Roles = "Users")]
         //public async Task<IActionResult> SaveUserImage()
         //{
         //    return View(); //See what this should be doing...
