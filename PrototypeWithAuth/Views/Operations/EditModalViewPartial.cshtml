@@ -31,8 +31,7 @@
 }
 <input type="hidden" class="old-name" value="@Model.Request.Product.ProductName" />
 <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
-    @if (User.IsInRole("Admin"))
-    {
+
         <div class=" row text-right mb-0">
             <div class="switch col-12 switch-margin">
                 <label>
@@ -42,7 +41,7 @@
                 </label>
             </div>
         </div>
-    }
+
     <div class="tab-content">
         <div id="item" class="tab-pane fade in @showItem">
             <div class="row modal-tab-name">

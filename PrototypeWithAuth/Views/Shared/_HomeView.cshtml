@@ -7,10 +7,10 @@
     ViewData["Title"] = "Centarix Management";
     Layout = "~/Views/Shared/Master.cshtml";
 }
-@if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
-{
+@*@if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
+{*@
     @*<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("GetHomeView", "Admin", new { })"> </form>*@
-    <header class="sticky-top">
+    @*<header class="sticky-top">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
 
 
@@ -64,11 +64,11 @@
             </div>
 
         </nav>
-    </header>
+    </header>*@
 
 
-}
-else if (SignInManager.IsSignedIn(User))
+@*}
+else*@ @if (SignInManager.IsSignedIn(User))
 {
     <header class="sticky-top">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
@@ -82,13 +82,13 @@ else if (SignInManager.IsSignedIn(User))
                     </li>
                 </ul>
             </div>
-            <div class="  container col-1  pl-5">
+            <div class="" style="padding-right: 1.313rem !important;">
                 <ul class="list-unstyled m-0">
-                    <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow "><div class="alerts-icon"><i style='font-size: 2.5rem;   color: #808080;' class='icon-notifications-24px '></i> <span id="alertCount" class="alert-count"></span></div>  </button> </li>
+                    <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow p-0 m-0 "><div class="alerts-icon"><i style='font-size: 2.3rem;   color: #808080;' class='icon-notification_top_menu'></i> <span id="alertCount" class="alert-count "></span></div>  </button> </li>
                     <div style="display:none;" id="notifications-popover">
                         <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
-                        <div style="width:410px" class="p-4">
-                            <h5><strong>Notifications</strong></h5>
+                        <div style="width:410px" class="p-4 heading-1">
+                            Notifications
                         </div>
                     </div>
                 </ul>
@@ -104,9 +104,10 @@ else if (SignInManager.IsSignedIn(User))
                                 <button href="#" id="profile-img" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn btn-link p-0 ">
                                     @{
                                         var src = "/UserImages/user-image-placeholder.png";
-                                        if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                                        var result = await UserManager.GetUserAsync(User);
+                                        if (result.UserImage != null)
                                         {
-                                            src = UserManager.GetUserAsync(User).Result.UserImage;
+                                            src = "\\" + AppUtility.GetLastFiles(result.UserImage, 2);
                                         }
                                     }
                                     <img src="@src" class=" ml-0 circular-profile-img circular-profile-img-50" alt="default User image" />

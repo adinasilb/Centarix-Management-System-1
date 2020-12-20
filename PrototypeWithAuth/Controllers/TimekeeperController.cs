@@ -30,7 +30,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, TimeKeeper")]
+        [Authorize(Roles = "TimeKeeper")]
         public IActionResult ReportHours()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
@@ -65,7 +65,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, TimeKeeper")]
+        [Authorize(Roles = "TimeKeeper")]
         public IActionResult ReportHours(EntryExitViewModel entryExitViewModel)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
@@ -127,7 +127,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(entryExitViewModel);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, TimeKeeper")]
+        [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> SummaryDaysOff()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
@@ -145,7 +145,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("ReportHours");
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, TimeKeeper")]
+        [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> _SummaryDaysOff(int year)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
@@ -213,7 +213,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, TimeKeeper")]
+        [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> HoursPage(int month = 0, int year = 0)
         {
             var userid = _userManager.GetUserId(User);
@@ -245,7 +245,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(summaryHoursViewModel);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, TimeKeeper")]
+        [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> SummaryHours(DateTime? Month)
         {
             var userid = _userManager.GetUserId(User);
@@ -288,7 +288,7 @@ namespace PrototypeWithAuth.Controllers
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> ReportDaysOff()
     {
         TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
@@ -340,7 +340,7 @@ namespace PrototypeWithAuth.Controllers
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> ReportHoursFromHomeModal(DateTime chosenDate, String PageType)
         {
         if (chosenDate == new DateTime())
@@ -372,7 +372,7 @@ namespace PrototypeWithAuth.Controllers
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public IActionResult ReportHoursFromHomeModal(ReportHoursFromHomeViewModel reportHoursFromHomeViewModel)
     {
         var userID = _userManager.GetUserId(User);
@@ -395,7 +395,7 @@ namespace PrototypeWithAuth.Controllers
 
         }
     [HttpGet]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> UpdateHours(DateTime chosenDate, String PageType)
     {
         if (chosenDate == new DateTime())
@@ -417,7 +417,7 @@ namespace PrototypeWithAuth.Controllers
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> UpdateHours(UpdateHoursViewModel updateHoursViewModel)
     {
         var awaitingApproval = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date).FirstOrDefault();
@@ -460,31 +460,31 @@ namespace PrototypeWithAuth.Controllers
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> Vacation(String PageType)
     {
         return PartialView("Vacation", PageType);
     }
     [HttpGet]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> SickDay(String PageType, DateTime? date)
     {
         return PartialView("SickDay",  new SickDayViewModel { PageType=PageType, SelectedDate=date??DateTime.Now });
     }
     [HttpGet]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> SickDayConfirmModal(String PageType, DateTime? date)
     {
         return PartialView("SickDayConfirmModal", new SickDayViewModel { PageType = PageType, SelectedDate = date ?? DateTime.Now });
     }
     [HttpGet]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> VacationDayConfirmModal(String PageType, DateTime? date)
     {
         return PartialView("VacationDayConfirmModal", new SickDayViewModel { PageType = PageType, SelectedDate = date ?? DateTime.Now });
     }
     [HttpGet]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> ExitModal()
     {
         var userID = _userManager.GetUserId(User);
@@ -505,7 +505,7 @@ namespace PrototypeWithAuth.Controllers
         return PartialView(todaysEntry);
     }
     [HttpPost]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public IActionResult SaveVacation(DateTime dateFrom, DateTime dateTo, String PageType )
     {
         SaveOffDay(dateFrom, dateTo, 2);
@@ -513,21 +513,21 @@ namespace PrototypeWithAuth.Controllers
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public IActionResult SaveSick(DateTime dateFrom, DateTime dateTo, String PageType, int? month)
     {
         SaveOffDay(dateFrom, dateTo, 1);
         return RedirectToAction(PageType,  new { Month = new DateTime(DateTime.Now.Year, month??DateTime.Now.Month, 1 )});
     }
     [HttpPost]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public IActionResult SickDayConfirmModal(DateTime dateFrom, String PageType, int? month)
     {
         SaveOffDay(dateFrom, new DateTime(), 1);
         return RedirectToAction(PageType, new { Month = new DateTime(DateTime.Now.Year, month ?? DateTime.Now.Month, 1) });
     }
         [HttpPost]
-        [Authorize(Roles = "Admin, TimeKeeper")]
+        [Authorize(Roles = "TimeKeeper")]
         public IActionResult VacationDayConfirmModal(DateTime dateFrom, String PageType, int? month)
         {
             SaveOffDay(dateFrom, new DateTime(), 2);
@@ -609,7 +609,7 @@ namespace PrototypeWithAuth.Controllers
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> Documents()
     {
         TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
@@ -619,7 +619,7 @@ namespace PrototypeWithAuth.Controllers
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin, TimeKeeper")]
+    [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> CompanyAbsences()
     {
         TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
