@@ -2,6 +2,13 @@
 @using PrototypeWithAuth.AppData
 @{
     Layout = null;
+
+    TempData["Email1"] = TempData["Email1"]?.ToString() ?? "";
+    TempData["Email2"] = TempData["Email2"]?.ToString() ?? "";
+    TempData["Email3"] = TempData["Email3"]?.ToString() ?? "";
+    TempData["Email4"] = TempData["Email4"]?.ToString() ?? "";
+    TempData["Email5"] = TempData["Email5"]?.ToString() ?? "";
+
     var bcColor = "order-inv-background-color";
     string form = "";
     if (Model.SectionType == AppUtility.MenuItems.Operations)
