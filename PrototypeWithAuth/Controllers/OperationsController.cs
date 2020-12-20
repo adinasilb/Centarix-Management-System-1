@@ -381,7 +381,7 @@ namespace PrototypeWithAuth.Controllers
                 //requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
 
                 //if it is out of the budget get sent to get approved automatically and user is not in role admin !User.IsInRole("Admin")
-                if (!User.IsInRole("Admin") && (OrderType.Equals("Ask For Permission") || !checkIfInBudget(requestItemViewModel.Request)))
+                if (/*!User.IsInRole("Admin") &&*/ OrderType.Equals("Ask For Permission") || !checkIfInBudget(requestItemViewModel.Request))
                 {
                     try
                     {

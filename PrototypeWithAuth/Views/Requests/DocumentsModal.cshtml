@@ -110,7 +110,7 @@
                         </div>
                         <div class="row">
                             <div class="col-3 offset-9">
-                                @if (User.IsInRole("Admin") && requestid != 0)
+                                @if (@*User.IsInRole("Admin") &&*@ requestid != 0)
                                 {
                                     <div class=" row text-right mb-0">
                                         <div class="switch col-12 switch-margin">

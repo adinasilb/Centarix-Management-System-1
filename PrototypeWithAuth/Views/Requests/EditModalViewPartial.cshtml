@@ -41,8 +41,8 @@
 }
 <input type="hidden" class="old-name" value="@Model.Request.Product.ProductName" />
 <div class="container-fluid edit-modal-body box-shadow orders" style="background: #FFF; border: 2px solid #EAEAEB;">
-    @if (User.IsInRole("Admin"))
-    {
+    @*@if (User.IsInRole("Admin"))
+    {*@
         <div class=" row text-right mb-0">
             <div class="switch col-12 switch-margin">
                 <label>
@@ -52,7 +52,7 @@
                 </label>
             </div>
         </div>
-    }
+    @*}*@
     <!-- Default switch -->
 
     <div class="tab-content">

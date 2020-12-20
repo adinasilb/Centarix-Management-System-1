@@ -75,7 +75,11 @@ namespace PrototypeWithAuth.Controllers
 
             var userid = _userManager.GetUserId(User);
             var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
-            todaysEntry.OffDayTypeID = null;
+            if (todaysEntry != null)
+            {
+                todaysEntry.OffDayTypeID = null;
+            }
+
             if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry1)
             {
                 if (todaysEntry == null)
@@ -177,16 +181,16 @@ namespace PrototypeWithAuth.Controllers
             while (year >= user.StartedWorking.Year)
             {
                 int vacationDays = 0;
-                double vacationDaysPerMonth = user.VacationDays / 12;
-                if (year == DateTime.Now.Year)
+                double vacationDaysPerMonth = user.VacationDays / 12.0;
+                if (year == user.StartedWorking.Year)
                 {
-                    int month = DateTime.Now.Month;
+                    int month = 12 - user.StartedWorking.Month + 1; //includes this month, even though month is not finished yet
                     double vacationDaysBeforeRound = vacationDaysPerMonth * month;
                     vacationDays = (int)Math.Ceiling(vacationDaysBeforeRound);
                 }
-                else if (year == user.StartedWorking.Year)
+                else if (year == DateTime.Now.Year)
                 {
-                    int month = 12 - user.StartedWorking.Month + 1;
+                    int month = DateTime.Now.Month;
                     double vacationDaysBeforeRound = vacationDaysPerMonth * month;
                     vacationDays = (int)Math.Ceiling(vacationDaysBeforeRound);
                 }
