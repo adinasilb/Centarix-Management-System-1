@@ -29,7 +29,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ProductSubcategories
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         public async Task<IActionResult> Index(int? page)
         {
 
@@ -58,7 +58,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ProductSubcategories
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         [HttpGet]
 
         public async Task<IActionResult> CreateCalibration(int requestid)
@@ -150,7 +150,7 @@ namespace PrototypeWithAuth.Controllers
             return View(createCalibrationViewModel);
         }
 
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         [HttpGet]
         public async Task<IActionResult> _Repairs(int RepairIndex)
         {
@@ -169,7 +169,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         [HttpGet]
         public async Task<IActionResult> _ExternalCalibration(int ECIndex)
         {
@@ -186,7 +186,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(externalCalibrationViewModel);
         }
 
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         [HttpGet]
         public async Task<IActionResult> _InternalCalibration(int ICIndex)
         {
@@ -204,7 +204,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         public async Task<IActionResult> SaveRepairs(CreateCalibrationViewModel vm)
         {
             foreach (Repair repair in vm.Repairs)
@@ -242,7 +242,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles ="Admin, LabManagment")]
+        [Authorize(Roles ="LabManagment")]
         public async Task<IActionResult> SaveExternalCalibrations(CreateCalibrationViewModel vm)
         {
             foreach (ExternalCalibration externalCalibration in vm.ExternalCalibrations)
@@ -280,7 +280,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         public async Task<IActionResult> SaveInternalCalibrations(CreateCalibrationViewModel vm)
         {
             foreach (InternalCalibration internalCalibration in vm.InternalCalibration)
@@ -319,7 +319,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         //writing this in a function because it's also called from the RenderPartialAsync in the view
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         public static _RepairsViewModel GetRepairsViewModel(int requestId, Repair repair = null)
         {
             _RepairsViewModel repairsViewModel = new _RepairsViewModel()
@@ -336,14 +336,14 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         public async Task<IActionResult> _ExternalCalibration(_ExternalCalibrationViewModel externalCalibrationViewModel)
         {
             return RedirectToAction("Index");
         }
 
         //writing this in a function because it's also called from the RenderPartialAsync in the view
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         public static _ExternalCalibrationViewModel GetExternalCalibrationViewModel(int requestId, int? calibrationId = null)
         {
             _ExternalCalibrationViewModel externalCalibrationViewModel = new _ExternalCalibrationViewModel();
@@ -356,14 +356,14 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         public async Task<IActionResult> _InternalCalibration(_InternalCalibrationViewModel internalCalibrationViewModel)
         {
             return RedirectToAction("Index");
         }
 
         //writing this in a function because it's also called from the RenderPartialAsync in the view
-        [Authorize(Roles = "Admin, LabManagment")]
+        [Authorize(Roles = "LabManagment")]
         public static _InternalCalibrationViewModel GetInternalCalibrationViewModel(int requestId, int? calibrationId = null)
         {
             _InternalCalibrationViewModel internalCalibrationViewModel = new _InternalCalibrationViewModel();

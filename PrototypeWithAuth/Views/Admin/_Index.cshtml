@@ -49,12 +49,12 @@
                     </a>
                 </td>
                 <td>
-                    @if (User.IsInRole("CEO"))
-                    {
+                    @*@if (User.IsInRole("CEO"))
+                        {*@
 
-                        var userid = user.Id;
+                    @{var userid = user.Id;
 
-                        if (userid != UserManager.GetUserId(User) && Model.IsCEO) //Viewing User is a CEO and the User to View is not the one signed in
+                        if (userid != UserManager.GetUserId(User) /*&& Model.IsCEO*/) //Viewing User is a CEO and the User to View is not the one signed in
                         {
                             if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now && !user.IsUser)
                             {

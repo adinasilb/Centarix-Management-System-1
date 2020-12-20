@@ -29,7 +29,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult SummaryPieCharts()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -41,6 +41,7 @@ namespace PrototypeWithAuth.Controllers
             return View(summaryChartsViewModel);
         }
         [HttpPost]
+        [Authorize(Roles = "Expenses")]
         public IActionResult _PieChart(SummaryChartsViewModel summaryChartsViewModel)
         {
             ChartViewModel pieChartViewModel = GetChartData(summaryChartsViewModel);
@@ -48,12 +49,14 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(pieChartViewModel);
         }
         [HttpPost]
+        [Authorize(Roles = "Expenses")]
         public IActionResult _GraphChart(SummaryChartsViewModel summaryChartsViewModel)
         {
             ChartViewModel chartViewModel = GetChartData(summaryChartsViewModel);
 
             return PartialView(chartViewModel);
         }
+        [Authorize(Roles = "Expenses")]
         private ChartViewModel GetChartData(SummaryChartsViewModel summaryChartsViewModel)
         {
             var count = 0;
@@ -336,7 +339,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult SummaryTables()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -348,12 +351,14 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Expenses")]
         public IActionResult _SummaryTables(AppUtility.CurrencyEnum currencyEnum, int year)
         {
             SummaryTablesViewModel summaryTablesViewModel = GetSummaryTablesViewModel(currencyEnum, year);
             return PartialView(summaryTablesViewModel);
         }
 
+        [Authorize(Roles = "Expenses")]
         public SummaryTablesViewModel GetSummaryTablesViewModel(AppUtility.CurrencyEnum currencyEnum, int year)
         {
             List<SummaryTableItem> summaryTableItems = new List<SummaryTableItem>();
@@ -414,7 +419,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult SummaryGraphs()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -425,7 +430,7 @@ namespace PrototypeWithAuth.Controllers
             return View(summaryChartsViewModel);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult _DDLForCharts()
         {
             SummaryChartsViewModel summaryChartsViewModel = GetSummaryChartsViewModel();
@@ -455,7 +460,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult StatisticsProject()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -470,6 +475,7 @@ namespace PrototypeWithAuth.Controllers
             return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Now.Year }));
         }
 
+        [Authorize(Roles = "Expenses")]
         public IActionResult _StatisticsProjects(List<int> Months, List<int> Years)
         {
             var AllProjects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product)
@@ -479,6 +485,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(GetStatisticsProjectViewModel(AllProjects, Months, Years));
         }
 
+        [Authorize(Roles = "Expenses")]
         public static StatisticsProjectViewModel GetStatisticsProjectViewModel(List<Project> AllProjects, List<int> Months, List<int> Years)
         {
 
@@ -509,7 +516,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult _StatisticsSubProjects(int ProjectID, List<int> Months, List<int> Years)
         {
             Dictionary<SubProject, List<Request>> subProjectRequests = new Dictionary<SubProject, List<Request>>();
@@ -537,7 +544,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult StatisticsItem()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -549,6 +556,7 @@ namespace PrototypeWithAuth.Controllers
             return View(GetStatisticsItemViewModel(true, false, categoryTypesSelected, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Now.Year }));
         }
 
+        [Authorize(Roles = "Expenses")]
         public StatisticsItemViewModel GetStatisticsItemViewModel(bool FrequentlyBought, bool HighestPrice, List<int> CategoryTypesSelected, List<int> Months, List<int> Year)
         {
             var categoryTypes = _context.CategoryTypes.ToList();
@@ -568,7 +576,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public async Task<IActionResult> StatisticsWorker()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -584,7 +592,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public async Task<IActionResult> _StatisticsWorkerChart(List<int> CategoryTypeIDs, List<int> Months, List<int> Years)
         {
             var employees = await _context.Employees.ToListAsync();
@@ -594,6 +602,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
+        [Authorize(Roles = "Expenses")]
         public StatisticsWorkerViewModel GetStatisticsWorkerViewModel(List<Employee> Employees, List<CategoryType> CategoryTypes, List<int> Months, List<int> Years)
         {
             Dictionary<Employee, List<Request>> EmployeeRequests = new Dictionary<Employee, List<Request>>();
@@ -623,7 +632,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult StatisticsCategory()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -637,7 +646,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult _CategoryTypes(List<int> categoryTypes, List<int> months, List<int> years)
         {
             var parentCategories = _context.ParentCategories.ToList();
@@ -645,6 +654,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(GetStatisticsCategoryViewModel(parentCategories, categoryTypes, months, years));
         }
 
+        [Authorize(Roles = "Expenses")]
         public StatisticsCategoryViewModel GetStatisticsCategoryViewModel(List<ParentCategory> parentCategories, List<int> categoryTypes, List<int> months, List<int> years)
         {
             Dictionary<ParentCategory, List<Request>> ParentCategories = new Dictionary<ParentCategory, List<Request>>();
@@ -670,7 +680,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult _SubCategoryTypes(int ParentCategoryId, List<int> categoryTypes, List<int> months, List<int> years)
         {
             var subCategories = _context.ProductSubcategories.Where(sc => sc.ParentCategoryID == ParentCategoryId).ToList();
@@ -695,7 +705,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult StatisticsVendor()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -708,13 +718,14 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult _VendorsTable(List<int> CategoryTypes, List<int> Months, List<int> Years)
         {
             var catTypes = _context.CategoryTypes.Where(ct => CategoryTypes.Contains(ct.CategoryTypeID)).ToList();
             return PartialView(GetStatisticsVendorViewModel(catTypes, Months, Years));
         }
 
+        [Authorize(Roles = "Expenses")]
         public StatisticsVendorViewModel GetStatisticsVendorViewModel(List<CategoryType> CategoryTypes, List<int> Months, List<int> Years)
         {
             Dictionary<Vendor, List<Request>> VendorRequests = new Dictionary<Vendor, List<Request>>();
@@ -745,7 +756,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public async Task<IActionResult> CostsProject()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -758,7 +769,7 @@ namespace PrototypeWithAuth.Controllers
             return View(costsProjectViewModel);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult CostsAdvancedSearch()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -767,7 +778,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult CostsAdvancedList()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -776,7 +787,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult WorkersDetails()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -785,7 +796,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult WorkersHours()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();
@@ -794,7 +805,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, CEO, Expenses")]
+        [Authorize(Roles = "Expenses")]
         public IActionResult WorkersSalary()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Reports.ToString();

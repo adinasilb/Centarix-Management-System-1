@@ -66,7 +66,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Operations")]
+        [Authorize(Roles = "Operations")]
         // GET: Requests
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         //ALSO when changing defaults -> change the defaults on the index page for paged list 
@@ -108,8 +108,9 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.PriceSortEnums = priceSorts;
             viewmodel.currency = AppUtility.CurrencyEnum.NIS;
             return View(viewmodel);
-        
+
         }
+        [Authorize(Roles = "Operations")]
         private async Task<RequestIndexViewModel> GetIndexViewModel(int page = 1, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
           RequestsSearchViewModel? requestsSearchViewModel = null, AppUtility.OperationsPageTypeEnum PageType = AppUtility.OperationsPageTypeEnum.RequestOperations)
         {
@@ -262,7 +263,7 @@ namespace PrototypeWithAuth.Controllers
             return requestIndexViewModel;
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Operations")] //TODO: Does this also 
         public async Task<IActionResult> _IndexTable(int page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
              AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
                   RequestsSearchViewModel? requestsSearchViewModel = null, List<String> selectedPriceSort = null, AppUtility.CurrencyEnum selectedCurrency = AppUtility.CurrencyEnum.NIS)
@@ -275,7 +276,7 @@ namespace PrototypeWithAuth.Controllers
             viewModel.PriceSortEnumsList = selectedPriceSort;
             return PartialView(viewModel);
         }
-        [Authorize(Roles = "Admin, Operations")]
+        [Authorize(Roles = "Operations")]
         public async Task<IActionResult> CreateModalView()
         {
             var parentcategories = await _context.ParentCategories.Where(pr => pr.CategoryTypeID == 2).ToListAsync();
@@ -336,7 +337,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Operations")]
+        [Authorize(Roles = "Operations")]
         public async Task<IActionResult> CreateModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //why do we need this here?
@@ -527,7 +528,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Operations")]
+        [Authorize(Roles = "Operations")]
         public async Task<IActionResult> DetailsModalView(int? id, bool NewRequestFromProduct = false)
         {
             //string ModalViewType = "";
@@ -737,14 +738,14 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Operations")]
+        [Authorize(Roles = "Operations")]
         public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false)
         {
             return await editModalViewFunction(id);
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Operations")]
+        [Authorize(Roles = "Operations")]
         public async Task<IActionResult> EditModalViewPartial(int? id, int? Tab)
         {
             return await editModalViewFunction(id, Tab);
@@ -962,7 +963,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Operations")]
+        [Authorize(Roles = "Operations")]
         public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
@@ -1085,7 +1086,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         //[ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,  Operations")]
+        [Authorize(Roles = "Operations")]
         public IActionResult Order(int id)
         {
             var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).FirstOrDefault();

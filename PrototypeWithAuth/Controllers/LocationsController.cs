@@ -31,7 +31,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> IndexForInventory(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Summary)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
@@ -50,7 +50,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests, LabManagement")]
+        [Authorize(Roles = "Requests, LabManagement")]
         public IActionResult Index(AppUtility.MenuItems SectionType)
         {
             TempData["SectionType"] = SectionType;
@@ -76,7 +76,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult SublocationIndex(int parentId)
         {
             SublocationIndexViewModel sublocationIndexViewModel = new SublocationIndexViewModel()
@@ -115,7 +115,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult VisualLocations(int VisualContainerId)
         {
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
@@ -162,7 +162,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(visualLocationsViewModel);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult LocationIndex(int typeID)
         {
             LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
@@ -176,7 +176,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult VisualLocationsZoom(int VisualContainerId, AppUtility.MenuItems SectionType = AppUtility.MenuItems.LabManagement)
         {
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
@@ -192,7 +192,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, manager, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult AddLocation()
         {
             AddLocationViewModel addLocationViewModel = new AddLocationViewModel
@@ -205,7 +205,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult SubLocation(int ParentLocationTypeID)
         {
             SubLocationViewModel subLocationViewModel = new SubLocationViewModel();
@@ -267,7 +267,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, manager, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> AddLocation(AddLocationViewModel addLocationViewModel, SubLocationViewModel subLocationViewModel)
         {
             if (ModelState.IsValid) //make sure this allows for sublocations to be binded
@@ -799,7 +799,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult AddLocationType()
         {
             AddLocationTypeViewModel addLocationTypeViewModel = new AddLocationTypeViewModel
@@ -811,7 +811,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult AddLocationType(AddLocationTypeViewModel addLocationTypeViewModel)
         {
             int foriegnKeyParent = 0; //retain primary key to be a foriegn key for next model
