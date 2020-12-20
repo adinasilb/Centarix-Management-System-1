@@ -770,6 +770,9 @@ namespace PrototypeWithAuth.Controllers
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                     string requestFolderFrom = Path.Combine(uploadFolder, "0");
                     string requestFolderTo = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
+                    if (Directory.Exists(requestFolderTo)){
+                        Directory.Delete(requestFolderTo);
+                    }
                     Directory.Move(requestFolderFrom, requestFolderTo);
 
 

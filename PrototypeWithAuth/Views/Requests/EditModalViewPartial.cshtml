@@ -640,14 +640,22 @@ Model.UnitTypeList,
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label asp-for="Request.VAT" class="control-label"></label>
                     <div class="input-group">
                         <span class="input-group-text">&#x20aa;</span>
-                        @{ var vat = .17 * Model.Request.VAT;}
                         <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " disabled />
                         <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#36;</span>
+                        <input  class="form-control-plaintext border-bottom  vatInDollars " disabled />                    
                     </div>
                 </div>
             </div>

@@ -30,6 +30,7 @@ $(function () {
 		$sumShekel = parseFloat($("#Request_Cost").val());
 		//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
 		$('#Request_VAT').val(vatCalc.toFixed(2));
+		$('.vatInDollars').val((vatCalc / $exchangeRate).toFixed(2));
 		$sumTotalVatShekel = $sumShekel + vatCalc;
 		$iptBox = $("input[name='sumPlusVat-Shekel']");
 		$.fn.ShowResults($iptBox, $sumTotalVatShekel);
