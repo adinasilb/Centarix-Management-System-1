@@ -51,7 +51,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin , Users")]
+        [Authorize(Roles = "Users")]
         public IActionResult Index()
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
@@ -64,7 +64,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin , Users")]
+        [Authorize(Roles = "Users")]
         public IActionResult _Index()
         {
             ViewBag.ErrorMessage = ViewBag.ErrorMessage;
@@ -81,11 +81,11 @@ namespace PrototypeWithAuth.Controllers
                 .ToList();
             List<ApplicationUser> UsersList = _context.Users.ToList();
             bool IsCEO = false;
-            if (User.IsInRole("CEO"))
-            {
+            //if (User.IsInRole("CEO"))
+            //{
                 users = _context.Employees.OrderBy(u => u.UserNum).ToList(); //The CEO can see all users even the ones that are suspended 
-                IsCEO = true;
-            }
+                IsCEO = false; //automatically set to false until CEO is reinstated
+            //}
 
             UserIndexViewModel userIndexViewModel = new UserIndexViewModel()
             {
@@ -96,7 +96,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public IActionResult RegisterUser()
 
         {
@@ -114,7 +114,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> RegisterUser(RegisterUserViewModel registerUserViewModel)
         {
 
@@ -155,7 +155,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public IActionResult CreateUser()
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
@@ -226,7 +226,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> CreateUser(RegisterUserViewModel registerUserViewModel)
         {
             int userid = 0;
@@ -514,21 +514,21 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> EditUser(string id)
         {
             return await editUserFunction(id);
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> EditUserPartial(string id, int? Tab)
         {
             return await editUserFunction(id, Tab);
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin , Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> EditUser(RegisterUserViewModel registerUserViewModel)
         {
             try
@@ -822,7 +822,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public IActionResult DeleteUserModal(string Id)
         {
             ApplicationUser user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
@@ -830,7 +830,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> DeleteUserModal(ApplicationUser applicationUser)
         {
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
@@ -840,7 +840,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> UserImageModal()
         {
             return PartialView();
@@ -854,7 +854,7 @@ namespace PrototypeWithAuth.Controllers
         //}
 
         [HttpGet]
-        [Authorize(Roles = "CEO")]
+        [Authorize(Roles = "Users")]
         public IActionResult SuspendUserModal(string Id)
         {
             ApplicationUser user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
@@ -862,7 +862,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "CEO")]
+        [Authorize(Roles = "Users")]
         public async Task<IActionResult> SuspendUserModal(ApplicationUser applicationUser)
         {
             applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
@@ -884,7 +884,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Users")]
+        [Authorize(Roles = "Users")]
         public IActionResult GetHomeView()
         {
             //Adina's code: should not go to IndexAdmin otherwise if not Admin will say denied Index will take them to IndexAdmin if they're an admin
