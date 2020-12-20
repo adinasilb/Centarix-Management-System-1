@@ -69,7 +69,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         // GET: Requests
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         //ALSO when changing defaults -> change the defaults on the index page for paged list 
@@ -137,6 +137,7 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
+        [Authorize(Roles = "Requests")]
         private async Task<RequestIndexViewModel> GetExpensesItemsViewModel(int page = 1)
         {
             RequestIndexViewModel viewModel = new RequestIndexViewModel()
@@ -146,6 +147,8 @@ namespace PrototypeWithAuth.Controllers
             };
             return viewModel;
         }
+
+        [Authorize(Roles = "Requests")]
         private async Task<RequestIndexViewModel> GetIndexViewModel(int page = 1, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
             AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             RequestsSearchViewModel? requestsSearchViewModel = null)
@@ -321,7 +324,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTable(int page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
             AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             RequestsSearchViewModel? requestsSearchViewModel = null, List<String> selectedPriceSort = null, AppUtility.CurrencyEnum selectedCurrency = AppUtility.CurrencyEnum.NIS,
@@ -343,7 +346,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteModal(int? id, bool isQuote = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             if (id == null)
@@ -374,7 +377,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel)
         {
             var request = _context.Requests.Where(r => r.RequestID == deleteRequestViewModel.Request.RequestID)
@@ -508,7 +511,7 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> CreateModalView(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
@@ -583,7 +586,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> CreateModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //why do we need this here?
@@ -825,7 +828,7 @@ namespace PrototypeWithAuth.Controllers
 
 
 
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DetailsSummaryModalView(int? id, bool NewRequestFromProduct = false)
         {
             //string ModalViewType = "";
@@ -1008,7 +1011,7 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public ActionResult DownloadPDF(string filename)
         {
             //string filename = orderFileInfo.FullName.ToString();
@@ -1019,18 +1022,19 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             return await editModalViewFunction(id, 0, SectionType);
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> EditModalViewPartial(int? id, int? Tab, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             return await editModalViewFunction(id, Tab, SectionType);
         }
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             string ModalViewType = "";
@@ -1360,7 +1364,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             TempData.Keep();
@@ -1536,7 +1540,7 @@ namespace PrototypeWithAuth.Controllers
         //    });
         //}
 
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(int? id, bool NewRequestFromProduct = false, String SectionType = "")
         {
             var parentcategories = await _context.ParentCategories.ToListAsync();
@@ -1579,7 +1583,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, string OrderType)
         {
             //get the old request that we are reordering
@@ -1665,6 +1669,7 @@ namespace PrototypeWithAuth.Controllers
             });
         }
 
+        [Authorize(Roles = "Requests")]
         private async Task<bool> populateRequestItemViewModel(RequestItemViewModel requestItemViewModel, Request oldRequest)
         {
             //in case of error we need to populate these fields
@@ -1686,7 +1691,8 @@ namespace PrototypeWithAuth.Controllers
          * BEGIN SEND EMAIL
          */
         //this could be used as a static function - for now we only need to convert the purchase order html into a pdf so it is located locally
-        [Authorize(Roles = "Admin, Requests")]
+
+        [Authorize(Roles = "Requests")]
         private async Task<string> RenderPartialViewToString(string viewName, object model)
         {
             if (string.IsNullOrEmpty(viewName))
@@ -1715,7 +1721,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(int id, bool isSingleRequest = false, bool IsCart = false) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
             //TODO: add temp data memory here 
@@ -1778,7 +1784,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
         {
             _context.Update(termsViewModel.ParentRequest);
@@ -1835,7 +1841,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(int id)
         {
             var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == id)
@@ -1886,7 +1892,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmail)
         {
             var firstRequest = _context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID)
@@ -2033,7 +2039,7 @@ namespace PrototypeWithAuth.Controllers
          */
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmQuoteEmailModal(ConfirmQuoteEmailViewModel confirmQuoteEmail)
         {
             List<Reorder> requests;
@@ -2142,7 +2148,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmQuoteEmailModal(int id, bool isResend = false)
         {
             List<Reorder> requests;
@@ -2205,7 +2211,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
 
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmQuoteOrderEmailModal(int id)
         {
             var requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
@@ -2267,7 +2273,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmQuoteOrderEmailModal(ConfirmQuoteOrderEmailViewModel confirmQuoteOrderEmail)
         {
             var requests = _context.Requests.OfType<Reorder>().Where(r => r.Product.VendorID == confirmQuoteOrderEmail.VendorId && r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
@@ -2379,7 +2385,7 @@ namespace PrototypeWithAuth.Controllers
 
         /*LABMANAGEMENT*/
         [HttpGet]
-        [Authorize(Roles = "Admin, LabManagement")]
+        [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> LabManageQuotes()
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
@@ -2397,7 +2403,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, LabManagement")]
+        [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> LabManageOrders()
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
@@ -2416,7 +2422,7 @@ namespace PrototypeWithAuth.Controllers
          * BEGIN SEARCH
          */
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests, LabManagement, Operations")]
+        [Authorize(Roles = "Requests, LabManagement, Operations")]
         public async Task<IActionResult> Search(AppUtility.MenuItems SectionType)
         {
             int categoryID = 0;
@@ -2632,7 +2638,7 @@ namespace PrototypeWithAuth.Controllers
          */
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReceivedModal(int RequestID, bool IsOperations = false)
         {
             //foreach(var li in _context.LocationInstances)
@@ -2662,7 +2668,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult ReceivedModalSublocations(int LocationTypeID)
         {
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
@@ -2699,7 +2705,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult ReceivedModalVisual(int LocationInstanceID)
         {
             ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
@@ -2767,7 +2773,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
@@ -2981,7 +2987,7 @@ namespace PrototypeWithAuth.Controllers
          * END RECEIVED MODAL
          */
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool IsNotifications = false)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -3092,7 +3098,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public ActionResult DocumentView(List<String> FileNames)
         {
             return View();
@@ -3151,7 +3157,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         //[ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public IActionResult ApproveReorder(int id)
         {
             var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).Include(x => x.ParentQuote).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
@@ -3193,7 +3199,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         //[ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Requests, Operations")]
+        [Authorize(Roles = "Requests, Operations")]
         public IActionResult Approve(int id)
         {
             var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
@@ -3244,7 +3250,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, LabManagement")]
+        [Authorize(Roles = "LabManagement")]
         public IActionResult EditQuoteDetails(int id, int requestID = 0)
         {
             if (requestID != 0)
@@ -3278,7 +3284,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
         [HttpPost]
-        [Authorize(Roles = "Admin, LabManagement")]
+        [Authorize(Roles = "LabManagement")]
         public IActionResult EditQuoteDetails(EditQuoteDetailsViewModel editQuoteDetailsViewModel)
         {
             try
@@ -3319,7 +3325,7 @@ namespace PrototypeWithAuth.Controllers
 
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> NotificationsView(int requestID = 0)
         {
             if (requestID != 0)
@@ -3338,7 +3344,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> Cart()
         {
             TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Cart;
@@ -3357,14 +3363,14 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEdit(AppUtility.MenuItems MenuItem = AppUtility.MenuItems.Requests)
         {
             return PartialView(MenuItem);
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> CommentInfoPartialView(String type, int index)
         {
             Comment comment = new Comment();
@@ -3374,7 +3380,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> InstallmentsPartial(int index)
         {
             return PartialView(index);
@@ -3383,7 +3389,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> OrderLateModal(int id)
         {
             var request = _context.Requests
@@ -3396,7 +3402,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Requests")]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> OrderLateModal(Request request)
         {
             request = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.ApplicationUserCreator).Include(r => r.ParentRequest).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
@@ -3493,7 +3499,7 @@ namespace PrototypeWithAuth.Controllers
          */
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AccountingPayments(AppUtility.AccountingPaymentsEnum accountingPaymentsEnum)
         {
             TempData["Action"] = accountingPaymentsEnum;
@@ -3575,7 +3581,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = accountingPaymentsEnum });
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AccountingNotifications(AppUtility.AccountingNotificationsEnum accountingNotificationsEnum = AppUtility.AccountingNotificationsEnum.NoInvoice)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Notifications;
@@ -3614,7 +3620,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? paymentstatusid, AppUtility.AccountingPaymentsEnum accountingPaymentsEnum = AppUtility.AccountingPaymentsEnum.MonthlyPayment  /*, List<int>? requestIds*/)
         {
             List<Request> requestsToPay = new List<Request>();
@@ -3640,7 +3646,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = " Accounting")]
         public async Task<IActionResult> PaymentsPayModal(PaymentsPayModalViewModel paymentsPayModalViewModel)
         {
             foreach (Request request in paymentsPayModalViewModel.Requests)
@@ -3655,7 +3661,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AddInvoiceModal(int? vendorid, int? requestid, int[] requestIds)
         {
             List<Request> Requests = new List<Request>();
@@ -3694,7 +3700,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AddInvoiceModal(AddInvoiceViewModel addInvoiceViewModel)
         {
             _context.Add(addInvoiceViewModel.Invoice); //TODO Return To Modal if Not filled in
