@@ -23,7 +23,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ProductSubcategories
-        [Authorize(Roles = "Admin, Requests, Operations")]
+        [Authorize(Roles = "Requests, Operations")]
         public async Task<IActionResult> Index(String PageType = "", int categoryType=1)
         {
             if(PageType.Equals( AppUtility.LabManagementPageTypeEnum.Equipment.ToString()))
@@ -61,6 +61,7 @@ namespace PrototypeWithAuth.Controllers
         }
         
         [HttpGet] //send a json to that the subcategory list is filtered
+        [Authorize(Roles = "Requests, Operations")]
         public JsonResult GetSubCategoryList(int? ParentCategoryId)
         {
             var subCategoryList = _context.ProductSubcategories.ToList();
@@ -71,6 +72,7 @@ namespace PrototypeWithAuth.Controllers
             return Json(subCategoryList);
         }
         [HttpGet]
+        [Authorize(Roles = "Requests, Operations")]
         public JsonResult FilterByCategoryType(List<int> SelectedCategoryTypes)
         {
             var requests = _context.Requests.Where(r => SelectedCategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID)).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ApplicationUserCreator);
@@ -85,6 +87,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Requests, Operations")]
         public JsonResult FilterByParentCategories(List<int> ParentCategoryIds)
         {
             var requests = _context.Requests.Where(r => ParentCategoryIds.Contains(r.Product.ProductSubcategory.ParentCategoryID)).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product.ProductSubcategory).Include(r => r.ApplicationUserCreator);
@@ -96,6 +99,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Requests, Operations")]
         public JsonResult FilterBySubCategories(List<int> SubCategoryIds)
         {
             var requests = _context.Requests.Where(r => SubCategoryIds.Contains(r.Product.ProductSubcategoryID)).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product.ProductSubcategory).Include(r => r.ApplicationUserCreator);
