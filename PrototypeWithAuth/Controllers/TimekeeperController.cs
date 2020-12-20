@@ -75,7 +75,11 @@ namespace PrototypeWithAuth.Controllers
 
             var userid = _userManager.GetUserId(User);
             var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
-            todaysEntry.OffDayTypeID = null;
+            if (todaysEntry != null)
+            {
+                todaysEntry.OffDayTypeID = null;
+            }
+
             if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry1)
             {
                 if (todaysEntry == null)
