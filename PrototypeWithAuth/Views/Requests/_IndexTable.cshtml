@@ -238,11 +238,11 @@
 
                                     @if (Model.PagedList[itemNum].RequestStatusID == 1)
                                     {
-                                        //this is a nested if b/c if user can't approve then i still don't want it to go the the else
-                                        if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
+                                        ////this is a nested if b/c if user can't approve then i still don't want it to go the the else
+                                        //if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
+                                        //{
+                                        if (Model.PagedList[itemNum] is Reorder)
                                         {
-                                            if (Model.PagedList[itemNum] is Reorder)
-                                            {
                                                 <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
                                                    title="Approve" href="@Url.Action("ApproveReorder", new { id = Model.PagedList[itemNum].RequestID })">
                                                     <i style="font-size:2rem; color:#00CA72;" class="icon-centarix-icons-03 hover-bold"></i>
@@ -259,7 +259,7 @@
                                             }
 
 
-                                        }
+                                       // }
                                     }
 
                                     else if (Model.PagedList[itemNum].RequestStatusID == 2)
