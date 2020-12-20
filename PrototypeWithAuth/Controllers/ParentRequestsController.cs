@@ -29,7 +29,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
      [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> GeneralPaymentList()
         {
 
@@ -55,7 +55,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> ExpensesList()
         {
             List<MonthlyTotalsViewModel> monthlyTotals = new List<MonthlyTotalsViewModel>();
@@ -101,7 +101,7 @@ namespace PrototypeWithAuth.Controllers
         // POST: ParentRequests/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parentRequest = await _context.ParentRequests.FindAsync(id);
@@ -115,7 +115,7 @@ namespace PrototypeWithAuth.Controllers
             return _context.ParentRequests.Any(e => e.ParentRequestID == id);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Accounting")]
        
        
 
@@ -123,7 +123,7 @@ namespace PrototypeWithAuth.Controllers
   
         //this is here b/c the ajax call on the payment view is not working and I didn't have time to debug it
         [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = "Accounting")]
         public IActionResult DetailsModalView(int id)
         {
             return RedirectToAction("DetailsModalView", "Requests", new { id = id });
