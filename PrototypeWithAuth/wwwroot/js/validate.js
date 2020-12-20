@@ -1,6 +1,12 @@
 ﻿
 
 $(function () {
+	$('#myForm input').keydown(function (e) {
+		if (e.keyCode == 13) {
+			e.preventDefault();
+			return false;
+		}
+	});
 	$.each($("#myForm").validate().settings.rules, function (name, value) {
 		
 		if (value["required"] ) {

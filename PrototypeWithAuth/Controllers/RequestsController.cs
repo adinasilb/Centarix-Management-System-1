@@ -770,6 +770,9 @@ namespace PrototypeWithAuth.Controllers
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                     string requestFolderFrom = Path.Combine(uploadFolder, "0");
                     string requestFolderTo = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
+                    if (Directory.Exists(requestFolderTo)){
+                        Directory.Delete(requestFolderTo);
+                    }
                     Directory.Move(requestFolderFrom, requestFolderTo);
 
 
@@ -1911,7 +1914,7 @@ namespace PrototypeWithAuth.Controllers
                 string ownerEmail = currentUser.Email;
                 string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                 string ownerPassword = currentUser.SecureAppPass;
-                string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ TempData["Email1"]?.ToString() ?? firstRequest.Product.Vendor.OrdersEmail;
+                string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ TempData["Email1"].ToString() == "" ? firstRequest.Product.Vendor.OrdersEmail : TempData["Email1"].ToString();
                 string vendorName = firstRequest.Product.Vendor.VendorEnName;
 
                 //add a "From" Email

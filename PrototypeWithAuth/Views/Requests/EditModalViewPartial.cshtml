@@ -502,13 +502,13 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 }
                 <div class="col-4 pl-0 RequestSubunitCard">
                     <div class="border h-100 ">
-                        <button type="button" class="close sub-close @cardDisplayNoneSub pr-2 pt-2" aria-label="Close" style="
+                        <button type="button" class="close sub-close @cardDisplayNoneSub pr-2 pt-2  mark-readonly" disabled aria-label="Close" style="
     /* display: flex; */
     float: right;
 ">
                             <span aria-hidden="true">×</span>
                         </button>
-                        <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub"><div class="row " style="display:initial;"><div class="col-6 offset-3 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow mark-readonly" disabled style="font-size: 5rem" /></div></div></div>
+                        <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub"><div class="row " style="display:initial;">          <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow mark-readonly" disabled  style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div></div></div>
                         <div class="mx-2rem  subUnitsCard @cardDisplayNoneSub mt-4">
 
 
@@ -571,13 +571,13 @@ Model.UnitTypeList,
                 }
                 <div class="col-4 pl-0 RequestSubsubunitCard @cardDivDisplayNone">
                     <div class="border h-100">
-                        <button type="button" class="close subsub-close @cardDisplayNoneSubSub pr-2 pt-2" aria-label="Close" style="
+                        <button type="button" class="close subsub-close @cardDisplayNoneSubSub pr-2 pt-2 mark-readonly" disabled aria-label="Close" style="
     /* display: flex; */
     float: right;
 ">
                             <span aria-hidden="true">×</span>
                         </button>
-                        <div class="mx-2rem addSubSubUnitCard mt-4 @plusDisplayNoneSubSub"><div class="row " style="display:initial;"><div class="col-6 offset-3 text-center font-weight-light"><input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow mark-readonly" disabled style="font-size: 5rem" /></div></div></div>
+                        <div class="mx-2rem addSubSubUnitCard mt-4 @plusDisplayNoneSubSub"><div class="row " style="display:initial;"><div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow mark-readonly" disabled  style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div> </div></div>
                         <div class="mx-2rem  subSubUnitsCard mt-4 @cardDisplayNoneSubSub">
                             <div class="row">
                                 <div class="col-md-6 form-group">
@@ -640,14 +640,22 @@ Model.UnitTypeList,
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label asp-for="Request.VAT" class="control-label"></label>
                     <div class="input-group">
                         <span class="input-group-text">&#x20aa;</span>
-                        @{ var vat = .17 * Model.Request.VAT;}
                         <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " disabled />
                         <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#36;</span>
+                        <input  class="form-control-plaintext border-bottom  vatInDollars " disabled />                    
                     </div>
                 </div>
             </div>

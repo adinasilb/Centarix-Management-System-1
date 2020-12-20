@@ -317,7 +317,9 @@
 ">
                                                 <span aria-hidden="true">×</span>
                                             </button>
-                                            <div class="mx-2rem addSubUnitCard mt-4"><div class="row " style="display:initial;"><div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div></div></div>
+                                            <div class="mx-2rem addSubUnitCard mt-4"><div class="row " style="display:initial;">
+                                                <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div></div>
+                                            </div>
                                             <div class="mx-2rem  subUnitsCard d-none mt-4">
 
                                                 <div class="row">
@@ -447,13 +449,22 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label asp-for="Request.VAT" class="control-label"></label>
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " />
+                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " disabled />
                                                 <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="control-label"></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">&#36;</span>
+                                                <input  class="form-control-plaintext border-bottom vatInDollars " disabled/>
                                             </div>
                                         </div>
                                     </div>

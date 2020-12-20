@@ -10,9 +10,8 @@ $(function () {
 
 	$.fn.CalculateSumPlusVat = function () {
 		var $exchangeRate = $("#Request_ExchangeRate").val();
-		var sumShek = $("#Request_Cost").val();
 		//console.log("sumShek: " + sumShek);
-		var vatCalc = sumShek * .17;
+	
 		//console.log("VatPercentage: " + VatPercentage);
 		//console.log("vatCalc: " + vatCalc);
 		//$("#Request_VAT").val(vatCalc)
@@ -28,8 +27,13 @@ $(function () {
 			$.fn.ShowResults($iptBox, $sumShekel);
 		}
 		$sumShekel = parseFloat($("#Request_Cost").val());
+		var vatCalc = $sumShekel * .17;
 		//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
 		$('#Request_VAT').val(vatCalc.toFixed(2));
+		$('.vatInDollars').val((vatCalc / $exchangeRate).toFixed(2));
+		console.log(vatCalc)
+		console.log($exchangeRate)
+		console.log((vatCalc / $exchangeRate).toFixed(2))
 		$sumTotalVatShekel = $sumShekel + vatCalc;
 		$iptBox = $("input[name='sumPlusVat-Shekel']");
 		$.fn.ShowResults($iptBox, $sumTotalVatShekel);
@@ -450,7 +454,7 @@ $(function () {
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
-		$.fn.updateDebt();
+		//$.fn.updateDebt();
 	});
 
 

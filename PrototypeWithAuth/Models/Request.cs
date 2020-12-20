@@ -90,6 +90,7 @@ namespace PrototypeWithAuth.Models
            private set { _VAT = value; }
 
         }
+ 
         private double _PricePerUnit;
         public double PricePerUnit
         {
