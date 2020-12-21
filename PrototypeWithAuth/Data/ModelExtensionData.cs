@@ -1102,12 +1102,12 @@ namespace PrototypeWithAuth.Data
                         new OffDayType
                         {
                             OffDayTypeID = 1,
-                            Description = "SickDay"
+                            Description = "Sick Day"
                         },
                          new OffDayType
                          {
                              OffDayTypeID = 2,
-                             Description = " VacationDay"
+                             Description = " Vacation Day"
                          }
                   );
             modelBuilder.Entity<EmployeeHoursStatus>().HasData(

@@ -14,7 +14,7 @@
                 @Html.HiddenFor(r => r.EmployeeHour.OffDayTypeID)
                 @Html.HiddenFor(r => r.EmployeeHour.EmployeeID)
                 @{var disabled = false;
-                    if (Model.PageType.Equals("SummaryHours"))
+                    if (Model.PageType?.Equals("SummaryHours")==true)
                     {
                         disabled = true;
                     }
