@@ -255,17 +255,23 @@
             //});
            // $('form').attr('autocomplete', 'off');
             $(document).ajaxError(function (event, jqxhr, settings, exception) {
+                $('#loading').hide();
                 if (jqxhr.status == 401) {
-                    $('#loading').hide();
                     alert("Cookie timed out. Please login again.");
                 }
                 if (jqxhr.status == 400) {
-                    $('#loading').hide();
                     alert("Error 400: error making request");
                 }
                 if (jqxhr.status == 500) {
-                    $('#loading').hide();
-                    alert("Error 500: error carrying out request");
+                    if ($(".error-msg").length > 0) {
+                        $(".error-msg").html(jqxhr.responseText);
+                    }
+                    else if (jqxhr.responseText != null) {
+                        alert("Error 500: " + jqxhr.responseText);
+                    }
+                    else {
+                        alert("Error 500: error carrying out request");
+                    }
                 }
             });
             $('[data-toggle="tooltip"]').tooltip()

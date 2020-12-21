@@ -122,7 +122,6 @@ $(function () {
 	});
 
 	$("#search-form #sublist").change(function () {
-		//alert("changed sublist");
 		if ($(this).val() == 'Please select a subcategory') {
 			$("#search-form #parentlist").attr("disabled", false);
 		}
@@ -637,7 +636,6 @@ $(function () {
 		} else if ($(".open-document-modal").hasClass('labManagement') || $(".open-document-modal").hasClass('LabManagement')) {
 			section = "LabManagement";
 		}
-		//alert("section:" + section)
 		$(this).addClass("active-document-modal");
 		var enumString = $(this).data("string");
 		console.log("enumString: " + enumString);
@@ -650,9 +648,6 @@ $(function () {
 	});
 
 	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section) {
-		alert(isEdittable)
-		//alert("in open doc modal");
-		//alert("in open document in site.js")
 		$(".documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
@@ -934,7 +929,6 @@ $(function () {
 
 		//var parentStylingClass = "parent-location-selected-outer-lab-man";
 		//var trParentStylingClass = "pl-border-right-0";
-		//alert("new js sheet - trparentstlyingclass");
 		//if ($(this).hasClass("parent-location")) {
 		//	$("body td").removeClass(parentStylingClass);
 		//	$("body tr").removeClass(trParentStylingClass);
@@ -1110,7 +1104,6 @@ $(function () {
 				visualDiv.show();
 				this.html(result);
 				var width = $('.visual-locations-table td').width();
-				alert(width)
 				if ($('.visual-locations-table td').hasClass("is25")) {
 					$('.visual-locations-table td').css("height", width);
 				}
@@ -1775,7 +1768,6 @@ $(function () {
 	});
 
 	$(".report-sick-days").off('click').click(function (e) {
-		alert("hello");
 		$("#loading").show();
 		var pageType = "";
 		var selectedDate = null;
@@ -2034,7 +2026,6 @@ $(function () {
 	}
 
 	$(".modal").off('click').on("click", "#saveSick", function (e) {
-		alert("in modal save sick click");
 		$.fn.SaveSick();
 	});
 
@@ -2105,6 +2096,7 @@ $(function () {
 
 	$('.turn-edit-on-off').off("click").on("click", function () {
 		if ($('.modal-open-state').attr("text") == "open") {
+			alert("turn edit on off");
 			$(".modal-open-state").attr("text", "close");
 			$(".confirm-edit-modal").remove();
 			return false;

@@ -49,14 +49,14 @@ namespace PrototypeWithAuth.Controllers
             }
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             IEnumerable<Menu> menu = null;
-            if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
-            {
-                menu = _context.Menus.Select(x => x);
-            }
-            else
-            {
+            //if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
+            //{
+            //    menu = _context.Menus.Select(x => x);
+            //}
+            //else
+            //{
                 menu = _context.Menus.Where(m => rolesList.Contains(m.MenuDescription));
-            }
+            //}
 
             //update latest exchange rate if need be
             var latestRate = _context.ExchangeRates.FirstOrDefault();
@@ -80,14 +80,14 @@ namespace PrototypeWithAuth.Controllers
             var user = await _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefaultAsync();
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             IEnumerable<Menu> menu = null;
-            if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
-            {
-                menu = _context.Menus.Select(x => x);
-            }
-            else
-            {
+            //if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
+            //{
+            //    menu = _context.Menus.Select(x => x);
+            //}
+            //else
+            //{
                 menu = _context.Menus.Where(m=> rolesList.Contains(m.MenuDescription));
-            }
+            //}
 
             return PartialView(menu);
         }

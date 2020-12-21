@@ -503,10 +503,11 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                ViewBag.ErrorMessage = "User Failed to add. Please try again.";
+                Response.StatusCode = 500;
+                Response.WriteAsync("User Failed to add. Please try again.");
                 foreach (IdentityError e in result.Errors)
                 {
-                    ViewBag.ErrorMessage += "/n " + e;
+                    Response.WriteAsync(e.ToString());
                 }
             }
             return RedirectToAction("Index");
@@ -806,19 +807,21 @@ namespace PrototypeWithAuth.Controllers
                 //    await _context.SaveChangesAsync();
                 //    stream.Close();
                 //}
-                ViewBag.ErrorMessage = "Test Error Message";
 
             }
             catch (DbUpdateException ex)
             {
-                ViewBag.ErrorMessage = ex.InnerException;
+                Response.StatusCode = 500;
+                Response.WriteAsync(ex.InnerException.ToString());
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.InnerException;
+                Response.StatusCode = 500;
+                Response.WriteAsync(e.InnerException.ToString());
             }
 
-            return RedirectToAction("Index");
+            //return RedirectToAction("Index");
+            return new EmptyResult();
         }
 
         [HttpGet]
