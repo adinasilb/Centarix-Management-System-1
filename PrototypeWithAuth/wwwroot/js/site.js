@@ -9,7 +9,8 @@ $(function () {
 	//$('.modal form').attr('autocomplete', 'off');
 	var VatPercentage = .17;
 
-	//$('.modal').on('click', '.close', function () {
+	//$('.modal').on('click', 'button[data-dismiss="modal"]', function () {
+	//	alert("in modal close click")
 	//	$('.modal').remove();
 	//	$('.modal-backdrop').remove();
 
