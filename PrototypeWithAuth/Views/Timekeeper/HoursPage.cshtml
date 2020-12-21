@@ -136,10 +136,10 @@
                         </button>
 
                     }
-                    else if (eh.Entry1 != null && eh.Exit1 == null)
+                    else if ((eh.Entry1 != null && eh.Exit1 == null)|| (eh.Entry1 == null && eh.Exit1 == null && (eh.OffDayTypeID==1 ||eh.OffDayTypeID==2)))
                     {
                         <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.Date.ToString("yyyy-MM-dd")">Update Hours</button>
-                    }
+                    }                 
                     else if (eh.Exit1 == null)
                     {
                         exit = "n/a";
