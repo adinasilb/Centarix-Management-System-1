@@ -9,12 +9,7 @@ $(function () {
 	//$('.modal form').attr('autocomplete', 'off');
 	var VatPercentage = .17;
 
-	//$('.modal').on('click', 'button[data-dismiss="modal"]', function () {
-	//	alert("in modal close click")
-	//	$('.modal').remove();
-	//	$('.modal-backdrop').remove();
-
-	//})
+	
 
 	function showmodal() {
 		$("#modal").modal('show');
@@ -1990,12 +1985,22 @@ $(function () {
 			url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType + "&month=" + month,
 			type: 'POST',
 			cache: false,
-			success: function (data) {
-				console.log(data)
+			success: function () {
+				alert("success from ajax post");
 				$(".modal").modal('hide');
 				if (pageType = "ReportDaysOff") {
-					alert("first if")
-					$(".report-days-off-partial").html("");
+					alert("in report days off")
+					$.ajax({
+						async: false,
+						url: "_ReportDaysoff",
+						type: 'GET',
+						cache: false,
+						success: function (data) {
+							console.log(data);
+							alert("in ajax get function");
+							$(".report-days-off-partial").html(data);
+						}
+					});
 				}
 				else {
 					alert("else")
@@ -2037,6 +2042,7 @@ $(function () {
 	}
 
 	$(".modal").off('click').on("click", "#saveSick", function (e) {
+		alert("save sick");
 		$.fn.SaveSick();
 	});
 

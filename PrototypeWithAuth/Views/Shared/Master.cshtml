@@ -438,6 +438,12 @@
         });
 
 
+        $('.modal').on('click', 'button[data-dismiss="modal"]', function () {
+            alert("in modal close click")
+            $('.modal').remove();
+            $('.modal-backdrop').remove();
+
+        })
 
 
         $(".load-confirm-delete-quote").on("click", function (e) {
