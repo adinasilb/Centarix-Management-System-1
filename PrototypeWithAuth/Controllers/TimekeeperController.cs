@@ -542,12 +542,11 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult SaveSick(DateTime dateFrom, DateTime dateTo, int? month, String PageType = "")
         {
             SaveOffDay(dateFrom, dateTo, 1);
-            return new EmptyResult();
-            //if (PageType.Equals("ReportDaysOff"))
-            //{
-            //    PageType = "_" + PageType;
-            //}
-            //return RedirectToAction(PageType,  new { Month = new DateTime(DateTime.Now.Year, month??DateTime.Now.Month, 1 )});
+            if (PageType.Equals("ReportDaysOff"))
+            {
+                PageType = "_" + PageType;
+            }
+            return RedirectToAction(PageType, new { Month = new DateTime(DateTime.Now.Year, month ?? DateTime.Now.Month, 1) });
         }
         [HttpPost]
         [Authorize(Roles = "TimeKeeper")]
