@@ -1830,7 +1830,7 @@ $(function () {
 		var itemurl = "SickDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
 		$.fn.CallModal(itemurl);
 	});
-	$("body").on("change", "#Date", function (e) {
+	$("body").on("change", "#EmployeeHour_Date", function (e) {
 		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
 	});
 
@@ -1842,10 +1842,10 @@ $(function () {
 		return dayOfWeek
 	}
 
-	$("body").on("change", "#Date.update-hour-date", function (e) {
+	$("body").on("change", "#EmployeeHour_Date.update-hour-date", function (e) {
 		$.fn.GetEmployeeHour($(this).val());
 	});
-	$("body").on("change", "#Date.update-work-from-home", function (e) {
+	$("body").on("change", "#EmployeeHour_Date.update-work-from-home", function (e) {
 		$.fn.GetEmployeeHourFromHome($(this).val());
 	});
 

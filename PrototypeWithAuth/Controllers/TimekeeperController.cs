@@ -421,7 +421,8 @@ namespace PrototypeWithAuth.Controllers
     public async Task<IActionResult> UpdateHours(UpdateHoursViewModel updateHoursViewModel)
     {
         var awaitingApproval = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date).FirstOrDefault();
-        int? employeeHoursID = null;
+        var updateHoursDate = updateHoursViewModel.EmployeeHour.Date;
+            int? employeeHoursID = null;
         if (updateHoursViewModel.EmployeeHour.EmployeeHoursID != 0)
         {
             employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
@@ -431,10 +432,14 @@ namespace PrototypeWithAuth.Controllers
         {
             employeeHoursAwaitingApproval.EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID;
             employeeHoursAwaitingApproval.EmployeeHoursID = employeeHoursID;
-            employeeHoursAwaitingApproval.Entry1 = updateHoursViewModel.EmployeeHour.Entry1;
-            employeeHoursAwaitingApproval.Entry2 = updateHoursViewModel.EmployeeHour.Entry2;
-            employeeHoursAwaitingApproval.Exit1 = updateHoursViewModel.EmployeeHour.Exit1;
-            employeeHoursAwaitingApproval.Exit2 = updateHoursViewModel.EmployeeHour.Exit2;
+            if(updateHoursViewModel.EmployeeHour.Entry1!=null)
+                employeeHoursAwaitingApproval.Entry1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry1?.Minute ?? 0, 0);
+            if (updateHoursViewModel.EmployeeHour.Entry2 != null)
+                employeeHoursAwaitingApproval.Entry2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry2?.Minute ?? 0, 0);
+            if (updateHoursViewModel.EmployeeHour.Exit1 != null) 
+                employeeHoursAwaitingApproval.Exit1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit1?.Minute ?? 0, 0);
+            if (updateHoursViewModel.EmployeeHour.Exit2 != null)
+                employeeHoursAwaitingApproval.Exit2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit2?.Minute ?? 0, 0);
             employeeHoursAwaitingApproval.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
             employeeHoursAwaitingApproval.OffDayTypeID = null;
             employeeHoursAwaitingApproval.Date = updateHoursViewModel.EmployeeHour.Date;
@@ -442,10 +447,14 @@ namespace PrototypeWithAuth.Controllers
         }
         else
         {
-            awaitingApproval.Entry1 = updateHoursViewModel.EmployeeHour.Entry1;
-            awaitingApproval.Exit1 = updateHoursViewModel.EmployeeHour.Exit1;
-            awaitingApproval.Entry2 = updateHoursViewModel.EmployeeHour.Entry2;
-            awaitingApproval.Exit2 = updateHoursViewModel.EmployeeHour.Exit2;
+            if (updateHoursViewModel.EmployeeHour.Entry1 != null)
+               employeeHoursAwaitingApproval.Entry1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry1?.Minute ?? 0, 0);
+            if (updateHoursViewModel.EmployeeHour.Entry2 != null) 
+               employeeHoursAwaitingApproval.Entry2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry2?.Minute ?? 0, 0);
+            if (updateHoursViewModel.EmployeeHour.Exit1 != null)
+                employeeHoursAwaitingApproval.Exit1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit1?.Minute ?? 0, 0);
+            if (updateHoursViewModel.EmployeeHour.Exit2 != null)
+                employeeHoursAwaitingApproval.Exit2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit2?.Minute ?? 0, 0);
             awaitingApproval.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
             awaitingApproval.OffDayTypeID = null;
             employeeHoursAwaitingApproval = awaitingApproval;
@@ -456,7 +465,7 @@ namespace PrototypeWithAuth.Controllers
         _context.SaveChanges();
 
 
-        return RedirectToAction(updateHoursViewModel.PageType, new { Month = Month });
+        return RedirectToAction(updateHoursViewModel.PageType??"ReportHours", new { Month = Month });
     }
 
     [HttpGet]
