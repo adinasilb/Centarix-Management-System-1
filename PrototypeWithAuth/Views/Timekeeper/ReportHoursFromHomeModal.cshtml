@@ -9,7 +9,7 @@
             </button>
             <form action="" method="post" id="myForm" enctype="multipart/form-data" class="reportHoursForm modal-padding" style="height: 100%; overflow: auto;">
                 @{var disabled = false;
-                    if (Model.PageType.Equals("SummaryHours"))
+                    if (Model.PageType?.Equals("SummaryHours")==true)
                     {
                         disabled = true;
                     }
