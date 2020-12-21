@@ -1,0 +1,101 @@
+﻿@model List<PrototypeWithAuth.ViewModels.SummaryOfDaysOffViewModel>
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    Layout = null;
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+}
+<div class="row   mb-5 text-center ">
+    <div class="col-7">
+        <div class="row  entry-exit-background p-5 ">
+            <div class="col-6 ">
+
+                <button class="custom-button-font custom-button timekeeper-color report-vacation-days @AppUtility.TimeKeeperSidebarEnum.ReportDaysOff" style="background-color: #009688" type="button">
+                    <i class="icon-luggage-24px-1 mx-2" style="        font-size: 1.25rem;
+        position: relative;
+
+"></i>Report vacation day
+                </button>
+                <br />
+                <label class=" text mt-3 " style=" color: #808080;"> Vacation Days</label>
+                <i class="icon-info-24px-2 m-2" style="        font-size: 1.25rem;
+        top: .24rem;
+        color: #808080;
+        position: relative;"></i>
+            </div>
+
+            <div class="col-6  ">
+
+
+                <button class="custom-button-font custom-button timekeeper-color report-sick-days  @AppUtility.TimeKeeperSidebarEnum.ReportDaysOff" style="" type="button">
+                    <i class="icon-sick-24px-1 mx-2" style="        font-size: 1.25rem;
+        position: relative;
+"> </i> Report sick leave
+                </button>
+                <br />
+                <label class=" text mt-3" style=" color: #808080;"> Sick Days</label>
+                <i class="icon-info-24px-2 mx-2" style="font-size: 1.25rem; top: .24rem;
+        position: relative;
+"></i>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="row mt-6">
+    <div class="col-7 mt-4 mb-5">
+
+        <div class="row">
+            <div class="col-4 heading-1 p-0"><label class="m-0 p-0">Summary Of Days Off</label></div>
+            <div class="col-4 heading-1 ">
+                <label class="font-weight-bolder text m-0 p-0"> Vacation Days Left: @Model.Select(d => d.VacationDaysLeft).Sum(vd => vd)</label>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-7">
+        <div class="row p-3 text-center ">
+            <div class="col-3 pl-5 text-left">
+                Year
+            </div>
+            <div class="col-3">
+                Total Vacation Days
+            </div>
+            <div class="col-3">
+                Vacation Days Taken
+            </div>
+            <div class="col-3">
+                Sick Days Taken
+            </div>
+        </div>
+        @foreach (var year in Model)
+        {
+            <div class="row border p-3 text-center">
+
+                <div class="col-3 pl-5 text-left">
+                    @year.Year
+                </div>
+                <div class="col-3">
+                    @year.TotalVacationDays
+                </div>
+                <div class="col-3">
+                    @year.VacationDaysTaken
+                </div>
+                <div class="col-3">
+                    @year.SickDaysTaken
+                </div>
+
+            </div>
+        }
+
+
+
+    </div>
+</div>

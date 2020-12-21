@@ -290,10 +290,21 @@ namespace PrototypeWithAuth.Controllers
     [HttpGet]
     [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> ReportDaysOff()
+        {
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.TimeKeeperSidebarEnum.ReportDaysOff;
+            return View(ReportDaysOffFunction());
+        }
+    [HttpGet]
+    [Authorize(Roles = "TimeKeeper")]
+    public async Task<IActionResult> _ReportDaysOff()
     {
-        TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
-        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.TimeKeeperPageTypeEnum.Report;
-        TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.TimeKeeperSidebarEnum.ReportDaysOff;
+        return PartialView(ReportDaysOffFunction());
+    }
+
+    private List<SummaryOfDaysOffViewModel> ReportDaysOffFunction()
+    {
         var userid = _userManager.GetUserId(User);
         var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault(); //TODO: make sure this is only employees
 
@@ -333,13 +344,13 @@ namespace PrototypeWithAuth.Controllers
                 year = year - 1;
             }
 
-            return View(daysOffByYear);
+            return  daysOffByYear;
         }
 
-        return RedirectToAction("ReportHours");
+        return null;
     }
 
-    [HttpGet]
+        [HttpGet]
     [Authorize(Roles = "TimeKeeper")]
     public async Task<IActionResult> ReportHoursFromHomeModal(DateTime chosenDate, String PageType)
         {
@@ -523,9 +534,13 @@ namespace PrototypeWithAuth.Controllers
 
     [HttpPost]
     [Authorize(Roles = "TimeKeeper")]
-    public IActionResult SaveSick(DateTime dateFrom, DateTime dateTo, String PageType, int? month)
+    public IActionResult SaveSick(DateTime dateFrom, DateTime dateTo, int? month, String PageType = "")
     {
         SaveOffDay(dateFrom, dateTo, 1);
+        if (PageType.Equals("ReportDaysOff"))
+        {
+            PageType = "_" + PageType;
+        }
         return RedirectToAction(PageType,  new { Month = new DateTime(DateTime.Now.Year, month??DateTime.Now.Month, 1 )});
     }
     [HttpPost]

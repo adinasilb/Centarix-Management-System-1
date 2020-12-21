@@ -1999,10 +1999,20 @@ $(function () {
 			type: 'POST',
 			cache: false,
 			success: function (data) {
+				console.log(data)
 				$(".modal").modal('hide');
-				$(".render-body").html(data);
+				if (pageType = "ReportDaysOff") {
+					alert("first if")
+					$(".report-days-off-partial").html("");
+				}
+				else {
+					alert("else")
+					$(".render-body").html(data);
+				}
+
 
 			}
+			
 		});
 	}
 
