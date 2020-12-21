@@ -219,11 +219,6 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        private async Task CreateSingleRole()
-        {
-            ApplicationUser user = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault();
-            await _userManager.AddToRoleAsync(user, "CEO");
-        }
 
         [HttpPost]
         [Authorize(Roles = "Users")]
