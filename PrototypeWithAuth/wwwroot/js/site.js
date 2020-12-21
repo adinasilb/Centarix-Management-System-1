@@ -1986,16 +1986,16 @@ $(function () {
 		console.log(dateFrom + "-" + dateTo);
 		alert("about to go into ajax, url: " + url);
 		$.ajax({
-			async: false,
-			url: url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType + "&month=" + month,
+			async: true,
+			url: "/Timekeeper/"+url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType + "&month=" + month,
 			type: 'POST',
-			cache: false,
+			cache: true,
 			success: function (data) {
 				console.log(data)
 				$(".modal").modal('hide');
 				if (pageType = "ReportDaysOff") {
-					alert("first if")
-					$(".report-days-off-partial").html("");
+	
+					$(".report-days-off-partial").html(data);
 				}
 				else {
 					alert("else")
@@ -2023,6 +2023,7 @@ $(function () {
 	});
 
 	$.fn.SaveSick = function () {
+
 		alert("in save sick function");
 		var pageType = "";
 		if ($("#saveSick").hasClass("SummaryHours")) {
@@ -2037,6 +2038,7 @@ $(function () {
 	}
 
 	$(".modal").off('click').on("click", "#saveSick", function (e) {
+		e.preventDefault();
 		$.fn.SaveSick();
 	});
 

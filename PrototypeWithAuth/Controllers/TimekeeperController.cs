@@ -529,7 +529,11 @@ namespace PrototypeWithAuth.Controllers
     public IActionResult SaveVacation(DateTime dateFrom, DateTime dateTo, String PageType )
     {
         SaveOffDay(dateFrom, dateTo, 2);
-        return RedirectToAction(PageType);
+            if (PageType.Equals("ReportDaysOff"))
+            {
+                PageType = "_" + PageType;
+            }
+            return RedirectToAction(PageType);
     }
 
     [HttpPost]

@@ -79,6 +79,7 @@
     <!--  SCRIPTS  -->
     <!-- JQuery -->
     @*load jquery ui*@
+    
     <script src="~/lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
     <!-- Bootstrap tooltips -->
@@ -567,7 +568,7 @@
                     //turn off data dismiss by clicking out of the box and by pressing esc
                     $(".modal-view").modal({
                         backdrop: true,
-                        keyboard: false,
+                        keyboard: true,
                     });
                     //shows the modal
                     $(".modal").modal('show');
@@ -778,7 +779,7 @@
                     $('body').append(modal);
                     $(".modal-view").modal({
                         backdrop: true,
-                        keyboard: false,
+                        keyboard: true,
                     });
                     $.fn.CalculateAge();
                     $(".modal").modal('show');
