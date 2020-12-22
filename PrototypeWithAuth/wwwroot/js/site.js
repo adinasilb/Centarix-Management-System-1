@@ -1783,7 +1783,7 @@ $(function () {
 		var pageType = "SummaryHours";
 		switch ($(this).val()) {
 			case "1":
-				var itemurl = "ReportHoursFromHomeModal?PageType=" + pageType + "&chosenDate=" + selectedDate;
+				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate+"&isWorkFromHome="+true;
 				$("#loading").show();
 				$.fn.CallModal(itemurl)
 				break;
