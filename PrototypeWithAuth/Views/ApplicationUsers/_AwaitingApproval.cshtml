@@ -74,7 +74,12 @@
                         @hours.EmployeeHoursAwaitingApproval.Employee.FirstName  @hours.EmployeeHoursAwaitingApproval.Employee.LastName
                     </td>
                     <td width="20%">
-                        @hours.EmployeeHoursAwaitingApproval.EmployeeHoursStatus.Description
+                        @hours.EmployeeHoursAwaitingApproval.EmployeeHoursStatusEntry1.Description
+                        @if (hours.EmployeeHoursAwaitingApproval.EmployeeHoursStatusEntry2 != null)
+                        {
+                            <br />
+                        }
+                        <label class="@Entry2 m-0">@hours.EmployeeHoursAwaitingApproval.EmployeeHoursStatusEntry2?.Description </label>
                     </td>
                     <td width="16%">
                         @hours.EmployeeHoursAwaitingApproval.Date.ToLongDateString()

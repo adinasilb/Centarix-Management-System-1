@@ -376,62 +376,7 @@ namespace PrototypeWithAuth.Controllers
             return null;
         }
 
-        [HttpGet]
-        [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> ReportHoursFromHomeModal(DateTime chosenDate, String PageType)
-        {
-            if (chosenDate == new DateTime())
-            {
-                chosenDate = DateTime.Today;
-            }
-            var userID = _userManager.GetUserId(User);
-            EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval = new EmployeeHoursAwaitingApproval();
-            var employeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).FirstOrDefault();
-            if (employeeHours == null)
-            {
-                employeeHoursAwaitingApproval.EmployeeID = userID;
-                employeeHoursAwaitingApproval.Date = chosenDate;
-            }
-            else
-            {
-                employeeHoursAwaitingApproval.EmployeeID = userID;
-                employeeHoursAwaitingApproval.Date = chosenDate;
-                employeeHoursAwaitingApproval.Entry1 = employeeHours.Entry1;
-                employeeHoursAwaitingApproval.Exit1 = employeeHours.Entry2;
-                employeeHoursAwaitingApproval.Entry2 = employeeHours.Exit1;
-                employeeHoursAwaitingApproval.Exit2 = employeeHours.Exit2;
-                employeeHoursAwaitingApproval.TotalHours = employeeHours.TotalHours;
-            }
-            ReportHoursFromHomeViewModel reportHoursFromHomeViewModel = new ReportHoursFromHomeViewModel() { EmployeeHour = employeeHoursAwaitingApproval, PageType = PageType };
-            return PartialView(reportHoursFromHomeViewModel);
 
-
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "TimeKeeper")]
-        public IActionResult ReportHoursFromHomeModal(ReportHoursFromHomeViewModel reportHoursFromHomeViewModel)
-        {
-
-            var userID = _userManager.GetUserId(User);
-            var employeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == reportHoursFromHomeViewModel.EmployeeHour.Date.Date).FirstOrDefault();
-            if (employeeHours != null)
-            {
-                reportHoursFromHomeViewModel.EmployeeHour.EmployeeHoursID = employeeHours.EmployeeHoursID;
-                reportHoursFromHomeViewModel.EmployeeHour.OffDayTypeID = employeeHours.OffDayTypeID;
-            }
-            var awaitingApprovalID = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == reportHoursFromHomeViewModel.EmployeeHour.Date.Date).Select(e => e.EmployeeHoursAwaitingApprovalID).FirstOrDefault();
-            if (awaitingApprovalID != null)
-            {
-                reportHoursFromHomeViewModel.EmployeeHour.EmployeeHoursAwaitingApprovalID = awaitingApprovalID;
-            }
-            reportHoursFromHomeViewModel.EmployeeHour.EmployeeHoursStatusID = 1;
-            DateTime Month = reportHoursFromHomeViewModel.EmployeeHour.Date;
-            _context.Update(reportHoursFromHomeViewModel.EmployeeHour);
-            _context.SaveChanges();
-            return RedirectToAction(reportHoursFromHomeViewModel.PageType, new { Month = Month });
-
-        }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> UpdateHours(DateTime chosenDate, String PageType, bool isWorkFromHome=false)
@@ -518,7 +463,7 @@ namespace PrototypeWithAuth.Controllers
             ehaa.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
             ehaa.OffDayTypeID = null;
             ehaa.Date = updateHoursViewModel.EmployeeHour.Date;
-            ehaa.EmployeeHoursStatusID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusID;
+            ehaa.EmployeeHoursStatusEntry1 = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1;
             //}
             //else
             //{

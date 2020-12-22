@@ -200,7 +200,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private List<EmployeeHoursAwaitingApprovalViewModel> GetAwaitingApprovalModel()
         {
-            var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatus).ToList();
+            var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatusEntry1).Include(ehwa => ehwa.EmployeeHoursStatusEntry2).ToList();
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = new List<EmployeeHoursAwaitingApprovalViewModel>();
             foreach (EmployeeHoursAwaitingApproval ehaa in employeeHoursAwaitingApproval)
             {
@@ -250,35 +250,21 @@ namespace PrototypeWithAuth.Controllers
         {
             EmployeeHours employeeHours = new EmployeeHours();
             EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).FirstOrDefaultAsync();
-            EmployeeHours oldEmployeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
-            if (oldEmployeeHours != null)
+
+            employeeHours = new EmployeeHours
             {
-                if (oldEmployeeHours.EmployeeHoursStatusEntry1ID != 1)
-                {
-                    oldEmployeeHours.EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusID;
-                }
-                oldEmployeeHours.Entry1 = employeeHoursBeingApproved.Entry1;
-                oldEmployeeHours.Entry2 = employeeHoursBeingApproved.Entry2;
-                oldEmployeeHours.Exit1 = employeeHoursBeingApproved.Exit1;
-                oldEmployeeHours.Exit2 = employeeHoursBeingApproved.Exit2;
-                oldEmployeeHours.TotalHours = employeeHoursBeingApproved.TotalHours;
-                oldEmployeeHours.OffDayTypeID = null;
-                employeeHours = oldEmployeeHours;
-            }
-            else
-            {
-                employeeHours = new EmployeeHours
-                {
-                    Entry1 = employeeHoursBeingApproved.Entry1,
-                    Entry2 = employeeHoursBeingApproved.Entry2,
-                    Exit1 = employeeHoursBeingApproved.Exit1,
-                    Exit2 = employeeHoursBeingApproved.Exit2,
-                    TotalHours = employeeHoursBeingApproved.TotalHours,
-                    EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusID,
-                    EmployeeID = employeeHoursBeingApproved.EmployeeID,
-                    Date = employeeHoursBeingApproved.Date
-                };
-            }
+                Entry1 = employeeHoursBeingApproved.Entry1,
+                Entry2 = employeeHoursBeingApproved.Entry2,
+                Exit1 = employeeHoursBeingApproved.Exit1,
+                Exit2 = employeeHoursBeingApproved.Exit2,
+                TotalHours = employeeHoursBeingApproved.TotalHours,
+                EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry1ID,
+                EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID,
+                EmployeeID = employeeHoursBeingApproved.EmployeeID,
+                Date = employeeHoursBeingApproved.Date,
+                EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID??0                
+            };
+            
             try
             {
                 _context.Update(employeeHours);

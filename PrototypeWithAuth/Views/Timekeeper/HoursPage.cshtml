@@ -87,7 +87,7 @@
                         hoursType = eh.EmployeeHours.OffDayType?.Description;
                         @if (eh.EmployeeHours.Entry1 != null || eh.EmployeeHours.TotalHours != null)
                         {
-                            if (eh.EmployeeHoursStatusEntry1ID != 1)
+                            if (eh.EmployeeHours.EmployeeHoursStatusEntry1ID != 1)
                             {
                                 hoursType = "Worked from office";
                             }
@@ -209,7 +209,7 @@
                 @Model.EmployeeHours.Where(eh => eh.EmployeeHours.OffDayTypeID == 2).Count()
             </div>
             <div class="col-2">
-                @Model.EmployeeHours.Where(eh => eh.EmployeeHoursStatusEntry1ID == 1).Count()
+                @Model.EmployeeHours.Where(eh => eh.EmployeeHours.EmployeeHoursStatusEntry1ID == 1).Count()
             </div>
             <div class="col-2 timekeeper-font-color font-weight-bold">
                 @{ var sum = new TimeSpan(Model.EmployeeHours.Select(eh => new { TimeSpan = eh.EmployeeHours.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }
