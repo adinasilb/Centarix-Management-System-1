@@ -16,6 +16,7 @@
             <input type="hidden" asp-for="UserImageSaved" value="false" />
             <input type="hidden" id="UserImagePath" value="" />
             <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
+                <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.Errors?[0]</label>
                 <div class="row modal-sides">
                     <div class="col-2 form-group modal-line-1-header pl-0  d-table">
                         <button type="button" class="btn no-box-shadow  upload-image border-0 p-0 m-0">
@@ -114,7 +115,7 @@
                                 <div class="row">
                                     <div class="col-6  p-0">
                                         <label asp-for="NewEmployee.DOB" class="control-label only-employee"></label>
-                                        <input asp-for="NewEmployee.DOB"  class="form-control-plaintext border-bottom only-employee" value="" />
+                                        <input asp-for="NewEmployee.DOB"  class="form-control-plaintext border-bottom only-employee" />
                                         <span asp-validation-for="NewEmployee.DOB" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-6 ">
