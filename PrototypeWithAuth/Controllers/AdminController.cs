@@ -455,6 +455,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 foreach (IdentityError e in result.Errors)
                 {
+                    registerUserViewModel.Errors = new List<string>();
                     registerUserViewModel.Errors.Add("User Failed to add. Please try again. " + e.Code.ToString() + " " + e.Description.ToString());
                 }
                 //refill Model to view errors
