@@ -437,54 +437,9 @@ namespace PrototypeWithAuth.Controllers
 
                 }
 
-
-                string userId = await _userManager.GetUserIdAsync(user);
-                string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                string confirmationLink = Url.Page(
-            "/Account/ConfirmEmail",
-            pageHandler: null,
-            values: new { area = "Identity", userId = userId, code = code },
-            protocol: Request.Scheme);
-
-
-                MimeMessage message = new MimeMessage();
-
-                //instantiate the body builder
-                BodyBuilder builder = new BodyBuilder();
-
-
-
-
-
-                //add a "From" Email
-                message.From.Add(new MailboxAddress("Elixir", "elixir@centarix.com"));
-
-                // add a "To" Email
-                message.To.Add(new MailboxAddress(user.FirstName, user.Email));
-
-                //subject
-                message.Subject = "Confirm centarix sign-up Link";
-
-                //body
-                builder.TextBody = confirmationLink;
-
-                message.Body = builder.ToMessageBody();
-
-                using (SmtpClient client = new SmtpClient())
+                if (IsUser)
                 {
-
-                    client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate("elixir@centarix.com", "cdbmhjidnzoghqvt");
-                    try
-                    {
-                        client.Send(message);
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-
-                    client.Disconnect(true);
+                    SendConfimationEmail(user);
                 }
                 //}
                 //else
@@ -498,16 +453,71 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                Response.StatusCode = 500;
-                Response.WriteAsync("User Failed to add. Please try again.");
                 foreach (IdentityError e in result.Errors)
                 {
-                    Response.WriteAsync(e.ToString());
+                    registerUserViewModel.Errors.Add("User Failed to add. Please try again. " + e.Code.ToString() + " " + e.Description.ToString());
                 }
+                //refill Model to view errors
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
+                registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
+                registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
+                registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
+                registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
+                registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
+                return View("CreateUser", registerUserViewModel);
             }
             return RedirectToAction("Index");
         }
 
+        public async void SendConfimationEmail(ApplicationUser user)
+        {
+            string userId = await _userManager.GetUserIdAsync(user);
+            string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            string confirmationLink = Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { area = "Identity", userId = userId, code = code },
+                protocol: Request.Scheme);
+
+
+            MimeMessage message = new MimeMessage();
+
+            //instantiate the body builder
+            BodyBuilder builder = new BodyBuilder();
+
+            //add a "From" Email
+            message.From.Add(new MailboxAddress("Elixir", "elixir@centarix.com"));
+
+            // add a "To" Email
+            message.To.Add(new MailboxAddress(user.FirstName, user.Email));
+
+            //subject
+            message.Subject = "Confirm centarix sign-up Link";
+
+            //body
+            builder.TextBody = confirmationLink;
+
+            message.Body = builder.ToMessageBody();
+
+            using (SmtpClient client = new SmtpClient())
+            {
+
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("elixir@centarix.com", "cdbmhjidnzoghqvt");
+                try
+                {
+                    client.Send(message);
+                }
+                catch (Exception ex)
+                {
+                }
+
+                client.Disconnect(true);
+            }
+        }
 
         [HttpGet]
         [Authorize(Roles = "Users")]
@@ -637,6 +647,15 @@ namespace PrototypeWithAuth.Controllers
                         employeeEditted.LockoutEnd = new DateTime(2999, 01, 01);
                         _context.Update(employeeEditted);
                         await _context.SaveChangesAsync();
+
+                        if (!registerUserViewModel.NewEmployee.IsUser)
+                        {
+                            employeeEditted.IsUser = true;
+                            _context.Update(employeeEditted);
+                            await _context.SaveChangesAsync();
+
+                            SendConfimationEmail(employeeEditted);
+                        }
                     }
                     else
                     {
@@ -1072,11 +1091,7 @@ namespace PrototypeWithAuth.Controllers
 
         public JsonResult GetGeneratedPassword()
         {
-            string password = "";
-            while (!PasswordIsValid(password))
-            {
-                password = GeneratePassword();
-            }
+            string password = GeneratePassword();
 
             return Json(password);
         }
@@ -1126,21 +1141,25 @@ namespace PrototypeWithAuth.Controllers
             char[] password = new char[lengthOfPassword];
             int characterSetLength = characterSet.Length;
 
-            System.Random random = new System.Random();
-            for (int characterPosition = 0; characterPosition < lengthOfPassword; characterPosition++)
+            while (!PasswordIsValid(string.Join(null,password)))
             {
-                password[characterPosition] = characterSet[random.Next(characterSetLength - 1)];
-
-                bool moreThanTwoIdenticalInARow =
-                    characterPosition > MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS
-                    && password[characterPosition] == password[characterPosition - 1]
-                    && password[characterPosition - 1] == password[characterPosition - 2];
-
-                if (moreThanTwoIdenticalInARow)
+                System.Random random = new System.Random();
+                for (int characterPosition = 0; characterPosition < lengthOfPassword; characterPosition++)
                 {
-                    characterPosition--;
+                    password[characterPosition] = characterSet[random.Next(characterSetLength - 1)];
+
+                    bool moreThanTwoIdenticalInARow =
+                        characterPosition > MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS
+                        && password[characterPosition] == password[characterPosition - 1]
+                        && password[characterPosition - 1] == password[characterPosition - 2];
+
+                    if (moreThanTwoIdenticalInARow)
+                    {
+                        characterPosition--;
+                    }
                 }
             }
+
 
             return string.Join(null, password);
         }

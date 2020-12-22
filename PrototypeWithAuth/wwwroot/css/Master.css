@@ -60,6 +60,7 @@
     --graduated-table-filter: brightness(0) saturate(100%) invert(91%) sepia(29%) saturate(0%) hue-rotate(314deg) brightness(97%) contrast(106%);
     --tiny-label-font-size: 0.469375rem;
     --select-border-radius: .25rem;
+    --timekeeper-alt-color: #009688;
 }
 
 .success-color {
@@ -97,6 +98,11 @@
 .timekeeper-color {
     background-color: var(--timekeeper-color);
 }
+
+.timekeeper-alt-color {
+    background-color: var(--timekeeper-alt-color);
+}
+
 
 .timekeeper-font-color {
     color: var(--timekeeper-color);

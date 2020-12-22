@@ -11,10 +11,10 @@
 
 }
 
-<div class="modal modal-view " id="myModal" role="dialog" aria-labelledby="User" data-backdrop="false">
+<div class="modal modal-view suspend-user-modal" id="myModal" role="dialog" aria-labelledby="User" data-backdrop="false">
     <div class="modal-dialog-centered modal-lg mx-auto " role="document" style="max-height:100%; width: 50%; max-width: 100%">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="editForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
@@ -28,7 +28,7 @@
                     <span class="text">Are you sure you would like to @suspendText this user?</span>
                     <div class="modal-footer-mt ">
                         <div class="mx-auto text-center">
-                            @if (Suspend)
+                            @if (!Suspend)
                             {
                                 <input type="submit" value="Unsuspend" asp-action="SuspendUserModal" class="custom-button custom-button-font users-background-color between-button-margin " />
                             }
@@ -36,7 +36,7 @@
                             {
                                 <input type="submit" value="Suspend" asp-action="SuspendUserModal" class="custom-button custom-button-font users-background-color between-button-margin" />
                             }
-                            <input type="button" data-dismiss="modal" value="Cancel" class="custom-cancel custom-button" />
+                            <input type="button" data-dismiss="modal" value="Cancel" class="custom-cancel custom-button"  onclick="$(this).closest('.modal').modal('hide');"/>
                         </div>
                        
                     </div>

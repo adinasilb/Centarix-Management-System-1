@@ -39,7 +39,7 @@
 <script src="~/js/CreateUser.js"></script>
 
 <input class="hasErrorMessage" type="hidden" value="@ViewBag.ErrorMessage" />
-
+<input type="hidden" asp-for="NewEmployee.IsUser" />
 <div class="container-fluid edit-modal-body box-shadow" style="background: #FFF; padding: 2em; border: 2px solid #EAEAEB;">
     <div class=" row text-right mb-6">
         <div class="switch col-12 switch-margin">
@@ -230,7 +230,7 @@
         <div id="security" class="tab-pane fade @showSecurity">
             @{ var disabled = "";
                 var markreadonly = "mark-readonly";}
-            @if (!Model.ConfirmedEmail)
+            @if (!Model.ConfirmedEmail && Model.NewEmployee.IsUser)
             {<div class="row">
                     <label class="text text-danger-centarix">Must confirm email before resetting password</label>
             </div>

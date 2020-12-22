@@ -21,7 +21,7 @@
     <div class="modal-dialog-centered mx-auto  modal-lg on-form-modal" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding @form receivedModalForm">
@@ -196,7 +196,7 @@
                 <div class="modal-footer border-0 modal-footer-mt">
                     <div class="m-auto">
                         <input type="submit" asp-action="ReceivedModal" class="custom-button custom-button-font @bcColor between-button-margin" />
-                        <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button" />
+                        <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button"  onclick="$(this).closest('.modal').modal('hide');" />
                     </div>
 
                 </div>

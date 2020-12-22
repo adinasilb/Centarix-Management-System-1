@@ -3,7 +3,7 @@
 <div class="modal modal-document fader exitModal" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered modal-sm mx-auto work-from-home-modal">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius modal-padding">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="modal-padding">
