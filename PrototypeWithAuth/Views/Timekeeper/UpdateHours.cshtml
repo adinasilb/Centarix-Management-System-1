@@ -30,6 +30,10 @@
                         </div>
                         <div class="">
                             <hr />
+                            @if(Model.EmployeeHour.OffDayTypeID != null)
+                            {
+                                <span class="text">Updating Hours Will Remove Your @Model.EmployeeHour.OffDayType.Description</span>
+                            }
                         </div>
                     </div>
                 </div>
