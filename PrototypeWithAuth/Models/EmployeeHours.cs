@@ -30,7 +30,7 @@ namespace PrototypeWithAuth.Models
         public DateTime Date { get; set; }
         public int? OffDayTypeID { get; set; }
         public OffDayType OffDayType { get; set; }
-        public int? EmployeeHoursStatusID { get; set; }
+
 
         private TimeSpan? _TotalHours;
         //[DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
@@ -44,8 +44,12 @@ namespace PrototypeWithAuth.Models
             set { _TotalHours = value; }
 
         }
-             
-        public EmployeeHoursStatus EmployeeHoursStatus { get; set; }
+        public int? EmployeeHoursStatusEntry1ID { get; set; }
+        [ForeignKey("EmployeeHoursStatusEntry1ID")]
+        public EmployeeHoursStatus EmployeeHoursStatusEntry1 { get; set; }
+        public int? EmployeeHoursStatusEntry2ID { get; set; }
+        [ForeignKey("EmployeeHoursStatusEntry2ID")]
+        public EmployeeHoursStatus EmployeeHoursStatusEntry2 { get; set; }
         public int? CompanyDayOffID { get; set; }
         public CompanyDayOff CompanyDayOff { get; set; }
     }

@@ -253,9 +253,9 @@ namespace PrototypeWithAuth.Controllers
             EmployeeHours oldEmployeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
             if (oldEmployeeHours != null)
             {
-                if (oldEmployeeHours.EmployeeHoursStatusID != 1)
+                if (oldEmployeeHours.EmployeeHoursStatusEntry1ID != 1)
                 {
-                    oldEmployeeHours.EmployeeHoursStatusID = employeeHoursBeingApproved.EmployeeHoursStatusID;
+                    oldEmployeeHours.EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusID;
                 }
                 oldEmployeeHours.Entry1 = employeeHoursBeingApproved.Entry1;
                 oldEmployeeHours.Entry2 = employeeHoursBeingApproved.Entry2;
@@ -274,7 +274,7 @@ namespace PrototypeWithAuth.Controllers
                     Exit1 = employeeHoursBeingApproved.Exit1,
                     Exit2 = employeeHoursBeingApproved.Exit2,
                     TotalHours = employeeHoursBeingApproved.TotalHours,
-                    EmployeeHoursStatusID = employeeHoursBeingApproved.EmployeeHoursStatusID,
+                    EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusID,
                     EmployeeID = employeeHoursBeingApproved.EmployeeID,
                     Date = employeeHoursBeingApproved.Date
                 };

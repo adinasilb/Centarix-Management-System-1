@@ -166,6 +166,11 @@ namespace PrototypeWithAuth.Data
             .WithMany(rs => rs.Requests)
             .HasForeignKey(r => r.RequestStatusID);
 
+            modelBuilder.Entity<EmployeeHours>()
+             .HasOne<EmployeeHoursStatus>(eh => eh.EmployeeHoursStatusEntry2)
+             .WithMany(ehs => ehs.EmployeeHours)
+             .HasForeignKey(eh => eh.EmployeeHoursStatusEntry2ID);
+
             //modelBuilder.Entity<Vendor>()
             //.HasOne<ParentCategory>(v => v.ParentCategory)
             //.WithMany(pc => pc.Vendors)

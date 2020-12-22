@@ -282,7 +282,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var userid = _userManager.GetUserId(User);
             var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
-            var hours = _context.EmployeeHours.Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatus).Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType).Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month && eh.Date.Year == monthDate.Year && eh.Date.Date <= DateTime.Now.Date)
+            var hours = _context.EmployeeHours.Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatusEntry1).Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType).Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month && eh.Date.Year == monthDate.Year && eh.Date.Date <= DateTime.Now.Date)
                 .OrderByDescending(eh => eh.Date).ToList();
             return hours;
         }
@@ -387,6 +387,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public IActionResult ReportHoursFromHomeModal(ReportHoursFromHomeViewModel reportHoursFromHomeViewModel)
         {
+
             var userID = _userManager.GetUserId(User);
             var employeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == reportHoursFromHomeViewModel.EmployeeHour.Date.Date).FirstOrDefault();
             if (employeeHours != null)
@@ -408,7 +409,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> UpdateHours(DateTime chosenDate, String PageType)
+        public async Task<IActionResult> UpdateHours(DateTime chosenDate, String PageType, bool isWorkFromHome=false)
         {
             if (chosenDate == new DateTime())
             {
@@ -418,12 +419,18 @@ namespace PrototypeWithAuth.Controllers
             var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).FirstOrDefault();
             if (employeeHour == null)
             {
-                employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, EmployeeHoursStatusID = 3 };
-            }
+                employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, EmployeeHoursStatusEntry1ID = 3 };
+            }            
             else
             {
-                employeeHour.EmployeeHoursStatusID = 2;
+                if (employeeHour.EmployeeHoursStatusEntry1ID == null)
+                {
+                    employeeHour.EmployeeHoursStatusEntry1ID = isWorkFromHome?1: 2;
+                }
+
             }
+            employeeHour.EmployeeHoursStatusEntry1 = _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry1ID).FirstOrDefault();
+            employeeHour.EmployeeHoursStatusEntry2 = _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry2ID).FirstOrDefault();
             UpdateHoursViewModel updateHoursViewModel = new UpdateHoursViewModel() { EmployeeHour = employeeHour, PageType = PageType };
             return PartialView(updateHoursViewModel);
         }
@@ -455,7 +462,7 @@ namespace PrototypeWithAuth.Controllers
                 employeeHoursAwaitingApproval.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
                 employeeHoursAwaitingApproval.OffDayTypeID = null;
                 employeeHoursAwaitingApproval.Date = updateHoursViewModel.EmployeeHour.Date;
-                employeeHoursAwaitingApproval.EmployeeHoursStatusID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusID;
+                employeeHoursAwaitingApproval.EmployeeHoursStatusID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID;
             }
             else
             {

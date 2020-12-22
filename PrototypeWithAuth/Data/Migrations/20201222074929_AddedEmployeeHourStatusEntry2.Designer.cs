@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201222074929_AddedEmployeeHourStatusEntry2")]
+    partial class AddedEmployeeHourStatusEntry2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -700,9 +702,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("EmployeeHoursStatusEntry1ID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EmployeeHoursStatusEntry2ID")
-                        .HasColumnType("int");
-
                     b.Property<string>("EmployeeID")
                         .HasColumnType("nvarchar(450)");
 
@@ -729,8 +728,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("CompanyDayOffID");
 
                     b.HasIndex("EmployeeHoursStatusEntry1ID");
-
-                    b.HasIndex("EmployeeHoursStatusEntry2ID");
 
                     b.HasIndex("EmployeeID");
 
@@ -3248,13 +3245,8 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry1")
-                        .WithMany()
-                        .HasForeignKey("EmployeeHoursStatusEntry1ID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry2")
                         .WithMany("EmployeeHours")
-                        .HasForeignKey("EmployeeHoursStatusEntry2ID")
+                        .HasForeignKey("EmployeeHoursStatusEntry1ID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")

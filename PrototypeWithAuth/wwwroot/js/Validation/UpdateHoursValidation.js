@@ -1,12 +1,4 @@
 ﻿
-$.validator.addMethod("eitherHoursOrTimeAndTimeRangeMakesSenseEntry1", function (value, element) {
-	return ($("#EmployeeHour_Exit1").val() != "" && $("#EmployeeHour_Entry1").val() != "") && ($('#EmployeeHour_Exit1').val() > $('#EmployeeHour_Entry1').val()) || $("#EmployeeHour_TotalHours").val() != "";
-}, 'Either total hours or Entry1 and Entry 2 must be filled in. Entry Must Be Less Than Exit');
-$.validator.addMethod("eitherHoursOrTimeAndTimeRangeMakesSenseEntry2", function (value, element) {
-	return ((($("#EmployeeHour_Exit1").val() != "" && $("#EmployeeHour_Entry1").val() != "") && ($('#EmployeeHour_Exit2').val() > $('#EmployeeHour_Entry2').val())) || $("#EmployeeHour_TotalHours").val() != "");
-}, 'Either total hours or Entry1 and Entry 2 must be filled in. Entry Must Be Less Than Exit');
-
-
 
 $('.UpdateHoursForm, .reportHoursForm').validate({
 	rules: {
@@ -28,3 +20,13 @@ $('.UpdateHoursForm, .reportHoursForm').validate({
 
 	}
 });
+$.validator.addMethod("eitherHoursOrTime", function (value, element) {
+	return ($("#Exit1").val() != "" && $("#Entry1").val() != "") || $("#TotalHours").val() != "";
+}, 'Either total hours or Entry1 and Entry 2 must be filled in');
+$.validator.addMethod("eitherHoursOrTimeAndTimeRangeMakesSenseEntry1", function (value, element) {
+	return ($("#EmployeeHour_Exit1").val() != "" && $("#EmployeeHour_Entry1").val() != "") && ($('#EmployeeHour_Exit1').val() > $('#EmployeeHour_Entry1').val()) || $("#EmployeeHour_TotalHours").val() != "";
+}, 'Either total hours or Entry1 and Entry 2 must be filled in. Entry Must Be Less Than Exit');
+$.validator.addMethod("eitherHoursOrTimeAndTimeRangeMakesSenseEntry2", function (value, element) {
+	return ((($("#EmployeeHour_Exit1").val() != "" && $("#EmployeeHour_Entry1").val() != "") && ($('#EmployeeHour_Exit2').val() > $('#EmployeeHour_Entry2').val())) || $("#EmployeeHour_TotalHours").val() != "");
+}, 'Either total hours or Entry1 and Entry 2 must be filled in. Entry Must Be Less Than Exit');
+

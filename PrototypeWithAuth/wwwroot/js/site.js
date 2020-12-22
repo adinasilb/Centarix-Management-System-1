@@ -1729,7 +1729,7 @@ $(function () {
 		if ($(this).hasClass("ReportHours")) {
 			pageType = "ReportHours";
 		}
-		var itemurl = "ReportHoursFromHomeModal?PageType=" + pageType;
+		var itemurl = "UpdateHours?PageType=" + pageType+"&isWorkFromHome="+true;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -1854,7 +1854,7 @@ $(function () {
 
 	$.fn.GetEmployeeHourFromHome = function (date) {
 		console.log(date);
-		$.fn.CallModal('ReportHoursFromHomeModal?chosenDate=' + new Date(date).toISOString())
+		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString()+"&isWorkFromHome="+true)
 	};
 	$.fn.GetEmployeeHourFromToday = function () {
 		$.fn.CallModal('ExitModal');
