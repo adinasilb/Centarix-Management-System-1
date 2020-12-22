@@ -13,8 +13,9 @@
                 @Html.HiddenFor(r => r.EmployeeHour.EmployeeHoursStatusID)
                 @Html.HiddenFor(r => r.EmployeeHour.OffDayTypeID)
                 @Html.HiddenFor(r => r.EmployeeHour.EmployeeID)
-                @{var disabled = false;
-                    if (Model.PageType?.Equals("SummaryHours")==true)
+                @{
+                    var disabled = false;
+                    if (Model.PageType?.Equals("SummaryHours") == true)
                     {
                         disabled = true;
                     }
@@ -26,6 +27,10 @@
                         </div>
                         <div class="">
                             <hr />
+                            @if(Model.EmployeeHour.OffDayTypeID != null)
+                            {
+                                <span class="text">Updating Hours Will Remove Your @Model.EmployeeHour.OffDayType.Description</span>
+                            }
                         </div>
                     </div>
                 </div>
@@ -86,7 +91,7 @@
                 </div>
                 <div class="modal-footer  border-0  modal-footer-mt">
                     <div class="mx-auto text-center">
-                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin " asp-action="UpdateHours" asp-route-PageType="@Model.PageType"  value="Save" />
+                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin " asp-action="UpdateHours" asp-route-PageType="@Model.PageType" value="Save" />
                         <button class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>@*FAIGE: should this delete the request?*@
                     </div>
                 </div>
