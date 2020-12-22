@@ -9,9 +9,9 @@
         $.fn.CallPageUser($itemurl);
         return false;
     });
-    $("body").on("click", "#suspend-user-modal", function (e) {
+    $("body").on("click", ".suspend-user-modal-icon", function (e) {
         e.preventDefault();
-        //alert("suspend user modal click");
+        alert("suspend user modal click");
         $.fn.SuspendUserModal($(this).attr('data-userid'), null);
     });
     $.fn.SuspendUserModal = function (userid, suspend) {
