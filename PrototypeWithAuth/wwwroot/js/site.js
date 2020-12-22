@@ -1952,25 +1952,15 @@ $(function () {
 	$.fn.SaveOffDays = function (url, pageType, month) {
 		alert("in save off days, url: " + url);
 		var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
-		console.log("rangeFrom: " + rangeFrom);
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
-		console.log("rangeTo: " + rangeTo);
 		var dateRangeFromDay = rangeFrom.attr('data-date');
-		console.log("dateRangeFromDay: " + dateRangeFromDay);
 		var dateRangeFromMonth = rangeFrom.attr('data-month');
-		console.log("dateRangeFromMonth: " + dateRangeFromMonth);
 		var dateRangeFromYear = rangeFrom.attr('data-year');
-		console.log("dateRangeFromYear: " + dateRangeFromYear);
 		var dateRangeToDay = rangeTo.attr('data-date');
-		console.log("dateRangeToDay: " + dateRangeToDay);
 		var dateRangeToMonth = rangeTo.attr('data-month');
-		console.log("dateRangeToMonth: " + dateRangeToMonth);
 		var dateRangeToYear = rangeTo.attr('data-year');
-		console.log("dateRangeToYear: " + dateRangeToYear);
 		var dateFrom = new Date(dateRangeFromYear, dateRangeFromMonth, dateRangeFromDay, 0, 0, 0).toISOString();
-		console.log("dateFrom: " + dateFrom);
 		var dateTo = '';
-		console.log("dateTo: " + dateTo);
 		if (dateRangeToDay == undefined) {
 			dateTo = null;
 		}
@@ -2018,8 +2008,6 @@ $(function () {
 	});
 
 	$.fn.SaveSick = function () {
-
-		alert("in save sick function");
 		var pageType = "";
 		if ($("#saveSick").hasClass("SummaryHours")) {
 			var month = $('#months').val();
@@ -2037,8 +2025,9 @@ $(function () {
 		$.fn.SaveSick();
 	});
 
-	$("body").off('click').on("click", "#saveSickConfirmation", function (e) {
+	$(".modal").on("click", "#saveSickConfirmation", function (e) {
 		e.preventDefault();
+		alert("save sick confirmation");
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
 			var month = $('#months').val();
@@ -2100,7 +2089,29 @@ $(function () {
 	//	alert("sitejs change edits");
 	//};
 
-
+	$(".open-ehaa-modal").off("click").on("click", function () {
+		//e.preventDefault();
+		$("#loading").show();
+		$("#ehaaModal").replaceWith('');
+		//alert("in ehaa modal: " + $(this).val());
+		$.ajax({
+			async: false,
+			url: '/Timekeeper/_EmployeeHoursAwaitingApproval?ehaaID=' + $(this).val(),
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("#loading").hide();
+				var modal = $(data);
+				$('body').append(modal);
+				$("#ehaaModal").modal({
+					backdrop: false,
+					keyboard: false,
+				});
+				//shows the modal
+				$("#ehaaModal").modal('show');
+			}
+		});
+	});
 
 	$('.turn-edit-on-off').off("click").on("click", function () {
 		if ($('.modal-open-state').attr("text") == "open") {

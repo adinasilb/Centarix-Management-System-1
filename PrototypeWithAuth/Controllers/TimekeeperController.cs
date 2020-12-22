@@ -278,13 +278,38 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(summaryHoursViewModel);
         }
 
-        private List<EmployeeHours> GetHours(DateTime monthDate)
+        private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(DateTime monthDate)
         {
             var userid = _userManager.GetUserId(User);
             var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
             var hours = _context.EmployeeHours.Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatus).Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType).Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month && eh.Date.Year == monthDate.Year && eh.Date.Date <= DateTime.Now.Date)
                 .OrderByDescending(eh => eh.Date).ToList();
-            return hours;
+
+            List<EmployeeHoursAndAwaitingApprovalViewModel> hoursList = new List<EmployeeHoursAndAwaitingApprovalViewModel>();
+            foreach (var hour in hours)
+            {
+                var ehaaavm = new EmployeeHoursAndAwaitingApprovalViewModel()
+                {
+                    EmployeeHours = hour
+                };
+                if (_context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeID == hour.EmployeeID).Where(ehaa => ehaa.Date == hour.Date).Any())
+                {
+                    ehaaavm.EmployeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals
+                        .Where(ehaa => ehaa.EmployeeID == hour.EmployeeID).Where(ehaa => ehaa.Date == hour.Date).FirstOrDefault();
+                }
+                hoursList.Add(ehaaavm);
+            }
+            return hoursList;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "TimeKeeper")]
+        public async Task<IActionResult> _EmployeeHoursAwaitingApproval(int ehaaID)
+        {
+            var ehaa = _context.EmployeeHoursAwaitingApprovals
+                .Include(ehaa => ehaa.EmployeeHours)
+                .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ehaaID).FirstOrDefault();
+            return PartialView(ehaa);
         }
 
         [HttpGet]
@@ -432,48 +457,79 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> UpdateHours(UpdateHoursViewModel updateHoursViewModel)
         {
-            var awaitingApproval = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date).FirstOrDefault();
+            var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date).FirstOrDefault();
+            //var ehaa = new EmployeeHoursAwaitingApproval()
+            //{
+            //    EmployeeHoursAwaitingApprovalID = awaitingApproval.EmployeeHoursAwaitingApprovalID
+            //};
             var updateHoursDate = updateHoursViewModel.EmployeeHour.Date;
             int? employeeHoursID = null;
             if (updateHoursViewModel.EmployeeHour.EmployeeHoursID != 0)
             {
                 employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
             }
-            EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval = new EmployeeHoursAwaitingApproval();
-            if (awaitingApproval == null)
+            if (ehaa == null)
             {
-                employeeHoursAwaitingApproval.EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID;
-                employeeHoursAwaitingApproval.EmployeeHoursID = employeeHoursID;
-                if (updateHoursViewModel.EmployeeHour.Entry1 != null)
-                    employeeHoursAwaitingApproval.Entry1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry1?.Minute ?? 0, 0);
-                if (updateHoursViewModel.EmployeeHour.Entry2 != null)
-                    employeeHoursAwaitingApproval.Entry2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry2?.Minute ?? 0, 0);
-                if (updateHoursViewModel.EmployeeHour.Exit1 != null)
-                    employeeHoursAwaitingApproval.Exit1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit1?.Minute ?? 0, 0);
-                if (updateHoursViewModel.EmployeeHour.Exit2 != null)
-                    employeeHoursAwaitingApproval.Exit2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit2?.Minute ?? 0, 0);
-                employeeHoursAwaitingApproval.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
-                employeeHoursAwaitingApproval.OffDayTypeID = null;
-                employeeHoursAwaitingApproval.Date = updateHoursViewModel.EmployeeHour.Date;
-                employeeHoursAwaitingApproval.EmployeeHoursStatusID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusID;
+                ehaa = new EmployeeHoursAwaitingApproval();
+            }
+            //if (awaitingApproval == null)
+            //{
+            ehaa.EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID;
+            ehaa.EmployeeHoursID = employeeHoursID;
+            if (updateHoursViewModel.EmployeeHour.Entry1 != null)
+            {
+                ehaa.Entry1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry1?.Minute ?? 0, 0);
             }
             else
             {
-                if (updateHoursViewModel.EmployeeHour.Entry1 != null)
-                    employeeHoursAwaitingApproval.Entry1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry1?.Minute ?? 0, 0);
-                if (updateHoursViewModel.EmployeeHour.Entry2 != null)
-                    employeeHoursAwaitingApproval.Entry2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry2?.Minute ?? 0, 0);
-                if (updateHoursViewModel.EmployeeHour.Exit1 != null)
-                    employeeHoursAwaitingApproval.Exit1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit1?.Minute ?? 0, 0);
-                if (updateHoursViewModel.EmployeeHour.Exit2 != null)
-                    employeeHoursAwaitingApproval.Exit2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit2?.Minute ?? 0, 0);
-                awaitingApproval.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
-                awaitingApproval.OffDayTypeID = null;
-                employeeHoursAwaitingApproval = awaitingApproval;
+                ehaa.Entry1 = null;
             }
-            DateTime Month = employeeHoursAwaitingApproval.Date;
+            if (updateHoursViewModel.EmployeeHour.Entry2 != null)
+            {
+                ehaa.Entry2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry2?.Minute ?? 0, 0);
+            }
+            else
+            {
+                ehaa.Entry2 = null;
+            }
+            if (updateHoursViewModel.EmployeeHour.Exit1 != null)
+            {
+                ehaa.Exit1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit1?.Minute ?? 0, 0);
+            }
+            else
+            {
+                ehaa.Exit1 = null;
+            }
+            if (updateHoursViewModel.EmployeeHour.Exit2 != null)
+            {
+                ehaa.Exit2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit2?.Minute ?? 0, 0);
+            }
+            else
+            {
+                ehaa.Exit2 = null;
+            }
+            ehaa.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
+            ehaa.OffDayTypeID = null;
+            ehaa.Date = updateHoursViewModel.EmployeeHour.Date;
+            ehaa.EmployeeHoursStatusID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusID;
+            //}
+            //else
+            //{
+            //    if (updateHoursViewModel.EmployeeHour.Entry1 != null)
+            //        employeeHoursAwaitingApproval.Entry1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry1?.Minute ?? 0, 0);
+            //    if (updateHoursViewModel.EmployeeHour.Entry2 != null)
+            //        employeeHoursAwaitingApproval.Entry2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry2?.Minute ?? 0, 0);
+            //    if (updateHoursViewModel.EmployeeHour.Exit1 != null)
+            //        employeeHoursAwaitingApproval.Exit1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit1?.Minute ?? 0, 0);
+            //    if (updateHoursViewModel.EmployeeHour.Exit2 != null)
+            //        employeeHoursAwaitingApproval.Exit2 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Exit2?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Exit2?.Minute ?? 0, 0);
+            //    awaitingApproval.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
+            //    awaitingApproval.OffDayTypeID = null;
+            //    employeeHoursAwaitingApproval = awaitingApproval;
+            //}
+            DateTime Month = ehaa.Date;
 
-            _context.Update(employeeHoursAwaitingApproval);
+            _context.Update(ehaa);
             _context.SaveChanges();
 
 
@@ -517,25 +573,25 @@ namespace PrototypeWithAuth.Controllers
                 _context.SaveChanges();
             }
 
-        else if (todaysEntry.Exit2 == null)
-        {
-            todaysEntry.Exit2 = DateTime.Now;
-            _context.EmployeeHours.Update(todaysEntry);
-            _context.SaveChanges();
+            else if (todaysEntry.Exit2 == null)
+            {
+                todaysEntry.Exit2 = DateTime.Now;
+                _context.EmployeeHours.Update(todaysEntry);
+                _context.SaveChanges();
+            }
+            return PartialView(todaysEntry);
         }
-        return PartialView(todaysEntry);
-    }
-    [HttpPost]
-    [Authorize(Roles = "TimeKeeper")]
-    public IActionResult SaveVacation(DateTime dateFrom, DateTime dateTo, String PageType )
-    {
-        SaveOffDay(dateFrom, dateTo, 2);
+        [HttpPost]
+        [Authorize(Roles = "TimeKeeper")]
+        public IActionResult SaveVacation(DateTime dateFrom, DateTime dateTo, String PageType)
+        {
+            SaveOffDay(dateFrom, dateTo, 2);
             if (PageType.Equals("ReportDaysOff"))
             {
                 PageType = "_" + PageType;
             }
             return RedirectToAction(PageType);
-    }
+        }
 
         [HttpPost]
         [Authorize(Roles = "TimeKeeper")]

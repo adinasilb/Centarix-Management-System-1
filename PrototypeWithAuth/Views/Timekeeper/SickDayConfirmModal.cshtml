@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.SickDayViewModel
+<script src="~/js/site.js"></script>
 <div class="modal modal-document fader on-form-modal timekeeper-form " id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered mx-auto modal-sm  work-from-home-modal">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
@@ -16,13 +17,13 @@
                         </div>
                         <div class="text">@Model.SelectedDate.ToLongDateString()</div>
                     </div>
-               
+
                 </div>
-          
-                <input type="hidden" id="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")"/>
+
+                <input type="hidden" id="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
                 <div class="modal-footer mt-4 border-0 ">
                     <div class="text-center m-auto">
-                        <input type="button" class="custom-button custom-button-font timekeeper-color between-button-margin @Model.PageType" id="saveSickConfirmation" value="Save" />
+                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin @Model.PageType" id="saveSickConfirmation" value="Save" />
                         <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>

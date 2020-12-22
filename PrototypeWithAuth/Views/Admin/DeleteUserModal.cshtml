@@ -14,7 +14,7 @@
                     <span class="mb-5">Are you sure you would like to delete this user?</span>
                     <br />
                     <input type="submit" value="Delete" asp-action="DeleteUserModal" class="inv-user-button float-left mt-4" />
-                    <input data-dismiss="modal" value="Cancel" class="cancel-button float-right mt-4" />
+                    <input data-dismiss="modal" onclick="$('#myModal').modal('hide');" value="Cancel" class="cancel-button float-right mt-4" />
                 </form>
             </div>
         </div>
