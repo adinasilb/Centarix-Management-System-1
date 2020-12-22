@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
 
+<script src="~/js/UserIndexPartial.js"></script>
 <table class="table table-headerspaced">
     <tbody>
         <tr class="text-center" style="border-color:transparent; border-bottom: 1px solid lightgrey;">
@@ -63,14 +64,14 @@
                             }
                             else if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now && user.IsSuspended)
                             {
-                                <a href="" onclick="$.fn.SuspendUserModal('@userid')" class="prevent-js-reload">
+                                <a href="" data-userid=@userid class="prevent-js-reload" id="suspend-user-modal">
                                     Unsuspend
                                 </a>
                             }
                             else
                             {
-                                <a href="" onclick="$.fn.SuspendUserModal('@userid')" data-toggle="tooltip" data-placement="top"
-                                   title="Suspend" class="prevent-js-reload">
+                                <a href="" data-userid=@userid id="suspend-user-modal" data-toggle="tooltip" data-placement="top"
+                                   title="Suspend" @*class="prevent-js-reload"*@>
                                     <i class="icon-block-24px text-danger-centarix"></i>
                                 </a>
                             }
@@ -83,4 +84,3 @@
         }
     </tbody>
 </table>
-<script src="~/js/UserIndexPartial.js"></script>

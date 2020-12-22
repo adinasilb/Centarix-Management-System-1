@@ -16,7 +16,7 @@
     TempData["Email4"] = TempData["Email4"]?.ToString() ?? "";
     TempData["Email5"] = TempData["Email5"]?.ToString() ?? "";
 }
-
+    @*<script src="~/js/UserIndexPartial.js"></script>*@
     <input type="hidden" id="PageType" value="@TempData[AppUtility.TempDataTypes.PageType.ToString()]"/>
     <div id="usersTable">
         @{ await Html.RenderPartialAsync("_Index", Model);}

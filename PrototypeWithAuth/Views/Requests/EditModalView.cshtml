@@ -12,7 +12,7 @@
            tabClass = "lab-man-nav-link";
        }
    }
-    <div class="modal modal-view right fader on-form-modal @form " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+    <div class="modal modal-view right fader on-form-modal @form " aria-labelledby="Request"  id="myModal" data-backdrop="false">
 
         <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
             @*style needed here to override bootstraps modal width limitations*@
@@ -48,7 +48,7 @@
                             <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         }
                         <div class="back-button">
-                            <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent">
+                            <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent" onclick="$(this).closest('.modal').modal('hide');">
                                 <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                             </button>
                         </div>

@@ -2,7 +2,7 @@
 <div class="modal modal-document fader on-form-modal timekeeper-form " id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered mx-auto modal-sm  work-from-home-modal">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <div style="height: 100%; overflow: auto;" class="modal-padding sickModal">
@@ -23,7 +23,7 @@
                 <div class="modal-footer mt-4 border-0 ">
                     <div class="text-center m-auto">
                         <input type="button" class="custom-button custom-button-font timekeeper-color between-button-margin @Model.PageType" id="saveVacationConfirmation" value="Save" />
-                        <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel</button>
+                        <button class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                     </div>
                 </div>
             </div>
