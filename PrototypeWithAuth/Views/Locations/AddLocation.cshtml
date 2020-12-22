@@ -19,7 +19,7 @@
                 <img src="~/images/css/Loading/centarix_loading3.gif" />
             </div>
 
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <!--HERE!-->
@@ -84,7 +84,7 @@
                                 {
                                     <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
                                 }*@
-                            <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button " />
+                            <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button "  onclick="$(this).closest('.modal').modal('hide');"/>
                         </div>
                         <br />
                     </div>

@@ -458,7 +458,7 @@
                                     <input type="submit" name="OrderType" value="Mark As Ordered" asp-action="CreateModalView" class="custom-button oper-button operations custom-button-font create-modal-submit text shortened-padding" />
 
                                     <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="custom-button custom-button-font operations oper-button text shortened-padding" />
-                                    <button type="button" class="custom-cancel custom-button float-right text shortened-padding" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="custom-cancel custom-button float-right text shortened-padding" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                                     @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
                                 </div>
                             </div>

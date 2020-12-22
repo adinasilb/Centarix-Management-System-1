@@ -8,7 +8,7 @@
 <div class="modal modal-view fader on-form-modal accounting-form" id="myModal" data-backdrop="false">
     <div class="add-invoice-modal modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding addInvoiceForm">
@@ -116,7 +116,7 @@
                                 <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" id="SaveInvoiceModal" value="Save" />
                             </div>
                             <div class="col-2">
-                                <button data-dismiss="modal" class="custom-button custom-cancel">Cancel</button>
+                                <button data-dismiss="modal" class="custom-button custom-cancel" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                             </div>
                         </div>
                     </div>
