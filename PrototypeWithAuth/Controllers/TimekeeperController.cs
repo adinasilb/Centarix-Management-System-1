@@ -74,10 +74,13 @@ namespace PrototypeWithAuth.Controllers
 
 
             var userid = _userManager.GetUserId(User);
-            var todaysEntry = _context.EmployeeHours.Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
-            if (todaysEntry != null)
+            var todaysEntry = _context.EmployeeHours
+                .Include(eh => eh.OffDayType)
+                .Where(eh => eh.Date.Date == DateTime.Today.Date && eh.EmployeeID == userid).FirstOrDefault();
+            if (todaysEntry != null && todaysEntry.OffDayTypeID != null)
             {
                 todaysEntry.OffDayTypeID = null;
+                entryExitViewModel.OffDayRemoved = todaysEntry.OffDayType.Description;
             }
 
             if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry1)
