@@ -45,20 +45,19 @@ namespace PrototypeWithAuth.Controllers
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-                TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
             }
             else
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
-                if (PageType == AppUtility.RequestPageTypeEnum.Request || PageType.ToString() == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
+                if (PageType == AppUtility.PageTypeEnum.RequestRequest || PageType.ToString() == AppUtility.PageTypeEnum.OperationsRequest.ToString())
                 {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations.ToString();
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsRequest.ToString();
                 }
-                else if (PageType == AppUtility.RequestPageTypeEnum.Inventory || PageType.ToString() == AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString())
+                else if (PageType == AppUtility.PageTypeEnum.RequestInventory || PageType.ToString() == AppUtility.PageTypeEnum.OperationsInventory.ToString())
                 {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString();
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory.ToString();
                 }
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Vendors;
             }
             TempData["CategoryType"] = categoryType;
             return View(await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync());
