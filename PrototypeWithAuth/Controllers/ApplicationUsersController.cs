@@ -38,7 +38,7 @@ namespace PrototypeWithAuth.Controllers
             if (categoryType == 1)
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-                TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Owner;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OrdersAndInventorySidebarEnum.Owner;
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             }
             if (categoryType == 2)

@@ -324,7 +324,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.AddItem;
-            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.AddItem;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OrdersAndInventorySidebarEnum.AddItem;
             if (AppUtility.IsAjaxRequest(this.Request))
             {
                 return PartialView(requestItemViewModel);
