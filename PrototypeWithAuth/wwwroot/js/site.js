@@ -2114,13 +2114,13 @@ $(function () {
 	});
 
 	$('.turn-edit-on-off').off("click").on("click", function () {
-		if ($('.modal-open-state').attr("text") == "open") {
-			alert("turn edit on off");
-			$(".modal-open-state").attr("text", "close");
-			$(".confirm-edit-modal").remove();
-			return false;
-		}
-		else {
+		//if ($('.modal-open-state').attr("text") == "open") {
+		//	alert("turn edit on off");
+		//	$(".modal-open-state").attr("text", "close");
+		//	$(".confirm-edit-modal").remove();
+		//	return false;
+		//}
+		//else {
 			var type = $(this).attr('name');
 			console.log(type);
 			var url = '';
@@ -2223,7 +2223,7 @@ $(function () {
 				}
 
 			}
-		}
+		//}
 	});
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
