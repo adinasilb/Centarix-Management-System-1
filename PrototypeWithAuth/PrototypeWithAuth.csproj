@@ -9,21 +9,25 @@
 
   <ItemGroup>
     <Compile Remove="Models\LocationModels\**" />
+    <Compile Remove="wwwroot\files\287\**" />
     <Compile Remove="wwwroot\files\65\**" />
     <Compile Remove="wwwroot\files\66\**" />
     <Compile Remove="wwwroot\files\68\**" />
     <Compile Remove="wwwroot\images\NewFolder\**" />
     <Content Remove="Models\LocationModels\**" />
+    <Content Remove="wwwroot\files\287\**" />
     <Content Remove="wwwroot\files\65\**" />
     <Content Remove="wwwroot\files\66\**" />
     <Content Remove="wwwroot\files\68\**" />
     <Content Remove="wwwroot\images\NewFolder\**" />
     <EmbeddedResource Remove="Models\LocationModels\**" />
+    <EmbeddedResource Remove="wwwroot\files\287\**" />
     <EmbeddedResource Remove="wwwroot\files\65\**" />
     <EmbeddedResource Remove="wwwroot\files\66\**" />
     <EmbeddedResource Remove="wwwroot\files\68\**" />
     <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
     <None Remove="Models\LocationModels\**" />
+    <None Remove="wwwroot\files\287\**" />
     <None Remove="wwwroot\files\65\**" />
     <None Remove="wwwroot\files\66\**" />
     <None Remove="wwwroot\files\68\**" />
@@ -207,7 +211,7 @@
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\files\287\" />
+    <Folder Include="wwwroot\files\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
   </ItemGroup>
