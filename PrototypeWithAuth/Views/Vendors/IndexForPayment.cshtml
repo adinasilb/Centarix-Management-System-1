@@ -3,7 +3,7 @@
     @{
         ViewData["Title"] = "IndexForPayment";
 
-        if (TempData["SectionType"].Equals(AppUtility.MenuItems.LabManagement))
+        if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.LabManagement))
         {
             Layout = "~/Views/Shared/RequestNavView.cshtml";
         }
@@ -12,7 +12,7 @@
             Layout = "~/Views/Shared/RequestNavView.cshtml";
         }
     }
-<input type="hidden" value="@TempData["SectionType"]" id="SectionType"/>
+<input type="hidden" value="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]" id="SectionType"/>
     <div class="indexTable">
         @{ await Html.RenderPartialAsync("_IndexForPayment", Model);}
     </div>

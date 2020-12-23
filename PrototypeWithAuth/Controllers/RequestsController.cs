@@ -73,15 +73,10 @@ namespace PrototypeWithAuth.Controllers
         // GET: Requests
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         //ALSO when changing defaults -> change the defaults on the index page for paged list 
-
-
         public async Task<IActionResult> Index(int page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
-            AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
-            RequestsSearchViewModel? requestsSearchViewModel = null)
+            AppUtility.IndexTablePageTypeEnum PageType = AppUtility.IndexTablePageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
-            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = p == AppUtility.PriceSortEnum.Total ? true : false }));
-
+            
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
 
             //instantiate your list of requests to pass into the index
@@ -105,7 +100,7 @@ namespace PrototypeWithAuth.Controllers
             TempData["AmountReceived"] = receivedCount;
             TempData["AmountApproved"] = approvedCount;
 
-
+            //todo: move to view model or the like
             TempData["Email1"] = TempData["Email1"];
             TempData["Email2"] = TempData["Email2"];
             TempData["Email3"] = TempData["Email3"];
@@ -126,14 +121,22 @@ namespace PrototypeWithAuth.Controllers
             }
 
 
+       
+            var viewmodel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID, PageType, SectionType);
+
+            //this is for the indextable price filters
+            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = p == AppUtility.PriceSortEnum.Total ? true : false }));
+            viewmodel.PriceSortEnums = priceSorts;
+            viewmodel.currency = AppUtility.CurrencyEnum.NIS;
+            viewmodel.MenuType = SectionType;
+
+            //add in to the view bag whatever erros there are
             if (ViewBag.ErrorMessage != null)
             {
                 ViewBag.ErrorMessage = ViewBag.ErrorMessage;
             }
-            var viewmodel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID, PageType, SectionType, requestsSearchViewModel);
-            viewmodel.PriceSortEnums = priceSorts;
-            viewmodel.currency = AppUtility.CurrencyEnum.NIS;
-            viewmodel.MenuType = SectionType;
+
             return View(viewmodel);
         }
 
@@ -150,8 +153,7 @@ namespace PrototypeWithAuth.Controllers
 
         [Authorize(Roles = "Requests")]
         private async Task<RequestIndexViewModel> GetIndexViewModel(int page = 1, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
-            AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
-            RequestsSearchViewModel? requestsSearchViewModel = null)
+            AppUtility.IndexTablePageTypeEnum PageType = AppUtility.IndexTablePageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             IQueryable<Request> RPI = _context.Requests;
@@ -183,7 +185,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
             }
-            else if (PageType == AppUtility.RequestPageTypeEnum.Request)
+            else if (PageType == AppUtility.IndexTablePageTypeEnum.Request)
             {
                 /*
                  * In order to combine all the requests each one needs to be in a separate list
@@ -233,12 +235,12 @@ namespace PrototypeWithAuth.Controllers
             }
             //if it is an inventory page --> get all the requests with received and is inventory request status
 
-            else if (PageType == AppUtility.RequestPageTypeEnum.Inventory)
+            else if (PageType == AppUtility.IndexTablePageTypeEnum.Inventory)
             {
                 //partial and clarify?
                 RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3);
             }
-            else if (PageType == AppUtility.RequestPageTypeEnum.Summary)
+            else if (PageType == AppUtility.IndexTablePageTypeEnum.Summary)
             {
                 RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product.ProductSubcategory)
                      .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
@@ -249,28 +251,28 @@ namespace PrototypeWithAuth.Controllers
             }
             AppUtility.OrdersAndInventorySidebarEnum SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
             //now that the lists are created sort by vendor or subcategory
-            if (vendorID > 0 && requestsSearchViewModel != null)
+            if (vendorID > 0 )
             {
                 SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
                 RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.VendorID == vendorID);
             }
-            else if (subcategoryID > 0 && requestsSearchViewModel != null)
+            else if (subcategoryID > 0 )
             {
                 SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Type;
                 RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
             }
-            else if (applicationUserID != null && requestsSearchViewModel != null)
+            else if (applicationUserID != null )
             {
                 SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Owner;
                 RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.ApplicationUserCreatorID == applicationUserID);
             }
-            else if (parentLocationInstanceID > 0 && requestsSearchViewModel != null)
+            else if (parentLocationInstanceID > 0 )
             {
                 //  SidebarTitle = AppUtility.OrdersAndInventorySidebarEnum.Vendor;
                 LocationInstance rliList = _context.LocationInstances
@@ -326,14 +328,14 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTable(int page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
-            AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
+            AppUtility.IndexTablePageTypeEnum PageType = AppUtility.IndexTablePageTypeEnum.Request, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             RequestsSearchViewModel? requestsSearchViewModel = null, List<String> selectedPriceSort = null, AppUtility.CurrencyEnum selectedCurrency = AppUtility.CurrencyEnum.NIS,
             string ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null)
         {
 
             RequestIndexViewModel viewModel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID,
-           PageType, SectionType,
-           requestsSearchViewModel);
+           PageType, SectionType
+           );
             viewModel.currency = selectedCurrency;
             viewModel.PriceSortEnumsList = selectedPriceSort;
             viewModel.MenuType = SectionType;
@@ -2428,7 +2430,6 @@ namespace PrototypeWithAuth.Controllers
             int categoryID = 0;
             if (SectionType == AppUtility.MenuItems.Requests)
             {
-                TempData["SectionType"] = SectionType;
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Search;
                 categoryID = 2;
@@ -2601,7 +2602,6 @@ namespace PrototypeWithAuth.Controllers
             TempData["Search"] = "True";
             if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Requests)
             {
-                TempData["SectionType"] = requestsSearchViewModel.SectionType;
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OrdersAndInventorySidebarEnum.LastItem;
@@ -3523,25 +3523,25 @@ namespace PrototypeWithAuth.Controllers
 
             switch (accountingPaymentsEnum)
             {
-                case AppUtility.AccountingPaymentsEnum.MonthlyPayment:
+                case AppUtility.SidebarEnum.MonthlyPayment:
                     requestsList = requestsList
                         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         .Where(r => r.PaymentStatusID == 1);
                     break;
-                case AppUtility.AccountingPaymentsEnum.PayNow:
+                case AppUtility.SidebarEnum.PayNow:
                     requestsList = payNowList;
                     break;
-                case AppUtility.AccountingPaymentsEnum.PayLater:
+                case AppUtility.SidebarEnum.PayLater:
                     requestsList = requestsList
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .Where(r => r.PaymentStatusID == 4);
                     break;
-                case AppUtility.AccountingPaymentsEnum.Installments:
+                case AppUtility.SidebarEnum.Installments:
                     requestsList = requestsList
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .Where(r => r.PaymentStatusID == 5);
                     break;
-                case AppUtility.AccountingPaymentsEnum.StandingOrders:
+                case AppUtility.SidebarEnum.StandingOrders:
                     requestsList = requestsList
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2);
                     break;

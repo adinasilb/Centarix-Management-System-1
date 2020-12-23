@@ -5,7 +5,7 @@
     string hoverClass = "";
     ViewData["Title"] = "IndexForPayment";
 
-    if (TempData["SectionType"].Equals(AppUtility.MenuItems.LabManagement))
+    if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.LabManagement))
     {
         hoverClass = "lab-man-link-clr";
     }
@@ -51,7 +51,7 @@
                     @Html.DisplayFor(modelItem => item.VendorID)
                 </td>
                 <td>
-                    <button val="@item.VendorID" class="@hoverClass  btn-link no-box-shadow link-ho load-vendor-edit border-0 text-capitalize" sectionType="@TempData["SectionType"]">@item.VendorEnName.ToLower()</button>
+                    <button val="@item.VendorID" class="@hoverClass  btn-link no-box-shadow link-ho load-vendor-edit border-0 text-capitalize" sectionType="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]">@item.VendorEnName.ToLower()</button>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.VendorHeName)
