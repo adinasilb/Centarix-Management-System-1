@@ -10,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public EntryExitEnum EntryExitEnum { get; set; }
         public DateTime? Entry { get; set; }
+        public string OffDayRemoved { get; set; }
     }
 }

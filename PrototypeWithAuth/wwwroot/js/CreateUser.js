@@ -53,13 +53,12 @@ $(function () {
 		console.log("minutes: " + minutes);
 		var minutesFloat = parseFloat(minutes) / 60;
 		console.log("minutesFloat: " + minutesFloat);
-		var hoursPercentage = hours + minutesFloat;
+		var hoursPercentage = parseFloat(hours + minutesFloat);
 		console.log("hoursPercentage: " + hoursPercentage);
 
 		SetHiddenHoursPerDay(hoursPercentage);
 
-		var percentageWorked = 100 * (hoursPercentage / 8.4).toFixed(4);
-		console.log("percentage worked: " + percentageWorked);
+		var percentageWorked = parseFloat(100 * (hoursPercentage / 8.4)).toFixed(2);
 		$("#NewEmployeeWorkScope").val(percentageWorked);
 	});
 

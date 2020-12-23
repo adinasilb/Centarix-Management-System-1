@@ -30,20 +30,17 @@
                         </div>
                         <div class="">
                             <hr />
-                            @if(Model.EmployeeHour.OffDayTypeID != null)
+                            @if (Model.EmployeeHour.OffDayTypeID != null)
                             {
-                                <span class="text">Updating Hours Will Remove Your @Model.EmployeeHour.OffDayType.Description</span>
+                                <div class="row text-danger-centarix text-center">
+                                    <div class="col-md-10 offset-1 pr-4">Updating hours will remove @Model.EmployeeHour.OffDayType.Description</div>
+                                </div>
                             }
                         </div>
                     </div>
                 </div>
                 <div class="modal-body p-0 border-0 rounded mx-4">
-                    @if (Model.EmployeeHour.OffDayTypeID != null)
-                    {
-                    <div class="row text-danger-centarix text-center">
-                        <div class="col-md-6 offset-3 pr-4">Updating hours will remove @Model.EmployeeHour.OffDayType.Description</div>
-                        </div>
-                        }
+                    
 
                         <div class="row">
                             <div class="col-md-6 pr-4">
