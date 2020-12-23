@@ -19,5 +19,6 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Invoice Date")]
         public DateTime InvoiceDate { get; set; }
         public List<Request> Requests { get; set; }
+        public string Test { get; set; }
     }
 }
