@@ -59,7 +59,6 @@ $(function () {
 		SetHiddenHoursPerDay(hoursPercentage);
 
 		var percentageWorked = 100 * (hoursPercentage / 8.4).toFixed(4);
-		console.log("percentage worked: " + percentageWorked);
 		$("#NewEmployeeWorkScope").val(percentageWorked);
 	});
 
