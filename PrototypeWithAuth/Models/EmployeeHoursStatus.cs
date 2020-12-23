@@ -10,6 +10,7 @@ namespace PrototypeWithAuth.Models
         public int EmployeeHoursStatusID { get; set; }
         public string Description { get; set; }
         public IEnumerable<EmployeeHours> EmployeeHours {get; set;}
+        public IEnumerable<EmployeeHoursAwaitingApproval> EmployeeHoursAwaitingApprovals { get; set; }
 
     }
 }

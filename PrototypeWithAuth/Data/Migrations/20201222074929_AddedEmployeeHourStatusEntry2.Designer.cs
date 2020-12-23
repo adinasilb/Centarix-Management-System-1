@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201222074929_AddedEmployeeHourStatusEntry2")]
+    partial class AddedEmployeeHourStatusEntry2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -700,9 +702,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("EmployeeHoursStatusEntry1ID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EmployeeHoursStatusEntry2ID")
-                        .HasColumnType("int");
-
                     b.Property<string>("EmployeeID")
                         .HasColumnType("nvarchar(450)");
 
@@ -730,8 +729,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("EmployeeHoursStatusEntry1ID");
 
-                    b.HasIndex("EmployeeHoursStatusEntry2ID");
-
                     b.HasIndex("EmployeeID");
 
                     b.HasIndex("OffDayTypeID");
@@ -752,10 +749,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("EmployeeHoursID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EmployeeHoursStatusEntry1ID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EmployeeHoursStatusEntry2ID")
+                    b.Property<int?>("EmployeeHoursStatusID")
                         .HasColumnType("int");
 
                     b.Property<string>("EmployeeID")
@@ -783,9 +777,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("EmployeeHoursID");
 
-                    b.HasIndex("EmployeeHoursStatusEntry1ID");
-
-                    b.HasIndex("EmployeeHoursStatusEntry2ID");
+                    b.HasIndex("EmployeeHoursStatusID");
 
                     b.HasIndex("EmployeeID");
 
@@ -3253,13 +3245,8 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry1")
-                        .WithMany()
-                        .HasForeignKey("EmployeeHoursStatusEntry1ID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry2")
                         .WithMany("EmployeeHours")
-                        .HasForeignKey("EmployeeHoursStatusEntry2ID")
+                        .HasForeignKey("EmployeeHoursStatusEntry1ID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
@@ -3280,14 +3267,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("EmployeeHoursID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry1")
+                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatus")
                         .WithMany()
-                        .HasForeignKey("EmployeeHoursStatusEntry1ID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry2")
-                        .WithMany("EmployeeHoursAwaitingApprovals")
-                        .HasForeignKey("EmployeeHoursStatusEntry2ID")
+                        .HasForeignKey("EmployeeHoursStatusID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")

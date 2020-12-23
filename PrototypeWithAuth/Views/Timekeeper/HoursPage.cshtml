@@ -7,7 +7,7 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 @{ var years = Enumerable.Range(2010, DateTime.Today.Year - 2010 + 1);}
 <div class="row mb-5">
-    <div class="col-9">
+    <div class="col-10">
 
         <div class="row">
             <div class="col-6 heading-1 p-0"><label class="m-0 p-0">@System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(Model.CurrentMonth.Month) @Model.SelectedYear Summary</label></div>
@@ -42,41 +42,42 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-9">
+    <div class="col-10">
         <div class="row mt-6 p-3 text-center">
-            <div class="coll pl-5 text-left" style="width:20%;">
+            <div class="col " style="width:15%;">
                 Day
             </div>
-            <div class="col text-left" style="width:20%;">
+            <div class="col " style="width:16%;">
                 Date
             </div>
-            <div class="col" style="width:20%;">
+            <div class="col" style="width:35%;">
 
             </div>
-            <div class="col" style="width:10%;">
+            <div class="col" style="width:9%;">
                 Entry Time
             </div>
-            <div class="col" style="width:10%;">
+            <div class="col" style="width:9%;">
                 Exit Time
             </div>
-            <div class="col text-left" style="width:10%;">
+            <div class="col " style="width:9%;">
                 Total
             </div>
-            <div class="col" style="width:10%;">
+            <div class="col" style="width:9%;">
                 Hours Awaiting Approval
             </div>
         </div>
         @foreach (var eh in Model.EmployeeHours)
         {
             <div class="row border p-3 text-center">
-                <div class="col pl-5 text-left" style="width:20%;">
+                <div class="col " style="width:15%;">
                     @eh.EmployeeHours.Date.DayOfWeek
                 </div>
-                <div class="col " style="width:20%;">
+                <div class="col " style="width:16%;">
                     @eh.EmployeeHours.Date.ToShortDateString()
                 </div>
-                <div class="col " style="width:20%;">
-                    @{ var hoursType = "";}
+                <div class="col " style="width:35%;">
+                    @{ var hoursType = "";
+                        var hoursType2 = "";}
                     @if (eh.EmployeeHours.CompanyDayOffID != null)
                     {
                         hoursType = eh.EmployeeHours.CompanyDayOff.CompanyDayOffType.Name;
@@ -87,13 +88,24 @@
                         hoursType = eh.EmployeeHours.OffDayType?.Description;
                         @if (eh.EmployeeHours.Entry1 != null || eh.EmployeeHours.TotalHours != null)
                         {
-                            if (eh.EmployeeHours.EmployeeHoursStatusID != 1)
+                            if (eh.EmployeeHours.EmployeeHoursStatusEntry1ID != 1)
                             {
                                 hoursType = "Worked from office";
                             }
                             else
                             {
                                 hoursType = "Worked from home";
+                            }
+                            if (eh.EmployeeHours.EmployeeHoursStatusEntry2ID != null)
+                            {
+                                if (eh.EmployeeHours.EmployeeHoursStatusEntry2ID != 1)
+                                {
+                                    hoursType2 = "Worked from office";
+                                }
+                                else
+                                {
+                                    hoursType2 = "Worked from home";
+                                }
                             }
                         }
                         @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null)
@@ -110,8 +122,9 @@
 
 
                     @hoursType
+                    @hoursType2
                 </div>
-                <div class="col " style="width:10%;">
+                <div class="col " style="width:9%;">
 
                     @eh.EmployeeHours.Entry1?.ToShortTimeString()
                     @{ var entry = "";}
@@ -128,7 +141,7 @@
                     @eh.EmployeeHours.Entry2?.ToShortTimeString()
 
                 </div>
-                <div class="col p-0" style="width:10%;">
+                <div class="col " style="width:9%;">
                     @{ var exit = "";}
                     @eh.EmployeeHours.Exit1?.ToShortTimeString()
                     @if (eh.EmployeeHours.Entry2 != null && eh.EmployeeHours.Exit2 == null)
@@ -158,12 +171,12 @@
 
                 </div>
 
-                <div class="col timekeeper-font-color font-weight-bold" style="width:10%;">
+                <div class="col timekeeper-font-color font-weight-bold" style="width:9%;">
                     @{var hours = eh.EmployeeHours.TotalHours == TimeSpan.Zero || eh.EmployeeHours.TotalHours == null ? "n/a" : eh.EmployeeHours.TotalHours?.ToString(@"h\:mm"); }
                     @hours
                 </div>
 
-                <div class="col" style="width:10%;">
+                <div class="col" style="width:9%;">
                     @if (eh.EmployeeHoursAwaitingApproval != null)
                     {
                         <button type="button" class="custom-button-table-font table-button timekeeper-alt-color  open-ehaa-modal" value="@eh.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID.ToString()">
@@ -209,7 +222,7 @@
                 @Model.EmployeeHours.Where(eh => eh.EmployeeHours.OffDayTypeID == 2).Count()
             </div>
             <div class="col-2">
-                @Model.EmployeeHours.Where(eh => eh.EmployeeHours.EmployeeHoursStatusID == 1).Count()
+                @Model.EmployeeHours.Where(eh => eh.EmployeeHours.EmployeeHoursStatusEntry1ID == 1).Count()
             </div>
             <div class="col-2 timekeeper-font-color font-weight-bold">
                 @{ var sum = new TimeSpan(Model.EmployeeHours.Select(eh => new { TimeSpan = eh.EmployeeHours.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }

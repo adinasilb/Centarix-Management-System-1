@@ -1729,7 +1729,7 @@ $(function () {
 		if ($(this).hasClass("ReportHours")) {
 			pageType = "ReportHours";
 		}
-		var itemurl = "ReportHoursFromHomeModal?PageType=" + pageType;
+		var itemurl = "UpdateHours?PageType=" + pageType+"&isWorkFromHome="+true;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
@@ -1783,7 +1783,7 @@ $(function () {
 		var pageType = "SummaryHours";
 		switch ($(this).val()) {
 			case "1":
-				var itemurl = "ReportHoursFromHomeModal?PageType=" + pageType + "&chosenDate=" + selectedDate;
+				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate+"&isWorkFromHome="+true;
 				$("#loading").show();
 				$.fn.CallModal(itemurl)
 				break;
@@ -1854,7 +1854,7 @@ $(function () {
 
 	$.fn.GetEmployeeHourFromHome = function (date) {
 		console.log(date);
-		$.fn.CallModal('ReportHoursFromHomeModal?chosenDate=' + new Date(date).toISOString())
+		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString()+"&isWorkFromHome="+true)
 	};
 	$.fn.GetEmployeeHourFromToday = function () {
 		$.fn.CallModal('ExitModal');

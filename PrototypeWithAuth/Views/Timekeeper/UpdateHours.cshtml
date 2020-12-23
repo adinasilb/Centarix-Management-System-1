@@ -1,20 +1,23 @@
-﻿@model PrototypeWithAuth.ViewModels.UpdateHoursViewModel;
-
+﻿@model PrototypeWithAuth.ViewModels.UpdateHoursViewModel
+@using PrototypeWithAuth.AppData
 <script src="~/js/Validation/UpdateHoursValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
+<script src="~/js/UpdateHours.js"></script>
 <div class="modal modal-document fader on-form-modal timekeeper-form" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
-    <div class="modal-dialog-centered modal-sm  mx-auto work-from-home-modal">
+    <div class="modal-dialog-centered mx-auto work-from-home-modal" style="width:50% !important">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="e => {
+        e.preventDefault(); $(this).closest('.modal').modal('hide');
+    }">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding UpdateHoursForm">
+         
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto; " class="modal-padding UpdateHoursForm">
                 @Html.HiddenFor(r => r.EmployeeHour.EmployeeHoursID)
-                @Html.HiddenFor(r => r.EmployeeHour.EmployeeHoursStatusID)
                 @Html.HiddenFor(r => r.EmployeeHour.OffDayTypeID)
                 @Html.HiddenFor(r => r.EmployeeHour.EmployeeID)
-                @{
-                    var disabled = false;
+                <input type="hidden" asp-for="IsForgotToReport" />
+                @{var disabled = false;
                     if (Model.PageType?.Equals("SummaryHours") == true)
                     {
                         disabled = true;
@@ -35,67 +38,142 @@
                     </div>
                 </div>
                 <div class="modal-body p-0 border-0 rounded mx-4">
-                    <div class="row">
-                        <div class="col-md-6 pr-4">
-                            <label class="control-label">Day</label>
-                            <input asp-for="EmployeeHour.Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week " disabled />
-                            <span asp-validation-for="EmployeeHour.Date.DayOfWeek" class="text-danger-centarix " />
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="EmployeeHour.Date" class="control-label"></label>
-                            @if (disabled)
-                            {
-                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" readonly />
-                            }
-                            else
-                            {
-                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
-                            }
-
-                            <span asp-validation-for="EmployeeHour.Date" class="text-danger-centarix " />
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-4 ">
-                            <label asp-for="EmployeeHour.Entry1" class="control-label">Entry</label>
-                            <input asp-for="EmployeeHour.Entry1" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="EmployeeHour.Entry1" class="text-danger-centarix"></span>
-                        </div>
-                        <div class="col-4 ">
-                            <label asp-for="EmployeeHour.Exit1" class="control-label">Exit</label>
-                            <input asp-for="EmployeeHour.Exit1" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="EmployeeHour.Exit1" class="text-danger-centarix"></span>
-                        </div>
-                        <div class="col-4">
-                            <label asp-for="EmployeeHour.TotalHours" class="control-label"></label>
-                            <input asp-for="EmployeeHour.TotalHours" class="form-control-plaintext border-bottom " />
-                            <span asp-validation-for="EmployeeHour.TotalHours" class="text-danger-centarix"></span>
-                        </div>
-                    </div>
-                    @if (Model.EmployeeHour.Entry2 != null)
+                    @if (Model.EmployeeHour.OffDayTypeID != null)
                     {
+                    <div class="row text-danger-centarix text-center">
+                        <div class="col-md-6 offset-3 pr-4">Updating hours will remove @Model.EmployeeHour.OffDayType.Description</div>
+                        </div>
+                        }
 
-                        <div class="row entry2Div">
-                            <div class="col-4 ">
-                                <input asp-for="EmployeeHour.Entry2" class="form-control-plaintext border-bottom " />
+                        <div class="row">
+                            <div class="col-md-6 pr-4">
+                                <label class="control-label">Day</label>
+                                <input asp-for="EmployeeHour.Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week " disabled />
+                                <span asp-validation-for="EmployeeHour.Date.DayOfWeek" class="text-danger-centarix " />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="EmployeeHour.Date" class="control-label"></label>
+                                @if (disabled)
+                                {
+                                    <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" readonly />
+                                }
+                                else
+                                {
+                                    <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                }
+
+                                <span asp-validation-for="EmployeeHour.Date" class="text-danger-centarix " />
+                            </div>
+                        </div>
+                        <br />
+
+                        <div class="row">
+                            <div class="col-3 ">
+                                <label class="control-label">Entry</label>
+                                <input asp-for="EmployeeHour.Entry1" class="form-control-plaintext border-bottom " />
+                                <span asp-validation-for="EmployeeHour.Entry1" class="text-danger-centarix"></span>
+                            </div>
+                            <div class="col-3 ">
+                                <label class="control-label">Exit</label>
+                                <input asp-for="EmployeeHour.Exit1" class="form-control-plaintext border-bottom " />
+                                <span asp-validation-for="EmployeeHour.Exit1" class="text-danger-centarix"></span>
+                            </div>
+                            <div class="col-3">
+                                <label asp-for="EmployeeHour.TotalHours" class="control-label"></label>
+                                <input asp-for="EmployeeHour.TotalHours" class="form-control-plaintext border-bottom " />
+                                <span asp-validation-for="EmployeeHour.TotalHours" class="text-danger-centarix"></span>
+                            </div>
+                            <div class="col-3 ">
+                                <label class="control-label"></label>
+                                <select class="mdb-select  timekeeper  form-control-plaintext custom select-dropdown  mb-0" asp-for="EmployeeHour.EmployeeHoursStatusEntry1ID">
+                                    <option value="" class=""></option>
+                                    <option value="1" class="">Worked from home</option>
+                                    <option value="2" class="">Worked from office</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        @{ var displayEntry2 = "";
+                            var displayAdd = "";
+                        }
+                        @if (Model.EmployeeHour.Entry2 == null)
+                        {
+                            displayEntry2 = "d-none";
+                        }
+                        else
+                        {
+                            displayAdd = "d-none";
+                        }
+                        <div class="row entry2 @displayEntry2">
+
+
+                            <div class="col-3 ">
+                                <label class="control-label">Entry 2</label>
+                                @if (Model.EmployeeHour.Entry2 == null)
+                                {
+                                    <input asp-for="EmployeeHour.Entry2" class="form-control-plaintext border-bottom " disabled />
+                                }
+                                else
+                                {
+                                    <input asp-for="EmployeeHour.Entry2" class="form-control-plaintext border-bottom " />
+                                }
                                 <span asp-validation-for="EmployeeHour.Entry2" class="text-danger-centarix"></span>
                             </div>
-                            <div class="col-4 ">
-                                <input asp-for="EmployeeHour.Exit2" class="form-control-plaintext border-bottom " />
+                            <div class="col-3 ">
+                                <label class="control-label">Exit 2</label>
+
+                                @if (Model.EmployeeHour.Entry2 == null)
+                                {
+                                    <input asp-for="EmployeeHour.Exit2" class="form-control-plaintext border-bottom " disabled />
+                                }
+                                else
+                                {
+                                    <input asp-for="EmployeeHour.Exit2" class="form-control-plaintext border-bottom " />
+                                }
                                 <span asp-validation-for="EmployeeHour.Exit2" class="text-danger-centarix"></span>
                             </div>
-                        </div>
-                    }
+                            <div class="col-3 ">
+                                <label class="control-label"></label>
 
-                </div>
-                <div class="modal-footer  border-0  modal-footer-mt">
-                    <div class="mx-auto text-center">
-                        <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin " asp-action="UpdateHours" asp-route-PageType="@Model.PageType" value="Save" />
-                        <button class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>@*FAIGE: should this delete the request?*@
+                            </div>
+                            <div class="col-3 ">
+
+                                <label class="control-label"></label>
+                                @if (Model.EmployeeHour.Entry2 == null)
+                                {
+                                    <select class="mdb-select  timekeeper  form-control-plaintext custom select-dropdown  mb-0" asp-for="EmployeeHour.EmployeeHoursStatusEntry2ID" disabled>
+                                        <option value="" class=""></option>
+                                        <option value="1" class="">Worked from home</option>
+                                        <option value="2" class="">Worked from office</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="mdb-select  timekeeper  form-control-plaintext custom select-dropdown  mb-0" asp-for="EmployeeHour.EmployeeHoursStatusEntry2ID">
+                                        <option value="" class=""></option>
+                                        <option value="1" class="">Worked from home</option>
+                                        <option value="2" class="">Worked from office</option>
+                                    </select>
+                                }
+
+                            </div>
+
+
+                        </div>
+                        <div class="row  entry2 @displayEntry2 text-center"><div class=" col-6 offset-3"><input type="button" value="- Remove Entry" class="btn  btn-rounded  border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize removeEntry " style="font-size:1rem;" /></div></div>
+
+                        <div class="row addEntryButton text-center @displayAdd"> <div class=" col-6 offset-3"><input id="addEntry" type="button" value="+ Add Entry" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize " style="font-size:1rem;" /></div></div>
+
+                        <div class="modal-footer  border-0  modal-footer-mt">
+                            <div class="mx-auto text-center">
+                                <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin " asp-action="UpdateHours" asp-route-PageType="@Model.PageType" value="Save" />
+                                <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>@*FAIGE: should this delete the request?*@
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </form>
+</form>
         </div>
     </div>
 </div>
+<script>  $('#EmployeeHour_EmployeeHoursStatusEntry1ID').materialSelect();
+    $('#EmployeeHour_EmployeeHoursStatusEntry2ID').materialSelect();</script>

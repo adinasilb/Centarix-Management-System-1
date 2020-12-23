@@ -28,6 +28,13 @@ $('.UpdateHoursForm, .reportHoursForm').validate({
 		"EmployeeHour.TotalHours": {
 			eitherHoursOrTime: true,
 		},
+		"EmployeeHour.EmployeeHoursStatusEntry1ID": {
+			required: true,
+		},
+		"EmployeeHour.EmployeeHoursStatusEntry2ID": {
+			required: true,
+		}
+
 
 	}
 });

@@ -23,7 +23,8 @@
                             @Model.Date.ToShortDateString()
                         </div>
                         <div class="col-2 ">
-                            @{ var hoursType = "";}
+                            @{ var hoursType = "";
+                                var hoursType2 = "";}
                             @if (Model.OffDayTypeID != null)
                             {
                                 hoursType = Model.OffDayType.Description; //eh.EmployeeHours.CompanyDayOff.CompanyDayOffType.Name;
@@ -34,7 +35,7 @@
                                 hoursType = Model.OffDayType?.Description; // eh.EmployeeHours.OffDayType?.Description;
                                 @if (Model.Entry1 != null || Model.TotalHours != null)
                                 {
-                                    if (Model.EmployeeHoursStatusID != 1)
+                                    if (Model.EmployeeHoursStatusEntry1ID != 1)
                                     {
                                         hoursType = "Worked from office";
                                     }
@@ -42,21 +43,38 @@
                                     {
                                         hoursType = "Worked from home";
                                     }
+                                    if (Model.EmployeeHoursStatusEntry2ID != null)
+                                    {
+                                        if (Model.EmployeeHoursStatusEntry2ID != 1)
+                                        {
+                                            hoursType2 = "Worked from office";
+                                        }
+                                        else
+                                        {
+                                            hoursType2 = "Worked from home";
+                                        }
+                                    }
                                 }
                                 @*@if (Model.Entry1 == null && Model.TotalHours == null && Model.OffDayType == null)
-                                {
-                                    <select class="mdb-select  timekeeper custom select-dropdown no-hours-reported mb-0" date="@Model.Date.ToString("yyyy-MM-dd")">
-                                        <option value="" selected disabled class="timekeeper-color">No hours reported</option>
-                                        <option value="1" class="open-work-from-home-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours">Worked from home</option>
-                                        <option value="2" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours">Update hours</option>
-                                        <option value="3" class="confirm-report-sick">Report sick day</option>
-                                        <option value="4" class="confirm-report-sick">Report vacation day</option>
-                                    </select>
-                                }*@
+            {
+                <select class="mdb-select  timekeeper custom select-dropdown no-hours-reported mb-0" date="@Model.Date.ToString("yyyy-MM-dd")">
+                    <option value="" selected disabled class="timekeeper-color">No hours reported</option>
+                    <option value="1" class="open-work-from-home-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours">Worked from home</option>
+                    <option value="2" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours">Update hours</option>
+                    <option value="3" class="confirm-report-sick">Report sick day</option>
+                    <option value="4" class="confirm-report-sick">Report vacation day</option>
+                </select>
+            }*@
                             }
 
 
                             @hoursType
+                            @if(Model.EmployeeHoursStatusEntry2 != null)
+                            {
+                                <br />
+
+                            }
+                            @hoursType2
                         </div>
                         <div class="col-2 ">
 
