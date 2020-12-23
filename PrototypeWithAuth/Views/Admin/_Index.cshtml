@@ -62,7 +62,8 @@
                             //else
                             if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now && user.IsSuspended)
                             {
-                                <a href="" data-userid=@userid class="suspend-user-modal-icon">
+                                <a href="" data-userid=@userid class="suspend-user-modal-icon" data-toggle="tooltip" data-placement="top"
+                                   title="Unuspend">
                                     <i class="icon-block-24px text-danger-centarix disabled-filter"></i>
                                 </a>
                             }
