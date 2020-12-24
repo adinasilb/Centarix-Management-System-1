@@ -135,14 +135,14 @@ namespace PrototypeWithAuth.Controllers
                         vacationDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 2 && eh.Date.Year == year && eh.Date.Month == month).Count();
                         workDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == null && eh.Date.Year == year && eh.Date.Month == month).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
-                        vacationSickCount = employee.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date)?.Count()??0;
+                        vacationSickCount = employee.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date)?.Count() ?? 0;
                         break;
                     case YearlyMonthlyEnum.Yearly:
                         sickDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 1 && eh.Date.Year == year).Count();
                         vacationDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 2 && eh.Date.Year == year).Count();
                         workDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == null && eh.Date.Year == year).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
-                        vacationSickCount = employee.EmployeeHours.Where(eh => eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date)?.Count()??0;
+                        vacationSickCount = employee.EmployeeHours.Where(eh => eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date)?.Count() ?? 0;
                         break;
                 }
 
@@ -262,9 +262,9 @@ namespace PrototypeWithAuth.Controllers
                 EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID,
                 EmployeeID = employeeHoursBeingApproved.EmployeeID,
                 Date = employeeHoursBeingApproved.Date,
-                EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID??0                
+                EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID ?? 0
             };
-            
+
             try
             {
                 _context.Update(employeeHours);
@@ -278,7 +278,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
-          
+
             return RedirectToAction("_AwaitingApproval");
         }
     }

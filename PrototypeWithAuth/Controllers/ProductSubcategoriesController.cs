@@ -26,11 +26,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Operations")]
         public async Task<IActionResult> Index(String PageType = "", int categoryType=1)
         {
-            if(PageType.Equals( AppUtility.LabManagementPageTypeEnum.Equipment.ToString()))
+            if(PageType.Equals( AppUtility.PageTypeEnum.LabManagementEquipment.ToString()))
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.LabManagementSidebarEnum.EquipmentCategories;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.LabManagementPageTypeEnum.Equipment;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Categories;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementEquipment;
                 var equipmentCategories = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
               .Where(ps => ps.ParentCategoryID ==5);
                 return View(await equipmentCategories.ToListAsync());
@@ -38,20 +38,20 @@ namespace PrototypeWithAuth.Controllers
             else if (categoryType == 1)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OrdersAndInventorySidebarEnum.Type;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             }
             else if (categoryType == 2)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Type;
-                if (PageType.ToString() == AppUtility.RequestPageTypeEnum.Inventory.ToString())
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
+                if (PageType.ToString() == AppUtility.PageTypeEnum.RequestInventory.ToString())
                 {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory;
                 }
-                else if (PageType.ToString() == AppUtility.RequestPageTypeEnum.Request.ToString())
+                else if (PageType.ToString() == AppUtility.PageTypeEnum.RequestRequest.ToString())
                 {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsRequest;
 
                 }
             }

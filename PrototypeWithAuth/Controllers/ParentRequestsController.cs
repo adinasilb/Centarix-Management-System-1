@@ -48,8 +48,8 @@ namespace PrototypeWithAuth.Controllers
 
             //tempdata page type for active tab link
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.General;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.AccountingSidebarEnum.General;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingGeneral;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.General;
 
             return View(await fullParentRequestsListByDate.ToListAsync());
         }
@@ -92,7 +92,7 @@ namespace PrototypeWithAuth.Controllers
                 monthlyTotals = monthlyTotals
             };
             //tempdata page type for active tab link
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PaymentPageTypeEnum.Expenses;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingExpenses;
 
 
             return View(expensesListViewModel);

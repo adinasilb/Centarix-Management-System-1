@@ -390,7 +390,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = menuClass,
                 IconName = "icon-format_list_bulleted-24px-01"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.AddItem) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Add) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Add Item",
@@ -418,7 +418,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = menuClass,
                 IconName = "icon-category-24px1"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Vendor) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Vendors) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Vendors",
@@ -469,7 +469,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = menuClass,
                 IconName = "icon-format_list_bulleted-24px-01"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.AddItem) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Add) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Add Item",
@@ -497,7 +497,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = menuClass,
                 IconName = "icon-category-24px1"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Vendor) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Vendors) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Vendors",
@@ -1003,7 +1003,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-format_list_bulleted-24px-01"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.AddItem) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Add) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Add Item",
@@ -1308,7 +1308,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-storefront-24px"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Vendor) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Vendors) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Vendor",
@@ -1347,7 +1347,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-zoom_in-24px"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Lists) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.List) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Advanced List",
