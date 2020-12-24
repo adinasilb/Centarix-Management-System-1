@@ -294,13 +294,13 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text border-bottom">&#36;</span>
+                                                                <span class="input-group-text border-bottom request-cost-dollar-icon">&#36;</span>
                                                                 <input class="form-control-plaintext border-bottom " name="unit-price-dollars" id="unit-price-dollars" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#x20aa;</span>
+                                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                                                                 <input class="form-control-plaintext border-bottom " name="unit-price-shekel" id="unit-price-shekel" disabled />
                                                             </div>
                                                         </div>
@@ -360,13 +360,13 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#36;</span>
+                                                                <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                                                                 <input class="form-control-plaintext border-bottom " type="number" min="0" name="subunit-price-dollars" id="subunit-price-dollars" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#x20aa;</span>
+                                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                                                                 <input class="form-control-plaintext border-bottom " type="number" min="0" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
                                                             </div>
                                                         </div>
@@ -413,13 +413,13 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#36;</span>
+                                                                <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                                                                 <input class="form-control-plaintext border-bottom" name="subsubunit-price-dollars" id="subsubunit-price-dollars" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#x20aa;</span>
+                                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                                                                 <input class="form-control-plaintext border-bottom" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled />
                                                             </div>
                                                         </div>
@@ -434,7 +434,7 @@
                                         <div class="form-group">
                                             <label asp-for="Request.Cost" class="control-label">Total:</label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
+                                                <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                                                 <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
                                             </div>
                                         </div>
@@ -443,7 +443,7 @@
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
+                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                                                 <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1" readonly />
                                                 <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                             </div>
@@ -453,9 +453,8 @@
                                         <div class="form-group">
                                             <label asp-for="Request.VAT" class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " disabled />
-                                                <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
+                                                <span class="input-group-text disabled-text">&#36;</span>
+                                                <input class="form-control-plaintext border-bottom vatInDollars disabled-text" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -463,8 +462,9 @@
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
-                                                <input  class="form-control-plaintext border-bottom vatInDollars " disabled/>
+                                                <span class="input-group-text disabled-text">&#x20aa;</span>
+                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom disabled-text" disabled />
+                                                <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -472,8 +472,8 @@
                                         <div class="form-group">
                                             <label class="control-label">Total + VAT:</label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                                                <span class="input-group-text disabled-text">&#36;</span>
+                                                <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -481,8 +481,8 @@
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                                <span class="input-group-text disabled-text">&#x20aa;</span>
+                                                <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
                                             </div>
                                         </div>
                                     </div>
