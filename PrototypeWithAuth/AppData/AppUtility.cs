@@ -253,7 +253,7 @@ namespace PrototypeWithAuth.AppData
               value.Hour, value.Minute, 0);
         }
 
-        public static List<AccountingPopoverLink> GetPaymentsPopoverLinks(String CurrentEnum)
+        public static List<AccountingPopoverLink> GetPaymentsPopoverLinks(AppUtility.SidebarEnum CurrentEnum)
         {
             List<AccountingPopoverLink> list = new List<AccountingPopoverLink>();
             List<PaymentsPopoverEnum> enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
@@ -262,10 +262,10 @@ namespace PrototypeWithAuth.AppData
                 foreach (PaymentsPopoverEnum e in enums)
                 {
 
-                    if (CurrentEnum != e.ToString())
+                    if (CurrentEnum.ToString() != e.ToString() && CurrentEnum != AppUtility.SidebarEnum.None)
                     {
                         AccountingPopoverLink accountingPopoverLink = new AccountingPopoverLink();
-                        accountingPopoverLink.CurrentLocation = (PaymentsPopoverEnum)Enum.Parse(typeof(PaymentsPopoverEnum), CurrentEnum);
+                        accountingPopoverLink.CurrentLocation = (PaymentsPopoverEnum)Enum.Parse(typeof(PaymentsPopoverEnum), CurrentEnum.ToString());
                         accountingPopoverLink.Description = e;
                         switch (e)
                         {

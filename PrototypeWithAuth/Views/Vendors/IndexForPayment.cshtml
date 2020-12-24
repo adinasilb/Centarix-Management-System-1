@@ -3,14 +3,7 @@
     @{
         ViewData["Title"] = "IndexForPayment";
 
-        if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.LabManagement))
-        {
-            Layout = "~/Views/Shared/RequestNavView.cshtml";
-        }
-        else
-        {
-            Layout = "~/Views/Shared/RequestNavView.cshtml";
-        }
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
     }
 <input type="hidden" value="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]" id="SectionType"/>
     <div class="indexTable">
