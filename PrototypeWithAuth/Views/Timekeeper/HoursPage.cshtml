@@ -112,8 +112,8 @@
                         {
                             <select class="mdb-select  timekeeper custom select-dropdown no-hours-reported mb-0" date="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
                                 <option value="" selected disabled class="timekeeper-color">No hours reported</option>
-                                <option value="1" class="open-work-from-home-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours">Worked from home</option>
-                                <option value="2" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours">Update hours</option>
+                                <option value="1" class="open-work-from-home-modal @AppUtility.SidebarEnum.SummaryHours">Worked from home</option>
+                                <option value="2" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours">Update hours</option>
                                 <option value="3" class="confirm-report-sick">Report sick day</option>
                                 <option value="4" class="confirm-report-sick">Report vacation day</option>
                             </select>
@@ -147,14 +147,14 @@
                     @if (eh.EmployeeHours.Entry2 != null && eh.EmployeeHours.Exit2 == null)
                     {
                         <br />
-                        <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString(" yyyy-MM-dd")">
+                        <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString(" yyyy-MM-dd")">
                             Update Hours
                         </button>
 
                     }
                     else if ((eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null) || (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2)))
                     {
-                        <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>
+                        <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>
                     }
                     else if (eh.EmployeeHours.Exit1 == null)
                     {
