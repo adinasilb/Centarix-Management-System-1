@@ -1642,6 +1642,7 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 	$(".open-update-hours-modal").off('click').click(function (e) {
+		e.preventDefault();
 		var val = $(this).val();
 		if (val != '') {
 			var date = new Date(val).toISOString();
