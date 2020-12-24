@@ -40,9 +40,11 @@ function ajaxCallToPartial() {
     });
 }
 $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
-    $('input[name=currecy]').attr("checked", false)
-    $('input[name=currecy]').prop("checked", false)
+    $('input[name=currency]').attr("checked", false)
+    $('input[name=currency]').prop("checked", false)
     $(this).attr("checked", true);
+    $(this).prop("checked", true);
+    console.log(this);
     $('#tempCurrency').val($(this).val())
     ajaxCallToPartial();    
     return false;
