@@ -54,9 +54,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public IActionResult Index()
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersList;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
 
             ViewBag.ErrorMessage = ViewBag.ErrorMessage;
             UserIndexViewModel userIndexViewModel = GetUserIndexViewModel();
@@ -100,9 +100,9 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult RegisterUser()
 
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
             IQueryable<IdentityRole> roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
             {
@@ -158,9 +158,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public IActionResult CreateUser()
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
 
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
 
@@ -459,9 +459,9 @@ namespace PrototypeWithAuth.Controllers
                     registerUserViewModel.Errors.Add("User Failed to add. Please try again. " + e.Code.ToString() + " " + e.Description.ToString());
                 }
                 //refill Model to view errors
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
                 registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
                 registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
                 registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
