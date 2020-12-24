@@ -240,7 +240,6 @@ namespace PrototypeWithAuth.Controllers
                 FirstName = registerUserViewModel.FirstName,
                 LastName = registerUserViewModel.LastName,
                 SecureAppPass = registerUserViewModel.SecureAppPass,
-                CentarixID = registerUserViewModel.CentarixID,
                 PhoneNumber = registerUserViewModel.PhoneNumber,
                 PhoneNumber2 = registerUserViewModel.PhoneNumber2,
                 UserNum = usernum,
@@ -280,6 +279,7 @@ namespace PrototypeWithAuth.Controllers
                 user.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
                 /*Salaried Employee*/
             }
+            //add in CentarixID
             bool IsUser = true;
             if (registerUserViewModel.Password == "" || registerUserViewModel.Password == null)
             {
@@ -547,7 +547,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //never was an employee only was a user and wants to update info                 
                     employeeEditted.UserName = registerUserViewModel.Email;
-                    employeeEditted.CentarixID = registerUserViewModel.CentarixID;
+                    //employeeEditted.CentarixID = registerUserViewModel.CentarixID;
                     employeeEditted.FirstName = registerUserViewModel.FirstName;
                     employeeEditted.LastName = registerUserViewModel.LastName;
                     employeeEditted.Email = registerUserViewModel.Email;
@@ -573,7 +573,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     // still wants to remain an employee
                     employeeEditted.UserName = registerUserViewModel.Email;
-                    employeeEditted.CentarixID = registerUserViewModel.CentarixID;
+                    //employeeEditted.CentarixID = registerUserViewModel.CentarixID;
                     employeeEditted.FirstName = registerUserViewModel.FirstName;
                     employeeEditted.LastName = registerUserViewModel.LastName;
                     employeeEditted.Email = registerUserViewModel.Email;
@@ -634,6 +634,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await _context.SaveChangesAsync();
                 }
+                //add new centarixID
 
                 if (!String.IsNullOrEmpty(registerUserViewModel.Password))
                 {
@@ -925,7 +926,7 @@ namespace PrototypeWithAuth.Controllers
                     LastName = userSelected.LastName,
                     Email = userSelected.Email,
                     PhoneNumber = userSelected.PhoneNumber,
-                    CentarixID = userSelected.CentarixID,
+                    //CentarixID = userSelected.CentarixID,
                     UserImageSaved = userSelected.UserImage,
                     //TODO: do we want to show the secure app pass??
                     LabMonthlyLimit = userSelected.LabMonthlyLimit,
@@ -937,6 +938,8 @@ namespace PrototypeWithAuth.Controllers
                     Tab = Tab ?? 1,
                     ConfirmedEmail = userSelected.EmailConfirmed
                 };
+
+                //get CentarixID
 
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                 DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
