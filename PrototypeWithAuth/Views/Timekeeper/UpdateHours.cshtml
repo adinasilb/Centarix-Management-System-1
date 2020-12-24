@@ -162,7 +162,6 @@
                             @if (Model.EmployeeHour.Entry2 == null)
                             {
                                 <select class="mdb-select  timekeeper  form-control-plaintext custom select-dropdown  mb-0" asp-for="EmployeeHour.EmployeeHoursStatusEntry2ID" disabled>
-                                    <option value="" class=""></option>
                                     <option value="1" class="">Worked from home</option>
                                     <option value="2" class="">Worked from office</option>
                                 </select>
@@ -170,7 +169,6 @@
                             else
                             {
                                 <select class="mdb-select  timekeeper  form-control-plaintext custom select-dropdown  mb-0" asp-for="EmployeeHour.EmployeeHoursStatusEntry2ID">
-                                    <option value="" class=""></option>
                                     <option value="1" class="">Worked from home</option>
                                     <option value="2" class="">Worked from office</option>
                                 </select>

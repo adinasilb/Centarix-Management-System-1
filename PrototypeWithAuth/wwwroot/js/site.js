@@ -662,7 +662,7 @@ $(function () {
 					backdrop: false,
 					keyboard: true,
 				});
-				$(".modal").modal('show');
+				$(".documentsModal").modal('show');
 				return true;
 			}
 
