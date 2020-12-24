@@ -24,8 +24,10 @@ namespace PrototypeWithAuth.Data
         public IEnumerable<ParentRequest> ParentRequests { get; set;}
         public int UserNum { get; set; }
 
-        [Display(Name = "ID")]
-        public string CentarixID { get; set; }
+        //[Display(Name = "ID")]
+        //public string CentarixID { get; set; }
+        public List<CentarixID> CentarixIDs { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
         public double LabMonthlyLimit { get; set; }
