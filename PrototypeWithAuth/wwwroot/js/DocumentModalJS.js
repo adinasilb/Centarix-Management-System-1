@@ -86,7 +86,7 @@
 					backdrop: false,
 					keyboard: true,
 				});
-				$(".modal").modal('show');
+				$(".documentsModal").modal('show');
 
 				return true;
 			}
@@ -118,9 +118,8 @@
 		}
 	};
 
-	$(".modal").on("click", ".delete-document",function (e) {
+	$(".delete-document").click( function (e) {
 		e.preventDefault();
-		e.stopPropagation();
 		var hasClass = $(this).hasClass("delete-file-document");
 		if (hasClass ==true) {
 			console.log("delete doc clicked");
@@ -139,7 +138,7 @@
 						backdrop: false,
 						keyboard: true,
 					});
-					$(".modal").modal('show');
+					$("#DeleteDocumentsModal").modal('show');
 				}
 			});
 		}

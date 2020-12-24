@@ -35,21 +35,21 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 };
 
 $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionType)  {
-	$("#documentsModal").replaceWith('');
+	$(".documentsModal").replaceWith('');
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
 		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + sectionType,
 		type: 'GET',
-		cache: false,
+		cache: true,
 		success: function (data) {
 			var modal = $(data);
 			$('body').append(modal);
-			$("#documentsModal").modal({
+			$(".documentsModal").modal({
 				backdrop: false,
 				keyboard: true,
 			});
-			$(".modal").modal('show');
+			$(".documentsModal").modal('show');
 			console.log("Here");
 			var length = $('.iframe-container').length;
 			if (length < 1) {

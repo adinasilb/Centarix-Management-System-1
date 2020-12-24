@@ -15,7 +15,7 @@
 
 $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable) {
 	console.log("in open doc modal");
-	$("#documentsModal").replaceWith('');
+	$(".documentsModal").replaceWith('');
 	var urltogo = $("#documentSubmit").attr("url");
 	//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
 	console.log("urltogo: " + urltogo);
@@ -29,11 +29,11 @@ $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable) {
 		success: function (data) {
 			var modal = $(data);
 			$('body').append(modal);
-			$("#documentsModal").modal({
+			$(".documentsModal").modal({
 				backdrop: false,
 				keyboard: true,
 			});
-			$(".modal").modal('show');
+			$(".documentsModal").modal('show');
 		}
 	});
 };

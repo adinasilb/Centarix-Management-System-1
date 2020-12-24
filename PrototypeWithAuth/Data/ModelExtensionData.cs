@@ -1155,12 +1155,18 @@ namespace PrototypeWithAuth.Data
            new EmployeeStatus
            {
                EmployeeStatusID = 1,
-               Description = "Employee"
+               Description = "Employee",
+               Abbreviation = "E",
+               LastCentarixID = 0,
+               LastCentarixIDTimeStamp = new DateTime()
            },
            new EmployeeStatus
            {
                EmployeeStatusID = 2,
-               Description = "Freelancer"
+               Description = "Freelancer",
+               Abbreviation = "F",
+               LastCentarixID = 0,
+               LastCentarixIDTimeStamp = new DateTime()
            },
            new EmployeeStatus
            {
@@ -1312,7 +1318,7 @@ namespace PrototypeWithAuth.Data
                  Icon = "icon-inhouse-maintainance-24px"
              }
          );
-
+           
             modelBuilder.Entity<CompanyDayOffType>().HasData(
              new CompanyDayOffType
              {
@@ -1359,7 +1365,7 @@ namespace PrototypeWithAuth.Data
                    CompanyDayOffTypeID = 9,
                    Name = "Shavuous"
                },
-             
+
                 new CompanyDayOffType
                 {
                     CompanyDayOffTypeID = 10,
@@ -1374,7 +1380,7 @@ namespace PrototypeWithAuth.Data
                {
                    CompanyDayOffTypeID = 12,
                    Name = "Rosh Hashana 2"
-               },         
+               },
                new CompanyDayOffType
                {
                    CompanyDayOffTypeID = 13,
