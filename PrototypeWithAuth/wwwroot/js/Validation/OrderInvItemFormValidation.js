@@ -1,4 +1,16 @@
-﻿
+﻿$.validator.addMethod('mindate', function (v, el, maxDate) {
+	if (this.optional(el)) {
+		return true;
+	}
+	var selectedDate = new Date($(el).val());
+
+	maxDate = new Date(maxDate.setHours(0));
+	maxDate = new Date(maxDate.setMinutes(0));
+	maxDate = new Date(maxDate.setSeconds(0));
+	maxDate = new Date(maxDate.setMilliseconds(0));
+
+	return selectedDate >= maxDate;
+}, 'Please select a valid date');
 $('.ordersItemForm').validate({
 	rules: {
 		"Request.Product.ProductName": "required",
@@ -12,6 +24,10 @@ $('.ordersItemForm').validate({
 		"Request.Product.VendorID": "selectRequired",
 		"Request.ParentQuote.QuoteNumber": {
 			required: true
+		},
+		"Request.ParentQuote.QuoteDate": {
+			required: true,
+			mindate: new Date('1900-12-17T03:24:00')
 		},
 		"Request.ExpectedSupplyDays": {
 			min: 0,

@@ -191,22 +191,22 @@ jQuery(($) => {
     }
 
     ChangeDateInputType() {
-      const $dateInputs = $('input[type="date"]');
+      //const $dateInputs = $('input[type="date"]');
     
-      $dateInputs.each((index, $item) => {
-        $item.type = 'text';
-      });
+      //$dateInputs.each((index, $item) => {
+      //  $item.type = 'text';
+      //});
     
-      $dateInputs.on('focus', $item => {
-        $item.target.type = 'date';
-      });
+      //$dateInputs.on('focus', $item => {
+      //  $item.target.type = 'date';
+      //});
     
-      $dateInputs.on('blur', $item => {
-        $item.target.type = 'text';
-        if($item.target.value.length === 0) {
-          $(`label[for=${$item.target.id}]`).removeClass('active');
-        }
-      });    
+      //$dateInputs.on('blur', $item => {
+      //  $item.target.type = 'text';
+      //  if($item.target.value.length === 0) {
+      //    $(`label[for=${$item.target.id}]`).removeClass('active');
+      //  }
+      //});    
     }
   
     textAreaAutoResize() {

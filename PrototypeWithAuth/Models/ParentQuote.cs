@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.Models
         public ApplicationUser ApplicationUser { get; set; }
 
         [Display(Name = "Quote Date")]
+        [DataType (DataType.Date)]
         //should not really be null just waiting till figure out how else to do the parentquote in create modal
         public DateTime QuoteDate { get; set; }
         public bool IsDeleted { get; set; } //will be set to true if all requests under parent are delted
