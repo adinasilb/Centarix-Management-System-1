@@ -19,5 +19,7 @@ namespace PrototypeWithAuth.Models
         public ApplicationUser ApplicationUser { get; set; }
 
         public string CentarixIDNumber { get; set; }
+        public bool IsCurrent { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

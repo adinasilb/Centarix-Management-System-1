@@ -1,6 +1,6 @@
 ﻿$(function () {
 
-    $(".open-user-modal").on("click", function (e) {
+    $("body").on("click", ".open-user-modal", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#loading").show();
@@ -9,13 +9,11 @@
         $.fn.CallPageUser($itemurl);
         return false;
     });
-    $("body").on("click", ".suspend-user-modal-icon", function (e) {
+    $("#suspend-user-modal-icon").click(function (e) {
         e.preventDefault();
-        alert("suspend user modal click");
         $.fn.SuspendUserModal($(this).attr('data-userid'), null);
     });
     $.fn.SuspendUserModal = function (userid, suspend) {
-        console.log("in delete user modal function");
         $itemurl = '/Admin/SuspendUserModal?id=' + userid;
         $('.suspend-user-modal').replaceWith('');
         $(".modal-backdrop").remove();

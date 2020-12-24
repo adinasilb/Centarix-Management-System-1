@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201224124322_addedTimestampToCentarixID")]
+    partial class addedTimestampToCentarixID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -879,7 +881,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Abbreviation = "E",
                             Description = "Employee",
                             LastCentarixID = 0,
-                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            LastCentarixIDTimeStamp = new DateTime(2020, 12, 24, 14, 43, 21, 636, DateTimeKind.Local).AddTicks(7685)
                         },
                         new
                         {
@@ -887,7 +889,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Abbreviation = "F",
                             Description = "Freelancer",
                             LastCentarixID = 0,
-                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            LastCentarixIDTimeStamp = new DateTime(2020, 12, 24, 14, 43, 21, 639, DateTimeKind.Local).AddTicks(4090)
                         },
                         new
                         {
@@ -895,7 +897,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Abbreviation = "A",
                             Description = "Advisor",
                             LastCentarixID = 0,
-                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            LastCentarixIDTimeStamp = new DateTime(2020, 12, 24, 14, 43, 21, 639, DateTimeKind.Local).AddTicks(4124)
                         },
                         new
                         {
@@ -903,7 +905,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Abbreviation = "U",
                             Description = "User",
                             LastCentarixID = 0,
-                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            LastCentarixIDTimeStamp = new DateTime(2020, 12, 24, 14, 43, 21, 639, DateTimeKind.Local).AddTicks(4129)
                         });
                 });
 
