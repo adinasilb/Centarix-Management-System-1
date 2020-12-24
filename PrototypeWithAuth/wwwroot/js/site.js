@@ -2274,12 +2274,28 @@ $(function () {
 	$('.employee-status-radio').off("click").on("click", function () {
 
 		var val = $(this).val();
-		alert("employee status" + val);
 		$('#NewEmployee_EmployeeStatusID').val(val)
 		$("#validation-EmployeeStatus").addClass("hidden");
 		if (val == "4") {
 			$('.only-employee').removeClass("error");
 		}
+
+		var centarixIDInput = $('#CentarixID');
+		if (val == $("#OriginalStatusID").val()) {
+			centarixIDInput.val($("#OriginalStatusID").attr("centarixID"));
+		}
+		else {
+			$.ajax({
+				async: true,
+				url: "/Admin/GetProbableNextCentarixID?StatusID=" + val,
+				type: 'GET',
+				cache: true,
+				success: function (data) {
+					centarixIDInput.val(data);
+				}
+			});
+		}
+
 
 	});
 

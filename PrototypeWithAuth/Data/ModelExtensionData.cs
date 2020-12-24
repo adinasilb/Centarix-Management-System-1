@@ -1157,32 +1157,28 @@ namespace PrototypeWithAuth.Data
                EmployeeStatusID = 1,
                Description = "Employee",
                Abbreviation = "E",
-               LastCentarixID = 0,
-               LastCentarixIDTimeStamp = new DateTime()
+               LastCentarixID = 0
            },
            new EmployeeStatus
            {
                EmployeeStatusID = 2,
                Description = "Freelancer",
                Abbreviation = "F",
-               LastCentarixID = 0,
-               LastCentarixIDTimeStamp = new DateTime()
+               LastCentarixID = 0
            },
            new EmployeeStatus
            {
                EmployeeStatusID = 3,
                Description = "Advisor",
                Abbreviation = "A",
-               LastCentarixID = 0,
-               LastCentarixIDTimeStamp = new DateTime()
+               LastCentarixID = 0
            },
            new EmployeeStatus
            {
                EmployeeStatusID = 4,
                Description = "User",
                Abbreviation = "U",
-               LastCentarixID = 0, 
-               LastCentarixIDTimeStamp = new DateTime()
+               LastCentarixID = 0
            }
        );
             modelBuilder.Entity<JobCategoryType>().HasData(

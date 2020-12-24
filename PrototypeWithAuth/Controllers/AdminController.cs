@@ -24,6 +24,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using Abp.Extensions;
+using System.Linq.Dynamic.Core;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -83,8 +85,8 @@ namespace PrototypeWithAuth.Controllers
             bool IsCEO = false;
             //if (User.IsInRole("CEO"))
             //{
-                users = _context.Employees.OrderBy(u => u.UserNum).ToList(); //The CEO can see all users even the ones that are suspended 
-                IsCEO = false; //automatically set to false until CEO is reinstated
+            users = _context.Employees.OrderBy(u => u.UserNum).ToList(); //The CEO can see all users even the ones that are suspended 
+            IsCEO = false; //automatically set to false until CEO is reinstated
             //}
 
             UserIndexViewModel userIndexViewModel = new UserIndexViewModel()
@@ -279,7 +281,7 @@ namespace PrototypeWithAuth.Controllers
                 user.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
                 /*Salaried Employee*/
             }
-            //add in CentarixID
+
             bool IsUser = true;
             if (registerUserViewModel.Password == "" || registerUserViewModel.Password == null)
             {
@@ -307,6 +309,31 @@ namespace PrototypeWithAuth.Controllers
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
+
+                //add in CentarixID
+                var employeeStatus = _context.EmployeeStatuses.Where(es => es.EmployeeStatusID == UserType).FirstOrDefault();
+                var currentNum = employeeStatus.LastCentarixID + 1;
+                var abbrev = employeeStatus.Abbreviation;
+                if (abbrev[1] == ' ')
+                {
+                    abbrev = abbrev.Substring(0, 1);
+                }
+                var cID = abbrev + currentNum.ToString();
+                CentarixID centarixID = new CentarixID()
+                {
+                    ApplicationUserID = user.Id,
+                    CentarixIDNumber = cID,
+                    IsCurrent = true,
+                    TimeStamp = DateTime.Now
+                };
+                _context.Add(centarixID);
+                await _context.SaveChangesAsync();
+
+                //update last ID
+                employeeStatus.LastCentarixID = currentNum;
+                employeeStatus.LastCentarixIDTimeStamp = DateTime.Now;
+                _context.Update(employeeStatus);
+                await _context.SaveChangesAsync();
 
                 switch (UserType)
                 {
@@ -547,7 +574,6 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //never was an employee only was a user and wants to update info                 
                     employeeEditted.UserName = registerUserViewModel.Email;
-                    //employeeEditted.CentarixID = registerUserViewModel.CentarixID;
                     employeeEditted.FirstName = registerUserViewModel.FirstName;
                     employeeEditted.LastName = registerUserViewModel.LastName;
                     employeeEditted.Email = registerUserViewModel.Email;
@@ -568,12 +594,12 @@ namespace PrototypeWithAuth.Controllers
                     _context.Update(employeeEditted);
                     await _context.SaveChangesAsync();
 
+                    await AddNewCentarixID(employeeEditted.Id, 4);
                 }
                 else
                 {
                     // still wants to remain an employee
                     employeeEditted.UserName = registerUserViewModel.Email;
-                    //employeeEditted.CentarixID = registerUserViewModel.CentarixID;
                     employeeEditted.FirstName = registerUserViewModel.FirstName;
                     employeeEditted.LastName = registerUserViewModel.LastName;
                     employeeEditted.Email = registerUserViewModel.Email;
@@ -615,6 +641,7 @@ namespace PrototypeWithAuth.Controllers
                             if (salariedEmployee == null)
                             {
                                 salariedEmployee = new SalariedEmployee();
+                                await AddNewCentarixID(employeeEditted.Id, 1);
                             }
                             salariedEmployee.EmployeeId = employeeEditted.Id;
                             salariedEmployee.HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay;
@@ -625,11 +652,14 @@ namespace PrototypeWithAuth.Controllers
                             if (freelancer == null)
                             {
                                 freelancer = new Freelancer();
+                                await AddNewCentarixID(employeeEditted.Id, 2);
                             }
                             freelancer.EmployeeId = employeeEditted.Id;
                             employeeEditted.Freelancer = freelancer;
                             break;
                         case 3: /*Advisor*/
+                            //check if they were already an advisor
+                            //    if so await AddNewCentarixID(employeeEditted.Id, 3);
                             break;
                     }
                     await _context.SaveChangesAsync();
@@ -799,7 +829,7 @@ namespace PrototypeWithAuth.Controllers
                         _context.Update(employeeEditted);
                         await _context.SaveChangesAsync();
                     }
-                   
+
                     //should we move the delete here and test for the extension just in case it breaks over there
 
                 }
@@ -828,16 +858,64 @@ namespace PrototypeWithAuth.Controllers
             catch (DbUpdateException ex)
             {
                 Response.StatusCode = 500;
-                Response.WriteAsync(ex.InnerException.ToString());
+                Response.WriteAsync(ex.InnerException?.ToString());
             }
             catch (Exception e)
             {
                 Response.StatusCode = 500;
-                Response.WriteAsync(e.InnerException.ToString());
+                Response.WriteAsync(e.InnerException?.ToString());
             }
 
             //return RedirectToAction("Index");
             return new EmptyResult();
+        }
+
+        public string GetProbableNextCentarixID(int StatusID)
+        {
+            var EmployeeStatus = _context.EmployeeStatuses.Where(es => es.EmployeeStatusID == StatusID).FirstOrDefault();
+            var abbrev = EmployeeStatus.Abbreviation;
+            if (abbrev[1] == ' ')
+            {
+                abbrev = abbrev.Substring(0, 1);
+            }
+            var newID = abbrev + (EmployeeStatus.LastCentarixID + 1).ToString();
+
+            return newID;
+        }
+
+        public async Task<bool> AddNewCentarixID(string UserID, int StatusID)
+        {
+            var oldCentarixID = _context.CentarixIDs.Where(ci => ci.ApplicationUserID == UserID)
+                .Where(ci => ci.IsCurrent).FirstOrDefault();
+            oldCentarixID.IsCurrent = false;
+            _context.Update(oldCentarixID);
+            await _context.SaveChangesAsync();
+
+            var lastStatus = _context.EmployeeStatuses.Where(es => es.EmployeeStatusID == StatusID).FirstOrDefault();
+            var newNum = lastStatus.LastCentarixID + 1;
+            var abbrev = lastStatus.Abbreviation;
+            if (abbrev[1] == ' ')
+            {
+                abbrev = abbrev.Substring(0, 1);
+            }
+            var newID = abbrev + newNum.ToString();
+
+            var newCentarixID = new CentarixID()
+            {
+                ApplicationUserID = UserID,
+                CentarixIDNumber = newID,
+                IsCurrent = true,
+                TimeStamp = DateTime.Now
+            };
+            _context.Add(newCentarixID);
+            await _context.SaveChangesAsync();
+
+            lastStatus.LastCentarixID = newNum;
+            lastStatus.LastCentarixIDTimeStamp = DateTime.Now;
+            _context.Update(lastStatus);
+            await _context.SaveChangesAsync();
+
+            return true; //just to allow asyncs
         }
 
         [HttpGet]
@@ -940,6 +1018,11 @@ namespace PrototypeWithAuth.Controllers
                 };
 
                 //get CentarixID
+                var allIDs = _context.CentarixIDs.Where(ci => ci.ApplicationUserID == userSelected.Id).OrderBy(ci => ci.TimeStamp);
+                foreach (var centarixID in allIDs)
+                {
+                    registerUserViewModel.CentarixID += centarixID.CentarixIDNumber;
+                }
 
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                 DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
@@ -1145,7 +1228,7 @@ namespace PrototypeWithAuth.Controllers
             char[] password = new char[lengthOfPassword];
             int characterSetLength = characterSet.Length;
 
-            while (!PasswordIsValid(string.Join(null,password)))
+            while (!PasswordIsValid(string.Join(null, password)))
             {
                 System.Random random = new System.Random();
                 for (int characterPosition = 0; characterPosition < lengthOfPassword; characterPosition++)
