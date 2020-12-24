@@ -550,6 +550,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ParentQuote = new ParentQuote();
             requestItemViewModel.Request.SubProject = new SubProject();
 
+            requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
 
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");

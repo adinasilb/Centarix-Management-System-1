@@ -78,10 +78,10 @@
                                         </a>
                                     </li>*@
                                 @*<li class="nav-item icon history-tab">
-                                        <a data-toggle="tab" href="#history" class="next-tab nav-link">
-                                            <i class="icon-history-24px" style="font-size: 2rem;"></i><br />History
-                                        </a>
-                                    </li>*@
+                                    <a data-toggle="tab" href="#history" class="next-tab nav-link">
+                                        <i class="icon-history-24px" style="font-size: 2rem;"></i><br />History
+                                    </a>
+                                </li>*@
                                 <li class="nav-item icon order-tab">
                                     <a data-toggle="tab" href="#order" class="next-tab nav-link">
                                         <i class="icon-assignment-24px" style="font-size: 2rem;"></i> <br />Order
@@ -192,7 +192,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext border-bottom
+                                        <input asp-for="Request.ParentQuote.QuoteDate"  class="form-control-plaintext border-bottom 
                                                " />
                                         <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
                                     </div>
@@ -317,10 +317,8 @@
 ">
                                                 <span aria-hidden="true">×</span>
                                             </button>
-                                            <div class="mx-2rem addSubUnitCard mt-4">
-                                                <div class="row " style="display:initial;">
-                                                    <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div>
-                                                </div>
+                                            <div class="mx-2rem addSubUnitCard mt-4"><div class="row " style="display:initial;">
+                                                <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div></div>
                                             </div>
                                             <div class="mx-2rem  subUnitsCard d-none mt-4">
 
@@ -701,13 +699,13 @@
                             </div>*@
 
                         @*<div id="history" class="tab-pane fade">
-                                <div class="modal-sides modal-body-top-p">
-                                    <span class="heading-1 modal-tab-name">History</span>
-                                    <br />
-                                    <br />
-                                    <h5>This is the History tab.</h5>
-                                </div>
-                            </div>*@
+                            <div class="modal-sides modal-body-top-p">
+                                <span class="heading-1 modal-tab-name">History</span>
+                                <br />
+                                <br />
+                                <h5>This is the History tab.</h5>
+                            </div>
+                        </div>*@
 
                         <div id="order" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
