@@ -1927,12 +1927,27 @@ namespace PrototypeWithAuth.Controllers
 
                 // add a "To" Email
                 message.To.Add(new MailboxAddress(vendorName, vendorEmail));
-
+                if (TempData["Email2"].ToString() != "")
+                {
+                    message.Cc.Add(new MailboxAddress(TempData["Email2"]?.ToString() ?? ""));
+                }
+                if (TempData["Email3"].ToString() != "")
+                {
+                    message.Cc.Add(new MailboxAddress(TempData["Email3"]?.ToString() ?? ""));
+                }
+                if (TempData["Email4"].ToString() != "")
+                {
+                    message.Cc.Add(new MailboxAddress(TempData["Email4"]?.ToString() ?? ""));
+                }
+                if (TempData["Email5"].ToString() != "")
+                {
+                    message.Cc.Add(new MailboxAddress(TempData["Email5"]?.ToString() ?? ""));
+                }
                 //add CC's to email
-                message.Cc.Add(new MailboxAddress(TempData["Email2"]?.ToString() ?? ""));
-                message.Cc.Add(new MailboxAddress(TempData["Email3"]?.ToString() ?? ""));
-                message.Cc.Add(new MailboxAddress(TempData["Email4"]?.ToString() ?? ""));
-                message.Cc.Add(new MailboxAddress(TempData["Email5"]?.ToString() ?? ""));
+  
+        
+  
+     
 
                 //subject
                 message.Subject = "Order from Centarix to " + vendorName;
@@ -2002,7 +2017,7 @@ namespace PrototypeWithAuth.Controllers
                     //    PageType = AppUtility.RequestPageTypeEnum.Request
                     //});
 
-                    return RedirectToAction("Index"); //temp: todo: must add Tempdata
+                    return RedirectToAction("Index" ); //temp: todo: must add Tempdata
                 }
                 else if (firstRequest.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
                 {
