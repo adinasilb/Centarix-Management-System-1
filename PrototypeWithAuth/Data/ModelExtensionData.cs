@@ -1171,12 +1171,18 @@ namespace PrototypeWithAuth.Data
            new EmployeeStatus
            {
                EmployeeStatusID = 3,
-               Description = "Advisor"
+               Description = "Advisor",
+               Abbreviation = "A",
+               LastCentarixID = 0,
+               LastCentarixIDTimeStamp = new DateTime()
            },
            new EmployeeStatus
            {
                EmployeeStatusID = 4,
-               Description = "User"
+               Description = "User",
+               Abbreviation = "U",
+               LastCentarixID = 0, 
+               LastCentarixIDTimeStamp = new DateTime()
            }
        );
             modelBuilder.Entity<JobCategoryType>().HasData(
