@@ -310,7 +310,7 @@ $(function () {
 		//$.fn.CalculateSubUnitAmounts();
 		//$.fn.CalculateSubSubUnitAmounts();
 	};
-	$.fn.CheckSubUnitsFilled = function () {sum-dollars
+	$.fn.CheckSubUnitsFilled = function () {
 		if (($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val())
 			|| ($("#Request_SubUnit").val() > 0 && $("#select-options-Request_SubUnitTypeID").val())) {
 			$.fn.EnableSubSubUnits();
