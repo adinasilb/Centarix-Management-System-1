@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201223120435_addGeneralOptionAllSubprojects")]
+    partial class addGeneralOptionAllSubprojects
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,6 +163,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("CentarixID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -419,26 +424,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             CategoryTypeID = 2,
                             CategoryTypeDescription = "Operational"
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.CentarixID", b =>
-                {
-                    b.Property<int>("CentarixIDID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CentarixIDNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CentarixIDID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.ToTable("CentarixIDs");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Citizenship", b =>
@@ -850,17 +835,8 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Abbreviation")
-                        .HasColumnType("char(2)");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LastCentarixID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("LastCentarixIDTimeStamp")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("EmployeeStatusID");
 
@@ -870,32 +846,22 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             EmployeeStatusID = 1,
-                            Abbreviation = "E",
-                            Description = "Employee",
-                            LastCentarixID = 0,
-                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            Description = "Employee"
                         },
                         new
                         {
                             EmployeeStatusID = 2,
-                            Abbreviation = "F",
-                            Description = "Freelancer",
-                            LastCentarixID = 0,
-                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            Description = "Freelancer"
                         },
                         new
                         {
                             EmployeeStatusID = 3,
-                            Description = "Advisor",
-                            LastCentarixID = 0,
-                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            Description = "Advisor"
                         },
                         new
                         {
                             EmployeeStatusID = 4,
-                            Description = "User",
-                            LastCentarixID = 0,
-                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            Description = "User"
                         });
                 });
 
@@ -3271,14 +3237,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.CentarixID", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany("CentarixIDs")
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>

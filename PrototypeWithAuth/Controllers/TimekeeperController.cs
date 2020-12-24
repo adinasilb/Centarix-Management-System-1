@@ -401,6 +401,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 updateHoursViewModel.IsForgotToReport = true;
             }
+            if (!isWorkFromHome)
+            {
+                updateHoursViewModel.AutoFillEntry1Type = 2;
+            }
+            else
+            {
+                updateHoursViewModel.AutoFillEntry1Type = 1;
+            }
             return PartialView(updateHoursViewModel);
         }
 

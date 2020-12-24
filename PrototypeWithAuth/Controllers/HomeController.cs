@@ -36,13 +36,16 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
+            var user = _context.Employees.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
 
             if (user.LastLogin.Date < DateTime.Today)
             {
                 fillInOrderLate(user);
-                fillInTimekeeperMissingDays(user);
-                fillInTimekeeperNotifications(user);
+                if (User.IsInRole("Timekeeper") && user.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
+                {
+                    fillInTimekeeperMissingDays(user);
+                    fillInTimekeeperNotifications(user);
+                }
                 user.LastLogin = DateTime.Now;
                 _context.Update(user);
                 _context.SaveChanges();

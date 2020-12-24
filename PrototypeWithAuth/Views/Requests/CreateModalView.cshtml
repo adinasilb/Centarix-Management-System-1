@@ -21,7 +21,7 @@
 
 <div class="col-12 create-user mx-auto on-form-modal order-inv-form" style="width: 60%">
     <div class="on-form-modal-border">
-        <form action="" id="" class="ordersItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+        <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
             @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
             @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
@@ -77,11 +77,11 @@
                                             <i class="icon-archive-24px" style="font-size: 2rem;"></i><br />Archive
                                         </a>
                                     </li>*@
-                                <li class="nav-item icon history-tab">
+                                @*<li class="nav-item icon history-tab">
                                     <a data-toggle="tab" href="#history" class="next-tab nav-link">
                                         <i class="icon-history-24px" style="font-size: 2rem;"></i><br />History
                                     </a>
-                                </li>
+                                </li>*@
                                 <li class="nav-item icon order-tab">
                                     <a data-toggle="tab" href="#order" class="next-tab nav-link">
                                         <i class="icon-assignment-24px" style="font-size: 2rem;"></i> <br />Order
@@ -294,13 +294,13 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text border-bottom">&#36;</span>
+                                                                <span class="input-group-text border-bottom request-cost-dollar-icon">&#36;</span>
                                                                 <input class="form-control-plaintext border-bottom " name="unit-price-dollars" id="unit-price-dollars" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#x20aa;</span>
+                                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                                                                 <input class="form-control-plaintext border-bottom " name="unit-price-shekel" id="unit-price-shekel" disabled />
                                                             </div>
                                                         </div>
@@ -360,13 +360,13 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#36;</span>
+                                                                <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                                                                 <input class="form-control-plaintext border-bottom " type="number" min="0" name="subunit-price-dollars" id="subunit-price-dollars" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#x20aa;</span>
+                                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                                                                 <input class="form-control-plaintext border-bottom " type="number" min="0" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
                                                             </div>
                                                         </div>
@@ -413,13 +413,13 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#36;</span>
+                                                                <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                                                                 <input class="form-control-plaintext border-bottom" name="subsubunit-price-dollars" id="subsubunit-price-dollars" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#x20aa;</span>
+                                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                                                                 <input class="form-control-plaintext border-bottom" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled />
                                                             </div>
                                                         </div>
@@ -434,7 +434,7 @@
                                         <div class="form-group">
                                             <label asp-for="Request.Cost" class="control-label">Total:</label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
+                                                <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                                                 <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
                                             </div>
                                         </div>
@@ -443,7 +443,7 @@
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
+                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                                                 <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1" readonly />
                                                 <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                             </div>
@@ -453,9 +453,8 @@
                                         <div class="form-group">
                                             <label asp-for="Request.VAT" class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " disabled />
-                                                <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
+                                                <span class="input-group-text disabled-text">&#36;</span>
+                                                <input class="form-control-plaintext border-bottom vatInDollars disabled-text" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -463,8 +462,9 @@
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
-                                                <input  class="form-control-plaintext border-bottom vatInDollars " disabled/>
+                                                <span class="input-group-text disabled-text">&#x20aa;</span>
+                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom disabled-text" disabled />
+                                                <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -472,8 +472,8 @@
                                         <div class="form-group">
                                             <label class="control-label">Total + VAT:</label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                                                <span class="input-group-text disabled-text">&#36;</span>
+                                                <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -481,8 +481,8 @@
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                                <span class="input-group-text disabled-text">&#x20aa;</span>
+                                                <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -509,12 +509,29 @@
                                                 filterClass = "order-inv-filter";
                                             }
                                         }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
                                             <div class="card document-border ">
                                                 <div class="document-card text-center">
                                                     <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                                                 </div>
 
+                                            </div>
+                                        </a>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+                                    </div>
+                                    <div class=" document-margin">
+                                        @{
+                                            filterClass = "opac87";
+                                            if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
+                                            {
+                                                filterClass = "order-inv-filter";
+                                            }
+                                        }
+                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
+                                            <div class="card document-border">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                </div>
                                             </div>
                                         </a>
                                         <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
@@ -537,7 +554,7 @@
                                         </a>
                                         <label class="control-label text-center text document-text-margin" style="width:100%;">Invoice</label>
                                     </div>
-                                    <div class=" document-margin">
+                                    <div class="">
                                         @{
                                             filterClass = "opac87";
                                             if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
@@ -554,23 +571,6 @@
                                             </div>
                                         </a>
                                         <label class="control-label text-center text document-text-margin" style="width:100%;">Shipment</label>
-                                    </div>
-                                    <div class="">
-                                        @{
-                                            filterClass = "opac87";
-                                            if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
-                                            {
-                                                filterClass = "order-inv-filter";
-                                            }
-                                        }
-                                        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
-                                            <div class="card document-border">
-                                                <div class="document-card text-center">
-                                                    <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
                                     </div>
                                 </div>
                                 <div class="row document-margin-bottom">
@@ -698,14 +698,14 @@
                                 <h5>This is the Archive tab. As of yet there is nothing in the Archive.</h5>
                             </div>*@
 
-                        <div id="history" class="tab-pane fade">
+                        @*<div id="history" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
                                 <span class="heading-1 modal-tab-name">History</span>
                                 <br />
                                 <br />
                                 <h5>This is the History tab.</h5>
                             </div>
-                        </div>
+                        </div>*@
 
                         <div id="order" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">

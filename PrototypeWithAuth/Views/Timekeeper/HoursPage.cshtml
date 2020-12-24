@@ -152,9 +152,14 @@
                         </button>
 
                     }
-                    else if ((eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null) || (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2)))
+                    else if ((eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null))
                     {
                         <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>
+                    }
+                    else if ((eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2)))
+                    {
+                        <a href="" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours timekeeper-font-color" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</a>
+                        @*<button type="button" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>*@
                     }
                     else if (eh.EmployeeHours.Exit1 == null)
                     {
@@ -171,7 +176,7 @@
 
                 </div>
 
-                <div class="col timekeeper-font-color font-weight-bold" style="width:9%;">
+                <div class="col timekeeper-font-color" style="width:9%;">
                     @{var hours = eh.EmployeeHours.TotalHours == TimeSpan.Zero || eh.EmployeeHours.TotalHours == null ? "n/a" : eh.EmployeeHours.TotalHours?.ToString(@"h\:mm"); }
                     @hours
                 </div>
