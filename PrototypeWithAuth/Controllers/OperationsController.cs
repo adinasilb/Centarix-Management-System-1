@@ -233,8 +233,6 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.VendorID = vendorID;
             /*string*/
             requestIndexViewModel.ApplicationUserID = applicationUserID;
-            /*AppUtility.RequestPageTypeEnum*/
-            requestIndexViewModel.OperPageType = PageType;
 
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
@@ -1115,7 +1113,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index", "Operations", new
             {
                 requestStatusID = 2,
-                PageType = AppUtility.RequestPageTypeEnum.Request
+                PageType = AppUtility.PageTypeEnum.RequestRequest
             });
         }
 

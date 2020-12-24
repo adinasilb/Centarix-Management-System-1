@@ -257,7 +257,7 @@ namespace PrototypeWithAuth.AppData
         {
             List<AccountingPopoverLink> list = new List<AccountingPopoverLink>();
             List<PaymentsPopoverEnum> enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
-            if (!CurrentEnum.Equals(AppUtility.AccountingPaymentsEnum.StandingOrders.ToString()))
+            if (!CurrentEnum.Equals(AppUtility.SidebarEnum.StandingOrders.ToString()))
             {
                 foreach (PaymentsPopoverEnum e in enums)
                 {
