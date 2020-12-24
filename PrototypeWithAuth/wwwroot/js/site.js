@@ -9,7 +9,7 @@ $(function () {
 	//$('.modal form').attr('autocomplete', 'off');
 	var VatPercentage = .17;
 
-	
+
 
 	function showmodal() {
 		$("#modal").modal('show');
@@ -527,7 +527,7 @@ $(function () {
 		//console.log("about to call ajax with a parentid of: " + parentId);
 		$.ajax({
 			async: true,
-			url: "/Locations/VisualLocationsZoom/?VisualContainerId=" + parentId+"&SectionType="+sectionType,
+			url: "/Locations/VisualLocationsZoom/?VisualContainerId=" + parentId + "&SectionType=" + sectionType,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -680,98 +680,6 @@ $(function () {
 
 
 
-	//$.fn.HideAllDocs = function () {
-	//	//$(".orders-view").hide();
-	//	$(".invoices-view").hide();
-	//	$(".shipments-view").hide();
-	//	$(".quotes-view").hide();
-	//	$(".info-view").hide();
-	//	$(".pictures-view").hide();
-	//	$(".returns-view").hide();
-	//	$(".credits-view").hide();
-	//};
-
-	//$(".show-orders-view").click(function () {
-	//	$(".invoices-view").hide();
-	//	$(".shipments-view").hide();
-	//	$(".quotes-view").hide();
-	//	$(".info-view").hide();
-	//	$(".pictures-view").hide();
-	//	$(".returns-view").hide();
-	//	$(".credits-view").hide();
-	//	$(".orders-view").toggle();
-	//});
-	//$(".show-invoices-view").click(function () {
-	//	$(".orders-view").hide();
-	//	$(".shipments-view").hide();
-	//	$(".quotes-view").hide();
-	//	$(".info-view").hide();
-	//	$(".pictures-view").hide();
-	//	$(".returns-view").hide();
-	//	$(".credits-view").hide();
-	//	$(".invoices-view").toggle();
-	//});
-	//$(".show-shipments-view").click(function () {
-	//	$(".orders-view").hide();
-	//	$(".invoices-view").hide();
-	//	$(".quotes-view").hide();
-	//	$(".info-view").hide();
-	//	$(".pictures-view").hide();
-	//	$(".returns-view").hide();
-	//	$(".credits-view").hide();
-	//	$(".shipments-view").toggle();
-	//});
-	//$(".show-quotes-view").click(function () {
-	//	$(".orders-view").hide();
-	//	$(".invoices-view").hide();
-	//	$(".shipments-view").hide();
-	//	$(".info-view").hide();
-	//	$(".pictures-view").hide();
-	//	$(".returns-view").hide();
-	//	$(".credits-view").hide();
-	//	$(".quotes-view").toggle();
-	//});
-	//$(".show-info-view").click(function () {
-	//	$(".orders-view").hide();
-	//	$(".invoices-view").hide();
-	//	$(".shipments-view").hide();
-	//	$(".quotes-view").hide();
-	//	$(".pictures-view").hide();
-	//	$(".returns-view").hide();
-	//	$(".credits-view").hide();
-	//	$(".info-view").toggle();
-	//});
-	//$(".show-pictures-view").click(function () {
-	//	$(".orders-view").hide();
-	//	$(".invoices-view").hide();
-	//	$(".shipments-view").hide();
-	//	$(".quotes-view").hide();
-	//	$(".info-view").hide();
-	//	$(".returns-view").hide();
-	//	$(".credits-view").hide();
-	//	$(".pictures-view").toggle();
-	//});
-	//$(".show-returns-view").click(function () {
-	//	$(".orders-view").hide();
-	//	$(".invoices-view").hide();
-	//	$(".shipments-view").hide();
-	//	$(".quotes-view").hide();
-	//	$(".info-view").hide();
-	//	$(".pictures-view").hide();
-	//	$(".credits-view").hide();
-	//	$(".returns-view").toggle();
-	//});
-	//$(".show-credits-view").click(function () {
-	//	$(".orders-view").hide();
-	//	$(".invoices-view").hide();
-	//	$(".shipments-view").hide();
-	//	$(".quotes-view").hide();
-	//	$(".info-view").hide();
-	//	$(".pictures-view").hide();
-	//	$(".returns-view").hide();
-	//	$(".credits-view").toggle();
-	//});
-
 
 	//$(".close").click(function () {
 	//	console.log("close");
@@ -910,7 +818,7 @@ $(function () {
 				$(this).remove();
 			}
 		});
-		
+
 		var myDiv = $(".colTwoSublocations");
 		var table = $(this).closest('table');
 
@@ -1018,12 +926,12 @@ $(function () {
 				$(this).hide();
 			});
 
-		
+
 			isParent = true;
 
 		}
 		else {
-			
+
 			console.log("is not parent location");
 			//remove all columns to the right
 			var thisLocationInstanceID = $(this).val();
@@ -1062,11 +970,11 @@ $(function () {
 			context: $("#colTwoSublocations" + parentsParentId),
 			success: function (result) {
 				myDiv.show();
-				
+
 				$("#loading1").hide();
 				$("#loading1")/*.delay(1000)*/.hide(0);
 				myDiv.append(result);
-				if ($(parentLocation).hasClass("parent-location") ) {
+				if ($(parentLocation).hasClass("parent-location")) {
 					//$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
 					//$("table td.li-name").html($(parentLocation).attr("name"));
 					//$("table td.li-name").removeClass("filled-location-class-color")
@@ -1074,7 +982,7 @@ $(function () {
 				}
 				//this.html(result);
 				//add heading name
-			
+
 
 			}
 		});
@@ -1705,15 +1613,15 @@ $(function () {
 		}
 	});
 	$('.yearsHours .select-dropdown').off('change').change(function (e) {
-	console.log(".yearsHours chnage")
-	if ($(this).val() != '') {
-		$.fn.SortByMonth($('#months').val(), $(this).val())
-	}
-});
+		console.log(".yearsHours chnage")
+		if ($(this).val() != '') {
+			$.fn.SortByMonth($('#months').val(), $(this).val())
+		}
+	});
 	$.fn.SortByMonth = function (month, year) {
 		$.ajax({
 			async: false,
-			url: 'HoursPage?month=' + month+"&year="+year,
+			url: 'HoursPage?month=' + month + "&year=" + year,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -1721,7 +1629,7 @@ $(function () {
 			}
 		});
 	};
-	
+
 	$(".open-work-from-home-modal").off('click').click(function (e) {
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
@@ -1729,11 +1637,12 @@ $(function () {
 		if ($(this).hasClass("ReportHours")) {
 			pageType = "ReportHours";
 		}
-		var itemurl = "UpdateHours?PageType=" + pageType+"&isWorkFromHome="+true;
+		var itemurl = "UpdateHours?PageType=" + pageType + "&isWorkFromHome=" + true;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
 	$(".open-update-hours-modal").off('click').click(function (e) {
+		e.preventDefault();
 		var val = $(this).val();
 		if (val != '') {
 			var date = new Date(val).toISOString();
@@ -1783,7 +1692,7 @@ $(function () {
 		var pageType = "SummaryHours";
 		switch ($(this).val()) {
 			case "1":
-				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate+"&isWorkFromHome="+true;
+				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate + "&isWorkFromHome=" + true;
 				$("#loading").show();
 				$.fn.CallModal(itemurl)
 				break;
@@ -1792,7 +1701,7 @@ $(function () {
 				$("#loading").show();
 				$.fn.CallModal(itemurl);
 				break;
-			case "3":		
+			case "3":
 				var itemurl = "SickDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
 				$.fn.CallModal(itemurl);
 				break;
@@ -1854,7 +1763,7 @@ $(function () {
 
 	$.fn.GetEmployeeHourFromHome = function (date) {
 		console.log(date);
-		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString()+"&isWorkFromHome="+true)
+		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString() + "&isWorkFromHome=" + true)
 	};
 	$.fn.GetEmployeeHourFromToday = function () {
 		$.fn.CallModal('ExitModal');
@@ -1924,18 +1833,53 @@ $(function () {
 		$('#EmployeeHour_Entry2').val('');
 	});
 	$("body").on("change", "#EmployeeHour_Exit1", function (e) {
-		$('#EmployeeHour_TotalHours').val('');
+		$.fn.UpdateTotalHours();
+		//$('#EmployeeHour_TotalHours').val('');
 	});
 	$("body").on("change", "#EmployeeHour_Entry1", function (e) {
-		$('#EmployeeHour_TotalHours').val('');
+		$.fn.UpdateTotalHours();
+		//$('#EmployeeHour_TotalHours').val('');
 	});
 
 	$("body").on("change", "#EmployeeHour_Exit2", function (e) {
-		$('#EmployeeHour_TotalHours').val('');
+		$.fn.UpdateTotalHours();
+		//$('#EmployeeHour_TotalHours').val('');
 	});
 	$("body").on("change", "#EmployeeHour_Entry2", function (e) {
-		$('#EmployeeHour_TotalHours').val('');
+		$.fn.UpdateTotalHours();
+		//$('#EmployeeHour_TotalHours').val('');
 	});
+
+	$.fn.UpdateTotalHours = function () {
+		var totalHours = '';
+		var totalentryhours = '';
+		var exit1 = $('#EmployeeHour_Exit1').val();
+		var exit2 = $('#EmployeeHour_Exit2').val();
+		var entry1 = $('#EmployeeHour_Entry1').val();
+		var entry2 = $('#EmployeeHour_Entry2').val();
+		if (entry1 != '' && exit1 != '') {
+			var exit1fullhours = parseFloat(exit1.substr(0, 2)) + parseFloat(exit1.substr(3, 2)) / 60;
+			var entry1fullhours = parseFloat(entry1.substr(0, 2)) + parseFloat(entry1.substr(3, 2)) / 60;
+			totalentryhours = exit1fullhours - entry1fullhours;
+		}
+		if (entry2 != '' && exit2 != '') {
+			var exit2fullhours = parseFloat(exit2.substr(0, 2)) + parseFloat(exit2.substr(3, 2)) / 60;
+			var entry2fullhours = parseFloat(entry2.substr(0, 2)) + parseFloat(entry2.substr(3, 2)) / 60;
+			var totalentry2hours = exit2fullhours - entry2fullhours;
+			totalentryhours += totalentry2hours;
+		}
+
+		if (totalentryhours != '') {
+			var hours = Math.floor(totalentryhours);
+			if (hours < 10) { hours = '0' + hours }
+			var mins = Math.floor(60 * (totalentryhours - hours));
+			if (mins < 10) { mins = '0' + mins }
+			var totalHours = hours + ":" + mins;
+		}
+
+		$('#EmployeeHour_TotalHours').val(totalHours);
+	}
+
 	//});
 	/*End Dropdown Menu*/
 	//$("body").off('click').on("click", ".upload-image", function (e) {
@@ -1972,14 +1916,14 @@ $(function () {
 		alert("about to go into ajax, url: " + url);
 		$.ajax({
 			async: true,
-			url: "/Timekeeper/"+url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType + "&month=" + month,
+			url: "/Timekeeper/" + url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType + "&month=" + month,
 			type: 'POST',
 			cache: true,
 			success: function (data) {
 				console.log(data)
 				$(".modal").modal('hide');
 				if (pageType = "ReportDaysOff") {
-	
+
 					$(".report-days-off-partial").html(data);
 				}
 				else {
@@ -1989,7 +1933,7 @@ $(function () {
 
 
 			}
-			
+
 		});
 	}
 
@@ -2121,108 +2065,108 @@ $(function () {
 		//	return false;
 		//}
 		//else {
-			var type = $(this).attr('name');
-			console.log(type);
-			var url = '';
-			var section = ""
-			if ($(this).hasClass('operations')) {
-				url = "/Operations/EditModalView";
-				section = "Operations";
-			} else if ($(this).hasClass('suppliers')) {
-				url = "/Vendors/Edit";
-				section = "LabManagement";
-			} else if ($(this).hasClass('accounting')) {
-				url = "/Vendors/Edit";
-				section = "Accounting";
-			}
-			else if ($(this).hasClass('users')) {
-				url = "/Admin/EditUser";
-				section = "Users";
-			} else if ($(this).hasClass('orders')) {
-				url = "/Requests/EditModalView";
-				section = "Requests";
-			}
-			if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
-				url = "/Requests/EditModalView";
-				section = "LabManagement";
-			}
+		var type = $(this).attr('name');
+		console.log(type);
+		var url = '';
+		var section = ""
+		if ($(this).hasClass('operations')) {
+			url = "/Operations/EditModalView";
+			section = "Operations";
+		} else if ($(this).hasClass('suppliers')) {
+			url = "/Vendors/Edit";
+			section = "LabManagement";
+		} else if ($(this).hasClass('accounting')) {
+			url = "/Vendors/Edit";
+			section = "Accounting";
+		}
+		else if ($(this).hasClass('users')) {
+			url = "/Admin/EditUser";
+			section = "Users";
+		} else if ($(this).hasClass('orders')) {
+			url = "/Requests/EditModalView";
+			section = "Requests";
+		}
+		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
+			url = "/Requests/EditModalView";
+			section = "LabManagement";
+		}
 
-			if (type == 'edit') {
-				$("#loading").show();
-				console.log("in if edit");
-				$itemurl = "/Requests/ConfirmEdit/?MenuItem=" + section;
-				console.log("itemurl: " + $itemurl);
-				$.ajax({
-					async: true,
-					url: $itemurl,
-					type: 'GET',
-					cache: true,
-					success: function (data) {
-						$("#loading").hide();
-						var modal = $(data);
-						$('body').append(modal);
-						$(".confirm-edit-modal").modal({
-							backdrop: false,
-							keyboard: false,
-						});
-						//shows the modal
-						$(".confirm-edit-modal").modal('show');
-						$(".modal-open-state").attr("text", "open");
-
-
-					}
-
-				});
+		if (type == 'edit') {
+			$("#loading").show();
+			console.log("in if edit");
+			$itemurl = "/Requests/ConfirmEdit/?MenuItem=" + section;
+			console.log("itemurl: " + $itemurl);
+			$.ajax({
+				async: true,
+				url: $itemurl,
+				type: 'GET',
+				cache: true,
+				success: function (data) {
+					$("#loading").hide();
+					var modal = $(data);
+					$('body').append(modal);
+					$(".confirm-edit-modal").modal({
+						backdrop: false,
+						keyboard: false,
+					});
+					//shows the modal
+					$(".confirm-edit-modal").modal('show');
+					$(".modal-open-state").attr("text", "open");
 
 
-			}
-			else if (type == 'details') {
-				console.log("in if details");
-				$('.mark-readonly').attr("disabled", false);
-				//TODO: add in mark-readonly fields for subunits
-				//$.fn.CheckUnitsFilled();
-				//$.fn.CheckSubUnitsFilled();
-
-				$('.mark-edditable').data("val", true);
-				$('.edit-mode-switch-description').text("Edit Mode On");
-				$('.turn-edit-on-off').attr('name', 'edit')
-
-				//turn off document modals
-
-
-
-				if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
-					console.log("orders operations")
-					$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
-					$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
-					$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
-					$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
-				}
-				if ($(this).hasClass('orders')) {
-					console.log("orders")
-					$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
-					$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
-					$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
-					if (($("#Request_SubSubUnit").hasClass('.mark-readonly'))) {
-						$.fn.EnableSubSubUnits();
-						$.fn.ChangeSubSubUnitDropdown();
-					}
-					if (($("#Request_SubUnit").hasClass('.mark-readonly'))) {
-						$.fn.EnableSubUnits();
-						$.fn.ChangeSubUnitDropdown();
-					}
-				}
-				if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
-					$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
-				}
-				if ($(this).hasClass('users')) {
-					$.fn.EnableMaterialSelect('#NewEmployee_JobCategoryTypeID', 'select-options-NewEmployee_JobCategoryTypeID');
-					$.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
-					$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
-					$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
 				}
 
+			});
+
+
+		}
+		else if (type == 'details') {
+			console.log("in if details");
+			$('.mark-readonly').attr("disabled", false);
+			//TODO: add in mark-readonly fields for subunits
+			//$.fn.CheckUnitsFilled();
+			//$.fn.CheckSubUnitsFilled();
+
+			$('.mark-edditable').data("val", true);
+			$('.edit-mode-switch-description').text("Edit Mode On");
+			$('.turn-edit-on-off').attr('name', 'edit')
+
+			//turn off document modals
+
+
+
+			if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
+				console.log("orders operations")
+				$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
+				$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
+				$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
+				$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
 			}
+			if ($(this).hasClass('orders')) {
+				console.log("orders")
+				$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
+				$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
+				$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
+				if (($("#Request_SubSubUnit").hasClass('.mark-readonly'))) {
+					$.fn.EnableSubSubUnits();
+					$.fn.ChangeSubSubUnitDropdown();
+				}
+				if (($("#Request_SubUnit").hasClass('.mark-readonly'))) {
+					$.fn.EnableSubUnits();
+					$.fn.ChangeSubUnitDropdown();
+				}
+			}
+			if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
+				$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+			}
+			if ($(this).hasClass('users')) {
+				$.fn.EnableMaterialSelect('#NewEmployee_JobCategoryTypeID', 'select-options-NewEmployee_JobCategoryTypeID');
+				$.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
+				$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
+				$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
+			}
+
+		}
 		//}
 	});
 
