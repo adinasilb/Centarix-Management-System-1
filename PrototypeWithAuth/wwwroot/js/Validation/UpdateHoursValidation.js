@@ -8,7 +8,7 @@ $.validator.addMethod("TimeRangeMakesSenseEntry2", function (value, element) {
 
 $.validator.addMethod("eitherHoursOrTime", function (value, element) {
 return ($("#EmployeeHour_Exit1").val() != "" && $("#EmployeeHour_Entry1").val() != "") || $("#EmployeeHour_TotalHours").val() != "";
-}, 'Either total hours or and Entry must be filled in');
+}, 'Either total hours or Entry must be filled in');
 
 $.validator.addMethod("IfEntry2IsInView", function (value, element) {
 	return $('#EmployeeHour_Exit2').val()!="" || $('#EmployeeHour_Entry2').val() !="";
