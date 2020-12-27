@@ -2068,7 +2068,7 @@ $(function () {
 		var type = $(this).attr('name');
 		console.log(type);
 		var url = '';
-		var section = ""
+		var section = "";
 		if ($(this).hasClass('operations')) {
 			url = "/Operations/EditModalView";
 			section = "Operations";
@@ -2112,7 +2112,6 @@ $(function () {
 					//shows the modal
 					$(".confirm-edit-modal").modal('show');
 					$(".modal-open-state").attr("text", "open");
-
 
 				}
 

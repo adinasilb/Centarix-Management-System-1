@@ -77,6 +77,8 @@
 						cache: true,
 						success: function (data) {
 							$('#usersTable').html(data);
+							alert("Updated CentarixID: " + $("#CentarixID").val());
+							$("#OriginalStatusID").attr("CentarixID", $("#CentarixID").val());
 						}
 					});
 
