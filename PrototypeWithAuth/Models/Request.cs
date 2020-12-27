@@ -144,6 +144,7 @@ namespace PrototypeWithAuth.Models
         public Invoice Invoice { get; set; }
 
         public string? NoteToSupplier { get; set; }
+        public IEnumerable<RequestNotification> RequestNotifications { get; set; }
 
 
     }
