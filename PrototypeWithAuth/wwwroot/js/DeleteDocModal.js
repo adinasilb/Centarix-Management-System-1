@@ -7,7 +7,7 @@
 	$foldername = $("#FolderName").val();
 	$requestId = $("#RequestID").val();
 	var $SectionType = $("#SectionType").val();
-	alert($("#SectionType").val())
+	//alert($("#SectionType").val())
 	var $isEdittable = $('#IsEdittable').val();
 	console.log("foldername: " + $foldername);
 	console.log("$requestId: " + $requestId);

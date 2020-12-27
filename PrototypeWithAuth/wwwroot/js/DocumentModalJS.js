@@ -167,7 +167,7 @@
 	//	alert("djs modal turned on or off!");
 	//});
 	$(".modal .turn-edit-doc-on-off").off("click").on("click", function () {
-		alert('.turneditdoc on and off')
+		//alert('.turneditdoc on and off')
 		var detailsBool = $(".isEdittable").hasClass("details");
 		var editBool = $(".isEdittable").hasClass("edit");
 

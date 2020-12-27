@@ -606,7 +606,7 @@
 				}
 
 				// default error handler if no custom one specified
-				alert("Webcam.js Error: " + message);
+				//alert("Webcam.js Error: " + message);
 			}
 
 			return false; // no hook defined

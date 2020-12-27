@@ -449,11 +449,11 @@ $(function () {
 	});
 
 	$("#currency").change(function (e) {
-		alert("Currency changed!");
+		//alert("Currency changed!");
 		$.fn.CheckCurrency();
 	});
 	$(".modal").on("change","#currency", function (e) {
-		alert("Currency changed!");
+		//alert("Currency changed!");
 		$.fn.CheckCurrency();
 	});
 	$("#Request_ExchangeRate").change(function (e) {

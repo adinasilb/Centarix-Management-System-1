@@ -1894,7 +1894,7 @@ $(function () {
 	//	$('.msg').html(msg + input + '</span>');
 	//}); 
 	$.fn.SaveOffDays = function (url, pageType, month) {
-		alert("in save off days, url: " + url);
+		//alert("in save off days, url: " + url);
 		var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
 		var dateRangeFromDay = rangeFrom.attr('data-date');
@@ -1913,7 +1913,7 @@ $(function () {
 		}
 
 		console.log(dateFrom + "-" + dateTo);
-		alert("about to go into ajax, url: " + url);
+		//alert("about to go into ajax, url: " + url);
 		$.ajax({
 			async: true,
 			url: "/Timekeeper/" + url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType + "&month=" + month,
@@ -1927,7 +1927,7 @@ $(function () {
 					$(".report-days-off-partial").html(data);
 				}
 				else {
-					alert("else")
+					//alert("else")
 					$(".render-body").html(data);
 				}
 
@@ -1971,7 +1971,7 @@ $(function () {
 
 	$(".modal").on("click", "#saveSickConfirmation", function (e) {
 		e.preventDefault();
-		alert("save sick confirmation");
+		//alert("save sick confirmation");
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
 			var month = $('#months').val();
