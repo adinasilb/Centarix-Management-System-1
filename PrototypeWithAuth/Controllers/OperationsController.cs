@@ -74,7 +74,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> Index(int page=0, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0,
             string applicationUserID = null, int parentLocationInstanceID = 0,
-            RequestsSearchViewModel? requestsSearchViewModel = null, AppUtility.OperationsPageTypeEnum PageType= AppUtility.OperationsPageTypeEnum.RequestOperations)
+            RequestsSearchViewModel? requestsSearchViewModel = null, AppUtility.PageTypeEnum PageType= AppUtility.PageTypeEnum.OperationsRequest)
         {
 
             //instantiate your list of requests to pass into the index
@@ -112,7 +112,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [Authorize(Roles = "Operations")]
         private async Task<RequestIndexViewModel> GetIndexViewModel(int page = 1, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
-          RequestsSearchViewModel? requestsSearchViewModel = null, AppUtility.OperationsPageTypeEnum PageType = AppUtility.OperationsPageTypeEnum.RequestOperations)
+          RequestsSearchViewModel? requestsSearchViewModel = null, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.OperationsRequest)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
@@ -127,7 +127,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
             }
-            else if (PageType == AppUtility.OperationsPageTypeEnum.RequestOperations)
+            else if (PageType == AppUtility.PageTypeEnum.OperationsRequest)
             {
                 /*
                  * In order to combine all the requests each one needs to be in a separate list
@@ -177,7 +177,7 @@ namespace PrototypeWithAuth.Controllers
 
             }
             //if it is an inventory page --> get all the requests with received and is inventory request status
-            else if (PageType == AppUtility.OperationsPageTypeEnum.InventoryOperations)
+            else if (PageType == AppUtility.PageTypeEnum.OperationsInventory)
             {
                 //partial and clarify?
                 RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3);
@@ -187,25 +187,25 @@ namespace PrototypeWithAuth.Controllers
             {
                 RequestsPassedIn = fullRequestsList;
             }
-            AppUtility.OperationsSidebarEnum SidebarTitle = AppUtility.OperationsSidebarEnum.LastItem;
+            AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.LastItem;
             //now that the lists are created sort by vendor or subcategory
             if (vendorID > 0 && requestsSearchViewModel != null)
             {
-                SidebarTitle = AppUtility.OperationsSidebarEnum.Vendors;
+                SidebarTitle = AppUtility.SidebarEnum.Vendors;
                 RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.VendorID == vendorID);
             }
             else if (subcategoryID > 0 && requestsSearchViewModel != null)
             {
-                SidebarTitle = AppUtility.OperationsSidebarEnum.Type;
+                SidebarTitle = AppUtility.SidebarEnum.Type;
                 RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.Product.ProductSubcategoryID == subcategoryID);
             }
             else if (applicationUserID != null && requestsSearchViewModel != null)
             {
-                SidebarTitle = AppUtility.OperationsSidebarEnum.Owner;
+                SidebarTitle = AppUtility.SidebarEnum.Owner;
                 RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.ApplicationUserCreatorID == applicationUserID);
@@ -233,8 +233,6 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.VendorID = vendorID;
             /*string*/
             requestIndexViewModel.ApplicationUserID = applicationUserID;
-            /*AppUtility.RequestPageTypeEnum*/
-            requestIndexViewModel.OperPageType = PageType;
 
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
@@ -321,10 +319,10 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.Request.ParentQuote.QuoteDate = DateTime.Now;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsRequest;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.AddItem;
-            TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.AddItem;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
             if (AppUtility.IsAjaxRequest(this.Request))
             {
                 return PartialView(requestItemViewModel);
@@ -500,7 +498,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         page = requestItemViewModel.Page,
                         requestStatusID = requestItemViewModel.Request.RequestStatusID,
-                        PageType = AppUtility.RequestPageTypeEnum.Request
+                        PageType = AppUtility.PageTypeEnum.RequestRequest
                     });
                 }
                 catch (DbUpdateException ex)
@@ -1115,7 +1113,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index", "Operations", new
             {
                 requestStatusID = 2,
-                PageType = AppUtility.RequestPageTypeEnum.Request
+                PageType = AppUtility.PageTypeEnum.RequestRequest
             });
         }
 

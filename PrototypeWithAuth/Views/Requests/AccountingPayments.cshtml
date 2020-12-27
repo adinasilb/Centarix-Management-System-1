@@ -23,7 +23,7 @@
                                 }
                             }
                         }
-                        @Html.DisplayFor(m => m.AccountingPaymentsEnum) &nbsp;
+                        @Html.DisplayFor(m => m.AccountingEnum) &nbsp;
                     </div>
                     <div class="text pt-2">
                         [@count]
@@ -158,14 +158,18 @@
                                             </button>
                                         </li>
                                         <div style="display:none;" id="@popoverID">
-                                            @{ var links = AppUtility.GetPaymentsPopoverLinks(Model.AccountingPaymentsEnum.ToString());}
-                                            @foreach (var link in links)
+                                            @if (Model.AccountingEnum != AppUtility.SidebarEnum.StandingOrders)
                                             {
-                                                <div class="row px-3 accounting-popover">
-                                                    <a asp-action="@link.Action" asp-controller="@link.Controller" asp-route-currentStatus="@link.CurrentLocation" asp-route-requestID="@Request.RequestID" asp-route-newStatus="@link.Description" class="btn-link text no-hover"><i class="@link.Icon " style="color:@link.Color"></i><label class="m-2">@link.Description.ToString() </label></a>
-                                                </div>
-                                                <hr class="m-0" />
+                                                 var links = AppUtility.GetPaymentsPopoverLinks(Model.AccountingEnum);
+                                                foreach (var link in links)
+                                                {
+                                                    <div class="row px-3 accounting-popover">
+                                                        <a asp-action="@link.Action" asp-controller="@link.Controller" asp-route-currentStatus="@link.CurrentLocation" asp-route-requestID="@Request.RequestID" asp-route-newStatus="@link.Description" class="btn-link text no-hover"><i class="@link.Icon " style="color:@link.Color"></i><label class="m-2">@link.Description.ToString() </label></a>
+                                                    </div>
+                                                    <hr class="m-0" />
+                                                }
                                             }
+
 
                                         </div>
 
@@ -188,7 +192,7 @@
                     </label>&nbsp;<span>@(((decimal)(00000)).ToString("C02"))</span>
 
                     <button class="custom-button custom-button-font accounting-background-color ml-5 float-right payments-pay-now"
-                            vendor="@Vendor.Key.VendorID" paymentstatus="@Vendor.FirstOrDefault().PaymentStatusID" type="@Model.AccountingPaymentsEnum">
+                            vendor="@Vendor.Key.VendorID" paymentstatus="@Vendor.FirstOrDefault().PaymentStatusID" type="@Model.AccountingEnum">
                         Pay Now
                     </button>
                 </div>

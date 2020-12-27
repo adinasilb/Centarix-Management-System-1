@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public List<Request> Requests { get; set; }
         public List<Payment> Payments { get; set; }
-        public AppUtility.AccountingPaymentsEnum AccountingPaymentsEnum { get; set; }
+        public AppUtility.SidebarEnum AccountingEnum { get; set; }
 
     }
 }

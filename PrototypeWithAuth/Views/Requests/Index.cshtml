@@ -26,7 +26,7 @@
     string pgt = "";
 
     //paged list booleans
-    AppUtility.RequestPageTypeEnum plPageType = AppUtility.RequestPageTypeEnum.Request;
+    AppUtility.PageTypeEnum plPageType = AppUtility.PageTypeEnum.RequestRequest;
     int plRequestStatusID = 1;
     int plSubcategoryID = 0;
     int plVendorID = 0;
@@ -86,15 +86,15 @@
     bool Request = false;
     bool Inventory = false;
     bool Summary = false;
-    if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
+    if (Model.PageType.Equals(AppUtility.PageTypeEnum.RequestRequest))
     {
         Request = true;
     }
-    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    else if (Model.PageType.Equals(AppUtility.PageTypeEnum.RequestInventory))
     {
         Inventory = true;
     }
-    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Summary))
+    else if (Model.PageType.Equals(AppUtility.PageTypeEnum.RequestSummary))
     {
         Summary = true;
     }
@@ -109,7 +109,7 @@
     string receivedActiveClass = "";
     string approvedActiveClass = "";
     int requestStatusID = Model.RequestStatusID;
-    bool isEquipment = Model.PageType.Equals(AppUtility.LabManagementPageTypeEnum.Equipment);
+    bool isEquipment = Model.PageType.Equals(AppUtility.PageTypeEnum.LabManagementEquipment);
     if (!search && !isEquipment)
     {
         newButtonText = "For Approval [" + TempData["AmountNew"].ToString() + "]";
@@ -181,26 +181,26 @@
     </div>
 }
 <form action="" id="requestIndexForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-    @if (TempData[AppUtility.TempDataTypes.PageType.ToString()].Equals(AppUtility.RequestPageTypeEnum.Request) && !search)
+    @if (TempData[AppUtility.TempDataTypes.PageType.ToString()].Equals(AppUtility.PageTypeEnum.RequestRequest) && !search)
     {
 
         <div class="">
             <div class="item-table">
                 <ul class="pl-0">
                     <li class="list-inline-item active m-0">
-                        <a class="@newActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.RequestPageTypeEnum.Request })"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
+                        <a class="@newActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.PageTypeEnum.RequestRequest })"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
                     </li>
                     <li class="list-inline-item m-0">
-                        <a class="@approvedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
+                        <a class="@approvedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.PageTypeEnum.RequestRequest })"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
 
                     </li>
 
                     <li class="list-inline-item m-0">
-                        <a class="@orderedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
+                        <a class="@orderedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.PageTypeEnum.RequestRequest })"> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
                     </li>
 
                     <li class="list-inline-item ">
-                        <a class="@receivedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.RequestPageTypeEnum.Request })"> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
+                        <a class="@receivedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.PageTypeEnum.RequestRequest })"> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
                     </li>
                 </ul>
             </div>

@@ -64,7 +64,7 @@
 
                     <td>
                         @*<a asp-action="Edit" asp-route-id="@item.VendorID">Edit</a> |*@
-                        <a href="@Url.Action("Index", "Requests", new { parentLocationInstanceID = item.LocationInstanceID,  PageType = AppUtility.RequestPageTypeEnum.Inventory })"> <img src="~/images/css/inventory/icons/view-eye.png" alt="Details" /></a>
+                        <a href="@Url.Action("Index", "Requests", new { parentLocationInstanceID = item.LocationInstanceID,  PageType = AppUtility.PageTypeEnum.RequestInventory })"> <img src="~/images/css/inventory/icons/view-eye.png" alt="Details" /></a>
                         @*<a asp-action="Delete" asp-route-id="@item.VendorID">Delete</a>*@
                     </td>
                 </tr>

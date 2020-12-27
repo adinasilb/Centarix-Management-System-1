@@ -23,41 +23,21 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Total + VAT")]
             TotalVat=4
         }
-        public enum YearlyMonthlyEnum { Yearly, Monthly }
-        public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
-        public enum CommentTypeEnum { Warning, Comment }
-        public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum RequestPageTypeEnum { None, Request, Inventory, Cart, Search, Location, Summary }
-        public enum PaymentPageTypeEnum { None, Notifications, General, Expenses, SuppliersAC, Payments } //these are all going to the ParentRequestIndex
-        public enum AccountingSidebarEnum { General, AllSuppliersAC, NewSupplierAC, SearchSupplierAC }
-        public enum LabManagementPageTypeEnum { None, Suppliers, Locations, Equipment, Quotes, SearchLM }
-        public enum LabManagementSidebarEnum { None, Orders, Quotes, AllSuppliers, NewSupplier, SearchSupplier, LocationsList, SearchRequests, SearchEquipment, Calibrate, EquipmentList, EquipmentCategories }
-        public enum OrdersAndInventorySidebarEnum { None, LastItem, Type, Vendor, Owner, Location, Cart, AddItem, Notifications }
-        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual } //Listed in the site.js (if you change here must change there)
-        public enum UserPageTypeEnum { None, User, Workers }
-        public enum UserSideBarEnum { UsersList, UsersAdd, WorkersDetails, WorkersHours, WorkersSalary, WorkersAwaitingApproval, AddWorker }
-        public enum OperationsPageTypeEnum { RequestOperations, InventoryOperations, SearchOperations }
-        public enum OperationsSidebarEnum { LastItem, AddItem, Type, Vendors, Owner, Search }
-        public enum TimeKeeperPageTypeEnum { None, Report, TimekeeperSummary }
-        public enum TimeKeeperSidebarEnum { ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences }
-        public enum ExpensesPageTypeEnum { ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers }
-        public enum ExpensesSidebarEnum { SummaryPieCharts, SummaryTables, SummaryGraphs, StatisticsProject, StatisticsItem, StatisticsWorker, StatisticsCategory, StatisticsVendor, CostsProject, CostsAdvancedSearch, CostsAdvancedLists, WorkersDetails, WorkersHours, WorkersSalary }
-        public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
-        public enum RoleItems { Admin, CEO }
-        public enum CurrencyEnum { USD, NIS }
-        public enum AccountingNotificationsEnum
-        {
-            [Display(Name = "No Invoice")]
-            NoInvoice,
-            [Display(Name = "Didnt Arrive")]
-            DidntArrive,
-            [Display(Name = "Partial Delivery")]
-            PartialDelivery,
-            [Display(Name = "For Clarification")]
-            ForClarification
+        public enum PageTypeEnum {None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, 
+            AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments, 
+            LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,
+            TimeKeeperReport, TimekeeperSummary, 
+            UsersUser, UsersWorkers,
+            OperationsRequest, OperationsInventory, OperationsSearch,
+            ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
+
         }
-        public enum AccountingPaymentsEnum
-        {
+        public enum SidebarEnum {
+            None, LastItem, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
+            Quotes, List,  Calibrate, Categories,  Location, Cart, Notifications,
+            ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
+            PieCharts, Tables, Graphs, Project, Item, Worker, 
+            Category,  Details, Hours, Salary, 
             [Display(Name = "Monthly Payment")]
             MonthlyPayment,
             [Display(Name = "Pay Now")]
@@ -65,8 +45,25 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Pay Later")]
             PayLater, Installments,
             [Display(Name = "Standing Orders")]
-            StandingOrders
+            StandingOrders, 
+            [Display(Name = "No Invoice")]
+            NoInvoice,
+            [Display(Name = "Didnt Arrive")]
+            DidntArrive,
+            [Display(Name = "Partial Delivery")]
+            PartialDelivery,
+            [Display(Name = "For Clarification")]
+            ForClarification,
+            Add,  AwaitingApproval,
         }
+        public enum YearlyMonthlyEnum { Yearly, Monthly }
+        public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
+        public enum CommentTypeEnum { Warning, Comment }
+        public enum TempDataTypes { MenuType, PageType, SidebarType }
+        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual } //Listed in the site.js (if you change here must change there)
+        public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
+        public enum RoleItems { Admin, CEO }
+        public enum CurrencyEnum { USD, NIS }
         public enum PaymentsPopoverEnum
         {
             //Share,
@@ -256,19 +253,19 @@ namespace PrototypeWithAuth.AppData
               value.Hour, value.Minute, 0);
         }
 
-        public static List<AccountingPopoverLink> GetPaymentsPopoverLinks(String CurrentEnum)
+        public static List<AccountingPopoverLink> GetPaymentsPopoverLinks(AppUtility.SidebarEnum CurrentEnum)
         {
             List<AccountingPopoverLink> list = new List<AccountingPopoverLink>();
             List<PaymentsPopoverEnum> enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
-            if (!CurrentEnum.Equals(AppUtility.AccountingPaymentsEnum.StandingOrders.ToString()))
+            if (!CurrentEnum.Equals(AppUtility.SidebarEnum.StandingOrders.ToString()))
             {
                 foreach (PaymentsPopoverEnum e in enums)
                 {
 
-                    if (CurrentEnum != e.ToString())
+                    if (CurrentEnum.ToString() != e.ToString() && CurrentEnum != AppUtility.SidebarEnum.None)
                     {
                         AccountingPopoverLink accountingPopoverLink = new AccountingPopoverLink();
-                        accountingPopoverLink.CurrentLocation = (PaymentsPopoverEnum)Enum.Parse(typeof(PaymentsPopoverEnum), CurrentEnum);
+                        accountingPopoverLink.CurrentLocation = (PaymentsPopoverEnum)Enum.Parse(typeof(PaymentsPopoverEnum), CurrentEnum.ToString());
                         accountingPopoverLink.Description = e;
                         switch (e)
                         {

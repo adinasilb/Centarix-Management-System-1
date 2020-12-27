@@ -5,7 +5,7 @@
     string controller = "";
     ViewData["Title"] = "IndexForPayment";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-    if (TempData["SectionType"].Equals(AppUtility.MenuItems.Operations))
+    if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.Operations))
     {
         hoverClass = "oper-link-clr";
         controller = "Operations";
@@ -54,7 +54,7 @@
                         @Html.DisplayFor(modelItem => item.VendorID)
                     </td>
                     <td>
-                        <a asp-action="Index" asp-controller="@controller" asp-route-vendorID="@item.VendorID" class="@hoverClass" asp-route-SectionType="@TempData["SectionType"]">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
+                        <a asp-action="Index" asp-controller="@controller" asp-route-vendorID="@item.VendorID" class="@hoverClass" asp-route-SectionType="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.VendorHeName)
