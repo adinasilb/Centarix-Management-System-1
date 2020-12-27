@@ -77,7 +77,7 @@ namespace PrototypeWithAuth.Controllers
         private UserIndexViewModel GetUserIndexViewModel()
         {
 
-            var users = _context.Employees.OrderBy(u => u.UserNum).
+            var users = _context.Employees.OrderBy(u => u.UserNum)
                 .Select(u => new UserWithCentarixIDViewModel
                 {
                     Employee = u,

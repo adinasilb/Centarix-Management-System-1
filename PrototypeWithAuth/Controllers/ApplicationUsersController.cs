@@ -78,11 +78,15 @@ namespace PrototypeWithAuth.Controllers
         }
         private EmployeeDetailsViewModel GetWorkersDetailsViewModel()
         {
-            IIncludableQueryable<Employee, JobCategoryType> employees = _context.Users.OfType<Employee>().Where(u => u.EmployeeStatusID != 4).Where(u => !u.IsSuspended)
+            IIncludableQueryable<Employee, JobCategoryType> employees = _context.Employees.Where(u => u.EmployeeStatusID != 4).Where(u => !u.IsSuspended)
                 .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobCategoryType);
             EmployeeDetailsViewModel employeeDetailsViewModel = new EmployeeDetailsViewModel
             {
-                Employees = employees.ToList(),
+                Employees = employees.Select(u => new UserWithCentarixIDViewModel
+                {
+                    Employee = u,
+                    CentarixID = AppUtility.getEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == u.Id).OrderBy(ci => ci.TimeStamp))
+                }),
                 SalariedEmployeeCount = employees.Where(e => e.EmployeeStatusID == 1).Count(),
                 FreelancerCount = employees.Where(e => e.EmployeeStatusID == 2).Count(),
                 AdvisorCount = employees.Where(e => e.EmployeeStatusID == 3).Count(),
