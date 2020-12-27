@@ -167,6 +167,8 @@
     <Compile Remove="Data\Migrations\20201223092048_addedTestToInvoice.Designer.cs" />
     <Compile Remove="Data\Migrations\20201224070239_addedLastCentarixIDTable.cs" />
     <Compile Remove="Data\Migrations\20201224070239_addedLastCentarixIDTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201227075710_movedCentarixIdsFromApplicationUserToEmployee.cs" />
+    <Compile Remove="Data\Migrations\20201227075710_movedCentarixIdsFromApplicationUserToEmployee.Designer.cs" />
   </ItemGroup>
 
 
