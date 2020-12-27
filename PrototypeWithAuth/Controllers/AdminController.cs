@@ -26,6 +26,7 @@ using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using Abp.Extensions;
 using System.Linq.Dynamic.Core;
+using OpenCvSharp;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -355,6 +356,11 @@ namespace PrototypeWithAuth.Controllers
                         _context.Add(freelancer);
                         break;
                     case 3: /*Advisor*/
+                        Advisor advisor = new Advisor()
+                        {
+                            EmployeeID = user.Id
+                        };
+                        _context.Add(advisor);
                         break;
                 }
                 await _context.SaveChangesAsync();
@@ -674,11 +680,17 @@ namespace PrototypeWithAuth.Controllers
                             employeeEditted.Freelancer = freelancer;
                             break;
                         case 3: /*Advisor*/
-                            //check if they were already an advisor
+                            Advisor advisor = _context.Advisors.Where(a => a.EmployeeID == employeeEditted.Id).FirstOrDefault();
+                            if (advisor == null)
+                            {
+                                advisor = new Advisor();
+                            }
                             if (changedEmployeeStatus)
                             {
                                 await AddNewCentarixID(employeeEditted.Id, 3);
                             }
+                            advisor.EmployeeID = employeeEditted.Id;
+                            employeeEditted.Advisor = advisor;
                             break;
                     }
                     await _context.SaveChangesAsync();
