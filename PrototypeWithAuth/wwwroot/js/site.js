@@ -2271,37 +2271,7 @@ $(function () {
 		$(this).popover('toggle');
 
 	});
-	$('.employee-status-radio').off("click").on("click", function () {
-
-		var val = $(this).val();
-		$('#NewEmployee_EmployeeStatusID').val(val)
-		$("#validation-EmployeeStatus").addClass("hidden");
-		if (val == "4") {
-			$('.only-employee').removeClass("error");
-		}
-
-		var centarixIDInput = $('#CentarixID');
-		if (val == $("#OriginalStatusID").val()) {
-			centarixIDInput.val($("#OriginalStatusID").attr("centarixID"));
-		}
-		else {
-			$.ajax({
-				async: true,
-				url: "/Admin/GetProbableNextCentarixID?StatusID=" + val,
-				type: 'GET',
-				cache: true,
-				success: function (data) {
-					console.log("original status id: " + $("#OriginalStatusID").attr("CentarixID"));
-					console.log("data " + data);
-					var showCentarixID = $("#OriginalStatusID").attr("CentarixID") + data;
-					console.log("showCentarixID: " + showCentarixID);
-					centarixIDInput.val(showCentarixID);
-				}
-			});
-		}
-
-
-	});
+	
 
 	$('.isRepeat').off("click").on("click", function () {
 		//console.log('employee status')

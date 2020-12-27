@@ -324,8 +324,10 @@ namespace PrototypeWithAuth.Controllers
                     EmployeeID = user.Id,
                     CentarixIDNumber = cID,
                     IsCurrent = true,
-                    TimeStamp = DateTime.Now
+                    TimeStamp = DateTime.Now,
+                    Employee = _context.Employees.Where(e => e.Id == user.Id).FirstOrDefault()
                 };
+
                 _context.Add(centarixID);
                 await _context.SaveChangesAsync();
 
