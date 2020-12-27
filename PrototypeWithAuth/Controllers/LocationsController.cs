@@ -35,7 +35,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> IndexForInventory(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestSummary)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.PageTypeEnum.RequestLocation;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Location;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
 
             var locations = _context.LocationInstances

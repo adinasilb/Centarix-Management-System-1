@@ -51,19 +51,19 @@
     if (Model.SubCategoryID > 0)
     {
         backTextBool = true;
-        backText = Model.VendorID.ToString();
+        //backText = Model.VendorID.ToString();
         backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = Model.SectionType }).ToString();
     }
     if (Model.VendorID > 0)
     {
         backTextBool = true;
-        backText = Model.VendorID.ToString();
+        //backText = Model.VendorID.ToString();
         backLink = Url.ActionLink("Index", "Vendors", new { @PageType = Model.PageType, SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString();
     }
     if (!string.IsNullOrEmpty(Model.ApplicationUserID))
     {
         backTextBool = true;
-        backText = Model.ApplicationUserID;
+        //backText = Model.ApplicationUserID;
         backLink = Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pgt }).ToString();
     }
 
