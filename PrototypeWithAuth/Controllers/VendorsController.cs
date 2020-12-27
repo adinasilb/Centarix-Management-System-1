@@ -123,7 +123,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (SectionType == AppUtility.MenuItems.Accounting)
             {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;            
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;            
             }
             //return View(vendorSearchViewModel);
             if (AppUtility.IsAjaxRequest(this.Request))
@@ -235,7 +235,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (SectionType == AppUtility.MenuItems.Accounting)
             {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
             }
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
             CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
