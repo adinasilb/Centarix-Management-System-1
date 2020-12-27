@@ -26,7 +26,6 @@ namespace PrototypeWithAuth.Data
 
         //[Display(Name = "ID")]
         //public string CentarixID { get; set; }
-        public List<CentarixID> CentarixIDs { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }

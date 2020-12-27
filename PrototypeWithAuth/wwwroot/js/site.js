@@ -2291,7 +2291,11 @@ $(function () {
 				type: 'GET',
 				cache: true,
 				success: function (data) {
-					centarixIDInput.val(data);
+					console.log("original status id: " + $("#OriginalStatusID").attr("CentarixID"));
+					console.log("data " + data);
+					var showCentarixID = $("#OriginalStatusID").attr("CentarixID") + data;
+					console.log("showCentarixID: " + showCentarixID);
+					centarixIDInput.val(showCentarixID);
 				}
 			});
 		}

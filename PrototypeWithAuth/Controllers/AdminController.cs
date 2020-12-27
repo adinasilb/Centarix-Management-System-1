@@ -321,7 +321,7 @@ namespace PrototypeWithAuth.Controllers
                 var cID = abbrev + currentNum.ToString();
                 CentarixID centarixID = new CentarixID()
                 {
-                    ApplicationUserID = user.Id,
+                    EmployeeID = user.Id,
                     CentarixIDNumber = cID,
                     IsCurrent = true,
                     TimeStamp = DateTime.Now
@@ -570,6 +570,11 @@ namespace PrototypeWithAuth.Controllers
                 int selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
                 Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
                 int oldSelectedStatus = employeeEditted.EmployeeStatusID;
+                bool changedEmployeeStatus = false;
+                if (selectedStatusID != oldSelectedStatus)
+                {
+                    changedEmployeeStatus = true;
+                }
                 if (selectedStatusID == 4)
                 {
                     //never was an employee only was a user and wants to update info                 
@@ -594,7 +599,10 @@ namespace PrototypeWithAuth.Controllers
                     _context.Update(employeeEditted);
                     await _context.SaveChangesAsync();
 
-                    await AddNewCentarixID(employeeEditted.Id, 4);
+                    if (changedEmployeeStatus)
+                    {
+                        await AddNewCentarixID(employeeEditted.Id, 4);
+                    }
                 }
                 else
                 {
@@ -641,6 +649,9 @@ namespace PrototypeWithAuth.Controllers
                             if (salariedEmployee == null)
                             {
                                 salariedEmployee = new SalariedEmployee();
+                            }
+                            if (changedEmployeeStatus)
+                            {
                                 await AddNewCentarixID(employeeEditted.Id, 1);
                             }
                             salariedEmployee.EmployeeId = employeeEditted.Id;
@@ -652,6 +663,9 @@ namespace PrototypeWithAuth.Controllers
                             if (freelancer == null)
                             {
                                 freelancer = new Freelancer();
+                            }
+                            if (changedEmployeeStatus)
+                            {
                                 await AddNewCentarixID(employeeEditted.Id, 2);
                             }
                             freelancer.EmployeeId = employeeEditted.Id;
@@ -659,7 +673,10 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case 3: /*Advisor*/
                             //check if they were already an advisor
-                            //    if so await AddNewCentarixID(employeeEditted.Id, 3);
+                            if (changedEmployeeStatus)
+                            {
+                                await AddNewCentarixID(employeeEditted.Id, 3);
+                            }
                             break;
                     }
                     await _context.SaveChangesAsync();
@@ -885,7 +902,7 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<bool> AddNewCentarixID(string UserID, int StatusID)
         {
-            var oldCentarixID = _context.CentarixIDs.Where(ci => ci.ApplicationUserID == UserID)
+            var oldCentarixID = _context.CentarixIDs.Where(ci => ci.EmployeeID == UserID)
                 .Where(ci => ci.IsCurrent).FirstOrDefault();
             oldCentarixID.IsCurrent = false;
             _context.Update(oldCentarixID);
@@ -902,10 +919,11 @@ namespace PrototypeWithAuth.Controllers
 
             var newCentarixID = new CentarixID()
             {
-                ApplicationUserID = UserID,
+                EmployeeID = UserID,
                 CentarixIDNumber = newID,
                 IsCurrent = true,
-                TimeStamp = DateTime.Now
+                TimeStamp = DateTime.Now,
+                Employee = _context.Employees.Where(e => e.Id == UserID).FirstOrDefault()
             };
             _context.Add(newCentarixID);
             await _context.SaveChangesAsync();
@@ -1018,7 +1036,7 @@ namespace PrototypeWithAuth.Controllers
                 };
 
                 //get CentarixID
-                var allIDs = _context.CentarixIDs.Where(ci => ci.ApplicationUserID == userSelected.Id).OrderBy(ci => ci.TimeStamp);
+                var allIDs = _context.CentarixIDs.Where(ci => ci.EmployeeID == userSelected.Id).OrderBy(ci => ci.TimeStamp);
                 foreach (var centarixID in allIDs)
                 {
                     registerUserViewModel.CentarixID += centarixID.CentarixIDNumber;

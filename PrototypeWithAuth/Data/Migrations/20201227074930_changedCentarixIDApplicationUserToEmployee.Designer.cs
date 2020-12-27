@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201227074930_changedCentarixIDApplicationUserToEmployee")]
+    partial class changedCentarixIDApplicationUserToEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -446,8 +448,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("CentarixIDID");
 
                     b.HasIndex("EmployeeID");
-
-                    b.HasIndex("EmployeeStatusID");
 
                     b.ToTable("CentarixIDs");
                 });
@@ -3292,12 +3292,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("CentarixIDs")
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeStatus", "EmployeeStatus")
-                        .WithMany()
-                        .HasForeignKey("EmployeeStatusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
