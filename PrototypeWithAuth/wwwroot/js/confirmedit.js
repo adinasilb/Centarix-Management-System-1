@@ -40,7 +40,7 @@
 			async: true,
 			url: url,
 			type: 'POST',
-			cache: true,
+			cache: false,
 			success: function (data) {
 				$.fn.getMenuItems();
 				//reload index pages

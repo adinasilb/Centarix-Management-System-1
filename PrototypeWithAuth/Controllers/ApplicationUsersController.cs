@@ -32,26 +32,26 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
 
         [Authorize(Roles = "Users")]
-        public async Task<IActionResult> Index(AppUtility.RequestPageTypeEnum PageType = AppUtility.RequestPageTypeEnum.Request, int categoryType = 1)
+        public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, int categoryType = 1)
         {
             TempData["CategoryType"] = categoryType == 1 ? AppUtility.CategoryTypeEnum.Lab : AppUtility.CategoryTypeEnum.Operations;
             if (categoryType == 1)
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-                TempData["SidebarTitle"] = AppUtility.OrdersAndInventorySidebarEnum.Owner;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Owner;
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             }
             if (categoryType == 2)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.OperationsSidebarEnum.Owner;
-                if (PageType == AppUtility.RequestPageTypeEnum.Request || PageType.ToString() == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Owner;
+                if (PageType == AppUtility.PageTypeEnum.RequestRequest || PageType == AppUtility.PageTypeEnum.OperationsRequest)
                 {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.RequestOperations;
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsRequest;
                 }
-                else if (PageType == AppUtility.RequestPageTypeEnum.Inventory || PageType.ToString() == AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString())
+                else if (PageType == AppUtility.PageTypeEnum.RequestInventory || PageType == AppUtility.PageTypeEnum.OperationsInventory)
                 {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.OperationsPageTypeEnum.InventoryOperations;
+                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory;
                 }
             }
             return View(await _context.Employees.Where(u => !u.IsSuspended).ToListAsync());
@@ -61,9 +61,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> Details()
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersDetails;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Details;
             EmployeeDetailsViewModel employeeDetailsViewModel = GetWorkersDetailsViewModel();
 
             return View(employeeDetailsViewModel);
@@ -115,9 +115,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 month = DateTime.Now.Month;
             }
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersHours;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Hours;
             IIncludableQueryable<Employee, SalariedEmployee> employees = _context.Users.OfType<Employee>().Where(u => !u.IsSuspended)
               .Include(e => e.EmployeeStatus).Include(e => e.JobCategoryType).Include(e => e.EmployeeHours).Include(e => e.SalariedEmployee);
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
@@ -135,14 +135,14 @@ namespace PrototypeWithAuth.Controllers
                         vacationDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 2 && eh.Date.Year == year && eh.Date.Month == month).Count();
                         workDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == null && eh.Date.Year == year && eh.Date.Month == month).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
-                        vacationSickCount = employee.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date)?.Count()??0;
+                        vacationSickCount = employee.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date)?.Count() ?? 0;
                         break;
                     case YearlyMonthlyEnum.Yearly:
                         sickDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 1 && eh.Date.Year == year).Count();
                         vacationDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 2 && eh.Date.Year == year).Count();
                         workDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == null && eh.Date.Year == year).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
-                        vacationSickCount = employee.EmployeeHours.Where(eh => eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date)?.Count()??0;
+                        vacationSickCount = employee.EmployeeHours.Where(eh => eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date)?.Count() ?? 0;
                         break;
                 }
 
@@ -174,9 +174,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> Salary()
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersSalary;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Salary;
             return View();
         }
 
@@ -184,9 +184,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> AwaitingApproval()
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.Workers;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.WorkersAwaitingApproval;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.AwaitingApproval;
 
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = GetAwaitingApprovalModel();
             return View(awaitingApproval);
@@ -262,9 +262,9 @@ namespace PrototypeWithAuth.Controllers
                 EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID,
                 EmployeeID = employeeHoursBeingApproved.EmployeeID,
                 Date = employeeHoursBeingApproved.Date,
-                EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID??0                
+                EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID ?? 0
             };
-            
+
             try
             {
                 _context.Update(employeeHours);
@@ -278,7 +278,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
-          
+
             return RedirectToAction("_AwaitingApproval");
         }
     }

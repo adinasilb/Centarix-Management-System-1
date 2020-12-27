@@ -1560,7 +1560,7 @@ $(function () {
 					backdrop: false,
 					keyboard: true,
 				});
-				$(".modal").modal('show');
+				$(".userImageModal").modal('show');
 			}
 		});
 	};
