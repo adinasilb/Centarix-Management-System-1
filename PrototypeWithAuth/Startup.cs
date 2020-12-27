@@ -224,7 +224,7 @@ namespace PrototypeWithAuth
                 LockoutEnabled = true,
                 LockoutEnd = new DateTime(2999, 01, 01),
                 NeedsToResetPassword = true,
-                UserNum = 1,
+                UserNum = 0,
                 IsUser = true,
             };
             var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
@@ -232,8 +232,7 @@ namespace PrototypeWithAuth
             var result = await UserManager.UpdateAsync(adminuser);
             if (createAdminUser.Succeeded)
             {
-                await UserManager.AddToRoleAsync(adminuser, "Admin");
-                await UserManager.AddToRoleAsync(adminuser, "CEO");
+                await UserManager.AddToRoleAsync(adminuser, "Users");
             }
 
             //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");
