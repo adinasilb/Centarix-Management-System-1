@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class UserIndexViewModel
+    public class UserWithCentarixIDViewModel
     {
-        public IEnumerable<UserWithCentarixIDViewModel> ApplicationUsers { get; set; }
-        public bool IsCEO { get; set; }
+        public Employee Employee {get; set;}
+        public string CentarixID { get; set; }
     }
 }

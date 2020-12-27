@@ -76,24 +76,18 @@ namespace PrototypeWithAuth.Controllers
         }
         private UserIndexViewModel GetUserIndexViewModel()
         {
-            List<Employee> users = new List<Employee>();
-            users = _context.Employees
-                //.Where(u => !u.IsSuspended) //instead of using lockout use bool so needstoreset password will be shown
-                //.Where(u => u.NeedsToResetPassword? !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
-                //.OrderBy(u => u.UserNum)
-                .ToList();
-            List<ApplicationUser> UsersList = _context.Users.ToList();
-            bool IsCEO = false;
-            //if (User.IsInRole("CEO"))
-            //{
-            users = _context.Employees.OrderBy(u => u.UserNum).ToList(); //The CEO can see all users even the ones that are suspended 
-            IsCEO = false; //automatically set to false until CEO is reinstated
-            //}
+
+            var users = _context.Employees.OrderBy(u => u.UserNum)
+                .Select(u => new UserWithCentarixIDViewModel
+                {
+                    Employee = u,
+                    CentarixID = AppUtility.GetEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == u.Id).OrderBy(ci => ci.TimeStamp))
+                });
 
             UserIndexViewModel userIndexViewModel = new UserIndexViewModel()
             {
                 ApplicationUsers = users,
-                IsCEO = IsCEO
+                IsCEO = false
             };
             return userIndexViewModel;
         }
@@ -1050,11 +1044,7 @@ namespace PrototypeWithAuth.Controllers
                 };
 
                 //get CentarixID
-                var allIDs = _context.CentarixIDs.Where(ci => ci.EmployeeID == userSelected.Id).OrderBy(ci => ci.TimeStamp);
-                foreach (var centarixID in allIDs)
-                {
-                    registerUserViewModel.CentarixID += centarixID.CentarixIDNumber;
-                }
+                registerUserViewModel.CentarixID = AppUtility.GetEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == userSelected.Id).OrderBy(ci => ci.TimeStamp));
 
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                 DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
