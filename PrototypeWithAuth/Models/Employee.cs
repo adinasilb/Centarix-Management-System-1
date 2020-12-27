@@ -72,6 +72,8 @@ namespace PrototypeWithAuth.Models
         public Advisor Advisor { get; set; }
 
         public bool IsUser { get; set; }
+
+        public IEnumerable<CentarixID> CentarixIDs { get; set; }
         //todo add job category
     }
 }
