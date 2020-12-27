@@ -169,6 +169,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             {
                 ModelState.AddModelError(string.Empty, error.Description);
                 Input.ErrorMessage += "\n" + error.Description;
+            
             }
 
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
