@@ -569,7 +569,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Reports")]
-        public StatisticsItemViewModel GetStatisticsItemViewModel(bool FrequentlyBought, bool HighestPrice, List<int> CategoryTypesSelected, List<int> Months, List<int> Year)
+        public StatisticsItemViewModel GetStatisticsItemViewModel(bool FrequentlyBought, bool HighestPrice, List<int> CategoryTypesSelected, List<int> Months, List<int> Years)
         {
             var categoryTypes = _context.CategoryTypes.ToList();
 
@@ -581,7 +581,7 @@ namespace PrototypeWithAuth.Controllers
                 CategoryTypesSelected = _context.CategoryTypes.Where(ct => CategoryTypesSelected.Contains(ct.CategoryTypeID)).ToList(),
                 CategoryTypes = categoryTypes,
                 Months = Months,
-                Year = Year
+                Years = Years
             };
 
             return statisticsItemViewModel;
