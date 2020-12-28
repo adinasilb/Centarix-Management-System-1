@@ -141,7 +141,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        private async Task<RequestIndexViewModel> GetExpensesItemsViewModel(int page = 1)
+        private async Task<RequestIndexViewModel> GetExpensesItemsViewModel(int page = 1, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null, String SortType = null)
         {
             RequestIndexViewModel viewModel = new RequestIndexViewModel()
             {
@@ -326,11 +326,11 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Requests")]
+        [Authorize(Roles = "Requests, Reports")] //called from statistics page
         public async Task<IActionResult> _IndexTable(int page, int RequestStatusID = 1, int subcategoryID = 0, int vendorID = 0, string applicationUserID = null, int parentLocationInstanceID = 0,
             AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             RequestsSearchViewModel? requestsSearchViewModel = null, List<String> selectedPriceSort = null, AppUtility.CurrencyEnum selectedCurrency = AppUtility.CurrencyEnum.NIS,
-            string ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null)
+            string ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null, String SortType = null)
         {
 
             RequestIndexViewModel viewModel = await GetIndexViewModel(page, RequestStatusID, subcategoryID, vendorID, applicationUserID, parentLocationInstanceID,
@@ -342,6 +342,7 @@ namespace PrototypeWithAuth.Controllers
             if (ExpensesFilter != null)
             {
                 viewModel.MenuType = AppUtility.MenuItems.Reports;
+                viewModel = await GetExpensesItemsViewModel(1, CategoryTypeIDs, Months, Years, SortType);
             }
             
             return PartialView(viewModel);

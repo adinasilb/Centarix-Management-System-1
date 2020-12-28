@@ -556,6 +556,18 @@ namespace PrototypeWithAuth.Controllers
             return View(GetStatisticsItemViewModel(true, false, categoryTypesSelected, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Now.Year }));
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Reports")]
+        public IActionResult _StatisticsItem(List<int> CategoryTypesSelected, List<int> Months, List<int> Year, String SortType)
+        {
+            StatisticsItemViewModel statisticsItemViewModel = new StatisticsItemViewModel()
+            {
+                CategoryTypesSelected = _context.CategoryTypes.Where(ct => CategoryTypesSelected.Contains(ct.CategoryTypeID)).ToList()
+            };
+            //statisticsItemViewModel = 
+            return View(statisticsItemViewModel);
+        }
+
         [Authorize(Roles = "Reports")]
         public StatisticsItemViewModel GetStatisticsItemViewModel(bool FrequentlyBought, bool HighestPrice, List<int> CategoryTypesSelected, List<int> Months, List<int> Year)
         {
@@ -763,7 +775,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ExpensesCost;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Project;
             CostsProjectViewModel costsProjectViewModel = new CostsProjectViewModel();
-            costsProjectViewModel.VendorList =   _context.Vendors;
+            costsProjectViewModel.VendorList = _context.Vendors;
             costsProjectViewModel.ParentCategoryList = _context.ParentCategories;
             costsProjectViewModel.SubCategoryList = _context.ProductSubcategories;
             return View(costsProjectViewModel);

@@ -1,0 +1,19 @@
+﻿@model PrototypeWithAuth.ViewModels._StatisticsItemsViewModel
+
+
+@{
+    for (int c = 0; c < Model.CategoryTypesSelected.Count; c++)
+    {
+        <input type="hidden" asp-for="CategoryTypesSelected[c].CategoryTypeID" class="category-type-selected" />
+    }
+    for (int m = 0; m < Model.Months.Count; m++)
+    {
+        <input type="hidden" asp-for="Months[m]" class="months-selected" />
+    }
+    for (int y = 0; y < Model.Years.Count; y++)
+    {
+        <input type="hidden" asp-for="Years[y]" class="years-selected" />
+    }
+
+    await Html.RenderPartialAsync("Requests/_IndexTable", Model.RequestItemViewModel);
+}
