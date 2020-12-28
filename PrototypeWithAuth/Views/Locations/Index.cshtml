@@ -42,13 +42,13 @@
             </div>
         </div>
         <div class="col-3">
-            @if (@*(@User.IsInRole("Admin") || @User.IsInRole("Manager")) &&*@ Model.SectionType == AppUtility.MenuItems.LabManagement)
+            @*@if ((@User.IsInRole("Admin") || @User.IsInRole("Manager")) && Model.SectionType == AppUtility.MenuItems.LabManagement)
             {
                 <button class="custom-button custom-button-font lab-man-background-color load-add-location  mt-3 float-right" data-target="item" data-backdrop="static" data-keyboard="false" href="item" style="vertical-align: middle;">
                     + &nbsp;&nbsp; Add Location
                 </button>
 
-            }
+            }*@
         </div>
     </div>
 

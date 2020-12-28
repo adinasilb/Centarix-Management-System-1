@@ -730,6 +730,14 @@ namespace PrototypeWithAuth.AppData
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
             string Classes = OrigClasses;
+            if (SidebarTitle == AppUtility.SidebarEnum.Add) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Add Location",
+                AjaxLink = "load-add-location",
+                Classes = Classes,
+                IconName = "icon-add_circle_outline-24px1"
+            });
             if (SidebarTitle == AppUtility.SidebarEnum.List) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {

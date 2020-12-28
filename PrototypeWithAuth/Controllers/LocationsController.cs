@@ -191,7 +191,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Requests")]
+        [Authorize(Roles = "Requests, LabManagement")]
         public IActionResult AddLocation()
         {
             AddLocationViewModel addLocationViewModel = new AddLocationViewModel

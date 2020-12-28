@@ -153,7 +153,7 @@ namespace PrototypeWithAuth
 
             //ChangePassword(serviceProvider).Wait();
             //CreateRoles(serviceProvider).Wait();
-            AddRoles(serviceProvider).Wait();
+            //AddRoles(serviceProvider).Wait();
 
             //app.UseApplicationInsightsRequestTelemetry();
             //app.UseApplicationInsightsExceptionTelemetry();
@@ -177,7 +177,7 @@ namespace PrototypeWithAuth
         {
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var user = await UserManager.FindByEmailAsync("adina@centarix.com");
-            await UserManager.AddToRoleAsync(user, "Users");
+            await UserManager.AddToRoleAsync(user, "LabManagement");
             ////await UserManager.AddToRoleAsync(user, "CEO");
             //var code = await UserManager.GeneratePasswordResetTokenAsync(user);
             //var result = await UserManager.ResetPasswordAsync(user, code, "adinabCE2063*");
