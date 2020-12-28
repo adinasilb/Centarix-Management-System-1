@@ -5,7 +5,7 @@ $(".load-order-details").on("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
     $("#loading").show();
-    var section = $(this).attr('section')
+    var section = $("#masterSectionType").val()
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
     var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true" + "&SectionType=" + section;
     $.fn.CallPageRequest($itemurl, "reorder");
@@ -22,7 +22,7 @@ $(".load-product-details").on("click", function (e) {
     else {
         console.log("Requests/EditModalView/?id")
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        $itemurl = "/Requests/EditModalView/?id=" + $(this).val() + "&SectionType=" + $("#SectionType").val();
+        $itemurl = "/Requests/EditModalView/?id=" + $(this).val() + "&SectionType=" +  $("#masterSectionType").val();
     }
     $.fn.CallPageRequest($itemurl, "details");
     return false;
@@ -40,7 +40,11 @@ $(".load-receive-and-location").on("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
     $("#loading").show();
-    var isOperations = $(this).hasClass('operations');
+    var isOperations = false;
+    if($("#masterSectionType").val()=="Operations")
+    {
+        isOperations=true;
+    }   
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
     var $itemurl = "/Requests/ReceivedModal?RequestID=" + $(this).val() + "&IsOperations=" + isOperations;
     $.fn.CallPageRequest($itemurl, "received");

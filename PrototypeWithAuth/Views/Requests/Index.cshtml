@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.RequestIndexViewModel
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
 @using PrototypeWithAuth.AppData;
 @using Newtonsoft.Json;
 @using PrototypeWithAuth.Data;
@@ -39,33 +39,33 @@
         pgt = TempData["TempPageType"].ToString();
         TempData["TempPageType"] = TempData["TempPageType"];
     }
-    <input type="hidden" asp-for=" Page" />
+    @*<input type="hidden" asp-for=" Page" />
     <input type="hidden" asp-for="RequestStatusID"  />
     <input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
     <input type="hidden" asp-for="SubCategoryID" />
     <input type="hidden" asp-for="PageType" />
     <input type="hidden" asp-for="VendorID" />
-    <input type="hidden" asp-for="ApplicationUserID" />
-    <input type="hidden" asp-for="RequestParentLocationInstanceID" />
-    <input type="hidden" asp-for="SectionType" />
-    if (Model.SubCategoryID > 0)
-    {
-        backTextBool = true;
-        //backText = Model.VendorID.ToString();
-        backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = Model.SectionType }).ToString();
-    }
-    if (Model.VendorID > 0)
-    {
-        backTextBool = true;
-        //backText = Model.VendorID.ToString();
-        backLink = Url.ActionLink("Index", "Vendors", new { @PageType = Model.PageType, SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString();
-    }
-    if (!string.IsNullOrEmpty(Model.ApplicationUserID))
-    {
-        backTextBool = true;
-        //backText = Model.ApplicationUserID;
-        backLink = Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pgt }).ToString();
-    }
+    <input type="hidden" asp-for="ApplicationUserID" />*@
+    @*<input type="hidden" asp-for="RequestParentLocationInstanceID" />*@
+    @*<input type="hidden" asp-for="SectionType" />*@
+    //if (Model.SubCategoryID > 0)
+    //{
+    //    backTextBool = true;
+    //    //backText = Model.VendorID.ToString();
+    //    backLink = Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType = Model.SectionType }).ToString();
+    //}
+    //if (Model.VendorID > 0)
+    //{
+    //    backTextBool = true;
+    //    //backText = Model.VendorID.ToString();
+    //    backLink = Url.ActionLink("Index", "Vendors", new { @PageType = Model.PageType, SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString();
+    //}
+    //if (!string.IsNullOrEmpty(Model.ApplicationUserID))
+    //{
+    //    backTextBool = true;
+    //    //backText = Model.ApplicationUserID;
+    //    backLink = Url.ActionLink("Index", "ApplicationUsers", new { @PageType = pgt }).ToString();
+    //}
 
 
     bool search = false;
@@ -77,7 +77,7 @@
         }
     }
 
-    int vendorID = Model.VendorID; int subcategoryID = Model.SubCategoryID; string applicationUserID = Model.ApplicationUserID;
+    // int vendorID = Model.VendorID; int subcategoryID = Model.SubCategoryID; string applicationUserID = Model.ApplicationUserID;
 
 
 
@@ -188,19 +188,19 @@
             <div class="item-table">
                 <ul class="pl-0">
                     <li class="list-inline-item active m-0">
-                        <a class="@newActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.PageTypeEnum.RequestRequest })"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
+                        <a class="@newActiveClass " @*href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 1, @PageType = AppUtility.PageTypeEnum.RequestRequest })"*@><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
                     </li>
                     <li class="list-inline-item m-0">
-                        <a class="@approvedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.PageTypeEnum.RequestRequest })"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
+                        <a class="@approvedActiveClass " @*href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 6, @PageType = AppUtility.PageTypeEnum.RequestRequest })"*@> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
 
                     </li>
 
                     <li class="list-inline-item m-0">
-                        <a class="@orderedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.PageTypeEnum.RequestRequest })"> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
+                        <a class="@orderedActiveClass " @*href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 2, @PageType = AppUtility.PageTypeEnum.RequestRequest })"*@> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
                     </li>
 
                     <li class="list-inline-item ">
-                        <a class="@receivedActiveClass " href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.PageTypeEnum.RequestRequest })"> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
+                        <a class="@receivedActiveClass " @*href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = applicationUserID, @vendorID = vendorID, @subcategoryID = subcategoryID, @RequestStatusID = 3, @PageType = AppUtility.PageTypeEnum.RequestRequest })"*@> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
                     </li>
                 </ul>
             </div>
@@ -212,23 +212,20 @@
         <table class="table table-headerspaced table-noheaderlines table-hover ">
             <thead>
                 <tr class="text-center">
-                    @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductMedia)</th>*@
-                    <th width="7%"></th>
-                    @*<th>@Html.DisplayNameFor(model => model[0].Product.ProductName)</th>*@
-                    <th width="20%">Item Name</th>
-                    @*<th>@Html.DisplayNameFor(m => m[0].Product.Vendor.VendorEnName)</th>*@
-                    <th width="7%">Vendor</th>
-                    <th width="12%">Type</th>
-                    @if (!Summary)
+                    @foreach (var col in Model.PagedList[0].Columns)
+                    {
+                        <th width="@col.Width%">@col.Title</th>
+                    }
+                    @*@if (!Summary)
                     {
                         <th width="12%">
                             Amount
 
                         </th>
-                    }
+                    }*@
 
                     @*Placeholder until we insert total*@
-                    <th width="12%">
+                    @*<th width="12%">
                         @Html.DisplayNameFor(m => m.PagedList[0].Cost)
                         <span class="d-inline-block">
                             <ul class="list-unstyled p-0 m-0">
@@ -278,15 +275,15 @@
 
                             </ul>
                         </span>
-                    </th>
+                    </th>*@
                     @*Later on should have a better location...*@
-                    @if (Inventory)
+                    @*@if (Inventory)
                     {
                         <th> Location </th>
-                    }
+                    }*@
                     @*<th>@Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.FirstName) @Html.DisplayNameFor(m => m[0].ParentRequest.ApplicationUser.LastName)</th>*@
 
-                    @if (!Summary)
+                    @*@if (!Summary)
                     {
                         <th width="10%">Owner</th>
                         if (Model.PagedList[0].RequestStatusID == 2)
@@ -308,7 +305,7 @@
                     {
                         <th width="9%">Last Ordered</th>
                     }
-                    <th width="9%"></th>
+                    <th width="9%"></th>*@
 
                 </tr>
             </thead>

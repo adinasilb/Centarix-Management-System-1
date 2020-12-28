@@ -187,7 +187,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 RequestsPassedIn = fullRequestsList;
             }
-            AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.LastItem;
+            AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
             //now that the lists are created sort by vendor or subcategory
             if (vendorID > 0 && requestsSearchViewModel != null)
             {
@@ -236,7 +236,7 @@ namespace PrototypeWithAuth.Controllers
 
             /*RequestsSearchViewModel?*/
             //TempData["TempRequestsSearchViewModel"] = requestsSearchViewModel;
-            requestIndexViewModel.RequestParentLocationInstanceID = parentLocationInstanceID;
+         //   requestIndexViewModel.RequestParentLocationInstanceID = parentLocationInstanceID;
             //use an iqueryable (not ienumerable) until it's passed in so you can include the vendors and subcategories later on
             var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarTitle;

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace PrototypeWithAuth.AppData
 
         }
         public enum SidebarEnum {
-            None, LastItem, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
+            None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
             Quotes, List,  Calibrate, Categories,  Location, Cart, Notifications,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker, 
@@ -320,6 +321,64 @@ namespace PrototypeWithAuth.AppData
         
 
             return list;
+        }
+
+        public static List<String> GetPriceColumn(List<String>priceFilterEnums, Request request, CurrencyEnum currency)
+        {
+            List<String> priceColumn = new List<String>();
+            var currencyFormat = "he-IL";
+            var pricePerUnit = request.PricePerUnit;
+            var cost = request.Cost;
+            var total = request.TotalWithVat;
+            var vat = request.VAT;
+            var exchangeRate = request.ExchangeRate;
+            if (currency == AppUtility.CurrencyEnum.USD)
+            {
+                currencyFormat = "en-US";
+                pricePerUnit = request.PricePerUnit / exchangeRate;
+                cost = request.Cost / exchangeRate;
+                total = request.TotalWithVat / exchangeRate;
+                vat = request.VAT / exchangeRate;
+            }
+            foreach (var p in priceFilterEnums)
+            {
+                switch (Enum.Parse(typeof(PriceSortEnum), p))
+                {
+                    case PriceSortEnum.Unit:
+                        priceColumn.Add("U: "+string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit));
+                        break;
+                    case PriceSortEnum.Total:
+                        priceColumn.Add("T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost));
+                        break;
+                    case PriceSortEnum.Vat:
+                        priceColumn.Add("V: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", vat));
+                        break;
+                    case PriceSortEnum.TotalVat:
+                        priceColumn.Add("P: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", total));
+                        break;
+                }
+            }
+            return priceColumn;
+        }
+
+        public static List<String> GetAmountColumn(Request request)
+        {
+            List<String> amountColumn = new List<String>();
+            if(request.Unit != null)
+            {
+                amountColumn.Add(request.Unit + " " + request.UnitType.UnitTypeDescription);
+                if(request.SubUnit != null)
+                {
+                    amountColumn.Add(request.SubUnit + " " + request.SubUnitType.UnitTypeDescription);                 
+                    if(request.SubSubUnit != null)
+                    {
+                        amountColumn.Add(request.SubSubUnit + " " + request.SubSubUnitType.UnitTypeDescription);
+                    }
+                    
+                }
+
+            }
+            return amountColumn;
         }
 
         public static string GetEmployeeCentarixID(IEnumerable<CentarixID> centarixIDs)

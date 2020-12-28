@@ -11,7 +11,7 @@
     AppUtility.PageTypeEnum pageType = AppUtility.PageTypeEnum.None;
     var categoryType = AppUtility.CategoryTypeEnum.Lab;
 
-    var MenuType = TempData[AppUtility.TempDataTypes.MenuType.ToString()]?.ToString();
+    AppUtility.MenuItems MenuType = (AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()];
     List<MenuItems> MainMenuItems = new List<MenuItems>();
 
     //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
@@ -24,34 +24,7 @@
     string initalClasses = "opac87 align-text-bottom  py-3";
     string currentClasses = " activeNavLink  ";
 
-    if (MenuType == AppUtility.MenuItems.Requests.ToString())
-    {
-        MainMenuItems = CreateMenus.CreateOrdersAndInventoryMainMenu(pageType, initalClasses, " activeNavLink");
-    }
-    else if (MenuType == AppUtility.MenuItems.LabManagement.ToString())
-    {
-        MainMenuItems = CreateMenus.CreateLabManagementMainMenu(pageType, initalClasses, " text-dark lab-man-filter");
-    }
-    else if (MenuType == AppUtility.MenuItems.Accounting.ToString())
-    {
-        MainMenuItems = CreateMenus.CreateAccountingMainMenu(pageType, initalClasses, " text-dark accounting-filter");
-    }
-    else if (MenuType == AppUtility.MenuItems.Operations.ToString())
-    {
-        MainMenuItems = CreateMenus.CreateOperationsMainMenu(pageType, initalClasses, " text-dark operations-filter");
-    }
-    else if (MenuType == AppUtility.MenuItems.Users.ToString())
-    {
-        MainMenuItems = CreateMenus.CreateUsersMainMenu(pageType, initalClasses, " text-dark users-filter");
-    }
-    else if (MenuType == AppUtility.MenuItems.TimeKeeper.ToString())
-    {
-        MainMenuItems = CreateMenus.CreateTimekeeperMainMenu(pageType, initalClasses, " text-dark timekeeper-filter");
-    }
-    else if (MenuType == AppUtility.MenuItems.Reports.ToString())
-    {
-        MainMenuItems = CreateMenus.CreateExpensesMainMenu(pageType, initalClasses, " text-dark expenses-filter");
-    }
+    MainMenuItems = CreateMenus.CreateMainMenu(MenuType, pageType, initalClasses);
 
     //passing the
     string inventoryClass = initalClasses;
@@ -221,7 +194,7 @@
     }
 }
 <header class="sticky-top greater-Z-index">
-
+    <input type="hidden" value="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]" id="masterSectionType"/>
     <div class="navbar-shadow-2">
         <div class="navbar-shadow-1">
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white ourNavBar p-0 no-box-shadow">
