@@ -12,7 +12,9 @@ namespace PrototypeWithAuth.Models
     public class Employee : ApplicationUser
     {
         [Display(Name = "Started Working")]
+        [DataType(DataType.Date)]
         public DateTime StartedWorking { get; set; }
+        [DataType(DataType.Date)]
         public DateTime DOB { get; set; }
         public int Age
         {
@@ -70,6 +72,8 @@ namespace PrototypeWithAuth.Models
         public Advisor Advisor { get; set; }
 
         public bool IsUser { get; set; }
+
+        public IEnumerable<CentarixID> CentarixIDs { get; set; }
         //todo add job category
     }
 }

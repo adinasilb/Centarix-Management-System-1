@@ -1,0 +1,136 @@
+﻿@model EmployeeHoursAwaitingApproval;
+<div class="modal modal-document fader on-form-modal timekeeper-form " id="ehaaModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
+    <div class="modal-dialog-centered mx-auto">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow mx-auto"  style="max-height:100%; max-width:80rem; overflow-y:auto;">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding sickModal">
+                <div class="modal-header border-0">
+                    <div class="container">
+                        <div class="">
+                            <div class="heading-1">Hours Awaiting Approval</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row border p-3 text-center">
+                        <div class="col-2 pl-5 text-left">
+                            @Model.Date.DayOfWeek
+                        </div>
+                        <div class="col-2 ">
+                            @Model.Date.ToShortDateString()
+                        </div>
+                        <div class="col-2 ">
+                            @{ var hoursType = "";
+                                var hoursType2 = "";}
+                            @if (Model.OffDayTypeID != null)
+                            {
+                                hoursType = Model.OffDayType.Description; //eh.EmployeeHours.CompanyDayOff.CompanyDayOffType.Name;
+                            }
+                            else
+                            {
+
+                                hoursType = Model.OffDayType?.Description; // eh.EmployeeHours.OffDayType?.Description;
+                                @if (Model.Entry1 != null || Model.TotalHours != null)
+                                {
+                                    if (Model.EmployeeHoursStatusEntry1ID != 1)
+                                    {
+                                        hoursType = "Worked from office";
+                                    }
+                                    else
+                                    {
+                                        hoursType = "Worked from home";
+                                    }
+                                    if (Model.EmployeeHoursStatusEntry2ID != null)
+                                    {
+                                        if (Model.EmployeeHoursStatusEntry2ID != 1)
+                                        {
+                                            hoursType2 = "Worked from office";
+                                        }
+                                        else
+                                        {
+                                            hoursType2 = "Worked from home";
+                                        }
+                                    }
+                                }
+                                @*@if (Model.Entry1 == null && Model.TotalHours == null && Model.OffDayType == null)
+            {
+                <select class="mdb-select  timekeeper custom select-dropdown no-hours-reported mb-0" date="@Model.Date.ToString("yyyy-MM-dd")">
+                    <option value="" selected disabled class="timekeeper-color">No hours reported</option>
+                    <option value="1" class="open-work-from-home-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours">Worked from home</option>
+                    <option value="2" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours">Update hours</option>
+                    <option value="3" class="confirm-report-sick">Report sick day</option>
+                    <option value="4" class="confirm-report-sick">Report vacation day</option>
+                </select>
+            }*@
+                            }
+
+
+                            @hoursType
+                            @if(Model.EmployeeHoursStatusEntry2 != null)
+                            {
+                                <br />
+
+                            }
+                            @hoursType2
+                        </div>
+                        <div class="col-2 ">
+
+                            @Model.Entry1?.ToShortTimeString()
+                            @{ var entry = "";}
+                            @if (Model.Entry1 == null)
+                            {
+                                entry = "n/a";
+                            }
+                            @entry
+                            @if (Model.Entry2 != null)
+                            {
+                                <br />
+
+                            }
+                            @Model.Entry2?.ToShortTimeString()
+
+                        </div>
+                        <div class="col-2 p-0">
+                            @{ var exit = "";}
+                            @Model.Exit1?.ToShortTimeString()
+                            @*@if (Model.Entry2 != null && Model.Exit2 == null)
+                            {
+                                <br />
+                                <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString(" yyyy-MM-dd")">
+                                    Update Hours
+                                </button>
+
+                            }
+                            else if ((eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null) || (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2)))
+                            {
+                                <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>
+                            }
+                            else*@ @if (Model.Exit1 == null)
+                            {
+                                exit = "n/a";
+                            }
+                            @exit
+                            @if (Model.Exit2 != null)
+                            {
+                                <br />
+
+                            }
+                            @Model.Exit2?.ToShortTimeString()
+
+
+                        </div>
+
+                        <div class="col-2 timekeeper-font-color font-weight-bold">
+                            @{var hours = Model.TotalHours == TimeSpan.Zero || Model.TotalHours == null ? "n/a" :Model.TotalHours?.ToString(@"h\:mm"); }
+                            @hours
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

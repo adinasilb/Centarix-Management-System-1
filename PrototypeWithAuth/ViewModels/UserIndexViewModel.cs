@@ -8,7 +8,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class UserIndexViewModel
     {
-        public IEnumerable<Employee> ApplicationUsers { get; set; }
+        public IEnumerable<UserWithCentarixIDViewModel> ApplicationUsers { get; set; }
         public bool IsCEO { get; set; }
     }
 }

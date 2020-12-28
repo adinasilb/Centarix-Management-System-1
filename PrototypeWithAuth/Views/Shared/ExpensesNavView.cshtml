@@ -17,7 +17,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
                     <li class="nav-item mx-4 d-table ">
-                        @Html.ActionLink("Expenses", "ExpensesList", "ParentRequests", new { @PageType = AppUtility.PaymentPageTypeEnum.General }, new { @class = " expenses-color-module align-text-bottom" })
+                        @Html.ActionLink("Expenses", "ExpensesList", "ParentRequests", new { @PageType = AppUtility.PageTypeEnum.AccountingGeneral }, new { @class = " expenses-color-module align-text-bottom" })
                     </li>
 
                 </ul>
@@ -26,7 +26,7 @@
                 <ul class="list-unstyled m-0">
                     <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow "><div class="alerts-icon"><i style='font-size: 2.5rem;   color: #808080;' class='icon-notifications-24px '></i> <span id="alertCount" class="alert-count"></span></div>  </button> </li>
                     <div style="display:none;" id="notifications-popover">
-                        <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
+                        <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover" onclick="$(this).closest('.modal').modal('hide');">&times;</button>
                         <div style="width:410px" class="p-4">
                             <h5><strong>Notifications</strong></h5>
                         </div>

@@ -36,27 +36,30 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
+            var user = _context.Employees.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
 
             if (user.LastLogin.Date < DateTime.Today)
             {
                 fillInOrderLate(user);
-                fillInTimekeeperMissingDays(user);
-                fillInTimekeeperNotifications(user);
+                if (User.IsInRole("Timekeeper") && user.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
+                {
+                    fillInTimekeeperMissingDays(user);
+                    fillInTimekeeperNotifications(user);
+                }
                 user.LastLogin = DateTime.Now;
                 _context.Update(user);
                 _context.SaveChanges();
             }
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             IEnumerable<Menu> menu = null;
-            if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
-            {
-                menu = _context.Menus.Select(x => x);
-            }
-            else
-            {
+            //if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
+            //{
+            //    menu = _context.Menus.Select(x => x);
+            //}
+            //else
+            //{
                 menu = _context.Menus.Where(m => rolesList.Contains(m.MenuDescription));
-            }
+            //}
 
             //update latest exchange rate if need be
             var latestRate = _context.ExchangeRates.FirstOrDefault();
@@ -80,14 +83,14 @@ namespace PrototypeWithAuth.Controllers
             var user = await _context.Users.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefaultAsync();
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             IEnumerable<Menu> menu = null;
-            if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
-            {
-                menu = _context.Menus.Select(x => x);
-            }
-            else
-            {
+            //if (rolesList.Contains(AppUtility.RoleItems.CEO.ToString()) || rolesList.Contains(AppUtility.RoleItems.Admin.ToString()))
+            //{
+            //    menu = _context.Menus.Select(x => x);
+            //}
+            //else
+            //{
                 menu = _context.Menus.Where(m=> rolesList.Contains(m.MenuDescription));
-            }
+            //}
 
             return PartialView(menu);
         }

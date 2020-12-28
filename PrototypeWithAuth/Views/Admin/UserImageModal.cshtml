@@ -7,7 +7,7 @@
 <div class="modal modal-document fader on-form-modal users-form  userImageModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered modal-sm  mx-auto  " style=" min-width: 32%;">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.userImageModal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding " id="userImageForm">
@@ -45,7 +45,7 @@
                 <div class="modal-footer mt-4 border-0">
                     <div class="text-center m-auto">
                         <input type="button" class="custom-button custom-button-font users-color between-button-margin " value="Save" id="saveUserImage" />
-                        <button class="custom-button custom-cancel cancel-email" id="cancelUserImage" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="custom-button custom-cancel cancel-email" id="cancelUserImage" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                     </div>
                 </div>
             </form>

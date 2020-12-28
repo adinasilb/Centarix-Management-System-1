@@ -53,13 +53,12 @@ $(function () {
 		console.log("minutes: " + minutes);
 		var minutesFloat = parseFloat(minutes) / 60;
 		console.log("minutesFloat: " + minutesFloat);
-		var hoursPercentage = hours + minutesFloat;
+		var hoursPercentage = parseFloat(hours + minutesFloat);
 		console.log("hoursPercentage: " + hoursPercentage);
 
 		SetHiddenHoursPerDay(hoursPercentage);
 
-		var percentageWorked = 100 * (hoursPercentage / 8.4).toFixed(4);
-		console.log("percentage worked: " + percentageWorked);
+		var percentageWorked = parseFloat(100 * (hoursPercentage / 8.4)).toFixed(2);
 		$("#NewEmployeeWorkScope").val(percentageWorked);
 	});
 
@@ -89,4 +88,40 @@ $(function () {
 		$("#NewEmployee_SalariedEmployee_HoursPerDay").val(hoursPercentage);
 	};
 
+	$('.employee-status-radio').off("click").on("click", function () {
+
+		var val = $(this).val();
+		$('#NewEmployee_EmployeeStatusID').val(val)
+		$("#validation-EmployeeStatus").addClass("hidden");
+		if (val == "4") {
+			$('.only-employee').removeClass("error");
+		}
+
+		var centarixIDInput = $('#CentarixID');
+		if (val == $("#OriginalStatusID").val()) {
+			centarixIDInput.val($("#OriginalStatusID").attr("centarixID"));
+		}
+		else {
+			$.ajax({
+				async: true,
+				url: "/Admin/GetProbableNextCentarixID?StatusID=" + val,
+				type: 'GET',
+				cache: true,
+				success: function (data) {
+					console.log("original status id: " + $("#OriginalStatusID").attr("CentarixID"));
+					console.log("data " + data);
+					var orginalID =$("#OriginalStatusID").attr("CentarixID")
+					if(orginalID==undefined)
+					{
+						orginalID='';
+					}
+					var showCentarixID = orginalID + data;
+					console.log("showCentarixID: " + showCentarixID);
+					centarixIDInput.val(showCentarixID);
+				}
+			});
+		}
+
+
+	});
 });

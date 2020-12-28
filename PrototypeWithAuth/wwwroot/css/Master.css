@@ -37,6 +37,7 @@
     --timekeeper-color: #FF9800;
     --biomarkers-color: #F44336;
     --operations-color: #3F51B5;
+    --disabled-color: #B3B3B3;
     --order-inv-filter: brightness(0) saturate(100%) invert(57%) sepia(42%) saturate(5293%) hue-rotate(184deg) brightness(96%) contrast(99%);
     --lab-man-filter: brightness(0) saturate(100%) invert(44%) sepia(48%) saturate(220%) hue-rotate(155deg) brightness(96%) contrast(87%);
     --acc-filter: brightness(0) saturate(100%) invert(51%) sepia(93%) saturate(1777%) hue-rotate(225deg) brightness(93%) contrast(103%);
@@ -60,6 +61,7 @@
     --graduated-table-filter: brightness(0) saturate(100%) invert(91%) sepia(29%) saturate(0%) hue-rotate(314deg) brightness(97%) contrast(106%);
     --tiny-label-font-size: 0.469375rem;
     --select-border-radius: .25rem;
+    --timekeeper-alt-color: #009688;
 }
 
 .success-color {
@@ -97,6 +99,11 @@
 .timekeeper-color {
     background-color: var(--timekeeper-color);
 }
+
+.timekeeper-alt-color {
+    background-color: var(--timekeeper-alt-color);
+}
+
 
 .timekeeper-font-color {
     color: var(--timekeeper-color);
@@ -224,6 +231,10 @@ a.yearly-monthly, input[type=button].yearly-monthly {
 }
 .visual-box{
     border: 1px solid var(--black-87);
+}
+
+.disabled-text {
+    color: var(--disabled-color) !important;
 }
 
 /*.visual-box .row-1{

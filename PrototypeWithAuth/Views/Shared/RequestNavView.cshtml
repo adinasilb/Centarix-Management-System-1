@@ -8,7 +8,7 @@
 @{
     Layout = "~/Views/Shared/Master.cshtml";
 
-    string pageType = "";
+    AppUtility.PageTypeEnum pageType = AppUtility.PageTypeEnum.None;
     var categoryType = AppUtility.CategoryTypeEnum.Lab;
 
     var MenuType = TempData[AppUtility.TempDataTypes.MenuType.ToString()]?.ToString();
@@ -17,7 +17,7 @@
     //all pages need PageType passed in so we're testing if it's null and if not we're taking in the type
     if (TempData[AppUtility.TempDataTypes.PageType.ToString()] != null)
     {
-        pageType = TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString();
+        pageType = (AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()];
         //pageType = (AppUtility.RequestPageTypeEnum)Enum.Parse(typeof(AppUtility.RequestPageTypeEnum), TempData[AppUtility.TempDataTypes.PageType.ToString()].ToString());
     }
 
@@ -72,125 +72,121 @@
     string activeClass = "text-dark order-inv-filter ";
 
     List<MenuItems> SidebarMenuItems = new List<MenuItems>();
-    string sidebarTitle = ""; //TODO: cchange this to SideabrType!!!!!;
-    if (TempData["SidebarTitle"] != null)
-    {
-        sidebarTitle = TempData["SidebarTitle"].ToString();
-    }
-    string sidebarType = "";
+
+    AppUtility.SidebarEnum sidebarType = AppUtility.SidebarEnum.None;
     if (TempData[AppUtility.TempDataTypes.SidebarType.ToString()] != null)
     {
-        sidebarType = TempData[AppUtility.TempDataTypes.SidebarType.ToString()].ToString();
+        sidebarType = (AppUtility.SidebarEnum)TempData[AppUtility.TempDataTypes.SidebarType.ToString()];
     }
 
     var menuClass = originalNavClasses;
-    if (pageType == AppUtility.RequestPageTypeEnum.Inventory.ToString())
+    if (pageType == AppUtility.PageTypeEnum.RequestInventory)
     {
         //inventoryClass = initalClasses + currentClasses;
-        SidebarMenuItems = CreateMenus.GetOrdersAndInventorySummarySidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventorySummarySidebarMenuItems(sidebarType, originalNavClasses, activeClass, pageType, categoryType);
         Inventory = true;
     }
-    else if (pageType == AppUtility.RequestPageTypeEnum.Summary.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.RequestSummary)
     {
         //summaryClass = initalClasses + currentClasses;
-        SidebarMenuItems = CreateMenus.GetOrdersAndInventorySummarySidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventorySummarySidebarMenuItems(sidebarType, originalNavClasses, activeClass, pageType, categoryType);
         Summary = true;
     }
-    else if (pageType == AppUtility.RequestPageTypeEnum.Request.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.RequestRequest)
     {
         Requests = true;
         //requestClass = initalClasses + currentClasses;
-        SidebarMenuItems = CreateMenus.GetOrdersAndInventoryRequestsSidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventoryRequestsSidebarMenuItems(sidebarType, originalNavClasses, activeClass, pageType, categoryType);
     }
-    else if (pageType == AppUtility.RequestPageTypeEnum.Cart.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.RequestCart)
     {
         //cartClass = initalClasses + currentClasses;
-        SidebarMenuItems = CreateMenus.GetOrdersAndInventoryCartSidebarMenuItems(sidebarTitle, originalNavClasses, activeClass, pageType, categoryType);
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventoryCartSidebarMenuItems(sidebarType, originalNavClasses, activeClass, pageType, categoryType);
         Cart = true;
     }
-    else if (pageType == AppUtility.RequestPageTypeEnum.Search.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.RequestSearch)
     {
         //searchClass = initalClasses + currentClasses + " search-link";
         SidebarMenuItems = CreateMenus.GetOrdersAndInventorySearchSidebarMenuItems(originalNavClasses, activeClass, pageType, categoryType);
     }
-    else if (pageType == AppUtility.RequestPageTypeEnum.Location.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.RequestLocation)
     {
         //locationClass = initalClasses + currentClasses;
-        SidebarMenuItems = CreateMenus.GetOrdersAndInventoryLocationSidebarMenuItems(originalNavClasses, activeClass, pageType, categoryType);
+        SidebarMenuItems = CreateMenus.GetOrdersAndInventoryLocationSidebarMenuItems(originalNavClasses, activeClass, categoryType);
     }
-    else if (pageType == AppUtility.LabManagementPageTypeEnum.Suppliers.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.LabManagementSuppliers)
     {
         SidebarMenuItems = CreateMenus.CreateLabManageSuppliersSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
-    else if (pageType == AppUtility.LabManagementPageTypeEnum.Locations.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.LabManagementLocations)
     {
         SidebarMenuItems = CreateMenus.CreateLabManageLocationsSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
-    else if (pageType == AppUtility.LabManagementPageTypeEnum.Quotes.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.LabManagementQuotes)
     {
         SidebarMenuItems = CreateMenus.CreateLabManageOrdersSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
-    else if (pageType == AppUtility.LabManagementPageTypeEnum.SearchLM.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.LabManagementSearch)
     {
         SidebarMenuItems = CreateMenus.CreateLabManageSearchSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
-    else if (pageType == AppUtility.LabManagementPageTypeEnum.Equipment.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.LabManagementEquipment)
     {
         SidebarMenuItems = CreateMenus.CreateLabManageEquipmentSidebar(sidebarType, originalNavClasses, "lab-man-filter");
     }
-    else if (pageType == AppUtility.PaymentPageTypeEnum.Payments.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.AccountingPayments)
     {
         SidebarMenuItems = CreateMenus.CreateAccountingPaymentsSidebar(sidebarType, originalNavClasses, "accounting-filter");
     }
-    else if (pageType == AppUtility.PaymentPageTypeEnum.Notifications.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.AccountingNotifications)
     {
         SidebarMenuItems = CreateMenus.CreateAccountingNotificationsSidebar(sidebarType, originalNavClasses, "accounting-filter");
     }
-    else if (pageType == AppUtility.PaymentPageTypeEnum.General.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.AccountingGeneral)
     {
         //TODO: LATER
     }
-    else if (pageType == AppUtility.PaymentPageTypeEnum.SuppliersAC.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.AccountingSuppliers)
     {
         SidebarMenuItems = CreateMenus.CreateAccountingSuppliersSidebar(sidebarType, originalNavClasses, "accounting-filter");
     }
-    else if (pageType == AppUtility.OperationsPageTypeEnum.InventoryOperations.ToString() || pageType == AppUtility.OperationsPageTypeEnum.RequestOperations.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.OperationsInventory || pageType == AppUtility.PageTypeEnum.OperationsRequest)
     {
         SidebarMenuItems = CreateMenus.CreateOperationsRequestsSidebar(pageType, sidebarType, originalNavClasses, "operations-filter");
     }
-    else if (pageType == AppUtility.OperationsPageTypeEnum.SearchOperations.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.OperationsSearch)
     {
         SidebarMenuItems = CreateMenus.CreateOperationsSearchSidebar(sidebarType, originalNavClasses, "operations-filter");
     }
-    else if (pageType == AppUtility.UserPageTypeEnum.User.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.UsersUser)
     {
         SidebarMenuItems = CreateMenus.CreateUsersUsersSidebar(sidebarType, originalNavClasses, "users-filter");
     }
-    else if (pageType == AppUtility.UserPageTypeEnum.Workers.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.UsersWorkers)
     {
         SidebarMenuItems = CreateMenus.CreateUsersWorkersSidebar(sidebarType, originalNavClasses, "users-filter");
     }
-    else if (pageType == AppUtility.TimeKeeperPageTypeEnum.Report.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.TimeKeeperReport)
     {
         SidebarMenuItems = CreateMenus.CreateTimekeeperReportsSidebar(sidebarType, originalNavClasses, "timekeeper-filter");
     }
-    else if (pageType == AppUtility.TimeKeeperPageTypeEnum.TimekeeperSummary.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.TimekeeperSummary)
     {
         SidebarMenuItems = CreateMenus.CreateTimekeeperSummarySidebar(sidebarType, originalNavClasses, "timekeeper-filter");
     }
-    else if (pageType == AppUtility.ExpensesPageTypeEnum.ExpensesSummary.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.ExpensesSummary)
     {
         SidebarMenuItems = CreateMenus.CreateExpensesSummarySidebar(sidebarType, originalNavClasses, "expenses-filter");
     }
-    else if (pageType == AppUtility.ExpensesPageTypeEnum.ExpensesStatistics.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.ExpensesStatistics)
     {
         SidebarMenuItems = CreateMenus.CreateExpensesStatisticsSidebar(sidebarType, originalNavClasses, "expenses-filter");
     }
-    else if (pageType == AppUtility.ExpensesPageTypeEnum.ExpensesCost.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.ExpensesCost)
     {
         SidebarMenuItems = CreateMenus.CreateExpensesCostsSidebar(sidebarType, originalNavClasses, "expenses-filter");
     }
-    else if (pageType == AppUtility.ExpensesPageTypeEnum.ExpensesWorkers.ToString())
+    else if (pageType == AppUtility.PageTypeEnum.ExpensesWorkers)
     {
         SidebarMenuItems = CreateMenus.CreateExpensesWorkersSidebar(sidebarType, originalNavClasses, "expenses-filter");
     }
@@ -262,7 +258,7 @@
                     <ul class="list-unstyled m-0">
                         <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow p-0 m-0 " style="margin-right: 1.313rem !important;"><div class="alerts-icon"><i style='font-size: 2.3rem;   color: #808080;' class='icon-notification_top_menu'></i> <span id="alertCount" class="alert-count "></span></div>  </button> </li>
                         <div style="display:none;" id="notifications-popover">
-                            <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover">&times;</button>
+                            <button type="button" class="close" style="font-size:2rem;" data-dismiss="popover" onclick="$(this).closest('.modal').modal('hide');">&times;</button>
                             <div style="width:410px" class="p-4 heading-1">
                                 Notifications
                             </div>
@@ -312,9 +308,7 @@
                 <span class="sr-only">Loading...</span>
             </div>*@
 
-        <div class="center" role="status" id="loading" style="display:none; z-index:2000 !important; position: relative;">
-            <img src="~/images/css/Loading/centarix_loading3.gif" />
-        </div>
+
         <div style="display: flex; overflow: hidden;">
             @{ var style = "min-width: " + sidebarWidth + "; max-width: " + sidebarWidth + "; min-height:100rem; aria-hidden=true;"; }
             <div class="sidebar-shadow2">

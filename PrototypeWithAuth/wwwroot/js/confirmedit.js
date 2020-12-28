@@ -40,18 +40,18 @@
 			async: true,
 			url: url,
 			type: 'POST',
-			cache: true,
+			cache: false,
 			success: function (data) {
 				$.fn.getMenuItems();
-				alert("in success");
 				//reload index pages
 				if ($('.turn-edit-on-off').hasClass('operations')) {
 					ajaxCallToPartial();
-				} else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
+				}
+				else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 
 					$.ajax({
 						async: true,
-						url: '/Vendors/_IndexForPayment?SectionType='+$('#SectionType').val(),
+						url: '/Vendors/_IndexForPayment?SectionType=' + $('#SectionType').val(),
 						type: 'GET',
 						cache: true,
 						success: function (data) {
@@ -59,8 +59,9 @@
 
 						}
 					});
-					
-				} else if ($('.turn-edit-on-off').hasClass('users')) {
+
+				}
+				else if ($('.turn-edit-on-off').hasClass('users')) {
 					var url = "";
 					var pageType = $('#PageType').val();
 					if (pageType == "Workers") {
@@ -76,7 +77,8 @@
 						cache: true,
 						success: function (data) {
 							$('#usersTable').html(data);
-
+							alert("Updated CentarixID: " + $("#CentarixID").val());
+							$("#OriginalStatusID").attr("CentarixID", $("#CentarixID").val());
 						}
 					});
 
@@ -84,20 +86,25 @@
 					ajaxCallToPartial();
 				}
 				//sets up error message if it has the setup in the view
-				if ($(".hasErrorMessage").length > 0) {
-					alert("error message: " + $(".hasErrorMessage").val());
-					$(".error-message").html($(".hasErrorMessage").val());
-				}
-			}
+				//if ($(".hasErrorMessage").length > 0) {
+				//	alert("error message: " + $(".hasErrorMessage").val());
+				//	$(".error-message").html($(".hasErrorMessage").val());
+				//}
+			}//,
+			//error: function (xhr, ajaxOptions, errorThrown) {
+			//	alert("error: " + xhr.responseText);
+			//	$(".error-msg").html(xhr.responseText);
+			//}
 		});
 		$.fn.TurnToDetails();
 	});
+
 
 	$(".dont-save-request-edits").on("click", function (e) {
 		$(".confirm-edit-modal").remove();
 		console.log("don't save request edits");
 		$("body").remove(".confirm-edit-modal");
-		var selectedTab = $('.nav-tabs .active').parent().index()+1;
+		var selectedTab = $('.nav-tabs .active').parent().index() + 1;
 		var url = '';
 		var section = "";
 		var id = $('.turn-edit-on-off').val();
@@ -107,18 +114,19 @@
 		} else if ($('.turn-edit-on-off').hasClass('suppliers')) {
 			section = "LabManagement";
 			url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
-			
+
 		} else if ($('.turn-edit-on-off').hasClass('accounting')) {
 			section = "Accounting";
-			url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section+ "&Tab=" + selectedTab;
-			
+			url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
+
 		}
 		else if ($('.turn-edit-on-off').hasClass('users')) {
+			alert("in users");
 			url = "/Admin/EditUserPartial?id=" + id + "&Tab=" + selectedTab;
 
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
 			section = $("#SectionType").val();
-			url = "/Requests/EditModalViewPartial?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section ;
+			url = "/Requests/EditModalViewPartial?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section;
 
 		}
 		else {
@@ -140,7 +148,6 @@
 	});
 
 	$.fn.TurnToDetails = function () {
-		console.log("after ajax call");
 		$('.mark-readonly').prop("disabled", true);
 		$('.mark-readonly input').prop("disabled", true);
 		$('.mark-edditable').data("val", false)

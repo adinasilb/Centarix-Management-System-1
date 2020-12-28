@@ -4,12 +4,12 @@
 <div class="modal modal-document fader on-form-modal timekeeper-form" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered mx-auto modal-sm  work-from-home-modal">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" id="myForm" enctype="multipart/form-data" class="reportHoursForm modal-padding" style="height: 100%; overflow: auto;">
                 @{var disabled = false;
-                    if (Model.PageType.Equals("SummaryHours"))
+                    if (Model.PageType?.Equals("SummaryHours")==true)
                     {
                         disabled = true;
                     }
@@ -70,7 +70,7 @@
                 <div class="modal-footer modal-footer-mt border-0">
                     <div class="m-auto">
                         <input type="submit" class="custom-button-font timekeeper-color custom-button between-button-margin" asp-action="ReportHoursFromHomeModal" asp-route-PageType="@Model.PageType" value="Save" />
-                        <button class="custom-cancel custom-button cancel-email" data-dismiss="modal">Cancel</button>
+                        <button class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                     </div>
                 </div>
             </form>

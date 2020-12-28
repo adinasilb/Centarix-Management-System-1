@@ -24,6 +24,9 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using Abp.Extensions;
+using System.Linq.Dynamic.Core;
+using OpenCvSharp;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -54,9 +57,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public IActionResult Index()
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersList;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
 
             ViewBag.ErrorMessage = ViewBag.ErrorMessage;
             UserIndexViewModel userIndexViewModel = GetUserIndexViewModel();
@@ -73,24 +76,18 @@ namespace PrototypeWithAuth.Controllers
         }
         private UserIndexViewModel GetUserIndexViewModel()
         {
-            List<Employee> users = new List<Employee>();
-            users = _context.Employees
-                //.Where(u => !u.IsSuspended) //instead of using lockout use bool so needstoreset password will be shown
-                //.Where(u => u.NeedsToResetPassword? !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null)
-                //.OrderBy(u => u.UserNum)
-                .ToList();
-            List<ApplicationUser> UsersList = _context.Users.ToList();
-            bool IsCEO = false;
-            //if (User.IsInRole("CEO"))
-            //{
-                users = _context.Employees.OrderBy(u => u.UserNum).ToList(); //The CEO can see all users even the ones that are suspended 
-                IsCEO = false; //automatically set to false until CEO is reinstated
-            //}
+
+            var users = _context.Employees.OrderBy(u => u.UserNum)
+                .Select(u => new UserWithCentarixIDViewModel
+                {
+                    Employee = u,
+                    CentarixID = AppUtility.GetEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == u.Id).OrderBy(ci => ci.TimeStamp))
+                });
 
             UserIndexViewModel userIndexViewModel = new UserIndexViewModel()
             {
                 ApplicationUsers = users,
-                IsCEO = IsCEO
+                IsCEO = false
             };
             return userIndexViewModel;
         }
@@ -100,9 +97,9 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult RegisterUser()
 
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
             IQueryable<IdentityRole> roles = _roleManager.Roles; // get the roles from db and have displayed sent to view model
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel
             {
@@ -158,9 +155,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public IActionResult CreateUser()
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.UserPageTypeEnum.User;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.UserSideBarEnum.UsersAdd;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
 
             RegisterUserViewModel registerUserViewModel = new RegisterUserViewModel();
 
@@ -219,11 +216,6 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        private async Task CreateSingleRole()
-        {
-            ApplicationUser user = _context.Users.Where(u => u.Email == "adina@centarix.com").FirstOrDefault();
-            await _userManager.AddToRoleAsync(user, "CEO");
-        }
 
         [HttpPost]
         [Authorize(Roles = "Users")]
@@ -245,7 +237,6 @@ namespace PrototypeWithAuth.Controllers
                 FirstName = registerUserViewModel.FirstName,
                 LastName = registerUserViewModel.LastName,
                 SecureAppPass = registerUserViewModel.SecureAppPass,
-                CentarixID = registerUserViewModel.CentarixID,
                 PhoneNumber = registerUserViewModel.PhoneNumber,
                 PhoneNumber2 = registerUserViewModel.PhoneNumber2,
                 UserNum = usernum,
@@ -285,6 +276,7 @@ namespace PrototypeWithAuth.Controllers
                 user.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
                 /*Salaried Employee*/
             }
+
             bool IsUser = true;
             if (registerUserViewModel.Password == "" || registerUserViewModel.Password == null)
             {
@@ -313,6 +305,33 @@ namespace PrototypeWithAuth.Controllers
                     await _context.SaveChangesAsync();
                 }
 
+                //add in CentarixID
+                var employeeStatus = _context.EmployeeStatuses.Where(es => es.EmployeeStatusID == UserType).FirstOrDefault();
+                var currentNum = employeeStatus.LastCentarixID + 1;
+                var abbrev = employeeStatus.Abbreviation;
+                if (abbrev[1] == ' ')
+                {
+                    abbrev = abbrev.Substring(0, 1);
+                }
+                var cID = abbrev + currentNum.ToString();
+                CentarixID centarixID = new CentarixID()
+                {
+                    EmployeeID = user.Id,
+                    CentarixIDNumber = cID,
+                    IsCurrent = true,
+                    TimeStamp = DateTime.Now,
+                    Employee = _context.Employees.Where(e => e.Id == user.Id).FirstOrDefault()
+                };
+
+                _context.Add(centarixID);
+                await _context.SaveChangesAsync();
+
+                //update last ID
+                employeeStatus.LastCentarixID = currentNum;
+                employeeStatus.LastCentarixIDTimeStamp = DateTime.Now;
+                _context.Update(employeeStatus);
+                await _context.SaveChangesAsync();
+
                 switch (UserType)
                 {
                     case 1: /*Salaried Employee*/
@@ -331,6 +350,11 @@ namespace PrototypeWithAuth.Controllers
                         _context.Add(freelancer);
                         break;
                     case 3: /*Advisor*/
+                        Advisor advisor = new Advisor()
+                        {
+                            EmployeeID = user.Id
+                        };
+                        _context.Add(advisor);
                         break;
                 }
                 await _context.SaveChangesAsync();
@@ -442,54 +466,9 @@ namespace PrototypeWithAuth.Controllers
 
                 }
 
-
-                string userId = await _userManager.GetUserIdAsync(user);
-                string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                string confirmationLink = Url.Page(
-            "/Account/ConfirmEmail",
-            pageHandler: null,
-            values: new { area = "Identity", userId = userId, code = code },
-            protocol: Request.Scheme);
-
-
-                MimeMessage message = new MimeMessage();
-
-                //instantiate the body builder
-                BodyBuilder builder = new BodyBuilder();
-
-
-
-
-
-                //add a "From" Email
-                message.From.Add(new MailboxAddress("Elixir", "elixir@centarix.com"));
-
-                // add a "To" Email
-                message.To.Add(new MailboxAddress(user.FirstName, user.Email));
-
-                //subject
-                message.Subject = "Confirm centarix sign-up Link";
-
-                //body
-                builder.TextBody = confirmationLink;
-
-                message.Body = builder.ToMessageBody();
-
-                using (SmtpClient client = new SmtpClient())
+                if (IsUser)
                 {
-
-                    client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate("elixir@centarix.com", "cdbmhjidnzoghqvt");
-                    try
-                    {
-                        client.Send(message);
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-
-                    client.Disconnect(true);
+                    SendConfimationEmail(user);
                 }
                 //}
                 //else
@@ -503,15 +482,72 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                ViewBag.ErrorMessage = "User Failed to add. Please try again.";
                 foreach (IdentityError e in result.Errors)
                 {
-                    ViewBag.ErrorMessage += "/n " + e;
+                    registerUserViewModel.Errors = new List<string>();
+                    registerUserViewModel.Errors.Add("User Failed to add. Please try again. " + e.Code.ToString() + " " + e.Description.ToString());
                 }
+                //refill Model to view errors
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
+                registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
+                registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
+                registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
+                registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
+                registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
+                return View("CreateUser", registerUserViewModel);
             }
             return RedirectToAction("Index");
         }
 
+        public async void SendConfimationEmail(ApplicationUser user)
+        {
+            string userId = await _userManager.GetUserIdAsync(user);
+            string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            string confirmationLink = Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { area = "Identity", userId = userId, code = code },
+                protocol: Request.Scheme);
+
+
+            MimeMessage message = new MimeMessage();
+
+            //instantiate the body builder
+            BodyBuilder builder = new BodyBuilder();
+
+            //add a "From" Email
+            message.From.Add(new MailboxAddress("Elixir", "elixir@centarix.com"));
+
+            // add a "To" Email
+            message.To.Add(new MailboxAddress(user.FirstName, user.Email));
+
+            //subject
+            message.Subject = "Confirm centarix sign-up Link";
+
+            //body
+            builder.TextBody = confirmationLink;
+
+            message.Body = builder.ToMessageBody();
+
+            using (SmtpClient client = new SmtpClient())
+            {
+
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("elixir@centarix.com", "cdbmhjidnzoghqvt");
+                try
+                {
+                    client.Send(message);
+                }
+                catch (Exception ex)
+                {
+                }
+
+                client.Disconnect(true);
+            }
+        }
 
         [HttpGet]
         [Authorize(Roles = "Users")]
@@ -536,11 +572,15 @@ namespace PrototypeWithAuth.Controllers
                 int selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
                 Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
                 int oldSelectedStatus = employeeEditted.EmployeeStatusID;
+                bool changedEmployeeStatus = false;
+                if (selectedStatusID != oldSelectedStatus)
+                {
+                    changedEmployeeStatus = true;
+                }
                 if (selectedStatusID == 4)
                 {
                     //never was an employee only was a user and wants to update info                 
                     employeeEditted.UserName = registerUserViewModel.Email;
-                    employeeEditted.CentarixID = registerUserViewModel.CentarixID;
                     employeeEditted.FirstName = registerUserViewModel.FirstName;
                     employeeEditted.LastName = registerUserViewModel.LastName;
                     employeeEditted.Email = registerUserViewModel.Email;
@@ -561,12 +601,15 @@ namespace PrototypeWithAuth.Controllers
                     _context.Update(employeeEditted);
                     await _context.SaveChangesAsync();
 
+                    if (changedEmployeeStatus)
+                    {
+                        await AddNewCentarixID(employeeEditted.Id, 4);
+                    }
                 }
                 else
                 {
                     // still wants to remain an employee
                     employeeEditted.UserName = registerUserViewModel.Email;
-                    employeeEditted.CentarixID = registerUserViewModel.CentarixID;
                     employeeEditted.FirstName = registerUserViewModel.FirstName;
                     employeeEditted.LastName = registerUserViewModel.LastName;
                     employeeEditted.Email = registerUserViewModel.Email;
@@ -609,6 +652,10 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 salariedEmployee = new SalariedEmployee();
                             }
+                            if (changedEmployeeStatus)
+                            {
+                                await AddNewCentarixID(employeeEditted.Id, 1);
+                            }
                             salariedEmployee.EmployeeId = employeeEditted.Id;
                             salariedEmployee.HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay;
                             employeeEditted.SalariedEmployee = salariedEmployee;
@@ -619,14 +666,30 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 freelancer = new Freelancer();
                             }
+                            if (changedEmployeeStatus)
+                            {
+                                await AddNewCentarixID(employeeEditted.Id, 2);
+                            }
                             freelancer.EmployeeId = employeeEditted.Id;
                             employeeEditted.Freelancer = freelancer;
                             break;
                         case 3: /*Advisor*/
+                            Advisor advisor = _context.Advisors.Where(a => a.EmployeeID == employeeEditted.Id).FirstOrDefault();
+                            if (advisor == null)
+                            {
+                                advisor = new Advisor();
+                            }
+                            if (changedEmployeeStatus)
+                            {
+                                await AddNewCentarixID(employeeEditted.Id, 3);
+                            }
+                            advisor.EmployeeID = employeeEditted.Id;
+                            employeeEditted.Advisor = advisor;
                             break;
                     }
                     await _context.SaveChangesAsync();
                 }
+                //add new centarixID
 
                 if (!String.IsNullOrEmpty(registerUserViewModel.Password))
                 {
@@ -641,6 +704,15 @@ namespace PrototypeWithAuth.Controllers
                         employeeEditted.LockoutEnd = new DateTime(2999, 01, 01);
                         _context.Update(employeeEditted);
                         await _context.SaveChangesAsync();
+
+                        if (!registerUserViewModel.NewEmployee.IsUser)
+                        {
+                            employeeEditted.IsUser = true;
+                            _context.Update(employeeEditted);
+                            await _context.SaveChangesAsync();
+
+                            SendConfimationEmail(employeeEditted);
+                        }
                     }
                     else
                     {
@@ -782,7 +854,7 @@ namespace PrototypeWithAuth.Controllers
                         _context.Update(employeeEditted);
                         await _context.SaveChangesAsync();
                     }
-                   
+
                     //should we move the delete here and test for the extension just in case it breaks over there
 
                 }
@@ -806,19 +878,70 @@ namespace PrototypeWithAuth.Controllers
                 //    await _context.SaveChangesAsync();
                 //    stream.Close();
                 //}
-                ViewBag.ErrorMessage = "Test Error Message";
 
             }
             catch (DbUpdateException ex)
             {
-                ViewBag.ErrorMessage = ex.InnerException;
+                Response.StatusCode = 500;
+                Response.WriteAsync(ex.InnerException?.ToString());
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.InnerException;
+                Response.StatusCode = 500;
+                Response.WriteAsync(e.InnerException?.ToString());
             }
 
-            return RedirectToAction("Index");
+            //return RedirectToAction("Index");
+            return new EmptyResult();
+        }
+
+        public string GetProbableNextCentarixID(int StatusID)
+        {
+            var EmployeeStatus = _context.EmployeeStatuses.Where(es => es.EmployeeStatusID == StatusID).FirstOrDefault();
+            var abbrev = EmployeeStatus.Abbreviation;
+            if (abbrev[1] == ' ')
+            {
+                abbrev = abbrev.Substring(0, 1);
+            }
+            var newID = abbrev + (EmployeeStatus.LastCentarixID + 1).ToString();
+
+            return newID;
+        }
+
+        public async Task<bool> AddNewCentarixID(string UserID, int StatusID)
+        {
+            var oldCentarixID = _context.CentarixIDs.Where(ci => ci.EmployeeID == UserID)
+                .Where(ci => ci.IsCurrent).FirstOrDefault();
+            oldCentarixID.IsCurrent = false;
+            _context.Update(oldCentarixID);
+            await _context.SaveChangesAsync();
+
+            var lastStatus = _context.EmployeeStatuses.Where(es => es.EmployeeStatusID == StatusID).FirstOrDefault();
+            var newNum = lastStatus.LastCentarixID + 1;
+            var abbrev = lastStatus.Abbreviation;
+            if (abbrev[1] == ' ')
+            {
+                abbrev = abbrev.Substring(0, 1);
+            }
+            var newID = abbrev + newNum.ToString();
+
+            var newCentarixID = new CentarixID()
+            {
+                EmployeeID = UserID,
+                CentarixIDNumber = newID,
+                IsCurrent = true,
+                TimeStamp = DateTime.Now,
+                Employee = _context.Employees.Where(e => e.Id == UserID).FirstOrDefault()
+            };
+            _context.Add(newCentarixID);
+            await _context.SaveChangesAsync();
+
+            lastStatus.LastCentarixID = newNum;
+            lastStatus.LastCentarixIDTimeStamp = DateTime.Now;
+            _context.Update(lastStatus);
+            await _context.SaveChangesAsync();
+
+            return true; //just to allow asyncs
         }
 
         [HttpGet]
@@ -907,7 +1030,7 @@ namespace PrototypeWithAuth.Controllers
                     LastName = userSelected.LastName,
                     Email = userSelected.Email,
                     PhoneNumber = userSelected.PhoneNumber,
-                    CentarixID = userSelected.CentarixID,
+                    //CentarixID = userSelected.CentarixID,
                     UserImageSaved = userSelected.UserImage,
                     //TODO: do we want to show the secure app pass??
                     LabMonthlyLimit = userSelected.LabMonthlyLimit,
@@ -919,6 +1042,9 @@ namespace PrototypeWithAuth.Controllers
                     Tab = Tab ?? 1,
                     ConfirmedEmail = userSelected.EmailConfirmed
                 };
+
+                //get CentarixID
+                registerUserViewModel.CentarixID = AppUtility.GetEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == userSelected.Id).OrderBy(ci => ci.TimeStamp));
 
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                 DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
@@ -1074,11 +1200,7 @@ namespace PrototypeWithAuth.Controllers
 
         public JsonResult GetGeneratedPassword()
         {
-            string password = "";
-            while (!PasswordIsValid(password))
-            {
-                password = GeneratePassword();
-            }
+            string password = GeneratePassword();
 
             return Json(password);
         }
@@ -1128,21 +1250,25 @@ namespace PrototypeWithAuth.Controllers
             char[] password = new char[lengthOfPassword];
             int characterSetLength = characterSet.Length;
 
-            System.Random random = new System.Random();
-            for (int characterPosition = 0; characterPosition < lengthOfPassword; characterPosition++)
+            while (!PasswordIsValid(string.Join(null, password)))
             {
-                password[characterPosition] = characterSet[random.Next(characterSetLength - 1)];
-
-                bool moreThanTwoIdenticalInARow =
-                    characterPosition > MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS
-                    && password[characterPosition] == password[characterPosition - 1]
-                    && password[characterPosition - 1] == password[characterPosition - 2];
-
-                if (moreThanTwoIdenticalInARow)
+                System.Random random = new System.Random();
+                for (int characterPosition = 0; characterPosition < lengthOfPassword; characterPosition++)
                 {
-                    characterPosition--;
+                    password[characterPosition] = characterSet[random.Next(characterSetLength - 1)];
+
+                    bool moreThanTwoIdenticalInARow =
+                        characterPosition > MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS
+                        && password[characterPosition] == password[characterPosition - 1]
+                        && password[characterPosition - 1] == password[characterPosition - 2];
+
+                    if (moreThanTwoIdenticalInARow)
+                    {
+                        characterPosition--;
+                    }
                 }
             }
+
 
             return string.Join(null, password);
         }

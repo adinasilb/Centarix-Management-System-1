@@ -162,9 +162,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("CentarixID")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -422,6 +419,37 @@ namespace PrototypeWithAuth.Data.Migrations
                             CategoryTypeID = 2,
                             CategoryTypeDescription = "Operational"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.CentarixID", b =>
+                {
+                    b.Property<int>("CentarixIDID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CentarixIDNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmployeeID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("EmployeeStatusID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCurrent")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CentarixIDID");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.HasIndex("EmployeeStatusID");
+
+                    b.ToTable("CentarixIDs");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Citizenship", b =>
@@ -697,7 +725,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmployeeHoursStatusID")
+                    b.Property<int?>("EmployeeHoursStatusEntry1ID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeeHoursStatusEntry2ID")
                         .HasColumnType("int");
 
                     b.Property<string>("EmployeeID")
@@ -725,7 +756,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("CompanyDayOffID");
 
-                    b.HasIndex("EmployeeHoursStatusID");
+                    b.HasIndex("EmployeeHoursStatusEntry1ID");
+
+                    b.HasIndex("EmployeeHoursStatusEntry2ID");
 
                     b.HasIndex("EmployeeID");
 
@@ -747,7 +780,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("EmployeeHoursID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EmployeeHoursStatusID")
+                    b.Property<int?>("EmployeeHoursStatusEntry1ID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeeHoursStatusEntry2ID")
                         .HasColumnType("int");
 
                     b.Property<string>("EmployeeID")
@@ -775,7 +811,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("EmployeeHoursID");
 
-                    b.HasIndex("EmployeeHoursStatusID");
+                    b.HasIndex("EmployeeHoursStatusEntry1ID");
+
+                    b.HasIndex("EmployeeHoursStatusEntry2ID");
 
                     b.HasIndex("EmployeeID");
 
@@ -823,8 +861,17 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Abbreviation")
+                        .HasColumnType("char(2)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LastCentarixID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastCentarixIDTimeStamp")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("EmployeeStatusID");
 
@@ -834,22 +881,34 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             EmployeeStatusID = 1,
-                            Description = "Employee"
+                            Abbreviation = "E",
+                            Description = "Employee",
+                            LastCentarixID = 0,
+                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             EmployeeStatusID = 2,
-                            Description = "Freelancer"
+                            Abbreviation = "F",
+                            Description = "Freelancer",
+                            LastCentarixID = 0,
+                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             EmployeeStatusID = 3,
-                            Description = "Advisor"
+                            Abbreviation = "A",
+                            Description = "Advisor",
+                            LastCentarixID = 0,
+                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             EmployeeStatusID = 4,
-                            Description = "User"
+                            Abbreviation = "U",
+                            Description = "User",
+                            LastCentarixID = 0,
+                            LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -2481,6 +2540,8 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("NotificationStatusID");
 
+                    b.HasIndex("RequestID");
+
                     b.ToTable("RequestNotifications");
                 });
 
@@ -2577,11 +2638,17 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             SubProjectID = 101,
                             ProjectID = 1,
-                            SubProjectDescription = "Epigenetic Rejuvenation"
+                            SubProjectDescription = "General"
                         },
                         new
                         {
                             SubProjectID = 102,
+                            ProjectID = 1,
+                            SubProjectDescription = "Epigenetic Rejuvenation"
+                        },
+                        new
+                        {
+                            SubProjectID = 103,
                             ProjectID = 1,
                             SubProjectDescription = "Plasma Rejuvenation"
                         },
@@ -2589,23 +2656,41 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             SubProjectID = 201,
                             ProjectID = 2,
+                            SubProjectDescription = "General"
+                        },
+                        new
+                        {
+                            SubProjectID = 202,
+                            ProjectID = 2,
                             SubProjectDescription = "AAV"
                         },
                         new
                         {
                             SubProjectID = 301,
                             ProjectID = 3,
-                            SubProjectDescription = "Epigenetic Clock"
+                            SubProjectDescription = "General"
                         },
                         new
                         {
                             SubProjectID = 302,
+                            ProjectID = 3,
+                            SubProjectDescription = "Epigenetic Clock"
+                        },
+                        new
+                        {
+                            SubProjectID = 303,
                             ProjectID = 3,
                             SubProjectDescription = "Telomere Measurement"
                         },
                         new
                         {
                             SubProjectID = 401,
+                            ProjectID = 4,
+                            SubProjectDescription = "General"
+                        },
+                        new
+                        {
+                            SubProjectID = 402,
                             ProjectID = 4,
                             SubProjectDescription = "Biomarker Trial"
                         },
@@ -3203,6 +3288,20 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.CentarixID", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
+                        .WithMany("CentarixIDs")
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.EmployeeStatus", "EmployeeStatus")
+                        .WithMany()
+                        .HasForeignKey("EmployeeStatusID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Comment", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
@@ -3242,9 +3341,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("CompanyDayOffID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatus")
+                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry1")
+                        .WithMany()
+                        .HasForeignKey("EmployeeHoursStatusEntry1ID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry2")
                         .WithMany("EmployeeHours")
-                        .HasForeignKey("EmployeeHoursStatusID")
+                        .HasForeignKey("EmployeeHoursStatusEntry2ID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
@@ -3265,9 +3369,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("EmployeeHoursID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatus")
+                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry1")
                         .WithMany()
-                        .HasForeignKey("EmployeeHoursStatusID")
+                        .HasForeignKey("EmployeeHoursStatusEntry1ID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry2")
+                        .WithMany("EmployeeHoursAwaitingApprovals")
+                        .HasForeignKey("EmployeeHoursStatusEntry2ID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
@@ -3481,6 +3590,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.RequestNotificationStatus", "NotificationStatus")
                         .WithMany("RequestNotifications")
                         .HasForeignKey("NotificationStatusID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany("RequestNotifications")
+                        .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

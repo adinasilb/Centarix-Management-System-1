@@ -770,11 +770,17 @@ namespace PrototypeWithAuth.Data
                 {
                     SubProjectID = 101,
                     ProjectID = 1,
-                    SubProjectDescription = "Epigenetic Rejuvenation"
+                    SubProjectDescription = "General"
                 },
                 new SubProject
                 {
                     SubProjectID = 102,
+                    ProjectID = 1,
+                    SubProjectDescription = "Epigenetic Rejuvenation"
+                },
+                new SubProject
+                {
+                    SubProjectID = 103,
                     ProjectID = 1,
                     SubProjectDescription = "Plasma Rejuvenation"
                 },
@@ -782,23 +788,41 @@ namespace PrototypeWithAuth.Data
                 {
                     SubProjectID = 201,
                     ProjectID = 2,
+                    SubProjectDescription = "General"
+                },
+                new SubProject
+                {
+                    SubProjectID = 202,
+                    ProjectID = 2,
                     SubProjectDescription = "AAV"
                 },
                 new SubProject
                 {
                     SubProjectID = 301,
                     ProjectID = 3,
-                    SubProjectDescription = "Epigenetic Clock"
+                    SubProjectDescription = "General"
                 },
                 new SubProject
                 {
                     SubProjectID = 302,
+                    ProjectID = 3,
+                    SubProjectDescription = "Epigenetic Clock"
+                },
+                new SubProject
+                {
+                    SubProjectID = 303,
                     ProjectID = 3,
                     SubProjectDescription = "Telomere Measurement"
                 },
                 new SubProject
                 {
                     SubProjectID = 401,
+                    ProjectID = 4,
+                    SubProjectDescription = "General"
+                },
+                new SubProject
+                {
+                    SubProjectID = 402,
                     ProjectID = 4,
                     SubProjectDescription = "Biomarker Trial"
                 },
@@ -1131,22 +1155,30 @@ namespace PrototypeWithAuth.Data
            new EmployeeStatus
            {
                EmployeeStatusID = 1,
-               Description = "Employee"
+               Description = "Employee",
+               Abbreviation = "E",
+               LastCentarixID = 0
            },
            new EmployeeStatus
            {
                EmployeeStatusID = 2,
-               Description = "Freelancer"
+               Description = "Freelancer",
+               Abbreviation = "F",
+               LastCentarixID = 0
            },
            new EmployeeStatus
            {
                EmployeeStatusID = 3,
-               Description = "Advisor"
+               Description = "Advisor",
+               Abbreviation = "A",
+               LastCentarixID = 0
            },
            new EmployeeStatus
            {
                EmployeeStatusID = 4,
-               Description = "User"
+               Description = "User",
+               Abbreviation = "U",
+               LastCentarixID = 0
            }
        );
             modelBuilder.Entity<JobCategoryType>().HasData(
@@ -1288,7 +1320,7 @@ namespace PrototypeWithAuth.Data
                  Icon = "icon-inhouse-maintainance-24px"
              }
          );
-
+           
             modelBuilder.Entity<CompanyDayOffType>().HasData(
              new CompanyDayOffType
              {
@@ -1335,7 +1367,7 @@ namespace PrototypeWithAuth.Data
                    CompanyDayOffTypeID = 9,
                    Name = "Shavuous"
                },
-             
+
                 new CompanyDayOffType
                 {
                     CompanyDayOffTypeID = 10,
@@ -1350,7 +1382,7 @@ namespace PrototypeWithAuth.Data
                {
                    CompanyDayOffTypeID = 12,
                    Name = "Rosh Hashana 2"
-               },         
+               },
                new CompanyDayOffType
                {
                    CompanyDayOffTypeID = 13,

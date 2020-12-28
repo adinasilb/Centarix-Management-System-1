@@ -14,11 +14,11 @@
     bool Reports = false;
     bool IsEquipment = false;
 
-    if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    if (Model.PageType.Equals(AppUtility.PageTypeEnum.RequestRequest))
     {
         Inventory = true;
     }
-    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Summary))
+    else if (Model.PageType.Equals(AppUtility.PageTypeEnum.RequestSummary))
     {
         Summary = true;
     }

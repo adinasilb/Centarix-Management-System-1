@@ -4,11 +4,11 @@
 <div class="modal modal-view fader" id="myModal" data-backdrop="false">
     <div class="modal-dialog-centered mx-auto modal-xl" style="min-width:1000PX !important; top: 20%;">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" class="modal-padding">
-                <input type="hidden" asp-for="AccountingPaymentsEnum" />
+                <input type="hidden" asp-for="AccountingEnum" />
                 @for(int i=0; i<Model.Requests.Count; i++)
                 {
                     <input type="hidden" asp-for="Requests[i].RequestID" />

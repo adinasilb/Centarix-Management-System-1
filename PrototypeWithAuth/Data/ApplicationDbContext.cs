@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.Data
 
         }
         //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+        public DbSet<CentarixID> CentarixIDs { get; set; }
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
         public DbSet<CompanyDayOff> CompanyDayOffs { get; set; }
         public DbSet<CompanyDayOffType> CompanyDayOffTypes { get; set; }
@@ -165,6 +166,18 @@ namespace PrototypeWithAuth.Data
             .HasOne<RequestStatus>(r => r.RequestStatus)
             .WithMany(rs => rs.Requests)
             .HasForeignKey(r => r.RequestStatusID);
+
+            modelBuilder.Entity<EmployeeHours>()
+             .HasOne<EmployeeHoursStatus>(eh => eh.EmployeeHoursStatusEntry2)
+             .WithMany(ehs => ehs.EmployeeHours)
+             .HasForeignKey(eh => eh.EmployeeHoursStatusEntry2ID);
+
+            modelBuilder.Entity<EmployeeHoursAwaitingApproval>()
+              .HasOne<EmployeeHoursStatus>(eh => eh.EmployeeHoursStatusEntry2)
+              .WithMany(ehs => ehs.EmployeeHoursAwaitingApprovals)
+              .HasForeignKey(eh => eh.EmployeeHoursStatusEntry2ID);
+
+
 
             //modelBuilder.Entity<Vendor>()
             //.HasOne<ParentCategory>(v => v.ParentCategory)

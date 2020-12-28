@@ -10,5 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public EmployeeHours EmployeeHour { get; set; }
         public String PageType { get; set; }
+        public bool IsForgotToReport { get; set; }
+        public int AutoFillEntry1Type { get; set; }
     }
 }

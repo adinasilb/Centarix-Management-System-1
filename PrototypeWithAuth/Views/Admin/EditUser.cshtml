@@ -35,10 +35,11 @@
                         <br />
                     }
                     <div class="back-button">
-                        <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent">
+                        <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent"  onclick="$(this).closest('.modal').modal('hide');">
                             <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                         </button>
                     </div>
+
                     <div class="row modal-title-line">
                         <div class="col-2 form-group  pl-0  d-table">
                             <button type="button" class="btn no-box-shadow  upload-image border-0 rounded-circle p-0 m-0 mark-readonly" disabled>
@@ -61,6 +62,7 @@
                         <input class="modal-product-title heading-1 userName form-control-plaintext border-0" disabled value="@Model.FirstName @Model.LastName" />
                     </div>
 
+                    <div class="row"><span class="error error-msg text-danger-centarix heading-1"></span></div>
                     <div class="row">
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center pl-0">

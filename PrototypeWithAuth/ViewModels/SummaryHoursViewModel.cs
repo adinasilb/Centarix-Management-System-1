@@ -8,7 +8,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class SummaryHoursViewModel
     {
-        public List<EmployeeHours> EmployeeHours { get; set; }
+        public List<EmployeeHoursAndAwaitingApprovalViewModel> EmployeeHours { get; set; }
         public DateTime CurrentMonth { get; set; }
         public int  SelectedYear { get; set;  }
         public double? TotalHoursInMonth { get; set; }

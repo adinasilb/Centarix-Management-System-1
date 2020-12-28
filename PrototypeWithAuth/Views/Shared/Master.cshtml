@@ -70,7 +70,10 @@
 
 <body style="display:none" class="body">
 
-    <div class="center" role="status" id="loading" style="display:none;">
+    <div class="center" role="status" id="loading" style="        z-index: 5000;
+        left: calc(960px - 182.5px) !important;
+        width: fit-content;
+        display: none;">
         <img src="~/images/css/Loading/centarix_loading3.gif" />
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -79,6 +82,7 @@
     <!--  SCRIPTS  -->
     <!-- JQuery -->
     @*load jquery ui*@
+    
     <script src="~/lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
     <!-- Bootstrap tooltips -->
@@ -243,7 +247,7 @@
         $(document).ready(function () {
        
             console.log("in doc ready");
-           $('input[type = "datetime-local"]').attr("type", "date")
+           //$('input[type = "datetime-local"]').attr("type", "date")
             //$('form').change(function () {
             //    console.log("form change");
             //    $(".input-group .form-control-plaintext").unwrap();
@@ -255,17 +259,23 @@
             //});
            // $('form').attr('autocomplete', 'off');
             $(document).ajaxError(function (event, jqxhr, settings, exception) {
+                $('#loading').hide();
                 if (jqxhr.status == 401) {
-                    $('#loading').hide();
                     alert("Cookie timed out. Please login again.");
                 }
                 if (jqxhr.status == 400) {
-                    $('#loading').hide();
                     alert("Error 400: error making request");
                 }
                 if (jqxhr.status == 500) {
-                    $('#loading').hide();
-                    alert("Error 500: error carrying out request");
+                    if ($(".error-msg").length > 0) {
+                        $(".error-msg").html(jqxhr.responseText);
+                    }
+                    else if (jqxhr.responseText != null) {
+                        alert("Error 500: " + jqxhr.responseText);
+                    }
+                    else {
+                        alert("Error 500: error carrying out request");
+                    }
                 }
             });
             $('[data-toggle="tooltip"]').tooltip()
@@ -561,7 +571,7 @@
                     //turn off data dismiss by clicking out of the box and by pressing esc
                     $(".modal-view").modal({
                         backdrop: true,
-                        keyboard: false,
+                        keyboard: true,
                     });
                     //shows the modal
                     $(".modal").modal('show');
@@ -772,7 +782,7 @@
                     $('body').append(modal);
                     $(".modal-view").modal({
                         backdrop: true,
-                        keyboard: false,
+                        keyboard: true,
                     });
                     $.fn.CalculateAge();
                     $(".modal").modal('show');

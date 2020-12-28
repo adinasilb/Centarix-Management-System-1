@@ -14,15 +14,15 @@
     bool Inventory = false;
     bool Summary = false;
 
-    if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Request))
+    if (Model.PageType.Equals(AppUtility.PageTypeEnum.RequestRequest))
     {
         Request = true;
     }
-    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Inventory))
+    else if (Model.PageType.Equals(AppUtility.PageTypeEnum.RequestInventory))
     {
         Inventory = true;
     }
-    else if (Model.PageType.Equals(AppUtility.RequestPageTypeEnum.Summary))
+    else if (Model.PageType.Equals(AppUtility.PageTypeEnum.RequestSummary))
     {
         Summary = true;
     }
