@@ -194,7 +194,9 @@
     }
 }
 <header class="sticky-top greater-Z-index">
-    <input type="hidden" value="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]" id="masterSectionType"/>
+    <input type="hidden" value="@TempData[AppUtility.TempDataTypes.MenuType.ToString()]" id="masterSectionType" />
+    <input type="hidden" value="@TempData[AppUtility.TempDataTypes.PageType.ToString()]" id="masterPageType" />
+    <input type="hidden" value="@TempData[AppUtility.TempDataTypes.SidebarType.ToString()]" id="masterSidebarType" />
     <div class="navbar-shadow-2">
         <div class="navbar-shadow-1">
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white ourNavBar p-0 no-box-shadow">
@@ -250,10 +252,10 @@
                                         @{
                                             var src = "/UserImages/user-image-placeholder.png";
                                             var result = await UserManager.GetUserAsync(User);
-                                            if ( result.UserImage != null)
+                                            if (result.UserImage != null)
                                             {
 
-                                                src= "\\"+AppUtility.GetLastFiles(result.UserImage, 2); 
+                                                src = "\\" + AppUtility.GetLastFiles(result.UserImage, 2);
                                             }
                                         }
                                         <img src="@src" class=" ml-0 circular-profile-img circular-profile-img-50" alt="default User image" />

@@ -17,15 +17,16 @@ function ajaxCallToPartial() {
     }
     $.ajax({
         async: true,
-        url: "/"+section+"/_IndexTable?SectionType="+sectiontype,
+        url: "/"+section+"/_IndexTable"
         data: {
             page: $('#Page').val(),
             RequestStatusID: $('.request-status-id').val(),
             subcategoryID: $('#SubCategoryID').val(),
             vendorID: $('#VendorID').val(),
             applicationUserID: $('#ApplicationUserID').val(),
-            parentLocationInstanceID: $('#RequestParentLocationInstanceID').val(),
-            PageType: $('#PageType').val(),
+            PageType: $('#masterPageType').val(),
+            SectionType:  $('#masterSectionType').val(), 
+            SidebarType:  $('#masterSidebarType').val(),
             selectedPriceSort: selectedPriceSort,
             selectedCurrency: $('#tempCurrency').val()
         },

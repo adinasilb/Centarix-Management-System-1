@@ -7,7 +7,7 @@ $(".load-order-details").on("click", function (e) {
     $("#loading").show();
     var section = $("#masterSectionType").val()
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-    var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).val() + "&NewRequestFromProduct=true" + "&SectionType=" + section;
+    var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&NewRequestFromProduct=true" + "&SectionType=" + section;
     $.fn.CallPageRequest($itemurl, "reorder");
     return false;
 });
@@ -46,7 +46,7 @@ $(".load-receive-and-location").on("click", function (e) {
         isOperations=true;
     }   
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-    var $itemurl = "/Requests/ReceivedModal?RequestID=" + $(this).val() + "&IsOperations=" + isOperations;
+    var $itemurl = "/Requests/ReceivedModal?RequestID=" + $(this).attr("value") + "&IsOperations=" + isOperations;
     $.fn.CallPageRequest($itemurl, "received");
     return false;
 });

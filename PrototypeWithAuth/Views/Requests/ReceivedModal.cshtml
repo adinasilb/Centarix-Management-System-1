@@ -35,7 +35,8 @@
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
                 @Html.HiddenFor(model => model.Page)
-                @Html.HiddenFor(model => model.RequestStatusID)
+                @*@Html.HiddenFor(model => model.RequestStatusID)*@
+                <input type="hidden" asp-for="PageRequestStatusID" value="@Model.PageRequestStatusID" />
                 @Html.HiddenFor(model => model.SubCategoryID)
                 @Html.HiddenFor(model => model.VendorID)
                 @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@

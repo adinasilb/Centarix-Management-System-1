@@ -57,6 +57,7 @@ namespace PrototypeWithAuth.AppData
             ForClarification,
             Add,  AwaitingApproval,
         }
+        public enum FilterEnum {None, Price, Category, Amount}
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
@@ -81,34 +82,39 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
-        public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
+        public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, SidebarEnum sidebarType, String filterID)
         {
             int ReturnList = 0;
-            if (VendorID > 0)
+            int id = 0;
+            if (sidebarType != SidebarEnum.Owner)
             {
-                ReturnList = RequestsList
+                int.TryParse(filterID, out id);
+            }
+            switch(sidebarType)
+            {
+                case SidebarEnum.Vendors:
+                    ReturnList = RequestsList
+                   .Where(r => r.RequestStatusID == RequestStatusID)
+                   .Where(r => r.Product.VendorID == id)
+                   .Count();
+                    break;
+                case SidebarEnum.Type:
+                    ReturnList = RequestsList
                     .Where(r => r.RequestStatusID == RequestStatusID)
-                    .Where(r => r.Product.VendorID == VendorID)
+                    .Where(r => r.Product.ProductSubcategoryID == id)
                     .Count();
-            }
-            else if (SubcategoryID > 0)
-            {
-                ReturnList = RequestsList
+                    break;
+                case SidebarEnum.Owner:
+                    ReturnList = RequestsList
                     .Where(r => r.RequestStatusID == RequestStatusID)
-                    .Where(r => r.Product.ProductSubcategoryID == SubcategoryID)
+                    .Where(r => r.ParentRequest.ApplicationUserID == filterID)
                     .Count();
+                    break;
+                default:
+                    ReturnList = RequestsList.Where(r => r.RequestStatusID == RequestStatusID).Count();
+                    break;
             }
-            else if (ApplicationUserID != null)
-            {
-                ReturnList = RequestsList
-                    .Where(r => r.RequestStatusID == RequestStatusID)
-                    .Where(r => r.ParentRequest.ApplicationUserID == ApplicationUserID)
-                    .Count();
-            }
-            else
-            {
-                ReturnList = RequestsList.Where(r => r.RequestStatusID == RequestStatusID).Count();
-            }
+
             return ReturnList;
         }
 

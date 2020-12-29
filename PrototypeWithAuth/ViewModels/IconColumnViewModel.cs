@@ -8,10 +8,16 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class IconColumnViewModel
     {
-        public string IconClass { get; set; }
-        public string Color { get; set; }
-        public string IconAjaxLink { get; set; }
-        public string IconUrlAction { get; set; }
-        public string TooltipTitle { get; set; }
+        public IconColumnViewModel(string? iconClass = null, string? color = null, string? iconAjaxLink = null, string? tooltipTitle = null)
+        {
+            IconClass = iconClass;
+            Color = color;
+            IconAjaxLink = iconAjaxLink;
+            TooltipTitle = tooltipTitle;
+        }
+        public string IconClass { get; private set; }
+        public string Color { get; private set; }
+        public string IconAjaxLink { get; private set; }
+        public string TooltipTitle { get; private set; }
     }
 }

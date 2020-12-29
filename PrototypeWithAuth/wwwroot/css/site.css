@@ -1122,7 +1122,7 @@ a.nav-link {
     }
 
     .new-button.active {
-        color: var(--order-inv-color);
+        color: var(--order-inv-color) !important;
         font-weight: var(--bold-regular);
         border-bottom: .188rem solid var(--order-inv-color);
     }
