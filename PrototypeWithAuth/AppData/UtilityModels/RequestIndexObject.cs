@@ -7,12 +7,57 @@ namespace PrototypeWithAuth.AppData
 {
     public class RequestIndexObject
     {
-        public int PageNumber { get; set} 
-        public int RequestStatusID { get; set; }
+        private int _PageNumber;
+        private int _RequestStatusID;
+        private List<string> _SelectedPriceSort;
+        public int PageNumber {
+            get
+            {
+                if (_PageNumber == 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return _PageNumber;
+                }
+            }
+            set { _PageNumber = value; }
+        } 
+        public int RequestStatusID
+        {
+            get
+            {
+                if (_RequestStatusID == 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return _RequestStatusID;
+                }
+            }
+            set { _RequestStatusID = value; }
+        }
         public AppUtility.SidebarEnum SidebarType { get; set; }
         public String SidebarFilterID { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
-        public List<String> SelectedPriceSort { get; set; }
+        public AppUtility.MenuItems SectionType { get; set; }
+        public List<String> SelectedPriceSort
+        {
+            get
+            {
+                if (_SelectedPriceSort == null)
+                {
+                    return new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString()};
+                }
+                else
+                {
+                    return _SelectedPriceSort;
+                }
+            }
+            set { _SelectedPriceSort = value; }
+        }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
          //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
     }

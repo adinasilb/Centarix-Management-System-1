@@ -75,34 +75,22 @@ namespace PrototypeWithAuth.Controllers
         // GET: Requests
         //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
         //ALSO when changing defaults -> change the defaults on the index page for paged list 
-        public async Task<IActionResult> Index(int page, int RequestStatusID = 1, AppUtility.SidebarEnum sidebarType = AppUtility.SidebarEnum.List, String sidebarFitlerID = "",
-            AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public async Task<IActionResult> Index(RequestIndexObject requestIndexObject)
         {
-            
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = sidebarType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
             //instantiate your list of requests to pass into the index
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
                 .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID==1).Include(x => x.ParentRequest)
-                .OrderBy(r => r.CreationDate);
-            //.Include(r=>r.UnitType).ThenInclude(ut => ut.UnitTypeDescription).Include(r=>r.SubUnitType).ThenInclude(sut => sut.UnitTypeDescription).Include(r=>r.SubSubUnitType).ThenInclude(ssut =>ssut.UnitTypeDescription); //inorder to display types of units
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Include(x => x.ParentRequest);
 
 
-            int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, sidebarType, sidebarFitlerID);
-            int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, sidebarType, sidebarFitlerID);
-            int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, sidebarType, sidebarFitlerID);
-            int approvedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 6, sidebarType, sidebarFitlerID);
-            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, sidebarType, sidebarFitlerID);
-            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, sidebarType, sidebarFitlerID);
+            var viewmodel = await GetIndexViewModel(requestIndexObject);
 
-            //passing in the amounts to display in the top buttons
-            TempData["AmountNew"] = newCount;
-            TempData["AmountOrdered"] = orderedCount;
-            TempData["AmountReceived"] = receivedCount;
-            TempData["AmountApproved"] = approvedCount;
+            SetViewModelCounts(requestIndexObject, fullRequestsList, viewmodel);
 
             //todo: move to view model or the like
             TempData["Email1"] = TempData["Email1"];
@@ -111,13 +99,6 @@ namespace PrototypeWithAuth.Controllers
             TempData["Email4"] = TempData["Email4"];
             TempData["Email5"] = TempData["Email5"];
 
-       
-            var viewmodel = await GetIndexViewModel(new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString()},page, RequestStatusID, (AppUtility.SidebarEnum)TempData[AppUtility.TempDataTypes.SidebarType.ToString()], sidebarFilterID, PageType, SectionType);
-
-            //this is for the indextable price filters
-            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = p== AppUtility.PriceSortEnum.TotalVat ? true : false }));
-            viewmodel.PriceSortEnums = priceSorts;
 
 
             if (ViewBag.ErrorMessage != null)
@@ -126,6 +107,22 @@ namespace PrototypeWithAuth.Controllers
             }
 
             return View(viewmodel);
+        }
+
+
+
+        private static void SetViewModelCounts(RequestIndexObject requestIndexObject, IQueryable<Request> fullRequestsList, RequestIndexPartialViewModel viewmodel)
+        {
+            int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            int approvedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 6, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            viewmodel.NewCount = newCount;
+            viewmodel.ApprovedCount = approvedCount;
+            viewmodel.OrderedCount = orderedCount;
+            viewmodel.ReceivedCount = receivedCount;
         }
 
         [Authorize(Roles = "Requests")]
@@ -284,7 +281,10 @@ namespace PrototypeWithAuth.Controllers
                 // Redirect("~/Views/Shared/RequestError.cshtml");
             }
             requestIndexViewModel.PagedList = onePageOfProducts;
-            //requestIndexViewModel.MenuType = AppUtility.MenuItems.Requests;
+            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = p == AppUtility.PriceSortEnum.TotalVat ? true : false }));
+            requestIndexViewModel.PriceSortEnums = priceSorts;
+
             return requestIndexViewModel;
         }
 
@@ -465,12 +465,48 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);            
             return PartialView(viewModel);
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject)
+        {
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            return PartialView(viewModel);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ItemTableOwner(RequestIndexObject requestIndexObject)
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            return View(viewModel);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ItemTableVendor(RequestIndexObject requestIndexObject)
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            return View(viewModel);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ItemTableType(RequestIndexObject requestIndexObject)
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            return View(viewModel);
+        }
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> DeleteModal(int? id, bool isQuote = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)

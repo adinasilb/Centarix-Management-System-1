@@ -1,95 +1,81 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
-@using PrototypeWithAuth.Data;
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<ApplicationUser> SignInManager
-@using X.PagedList.Mvc.Core 
-
-<div class="">
-
-    <table class="table table-headerspaced table-noheaderlines table-hover ">
-        <tbody>
-            @for (int i = 0; i < Model.PagedList.Count; i++)
-            {
-                <tr class="text-center ">
-                    @*<td width="7%">
-                        <div class="form-check order-inv-form">
-                            <input type="checkbox" class="form-check-input filled-in" id="@Model.PagedList[itemNum].RequestID">
-                            <label class="form-check-label" for="@Model.PagedList[itemNum].RequestID">@Model.PagedList[itemNum].RequestID</label>
-                        </div>
-                    *@
-                    @foreach (var col in Model.PagedList[i].Columns)
+@using PrototypeWithAuth.AppData
+@if (Model.PagedList.Count() > 0)
+    {
+<table class="table table-headerspaced table-noheaderlines table-hover ">
+    <thead>
+        <tr class="text-center">
+            @foreach (var col in Model.PagedList[0].Columns)
                     {
-                    <td width="@col.Width%">
-                        @if (col.Image != null)
-                        {
-                            <img src="@col.Image" alt="Image" width="75" class="category-image" />
-                        }
-                        else if (col.Icons != null)
-                        {
-                            <div class="d-inline-flex">
 
-                                @foreach (var icon in col.Icons)
-                                {
-                                    <div class="table-icon-div">
-
-                                        <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
-                                           title="@icon.TooltipTitle" value="@col.AjaxID">
-                                            <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
-                                        </a>
-
-                                    </div>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            for (int val = 0; val < col.Value.Count; val++)
+            <th width="@col.Width%">
+                @switch (col.FilterEnum)
                             {
-                                if (val != 0)
-                                {
-                                    <br />
-                                }
-                                if (col.AjaxLink != null)
-                                {
-                                    <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID" data-target="item" href="item">
-                                        <p class="m-0">@col.Value[val]</p>
-                                    </button>
-                                }
-                                else
-                                {
-                                    <label class="m-0 p-0">@col.Value[val]</label>
-                                }
+                                case AppUtility.FilterEnum.Price:
+                <label>@col.Title</label>
+                <span class="d-inline-block">
+                    <ul class="list-unstyled p-0 m-0">
+                        <li>
+                            <button id="pricePopover" type="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body" class="btn p-0 m-0 no-box-shadow text">
+                                <i class="icon-centarix-icons-17" style="font-size:1.6rem;">
+                                </i>
+                            </button>
+                        </li>
+                        <div style="display:none;" id="priceSortContent" class="">
+                            @for (int i = 0; i < Model.PriceSortEnums.Count; i++)
+                                                {
+                                                    var val = (int)(Model.PriceSortEnums[i].PriceSortEnum);
+                                                    var id = "PriceSortEnums_" + i + "__Selected";
+                            <div class="custom-control custom-checkbox plain-form priceFilterDiv" onclick="callIndexWithNewFilter(@val, @id)">
+                                <input type="checkbox" class="custom-control-input priceSort" enum="@Model.PriceSortEnums[i].PriceSortEnum" asp-for="PriceSortEnums[i].Selected" />
+                                <label class="custom-control-label text" asp-for="PriceSortEnums[i].Selected">@Html.DisplayFor(e => Model.PriceSortEnums[i].PriceSortEnum)</label>
+                            </div>
+                            <hr class="mx-0  my-1" />
+                                                }
+
+                            <div class="row mt-2">
+                                <input type="hidden" id="tempCurrency" value="NIS" />
+                                <div class="col-5">
+                                    <div class="custom-control custom-radio">
+                                        <input checked="checked"
+                                               id="nis"
+                                               name="currency"
+                                               type="radio"
+                                               value="@AppUtility.CurrencyEnum.NIS" class="custom-control-input currency nis">
+                                        <label class="custom-control-label currency radio-button text" for="nis">@AppUtility.CurrencyEnum.NIS.ToString()</label>
+                                    </div>
+
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio">
+                                        <input id="usd"
+                                               name="currency"
+                                               type="radio"
+                                               value="@AppUtility.CurrencyEnum.USD"
+                                               class="custom-control-input currency usd">
+                                        <label class="custom-control-label currency radio-button text" for="usd">@AppUtility.CurrencyEnum.USD.ToString()</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </ul>
+                </span>
+                                    break;
+                                default:
+                <label>@col.Title</label>
+                                    break;
                             }
 
-                        }
-                    </td>
-                    }
+            </th>
 
-                                       
-                       
-                            @*@if (IsEquipment)
-                            {
-                                <div class="table-icon-div">
-                                    <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
-                                       title="Add" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
-                                        <i style="        font-size: 2rem;
-                                color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
-                                    </a>
-                                </div>
-                            }*@
-
-
-                </tr>
             }
-        </tbody>
-    </table>
+        </tr>
+    </thead>
+</table>
+<div class="_IndexTableData">
+    @{
+                await Html.RenderPartialAsync("_IndexTableData", Model);
+    }
 </div>
-
-<div class="row">
-    <div class="col-6 offset-6 text-center">
-        @Html.PagedListPager(Model.PagedList, page => Url.Action("Index", new { page = page, RequestStatusID = Model.RequestStatusID, }))
-    </div>
-</div>
-<script src="~/js/IndexTablePartial.js"></script>
-<script src="~/js/ConfirmDeleteScript.js"></script>
-<script>$('[data-toggle="tooltip"]').tooltip()</script>
+}

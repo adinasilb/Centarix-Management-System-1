@@ -15,5 +15,10 @@ namespace PrototypeWithAuth.ViewModels
         public List<String> PriceSortEnumsList { get; set; }
         public int? PageNumber { get; set; }
         public int RequestStatusID { get; set; }
+        public int NewCount { get; set; }
+        public int ApprovedCount { get; set; }
+        public int OrderedCount { get; set; }
+        public int ReceivedCount { get; set; }
+
     }
 }

@@ -1,0 +1,22 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+@using PrototypeWithAuth.AppData
+@{ 
+    ViewData["Title"] = "Owner";
+
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+<div class="row">
+    <a href="@Url.ActionLink("Index", "ApplicationUsers", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()] }).ToString()">
+        <i class="fas fa-long-arrow-alt-left"></i>
+    </a>
+</div>
+<div class="_IndexTable">
+    @if ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.RequestRequest)
+    {
+        await Html.RenderPartialAsync("_IndexTableWithCounts", Model);
+    }
+    else
+    {
+        await Html.RenderPartialAsync("_IndexTable", Model);
+    }
+</div>
