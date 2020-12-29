@@ -980,11 +980,11 @@ namespace PrototypeWithAuth.AppData
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Last Item",
-                Controller = "Operations",
+                Controller = "Requests",
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"PageType", PageType }
+                    {"requestIndexObject", new RequestIndexObject { SectionType = AppUtility.MenuItems.Operations, PageType = AppUtility.PageTypeEnum.OperationsRequest} }
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-format_list_bulleted-24px-01"
