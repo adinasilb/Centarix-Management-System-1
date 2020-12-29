@@ -82,15 +82,9 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
-            //instantiate your list of requests to pass into the index
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
-                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Include(x => x.ParentRequest);
-
-
             var viewmodel = await GetIndexViewModel(requestIndexObject);
 
-            SetViewModelCounts(requestIndexObject, fullRequestsList, viewmodel);
+            SetViewModelCounts(requestIndexObject, viewmodel);
 
             //todo: move to view model or the like
             TempData["Email1"] = TempData["Email1"];
@@ -111,8 +105,19 @@ namespace PrototypeWithAuth.Controllers
 
 
 
-        private static void SetViewModelCounts(RequestIndexObject requestIndexObject, IQueryable<Request> fullRequestsList, RequestIndexPartialViewModel viewmodel)
+        private void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel)
         {
+            int categoryID = 0;
+            if(requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+            {
+                categoryID = 1;
+            }
+            else if(requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
+            {
+                categoryID = 2;
+            }
+            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
+              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Include(x => x.ParentRequest);
             int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
@@ -485,6 +490,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            SetViewModelCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
         [HttpGet]
@@ -495,6 +501,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            SetViewModelCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
         [HttpGet]
@@ -505,6 +512,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            SetViewModelCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
         [HttpGet]
