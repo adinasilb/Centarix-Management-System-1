@@ -361,18 +361,18 @@ namespace PrototypeWithAuth.AppData
             return priceColumn;
         }
 
-        public static List<String> GetAmountColumn(Request request)
+        public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)
         {
             List<String> amountColumn = new List<String>();
             if(request.Unit != null)
             {
-                amountColumn.Add(request.Unit + " " + request.UnitType.UnitTypeDescription);
+                amountColumn.Add(request.Unit + " " + unitType.UnitTypeDescription);
                 if(request.SubUnit != null)
                 {
-                    amountColumn.Add(request.SubUnit + " " + request.SubUnitType.UnitTypeDescription);                 
+                    amountColumn.Add(request.SubUnit + " " + subUnitType.UnitTypeDescription);                 
                     if(request.SubSubUnit != null)
                     {
-                        amountColumn.Add(request.SubSubUnit + " " + request.SubSubUnitType.UnitTypeDescription);
+                        amountColumn.Add(request.SubSubUnit + " " + subSubUnitType.UnitTypeDescription);
                     }
                     
                 }

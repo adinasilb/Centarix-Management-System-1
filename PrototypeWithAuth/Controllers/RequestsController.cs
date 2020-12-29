@@ -314,16 +314,14 @@ namespace PrototypeWithAuth.Controllers
                    .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType);
                 if (PageType == AppUtility.PageTypeEnum.RequestRequest)
                 {
-                    onePageOfProducts = await RequestPassedInWithInclude.Include(r => r.Product.ProductSubcategory)
-                   .Include(r => r.ParentRequest)
-                   .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Select(r => new RequestIndexPartialRowViewModel()
+                    onePageOfProducts = await RequestPassedInWithInclude.Select(r => new RequestIndexPartialRowViewModel()
                     {
                         Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
                              new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?"~/images/css/accounting/sample_image.png": r.Product.ProductSubcategory.ImageURL},
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r)},
+                             new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
                              new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(selectedPriceFilters, r, currency)},
@@ -333,8 +331,9 @@ namespace PrototypeWithAuth.Controllers
                                  Title = "", Width=10, Icons = new List<IconColumnViewModel>()
                                  { 
                                      new IconColumnViewModel() {IconClass= " icon-centarix-icons-03 ", Color= "#00CA72", IconUrlAction= Url.Action("Approve", new { id = r.RequestID }), TooltipTitle="Approve" },
-                                     new IconColumnViewModel() {IconClass= " icon-delete-24px ", Color= "", IconAjaxLink= "load-confirm-delete",  TooltipTitle="Delete"}
-                                 } 
+                                     new IconColumnViewModel() {IconClass= " icon-delete-24px ", Color= "black", IconAjaxLink= "load-confirm-delete",  TooltipTitle="Delete"}
+                                 } ,
+                                 AjaxID = r.RequestID
                              }
                         }   
                    }).ToPagedListAsync(page == 0 ? 1 : page, 25);
