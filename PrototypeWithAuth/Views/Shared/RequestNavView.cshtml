@@ -323,7 +323,7 @@
                             }
                             @foreach (var sidebarNavItem in SidebarMenuItems)
                             {
-                                <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="text-black">
+                                <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="text-black @sidebarNavItem.AjaxLink">
                                     <li class="nav-item sidenav-button @sidebarNavItem.Classes side-menu px-2" style="@liMargins">
                                         <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
                                         <br /><span>@sidebarNavItem.Description</span><br />

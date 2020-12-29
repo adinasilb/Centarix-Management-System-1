@@ -18,5 +18,6 @@ namespace PrototypeWithAuth.ViewModels
         public string ID { get; set; }
         public string IconName { get; set; }
         public string SidebarCountReference { get; set; }
+        public string AjaxLink { get; set; }
     }
 }

@@ -321,6 +321,16 @@ namespace PrototypeWithAuth.AppData
 
             return list;
         }
+
+        public static string GetEmployeeCentarixID(IEnumerable<CentarixID> centarixIDs)
+        {
+            string centarixID = "";
+            foreach (var c in centarixIDs)
+            {
+                centarixID += c.CentarixIDNumber;
+            }
+            return centarixID;
+        }
         public static int GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs, int vacationSickCount)
         {
             DateTime nextDay = firstOfTheMonth;

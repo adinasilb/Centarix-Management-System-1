@@ -69,7 +69,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
+                    Configuration.GetConnectionString("AdinaHome"));
                 options.EnableSensitiveDataLogging(true);
             });
 
@@ -173,15 +173,15 @@ namespace PrototypeWithAuth
 
         //Seed database with new roles
 
-        //private async Task AddRoles(IServiceProvider serviceProvider)
-        //{
-        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    var user = await UserManager.FindByEmailAsync("adina@centarix.com");
-        //    //await UserManager.AddToRoleAsync(user, "Admin");
-        //    //await UserManager.AddToRoleAsync(user, "CEO");
-        //    var code = await UserManager.GeneratePasswordResetTokenAsync(user);
-        //    var result = await UserManager.ResetPasswordAsync(user, code, "adinabCE2063*");
-        //}
+        private async Task AddRoles(IServiceProvider serviceProvider)
+        {
+            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var user = await UserManager.FindByEmailAsync("adina@centarix.com");
+            await UserManager.AddToRoleAsync(user, "LabManagement");
+            ////await UserManager.AddToRoleAsync(user, "CEO");
+            //var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+            //var result = await UserManager.ResetPasswordAsync(user, code, "adinabCE2063*");
+        }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
