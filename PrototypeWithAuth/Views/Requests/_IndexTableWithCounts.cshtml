@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+@using PrototypeWithAuth.AppData
 @{
 
     string newButtonText = "";
@@ -22,21 +23,27 @@
     receivedActiveClass = "new-button pt-4 ";
     approvedActiveClass = "new-button pt-4 ";
 
+    var activeClasses = "new-button active  pt-4";
+    if (Model.PageType == AppUtility.PageTypeEnum.OperationsRequest)
+    {
+        activeClasses += " new-oper-button ";
+    }
+
     switch (Model.RequestStatusID)
     {
         case 1:
         case 4:
         case 5:
-            newActiveClass = "new-button active  pt-4";
+            newActiveClass = activeClasses ;
             break;
         case 2:
-            orderedActiveClass = "new-button active pt-4";
+            orderedActiveClass = activeClasses;
             break;
         case 3:
-            receivedActiveClass = "new-button active  pt-4";
+            receivedActiveClass = activeClasses;
             break;
         case 6:
-            approvedActiveClass = "new-button active  pt-4";
+            approvedActiveClass = activeClasses;
             break;
 
     }

@@ -35,7 +35,7 @@
                     if (i == 0)
                     {
                         <div class="px-2 pt-2 offset-1 col-2 module-button-div">
-                            <a class="module-button" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})">
+                            <a class="module-button" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, Model.ElementAt(i).RouteValues)">
                                 <img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br />
                                 <span>@Model.ElementAt(i).MenuViewName</span>
                             </a>
@@ -44,7 +44,7 @@
                     else
                     {
                         <div class="px-2 pt-2 col-2 module-button-div">
-                            <a class="module-button" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
+                            <a class="module-button" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, Model.ElementAt(i).RouteValues))"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
                         </div>
                     }
 

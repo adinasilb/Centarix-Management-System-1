@@ -28,7 +28,9 @@ namespace PrototypeWithAuth.AppData
                         Action = "Index",
                         RouteValues = new RouteValueDictionary()
                         {
-                            {"requestIndexObject", new { PageType = AppUtility.PageTypeEnum.RequestRequest, SectionType = AppUtility.MenuItems.Requests, SidebarType = AppUtility.SidebarEnum.List} }
+                            {"PageType",  AppUtility.PageTypeEnum.RequestRequest },
+                            { "SectionType", AppUtility.MenuItems.Requests },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
                         },
                         Classes = AllClasses,
                         ID = "request-link"
@@ -39,9 +41,11 @@ namespace PrototypeWithAuth.AppData
                         Description = "Inventory",
                         Controller = "Requests",
                         Action = "IndexInventory",
-                        RouteValues = new RouteValueDictionary() 
+                        RouteValues = new RouteValueDictionary()  
                         { 
-                            {"requestIndexObject", new { PageType = AppUtility.PageTypeEnum.RequestSummary, SectionType = AppUtility.MenuItems.Requests, SidebarType = AppUtility.SidebarEnum.List} }
+                            {"PageType",  AppUtility.PageTypeEnum.RequestSummary },
+                            { "SectionType", AppUtility.MenuItems.Requests },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
                         },
                         Classes = AllClasses,
                         ID = "summary-link"
@@ -93,9 +97,11 @@ namespace PrototypeWithAuth.AppData
                     //    Action = "Index",
                     //    RouteValues = new RouteValueDictionary()
                     //    {
-                    //              {"requestIndexObject", new { PageType = AppUtility.PageTypeEnum.RequestInventory, SectionType = AppUtility.MenuItems.Requests, SidebarType = AppUtility.SidebarEnum.List} }
-                    //    },
-                    //    Classes = AllClasses,
+                    //                {"PageType",  AppUtility.PageTypeEnum.RequestRequest },
+            //        { "SectionType", AppUtility.MenuItems.Requests },
+            //                { "SidebarType", AppUtility.SidebarEnum.List }
+            //},
+            //        //    Classes = AllClasses,
                     //    ID = "inventory-link"
                     //});
 
@@ -106,12 +112,14 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Requests",
-                        Controller = "Operations",
+                        Controller = "Requests",
                         Action = "Index",
                         RouteValues = new RouteValueDictionary()
-                {
-                         {"requestIndexObject", new { PageType = AppUtility.PageTypeEnum.OperationsRequest, SectionType = AppUtility.MenuItems.Operations, SidebarType = AppUtility.SidebarEnum.List} }
-                },
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
+                            { "SectionType", AppUtility.MenuItems.Operations },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
                         Classes = AllClasses,
                         ID = "request-link"
                     });
@@ -119,12 +127,14 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Inventory",
-                        Controller = "Operations",
+                        Controller = "Requests",
                         Action = "IndexInventory",
                         RouteValues = new RouteValueDictionary()
-                {
-                          {"requestIndexObject", new { PageType = AppUtility.PageTypeEnum.OperationsInventory, SectionType = AppUtility.MenuItems.Operations, SidebarType = AppUtility.SidebarEnum.List} }
-                },
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.OperationsInventory },
+                            { "SectionType", AppUtility.MenuItems.Operations },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
                         Classes = AllClasses,
                         ID = "inventory-link"
                     });
@@ -369,9 +379,11 @@ namespace PrototypeWithAuth.AppData
                 Controller = "Requests",
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
-                {
-                   {"requestIndexObject", new { PageType = pageType, SectionType = AppUtility.MenuItems.Requests, SidebarType = AppUtility.SidebarEnum.List} }
-                },
+                        {
+                            {"PageType", pageType },
+                            { "SectionType", AppUtility.MenuItems.Requests },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
                 Classes = menuClass,
                 IconName = "icon-format_list_bulleted-24px-01"
             });
@@ -448,7 +460,9 @@ namespace PrototypeWithAuth.AppData
                 Action = "IndexInventory",
                 RouteValues = new RouteValueDictionary()
                 {
-                         {"requestIndexObject", new { PageType = pageType, SectionType = AppUtility.MenuItems.Requests, SidebarType = AppUtility.SidebarEnum.List} }
+                    {"PageType",  pageType },
+                    { "SectionType", AppUtility.MenuItems.Requests },
+                    { "SidebarType", AppUtility.SidebarEnum.List }
                 },
                 Classes = menuClass,
                 IconName = "icon-format_list_bulleted-24px-01"
@@ -981,9 +995,11 @@ namespace PrototypeWithAuth.AppData
                 Controller = "Requests",
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
-                {
-                    {"requestIndexObject", new { SectionType = AppUtility.MenuItems.Operations, PageType = AppUtility.PageTypeEnum.OperationsRequest} }
-                },
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
+                            { "SectionType", AppUtility.MenuItems.Operations },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
                 Classes = CurrentClasses,
                 IconName = "icon-format_list_bulleted-24px-01"
             });

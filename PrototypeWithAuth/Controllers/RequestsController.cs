@@ -310,7 +310,7 @@ namespace PrototypeWithAuth.Controllers
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = p == AppUtility.PriceSortEnum.TotalVat ? true : false }));
             requestIndexViewModel.PriceSortEnums = priceSorts;
-
+            requestIndexViewModel.PageType = requestIndexObject.PageType;
             return requestIndexViewModel;
         }
 

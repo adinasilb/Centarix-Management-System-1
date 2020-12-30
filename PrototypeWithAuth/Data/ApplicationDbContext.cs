@@ -55,7 +55,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<CategoryType> CategoryTypes { get; set; }
         public DbSet<VendorComment> VendorComments { get; set; }
         public DbSet<VendorContact> VendorContacts { get; set; }
-        public DbSet<Menu> Menus { get; set; }
         public DbSet<SubProject> SubProjects { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<LocationInstance> LocationInstances { get; set; }

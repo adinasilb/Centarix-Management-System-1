@@ -1158,7 +1158,7 @@ a.nav-link {
 }
 
 .new-oper-button.active {
-    color: var(--operations-color);
+    color: var(--operations-color) !important;
     border-bottom: 4px solid var(--operations-color);
 }
 
