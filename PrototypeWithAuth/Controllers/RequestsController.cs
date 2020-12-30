@@ -128,11 +128,11 @@ namespace PrototypeWithAuth.Controllers
         private void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel)
         {
             int categoryID = 0;
-            if(requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+            if(requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
             {
                 categoryID = 1;
             }
-            else if(requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
+            else if(requestIndexObject.PageType == AppUtility.MenuItems.Operations)
             {
                 categoryID = 2;
             }
@@ -166,7 +166,7 @@ namespace PrototypeWithAuth.Controllers
         private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject)
         {
             int categoryID = 1;
-            if(requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
+            if(requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
             {
                 categoryID = 2;
             }
@@ -388,7 +388,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.OperationsInventory:
                     iconList.Add(orderOperations);
                     iconList.Add(deleteIcon);
-                    onePageOfProducts = await GetSummaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
+                    onePageOfProducts = await GetReceivedInventoryOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                     break;
                 case AppUtility.PageTypeEnum.LabManagementEquipment:
                     break;
