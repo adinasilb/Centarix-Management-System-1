@@ -35,33 +35,6 @@ namespace PrototypeWithAuth
             CreateHostBuilder(args).Build().Run();
 
           
-
-//            var host = CreateHostBuilder(args);
-//​
-//            using (var scope = host.ConfigureServices.scope())
-//            {
-//                var services = scope.ServiceProvider;
-//                try
-//                {
-//                    var serviceProvider = services.GetRequiredService<IServiceProvider>();
-//                    var configuration = services.GetRequiredService<IConfiguration>();
-//                    SeedRoles.CreateRoles(serviceProvider, configuration).Wait();
-
-//                }
-//                catch (Exception exception)
-//                {
-//                    var logger = services.GetRequiredService<ILogger<Program>>();
-//                    logger.LogError(exception, "An error occurred while creating roles");
-//                }
-//            }
-//​
-//            host.Build().Run();
-
-
-
-
-
-
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

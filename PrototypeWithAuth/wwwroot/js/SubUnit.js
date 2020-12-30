@@ -340,12 +340,19 @@ $(function () {
 
 				$("#unit-price-dollars").prop("disabled", false);
 				$("#unit-price-dollars").removeClass('disabled-text');
+
+				$("#subunit-price-dollars").prop("disabled", false);
 				$("#subunit-price-dollars").removeClass('disabled-text');
+				$("#subsubunit-price-dollars").prop("disabled", false);
 				$("#subsubunit-price-dollars").removeClass('disabled-text');
 				$(".request-cost-dollar-icon").removeClass('disabled-text');
+
 				$("#unit-price-shekel").prop("disabled", true);
 				$("#unit-price-shekel").addClass('disabled-text');
+
+				$("#subunit-price-shekel").prop('disabled', true);
 				$("#subunit-price-shekel").addClass('disabled-text');
+				$("#subsubunit-price-shekel").prop('disabled', true);
 				$("#subsubunit-price-shekel").addClass('disabled-text');
 				$(".request-cost-shekel-icon").addClass('disabled-text');
 				break;
@@ -358,12 +365,18 @@ $(function () {
 
 				$("#unit-price-dollars").prop("disabled", true);
 				$("#unit-price-dollars").addClass('disabled-text');
+
+				$("#subunit-price-dollars").prop('disabled', true);
 				$("#subunit-price-dollars").addClass('disabled-text');
+				$("#subsubunit-price-dollars").prop('disabled', true);
 				$("#subsubunit-price-dollars").addClass('disabled-text');
 				$(".request-cost-dollar-icon").addClass('disabled-text');
+
 				$("#unit-price-shekel").prop("disabled", false);
 				$("#unit-price-shekel").removeClass('disabled-text');
-				$("#subunit-price-shekel").removeClass('disabled-text');
+				$("#subunit-price-shekel").prop("disabled", false);
+				$("#subsubunit-price-shekel").removeClass('disabled-text');
+				$("#unit-price-shekel").prop("disabled", false);
 				$("#subsubunit-price-shekel").removeClass('disabled-text');
 				$(".request-cost-shekel-icon").removeClass('disabled-text');
 				
