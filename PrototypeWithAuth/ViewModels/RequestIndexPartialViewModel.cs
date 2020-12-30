@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.ViewModels
         public int ApprovedCount { get; set; }
         public int OrderedCount { get; set; }
         public int ReceivedCount { get; set; }
+        public string SidebarFilterID { get; set; }
 
     }
 }

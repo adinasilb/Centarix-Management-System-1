@@ -1,41 +1,34 @@
 ﻿ $('body').on('click', '.priceFilterDiv', function (e) { e.preventDefault(); }).click();
+
 function callIndexWithNewFilter(val, id) {
     $(id).attr("checked", !$(id).prop("checked"));
 
-    ajaxCallToPartial();
+    ajaxCallToPartialTableData();
     return false;
 }
-function ajaxCallToPartial() {
-    var section = $('#section').val();
+function ajaxCallToPartialTableData() {
     var selectedPriceSort = [];
     $("#priceSortContent .priceSort:checked").each(function (e) {
         selectedPriceSort.push($(this).attr("enum"));
     })
-    if (section == "LabManagement") {
-        section = "Requests"
-        var sectiontype = "LabManagement";
-    }
     $.ajax({
         async: true,
-        url: "/"+section+"/_IndexTable"
+        url: "/Requests/_IndexTableData",
         data: {
-            page: $('#Page').val(),
-            RequestStatusID: $('.request-status-id').val(),
-            subcategoryID: $('#SubCategoryID').val(),
-            vendorID: $('#VendorID').val(),
-            applicationUserID: $('#ApplicationUserID').val(),
+            PageNumber: $('#PageNumber').val(),
+            RequestStatusID: $('.request-status-id').val(),           
             PageType: $('#masterPageType').val(),
             SectionType:  $('#masterSectionType').val(), 
             SidebarType:  $('#masterSidebarType').val(),
-            selectedPriceSort: selectedPriceSort,
-            selectedCurrency: $('#tempCurrency').val()
+            SelectedPriceSort: selectedPriceSort,
+            SelectedCurrency: $('#tempCurrency').val(),
+            SidebarFilterID :  $('#SidebarFilterID').val()
         },
         traditional: true,
         type: 'GET',
         cache: false,
         success: function (data) {
-            $(".index-partial").html(data);
-
+            $("._IndexTableData").html(data);
             return true;
         }
     });
@@ -47,7 +40,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     $(this).prop("checked", true);
     console.log(this);
     $('#tempCurrency').val($(this).val())
-    ajaxCallToPartial();    
+    ajaxCallToPartialTableData();    
     return false;
 
 });

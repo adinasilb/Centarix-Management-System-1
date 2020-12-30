@@ -287,7 +287,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
             requestIndexViewModel.RequestStatusID = requestIndexObject.RequestStatusID;
             requestIndexViewModel.PageType = requestIndexObject.PageType;
-
+            requestIndexViewModel.SidebarFilterID = requestIndexObject.SidebarFilterID;
             var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
 
             try
