@@ -38,23 +38,13 @@ namespace PrototypeWithAuth.Controllers
             else if (categoryType == 1)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             }
             else if (categoryType == 2)
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
-                if (PageType.ToString() == AppUtility.PageTypeEnum.RequestInventory.ToString())
-                {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory;
-                }
-                else if (PageType.ToString() == AppUtility.PageTypeEnum.RequestRequest.ToString())
-                {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsRequest;
-
-                }
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;      
             }
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
                 .Where(ps => ps.ParentCategory.CategoryTypeID == categoryType);
             return View(await applicationDbContext.ToListAsync());

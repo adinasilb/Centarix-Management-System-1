@@ -5,7 +5,7 @@
     string controller = "";
     ViewData["Title"] = "IndexForPayment";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-    if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.Operations))
+    if ((AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()]==AppUtility.MenuItems.Operations)
     {
         hoverClass = "oper-link-clr";
         controller = "Operations";
@@ -55,7 +55,7 @@
                     </td>
                     <td>
 
-                        <a href="@Url.ActionLink("ItemTableVendor", "Requests", new { SidebarFilterID = item.VendorID.ToString(), SectionType = ((AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()]), PageType = ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()]), SidebarType = AppUtility.SidebarEnum.Vendors } )" class="@hoverClass">
+                        <a href="@Url.ActionLink("ItemTableVendor", "Requests", new { SidebarFilterID = item.VendorID.ToString(), SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()], PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SidebarType = AppUtility.SidebarEnum.Vendors } )" class="@hoverClass">
                            @Html.DisplayFor(modelItem => item.VendorEnName)</a>
                     </td>
                     <td>
