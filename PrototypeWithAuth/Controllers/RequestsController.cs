@@ -2111,10 +2111,18 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> CancelEmailModal(ConfirmEmailViewModel confirmEmailViewModel)
+        {
+            //TempData["OpenTermsModal"] = "Single";
 
+            return RedirectToAction("Index");
+        }
         /*
          * END SEND EMAIL
          */
+
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
