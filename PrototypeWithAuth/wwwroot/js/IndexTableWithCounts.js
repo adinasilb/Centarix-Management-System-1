@@ -1,5 +1,6 @@
-﻿$('.countStatus').click(function(){
-    e.prevenDefault()
+﻿$('body').on('click', '.countStatus', function(e){
+    e.preventDefault()
+    alert("in countstatus click")
     $(".active").removeClass("active")
     $(this).addClass("active")
     ajaxCallToPartialTable($(this).attr("value"))
@@ -21,7 +22,7 @@ function ajaxCallToPartialTable(status) {
             SidebarType:  $('#masterSidebarType').val(),
             SelectedPriceSort: selectedPriceSort,
             SelectedCurrency: $('#tempCurrency').val(),
-            SidebarFilterID :  $('#SidebarFilterID').val()
+            SidebarFilterID :  $('.sideBarFilterID').val()
         },
         traditional: true,
         type: 'GET',
@@ -32,3 +33,4 @@ function ajaxCallToPartialTable(status) {
         }
   });
     }
+

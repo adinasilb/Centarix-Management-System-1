@@ -10,13 +10,18 @@
         <i class="fas fa-long-arrow-alt-left"></i>
     </a>
 </div>
-<div class="_IndexTable">
-    @if((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()]== AppUtility.PageTypeEnum.RequestRequest)
-    {
-        await Html.RenderPartialAsync("_IndexTableWithCounts", Model);
-    }
-    else
-    {
-        await Html.RenderPartialAsync("_IndexTable", Model);
-    }
-</div>
+@if ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.RequestRequest)
+{
+    <div class="_IndexTableWithCounts">
+        @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
+    </div>
+
+}
+else
+{
+    <div class="_IndexTable">
+        @{await Html.RenderPartialAsync("_IndexTable", Model); }
+    </div>
+
+}
+

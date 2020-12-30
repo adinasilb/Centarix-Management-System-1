@@ -2,7 +2,8 @@
 @using PrototypeWithAuth.AppData
 @if (Model.PagedList.Count() > 0)
 {
-    <input type="hidden" asp-for="SidebarFilterID"/>
+    <input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
+    <input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <thead>
             <tr class="text-center">
@@ -17,7 +18,7 @@
                                 <span class="d-inline-block">
                                     <ul class="list-unstyled p-0 m-0">
                                         <li>
-                                            <button id="pricePopover" type="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body" class="btn p-0 m-0 no-box-shadow text">
+                                            <button id="pricePopover" type="button" data-toggle="popover" data-placement="bottom" @*data-trigger="focus"*@ data-container="body" class="btn p-0 m-0 no-box-shadow text">
                                                 <i class="icon-centarix-icons-17" style="font-size:1.6rem;">
                                                 </i>
                                             </button>

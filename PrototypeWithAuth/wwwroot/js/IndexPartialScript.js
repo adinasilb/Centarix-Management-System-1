@@ -2,7 +2,7 @@
 
 function callIndexWithNewFilter(val, id) {
     $(id).attr("checked", !$(id).prop("checked"));
-
+    alert("In call index with new filter")
     ajaxCallToPartialTableData();
     return false;
 }
@@ -22,7 +22,7 @@ function ajaxCallToPartialTableData() {
             SidebarType:  $('#masterSidebarType').val(),
             SelectedPriceSort: selectedPriceSort,
             SelectedCurrency: $('#tempCurrency').val(),
-            SidebarFilterID :  $('#SidebarFilterID').val()
+            SidebarFilterID :  $('.sideBarFilterID').val()
         },
         traditional: true,
         type: 'GET',
@@ -44,3 +44,16 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     return false;
 
 });
+$("#pricePopover").click(function () {
+	//	$('[data-toggle="popover"]').popover('dispose');
+		$('#pricePopover').popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#priceSortContent').html();
+			}
+		});
+		$('#pricePopover').popover('toggle');
+
+	});

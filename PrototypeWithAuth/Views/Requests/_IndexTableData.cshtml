@@ -1,8 +1,9 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
 @using PrototypeWithAuth.Data;
+@using PrototypeWithAuth.AppData
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
-@using X.PagedList.Mvc.Core 
+@using X.PagedList.Mvc.Core
 
 <div class="">
 
@@ -19,64 +20,64 @@
                     *@
                     @foreach (var col in Model.PagedList[i].Columns)
                     {
-                    <td width="@col.Width%">
-                        @if (col.Image != null)
-                        {
-                            <img src="@col.Image" alt="Image" width="75" class="category-image" />
-                        }
-                        else if (col.Icons != null)
-                        {
-                            <div class="d-inline-flex">
-
-                                @foreach (var icon in col.Icons)
-                                {
-                                    <div class="table-icon-div">
-
-                                        <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
-                                           title="@icon.TooltipTitle" value="@col.AjaxID">
-                                            <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
-                                        </a>
-
-                                    </div>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            for (int val = 0; val < col.Value.Count; val++)
+                        <td width="@col.Width%">
+                            @if (col.Image != null)
                             {
-                                if (val != 0)
-                                {
-                                    <br />
-                                }
-                                if (col.AjaxLink != null)
-                                {
-                                    <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID" data-target="item" href="item">
-                                        <p class="m-0">@col.Value[val]</p>
-                                    </button>
-                                }
-                                else
-                                {
-                                    <label class="m-0 p-0">@col.Value[val]</label>
-                                }
+                                <img src="@col.Image" alt="Image" width="75" class="category-image" />
                             }
+                            else if (col.Icons != null)
+                            {
+                                <div class="d-inline-flex">
 
-                        }
-                    </td>
+                                    @foreach (var icon in col.Icons)
+                                    {
+                                        <div class="table-icon-div">
+
+                                            <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                               title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                            </a>
+
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                for (int val = 0; val < col.Value.Count; val++)
+                                {
+                                    if (val != 0)
+                                    {
+                                        <br />
+                                    }
+                                    if (col.AjaxLink != null)
+                                    {
+                                        <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID" data-target="item" href="item">
+                                            <p class="m-0">@col.Value[val]</p>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <label class="m-0 p-0">@col.Value[val]</label>
+                                    }
+                                }
+
+                            }
+                        </td>
                     }
 
-                                       
-                       
-                            @*@if (IsEquipment)
-                            {
-                                <div class="table-icon-div">
-                                    <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
-                                       title="Add" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
-                                        <i style="        font-size: 2rem;
-                                color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
-                                    </a>
-                                </div>
-                            }*@
+
+
+                    @*@if (IsEquipment)
+                        {
+                            <div class="table-icon-div">
+                                <a class="btn p-0 m-0 no-box-shadow" data-toggle="tooltip" data-placement="top"
+                                   title="Add" href="@Url.Action("CreateCalibration","Calibrations", new { requestid = Model.PagedList[itemNum].RequestID })">
+                                    <i style="        font-size: 2rem;
+                            color: var(--lab-man-color);" class="icon-settings-24px-1"></i>
+                                </a>
+                            </div>
+                        }*@
 
 
                 </tr>
@@ -92,4 +93,7 @@
 </div>
 <script src="~/js/IndexTablePartial.js"></script>
 <script src="~/js/ConfirmDeleteScript.js"></script>
-<script>$('[data-toggle="tooltip"]').tooltip()</script>
+@if (AppUtility.IsAjaxRequest(this.Context.Request))
+{
+    <script>$('[data-toggle="tooltip"]').tooltip()</script>
+}

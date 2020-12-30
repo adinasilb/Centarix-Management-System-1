@@ -34,7 +34,7 @@
         case 1:
         case 4:
         case 5:
-            newActiveClass = activeClasses ;
+            newActiveClass = activeClasses;
             break;
         case 2:
             orderedActiveClass = activeClasses;
@@ -50,24 +50,24 @@
 
 
 }
-
+<input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
 <div class="">
     <div class="item-table">
         <ul class="pl-0">
             <li class="list-inline-item active m-0">
-                <a class="@newActiveClass countStatus" value="1" href=" "><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
+                <a class="@newActiveClass countStatus" value="1" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
             </li>
             <li class="list-inline-item m-0">
-                <a class="@approvedActiveClass countStatus"  value="6" href=" "> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
+                <a class="@approvedActiveClass countStatus" value="6" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
 
             </li>
 
             <li class="list-inline-item m-0">
-                <a class="@orderedActiveClass countStatus"  value="2" href=" "> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
+                <a class="@orderedActiveClass countStatus" value="2" href="#"> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
             </li>
 
             <li class="list-inline-item ">
-                <a class="@receivedActiveClass countStatus"  value="3" href=" "> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
+                <a class="@receivedActiveClass countStatus" value="3" href="#"> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
             </li>
         </ul>
     </div>
