@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.AppData
@@ -64,22 +65,28 @@ namespace PrototypeWithAuth.AppData
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { USD, NIS }
-        public enum PaymentsPopoverEnum
-        {
-            //Share,
-            // Order,
-            [Display(Name = "Monthly Payment")]
-            MonthlyPayment = 1,
-            [Display(Name = "Pay Now")]
-            PayNow = 3,
-            [Display(Name = "Pay Later")]
-            PayLater = 4,
-            Installments = 5,
-            // Clarification
-        }
+        public enum PaymentsPopoverEnum { MonthlyPayment, PayNow, PayLater, Installments}
+        //{
+        //    //Share,
+        //    // Order,
+        //    [Display(Name = "Monthly Payment")]
+        //    MonthlyPayment = 1,
+        //    [Display(Name = "Pay Now")]
+        //    PayNow = 3,
+        //    [Display(Name = "Pay Later")]
+        //    PayLater = 4,
+        //    Installments = 5,
+        //    // Clarification
+        //}
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
+        public enum OrderTypeEnum { OrderNow, AddToCart, AskForPermission, WithoutOrder}
+        public static string GetDisplayNameOfEnumValue(string EnumValueName)
+        {
+            string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
+            return String.Join(' ', splitEnumValue);
+        }
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
         {
             int ReturnList = 0;

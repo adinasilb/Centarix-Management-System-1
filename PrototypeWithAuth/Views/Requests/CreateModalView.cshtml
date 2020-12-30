@@ -742,8 +742,10 @@
                                             <span class="small-text">If you want to process a single order immediately</span>
                                         </div>
                                         <div class="col-4">
-                                            <input type="submit" name="OrderType" value="Order Now" asp-action="CreateModalView"
-                                                   class="text custom-order-inv custom-button float-right create-modal-submit" />
+                                            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow" asp-action="CreateModalView"
+                                                    class="text custom-order-inv custom-button float-right create-modal-submit">
+                                                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -751,8 +753,10 @@
                                             <span class="small-text">If you want to order multiple items</span>
                                         </div>
                                         <div class="col-4">
-                                            <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView"
-                                                   class="text custom-order-inv custom-button float-right create-modal-submit" />
+                                            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart" asp-action="CreateModalView"
+                                                    class="text custom-order-inv custom-button float-right create-modal-submit">
+                                                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+                                            </button>
 
                                         </div>
                                     </div>
@@ -761,8 +765,10 @@
                                             <span class="small-text">If you want to get permission from an executive</span>
                                         </div>
                                         <div class="col-4">
-                                            <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView"
-                                                   class="text custom-order-inv custom-button float-right create-modal-submit" />
+                                            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AskForPermission" asp-action="CreateModalView"
+                                                    class="text custom-order-inv custom-button float-right create-modal-submit">
+                                                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AskForPermission.ToString())
+                                            </button>
 
                                         </div>
                                     </div>

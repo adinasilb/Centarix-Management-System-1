@@ -589,7 +589,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> CreateModalView(RequestItemViewModel requestItemViewModel, string OrderType)
+        public async Task<IActionResult> CreateModalView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType)
         {
             //why do we need this here?
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
@@ -636,7 +636,7 @@ namespace PrototypeWithAuth.Controllers
                 //requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
 
                 //if it is out of the budget get sent to get approved automatically and user is not in role admin !User.IsInRole("Admin")
-                if (/*!User.IsInRole("Admin") &&*/ (OrderType.Equals("Ask For Permission") || !checkIfInBudget(requestItemViewModel.Request)))
+                if (/*!User.IsInRole("Admin") &&*/ (OrderType.Equals(AppUtility.OrderTypeEnum.AskForPermission) || !checkIfInBudget(requestItemViewModel.Request)))
                 {
                     requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault(); //Why do we need this here?
                     try
@@ -655,27 +655,25 @@ namespace PrototypeWithAuth.Controllers
                 else
                 {
                     requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault(); //Why do we need this here?
-                    if (OrderType.Equals("Add To Cart"))
+
+                    switch (OrderType)
                     {
-                        try
-                        {
-                            requestItemViewModel.Request.RequestStatusID = 6; //approved
-                            requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
-                            _context.Update(requestItemViewModel.Request);
-                            _context.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            TempData["ErrorMessage"] = ex.Message;
-                            TempData["InnerMessage"] = ex.InnerException;
-                            return View("~/Views/Shared/RequestError.cshtml");
-                        }
-                    }
-                    try
-                    {
-                        requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault(); //Why do we need this here?
-                        if (OrderType.Equals("Without Order"))
-                        {
+                        case AppUtility.OrderTypeEnum.AddToCart:
+                            try
+                            {
+                                requestItemViewModel.Request.RequestStatusID = 6; //approved
+                                requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
+                                _context.Update(requestItemViewModel.Request);
+                                _context.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                TempData["ErrorMessage"] = ex.Message;
+                                TempData["InnerMessage"] = ex.InnerException;
+                                return View("~/Views/Shared/RequestError.cshtml");
+                            }
+                            break;
+                        case AppUtility.OrderTypeEnum.WithoutOrder:
                             requestItemViewModel.Request.ParentRequest = new ParentRequest();
                             int lastParentRequestOrderNum = 0;
                             requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
@@ -705,9 +703,8 @@ namespace PrototypeWithAuth.Controllers
                             requestNotification.Vendor = requestItemViewModel.Request.Product.Vendor.VendorEnName;
                             _context.Update(requestNotification);
                             _context.SaveChanges();
-                        }
-                        else if (OrderType.Equals("Order Now"))
-                        {
+                            break;
+                        case AppUtility.OrderTypeEnum.OrderNow:
                             requestItemViewModel.Request.RequestStatusID = 1; //new request
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestItemViewModel.RequestStatusID = 1;
@@ -722,22 +719,86 @@ namespace PrototypeWithAuth.Controllers
                             TempData["Email5"] = requestItemViewModel.EmailAddresses[4];
                             //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
                             TempData["RequestID"] = requestItemViewModel.Request.RequestID;
-                        }
-                        else
-                        {
+                            break;
+                        default:
                             requestItemViewModel.Request.RequestStatusID = 1; //needs approvall
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             _context.Update(requestItemViewModel.Request);
                             _context.SaveChanges();
-                        }
+                            break;
+                    }
+                    //if (OrderType.Equals(AppUtility.OrderTypeEnum.AddToCart))
+                    //{
+                    //    try
+                    //    {
+                    //        requestItemViewModel.Request.RequestStatusID = 6; //approved
+                    //        requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
+                    //        _context.Update(requestItemViewModel.Request);
+                    //        _context.SaveChanges();
+                    //    } 
+                    //    catch (Exception ex)
+                    //    {
+                    //        TempData["ErrorMessage"] = ex.Message;
+                    //        TempData["InnerMessage"] = ex.InnerException;
+                    //        return View("~/Views/Shared/RequestError.cshtml");
+                    //    }
+                    //}
+                    //else if (OrderType.Equals(AppUtility.OrderTypeEnum.WithoutOrder))
+                    //{
+                    //    requestItemViewModel.Request.ParentRequest = new ParentRequest();
+                    //    int lastParentRequestOrderNum = 0;
+                    //    requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
+                    //    if (_context.ParentRequests.Any())
+                    //    {
+                    //        lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
+                    //    }
+                    //    requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
+                    //    requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
+                    //    requestItemViewModel.Request.ParentRequest.WithoutOrder = true;
+                    //    requestItemViewModel.Request.RequestStatusID = 2;
+                    //    requestItemViewModel.RequestStatusID = 2;
+                    //    requestItemViewModel.Request.ParentQuote = null;
+                    //    _context.Update(requestItemViewModel.Request);
+                    //    _context.SaveChanges();
+                    //    RequestNotification requestNotification = new RequestNotification();
+                    //    requestNotification.RequestID = requestItemViewModel.Request.RequestID;
+                    //    requestNotification.IsRead = false;
+                    //    requestNotification.RequestName = requestItemViewModel.Request.Product.ProductName;
+                    //    requestNotification.ApplicationUserID = requestItemViewModel.Request.ApplicationUserCreatorID;
+                    //    requestNotification.Description = "item ordered";
+                    //    requestNotification.NotificationStatusID = 2;
+                    //    requestNotification.TimeStamp = DateTime.Now;
+                    //    requestNotification.Controller = "Requests";
+                    //    requestNotification.Action = "NotificationsView";
+                    //    requestNotification.OrderDate = DateTime.Now;
+                    //    requestNotification.Vendor = requestItemViewModel.Request.Product.Vendor.VendorEnName;
+                    //    _context.Update(requestNotification);
+                    //    _context.SaveChanges();
+                    //}
+                    //else if (OrderType.Equals(AppUtility.OrderTypeEnum.OrderNow))
+                    //{
+                    //    requestItemViewModel.Request.RequestStatusID = 1; //new request
+                    //    requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
+                    //    requestItemViewModel.RequestStatusID = 1;
+                    //    _context.Add(requestItemViewModel.Request);
+                    //    _context.SaveChanges();
 
-                    }
-                    catch (Exception ex)
-                    {
-                        TempData["ErrorMessage"] = ex.Message;
-                        TempData["InnerMessage"] = ex.InnerException;
-                        return View("~/Views/Shared/RequestError.cshtml");
-                    }
+                    //    TempData["OpenTermsModal"] = "Single";
+                    //    TempData["Email1"] = requestItemViewModel.EmailAddresses[0];
+                    //    TempData["Email2"] = requestItemViewModel.EmailAddresses[1];
+                    //    TempData["Email3"] = requestItemViewModel.EmailAddresses[2];
+                    //    TempData["Email4"] = requestItemViewModel.EmailAddresses[3];
+                    //    TempData["Email5"] = requestItemViewModel.EmailAddresses[4];
+                    //    //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
+                    //    TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+                    //}
+                    //else
+                    //{
+                    //    requestItemViewModel.Request.RequestStatusID = 1; //needs approvall
+                    //    requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
+                    //    _context.Update(requestItemViewModel.Request);
+                    //    _context.SaveChanges();
+                    //}
                 }
                 try
                 {
