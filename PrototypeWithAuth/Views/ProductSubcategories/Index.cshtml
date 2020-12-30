@@ -5,7 +5,7 @@
 
     ViewData["Title"] = "Index";
     AppUtility.PageTypeEnum PageType =  (AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()];
-    AppUtility.MenuItems SectionType = (AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.PageType.ToString()];
+    AppUtility.MenuItems SectionType = (AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()];
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
 }
@@ -37,7 +37,7 @@
            
             <div class="type-div" >
                 <fieldset class=" type-fieldset">
-                        <a href="@Url.ActionLink("IndexTableType", "Requests", new {@requestIndexObject = new RequestIndexObject(){ PageType = PageType, SectionType =SectionType, SidebarType= AppUtility.SidebarEnum.Type, SidebarFilterID=Model.ElementAt(i).ProductSubcategoryID+""})" class="text text-dark">
+                        <a href="@Url.ActionLink("ItemTableType", "Requests", new { PageType = PageType, SectionType = SectionType, SidebarType = AppUtility.SidebarEnum.Type, SidebarFilterID = Model.ElementAt(i).ProductSubcategoryID + "" } )" class="text text-dark">
                             @if (Model.ElementAt(i).ImageURL != null)
                             {
                                 <img class=" type-img " src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />

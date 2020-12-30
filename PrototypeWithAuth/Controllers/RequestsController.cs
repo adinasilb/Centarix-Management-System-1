@@ -103,7 +103,27 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Requests, Operations")]
+        // GET: Requests
+        //IMPORTANT!!! When adding more parameters into the Index Get make sure to add them to the ViewData and follow them through to the Index page
+        //ALSO when changing defaults -> change the defaults on the index page for paged list 
+        public async Task<IActionResult> IndexInventory(RequestIndexObject requestIndexObject)
+        {
 
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
+
+            var viewmodel = await GetIndexViewModel(requestIndexObject);
+
+            if (ViewBag.ErrorMessage != null)
+            {
+                ViewBag.ErrorMessage = ViewBag.ErrorMessage;
+            }
+
+            return View(viewmodel);
+        }
 
         private void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel)
         {
@@ -145,14 +165,15 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject)
         {
+            int categoryID = 1;
+            if(requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
+            {
+                categoryID = 2;
+            }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-            IQueryable<Request> RPI = _context.Requests;
-            RPI = _context.Requests.Include(r => r.ApplicationUserCreator);
-            RPI = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.RequestLocationInstances);
-            RPI = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
          .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Include(x => x.ParentRequest)
+         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Include(x => x.ParentRequest)
          .OrderBy(r => r.CreationDate);
 
             int sideBarID = 0;
@@ -267,7 +288,6 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.RequestStatusID = requestIndexObject.RequestStatusID;
             requestIndexViewModel.PageType = requestIndexObject.PageType;
 
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarTitle;
             var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
 
             try

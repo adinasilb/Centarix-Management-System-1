@@ -54,11 +54,9 @@
                         @Html.DisplayFor(modelItem => item.VendorID)
                     </td>
                     <td>
-                        @{ 
-                            RequestIndexObject requestIndexObject = new RequestIndexObject() { SidebarFilterID = item.VendorID.ToString(), SectionType = ((AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()]), PageType = ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()]) };
 
-                        }
-                        <a asp-action="IndexTableVendor" asp-controller="@controller" asp-route-requestIndexObject="@requestIndexObject" class="@hoverClass">@Html.DisplayFor(modelItem => item.VendorEnName)</a>
+                        <a href="@Url.ActionLink("ItemTableVendor", "Requests", new { SidebarFilterID = item.VendorID.ToString(), SectionType = ((AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()]), PageType = ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()]), SidebarType = AppUtility.SidebarEnum.Vendors } )" class="@hoverClass">
+                           @Html.DisplayFor(modelItem => item.VendorEnName)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.VendorHeName)

@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.AppData
         private int _RequestStatusID;
         private List<string> _SelectedPriceSort;
         private AppUtility.CurrencyEnum _SelectedCurrency;
+        private AppUtility.PageTypeEnum _PageType;
         public int PageNumber {
             get
             {
@@ -42,7 +43,21 @@ namespace PrototypeWithAuth.AppData
         }
         public AppUtility.SidebarEnum SidebarType { get; set; }
         public String SidebarFilterID { get; set; }
-        public AppUtility.PageTypeEnum PageType { get; set; }
+        public AppUtility.PageTypeEnum PageType 
+        {
+            get
+            {
+                if (_PageType == AppUtility.PageTypeEnum.None)
+                {
+                    return AppUtility.PageTypeEnum.RequestRequest;
+                }
+                else
+                {
+                    return _PageType;
+                }
+            }
+            set { _PageType = value; }
+        }
         public AppUtility.MenuItems SectionType { get; set; }
         public List<String> SelectedPriceSort
         {

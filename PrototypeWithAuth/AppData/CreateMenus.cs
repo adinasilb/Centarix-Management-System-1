@@ -27,9 +27,9 @@ namespace PrototypeWithAuth.AppData
                         Controller = "Requests",
                         Action = "Index",
                         RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.RequestRequest }
-                },
+                        {
+                            {"requestIndexObject", new { PageType = AppUtility.PageTypeEnum.RequestRequest, SectionType = AppUtility.MenuItems.Requests, SidebarType = AppUtility.SidebarEnum.List} }
+                        },
                         Classes = AllClasses,
                         ID = "request-link"
                     });
@@ -38,11 +38,11 @@ namespace PrototypeWithAuth.AppData
                     {
                         Description = "Inventory",
                         Controller = "Requests",
-                        Action = "Index",
-                        RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.RequestSummary }
-                },
+                        Action = "IndexInventory",
+                        RouteValues = new RouteValueDictionary() 
+                        { 
+                            {"requestIndexObject", new { PageType = AppUtility.PageTypeEnum.RequestSummary, SectionType = AppUtility.MenuItems.Requests, SidebarType = AppUtility.SidebarEnum.List} }
+                        },
                         Classes = AllClasses,
                         ID = "summary-link"
                     });
@@ -93,7 +93,7 @@ namespace PrototypeWithAuth.AppData
                     //    Action = "Index",
                     //    RouteValues = new RouteValueDictionary()
                     //    {
-                    //        {"PageType", AppUtility.RequestPageTypeEnum.Inventory }
+                    //              {"requestIndexObject", new { PageType = AppUtility.PageTypeEnum.RequestInventory, SectionType = AppUtility.MenuItems.Requests, SidebarType = AppUtility.SidebarEnum.List} }
                     //    },
                     //    Classes = AllClasses,
                     //    ID = "inventory-link"
@@ -110,7 +110,7 @@ namespace PrototypeWithAuth.AppData
                         Action = "Index",
                         RouteValues = new RouteValueDictionary()
                 {
-                    {"PageType", AppUtility.PageTypeEnum.OperationsRequest }
+                         {"requestIndexObject", new { PageType = AppUtility.PageTypeEnum.OperationsRequest, SectionType = AppUtility.MenuItems.Operations, SidebarType = AppUtility.SidebarEnum.List} }
                 },
                         Classes = AllClasses,
                         ID = "request-link"
@@ -120,10 +120,10 @@ namespace PrototypeWithAuth.AppData
                     {
                         Description = "Inventory",
                         Controller = "Operations",
-                        Action = "Index",
+                        Action = "IndexInventory",
                         RouteValues = new RouteValueDictionary()
                 {
-                    {"PageType", AppUtility.PageTypeEnum.OperationsInventory }
+                          {"requestIndexObject", new { PageType = AppUtility.PageTypeEnum.OperationsInventory, SectionType = AppUtility.MenuItems.Operations, SidebarType = AppUtility.SidebarEnum.List} }
                 },
                         Classes = AllClasses,
                         ID = "inventory-link"
@@ -370,8 +370,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                 {
-                    { "PageType", pageType },
-                    { "CategoryType", categoryType }
+                   {"requestIndexObject", new { PageType = pageType, SectionType = AppUtility.MenuItems.Requests, SidebarType = AppUtility.SidebarEnum.List} }
                 },
                 Classes = menuClass,
                 IconName = "icon-format_list_bulleted-24px-01"
@@ -446,11 +445,10 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Last Item",
                 Controller = "Requests",
-                Action = "Index",
+                Action = "IndexInventory",
                 RouteValues = new RouteValueDictionary()
                 {
-                    { "PageType",pageType},
-                    { "CategoryType",categoryType}
+                         {"requestIndexObject", new { PageType = pageType, SectionType = AppUtility.MenuItems.Requests, SidebarType = AppUtility.SidebarEnum.List} }
                 },
                 Classes = menuClass,
                 IconName = "icon-format_list_bulleted-24px-01"
@@ -984,7 +982,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"requestIndexObject", new RequestIndexObject { SectionType = AppUtility.MenuItems.Operations, PageType = AppUtility.PageTypeEnum.OperationsRequest} }
+                    {"requestIndexObject", new { SectionType = AppUtility.MenuItems.Operations, PageType = AppUtility.PageTypeEnum.OperationsRequest} }
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-format_list_bulleted-24px-01"

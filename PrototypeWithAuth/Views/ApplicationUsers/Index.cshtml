@@ -23,12 +23,8 @@
             }
                         <div class="col-auto @owners p-0">
 
-                            @{
-                                RequestIndexObject requestIndexObject = new RequestIndexObject() { SidebarFilterID = @Model.ElementAt(i).Id, SectionType = ((AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()]), PageType = ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()]) };
 
-                            }
-
-                            <a href="@Url.ActionLink("Index", "Requests", new {@requestIndexObject = requestIndexObject })"
+                            <a href="@Url.ActionLink("ItemTableOwner", "Requests", new { SidebarFilterID = @Model.ElementAt(i).Id, SectionType = ((AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()]), PageType = ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()]), SidebarType= AppUtility.SidebarEnum.Owner  })"
                                class=" bold-hover-effects" id="profile-img">
                                 @{
                                     var src = "/UserImages/user-image-placeholder.png";
