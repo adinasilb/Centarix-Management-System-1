@@ -132,7 +132,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 categoryID = 1;
             }
-            else if(requestIndexObject.PageType == AppUtility.MenuItems.Operations)
+            else if(requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
             {
                 categoryID = 2;
             }
