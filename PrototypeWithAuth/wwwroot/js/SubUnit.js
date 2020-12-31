@@ -59,6 +59,15 @@ $(function () {
 		$subUnitSumDollars = $subUnitSumShekel / $exchangeRate;
 		$iptBox = $("input[name='subunit-price-dollars']");
 		$.fn.ShowResults($iptBox, $subUnitSumDollars);
+
+		//for the reorder modal
+		$subunit = $("#Request_SubUnit");
+		if ($subunit.val() != null && $subunit.val() > 0) {
+			$.fn.EnableSubUnits();
+		}
+		else {
+			$.fn.DisableSubUnits();
+		}
 	};
 
 	$.fn.CalculateSubSubUnitAmounts = function () {
@@ -69,6 +78,14 @@ $(function () {
 		$subSubUnitSumDollars = $subSubUnitSumShekel / $exchangeRate;
 		$iptBox = $("input[name='subsubunit-price-dollars']");
 		$.fn.ShowResults($iptBox, $subSubUnitSumDollars);
+		//for the reorder modal
+		$subsubunit = $("#Request_SubSubUnit");
+		if ($subsubunit.val() != null && $subsubunit.val() > 0) {
+			$.fn.EnableSubSubUnits();
+		}
+		else {
+			$.fn.DisableSubSubUnits();
+		}
 	};
 	$.fn.CalculatePriceShekels = function () {
 		var $exchangeRate = $("#Request_ExchangeRate").val();
@@ -153,7 +170,6 @@ $(function () {
 
 				break;
 			case "Weight/Volume":
-				//alert("inside optgroup weight/volume TESTING");
 				//$(".subunit-subunit").hide();
 				//$("#select-options-Request_SubUnitTypeID option").prop('hidden', true);
 				//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
@@ -375,34 +391,21 @@ $(function () {
 
 
 	$("#Request_Unit").change(function () {
-		//alert("request unit changed");
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
 	});
 
-	//$(".modal").on("click", "#Request_UnitTypeID", function () {
-	//	alert("modal Request_UnitTypeID was clicked");
-	//	$.fn.CheckUnitsFilled();
-
-
-	//});
-
 	$(".modal").on("change", "#Request_UnitTypeID", function () {
-		//	alert("modal Request_UnitTypeID was changed");
 		//$.fn.CheckUnitsFilled();
 		$.fn.ChangeSubUnitDropdown();
 		$.fn.ChangeSubSubUnitDropdown();
 	});
 	$(".modal").on("change", "#Request_SubUnitTypeID", function () {
-		//	alert("modal Request_SubUnitTypeID was changed");
 		$.fn.ChangeSubSubUnitDropdown();
 	});
 
 	$("#unit-type-select").on("change", function () {
-		//console.log("unit type id changed");
-		//alert("select options change was selected");
-		//$.fn.CheckUnitsFilled();
 		$.fn.ChangeSubUnitDropdown();
 		$.fn.ChangeSubSubUnitDropdown();
 	});
@@ -449,11 +452,9 @@ $(function () {
 	});
 
 	$("#currency").change(function (e) {
-		alert("Currency changed!");
 		$.fn.CheckCurrency();
 	});
 	$(".modal").on("change","#currency", function (e) {
-		alert("Currency changed!");
 		$.fn.CheckCurrency();
 	});
 	$("#Request_ExchangeRate").change(function (e) {

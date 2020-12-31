@@ -1,6 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @using PrototypeWithAuth.AppData
-@{ 
+@{
     var bcColor = "order-inv-background-color  ";
     var form = "order-inv-form";
     if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.LabManagement.ToString()))
@@ -15,6 +15,7 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/Validation/ReorderFormValidation.js"></script>
+<script src="~/js/SubUnit.js"></script>
 <div class="modal modal-view fader on-form-modal @form " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered modal-xl mx-auto" role="document">
@@ -197,7 +198,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                     <span aria-hidden="true">×</span>
                                 </button>
                                 <div class="mx-2rem addSubSubUnitCard mt-4 @plusDisplayNoneSubSub"><div class="row " style="display:initial;"><div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div> </div></div>
-                             
+
                                 <div class="mx-2rem  subSubUnitsCard mt-4 @cardDisplayNoneSubSub">
                                     <div class="row mb-4">
                                         <div class="col-md-6 pl-0 form-group">
@@ -235,8 +236,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                         </div>
                                     </div>
                                 </div>
-                            </div>                          
-                            
+                            </div>
+
                         </div>
 
                     </div>
@@ -246,7 +247,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label class="control-label">Sum:</label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars" disabled value=""/>
+                                    <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars" disabled value="" />
                                 </div>
                             </div>
                         </div>
@@ -265,7 +266,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label class="control-label">VAT</label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
-                                   
+
                                     <input class="form-control-plaintext border-bottom vat" disabled value="@Model.Request.VAT.ToString("N2")" />
                                 </div>
                             </div>
@@ -295,7 +296,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 
                     <div class="form-group mx-auto text-center mb-4 modal-footer-mt">
                         <input type="submit" name="OrderType" id="reorderRequest" value="Request" asp-action="ReOrderFloatModalView" class="custom-button custom-button-font @bcColor between-button-margin" />
-                        <button type="button" class="custom-cancel custom-button " data-dismiss="modal"  onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                        <button type="button" class="custom-cancel custom-button " data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                     </div>
                 </div>
             </form>
@@ -308,7 +309,6 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-<script src="~/js/SubUnit.js"></script>
 <script>
     $(function () {
         $("#Request_Cost").trigger('change');
