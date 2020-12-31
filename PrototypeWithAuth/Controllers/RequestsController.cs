@@ -619,6 +619,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            SetViewModelCounts(requestIndexObject, viewModel);
             return PartialView(viewModel);
         }
         [HttpGet]
@@ -3551,24 +3552,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
-            AppUtility.PageTypeEnum requestPageTypeEnum = AppUtility.PageTypeEnum.RequestRequest;
-            if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-            {
-                return RedirectToAction("_IndexTableWithCounts", new
-                {
-                    requestStatusID = 6,
-                    PageType = requestPageTypeEnum,
-                    requestIndex
-                });
-            }
-            else
-            {
-                return RedirectToAction("Index", "Operations", new
-                {
-                    requestStatusID = 6,
-                    PageType = requestPageTypeEnum
-                });
-            }
+            return RedirectToAction("_IndexTableWithCounts", requestIndex);
 
 
         }

@@ -60,8 +60,9 @@ $(".approve-order").on("click", function (e) {
     })
     $.ajax({
         async: true,
-        url: "/Requests/Approve/?id=" + $(this).attr("value"),
+        url: "/Requests/Approve/",
         data: {
+            id :$(this).attr("value"),
             PageNumber: $('#PageNumber').val(),
             RequestStatusID: status,
             PageType: $('#masterPageType').val(),
