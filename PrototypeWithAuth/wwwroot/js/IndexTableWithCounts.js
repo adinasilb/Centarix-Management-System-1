@@ -4,6 +4,7 @@
     alert("in countstatus click")
     $(".active").removeClass("active")
     $(this).addClass("active")
+
     ajaxPartialIndexTable($(this).attr("value"), "/Requests/_IndexTable", "._IndexTable")
 });
 
