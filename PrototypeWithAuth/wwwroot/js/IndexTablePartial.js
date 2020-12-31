@@ -50,19 +50,30 @@ $(".load-receive-and-location").on("click", function (e) {
     $.fn.CallPageRequest($itemurl, "received");
     return false;
 });
+$(".order-approved-operation").on("click", function (e) {
+    console.log("approving");
+    e.preventDefault();
+    $("#loading").show();
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/", "._IndexTableWithCounts");
+    return false;
+});
 $(".approve-order").on("click", function (e) {
     console.log("approving");
     e.preventDefault();
     $("#loading").show();
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/" + $(this).attr("value"), "._IndexTableWithCounts");
+    return false;
+});
+function ajaxPartialIndexTable(status, url, viewClass) {
     var selectedPriceSort = [];
     $("#priceSortContent .priceSort:checked").each(function (e) {
         selectedPriceSort.push($(this).attr("enum"));
     })
     $.ajax({
         async: true,
-        url: "/Requests/Approve/",
+        url: url,
         data: {
-            id :$(this).attr("value"),
+            id: $(this).attr("value"),
             PageNumber: $('#PageNumber').val(),
             RequestStatusID: status,
             PageType: $('#masterPageType').val(),
@@ -76,10 +87,9 @@ $(".approve-order").on("click", function (e) {
         type: 'GET',
         cache: false,
         success: function (data) {
-            $("._IndexTableWithCounts").html(data);
+            $(viewClass).html(data);
             $("#loading").hide();
             return true;
         }
     });
-    return false;
-});
+}
