@@ -41,7 +41,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     $("."+$(this).attr("id")).prop("checked", true);
     $('#pricePopover').popover('show');
     console.log(this);
-    $('#tempCurrency').val($(this).attr("attr-value"))
+    $('#tempCurrency').val($(this).val())
     ajaxCallToPartialTableData();    
     return false;
 
