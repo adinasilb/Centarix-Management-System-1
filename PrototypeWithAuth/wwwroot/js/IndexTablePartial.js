@@ -65,6 +65,7 @@ $(".approve-order").on("click", function (e) {
     return false;
 });
 function ajaxPartialIndexTable(status, url, viewClass) {
+    console.log("in ajax partial index call");
     var selectedPriceSort = [];
     $("#priceSortContent .priceSort:checked").each(function (e) {
         selectedPriceSort.push($(this).attr("enum"));

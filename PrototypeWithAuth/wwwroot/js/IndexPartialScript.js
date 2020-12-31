@@ -3,7 +3,7 @@
 function callIndexWithNewFilter(val, id) {
     $(id).attr("checked", !$(id).prop("checked"));
     alert("In call index with new filter")
-    ajaxPartialIndexTable($('.request-status-id').val(),"/Requests/_IndexTableData", "._IndexTableData");
+    ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData"); 
     return false;
 }
 //function ajaxCallToPartialTableData() {
@@ -42,7 +42,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     $('#pricePopover').popover('show');
     console.log(this);
     $('#tempCurrency').val($(this).val())
-    ajaxPartialIndexTable($('.request-status-id').val(),"/Requests/_IndexTableData", "._IndexTableData");  
+    ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData");    
     return false;
 
 });
