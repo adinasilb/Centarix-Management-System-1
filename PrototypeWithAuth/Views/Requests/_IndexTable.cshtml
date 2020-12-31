@@ -80,11 +80,11 @@
             </tr>
         </thead>
     </table>
-    <div class="_IndexTableData">
-        @{
-            await Html.RenderPartialAsync("_IndexTableData", Model);
-        }
-    </div>
-    <script src="~/js/IndexPartialScript.js"></script>
 
 }
+<div class="_IndexTableData">
+    @{
+        await Html.RenderPartialAsync("_IndexTableData", Model);
+    }
+</div>
+<script src="~/js/IndexPartialScript.js"></script>

@@ -1,4 +1,4 @@
-﻿$('body').on('click', '.countStatus', function(e){
+﻿$('body').off('click', '.countStatus').on('click', '.countStatus', function(e){
     $('#pricePopover').popover('dispose');
     e.preventDefault()
     alert("in countstatus click")
