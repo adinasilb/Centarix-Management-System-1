@@ -616,6 +616,13 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _IndexTableCounts(RequestIndexObject requestIndexObject)
+        {
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            return PartialView(viewModel);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
