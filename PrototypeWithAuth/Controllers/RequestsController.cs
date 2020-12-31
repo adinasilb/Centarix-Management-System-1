@@ -360,7 +360,7 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProducts = await GetForApprovalOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                         case 6:
-                            iconList.Add(reorderIcon);
+                            iconList.Add(orderOperations);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetApprovedOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
@@ -370,7 +370,6 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProducts = await GetOrderedOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                         case 3:
-                            iconList.Add(orderOperations);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetReceivedInventoryOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
