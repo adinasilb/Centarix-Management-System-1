@@ -1,6 +1,6 @@
 ﻿
 
-$(".load-order-details").on("click", function (e) {
+$(".load-order-details").off('click').on("click", function (e) {
     console.log("in order details");
     e.preventDefault();
     e.stopPropagation();
@@ -11,12 +11,12 @@ $(".load-order-details").on("click", function (e) {
     $.fn.CallPageRequest($itemurl, "reorder");
     return false;
 });
-$(".load-product-details").on("click", function (e) {
+$(".load-product-details").off('click').on("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
     $("#loading").show();
     var $itemurl = "";
-    if ($(this).hasClass('operations')) {
+    if ($('#masterSectionType').val()=="Operations") {
         $itemurl = "/Operations/EditModalView/?id=" + $(this).val();
     }
     else {
@@ -50,14 +50,14 @@ $(".load-receive-and-location").on("click", function (e) {
     $.fn.CallPageRequest($itemurl, "received");
     return false;
 });
-$(".order-approved-operation").on("click", function (e) {
+$(".order-approved-operation").off('click').on("click", function (e) {
     console.log("approving");
     e.preventDefault();
     $("#loading").show();
     ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/" + $(this).attr("value"), "._IndexTableWithCounts");
     return false;
 });
-$(".approve-order").on("click", function (e) {
+$(".approve-order").off('click').on("click", function (e) {
     console.log("approving");
     e.preventDefault();
     $("#loading").show();

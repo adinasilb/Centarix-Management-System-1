@@ -46,7 +46,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     return false;
 
 });
-$("#pricePopover").click(function () {
+$("#pricePopover").off('click').click(function () {
         $(this).addClass("activePopover");
 		$('[data-toggle="popover"]').each(function() {
             if(!$(this).hasClass("activePopover"))
