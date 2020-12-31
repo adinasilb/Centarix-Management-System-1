@@ -11,7 +11,7 @@ $(function () {
 	$.fn.CalculateSumPlusVat = function () {
 		var $exchangeRate = $("#Request_ExchangeRate").val();
 		//console.log("sumShek: " + sumShek);
-	
+
 		//console.log("VatPercentage: " + VatPercentage);
 		//console.log("vatCalc: " + vatCalc);
 		//$("#Request_VAT").val(vatCalc)
@@ -92,7 +92,7 @@ $(function () {
 		var $unitPrice = $("#unit-price-shekel").val();
 		var $priceShekels = $unitPrice * $("#Request_Unit").val();
 		$iptBox = $("input[name='Request.Cost']");
-		$.fn.ShowResults($iptBox, $priceShekels);		
+		$.fn.ShowResults($iptBox, $priceShekels);
 		var $priceDollars = $priceShekels / $exchangeRate;
 		var $iptBox = $("input[name='sum-dollars']");
 		$.fn.ShowResults($iptBox, $priceDollars);
@@ -347,6 +347,7 @@ $(function () {
 
 	$.fn.CheckCurrency = function () {
 		var currencyType = $("#currency").val();
+		alert("in check currency" + currencyType);
 		switch (currencyType) {
 			case "dollar":
 				$("#Request_Cost").prop("readonly", true);
@@ -366,11 +367,13 @@ $(function () {
 				$(".request-cost-shekel-icon").addClass('disabled-text');
 				break;
 			case "shekel":
+			case undefined: //for the reorder modal
+				alert("shekel or undefined");
 				$("#Request_Cost").prop("readonly", false);
 				$("#Request_Cost").removeClass('disabled-text');
 				$("#sum-dollars").prop("disabled", true);
 				$("#sum-dollars").addClass('disabled-text');
-				
+
 
 				$("#unit-price-dollars").prop("disabled", true);
 				$("#unit-price-dollars").addClass('disabled-text');
@@ -382,7 +385,7 @@ $(function () {
 				$("#subunit-price-shekel").removeClass('disabled-text');
 				$("#subsubunit-price-shekel").removeClass('disabled-text');
 				$(".request-cost-shekel-icon").removeClass('disabled-text');
-				
+
 				break;
 		}
 	};
@@ -454,7 +457,7 @@ $(function () {
 	$("#currency").change(function (e) {
 		$.fn.CheckCurrency();
 	});
-	$(".modal").on("change","#currency", function (e) {
+	$(".modal").on("change", "#currency", function (e) {
 		$.fn.CheckCurrency();
 	});
 	$("#Request_ExchangeRate").change(function (e) {
@@ -469,7 +472,7 @@ $(function () {
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
-
+		$.fn.CheckCurrency(); //for the reorder modal
 	});
 
 	$("#sum-dollars").change(function (e) {
