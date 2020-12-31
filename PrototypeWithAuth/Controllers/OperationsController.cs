@@ -902,7 +902,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
-            return RedirectToAction("Index", "Operations", new
+            return RedirectToAction("_IndexTableWithCounts", "Requests", new
             {
                 requestStatusID = 2,
                 PageType = AppUtility.PageTypeEnum.RequestRequest
