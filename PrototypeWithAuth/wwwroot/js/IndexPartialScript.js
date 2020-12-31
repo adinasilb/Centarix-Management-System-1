@@ -35,13 +35,13 @@ function ajaxCallToPartialTableData() {
 }
 $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     $('#pricePopover').popover('hide');
-    $('input[name=currency]').attr("checked", false)
-    $('input[name=currency]').prop("checked", false)
+    $('input[name=SelectedCurrency]').attr("checked", false)
+    $('input[name=SelectedCurrency]').prop("checked", false)
     $("."+$(this).attr("id")).attr("checked", true);
     $("."+$(this).attr("id")).prop("checked", true);
     $('#pricePopover').popover('show');
     console.log(this);
-    $('#tempCurrency').val($(this).val())
+    $('#tempCurrency').val($(this).attr("attr-value"))
     ajaxCallToPartialTableData();    
     return false;
 

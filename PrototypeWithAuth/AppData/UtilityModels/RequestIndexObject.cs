@@ -10,7 +10,6 @@ namespace PrototypeWithAuth.AppData
         private int _PageNumber;
         private int _RequestStatusID;
         private List<string> _SelectedPriceSort;
-        private AppUtility.CurrencyEnum _SelectedCurrency;
         private AppUtility.PageTypeEnum _PageType;
         public int PageNumber {
             get
@@ -74,20 +73,7 @@ namespace PrototypeWithAuth.AppData
             }
             set { _SelectedPriceSort = value; }
         }
-        public AppUtility.CurrencyEnum SelectedCurrency {
-            get
-            {
-                if (_SelectedCurrency == null)
-                {
-                    return AppUtility.CurrencyEnum.NIS;
-                }
-                else
-                {
-                    return _SelectedCurrency;
-                }
-            }
-            set { _SelectedCurrency = value; }
-        }
+        public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
          //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
     }
 }

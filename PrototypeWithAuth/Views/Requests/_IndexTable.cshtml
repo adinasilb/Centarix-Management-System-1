@@ -41,19 +41,19 @@
                                                     <div class="custom-control custom-radio">
                                                         <input checked="checked"
                                                                id="nis"
-                                                               name="currency"
+                                        
                                                                type="radio"
-                                                               value="@AppUtility.CurrencyEnum.NIS" class="custom-control-input currency nis">
+                                                               attr-value="@AppUtility.CurrencyEnum.NIS" asp-for="SelectedCurrency" class="custom-control-input currency nis">
                                                         <label class="custom-control-label currency radio-button text" for="nis">@AppUtility.CurrencyEnum.NIS.ToString()</label>
                                                     </div>
 
                                                 </div>
                                                 <div class="col-4">
                                                     <div class="custom-control custom-radio">
-                                                        <input id="usd"
-                                                               name="currency"
+                                                        <input id="usd"                                                         
                                                                type="radio"
-                                                               value="@AppUtility.CurrencyEnum.USD"
+                                                                asp-for="SelectedCurrency"
+                                                               attr-value="@AppUtility.CurrencyEnum.USD"
                                                                class="custom-control-input currency usd">
                                                         <label class="custom-control-label currency radio-button text" for="usd">@AppUtility.CurrencyEnum.USD.ToString()</label>
                                                     </div>
