@@ -50,3 +50,35 @@ $(".load-receive-and-location").on("click", function (e) {
     $.fn.CallPageRequest($itemurl, "received");
     return false;
 });
+$(".approve-order").on("click", function (e) {
+    console.log("approving");
+    e.preventDefault();
+    $("#loading").show();
+    var selectedPriceSort = [];
+    $("#priceSortContent .priceSort:checked").each(function (e) {
+        selectedPriceSort.push($(this).attr("enum"));
+    })
+    $.ajax({
+        async: true,
+        url: "/Requests/Approve/?id=" + $(this).attr("value"),
+        data: {
+            PageNumber: $('#PageNumber').val(),
+            RequestStatusID: status,
+            PageType: $('#masterPageType').val(),
+            SectionType: $('#masterSectionType').val(),
+            SidebarType: $('#masterSidebarType').val(),
+            SelectedPriceSort: selectedPriceSort,
+            SelectedCurrency: $('#tempCurrency').val(),
+            SidebarFilterID: $('.sideBarFilterID').val()
+        },
+        traditional: true,
+        type: 'GET',
+        cache: false,
+        success: function (data) {
+            $("._IndexTableWithCounts").html(data);
+            $("#loading").hide();
+            return true;
+        }
+    });
+    return false;
+});

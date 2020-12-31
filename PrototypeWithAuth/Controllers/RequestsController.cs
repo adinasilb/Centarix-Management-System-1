@@ -322,7 +322,7 @@ namespace PrototypeWithAuth.Controllers
             var orderOperations = new IconColumnViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", "", "Order");
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var receiveIcon = new IconColumnViewModel(" icon-done-24px ", "#00CA72", "load-receive-and-location", "Receive");
-            var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", null, "Approve");
+            var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
             var defaultImage = "/images/css/accounting/sample_image.png";
             switch (requestIndexObject.PageType)
             {
@@ -612,6 +612,13 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);            
+            return PartialView(viewModel);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject)
+        {
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             return PartialView(viewModel);
         }
         [HttpGet]
@@ -3516,7 +3523,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         //[ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests, Operations")]
-        public IActionResult Approve(int id)
+        public IActionResult Approve(int id, RequestIndexObject requestIndex)
         {
             var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
             try
@@ -3547,10 +3554,11 @@ namespace PrototypeWithAuth.Controllers
             AppUtility.PageTypeEnum requestPageTypeEnum = AppUtility.PageTypeEnum.RequestRequest;
             if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
             {
-                return RedirectToAction("Index", new
+                return RedirectToAction("_IndexTableWithCounts", new
                 {
                     requestStatusID = 6,
-                    PageType = requestPageTypeEnum
+                    PageType = requestPageTypeEnum,
+                    requestIndex
                 });
             }
             else
