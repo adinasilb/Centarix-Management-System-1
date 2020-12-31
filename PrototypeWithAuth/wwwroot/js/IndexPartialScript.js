@@ -34,10 +34,12 @@ function ajaxCallToPartialTableData() {
     });
 }
 $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
+    $('#pricePopover').popover('hide');
     $('input[name=currency]').attr("checked", false)
     $('input[name=currency]').prop("checked", false)
-    $(this).attr("checked", true);
-    $(this).prop("checked", true);
+    $("."+$(this).attr("id")).attr("checked", true);
+    $("."+$(this).attr("id")).prop("checked", true);
+    $('#pricePopover').popover('show');
     console.log(this);
     $('#tempCurrency').val($(this).val())
     ajaxCallToPartialTableData();    
@@ -45,7 +47,13 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
 
 });
 $("#pricePopover").click(function () {
-	//	$('[data-toggle="popover"]').popover('dispose');
+        $(this).addClass("activePopover");
+		$('[data-toggle="popover"]').each(function() {
+            if(!$(this).hasClass("activePopover"))
+            {
+                 $(this).popover('dispose');
+            }
+        });
 		$('#pricePopover').popover({
 			sanitize: false,
 			placement: 'bottom',
