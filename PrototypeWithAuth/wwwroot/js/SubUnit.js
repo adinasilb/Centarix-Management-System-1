@@ -338,15 +338,27 @@ $(function () {
 				$("#sum-dollars").prop("disabled", false);
 				$("#sum-dollars").removeClass('disabled-text');
 
+
 				$("#unit-price-dollars").prop("disabled", false);
 				$("#unit-price-dollars").removeClass('disabled-text');
+				$("#unit-price-dollars").prop("readonly", false);
+				$("#subunit-price-dollars").prop("disabled", false);
 				$("#subunit-price-dollars").removeClass('disabled-text');
+				$("#subunit-price-dollars").prop("readonly", false);
+				$("#subsubunit-price-dollars").prop("disabled", false);
 				$("#subsubunit-price-dollars").removeClass('disabled-text');
+				$("#subsubunit-price-dollars").prop("readonly", false);
 				$(".request-cost-dollar-icon").removeClass('disabled-text');
+
 				$("#unit-price-shekel").prop("disabled", true);
 				$("#unit-price-shekel").addClass('disabled-text');
+				$("#unit-price-shekel").prop("readonly", true);
+				$("#subunit-price-shekel").prop("disabled", true);
 				$("#subunit-price-shekel").addClass('disabled-text');
+				$("#subunit-price-shekel").prop("readonly", true);
+				$("#subsubunit-price-shekel").prop("disabled", true);
 				$("#subsubunit-price-shekel").addClass('disabled-text');
+				$("#subsubunit-price-shekel").prop("readonly", true);
 				$(".request-cost-shekel-icon").addClass('disabled-text');
 				break;
 			case "shekel":
@@ -358,13 +370,24 @@ $(function () {
 
 				$("#unit-price-dollars").prop("disabled", true);
 				$("#unit-price-dollars").addClass('disabled-text');
+				$("#unit-price-dollars").prop("readonly", true);
+				$("#subunit-price-dollars").prop("disabled", true);
 				$("#subunit-price-dollars").addClass('disabled-text');
+				$("#subunit-price-dollars").prop("readonly", true);
+				$("#subsubunit-price-dollars").prop("disabled", true);
 				$("#subsubunit-price-dollars").addClass('disabled-text');
+				$("#subsubunit-price-dollars").prop("readonly", true);
 				$(".request-cost-dollar-icon").addClass('disabled-text');
+
 				$("#unit-price-shekel").prop("disabled", false);
 				$("#unit-price-shekel").removeClass('disabled-text');
+				$("#unit-price-shekel").prop("readonly", false);
+				$("#subunit-price-shekel").prop("disabled", false);
 				$("#subunit-price-shekel").removeClass('disabled-text');
+				$("#subunit-price-shekel").prop("readonly", false);
+				$("#subsubunit-price-shekel").prop("disabled", false);
 				$("#subsubunit-price-shekel").removeClass('disabled-text');
+				$("#subsubunit-price-shekel").prop("readonly", false);
 				$(".request-cost-shekel-icon").removeClass('disabled-text');
 				
 				break;
