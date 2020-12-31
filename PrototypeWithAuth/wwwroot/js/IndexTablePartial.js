@@ -54,7 +54,7 @@ $(".order-approved-operation").off('click').on("click", function (e) {
     console.log("approving");
     e.preventDefault();
     $("#loading").show();
-    ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/", "._IndexTableWithCounts");
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/" + $(this).attr("value"), "._IndexTableWithCounts");
     return false;
 });
 $(".approve-order").off('click').on("click", function (e) {

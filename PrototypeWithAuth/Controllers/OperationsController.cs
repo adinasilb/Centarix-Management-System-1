@@ -877,7 +877,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         //[ValidateAntiForgeryToken]
         [Authorize(Roles = "Operations")]
-        public IActionResult Order(int id)
+        public IActionResult Order(int id, RequestIndexObject requestIndexObject)
         {
             var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).FirstOrDefault();
             try
@@ -902,11 +902,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
-            return RedirectToAction("_IndexTableWithCounts", "Requests", new
-            {
-                requestStatusID = 2,
-                PageType = AppUtility.PageTypeEnum.RequestRequest
-            });
+            return RedirectToAction("_IndexTableWithCounts", "Requests", requestIndexObject);
         }
 
 

@@ -593,8 +593,10 @@
                             break;
                         case "reorder":
                             $.fn.OnOpenModalView();
+                            alert("in reorder");
                             AddTempDataMemory();
                             $("#Request_Cost").trigger('change');
+                            //$.fn.CheckCurrency();
                             break;
                         case "create":
                             $.fn.OnOpenModalView();
