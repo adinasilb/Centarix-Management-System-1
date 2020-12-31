@@ -95,11 +95,15 @@
                             </div>
                         </td>
                         <td style="width:8.1%;">
-                            @if (Request.Product.ProductSubcategory.ImageURL != null)
-                            {
-                                var imageurl = Request.Product.ProductSubcategory.ImageURL;
-                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+
+                            @{
+                                var imageurl = "/images/css/CategoryImages/placeholder.png";
+                                if (Request.Product.ProductSubcategory.ImageURL != null)
+                                {
+                                    imageurl = Request.Product.ProductSubcategory.ImageURL;
+                                }
                             }
+                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
                         </td>
                         <td style="width:11.1%;">
                             @Request.Product.ProductName

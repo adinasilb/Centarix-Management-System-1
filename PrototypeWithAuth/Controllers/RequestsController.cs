@@ -323,7 +323,7 @@ namespace PrototypeWithAuth.Controllers
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var receiveIcon = new IconColumnViewModel(" icon-done-24px ", "#00CA72", "load-receive-and-location", "Receive");
             var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
-            var defaultImage = "/images/css/accounting/sample_image.png";
+            var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.RequestRequest:
