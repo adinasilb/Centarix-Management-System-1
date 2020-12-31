@@ -319,7 +319,7 @@ namespace PrototypeWithAuth.Controllers
         {
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
             var reorderIcon = new IconColumnViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", "load-order-details", "Reorder");
-            var orderOperations = new IconColumnViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", "", "Order");
+            var orderOperations = new IconColumnViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", "order-approved-operation", "Order");
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var receiveIcon = new IconColumnViewModel(" icon-done-24px ", "#00CA72", "load-receive-and-location", "Receive");
             var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
@@ -360,7 +360,7 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProducts = await GetForApprovalOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                         case 6:
-                            iconList.Add(reorderIcon);
+                            iconList.Add(orderOperations);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetApprovedOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
@@ -370,7 +370,6 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProducts = await GetOrderedOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                         case 3:
-                            iconList.Add(orderOperations);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetReceivedInventoryOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
