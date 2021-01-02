@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210102203723_addedJobSubcategoryTypesAndChangedEmployeeFK")]
+    partial class addedJobSubcategoryTypesAndChangedEmployeeFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -990,47 +992,52 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             JobCategoryTypeID = 2,
-                            Description = "Rejuvenation"
+                            Description = "Senior Manager"
                         },
                         new
                         {
                             JobCategoryTypeID = 3,
-                            Description = "Biomarker"
+                            Description = "Manager"
                         },
                         new
                         {
                             JobCategoryTypeID = 4,
-                            Description = "Delivery Systems"
+                            Description = "Senior Bioinformatician"
                         },
                         new
                         {
                             JobCategoryTypeID = 5,
-                            Description = "Clinical Trials"
+                            Description = "Bioinformatician"
                         },
                         new
                         {
                             JobCategoryTypeID = 6,
-                            Description = "Business Development"
+                            Description = "Senior Scientist"
                         },
                         new
                         {
                             JobCategoryTypeID = 7,
-                            Description = "Software Development"
+                            Description = "Lab Technician"
                         },
                         new
                         {
                             JobCategoryTypeID = 8,
-                            Description = "General"
+                            Description = "Research Associate"
                         },
                         new
                         {
                             JobCategoryTypeID = 9,
-                            Description = "Lab"
+                            Description = "Software Developer"
                         },
                         new
                         {
                             JobCategoryTypeID = 10,
-                            Description = "Bioinformatics"
+                            Description = "Administration"
+                        },
+                        new
+                        {
+                            JobCategoryTypeID = 11,
+                            Description = "General"
                         });
                 });
 
@@ -1052,230 +1059,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("JobCategoryTypeID");
 
                     b.ToTable("JobSubcategoryTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            JobSubcategoryTypeID = 201,
-                            Description = "Senior Scientist",
-                            JobCategoryTypeID = 2
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 202,
-                            Description = "Research Associate",
-                            JobCategoryTypeID = 2
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 203,
-                            Description = "Lab Technician",
-                            JobCategoryTypeID = 2
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 204,
-                            Description = "Team Manager",
-                            JobCategoryTypeID = 2
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 205,
-                            Description = "Production Worker",
-                            JobCategoryTypeID = 2
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 206,
-                            Description = "Operation Executive",
-                            JobCategoryTypeID = 2
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 207,
-                            Description = "Business Development",
-                            JobCategoryTypeID = 2
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 208,
-                            Description = "Sales",
-                            JobCategoryTypeID = 2
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 209,
-                            Description = "Lab Manager",
-                            JobCategoryTypeID = 2
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 210,
-                            Description = "Bioinformatician",
-                            JobCategoryTypeID = 2
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 101,
-                            Description = "CEO",
-                            JobCategoryTypeID = 1
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 102,
-                            Description = "CTO",
-                            JobCategoryTypeID = 1
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 103,
-                            Description = "COO",
-                            JobCategoryTypeID = 1
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 104,
-                            Description = "President",
-                            JobCategoryTypeID = 1
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 105,
-                            Description = "Director",
-                            JobCategoryTypeID = 1
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 106,
-                            Description = "CSO",
-                            JobCategoryTypeID = 1
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 107,
-                            Description = "CMO",
-                            JobCategoryTypeID = 1
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 108,
-                            Description = "CFO",
-                            JobCategoryTypeID = 1
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 109,
-                            Description = "CBO",
-                            JobCategoryTypeID = 1
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 601,
-                            Description = "Sales",
-                            JobCategoryTypeID = 6
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 701,
-                            Description = "Elixir",
-                            JobCategoryTypeID = 7
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 702,
-                            Description = "Automation Developer",
-                            JobCategoryTypeID = 7
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 703,
-                            Description = "Other",
-                            JobCategoryTypeID = 7
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 801,
-                            Description = "Cooking",
-                            JobCategoryTypeID = 8
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 802,
-                            Description = "Cleaning",
-                            JobCategoryTypeID = 8
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 803,
-                            Description = "IT",
-                            JobCategoryTypeID = 8
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 804,
-                            Description = "Administration",
-                            JobCategoryTypeID = 8
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 805,
-                            Description = "Operations Manager",
-                            JobCategoryTypeID = 8
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 806,
-                            Description = "Branch Manager",
-                            JobCategoryTypeID = 8
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 901,
-                            Description = "Lab Manager",
-                            JobCategoryTypeID = 9
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 902,
-                            Description = "Automations Manager",
-                            JobCategoryTypeID = 9
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 903,
-                            Description = "Automations Implementer",
-                            JobCategoryTypeID = 9
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 1001,
-                            Description = "Senior Bioinformatician",
-                            JobCategoryTypeID = 10
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 1002,
-                            Description = "Bioinformatician Executive",
-                            JobCategoryTypeID = 10
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 1003,
-                            Description = "Bioinformatician Team Manager",
-                            JobCategoryTypeID = 10
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 1004,
-                            Description = "Bioinformatics Technician",
-                            JobCategoryTypeID = 10
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 1005,
-                            Description = "Bioinformatics Researcher",
-                            JobCategoryTypeID = 10
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -3222,8 +3005,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsUser")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("JobSubategoryTypeID")
+                        .HasColumnType("int");
+
                     b.Property<int?>("JobSubcategoryTypeID")
                         .HasColumnType("int");
+
+                    b.Property<string>("JobTitle")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("MaritalStatusID")
                         .HasColumnType("int");

@@ -41,8 +41,6 @@ namespace PrototypeWithAuth.Models
         [Display(Name ="Tax Credits")]
         public int TaxCredits { get; set; }
         public int VacationDays { get; set; }
-        [Display(Name = "Job Title")]
-        public string JobTitle { get; set; }
         [Display(Name = "ID Number")]
         public string IDNumber { get; set; }
         public int? DegreeID { get; set; }
@@ -64,9 +62,9 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<EmployeeHours> EmployeeHours { get; set; }
         public int EmployeeStatusID { get; set; }
         public EmployeeStatus EmployeeStatus { get; set; }
-        public int? JobCategoryTypeID { get; set;}
-        [ForeignKey("JobCategoryTypeID")]
-        public JobCategoryType JobCategoryType { get; set; }
+        public int? JobSubcategoryTypeID { get; set;}
+        [ForeignKey("JobSubcategoryTypeID")]
+        public JobSubcategoryType JobSubcategoryType { get; set; }
         public Freelancer Freelancer { get; set; }
         public SalariedEmployee SalariedEmployee { get; set; }
         public Advisor Advisor { get; set; }

@@ -268,12 +268,12 @@ namespace PrototypeWithAuth.Controllers
                 user.IncomeTax = registerUserViewModel.NewEmployee.IncomeTax;
                 user.TaxCredits = registerUserViewModel.NewEmployee.TaxCredits;
                 user.VacationDays = registerUserViewModel.NewEmployee.VacationDays;
-                user.JobTitle = registerUserViewModel.NewEmployee.JobTitle;
+                //user.JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubategoryTypeID;
                 user.DegreeID = registerUserViewModel.NewEmployee.DegreeID;
                 user.IDNumber = registerUserViewModel.NewEmployee.IDNumber;
                 user.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
                 user.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
-                user.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
+                user.JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
                 /*Salaried Employee*/
             }
 
@@ -633,13 +633,13 @@ namespace PrototypeWithAuth.Controllers
                     employeeEditted.IncomeTax = registerUserViewModel.NewEmployee.IncomeTax;
                     employeeEditted.TaxCredits = registerUserViewModel.NewEmployee.TaxCredits;
                     employeeEditted.VacationDays = registerUserViewModel.NewEmployee.VacationDays;
-                    employeeEditted.JobTitle = registerUserViewModel.NewEmployee.JobTitle;
+                    employeeEditted.JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
                     employeeEditted.DegreeID = registerUserViewModel.NewEmployee.DegreeID;
                     employeeEditted.IDNumber = registerUserViewModel.NewEmployee.IDNumber;
                     employeeEditted.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
                     employeeEditted.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
                     employeeEditted.EmployeeStatusID = selectedStatusID;
-                    employeeEditted.JobCategoryTypeID = registerUserViewModel.NewEmployee.JobCategoryTypeID;
+                    //employeeEditted.JobSubategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
 
                     _context.Update(employeeEditted);
 

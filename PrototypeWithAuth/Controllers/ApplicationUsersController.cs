@@ -79,7 +79,7 @@ namespace PrototypeWithAuth.Controllers
         private EmployeeDetailsViewModel GetWorkersDetailsViewModel()
         {
             IIncludableQueryable<Employee, JobCategoryType> employees = _context.Employees.Where(u => u.EmployeeStatusID != 4).Where(u => !u.IsSuspended)
-                .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobCategoryType);
+                .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobSubcategoryType).ThenInclude(js => js.JobCategoryType);
             EmployeeDetailsViewModel employeeDetailsViewModel = new EmployeeDetailsViewModel
             {
                 Employees = employees.Select(u => new UserWithCentarixIDViewModel
@@ -123,7 +123,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Hours;
             IIncludableQueryable<Employee, SalariedEmployee> employees = _context.Users.OfType<Employee>().Where(u => !u.IsSuspended)
-              .Include(e => e.EmployeeStatus).Include(e => e.JobCategoryType).Include(e => e.EmployeeHours).Include(e => e.SalariedEmployee);
+              .Include(e => e.EmployeeStatus).Include(e => e.JobSubcategoryType).ThenInclude(js => js.JobCategoryType)
+              .Include(e => e.EmployeeHours).Include(e => e.SalariedEmployee);
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
             foreach (Employee employee in employees)
             {
