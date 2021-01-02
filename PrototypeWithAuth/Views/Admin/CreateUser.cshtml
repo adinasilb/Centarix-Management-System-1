@@ -133,14 +133,25 @@
                                             dataValueField: "JobCategoryTypeID",
                                             dataTextField: "Description"),
                                             optionLabel: "Select A Category",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
+                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee job-category", @searchable = "default value" }
                                             )
                                         <span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-6 ">
-                                        @*<label asp-for="NewEmployee.jobsu" class="control-label only-employee"></label>*@
-                                        @*<input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom only-employee" required />*@
-                                        @*<span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix only-employee"></span>*@
+                                    <div class="col-6  p-0">
+                                        <label class="control-label only-employee">Job Subcategory</label>
+                                        <select asp-for="NewEmployee.JobSubcategoryTypeID" class="mdb-select custom select-dropdown form-control-plaintext only-employee job-subcategory" searchable="default value">
+
+                                        </select>
+                                        @*@Html.DropDownListFor(
+                                            vm => vm.NewEmployee.JobSubcategoryTypeID,
+                                            new SelectList(
+                                            Model.JobSubcategoryTypes,
+                                            dataValueField: "JobSubCategoryTypeID",
+                                            dataTextField: "Description"),
+                                            optionLabel: "Select A Sub Category",
+                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
+                                            )*@
+                                        <span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                                 <div class="row">
