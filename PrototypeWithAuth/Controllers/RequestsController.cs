@@ -633,7 +633,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ItemTableOwner(RequestIndexObject requestIndexObject)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Owner;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             SetViewModelCounts(requestIndexObject, viewModel);

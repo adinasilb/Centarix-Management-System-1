@@ -107,7 +107,7 @@ namespace PrototypeWithAuth.AppData
                 case SidebarEnum.Owner:
                     ReturnList = RequestsList
                     .Where(r => r.RequestStatusID == RequestStatusID)
-                    .Where(r => r.ParentRequest.ApplicationUserID == filterID)
+                    .Where(r => r.ApplicationUserCreatorID == filterID)
                     .Count();
                     break;
                 default:
