@@ -16,6 +16,12 @@
     TempData["Email3"] = TempData["Email3"]?.ToString() ?? "";
     TempData["Email4"] = TempData["Email4"]?.ToString() ?? "";
     TempData["Email5"] = TempData["Email5"]?.ToString() ?? "";
+
+    char currency = '₪';
+    if (Model.ParentRequest.Requests.Count() == 1 && Model.ParentRequest.Requests.FirstOrDefault().Currency == AppUtility.CurrencyEnum.USD.ToString())
+    {
+        currency = '$';
+    }
 }
 @{
 
@@ -123,10 +129,10 @@
                                         @if (Model.ParentRequest.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                                         {
                                             <th style="width:40%;">Items</th>
-                                            <th style="width:20%;">SKU</th>
+                                            <th style="width:18%;">SKU</th>
                                             <th style="width:10%;">Units</th>
                                             <th style="width:20%;">Price</th>
-                                            <th style="width:10%;">Total</th>
+                                            <th style="width:12%;">Total</th>
                                         }
                                         else
                                         {
@@ -166,10 +172,10 @@
                                             {
                                                 <td>@request.Unit</td>
                                                 double unitPrice = (request.Cost) / request.Unit;
-                                                <td>@unitPrice.ToString("N2")</td>
+                                                <td>@currency @unitPrice.ToString("N2")</td>
                                             }
 
-                                            <td>@request.Cost</td>
+                                            <td>@currency @request.Cost</td>
                                         </tr>
                                     }
                                     @{ double total = Model.ParentRequest.Requests.Sum(r => r.Cost);
@@ -180,7 +186,7 @@
                                             <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
                                         </td>
                                         <td>Total</td>
-                                        <td>@total.ToString("N2")</td>
+                                        <td>@currency @total.ToString("N2")</td>
                                     </tr>
 
                                     <tr>
@@ -197,12 +203,12 @@
                                     <tr>
                                         <td>VAT [17%]</td>
                                         @* make the vat a global variable*@
-                                        <td>@vat.ToString("N2")</td>
+                                        <td>@currency @vat.ToString("N2")</td>
                                     </tr>
                                     <tr>
                                         <td style="font-weight: bold;">Total To Pay</td>
 
-                                        <td style="font-weight: bold;">@totalWithVat.ToString("N2")</td>
+                                        <td style="font-weight: bold;">@currency @totalWithVat.ToString("N2")</td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -1510,36 +1510,6 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-            //GET PAYMENTS HERE
-            //var payments = _context.Payments
-            //    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
-            //    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
-            //requestItemViewModel.NewPayments = payments;
-
-            //if (payments.Count > 0)
-            //{
-            //    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
-            //    var totalPaymentsToDate = 0;
-            //    foreach (var payment in payments)
-            //    {
-            //        if (payment.PaymentDate <= DateTime.Now)
-            //        {
-            //            totalPaymentsToDate++;
-            //        }
-            //        else
-            //        {
-            //            break;
-            //        }
-            //    }
-            //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
-            //}
-            //else
-            //{
-            //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
-            //}
-
-            //setting the lists of companyaccounts by payment type id (so easy filtering on the frontend)
-
             //first get the list of payment types there are
             var paymentTypeIds = _context.CompanyAccounts.Select(ca => ca.PaymentTypeID).Distinct().ToList();
             //initialize the dictionary

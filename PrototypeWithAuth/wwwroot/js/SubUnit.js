@@ -347,7 +347,6 @@ $(function () {
 
 	$.fn.CheckCurrency = function () {
 		var currencyType = $("#currency").val();
-		alert("in check currency" + currencyType);
 		switch (currencyType) {
 			case "dollar":
 				$("#Request_Cost").prop("readonly", true);
