@@ -3502,6 +3502,16 @@ namespace PrototypeWithAuth.Controllers
             var workers = requests.Select(r => r.ApplicationUserCreator).Select(e => new { workerID = e.Id, workerName = e.FirstName + " " + e.LastName }).Distinct();
             return Json(new { Employees = workers });
         }
+
+        public bool CheckUniqueVendorAndCatalogNumber (int VendorID, string CatalogNumber)
+        {
+            var boolCheck = true;
+            if (_context.Requests.Where(r => r.CatalogNumber == CatalogNumber).Where(r => r.Product.VendorID == VendorID).Any())
+            {
+                boolCheck = false;
+            }
+            return boolCheck;
+        }
         //[HttpGet]
         //public JsonResult GetCompanyAccountList(int PaymentTypeID)
         //{

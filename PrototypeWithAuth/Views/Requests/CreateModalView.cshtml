@@ -825,16 +825,6 @@
             }
         });
 
-        $.fn.UpdatePrimaryOrderEmail = function () {
-            if ($(".supplier-email").length > 0) {
-                $(".supplier-email").html($("#vendor-primary-email").val());
-                $(".isSupplier").val($("#vendor-primary-email").val());
-            }
-            else {
-                $('.all-mail').prepend('<span class="email-ids supplier-email">' + $("#vendor-primary-email").val() + '</span>');
-                $(".isSupplier").val($("#vendor-primary-email").val());
-            }
-        };
 
         $.fn.CheckListLength = function () {
             //Disable if 5 emails
