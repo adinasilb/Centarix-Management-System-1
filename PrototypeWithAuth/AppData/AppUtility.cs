@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace PrototypeWithAuth.AppData
 
         }
         public enum SidebarEnum {
-            None, LastItem, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
+            None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
             Quotes, List,  Calibrate, Categories,  Location, Cart, Notifications,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker, 
@@ -57,6 +58,7 @@ namespace PrototypeWithAuth.AppData
             ForClarification,
             Add,  AwaitingApproval,
         }
+        public enum FilterEnum {None, Price, Category, Amount}
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
@@ -64,20 +66,20 @@ namespace PrototypeWithAuth.AppData
         public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual } //Listed in the site.js (if you change here must change there)
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
-        public enum CurrencyEnum { USD, NIS }
-        public enum PaymentsPopoverEnum { MonthlyPayment, PayNow, PayLater, Installments}
-        //{
-        //    //Share,
-        //    // Order,
-        //    [Display(Name = "Monthly Payment")]
-        //    MonthlyPayment = 1,
-        //    [Display(Name = "Pay Now")]
-        //    PayNow = 3,
-        //    [Display(Name = "Pay Later")]
-        //    PayLater = 4,
-        //    Installments = 5,
-        //    // Clarification
-        //}
+        public enum CurrencyEnum {  NIS, USD }
+        public enum PaymentsPopoverEnum
+        {
+            //Share,
+            // Order,
+            [Display(Name = "Monthly Payment")]
+            MonthlyPayment = 1,
+            [Display(Name = "Pay Now")]
+            PayNow = 3,
+            [Display(Name = "Pay Later")]
+            PayLater = 4,
+            Installments = 5,
+            // Clarification
+        }
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
@@ -88,33 +90,39 @@ namespace PrototypeWithAuth.AppData
             return String.Join(' ', splitEnumValue);
         }
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
+        public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, SidebarEnum sidebarType, String filterID)
         {
             int ReturnList = 0;
-            if (VendorID > 0)
+            int id = 0;
+            if (sidebarType != SidebarEnum.Owner)
             {
-                ReturnList = RequestsList
+                int.TryParse(filterID, out id);
+            }
+            switch(sidebarType)
+            {
+                case SidebarEnum.Vendors:
+                    ReturnList = RequestsList
+                   .Where(r => r.RequestStatusID == RequestStatusID)
+                   .Where(r => r.Product.VendorID == id)
+                   .Count();
+                    break;
+                case SidebarEnum.Type:
+                    ReturnList = RequestsList
                     .Where(r => r.RequestStatusID == RequestStatusID)
-                    .Where(r => r.Product.VendorID == VendorID)
+                    .Where(r => r.Product.ProductSubcategoryID == id)
                     .Count();
-            }
-            else if (SubcategoryID > 0)
-            {
-                ReturnList = RequestsList
+                    break;
+                case SidebarEnum.Owner:
+                    ReturnList = RequestsList
                     .Where(r => r.RequestStatusID == RequestStatusID)
-                    .Where(r => r.Product.ProductSubcategoryID == SubcategoryID)
+                    .Where(r => r.ApplicationUserCreatorID == filterID)
                     .Count();
+                    break;
+                default:
+                    ReturnList = RequestsList.Where(r => r.RequestStatusID == RequestStatusID).Count();
+                    break;
             }
-            else if (ApplicationUserID != null)
-            {
-                ReturnList = RequestsList
-                    .Where(r => r.RequestStatusID == RequestStatusID)
-                    .Where(r => r.ParentRequest.ApplicationUserID == ApplicationUserID)
-                    .Count();
-            }
-            else
-            {
-                ReturnList = RequestsList.Where(r => r.RequestStatusID == RequestStatusID).Count();
-            }
+
             return ReturnList;
         }
 
@@ -327,6 +335,64 @@ namespace PrototypeWithAuth.AppData
         
 
             return list;
+        }
+
+        public static List<String> GetPriceColumn(List<String>priceFilterEnums, Request request, CurrencyEnum currency)
+        {
+            List<String> priceColumn = new List<String>();
+            var currencyFormat = "he-IL";
+            var pricePerUnit = request.PricePerUnit;
+            var cost = request.Cost;
+            var total = request.TotalWithVat;
+            var vat = request.VAT;
+            var exchangeRate = request.ExchangeRate;
+            if (currency == AppUtility.CurrencyEnum.USD)
+            {
+                currencyFormat = "en-US";
+                pricePerUnit = request.PricePerUnit / exchangeRate;
+                cost = request.Cost / exchangeRate;
+                total = request.TotalWithVat / exchangeRate;
+                vat = request.VAT / exchangeRate;
+            }
+            foreach (var p in priceFilterEnums)
+            {
+                switch (Enum.Parse(typeof(PriceSortEnum), p))
+                {
+                    case PriceSortEnum.Unit:
+                        priceColumn.Add("U: "+string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit));
+                        break;
+                    case PriceSortEnum.Total:
+                        priceColumn.Add("T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost));
+                        break;
+                    case PriceSortEnum.Vat:
+                        priceColumn.Add("V: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", vat));
+                        break;
+                    case PriceSortEnum.TotalVat:
+                        priceColumn.Add("P: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", total));
+                        break;
+                }
+            }
+            return priceColumn;
+        }
+
+        public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)
+        {
+            List<String> amountColumn = new List<String>();
+            if(request.Unit != null)
+            {
+                amountColumn.Add(request.Unit + " " + unitType.UnitTypeDescription);
+                if(request.SubUnit != null)
+                {
+                    amountColumn.Add(request.SubUnit + " " + subUnitType.UnitTypeDescription);                 
+                    if(request.SubSubUnit != null)
+                    {
+                        amountColumn.Add(request.SubSubUnit + " " + subSubUnitType.UnitTypeDescription);
+                    }
+                    
+                }
+
+            }
+            return amountColumn;
         }
 
         public static string GetEmployeeCentarixID(IEnumerable<CentarixID> centarixIDs)

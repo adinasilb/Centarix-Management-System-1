@@ -6,6 +6,7 @@
 @{
 }
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/SubUnit.js"></script>
 <div class="modal modal-view right fader on-form-modal order-inv-form" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
@@ -71,7 +72,7 @@
                                     <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link"> <i style="font-size:2rem;" class="icon-comment-24px"></i> <br />Comments</a></li>
                                     <li class="nav-item icon"><a data-toggle="tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
                                     @*<li class="nav-item"><a data-toggle="tab" href="#order" class="nav-link">Order</a></li>
-                            Commented out below - because this is the DETAILS modal, so cant order from here.*@
+                                        Commented out below - because this is the DETAILS modal, so cant order from here.*@
                                 </ul>
                             </div>
                         </div>
@@ -83,17 +84,17 @@
                 <div class="new-modal-body edit-modal-outer-body">
                     <div class="container-fluid edit-modal-body box-shadow orders" style="background: #FFF; border: 2px solid #EAEAEB;">
                         @*@if (User.IsInRole("Admin"))
-                        {
-                            <div class=" row text-right mb-0">
-                                <div class="switch col-12 switch-margin">
-                                    <label>
-                                        <label class="edit-mode-switch-description">Edit Mode Off</label>
-                                        <input type="checkbox" class="turn-edit-on-off  orders" value="@Model.Request.RequestID" name="details">
-                                        <span class="lever"></span>
-                                    </label>
+                            {
+                                <div class=" row text-right mb-0">
+                                    <div class="switch col-12 switch-margin">
+                                        <label>
+                                            <label class="edit-mode-switch-description">Edit Mode Off</label>
+                                            <input type="checkbox" class="turn-edit-on-off  orders" value="@Model.Request.RequestID" name="details">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                        }*@
+                            }*@
                         <div class="tab-content">
                             <div id="item" class="tab-pane fade in active">
                                 <div class="row modal-tab-name">
@@ -200,7 +201,7 @@
                                     <span class="heading-1 col-12 modal-tab-name">Location</span>
                                 </div>
 
-                             
+
                             </div>
 
                             <div id="price" class="tab-pane fade">
@@ -439,7 +440,7 @@
                                         </a>
                                         <label class="control-label text-center text document-text-margin" style="width:100%;">Picture</label>
                                     </div>
-                                
+
                                 </div>
                             </div>
 
@@ -460,8 +461,8 @@
                                                                 <div class="col-md-2">
                                                                     <img height="75" src="~/images/css/default_user_image.png" alt="Profile Picture" />
                                                                     @*Insert Pic
-                                                <img src="" />
-                                                changing this to the user's profile picture*@
+                                                                        <img src="" />
+                                                                        changing this to the user's profile picture*@
                                                                 </div>
                                                                 <div class="col-md-10">
                                                                     <div class="font-weight-bolder">@comment.ApplicationUser.FirstName @comment.ApplicationUser.LastName - @comment.CommentTimeStamp</div>
@@ -556,11 +557,16 @@
 
                             </div>
 
-</form>
+            </form>
 
         </div>
     </div>
 
 </div>
 
+<script>
+    $(function () {
+        $("#Request_Cost").trigger('change');
+    });
+</script>
 

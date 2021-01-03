@@ -2217,19 +2217,7 @@ $(function () {
 		$('#addSupplierComment').popover('toggle');
 
 	});
-	$("#pricePopover").click(function () {
-		$('[data-toggle="popover"]').popover('dispose');
-		$('#pricePopover').popover({
-			sanitize: false,
-			placement: 'bottom',
-			html: true,
-			content: function () {
-				return $('#priceSortContent').html();
-			}
-		});
-		$('#pricePopover').popover('toggle');
-
-	});
+	
 	$("#home-btn").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');
 		$("#home-btn").popover({

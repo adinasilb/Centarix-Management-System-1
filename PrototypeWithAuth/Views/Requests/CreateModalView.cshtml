@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @*@inject UserManager<ApplicationUser> UserManager*@
 @{
-    ViewData["Title"] = "CreateUser";
+    ViewData["Title"] = "Add Item";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 
@@ -247,9 +247,9 @@
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label class="control-label">Currency</label>
-                                                    <select id="currency" class="mdb-select custom select-dropdown form-control-plaintext">
-                                                        <option value="dollar">&dollar; USD</option>
-                                                        <option value="shekel">&#8362; NIS</option>
+                                                    <select id="currency" asp-for="Request.Currency" class="mdb-select custom select-dropdown form-control-plaintext">
+                                                        <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
+                                                        <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
                                                     </select>
                                                 </div>
                                             </div>

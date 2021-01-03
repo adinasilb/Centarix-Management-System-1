@@ -58,7 +58,7 @@ namespace PrototypeWithAuth.Controllers
             //}
             //else
             //{
-                menu = _context.Menus.Where(m => rolesList.Contains(m.MenuDescription));
+                menu =CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
             //}
 
             //update latest exchange rate if need be
@@ -89,7 +89,7 @@ namespace PrototypeWithAuth.Controllers
             //}
             //else
             //{
-                menu = _context.Menus.Where(m=> rolesList.Contains(m.MenuDescription));
+                menu = CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
             //}
 
             return PartialView(menu);

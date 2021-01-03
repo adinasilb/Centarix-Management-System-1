@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.ViewModels
 
         //The following properties are for remembering where you are on the request Index to follow through to the right page
         public int? Page { get; set; }
-        public int RequestStatusID { get; set; }
+        public int PageRequestStatusID { get; set; }
         public int SubCategoryID { get; set; }
         public int CategoryType { get; set; }
         public int VendorID { get; set; }

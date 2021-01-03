@@ -95,11 +95,15 @@
                             </div>
                         </td>
                         <td style="width:8.1%;">
-                            @if (Request.Product.ProductSubcategory.ImageURL != null)
-                            {
-                                var imageurl = Request.Product.ProductSubcategory.ImageURL;
-                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+
+                            @{
+                                var imageurl = "/images/css/CategoryImages/placeholder.png";
+                                if (Request.Product.ProductSubcategory.ImageURL != null)
+                                {
+                                    imageurl = Request.Product.ProductSubcategory.ImageURL;
+                                }
                             }
+                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
                         </td>
                         <td style="width:11.1%;">
                             @Request.Product.ProductName
@@ -164,7 +168,7 @@
                                                 foreach (var link in links)
                                                 {
                                                     <div class="row px-3 accounting-popover">
-                                                        <a asp-action="@link.Action" asp-controller="@link.Controller" asp-route-currentStatus="@link.CurrentLocation" asp-route-requestID="@Request.RequestID" asp-route-newStatus="@link.Description" class="btn-link text no-hover"><i class="@link.Icon " style="color:@link.Color"></i><label class="m-2">@link.Description.ToString() </label></a>
+                                                        <a asp-action="@link.Action" asp-controller="@link.Controller" asp-route-currentStatus="@link.CurrentLocation" asp-route-requestID="@Request.RequestID" asp-route-newStatus="@link.Description" class="btn-link text no-hover"><i class="@link.Icon " style="color:@link.Color"></i><label class="m-2">@Html.DisplayFor(e => link.Description)</label></a>
                                                     </div>
                                                     <hr class="m-0" />
                                                 }

@@ -4,16 +4,9 @@
 @{
 
     ViewData["Title"] = "Index";
-    var pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()];
-    var sectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()];
-    if (Model.FirstOrDefault().ParentCategory.CategoryTypeID == 1)
-    {
-        Layout = "~/Views/Shared/RequestNavView.cshtml";
-    }
-    else if (Model.FirstOrDefault().ParentCategory.CategoryTypeID == 2)
-    {
-        Layout = "~/Views/Shared/RequestNavView.cshtml";
-    }
+    AppUtility.PageTypeEnum PageType =  (AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()];
+    AppUtility.MenuItems SectionType = (AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()];
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
 
 }
 
@@ -44,10 +37,7 @@
            
             <div class="type-div" >
                 <fieldset class=" type-fieldset">
-                    @*@Html.ActionLink(Model.ElementAt(i).ProductSubcategoryDescription, "Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)*@
-                    @if (Model.FirstOrDefault().ParentCategory.CategoryTypeID == 1)
-                    {
-                        <a href="@Url.ActionLink("Index", "Requests", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype, @SectionType = sectionType}, null)" class="text text-dark">
+                        <a href="@Url.ActionLink("ItemTableType", "Requests", new { PageType = PageType, SectionType = SectionType, SidebarType = AppUtility.SidebarEnum.Type, SidebarFilterID = Model.ElementAt(i).ProductSubcategoryID + "" } )" class="text text-dark">
                             @if (Model.ElementAt(i).ImageURL != null)
                             {
                                 <img class=" type-img " src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
@@ -60,22 +50,6 @@
                         <label class="type-label"> @Model.ElementAt(i).ProductSubcategoryDescription</label>
                          
                         </a>
-                    }
-                    else if (Model.FirstOrDefault().ParentCategory.CategoryTypeID == 2)
-                    {
-                <a href="@Url.ActionLink("Index", "Operations", new { @subcategoryID = @Model.ElementAt(i).ProductSubcategoryID, @PageType = pagetype }, null)" class="text text-dark">
-                    @if (Model.ElementAt(i).ImageURL != null)
-                    {
-                        <img class=" type-img" src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
-                    }
-                    else
-                    {
-
-                        <img class="type-img" src="~/images/css/inventory/Type/bottleBig.png" alt="Type Bottle" />
-                    }
-                    <label class="type-label">@Model.ElementAt(i).ProductSubcategoryDescription</label>
-                </a>
-                    }
 
                 </fieldset>
             </div>

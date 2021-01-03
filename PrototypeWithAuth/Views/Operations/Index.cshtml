@@ -34,14 +34,14 @@
         pgt = TempData["TempPageType"].ToString();
         TempData["TempPageType"] = TempData["TempPageType"];
     }
-    <input type="hidden" asp-for=" Page" />
+    @*<input type="hidden" asp-for=" Page" />
     <input type="hidden" asp-for="RequestStatusID" />
     <input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
     <input type="hidden" asp-for="SubCategoryID" />
     <input type="hidden" asp-for="PageType" />
     <input type="hidden" asp-for="VendorID" />
     <input type="hidden" asp-for="ApplicationUserID" />
-    <input type="hidden" asp-for="RequestParentLocationInstanceID" />
+    <input type="hidden" asp-for="RequestParentLocationInstanceID" />*@
     if (Model.SubCategoryID > 0)
     {
         backTextBool = true;

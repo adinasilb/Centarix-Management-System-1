@@ -54,7 +54,7 @@
                 </td>
                 @if (Summary)
                 {
-                    <td width="15%"> <button class="btn inv-link-clr oper-link-clr load-product-details-summary no-box-shadow" title="Details" value="@@Model.PagedList[itemNum].RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.ProductName) </button></td>
+                    <td width="15%"> <button class="btn inv-link-clr oper-link-clr load-product-details-summary no-box-shadow" title="Details" value="@Model.PagedList[itemNum].RequestID" data-target="item" href="item">@Html.DisplayFor(modelItem => Model.PagedList[itemNum].Product.ProductName) </button></td>
                 }
                 else
                 {

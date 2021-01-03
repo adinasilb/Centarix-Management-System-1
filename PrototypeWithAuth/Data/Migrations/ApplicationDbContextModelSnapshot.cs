@@ -990,52 +990,291 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             JobCategoryTypeID = 2,
-                            Description = "Senior Manager"
+                            Description = "Rejuvenation"
                         },
                         new
                         {
                             JobCategoryTypeID = 3,
-                            Description = "Manager"
+                            Description = "Biomarker"
                         },
                         new
                         {
                             JobCategoryTypeID = 4,
-                            Description = "Senior Bioinformatician"
+                            Description = "Delivery Systems"
                         },
                         new
                         {
                             JobCategoryTypeID = 5,
-                            Description = "Bioinformatician"
+                            Description = "Clinical Trials"
                         },
                         new
                         {
                             JobCategoryTypeID = 6,
-                            Description = "Senior Scientist"
+                            Description = "Business Development"
                         },
                         new
                         {
                             JobCategoryTypeID = 7,
-                            Description = "Lab Technician"
+                            Description = "Software Development"
                         },
                         new
                         {
                             JobCategoryTypeID = 8,
-                            Description = "Research Associate"
+                            Description = "General"
                         },
                         new
                         {
                             JobCategoryTypeID = 9,
-                            Description = "Software Developer"
+                            Description = "Lab"
                         },
                         new
                         {
                             JobCategoryTypeID = 10,
-                            Description = "Administration"
+                            Description = "Bioinformatics"
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.JobSubcategoryType", b =>
+                {
+                    b.Property<int>("JobSubcategoryTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("JobCategoryTypeID")
+                        .HasColumnType("int");
+
+                    b.HasKey("JobSubcategoryTypeID");
+
+                    b.HasIndex("JobCategoryTypeID");
+
+                    b.ToTable("JobSubcategoryTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            JobSubcategoryTypeID = 201,
+                            Description = "Senior Scientist",
+                            JobCategoryTypeID = 2
                         },
                         new
                         {
-                            JobCategoryTypeID = 11,
-                            Description = "General"
+                            JobSubcategoryTypeID = 202,
+                            Description = "Research Associate",
+                            JobCategoryTypeID = 2
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 203,
+                            Description = "Lab Technician",
+                            JobCategoryTypeID = 2
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 204,
+                            Description = "Team Manager",
+                            JobCategoryTypeID = 2
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 205,
+                            Description = "Production Worker",
+                            JobCategoryTypeID = 2
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 206,
+                            Description = "Operation Executive",
+                            JobCategoryTypeID = 2
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 207,
+                            Description = "Business Development",
+                            JobCategoryTypeID = 2
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 208,
+                            Description = "Sales",
+                            JobCategoryTypeID = 2
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 209,
+                            Description = "Lab Manager",
+                            JobCategoryTypeID = 2
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 210,
+                            Description = "Bioinformatician",
+                            JobCategoryTypeID = 2
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 101,
+                            Description = "CEO",
+                            JobCategoryTypeID = 1
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 102,
+                            Description = "CTO",
+                            JobCategoryTypeID = 1
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 103,
+                            Description = "COO",
+                            JobCategoryTypeID = 1
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 104,
+                            Description = "President",
+                            JobCategoryTypeID = 1
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 105,
+                            Description = "Director",
+                            JobCategoryTypeID = 1
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 106,
+                            Description = "CSO",
+                            JobCategoryTypeID = 1
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 107,
+                            Description = "CMO",
+                            JobCategoryTypeID = 1
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 108,
+                            Description = "CFO",
+                            JobCategoryTypeID = 1
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 109,
+                            Description = "CBO",
+                            JobCategoryTypeID = 1
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 601,
+                            Description = "Sales",
+                            JobCategoryTypeID = 6
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 701,
+                            Description = "Elixir",
+                            JobCategoryTypeID = 7
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 702,
+                            Description = "Automation Developer",
+                            JobCategoryTypeID = 7
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 703,
+                            Description = "Other",
+                            JobCategoryTypeID = 7
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 801,
+                            Description = "Cooking",
+                            JobCategoryTypeID = 8
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 802,
+                            Description = "Cleaning",
+                            JobCategoryTypeID = 8
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 803,
+                            Description = "IT",
+                            JobCategoryTypeID = 8
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 804,
+                            Description = "Administration",
+                            JobCategoryTypeID = 8
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 805,
+                            Description = "Operations Manager",
+                            JobCategoryTypeID = 8
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 806,
+                            Description = "Branch Manager",
+                            JobCategoryTypeID = 8
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 901,
+                            Description = "Lab Manager",
+                            JobCategoryTypeID = 9
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 902,
+                            Description = "Automations Manager",
+                            JobCategoryTypeID = 9
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 903,
+                            Description = "Automations Implementer",
+                            JobCategoryTypeID = 9
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 1001,
+                            Description = "Senior Bioinformatician",
+                            JobCategoryTypeID = 10
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 1002,
+                            Description = "Bioinformatician Executive",
+                            JobCategoryTypeID = 10
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 1003,
+                            Description = "Bioinformatician Team Manager",
+                            JobCategoryTypeID = 10
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 1004,
+                            Description = "Bioinformatics Technician",
+                            JobCategoryTypeID = 10
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 1005,
+                            Description = "Bioinformatics Researcher",
+                            JobCategoryTypeID = 10
                         });
                 });
 
@@ -1290,125 +1529,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             MaritalStatusID = 3,
                             Description = "Divorced"
-                        });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Menu", b =>
-                {
-                    b.Property<int>("menuID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ActionName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ControllerName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MenuDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MenuImageURL")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MenuViewName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("menuID");
-
-                    b.ToTable("Menus");
-
-                    b.HasData(
-                        new
-                        {
-                            menuID = 1,
-                            ActionName = "Index",
-                            ControllerName = "Requests",
-                            MenuDescription = "Requests",
-                            MenuImageURL = "/images/css/main_menu_icons/inventory.png",
-                            MenuViewName = "Orders & Inventory"
-                        },
-                        new
-                        {
-                            menuID = 2,
-                            ActionName = "",
-                            ControllerName = "",
-                            MenuDescription = "Protocols",
-                            MenuImageURL = "/images/css/main_menu_icons/protocols.png",
-                            MenuViewName = "Protocols"
-                        },
-                        new
-                        {
-                            menuID = 3,
-                            ActionName = "Index",
-                            ControllerName = "Operations",
-                            MenuDescription = "Operations",
-                            MenuImageURL = "/images/css/main_menu_icons/operation.png",
-                            MenuViewName = "Operation"
-                        },
-                        new
-                        {
-                            menuID = 4,
-                            ActionName = "",
-                            ControllerName = "",
-                            MenuDescription = "Biomarkers",
-                            MenuImageURL = "/images/css/main_menu_icons/biomarkers.png",
-                            MenuViewName = "Biomarkers"
-                        },
-                        new
-                        {
-                            menuID = 5,
-                            ActionName = "ReportHours",
-                            ControllerName = "Timekeeper",
-                            MenuDescription = "TimeKeeper",
-                            MenuImageURL = "/images/css/main_menu_icons/timekeeper.png",
-                            MenuViewName = "Timekeeper"
-                        },
-                        new
-                        {
-                            menuID = 6,
-                            ActionName = "IndexForPayment",
-                            ControllerName = "Vendors",
-                            MenuDescription = "LabManagement",
-                            MenuImageURL = "/images/css/main_menu_icons/lab.png",
-                            MenuViewName = "Lab Management"
-                        },
-                        new
-                        {
-                            menuID = 7,
-                            ActionName = "AccountingPayments",
-                            ControllerName = "Requests",
-                            MenuDescription = "Accounting",
-                            MenuImageURL = "/images/css/main_menu_icons/accounting.png",
-                            MenuViewName = "Accounting"
-                        },
-                        new
-                        {
-                            menuID = 8,
-                            ActionName = "SummaryPieCharts",
-                            ControllerName = "Expenses",
-                            MenuDescription = "Reports",
-                            MenuImageURL = "/images/css/main_menu_icons/expenses.png",
-                            MenuViewName = "Reports"
-                        },
-                        new
-                        {
-                            menuID = 9,
-                            ActionName = "",
-                            ControllerName = "",
-                            MenuDescription = "Income",
-                            MenuImageURL = "/images/css/main_menu_icons/income.png",
-                            MenuViewName = "Income"
-                        },
-                        new
-                        {
-                            menuID = 10,
-                            ActionName = "Index",
-                            ControllerName = "Admin",
-                            MenuDescription = "Users",
-                            MenuImageURL = "/images/css/main_menu_icons/users.png",
-                            MenuViewName = "Users"
                         });
                 });
 
@@ -3102,11 +3222,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsUser")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("JobCategoryTypeID")
+                    b.Property<int?>("JobSubcategoryTypeID")
                         .HasColumnType("int");
-
-                    b.Property<string>("JobTitle")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("MaritalStatusID")
                         .HasColumnType("int");
@@ -3126,7 +3243,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("EmployeeStatusID");
 
-                    b.HasIndex("JobCategoryTypeID");
+                    b.HasIndex("JobSubcategoryTypeID");
 
                     b.HasIndex("MaritalStatusID");
 
@@ -3396,6 +3513,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithOne("Freelancer")
                         .HasForeignKey("PrototypeWithAuth.Models.Freelancer", "EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.JobSubcategoryType", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.JobCategoryType", "JobCategoryType")
+                        .WithMany("JobSubcategoryTypes")
+                        .HasForeignKey("JobCategoryTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -3696,9 +3822,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.JobCategoryType", "JobCategoryType")
+                    b.HasOne("PrototypeWithAuth.Models.JobSubcategoryType", "JobSubcategoryType")
                         .WithMany("Employees")
-                        .HasForeignKey("JobCategoryTypeID")
+                        .HasForeignKey("JobSubcategoryTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.MaritalStatus", "MaritalStatus")

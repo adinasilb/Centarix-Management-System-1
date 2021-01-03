@@ -10,383 +10,380 @@ namespace PrototypeWithAuth.AppData
 {
     public static class CreateMenus
     {
-        public static List<MenuItems> CreateOrdersAndInventoryMainMenu(AppUtility.PageTypeEnum pageType, string OrigClasses, string ActiveClasses)
+        public static List<MenuItems> CreateMainMenu(AppUtility.MenuItems SectionType, AppUtility.PageTypeEnum pageType, string OrigClasses)
         {
             List<MenuItems> MainMenuItems = new List<MenuItems>();
-
+            string ActiveClasses ="";
             string AllClasses = OrigClasses;
-            if (pageType == AppUtility.PageTypeEnum.RequestRequest) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
+            switch (SectionType)
             {
-                Description = "Requests",
-                Controller = "Requests",
-                Action = "Index",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.RequestRequest }
-                },
-                Classes = AllClasses,
-                ID = "request-link"
-            });
-            if (pageType == AppUtility.PageTypeEnum.RequestSummary) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Inventory",
-                Controller = "Requests",
-                Action = "Index",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.RequestSummary }
-                },
-                Classes = AllClasses,
-                ID = "summary-link"
-            });
-            if (pageType == AppUtility.PageTypeEnum.RequestSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Search",
-                Controller = "Requests",
-                Action = "Search",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.Requests }
-                },
-                Classes = AllClasses,
-                ID = "search-link"
-            });
-            if (pageType == AppUtility.PageTypeEnum.RequestLocation) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Locations",
-                Controller = "Locations",
-                Action = "Index",
-                RouteValues = new RouteValueDictionary()
+               
+                case AppUtility.MenuItems.Requests:
+                    ActiveClasses = " activeNavLink";
+                    if (pageType == AppUtility.PageTypeEnum.RequestRequest) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Requests",
+                        Controller = "Requests",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary()
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.RequestRequest },
+                            { "SectionType", AppUtility.MenuItems.Requests },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
+                        Classes = AllClasses,
+                        ID = "request-link"
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.RequestSummary) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Inventory",
+                        Controller = "Requests",
+                        Action = "IndexInventory",
+                        RouteValues = new RouteValueDictionary()  
+                        { 
+                            {"PageType",  AppUtility.PageTypeEnum.RequestSummary },
+                            { "SectionType", AppUtility.MenuItems.Requests },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
+                        Classes = AllClasses,
+                        ID = "summary-link"
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.RequestSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Search",
+                        Controller = "Requests",
+                        Action = "Search",
+                        RouteValues = new RouteValueDictionary()
                 {
                     {"SectionType", AppUtility.MenuItems.Requests }
                 },
-                Classes = AllClasses,
-                ID = "location-link"
-            });
-            if (pageType == AppUtility.PageTypeEnum.RequestCart) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Personal",
-                Controller = "Requests",
-                Action = "Cart",
-                RouteValues = new RouteValueDictionary()
+                        Classes = AllClasses,
+                        ID = "search-link"
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.RequestLocation) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Locations",
+                        Controller = "Locations",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.Requests }
+                },
+                        Classes = AllClasses,
+                        ID = "location-link"
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.RequestCart) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Personal",
+                        Controller = "Requests",
+                        Action = "Cart",
+                        RouteValues = new RouteValueDictionary()
                 {
                     {"PageType", AppUtility.PageTypeEnum.RequestCart }
                 },
-                Classes = AllClasses,
-                ID = "personal-link"
-            });
-            //if (MainMenu == AppUtility.RequestPageTypeEnum.Inventory.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            //MainMenuItems.Add(new MenuItems()
-            //{
-            //    Description = "Full Inventory",
-            //    Controller = "Requests",
-            //    Action = "Index",
-            //    RouteValues = new RouteValueDictionary()
-            //    {
-            //        {"PageType", AppUtility.RequestPageTypeEnum.Inventory }
-            //    },
-            //    Classes = AllClasses,
-            //    ID = "inventory-link"
-            //});
+                        Classes = AllClasses,
+                        ID = "personal-link"
+                    });
+                    //if (MainMenu == AppUtility.RequestPageTypeEnum.Inventory.ToString()) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Full Inventory",
+                    //    Controller = "Requests",
+                    //    Action = "Index",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
+                    //                {"PageType",  AppUtility.PageTypeEnum.RequestRequest },
+            //        { "SectionType", AppUtility.MenuItems.Requests },
+            //                { "SidebarType", AppUtility.SidebarEnum.List }
+            //},
+            //        //    Classes = AllClasses,
+                    //    ID = "inventory-link"
+                    //});
 
-            return MainMenuItems;
-        }
-        public static List<MenuItems> CreateLabManagementMainMenu(AppUtility.PageTypeEnum pageType, string OrigClasses, string ActiveClasses)
-        {
-            List<MenuItems> MainMenuItems = new List<MenuItems>();
-
-            string AllClasses = OrigClasses;
-            if (pageType == AppUtility.PageTypeEnum.LabManagementSuppliers) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Suppliers",
-                Controller = "Vendors",
-                Action = "IndexForPayment",
-                RouteValues = new RouteValueDictionary()
+                    break;
+                case AppUtility.MenuItems.Operations:
+                    ActiveClasses = " text-dark operations-filter";
+                    if (pageType == AppUtility.PageTypeEnum.OperationsRequest) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Requests",
+                        Controller = "Requests",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary()
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
+                            { "SectionType", AppUtility.MenuItems.Operations },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
+                        Classes = AllClasses,
+                        ID = "request-link"
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.OperationsInventory) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Inventory",
+                        Controller = "Requests",
+                        Action = "IndexInventory",
+                        RouteValues = new RouteValueDictionary()
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.OperationsInventory },
+                            { "SectionType", AppUtility.MenuItems.Operations },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
+                        Classes = AllClasses,
+                        ID = "inventory-link"
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.OperationsSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Search",
+                        Controller = "Requests",
+                        Action = "Search",
+                        RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.Operations }
+                },
+                        Classes = AllClasses,
+                        ID = "search-link"
+                    });
+                    break;
+                case AppUtility.MenuItems.Accounting:
+                    ActiveClasses = " text-dark accounting-filter";
+                    if (pageType == AppUtility.PageTypeEnum.AccountingPayments) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Payments",
+                        Controller = "Requests",
+                        Action = "AccountingPayments",
+                        RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingPaymentsEnum", AppUtility.SidebarEnum.MonthlyPayment }
+                },
+                        Classes = AllClasses
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.AccountingNotifications) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Notifications",
+                        Controller = "Requests",
+                        Action = "AccountingNotifications",
+                        RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", AppUtility.PageTypeEnum.AccountingNotifications }
+                },
+                        Classes = AllClasses
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.AccountingGeneral) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "General",
+                        Controller = "ParentRequests",
+                        Action = "GeneralPaymentList",
+                        RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType", AppUtility.PageTypeEnum.AccountingGeneral }
+                },
+                        Classes = AllClasses
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.AccountingSuppliers) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Suppliers",
+                        Controller = "Vendors",
+                        Action = "IndexForPayment",
+                        RouteValues = new RouteValueDictionary()
+                {
+                    {"SectionType", AppUtility.MenuItems.Accounting }
+                },
+                        Classes = AllClasses
+                    });
+                    break;
+                case AppUtility.MenuItems.Income:
+                    break;
+                case AppUtility.MenuItems.Biomarkers:
+                    break;
+                case AppUtility.MenuItems.LabManagement:
+                    ActiveClasses = " text-dark lab-man-filter";
+                    if (pageType == AppUtility.PageTypeEnum.LabManagementSuppliers) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Suppliers",
+                        Controller = "Vendors",
+                        Action = "IndexForPayment",
+                        RouteValues = new RouteValueDictionary()
                     {
                         {"PageType", AppUtility.PageTypeEnum.LabManagementSuppliers },
                         {"SectionType", AppUtility.MenuItems.LabManagement }
                     },
-                Classes = AllClasses
-            });
-            if (pageType == AppUtility.PageTypeEnum.LabManagementLocations) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Locations",
-                Controller = "Locations",
-                Action = "Index",
-                RouteValues = new RouteValueDictionary()
+                        Classes = AllClasses
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.LabManagementLocations) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Locations",
+                        Controller = "Locations",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary()
                     {
                         {"SectionType", AppUtility.MenuItems.LabManagement }
                     },
-                Classes = AllClasses
-            });
-            if (pageType == AppUtility.PageTypeEnum.LabManagementEquipment) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Equipment",
-                Controller = "Calibrations",
-                Action = "Index",
-                RouteValues = new RouteValueDictionary()
-                {
+                        Classes = AllClasses
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.LabManagementEquipment) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Equipment",
+                        Controller = "Calibrations",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary()
+                        {
 
-                },
-                Classes = AllClasses
-            });
-            if (pageType == AppUtility.PageTypeEnum.LabManagementQuotes) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Orders",
-                Controller = "Requests",
-                Action = "LabManageQuotes",
-                RouteValues = new RouteValueDictionary(),
-                Classes = AllClasses
-            });
-            if (pageType == AppUtility.PageTypeEnum.LabManagementSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Search",
-                Controller = "Requests",
-                Action = "Search",
-                RouteValues = new RouteValueDictionary()
+                        },
+                        Classes = AllClasses
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.LabManagementQuotes) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Orders",
+                        Controller = "Requests",
+                        Action = "LabManageQuotes",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.LabManagementSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Search",
+                        Controller = "Requests",
+                        Action = "Search",
+                        RouteValues = new RouteValueDictionary()
                 {
                     {"SectionType", AppUtility.MenuItems.LabManagement }
                 },
-                Classes = AllClasses
-            });
+                        Classes = AllClasses
+                    });
+                    break;
+                case AppUtility.MenuItems.Protocols:
+                    break;
+                case AppUtility.MenuItems.Reports:
+                    ActiveClasses = " text-dark expenses-filter";
+                    if (pageType == AppUtility.PageTypeEnum.ExpensesSummary) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Summary",
+                        Controller = "Expenses",
+                        Action = "SummaryPieCharts",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = ""
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.ExpensesStatistics) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Statistics",
+                        Controller = "Expenses",
+                        Action = "StatisticsProject",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = ""
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.ExpensesCost) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Costs",
+                        Controller = "Expenses",
+                        Action = "CostsProject",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = ""
+                    });
+                    //if (MainMenu == AppUtility.ExpensesPageTypeEnum.ExpensesWorkers.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Workers",
+                    //    Controller = "Expenses",
+                    //    Action = "WorkersDetails",
+                    //    RouteValues = new RouteValueDictionary(),
+                    //    Classes = CurrentClasses,
+                    //    ID = ""
+                    //});
 
-            return MainMenuItems;
-        }
-        public static List<MenuItems> CreateAccountingMainMenu(AppUtility.PageTypeEnum pageType, string OrigClasses, string ActiveClasses)
-        {
-            List<MenuItems> MainMenuItems = new List<MenuItems>();
+                    break;
+                case AppUtility.MenuItems.TimeKeeper:
+                    ActiveClasses = " text-dark timekeeper-filter";
+                    if (pageType == AppUtility.PageTypeEnum.TimeKeeperReport) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Reports",
+                        Controller = "Timekeeper",
+                        Action = "ReportHours",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = "reports-link"
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.TimekeeperSummary) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Summary",
+                        Controller = "Timekeeper",
+                        Action = "SummaryHours",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = "summary-link"
+                    });
+                    break;
+                case AppUtility.MenuItems.Users:
+                    ActiveClasses = " text-dark users-filter";
+                    if (pageType == AppUtility.PageTypeEnum.UsersUser) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Users",
+                        Controller = "Admin",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = "inventory-link"
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.UsersWorkers) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Employees",
+                        Controller = "ApplicationUsers",
+                        Action = "Details",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = "inventory-link"
+                    });
 
-            string MainClasses = OrigClasses;
-            if (pageType == AppUtility.PageTypeEnum.AccountingPayments) { MainClasses += ActiveClasses; } else { MainClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Payments",
-                Controller = "Requests",
-                Action = "AccountingPayments",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"accountingPaymentsEnum", AppUtility.SidebarEnum.MonthlyPayment }
-                },
-                Classes = MainClasses
-            });
-            if (pageType == AppUtility.PageTypeEnum.AccountingNotifications) { MainClasses += ActiveClasses; } else { MainClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Notifications",
-                Controller = "Requests",
-                Action = "AccountingNotifications",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.AccountingNotifications }
-                },
-                Classes = MainClasses
-            });
-            if (pageType == AppUtility.PageTypeEnum.AccountingGeneral) { MainClasses += ActiveClasses; } else { MainClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "General",
-                Controller = "ParentRequests",
-                Action = "GeneralPaymentList",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.AccountingGeneral }
-                },
-                Classes = MainClasses
-            });
-            if (pageType == AppUtility.PageTypeEnum.AccountingSuppliers) { MainClasses += ActiveClasses; } else { MainClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Suppliers",
-                Controller = "Vendors",
-                Action = "IndexForPayment",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.Accounting }
-                },
-                Classes = MainClasses
-            });
-
-            return MainMenuItems;
-        }
-        public static List<MenuItems> CreateOperationsMainMenu(AppUtility.PageTypeEnum pageType, string OrigClasses, string ActiveClasses)
-        {
-            List<MenuItems> MainMenuItems = new List<MenuItems>();
-
-            string CurrentClasses = OrigClasses;
-            if (pageType == AppUtility.PageTypeEnum.OperationsRequest) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Requests",
-                Controller = "Operations",
-                Action = "Index",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.OperationsRequest }
-                },
-                Classes = CurrentClasses,
-                ID = "request-link"
-            });
-            if (pageType == AppUtility.PageTypeEnum.OperationsInventory) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Inventory",
-                Controller = "Operations",
-                Action = "Index",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.OperationsInventory }
-                },
-                Classes = CurrentClasses,
-                ID = "inventory-link"
-            });
-            if (pageType == AppUtility.PageTypeEnum.OperationsSearch) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Search",
-                Controller = "Requests",
-                Action = "Search",
-                RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.Operations }
-                },
-                Classes = CurrentClasses,
-                ID = "search-link"
-            });
-
-            return MainMenuItems;
-        }
-        public static List<MenuItems> CreateUsersMainMenu(AppUtility.PageTypeEnum pageType, string OrigClasses, string ActiveClasses)
-        {
-            List<MenuItems> MainMenuItems = new List<MenuItems>();
-            string CurrentClasses = OrigClasses;
-
-            if (pageType == AppUtility.PageTypeEnum.UsersUser) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Users",
-                Controller = "Admin",
-                Action = "Index",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                ID = "inventory-link"
-            });
-            if (pageType == AppUtility.PageTypeEnum.UsersWorkers) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Employees",
-                Controller = "ApplicationUsers",
-                Action = "Details",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                ID = "inventory-link"
-            });
-
-            return MainMenuItems;
-        }
-        public static List<MenuItems> CreateTimekeeperMainMenu(AppUtility.PageTypeEnum pageType, string OrigClasses, string ActiveClasses)
-        {
-            List<MenuItems> MainMenuItems = new List<MenuItems>();
-
-            string CurrentClasses = OrigClasses;
-            if (pageType == AppUtility.PageTypeEnum.TimeKeeperReport) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Reports",
-                Controller = "Timekeeper",
-                Action = "ReportHours",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                ID = "reports-link"
-            });
-            if (pageType == AppUtility.PageTypeEnum.TimekeeperSummary) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Summary",
-                Controller = "Timekeeper",
-                Action = "SummaryHours",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                ID = "summary-link"
-            });
-
+                    break;
+                   
+            }         
             return MainMenuItems;
         }
 
-        public static List<MenuItems> CreateExpensesMainMenu(AppUtility.PageTypeEnum pageType, string OrigClasses, string ActiveClasses)
-        {
-            List<MenuItems> MainMenuItems = new List<MenuItems>();
-
-            string CurrentClasses = OrigClasses;
-            if (pageType == AppUtility.PageTypeEnum.ExpensesSummary) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Summary",
-                Controller = "Expenses",
-                Action = "SummaryPieCharts",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                ID = ""
-            });
-            if (pageType == AppUtility.PageTypeEnum.ExpensesStatistics) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Statistics",
-                Controller = "Expenses",
-                Action = "StatisticsProject",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                ID = ""
-            });
-            if (pageType == AppUtility.PageTypeEnum.ExpensesCost) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            MainMenuItems.Add(new MenuItems()
-            {
-                Description = "Costs",
-                Controller = "Expenses",
-                Action = "CostsProject",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                ID = ""
-            });
-            //if (MainMenu == AppUtility.ExpensesPageTypeEnum.ExpensesWorkers.ToString()) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            //MainMenuItems.Add(new MenuItems()
-            //{
-            //    Description = "Workers",
-            //    Controller = "Expenses",
-            //    Action = "WorkersDetails",
-            //    RouteValues = new RouteValueDictionary(),
-            //    Classes = CurrentClasses,
-            //    ID = ""
-            //});
-
-            return MainMenuItems;
-        }
 
         public static List<MenuItems> GetOrdersAndInventoryRequestsSidebarMenuItems(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses, AppUtility.PageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
         {
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
             string menuClass = OrigClasses;
-            if (SidebarTitle == AppUtility.SidebarEnum.LastItem) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.List) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Last Item",
                 Controller = "Requests",
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
-                {
-                    { "PageType", pageType },
-                    { "CategoryType", categoryType }
-                },
+                        {
+                            {"PageType", pageType },
+                            { "SectionType", AppUtility.MenuItems.Requests },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
                 Classes = menuClass,
                 IconName = "icon-format_list_bulleted-24px-01"
             });
@@ -455,16 +452,17 @@ namespace PrototypeWithAuth.AppData
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
             string menuClass = OrigClasses;
-            if (SidebarTitle == AppUtility.SidebarEnum.LastItem) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.List) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Last Item",
                 Controller = "Requests",
-                Action = "Index",
+                Action = "IndexInventory",
                 RouteValues = new RouteValueDictionary()
                 {
-                    { "PageType",pageType},
-                    { "CategoryType",categoryType}
+                    {"PageType",  pageType },
+                    { "SectionType", AppUtility.MenuItems.Requests },
+                    { "SidebarType", AppUtility.SidebarEnum.List }
                 },
                 Classes = menuClass,
                 IconName = "icon-format_list_bulleted-24px-01"
@@ -593,7 +591,7 @@ namespace PrototypeWithAuth.AppData
 
             return SidebarMenuItems;
         }
-        public static List<MenuItems> GetOrdersAndInventoryLocationSidebarMenuItems(string OrigClasses, string ActiveClasses,  AppUtility.CategoryTypeEnum categoryType)
+        public static List<MenuItems> GetOrdersAndInventoryLocationSidebarMenuItems(string OrigClasses, string ActiveClasses, AppUtility.CategoryTypeEnum categoryType)
         {
 
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
@@ -998,16 +996,18 @@ namespace PrototypeWithAuth.AppData
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
             string CurrentClasses = OrigClasses;
 
-            if (SidebarTitle == AppUtility.SidebarEnum.LastItem) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.List) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Last Item",
-                Controller = "Operations",
+                Controller = "Requests",
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", PageType }
-                },
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
+                            { "SectionType", AppUtility.MenuItems.Operations },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
                 Classes = CurrentClasses,
                 IconName = "icon-format_list_bulleted-24px-01"
             });
@@ -1188,7 +1188,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-assignment-24px"
             });
-   
+
             if (SidebarTitle == AppUtility.SidebarEnum.ReportDaysOff) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
@@ -1199,7 +1199,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-event-24px"
             });
-     
+
 
             return SidebarMenuItems;
         }
@@ -1228,7 +1228,7 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-highlight_off-24px"
             });
-  
+
             return SidebarMenuItems;
         }
 

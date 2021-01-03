@@ -2,16 +2,7 @@
 @using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "Index";
-    var pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()];
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-    //if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
-    //{
-    //    Layout = "~/Views/Shared/RequestNavView.cshtml";
-    //}
-    //else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
-    //{
-    //    Layout = "~/Views/Shared/RequestNavView.cshtml";
-    //}
 }
 
 @*<<<<<<<<<<<< This is the Owner page >>>>>>>>>>>>>>>*@
@@ -31,11 +22,9 @@
                 owners = "owners-ml";
             }
                         <div class="col-auto @owners p-0">
-                            @*<fieldset class="border">*@
-                            @*@Html.ActionLink(Model.ElementAt(i).FirstName + " " + Model.ElementAt(i).LastName, "Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype }, null)*@
-                           @if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Lab))
-                            {
-                            <a href="@Url.ActionLink("Index", "Requests", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
+
+
+                            <a href="@Url.ActionLink("ItemTableOwner", "Requests", new { SidebarFilterID = @Model.ElementAt(i).Id, SectionType = ((AppUtility.MenuItems)TempData[AppUtility.TempDataTypes.MenuType.ToString()]), PageType = ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()]), SidebarType= AppUtility.SidebarEnum.Owner  })"
                                class=" bold-hover-effects" id="profile-img">
                                 @{
                                     var src = "/UserImages/user-image-placeholder.png";
@@ -48,29 +37,6 @@
                                 <br />
                                 <label class="owner-label mb-0">@Model.ElementAt(i).FirstName<br />@Model.ElementAt(i).LastName</label>
                             </a>
-                            }
-                            else if (TempData["CategoryType"].Equals(AppUtility.CategoryTypeEnum.Operations))
-                            {
-                        <a href="@Url.ActionLink("Index", "Operations", new { @applicationUserID = @Model.ElementAt(i).Id, @PageType = pagetype,  }, null)"
-                           class=" bold-hover-effects" id="profile-img">
-                            @{
-                                        var src = "/UserImages/user-image-placeholder.png";
-                                        if (Model.ElementAt(i).UserImage != null)
-                                        {
-                                            src = "\\" + AppUtility.GetLastFiles(Model.ElementAt(i).UserImage, 2);
-                                        }
-                                    }
-                            <img id="user-image" class="circular-profile-img circular-profile-img-141" src="@src" />
-                            <br />
-                            <label class="owner-label mb-0">@Model.ElementAt(i).FirstName<br />@Model.ElementAt(i).LastName</label>
-                        </a>
-                            }
-
-                            @*<button id="profile-img" class="btn no-box-shadow ">
-
-            <img src="@src" class="user-image ml-0" height="50" alt="default User image" />
-        </button>*@
-                            @*</fieldset>*@
                         </div>
         }
     </div>

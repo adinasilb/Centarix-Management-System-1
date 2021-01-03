@@ -437,9 +437,9 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 <div class="col-md-2 offset-8">
                     <div class="form-group">
                         <label asp-for="Request.Currency" class="control-label">Currency</label>
-                        <select id="currency" asp-for="Request.Currency" class="mdb-select custom select-dropdown form-control-plaintext">
-                            <option value="dollar">&dollar; USD</option>
-                            <option value="shekel">&#8362; NIS</option>
+                        <select id="currency" asp-for="Request.Currency" disabled class="mdb-select custom select-dropdown form-control-plaintext mark-readonly">
+                            <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
+                            <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
                         </select>
                     </div>
                 </div>
@@ -478,14 +478,14 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <span class="input-group-text">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom" name="unit-price-dollars" id="unit-price-dollars" />
+                                        <span class="input-group-text request-cost-dollar-icon">&#36;</span>
+                                        <input class="form-control-plaintext border-bottom mark-readonly" name="unit-price-dollars" id="unit-price-dollars" disabled/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <span class="input-group-text">&#x20aa;</span>
-                                        <input class="form-control-plaintext border-bottom" name="unit-price-shekel" id="unit-price-shekel" disabled />
+                                        <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
+                                        <input class="form-control-plaintext border-bottom mark-readonly" name="unit-price-shekel" id="unit-price-shekel" disabled />
                                     </div>
                                 </div>
                             </div>
@@ -535,13 +535,13 @@ Model.UnitTypeList,
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <span class="input-group-text">&#36;</span>
+                                            <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                                             <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
+                                            <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                                             <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
                                         </div>
                                     </div>
@@ -602,13 +602,13 @@ Model.UnitTypeList,
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <span class="input-group-text">&#36;</span>
+                                            <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                                             <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
+                                            <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                                             <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel " disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
@@ -625,7 +625,7 @@ Model.UnitTypeList,
                 <div class="form-group">
                     <label class="control-label">Sum:</label>
                     <div class="input-group">
-                        <span class="input-group-text">&#36;</span>
+                        <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                         <input class="form-control-plaintext border-bottom mark-readonly" name="sum-dollars" min="0" id="sum-dollars" disabled />
                     </div>
                 </div>
@@ -634,7 +634,7 @@ Model.UnitTypeList,
                 <div class="form-group">
                     <label asp-for="Request.Cost" class="control-label"></label>
                     <div class="input-group">
-                        <span class="input-group-text">&#x20aa;</span>
+                        <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
                         <input asp-for="Request.Cost" min="1" class="form-control-plaintext border-bottom " readonly />
                         <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                     </div>
@@ -644,8 +644,8 @@ Model.UnitTypeList,
                 <div class="form-group">
                     <label asp-for="Request.VAT" class="control-label"></label>
                     <div class="input-group">
-                        <span class="input-group-text">&#x20aa;</span>
-                        <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " disabled />
+                        <span class="input-group-text disabled-text">&#x20aa;</span>
+                        <input asp-for="Request.VAT" class="form-control-plaintext border-bottom disabled-text " disabled />
                         <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
                     </div>
                 </div>
@@ -654,8 +654,8 @@ Model.UnitTypeList,
                 <div class="form-group">
                     <label class="control-label"></label>
                     <div class="input-group">
-                        <span class="input-group-text">&#36;</span>
-                        <input  class="form-control-plaintext border-bottom  vatInDollars " disabled />                    
+                        <span class="input-group-text disabled-text">&#36;</span>
+                        <input  class="form-control-plaintext border-bottom  vatInDollars disabled-text " disabled />                    
                     </div>
                 </div>
             </div>
@@ -663,8 +663,8 @@ Model.UnitTypeList,
                 <div class="form-group">
                     <label class="control-label">Total + VAT:</label>
                     <div class="input-group">
-                        <span class="input-group-text">&#36;</span>
-                        <input class="form-control-plaintext border-bottom" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                        <span class="input-group-text disabled-text">&#36;</span>
+                        <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
                     </div>
                 </div>
             </div>
@@ -672,8 +672,8 @@ Model.UnitTypeList,
                 <div class="form-group">
                     <label class="control-label">____</label>
                     <div class="input-group">
-                        <span class="input-group-text">&#x20aa;</span>
-                        <input class="form-control-plaintext border-bottom" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                        <span class="input-group-text disabled-text">&#x20aa;</span>
+                        <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
                     </div>
                 </div>
             </div>
@@ -696,6 +696,23 @@ Model.UnitTypeList,
             <div class=" document-margin">
                 @{
                     var filterClass = "opac87";
+                    if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
+                    {
+                        filterClass = "order-inv-filter";
+                    }
+                }
+                <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
+                    <div class="card document-border">
+                        <div class="document-card text-center">
+                            <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                        </div>
+                    </div>
+                </a>
+                <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+            </div>
+            <div class=" document-margin">
+                @{
+                    filterClass = "opac87";
                     if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
                     {
                         filterClass = "order-inv-filter";
@@ -729,7 +746,7 @@ Model.UnitTypeList,
                 </a>
                 <label class="control-label text-center text document-text-margin" style="width:100%;">Invoice</label>
             </div>
-            <div class=" document-margin">
+            <div class="">
                 @{
                     filterClass = "opac87";
                     if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
@@ -746,23 +763,6 @@ Model.UnitTypeList,
                     </div>
                 </a>
                 <label class="control-label text-center text document-text-margin" style="width:100%;">Shipment</label>
-            </div>
-            <div class="">
-                @{
-                    filterClass = "opac87";
-                    if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
-                    {
-                        filterClass = "order-inv-filter";
-                    }
-                }
-                <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
-                    <div class="card document-border">
-                        <div class="document-card text-center">
-                            <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                        </div>
-                    </div>
-                </a>
-                <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
             </div>
         </div>
         <div class="row document-margin-bottom">
@@ -897,7 +897,6 @@ Model.UnitTypeList,
 <script src="~/js/SubUnit.js"></script>
 <script>
     $(function () {
-        $('input[type = "datetime-local"]').attr("type", "date")
         $("#Request_Cost").trigger('change');
     });
 </script>

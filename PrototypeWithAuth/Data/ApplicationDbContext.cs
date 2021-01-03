@@ -31,6 +31,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<Degree> Degrees { get; set; }
         public DbSet<Citizenship> Citizenships { get; set; }
         public DbSet<MaritalStatus> MaritalStatuses { get; set; }
+        public DbSet<JobSubcategoryType> JobSubcategoryTypes { get; set; }
         public DbSet<JobCategoryType> JobCategoryTypes { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Freelancer> Freelancers { get; set; }
@@ -55,7 +56,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<CategoryType> CategoryTypes { get; set; }
         public DbSet<VendorComment> VendorComments { get; set; }
         public DbSet<VendorContact> VendorContacts { get; set; }
-        public DbSet<Menu> Menus { get; set; }
         public DbSet<SubProject> SubProjects { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<LocationInstance> LocationInstances { get; set; }

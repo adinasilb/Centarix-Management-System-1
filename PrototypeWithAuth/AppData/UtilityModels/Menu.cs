@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Routing;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace PrototypeWithAuth.Models
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
         public string MenuImageURL { get; set; }
+        public RouteValueDictionary RouteValues {get; set;}
     }
 }

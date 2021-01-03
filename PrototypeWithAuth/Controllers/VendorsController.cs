@@ -43,22 +43,14 @@ namespace PrototypeWithAuth.Controllers
         {
             if (categoryType == 1)
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;                
             }
             else
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
-                if (PageType == AppUtility.PageTypeEnum.RequestRequest || PageType.ToString() == AppUtility.PageTypeEnum.OperationsRequest.ToString())
-                {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsRequest.ToString();
-                }
-                else if (PageType == AppUtility.PageTypeEnum.RequestInventory || PageType.ToString() == AppUtility.PageTypeEnum.OperationsInventory.ToString())
-                {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory.ToString();
-                }
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;               
             }
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
             TempData["CategoryType"] = categoryType;
             return View(await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync());
         }
