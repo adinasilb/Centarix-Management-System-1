@@ -7,7 +7,7 @@
 @using X.PagedList.Mvc.Core.Common
 
 <div class="">
-
+    <input type="hidden" asp-for="PageNumber" class="page-number"/>
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <tbody>
             @for (int i = 0; i < Model.PagedList.Count; i++)

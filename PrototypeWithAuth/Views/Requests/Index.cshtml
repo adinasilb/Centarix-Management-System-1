@@ -11,10 +11,6 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
 
-    <input type="hidden" asp-for="PagedList" />
-    <input type="hidden" asp-for="PageType" />
-
-
     bool search = false;
     if (TempData["Search"] != null)
     {
