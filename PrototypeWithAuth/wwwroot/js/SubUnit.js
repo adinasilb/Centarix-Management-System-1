@@ -348,7 +348,7 @@ $(function () {
 	$.fn.CheckCurrency = function () {
 		var currencyType = $("#currency").val();
 		switch (currencyType) {
-			case "dollar":
+			case "USD":
 				$("#Request_Cost").prop("readonly", true);
 				$("#Request_Cost").addClass('disabled-text');
 				$("#sum-dollars").prop("disabled", false);
@@ -377,9 +377,8 @@ $(function () {
 				$("#subsubunit-price-shekel").prop("readonly", true);
 				$(".request-cost-shekel-icon").addClass('disabled-text');
 				break;
-			case "shekel":
+			case "NIS":
 			case undefined: //for the reorder modal
-				alert("shekel or undefined");
 				$("#Request_Cost").prop("readonly", false);
 				$("#Request_Cost").removeClass('disabled-text');
 				$("#sum-dollars").prop("disabled", true);
