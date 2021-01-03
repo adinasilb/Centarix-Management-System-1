@@ -377,7 +377,7 @@
                                     @Html.HiddenFor(model => model.OrderRoles[i].MenuItemsID)
                                     @Html.HiddenFor(model => model.OrderRoles[i].Name)
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="OrderRoles[i].Selected" />
+                                        <input type="checkbox" class="form-check-input filled-in mark-readonly" asp-for="OrderRoles[i].Selected" disabled />
                                         <label class="form-check-label " asp-for="OrderRoles[i].Selected">@Model.OrderRoles[i].Name</label>
                                     </div>
                                     @*<div class="custom-control custom-checkbox">
@@ -577,7 +577,7 @@
                             <label asp-for="LabMonthlyLimit" class="control-label"></label>
                             <div class="input-group">
                                 <span class="input-group-text">&#x20aa;</span>
-                                <input asp-for="LabMonthlyLimit" class="form-control-plaintext border-bottom " />
+                                <input asp-for="LabMonthlyLimit" class="form-control-plaintext border-bottom mark-readonly" disabled />
                             </div>
                             <span asp-validation-for="LabMonthlyLimit" class="text-danger-centarix"></span>
                         </div>
