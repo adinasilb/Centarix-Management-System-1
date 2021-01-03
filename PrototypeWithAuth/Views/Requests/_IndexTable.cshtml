@@ -1,9 +1,10 @@
 ﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
 @using PrototypeWithAuth.AppData
+<input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
+<input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
 @if (Model.PagedList.Count() > 0)
 {
-    <input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
-    <input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
+
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <thead>
             <tr class="text-center">

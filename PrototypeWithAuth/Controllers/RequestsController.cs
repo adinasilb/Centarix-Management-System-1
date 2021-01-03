@@ -323,7 +323,7 @@ namespace PrototypeWithAuth.Controllers
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var receiveIcon = new IconColumnViewModel(" icon-done-24px ", "#00CA72", "load-receive-and-location", "Receive");
             var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
-            var defaultImage = "/images/css/accounting/sample_image.png";
+            var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.RequestRequest:
@@ -633,7 +633,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ItemTableOwner(RequestIndexObject requestIndexObject)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Owner;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             SetViewModelCounts(requestIndexObject, viewModel);
@@ -1509,36 +1509,6 @@ namespace PrototypeWithAuth.Controllers
                     requestItemViewModel.CreditFileStrings.Add(newFileString);
                 }
             }
-
-            //GET PAYMENTS HERE
-            //var payments = _context.Payments
-            //    .Include(p => p.CompanyAccount).ThenInclude(ca => ca.PaymentType)
-            //    .Where(p => p.RequestID == requestItemViewModel.Request.RequestID).ToList();
-            //requestItemViewModel.NewPayments = payments;
-
-            //if (payments.Count > 0)
-            //{
-            //    var amountPerPayment = requestItemViewModel.Request.Cost / payments.Count; //shekel
-            //    var totalPaymentsToDate = 0;
-            //    foreach (var payment in payments)
-            //    {
-            //        if (payment.PaymentDate <= DateTime.Now)
-            //        {
-            //            totalPaymentsToDate++;
-            //        }
-            //        else
-            //        {
-            //            break;
-            //        }
-            //    }
-            //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost - (totalPaymentsToDate * amountPerPayment);
-            //}
-            //else
-            //{
-            //    requestItemViewModel.Debt = requestItemViewModel.Request.Cost;
-            //}
-
-            //setting the lists of companyaccounts by payment type id (so easy filtering on the frontend)
 
             //first get the list of payment types there are
             var paymentTypeIds = _context.CompanyAccounts.Select(ca => ca.PaymentTypeID).Distinct().ToList();

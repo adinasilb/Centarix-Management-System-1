@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public AppUtility.SidebarEnum AccountingEnum { get; set; }
         public ILookup<Vendor, Request> Requests { get; set; }
+        public RequestIndexPartialViewModel RequestIndexPartialViewModel { get; set; }
 
         public int PayNowListNum { get; set; }
     }

@@ -100,9 +100,9 @@
                     <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-6 ">
-                    <label asp-for="NewEmployee.JobTitle" class="control-label only-employee"></label>
+                    @*<label asp-for="NewEmployee.JobTitle" class="control-label only-employee"></label>
                     <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom only-employee mark-readonly" disabled />
-                    <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix"></span>
+                    <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix"></span>*@
                 </div>
             </div>
             <div class="row">
@@ -120,7 +120,7 @@
                 <div class="col-4  p-0">
                     <label class="control-label only-employee">Job Category</label>
                     @Html.DropDownListFor(
-                        vm => vm.NewEmployee.JobCategoryTypeID,
+                        vm => vm.NewEmployee.JobSubcategoryType.JobCategoryTypeID,
                         new SelectList(
                         Model.JobCategoryTypes,
                         dataValueField: "JobCategoryTypeID",
@@ -128,7 +128,7 @@
                         optionLabel: "Select A Category",
                         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly", @searchable = "default value", @disabled = "disabled" }
                         )
-                    <span asp-validation-for="NewEmployee.JobCategoryTypeID" class="text-danger-centarix"></span>
+                    <span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-4">
                     <label asp-for="Email" class="control-label "></label>

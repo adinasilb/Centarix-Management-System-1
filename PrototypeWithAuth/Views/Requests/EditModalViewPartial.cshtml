@@ -438,8 +438,8 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <div class="form-group">
                         <label asp-for="Request.Currency" class="control-label">Currency</label>
                         <select id="currency" asp-for="Request.Currency" class="mdb-select custom select-dropdown form-control-plaintext">
-                            <option value="dollar">&dollar; USD</option>
-                            <option value="shekel">&#8362; NIS</option>
+                            <option value="@AppUtility.CurrencyEnum.USD">&dollar; USD</option>
+                            <option value="@AppUtility.CurrencyEnum.NIS">&#8362; NIS</option>
                         </select>
                     </div>
                 </div>

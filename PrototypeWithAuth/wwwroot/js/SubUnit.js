@@ -11,7 +11,7 @@ $(function () {
 	$.fn.CalculateSumPlusVat = function () {
 		var $exchangeRate = $("#Request_ExchangeRate").val();
 		//console.log("sumShek: " + sumShek);
-	
+
 		//console.log("VatPercentage: " + VatPercentage);
 		//console.log("vatCalc: " + vatCalc);
 		//$("#Request_VAT").val(vatCalc)
@@ -59,6 +59,15 @@ $(function () {
 		$subUnitSumDollars = $subUnitSumShekel / $exchangeRate;
 		$iptBox = $("input[name='subunit-price-dollars']");
 		$.fn.ShowResults($iptBox, $subUnitSumDollars);
+
+		//for the reorder modal
+		$subunit = $("#Request_SubUnit");
+		if ($subunit.val() != null && $subunit.val() > 0) {
+			$.fn.EnableSubUnits();
+		}
+		else {
+			$.fn.DisableSubUnits();
+		}
 	};
 
 	$.fn.CalculateSubSubUnitAmounts = function () {
@@ -69,13 +78,21 @@ $(function () {
 		$subSubUnitSumDollars = $subSubUnitSumShekel / $exchangeRate;
 		$iptBox = $("input[name='subsubunit-price-dollars']");
 		$.fn.ShowResults($iptBox, $subSubUnitSumDollars);
+		//for the reorder modal
+		$subsubunit = $("#Request_SubSubUnit");
+		if ($subsubunit.val() != null && $subsubunit.val() > 0) {
+			$.fn.EnableSubSubUnits();
+		}
+		else {
+			$.fn.DisableSubSubUnits();
+		}
 	};
 	$.fn.CalculatePriceShekels = function () {
 		var $exchangeRate = $("#Request_ExchangeRate").val();
 		var $unitPrice = $("#unit-price-shekel").val();
 		var $priceShekels = $unitPrice * $("#Request_Unit").val();
 		$iptBox = $("input[name='Request.Cost']");
-		$.fn.ShowResults($iptBox, $priceShekels);		
+		$.fn.ShowResults($iptBox, $priceShekels);
 		var $priceDollars = $priceShekels / $exchangeRate;
 		var $iptBox = $("input[name='sum-dollars']");
 		$.fn.ShowResults($iptBox, $priceDollars);
@@ -153,7 +170,6 @@ $(function () {
 
 				break;
 			case "Weight/Volume":
-				//alert("inside optgroup weight/volume TESTING");
 				//$(".subunit-subunit").hide();
 				//$("#select-options-Request_SubUnitTypeID option").prop('hidden', true);
 				//$("#Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
@@ -362,11 +378,13 @@ $(function () {
 				$(".request-cost-shekel-icon").addClass('disabled-text');
 				break;
 			case "shekel":
+			case undefined: //for the reorder modal
+				alert("shekel or undefined");
 				$("#Request_Cost").prop("readonly", false);
 				$("#Request_Cost").removeClass('disabled-text');
 				$("#sum-dollars").prop("disabled", true);
 				$("#sum-dollars").addClass('disabled-text');
-				
+
 
 				$("#unit-price-dollars").prop("disabled", true);
 				$("#unit-price-dollars").addClass('disabled-text');
@@ -389,7 +407,7 @@ $(function () {
 				$("#subsubunit-price-shekel").removeClass('disabled-text');
 				$("#subsubunit-price-shekel").prop("readonly", false);
 				$(".request-cost-shekel-icon").removeClass('disabled-text');
-				
+
 				break;
 		}
 	};
@@ -398,34 +416,21 @@ $(function () {
 
 
 	$("#Request_Unit").change(function () {
-		//alert("request unit changed");
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
 	});
 
-	//$(".modal").on("click", "#Request_UnitTypeID", function () {
-	//	alert("modal Request_UnitTypeID was clicked");
-	//	$.fn.CheckUnitsFilled();
-
-
-	//});
-
 	$(".modal").on("change", "#Request_UnitTypeID", function () {
-		//	alert("modal Request_UnitTypeID was changed");
 		//$.fn.CheckUnitsFilled();
 		$.fn.ChangeSubUnitDropdown();
 		$.fn.ChangeSubSubUnitDropdown();
 	});
 	$(".modal").on("change", "#Request_SubUnitTypeID", function () {
-		//	alert("modal Request_SubUnitTypeID was changed");
 		$.fn.ChangeSubSubUnitDropdown();
 	});
 
 	$("#unit-type-select").on("change", function () {
-		//console.log("unit type id changed");
-		//alert("select options change was selected");
-		//$.fn.CheckUnitsFilled();
 		$.fn.ChangeSubUnitDropdown();
 		$.fn.ChangeSubSubUnitDropdown();
 	});
@@ -472,11 +477,9 @@ $(function () {
 	});
 
 	$("#currency").change(function (e) {
-		alert("Currency changed!");
 		$.fn.CheckCurrency();
 	});
-	$(".modal").on("change","#currency", function (e) {
-		alert("Currency changed!");
+	$(".modal").on("change", "#currency", function (e) {
 		$.fn.CheckCurrency();
 	});
 	$("#Request_ExchangeRate").change(function (e) {
@@ -491,7 +494,7 @@ $(function () {
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
-
+		$.fn.CheckCurrency(); //for the reorder modal
 	});
 
 	$("#sum-dollars").change(function (e) {

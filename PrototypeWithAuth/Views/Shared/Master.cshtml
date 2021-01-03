@@ -586,6 +586,7 @@
                         case "details":
                             $.fn.OnOpenModalView();
                             AddTempDataMemory();
+                            $("#Request_Cost").trigger('change');
                             break;
                         case "edit":
                             $.fn.OnOpenModalView();
@@ -593,8 +594,10 @@
                             break;
                         case "reorder":
                             $.fn.OnOpenModalView();
+                            alert("in reorder");
                             AddTempDataMemory();
                             $("#Request_Cost").trigger('change');
+                            //$.fn.CheckCurrency();
                             break;
                         case "create":
                             $.fn.OnOpenModalView();

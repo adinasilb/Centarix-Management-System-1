@@ -1095,57 +1095,276 @@ namespace PrototypeWithAuth.Data
                       JobCategoryTypeID = 1,
                       Description = "Executive"
                   },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 2,
-                     Description = "Senior Manager"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 3,
-                     Description = "Manager"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 4,
-                     Description = "Senior Bioinformatician"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 5,
-                     Description = "Bioinformatician"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 6,
-                     Description = "Senior Scientist"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 7,
-                     Description = "Lab Technician"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 8,
-                     Description = "Research Associate"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 9,
-                     Description = "Software Developer"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 10,
-                     Description = "Administration"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 11,
-                     Description = "General"
-                 }
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 2,
+                      Description = "Rejuvenation"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 3,
+                      Description = "Biomarker"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 4,
+                      Description = "Delivery Systems"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 5,
+                      Description = "Clinical Trials"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 6,
+                      Description = "Business Development"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 7,
+                      Description = "Software Development"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 8,
+                      Description = "General"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 9,
+                      Description = "Lab"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 10,
+                      Description = "Bioinformatics"
+                  }
               );
+            modelBuilder.Entity<JobSubcategoryType>().HasData(
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 201,
+                    JobCategoryTypeID = 2,
+                    Description = "Senior Scientist"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 202,
+                    JobCategoryTypeID = 2,
+                    Description = "Research Associate"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 203,
+                    JobCategoryTypeID = 2,
+                    Description = "Lab Technician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 204,
+                    JobCategoryTypeID = 2,
+                    Description = "Team Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 205,
+                    JobCategoryTypeID = 2,
+                    Description = "Production Worker"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 206,
+                    JobCategoryTypeID = 2,
+                    Description = "Operation Executive"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 207,
+                    JobCategoryTypeID = 2,
+                    Description = "Business Development"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 208,
+                    JobCategoryTypeID = 2,
+                    Description = "Sales"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 209,
+                    JobCategoryTypeID = 2,
+                    Description = "Lab Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 210,
+                    JobCategoryTypeID = 2,
+                    Description = "Bioinformatician"
+                }, 
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 101,
+                    JobCategoryTypeID = 1,
+                    Description = "CEO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 102,
+                    JobCategoryTypeID = 1,
+                    Description = "CTO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 103,
+                    JobCategoryTypeID = 1,
+                    Description = "COO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 104,
+                    JobCategoryTypeID = 1,
+                    Description = "President"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 105,
+                    JobCategoryTypeID = 1,
+                    Description = "Director"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 106,
+                    JobCategoryTypeID = 1,
+                    Description = "CSO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 107,
+                    JobCategoryTypeID = 1,
+                    Description = "CMO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 108,
+                    JobCategoryTypeID = 1,
+                    Description = "CFO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 109,
+                    JobCategoryTypeID = 1,
+                    Description = "CBO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 601,
+                    JobCategoryTypeID = 6,
+                    Description = "Sales"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 701,
+                    JobCategoryTypeID = 7,
+                    Description = "Elixir"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 702,
+                    JobCategoryTypeID = 7,
+                    Description = "Automation Developer"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 703,
+                    JobCategoryTypeID = 7,
+                    Description = "Other"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 801,
+                    JobCategoryTypeID = 8,
+                    Description = "Cooking"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 802,
+                    JobCategoryTypeID = 8,
+                    Description = "Cleaning"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 803,
+                    JobCategoryTypeID = 8,
+                    Description = "IT"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 804,
+                    JobCategoryTypeID = 8,
+                    Description = "Administration"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 805,
+                    JobCategoryTypeID = 8,
+                    Description = "Operations Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 806,
+                    JobCategoryTypeID = 8,
+                    Description = "Branch Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 901,
+                    JobCategoryTypeID = 9,
+                    Description = "Lab Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 902,
+                    JobCategoryTypeID = 9,
+                    Description = "Automations Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 903,
+                    JobCategoryTypeID = 9,
+                    Description = "Automations Implementer"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 1001,
+                    JobCategoryTypeID = 10,
+                    Description = "Senior Bioinformatician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 1002,
+                    JobCategoryTypeID = 10,
+                    Description = "Bioinformatician Executive"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 1003,
+                    JobCategoryTypeID = 10,
+                    Description = "Bioinformatician Team Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 1004,
+                    JobCategoryTypeID = 10,
+                    Description = "Bioinformatics Technician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 1005,
+                    JobCategoryTypeID = 10,
+                    Description = "Bioinformatics Researcher"
+                }
+            );
             modelBuilder.Entity<Degree>().HasData(
                 new Degree
                 {
@@ -1228,7 +1447,7 @@ namespace PrototypeWithAuth.Data
                  Icon = "icon-inhouse-maintainance-24px"
              }
          );
-           
+
             modelBuilder.Entity<CompanyDayOffType>().HasData(
              new CompanyDayOffType
              {
