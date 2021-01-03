@@ -167,8 +167,8 @@
                                                 <div class="form-group">
                                                     <label class="control-label">Currency</label>
                                                     <select id="currency" class="mdb-select custom select-dropdown form-control-plaintext">
-                                                        <option value="dollar">&dollar; USD</option>
-                                                        <option value="shekel">&#8362; NIS</option>
+                                                        <option value=@AppUtility.CurrencyEnum.USD>&dollar; USD</option>
+                                                        <option value=@AppUtility.CurrencyEnum.NIS>&#8362; NIS</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -190,7 +190,7 @@
                                             <label asp-for="Request.Cost" class="control-label">Total:</label>
                                       
                                             <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
+                                                <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                                                 <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
                                             </div>
                                         </div>
@@ -199,8 +199,8 @@
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1" readonly />
+                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
+                                                <input id="Request_Cost" asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1" readonly />
                                                 <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
@@ -209,8 +209,8 @@
                                         <div class="form-group">
                                             <label asp-for="Request.VAT" class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom " />
+                                                <span class="input-group-text disabled-text">&#x20aa;</span>
+                                                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom disabled-text" disabled />
                                                 <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
                                             </div>
                                         </div>
@@ -219,8 +219,8 @@
                                         <div class="form-group">
                                             <label class="control-label">Total + VAT:</label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                                                <span class="input-group-text disabled-text">&#36;</span>
+                                                <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -228,8 +228,8 @@
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                                <span class="input-group-text disabled-text">&#x20aa;</span>
+                                                <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
                                             </div>
                                         </div>
                                     </div>
