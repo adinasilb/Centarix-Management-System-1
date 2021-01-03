@@ -231,7 +231,9 @@ $(function () {
 				$(".vendorBusinessId").val(newBusinessID);
 				$(".vendorBusinessId").text(newBusinessID);
 				$("#vendor-primary-email").val(data.ordersEmail);
-				$.fn.UpdatePrimaryOrderEmail();
+				if ($.isFunction($.fn.UpdatePrimaryOrderEmail)) {
+					$.fn.UpdatePrimaryOrderEmail();
+				}
 			})
 		}
 		//console.log("newBusinessID: " + newBusinessID);
@@ -242,16 +244,6 @@ $(function () {
 
 
 
-	$.fn.UpdatePrimaryOrderEmail = function () {
-		if ($(".supplier-email").length > 0) {
-			$(".supplier-email").html($("#vendor-primary-email").val());
-			$(".isSupplier").val($("#vendor-primary-email").val());
-		}
-		else {
-			$('.all-mail').prepend('<span class="email-ids supplier-email">' + $("#vendor-primary-email").val() + '</span>');
-			$(".isSupplier").val($("#vendor-primary-email").val());
-		}
-	};
 
 	$.fn.CheckVendorAndCatalogNumbers = function () {
 		//var vendorID = $("#vendorList").val();
@@ -2238,7 +2230,7 @@ $(function () {
 		$('#addSupplierComment').popover('toggle');
 
 	});
-	
+
 	$("#home-btn").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');
 		$("#home-btn").popover({
@@ -2279,7 +2271,7 @@ $(function () {
 		$(this).popover('toggle');
 
 	});
-	
+
 
 	$('.isRepeat').off("click").on("click", function () {
 		//console.log('employee status')

@@ -16,14 +16,16 @@
 $.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
 	var vendorID = $("#vendorList").val();
 	var catalogNumber = $("#Request_CatalogNumber").val();
-	alert("VendorID: " + vendorID + " && Catalog Num: " + catalogNumber);
+	var productID = null;
+	if ($(".turn-edit-on-off").length > 0) {
+		productID = $(".turn-edit-on-off").val();
+	}
 	$.ajax({
 		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
 		type: 'POST',
-		data: { "VendorID": vendorID, "CatalogNumber", catalogNumber },
+		data: { "VendorID": vendorID, "CatalogNumber": catalogNumber, "ProductID": productID },
 		dataType: 'text',
 		success: function (result) {
-			alert("result: " + result);
 			return result;
 		},
 		error: function (jqXHR, satus, error) {

@@ -3503,10 +3503,11 @@ namespace PrototypeWithAuth.Controllers
             return Json(new { Employees = workers });
         }
 
-        public bool CheckUniqueVendorAndCatalogNumber (int VendorID, string CatalogNumber)
+        public bool CheckUniqueVendorAndCatalogNumber (int VendorID, string CatalogNumber, int? ProductID = null)
         {
             var boolCheck = true;
-            if (_context.Requests.Where(r => r.CatalogNumber == CatalogNumber).Where(r => r.Product.VendorID == VendorID).Any())
+            if ((ProductID == null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber).Where(r => r.Product.VendorID == VendorID).Any())
+                || ProductID != null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber).Where(r => r.Product.VendorID == VendorID).Count() > 1)
             {
                 boolCheck = false;
             }
