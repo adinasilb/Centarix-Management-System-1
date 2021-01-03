@@ -125,22 +125,28 @@ $(function () {
 
 	});
 
-	$("body").off("change", ".job-category").on("change", ".job-category", function () {
+	$("body").off("change", "job-category").on("change", ".job-category", function () {
 		console.log("in on change before fx");
 		//$.fn.changeProject($(this).val());
 		console.log("job-category was changed");
 		var categoryID = $(this).val();
 		var url = "/Admin/GetJobSubcategoryTypeList";
 
+		var jobSubcategory = $("#job-subcategory");
+
 		$.getJSON(url, { JobCategoryTypeID: categoryID }, function (data) {
 			var item1 = "<option value=''>Select Sub Category Type</option>";
-			$(".job-subcategory").empty();
-			$(".job-subcategory").append(item1);
+			jobSubcategory.empty();
+			jobSubcategory.append(item1);
 			$.each(data, function (i, subCategory) {
-				item = '<option value="' + subCategory.subCategoryTypeID + '">' + subCategory.description + '</option>'
-				$(".job-subcategory").append(item);
+				item = '<option value="' + subCategory.jobSubcategoryTypeID + '">' + subCategory.description + '</option>'
+				jobSubcategory.append(item);
 			});
-			$(".job-subcategory").materialSelect();
+			//jobSubcategory.destroyMaterialSelect();
+			//jobSubcategory.prop("disabled", false);
+			//jobSubcategory.removeAttr("disabled");
+			//$('[data-activates="select-options-job-subcategory"]').prop('disabled', false);
+			jobSubcategory.materialSelect();
 			return false;
 		});
 		return false;

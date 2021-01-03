@@ -100,9 +100,9 @@
                     <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-6 ">
-                    @*<label asp-for="NewEmployee.JobTitle" class="control-label only-employee"></label>
-                    <input asp-for="NewEmployee.JobTitle" class="form-control-plaintext border-bottom only-employee mark-readonly" disabled />
-                    <span asp-validation-for="NewEmployee.JobTitle" class="text-danger-centarix"></span>*@
+                    <label asp-for="Email" class="control-label "></label>
+                    <input asp-for="Email" class="form-control-plaintext border-bottom mark-readonly" autocomplete="nope" type="text" disabled />
+                    <span asp-validation-for="Email" class="text-danger-centarix"></span>
                 </div>
             </div>
             <div class="row">
@@ -120,20 +120,25 @@
                 <div class="col-4  p-0">
                     <label class="control-label only-employee">Job Category</label>
                     @Html.DropDownListFor(
-                        vm => vm.NewEmployee.JobSubcategoryType.JobCategoryTypeID,
-                        new SelectList(
-                        Model.JobCategoryTypes,
-                        dataValueField: "JobCategoryTypeID",
-                        dataTextField: "Description"),
-                        optionLabel: "Select A Category",
-                        htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly", @searchable = "default value", @disabled = "disabled" }
-                        )
+                   m => m.NewEmployee.JobSubcategoryType.JobCategoryTypeID,
+                   new SelectList(Model.JobCategoryTypes, "JobCategoryTypeID", "Description"),
+                   new { @class= "mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly job-category" , @searchable="default value", @disabled="disabled"})
+                    @*<select class="mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly job-category" asp-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" searchable="default value" disabled>
+                        @foreach (var category in Model.JobCategoryTypes)
+                        {
+                            <option value="@category.JobCategoryTypeID">@category.Description</option>
+                        }
+                    </select>*@
                     <span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-4">
-                    <label asp-for="Email" class="control-label "></label>
-                    <input asp-for="Email" class="form-control-plaintext border-bottom mark-readonly" autocomplete="nope" type="text" disabled />
-                    <span asp-validation-for="Email" class="text-danger-centarix"></span>
+                    <label class="control-label only-employee">Job Subcategory</label>
+                    @Html.DropDownListFor(
+                    m => m.NewEmployee.JobSubcategoryTypeID,
+                    new SelectList(Model.JobSubcategoryTypes, "JobSubcategoryTypeID", "Description"),
+                    new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly job-subcategory", @searchable = "default value", @disabled = "disabled" })
+
+                    <span asp-validation-for="NewEmployee.JobSubcategoryTypeID" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-4">
                     <label asp-for="PhoneNumber" class="control-label"></label>

@@ -248,6 +248,7 @@ namespace PrototypeWithAuth.Controllers
                 OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit,
                 DateCreated = DateTime.Now,
                 EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
+                JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID,
                 IsUser = true,
                 NeedsToResetPassword = true,
                 TwoFactorEnabled = true
@@ -1057,9 +1058,11 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
 
-                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.IsSuspended).Include(s => s.SalariedEmployee).FirstOrDefault();
+                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.IsSuspended)
+                    .Include(s => s.SalariedEmployee).Include(e => e.JobSubcategoryType).FirstOrDefault();
                 registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
                 registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
+                registerUserViewModel.JobSubcategoryTypes = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == registerUserViewModel.NewEmployee.JobSubcategoryType.JobCategoryTypeID).ToList();
                 registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
                 registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
                 registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();

@@ -182,10 +182,11 @@
 			$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
 		}
 		if ($(this).hasClass('users')) {
-			$.fn.EnableMaterialSelect('#NewEmployee_JobCategoryTypeID', 'select-options-NewEmployee_JobCategoryTypeID');
+			$.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
 			$.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
 			$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
 			$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
+			$.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryTypeID', 'select-options-NewEmployee_JobSubcategoryTypeID');
 		}
 		$('.turn-edit-on-off').prop('checked', true);
 		$('.open-document-modal').attr("data-val", true);
