@@ -1336,5 +1336,11 @@ namespace PrototypeWithAuth.Controllers
             return lowerCaseIsValid && upperCaseIsValid && numericIsValid && symbolsAreValid && spacesAreValid;
         }
 
+        public JsonResult GetJobSubcategoryTypeList(int JobCategoryTypeID)
+        {
+            var subcategories = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == JobCategoryTypeID).ToList();
+            return Json(subcategories);
+        }
+
     }
 }

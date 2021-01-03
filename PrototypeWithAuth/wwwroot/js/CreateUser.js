@@ -124,4 +124,25 @@ $(function () {
 
 
 	});
+
+	$("body").off("change", ".job-category").on("change", ".job-category", function () {
+		console.log("in on change before fx");
+		//$.fn.changeProject($(this).val());
+		console.log("job-category was changed");
+		var categoryID = $(this).val();
+		var url = "/Admin/GetJobSubcategoryTypeList";
+
+		$.getJSON(url, { JobCategoryTypeID: categoryID }, function (data) {
+			var item1 = "<option value=''>Select Sub Category Type</option>";
+			$(".job-subcategory").empty();
+			$(".job-subcategory").append(item1);
+			$.each(data, function (i, subCategory) {
+				item = '<option value="' + subCategory.subCategoryTypeID + '">' + subCategory.description + '</option>'
+				$(".job-subcategory").append(item);
+			});
+			$(".job-subcategory").materialSelect();
+			return false;
+		});
+		return false;
+	});
 });
