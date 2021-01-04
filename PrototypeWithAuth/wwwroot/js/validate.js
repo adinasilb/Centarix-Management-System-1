@@ -7,19 +7,35 @@ $(function () {
 			return false;
 		}
 	});
-	$.each($("#myForm").validate().settings.rules, function (name, value) {
-		
-		if (value["required"] ) {
-			$('input[name ="' + name + '"]').prev('label').first().append('*');
-			
-		}	
-		if (value["selectRequired"]) {
-			var id = $('[name = "' + name + '"]').attr('id')
-			$('input[data-activates ="select-options-' + id + '"] ').parent('div').prev().first().append('*');
-		}
-	}
-	);
 
+	$.fn.AppendAsteriskToRequired = function() {
+		//$('input')prev('label').first().replaceWith('*', "");
+		//$('input').parent('div').prev().first().replaceWith('*', "");
+		$.each($("#myForm").validate().settings.rules, function (name, value) {
+
+			if (value["required"]) {
+				var str = $('input[name ="' + name + '"]').prev('label').first().text();
+				var char = str.slice(-1);
+				if (char == "*") {
+					$('input[name ="' + name + '"]').prev('label').first().html(str.slice(0,-1));
+                }
+				$('input[name ="' + name + '"]').prev('label').first().append('*');
+
+			}
+			if (value["selectRequired"]) {
+				var id = $('[name = "' + name + '"]').attr('id')
+				var str = $('input[data-activates ="select-options-' + id + '"]').parent('div').prev('label').first().text();
+				var char = str.slice(-1);
+				if (char == "*") {
+					$('input[data-activates ="select-options-' + id + '"]').parent('div').prev('label').first().html(str.slice(0, -1));
+				}
+				$('input[data-activates ="select-options-' + id + '"]').parent('div').prev('label').first().append('*');
+			}
+		}
+		);
+    }
+	
+	$.fn.AppendAsteriskToRequired();
 
 	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
 	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {

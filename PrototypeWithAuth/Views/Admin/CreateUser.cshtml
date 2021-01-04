@@ -105,26 +105,26 @@
                                         <input asp-for="CentarixID" class="form-control-plaintext border-bottom" disabled />
                                         <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-6 ">
+                                    <div class="col-6 only-employee">
                                         <label asp-for="NewEmployee.IDNumber" class="control-label only-employee"></label>
                                         <input asp-for="NewEmployee.IDNumber" class="form-control-plaintext border-bottom only-employee" value="" />
                                         <span asp-validation-for="NewEmployee.IDNumber" class="text-danger-centarix"></span>
                                     </div>
 
                                 </div>
-                                <div class="row">
-                                    <div class="col-6  p-0">
+                                <div class="row only-employee">
+                                    <div class="col-6  p-0 only-employee">
                                         <label asp-for="NewEmployee.DOB" class="control-label only-employee"></label>
                                         <input asp-for="NewEmployee.DOB" class="form-control-plaintext border-bottom only-employee" />
                                         <span asp-validation-for="NewEmployee.DOB" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-6 ">
+                                    <div class="col-6 only-employee">
                                         <label asp-for="NewEmployee.Age" class="control-label "></label>
                                         <input id="Age" name="Age" class="form-control-plaintext border-bottom" disabled />
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6  p-0">
+                                <div class="row only-employee">
+                                    <div class="col-6  p-0 only-employee">
                                         <label class="control-label only-employee">Job Category</label>
                                         @Html.DropDownListFor(
                                             vm => vm.NewEmployee.JobSubcategoryType.JobCategoryTypeID,
@@ -137,14 +137,14 @@
                                             )
                                         <span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-6  p-0">
+                                    <div class="col-6  p-0 only-employee">
                                         <label class="control-label only-employee">Job Subcategory</label>
                                         <select asp-for="NewEmployee.JobSubcategoryTypeID" class="mdb-select custom select-dropdown form-control-plaintext only-employee job-subcategory" id="job-subcategory" searchable="default value">
                                         </select>
                                         <span asp-validation-for="NewEmployee.JobSubcategoryTypeID" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row ">
                                     <div class="col-6 p-0">
                                         <label asp-for="Email" class="control-label"></label>
                                         <input asp-for="Email" class="form-control-plaintext border-bottom" autocomplete="nope" type="text" />
@@ -156,13 +156,13 @@
                                         <span asp-validation-for="PhoneNumber" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-4  p-0">
+                                <div class="row only-employee">
+                                    <div class="col-4  p-0 only-employee">
                                         <label asp-for="PhoneNumber2" class="control-label"></label>
                                         <input asp-for="PhoneNumber2" class="form-control-plaintext border-bottom" />
                                         <span asp-validation-for="PhoneNumber2" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-4 only-employee">
                                         <label class="control-label only-employee">Degree</label>
                                         @Html.DropDownListFor(
                                             vm => vm.NewEmployee.DegreeID,
@@ -175,14 +175,14 @@
                                             )
                                         <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-4 only-employee">
                                         <label asp-for="NewEmployee.StartedWorking" class="control-label only-employee"></label>
                                         <input asp-for="NewEmployee.StartedWorking" class="form-control-plaintext border-bottom only-employee" />
                                         <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-4  p-0">
+                                <div class="row only-employee">
+                                    <div class="col-4  p-0 only-employee">
                                         <label class="control-label only-employee">Relationship Status</label>
                                         @Html.DropDownListFor(
                                             vm => vm.NewEmployee.MaritalStatusID,
@@ -195,7 +195,7 @@
                                             )
                                         <span asp-validation-for="NewEmployee.MaritalStatusID" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-4 only-employee">
                                         <label class="control-label only-employee">Citizenship</label>
                                         @Html.DropDownListFor(
                                             vm => vm.NewEmployee.CitizenshipID,
@@ -208,7 +208,7 @@
                                             )
                                         <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-4 only-employee">
                                         <label asp-for="NewEmployee.TaxCredits" class="control-label only-employee"></label>
                                         <input asp-for="NewEmployee.TaxCredits" class="form-control-plaintext border-bottom only-employee" />
                                         <span asp-validation-for="NewEmployee.TaxCredits" class="text-danger-centarix"></span>
@@ -643,8 +643,8 @@
 
 
     <script src="~/js/Validation/UsersFormValidation.js"></script>
-    <script src="~/js/CreateUser.js"></script>
     <script src="~/js/validate.js"></script>
+    <script src="~/js/CreateUser.js"></script>
     <script>
         $(".upload-image").off("click").on("click", function (e) {
             console.log("in upload image 2");

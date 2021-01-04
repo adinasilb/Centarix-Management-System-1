@@ -95,7 +95,15 @@ $(function () {
 		$("#validation-EmployeeStatus").addClass("hidden");
 		if (val == "4") {
 			$('.only-employee').removeClass("error");
+			$('.only-employee').addClass("hidden");
+			$('.only-employee').addClass("m-0");
 		}
+		else {
+			$('.only-employee').removeClass("hidden");
+			$('.only-employee').removeClass("m-0");
+        }
+
+		$.fn.AppendAsteriskToRequired();
 
 		var centarixIDInput = $('#CentarixID');
 		if (val == $("#OriginalStatusID").val()) {
