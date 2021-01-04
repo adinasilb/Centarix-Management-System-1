@@ -64,6 +64,19 @@ $(".approve-order").off('click').on("click", function (e) {
     ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/" + $(this).attr("value"), "._IndexTableWithCounts");
     return false;
 });
+
+$(".page-item a").off('click').on("click", function (e) {
+    console.log("next page");
+    e.preventDefault();
+    $("#loading").show();
+    var pageNumber = parseInt($(this).html());
+    $('.page-number').val(pageNumber);
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/" + $(this).attr("value"), "._IndexTableData");
+    return false;
+});
+
+
+
 function ajaxPartialIndexTable(status, url, viewClass) {
     console.log("in ajax partial index call");
     var selectedPriceSort = [];
@@ -75,7 +88,7 @@ function ajaxPartialIndexTable(status, url, viewClass) {
         url: url,
         data: {
             id: $(this).attr("value"),
-            PageNumber: $('#PageNumber').val(),
+            PageNumber: $('.page-number').val(),
             RequestStatusID: status,
             PageType: $('#masterPageType').val(),
             SectionType: $('#masterSectionType').val(),
