@@ -23,8 +23,12 @@ $(function () {
 		 });
 		console.log($("#myForm").validate().settings.rules);
 		$.each($("#myForm").validate().settings.rules, function (name, value) {
-			console.log(value["required"]);
-			if (value["required"] == true) {
+			var rule = value["required"];
+			if($.isFunction(rule))
+			{
+				rule=rule();
+			}
+			if (rule) {
 				var str = $('input[name ="' + name + '"]').prev('label').first().text();
 				var char = str.slice(-1);
 				if (char == "*") {
@@ -33,7 +37,12 @@ $(function () {
 				$('input[name ="' + name + '"]').prev('label').first().append('*');
 
 			}
-			if (value["selectRequired"] == true) {
+			var rule2 = value["selectRequired"];
+			if($.isFunction(rule2))
+			{
+				rule2=rule2();
+			}
+			if (rule2 == true) {
 				var id = $('[name = "' + name + '"]').attr('id')
 				var str = $('input[data-activates ="select-options-' + id + '"]').parent('div').prev('label').first().text();
 				var char = str.slice(-1);

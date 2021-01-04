@@ -464,7 +464,7 @@ namespace PrototypeWithAuth.Controllers
                                      Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
                                  }
                             }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 2);
             return onePageOfProducts;
         }
 
