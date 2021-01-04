@@ -1061,7 +1061,7 @@ namespace PrototypeWithAuth.Controllers
                   .Include(s => s.SalariedEmployee).Include(e => e.JobSubcategoryType).FirstOrDefault();
                     registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
                     registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
-                    if (userSelected.EmployeeStatusID != 4)
+                    if (registerUserViewModel.NewEmployee.JobSubcategoryTypeID != null)
                     {
                         registerUserViewModel.JobSubcategoryTypes = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == registerUserViewModel.NewEmployee.JobSubcategoryType.JobCategoryTypeID).ToList();
                     }
