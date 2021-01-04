@@ -137,7 +137,12 @@
                     m => m.NewEmployee.JobSubcategoryTypeID,
                     new SelectList(Model.JobSubcategoryTypes, "JobSubcategoryTypeID", "Description"),
                     new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly job-subcategory", @searchable = "default value", @disabled = "disabled" })
-
+                    @*<select class="mdb-select custom select-dropdown form-control-plaintext only-employee mark-readonly job-category" asp-for="NewEmployee.JobSubcategoryTypeID" searchable="default value" disabled>
+                        @foreach (var category in Model.JobSubcategoryTypes)
+                        {
+                            <option value="@category.JobSubcategoryTypeID">@category.Description</option>
+                        }
+                    </select>*@
                     <span asp-validation-for="NewEmployee.JobSubcategoryTypeID" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-4">

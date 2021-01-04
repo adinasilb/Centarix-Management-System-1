@@ -1057,26 +1057,33 @@ namespace PrototypeWithAuth.Controllers
                         registerUserViewModel.UserImage = file.FullName;
                     }
                 }
-
                 registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.IsSuspended)
-                    .Include(s => s.SalariedEmployee).Include(e => e.JobSubcategoryType).FirstOrDefault();
-                registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
-                registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
-                registerUserViewModel.JobSubcategoryTypes = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == registerUserViewModel.NewEmployee.JobSubcategoryType.JobCategoryTypeID).ToList();
-                registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
-                registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
-                registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
-                if (registerUserViewModel.NewEmployee == null)
-                {
-                    registerUserViewModel.NewEmployee = new Employee();
-                    registerUserViewModel.NewEmployee.EmployeeStatusID = 4;
-                }
+                  .Include(s => s.SalariedEmployee).Include(e => e.JobSubcategoryType).FirstOrDefault();
+                    registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
+                    registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
+                    if (userSelected.EmployeeStatusID != 4)
+                    {
+                        registerUserViewModel.JobSubcategoryTypes = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == registerUserViewModel.NewEmployee.JobSubcategoryType.JobCategoryTypeID).ToList();
+                    }
+                    else
+                    {
+                        registerUserViewModel.JobSubcategoryTypes = new List<JobSubcategoryType>();
+                    }
+                    registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
+                    registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
+                    registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
+                    if (registerUserViewModel.NewEmployee == null)
+                    {
+                        registerUserViewModel.NewEmployee = new Employee();
+                        registerUserViewModel.NewEmployee.EmployeeStatusID = 4;
+                    }
 
 
-                //round job scope
-                string WorkScope = registerUserViewModel.NewEmployee?.SalariedEmployee?.WorkScope.ToString("0.00") ?? "0";
-                registerUserViewModel.NewEmployeeWorkScope = Decimal.Parse(WorkScope);
+                    //round job scope
+                    string WorkScope = registerUserViewModel.NewEmployee?.SalariedEmployee?.WorkScope.ToString("0.00") ?? "0";
+                    registerUserViewModel.NewEmployeeWorkScope = Decimal.Parse(WorkScope);
 
+       
 
 
                 //var userToShow = _context.Users.Where(u => u.Id == id).FirstOrDefault();
@@ -1165,13 +1172,13 @@ namespace PrototypeWithAuth.Controllers
                         registerUserViewModel.UserRoles[0].Selected = true;
                     }
                 }
-
                 if (registerUserViewModel.NewEmployee.UserImage == null)
                 {
                     string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                     string filePath = Path.Combine(uploadFolder, "profile_circle_big.png");
                     registerUserViewModel.NewEmployee.UserImage = filePath;
                 }
+
 
                 //FileStreamResult fs;
                 //using (var img = System.Drawing.Image.FromStream(file.OpenReadStream()))
