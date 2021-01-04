@@ -40,8 +40,8 @@
                                         <i class="icon-face-24px" style="font-size: 2rem;"></i><br />Details
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a data-toggle="tab" href="#salary" id="user-salary-tab" class="nav-link user-nav-link  next-tab salary-tab">
+                                <li class="nav-item only-employee">
+                                    <a data-toggle="tab" href="#salary" id="user-salary-tab" class="nav-link user-nav-link  next-tab salary-tab ">
                                         <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Salary
                                     </a>
                                 </li>
@@ -124,7 +124,7 @@
                                     </div>
                                 </div>
                                 <div class="row only-employee">
-                                    <div class="col-6  p-0 only-employee">
+                                    <div class="col-6 p-0  only-employee">
                                         <label class="control-label only-employee">Job Category</label>
                                         @Html.DropDownListFor(
                                             vm => vm.NewEmployee.JobSubcategoryType.JobCategoryTypeID,
@@ -137,7 +137,7 @@
                                             )
                                         <span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>
                                     </div>
-                                    <div class="col-6  p-0 only-employee">
+                                    <div class="col-6  only-employee">
                                         <label class="control-label only-employee">Job Subcategory</label>
                                         <select asp-for="NewEmployee.JobSubcategoryTypeID" class="mdb-select custom select-dropdown form-control-plaintext only-employee job-subcategory remove-extra-border" id="job-subcategory" searchable="default value">
                                         </select>

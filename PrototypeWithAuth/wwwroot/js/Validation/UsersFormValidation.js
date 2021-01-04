@@ -30,14 +30,14 @@ $('.usersForm').validate({
 			required: true,
 			minlength: 9
 		},
-		"NewEmployee.JobTitle": {
-			required: isEmployee,
-		},
 		"NewEmployee.DOB": {
 			required: isEmployee,
 			date: true
 		},
-		"NewEmployee.JobCategoryTypeID": {
+		"NewEmployee.JobSubcategoryType.JobCategoryTypeID":{
+			selectRequired: isEmployee,
+		},
+		"NewEmployee.JobSubcategoryTypeID": {
 			selectRequired: isEmployee,
 		},
 		"NewEmployee.DegreeID": {

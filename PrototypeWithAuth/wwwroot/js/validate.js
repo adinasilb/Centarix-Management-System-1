@@ -21,7 +21,6 @@ $(function () {
 				$(this).parent('div').prev('label').first().html(str2.slice(0, -1));
 			}
 		 });
-		console.log($("#myForm").validate().settings.rules);
 		$.each($("#myForm").validate().settings.rules, function (name, value) {
 			var rule = value["required"];
 			if($.isFunction(rule))
