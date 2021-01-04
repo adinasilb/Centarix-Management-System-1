@@ -88,8 +88,8 @@
 </div>
 
 <div class="row">
-    <div class="col-6 offset-6 text-center">
-        @Html.PagedListPager(Model.PagedList, page => Url.Action(" "), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item" }, DisplayLinkToNextPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToPreviousPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never })
+    <div class="col-12 justify-content-center d-flex">
+        @Html.PagedListPager(Model.PagedList, page => Url.Action(" "), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item pr-4" }, DisplayLinkToNextPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToPreviousPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToLastPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToFirstPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, MaximumPageNumbersToDisplay = 14, DisplayEllipsesWhenNotShowingAllPageNumbers = true })
     </div>
 </div>
 <script src="~/js/IndexTablePartial.js"></script>

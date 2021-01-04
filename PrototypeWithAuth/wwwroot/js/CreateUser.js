@@ -132,7 +132,6 @@ $(function () {
 
 
 	});
-
 	$("body, .modal").off("change", ".job-category").on("change", ".job-category", function () {
 		console.log("in on change before fx");
 		//$.fn.changeProject($(this).val());

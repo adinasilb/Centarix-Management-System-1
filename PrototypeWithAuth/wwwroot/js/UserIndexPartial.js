@@ -1,6 +1,6 @@
 ﻿$(function () {
 
-    $("body").on("click", ".open-user-modal", function (e) {
+    $(".open-user-modal").on("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#loading").show();
