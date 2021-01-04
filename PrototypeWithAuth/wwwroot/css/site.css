@@ -2006,7 +2006,8 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     box-shadow: 6px 0px 10px #0000008C;
 } .add-invoice-modal {
     width: 93.31rem;
-} .select-wrapper.mdb-select-sublist.mdb-select.custom.select-dropdown.form-control-plaintext, .select-wrapper.mdb-select-subProject.mdb-select.custom.select-dropdown.form-control-plaintext {
+}
+.select-wrapper.mdb-select-sublist.mdb-select.custom.select-dropdown.form-control-plaintext, .select-wrapper.mdb-select-subProject.mdb-select.custom.select-dropdown.form-control-plaintext, .remove-extra-border {
     border: none !important;
 } .document-card {
     height: 154px;

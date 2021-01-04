@@ -4,7 +4,8 @@
     alert("in countstatus click")
     $(".active").removeClass("active")
     $(this).addClass("active")
-
+    //reset page number
+      $('.page-number').val(1);
     ajaxPartialIndexTable($(this).attr("value"), "/Requests/_IndexTable", "._IndexTable")
 });
 
