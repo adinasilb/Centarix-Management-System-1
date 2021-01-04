@@ -1201,7 +1201,7 @@ namespace PrototypeWithAuth.Data
                     JobSubcategoryTypeID = 210,
                     JobCategoryTypeID = 2,
                     Description = "Bioinformatician"
-                }, 
+                },
                 new JobSubcategoryType
                 {
                     JobSubcategoryTypeID = 101,
@@ -1363,6 +1363,24 @@ namespace PrototypeWithAuth.Data
                     JobSubcategoryTypeID = 1005,
                     JobCategoryTypeID = 10,
                     Description = "Bioinformatics Researcher"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 301,
+                    JobCategoryTypeID = 3,
+                    Description = "Biomarker"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 401,
+                    JobCategoryTypeID = 4,
+                    Description = "Delivery Systems"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 501,
+                    JobCategoryTypeID = 5,
+                    Description = "Clinical Trials"
                 }
             );
             modelBuilder.Entity<Degree>().HasData(

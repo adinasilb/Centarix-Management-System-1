@@ -107,7 +107,7 @@
                                     </div>
                                     <div class="col-6 ">
                                         <label asp-for="NewEmployee.IDNumber" class="control-label only-employee"></label>
-                                        <input asp-for="NewEmployee.IDNumber"  class="form-control-plaintext border-bottom only-employee" value="" />
+                                        <input asp-for="NewEmployee.IDNumber" class="form-control-plaintext border-bottom only-employee" value="" />
                                         <span asp-validation-for="NewEmployee.IDNumber" class="text-danger-centarix"></span>
                                     </div>
 
@@ -115,7 +115,7 @@
                                 <div class="row">
                                     <div class="col-6  p-0">
                                         <label asp-for="NewEmployee.DOB" class="control-label only-employee"></label>
-                                        <input asp-for="NewEmployee.DOB"  class="form-control-plaintext border-bottom only-employee" />
+                                        <input asp-for="NewEmployee.DOB" class="form-control-plaintext border-bottom only-employee" />
                                         <span asp-validation-for="NewEmployee.DOB" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-6 ">
@@ -139,19 +139,9 @@
                                     </div>
                                     <div class="col-6  p-0">
                                         <label class="control-label only-employee">Job Subcategory</label>
-                                        <select asp-for="NewEmployee.JobSubcategoryTypeID" class="mdb-select custom select-dropdown form-control-plaintext only-employee job-subcategory" searchable="default value">
-
+                                        <select asp-for="NewEmployee.JobSubcategoryTypeID" class="mdb-select custom select-dropdown form-control-plaintext only-employee job-subcategory" id="job-subcategory" searchable="default value">
                                         </select>
-                                        @*@Html.DropDownListFor(
-                                            vm => vm.NewEmployee.JobSubcategoryTypeID,
-                                            new SelectList(
-                                            Model.JobSubcategoryTypes,
-                                            dataValueField: "JobSubCategoryTypeID",
-                                            dataTextField: "Description"),
-                                            optionLabel: "Select A Sub Category",
-                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
-                                            )*@
-                                        <span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>
+                                        <span asp-validation-for="NewEmployee.JobSubcategoryTypeID" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -187,7 +177,7 @@
                                     </div>
                                     <div class="col-4">
                                         <label asp-for="NewEmployee.StartedWorking" class="control-label only-employee"></label>
-                                        <input asp-for="NewEmployee.StartedWorking"  class="form-control-plaintext border-bottom only-employee"  />
+                                        <input asp-for="NewEmployee.StartedWorking" class="form-control-plaintext border-bottom only-employee" />
                                         <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger-centarix"></span>
                                     </div>
                                 </div>
@@ -661,7 +651,7 @@
             $.fn.CallModal2("/Admin/UserImageModal");
             return false;
         });
-      
+
     </script>
 
 }

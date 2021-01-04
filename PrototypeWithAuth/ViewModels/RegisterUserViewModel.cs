@@ -117,6 +117,7 @@ namespace PrototypeWithAuth.ViewModels
         public FormFile NewEmployeeImage { get; set; }
         public int NewEmployeeStatus { get; set; }
         public List<JobCategoryType> JobCategoryTypes { get; set; }
+        public List<JobSubcategoryType> JobSubcategoryTypes { get; set; }
         public List<EmployeeStatus> EmployeeStatuses { get; set; }
         public List<MaritalStatus> MaritalStatuses { get; set; }
         public List<Degree> Degrees { get; set; }

@@ -210,10 +210,12 @@ $(function () {
 		console.log('in on change vendor')
 		var vendorid = $(this).val();
 		$.fn.ChangeVendorBusinessId(vendorid);
+		$.fn.CheckVendorAndCatalogNumbers();
 	});
 	$("#vendorList").change(function () {
 		var vendorid = $("#vendorList").val();
 		$.fn.ChangeVendorBusinessId(vendorid);
+		CheckVendorAndCatalogNumbers();
 	});
 	$.fn.ChangeVendorBusinessId = function (vendorid) {
 		var newBusinessID = "";
@@ -229,13 +231,24 @@ $(function () {
 				$(".vendorBusinessId").val(newBusinessID);
 				$(".vendorBusinessId").text(newBusinessID);
 				$("#vendor-primary-email").val(data.ordersEmail);
-				$.fn.UpdatePrimaryOrderEmail();
+				if ($.isFunction($.fn.UpdatePrimaryOrderEmail)) {
+					$.fn.UpdatePrimaryOrderEmail();
+				}
 			})
 		}
 		//console.log("newBusinessID: " + newBusinessID);
 		//if nothing was selected want to load a blank
 		$(".vendorBusinessId").val(newBusinessID);
 		//put the business id into the form
+	}
+
+
+
+
+	$.fn.CheckVendorAndCatalogNumbers = function () {
+		//var vendorID = $("#vendorList").val();
+		//var catalogNumber = $("#Request_Catalog").val();
+		//alert("vendor id: " + vendorID + " && catalog number: " + catalogNumber);
 	}
 
 	//view documents on modal view
@@ -2217,7 +2230,7 @@ $(function () {
 		$('#addSupplierComment').popover('toggle');
 
 	});
-	
+
 	$("#home-btn").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');
 		$("#home-btn").popover({
@@ -2258,7 +2271,7 @@ $(function () {
 		$(this).popover('toggle');
 
 	});
-	
+
 
 	$('.isRepeat').off("click").on("click", function () {
 		//console.log('employee status')
