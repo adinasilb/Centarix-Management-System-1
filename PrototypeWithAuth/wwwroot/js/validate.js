@@ -9,11 +9,22 @@ $(function () {
 	});
 
 	$.fn.AppendAsteriskToRequired = function() {
-		//$('input')prev('label').first().replaceWith('*', "");
-		//$('input').parent('div').prev().first().replaceWith('*', "");
+		 $('input').each(function () {
+			var str = $(this).prev('label').first().text();
+			var char = str.slice(-1);
+			if (char == "*") {
+				$(this).prev('label').first().html(str.slice(0, -1));
+			}
+			var str2= $(this).parent('div').prev('label').first().text();
+			var char2 = str2.slice(-1);
+			if (char2 == "*") {
+				$(this).parent('div').prev('label').first().html(str2.slice(0, -1));
+			}
+		 });
+		console.log($("#myForm").validate().settings.rules);
 		$.each($("#myForm").validate().settings.rules, function (name, value) {
-
-			if (value["required"]) {
+			console.log(value["required"]);
+			if (value["required"] == true) {
 				var str = $('input[name ="' + name + '"]').prev('label').first().text();
 				var char = str.slice(-1);
 				if (char == "*") {
@@ -22,7 +33,7 @@ $(function () {
 				$('input[name ="' + name + '"]').prev('label').first().append('*');
 
 			}
-			if (value["selectRequired"]) {
+			if (value["selectRequired"] == true) {
 				var id = $('[name = "' + name + '"]').attr('id')
 				var str = $('input[data-activates ="select-options-' + id + '"]').parent('div').prev('label').first().text();
 				var char = str.slice(-1);
