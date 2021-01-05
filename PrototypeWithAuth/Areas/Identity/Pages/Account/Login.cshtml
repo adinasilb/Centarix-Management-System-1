@@ -13,7 +13,7 @@
 
 
     <section>
-        <div class="container col-md-5 offset-2.5">
+        <div class="container col-md-4 offset-2.5">
 
             <form id="account" method="post" autocomplete="off">
 
@@ -26,7 +26,7 @@
                     <div class="form-group text-center">
 
                         <div class="input-group">
-                            <input asp-for="Input.Email" class="form-control login-field  text" style="line-height:2 !important" placeholder="Name" />
+                            <input asp-for="Input.Email" class="form-control login-field " style="font-size: 1.5em !important; line-height: 1.5 !important" placeholder="Name" />
                         </div>
 
                         <span asp-validation-for="Input.Email" class="text-danger-centarix"></span>
@@ -35,8 +35,10 @@
                     <div class="form-group text-center">
 
                         <div class="md-form md-outline">
-                            <input asp-for="Input.Password" class="form-control mt-4 login-field text" placeholder="Password" style="line-height:2 !important" />
-                            <span toggle="#Input_Password" class=" fa icon-remove_red_eye-24px field-icon toggle-password text" style="        line-height: 2 !important; color:#495057"></span>
+                            <input asp-for="Input.Password" class="form-control mt-4 login-field " placeholder="Password" style="        line-height: 1.5 !important;
+        font-size: 1.5em !important;
+" />
+                            <span toggle="#Input_Password" class=" fa icon-remove_red_eye-24px field-icon toggle-password " style=" font-size:1.5em !important; line-height: 1.5 !important; color:#495057"></span>
                         </div>
                         <span asp-validation-for="Input.Password" class="text-danger-centarix"></span>
                     </div>
