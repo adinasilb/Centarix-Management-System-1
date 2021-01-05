@@ -171,6 +171,8 @@
     <Compile Remove="Data\Migrations\20201227075710_movedCentarixIdsFromApplicationUserToEmployee.Designer.cs" />
     <Compile Remove="Data\Migrations\20210105093516_TookAwayNewNullables.cs" />
     <Compile Remove="Data\Migrations\20210105093516_TookAwayNewNullables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210105094203_DefalutNullableValue.cs" />
+    <Compile Remove="Data\Migrations\20210105094203_DefalutNullableValue.Designer.cs" />
   </ItemGroup>
 
 
