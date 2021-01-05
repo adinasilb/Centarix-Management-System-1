@@ -8,9 +8,9 @@ namespace PrototypeWithAuth.ViewModels
     public class SummaryOfDaysOffViewModel
     {
         public int Year { get; set; }
-        public int TotalVacationDays { get; set; }
-        public int VacationDaysTaken { get; set; }
-        public int SickDaysTaken { get; set; }
-        public int VacationDaysLeft { private set {; } get { return TotalVacationDays - VacationDaysTaken; } }
+        public double TotalVacationDays { get; set; }
+        public double VacationDaysTaken { get; set; }
+        public double SickDaysTaken { get; set; }
+        public double VacationDaysLeft { private set {; } get { return TotalVacationDays - VacationDaysTaken; } }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210105083553_AddedIsDeniedField")]
+    partial class AddedIsDeniedField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3249,23 +3251,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("MaritalStatusID")
                         .HasColumnType("int");
 
-                    b.Property<double?>("RollOverSickDays")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("RollOverVacationDays")
-                        .HasColumnType("float");
-
-                    b.Property<double>("SickDays")
-                        .HasColumnType("float");
-
                     b.Property<DateTime>("StartedWorking")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("TaxCredits")
                         .HasColumnType("int");
 
-                    b.Property<double>("VacationDays")
-                        .HasColumnType("float");
+                    b.Property<int>("VacationDays")
+                        .HasColumnType("int");
 
                     b.HasIndex("CitizenshipID");
 

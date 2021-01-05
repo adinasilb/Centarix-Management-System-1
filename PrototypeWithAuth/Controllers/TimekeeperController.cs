@@ -176,14 +176,14 @@ namespace PrototypeWithAuth.Controllers
             };
         }
 
-        private int getVacationDaysLeft(Employee user)
+        private double getVacationDaysLeft(Employee user)
         {
             int year = DateTime.Now.Year;
-            int vacationLeft = 0;
+            double vacationLeft = 0;
 
             while (year >= user.StartedWorking.Year)
             {
-                int vacationDays = 0;
+                double vacationDays = 0;
                 double vacationDaysPerMonth = user.VacationDays / 12.0;
                 if (year == user.StartedWorking.Year)
                 {

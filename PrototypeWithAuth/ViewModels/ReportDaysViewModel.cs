@@ -8,11 +8,10 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class ReportDaysViewModel
     {
-        public int Vacationdays { get; internal set; }
-        public int VacationDays { get; set; }
+        public double VacationDays { get; set; }
         public IEnumerable<EmployeeHours> VacationDaysTaken { get; set; }
         public IEnumerable<EmployeeHours> SickDaysTaken { get; set; }
-        public int VacationDaysLeft{ get; set; }
+        public double VacationDaysLeft{ get; set; }
         public int SelectedYear { get; set; }
     }
 }

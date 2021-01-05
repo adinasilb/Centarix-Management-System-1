@@ -54,5 +54,6 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("EmployeeHoursStatusEntry2ID")]
         public EmployeeHoursStatus EmployeeHoursStatusEntry2 { get; set; }
 
+        public bool? IsDenied { get; set; }
     }
 }

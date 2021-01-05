@@ -40,7 +40,8 @@ namespace PrototypeWithAuth.Models
         public double IncomeTax { get; set; }
         [Display(Name ="Tax Credits")]
         public int TaxCredits { get; set; }
-        public int VacationDays { get; set; }
+        public double VacationDays { get; set; }
+        public double SickDays { get; set; }
         [Display(Name = "ID Number")]
         public string IDNumber { get; set; }
         public int? DegreeID { get; set; }
@@ -72,6 +73,8 @@ namespace PrototypeWithAuth.Models
         public bool IsUser { get; set; }
 
         public IEnumerable<CentarixID> CentarixIDs { get; set; }
-        //todo add job category
+    
+        public double? RollOverSickDays { get; set; }
+        public double? RollOverVacationDays { get; set; }
     }
 }
