@@ -9,5 +9,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public string PageType { get; set; }
         public DateTime SelectedDate { get; set; }
+        public bool NeedsDoctorsNote { get; set; }
     }
 }

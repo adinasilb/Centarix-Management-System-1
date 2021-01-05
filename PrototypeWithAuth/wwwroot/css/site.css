@@ -2215,10 +2215,10 @@ table.visual-locations-table td .visual-locations-div {
 }
 
 .not-form-ddl.select-wrapper input.select-dropdown {
-
+    border: solid 0.094rem var(--black-87);
+    border-radius: .25rem !important
 }
 
 .not-form-ddl.select-wrapper {
-    border: solid 0.094rem var(--black-87);
-    border-radius: .25rem !important
+
 }
