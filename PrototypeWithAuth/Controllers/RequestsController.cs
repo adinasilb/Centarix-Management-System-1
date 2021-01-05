@@ -1930,7 +1930,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, string OrderType)
+        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, RequestIndexObject requestIndexObject)
         {
             //get the old request that we are reordering
             var oldRequest = _context.Requests.Where(r => r.RequestID == requestItemViewModel.Request.RequestID)
@@ -2006,13 +2006,7 @@ namespace PrototypeWithAuth.Controllers
                 await populateRequestItemViewModel(requestItemViewModel, oldRequest);
                 return PartialView(requestItemViewModel);
             }
-            return RedirectToAction("Index", new
-            {
-                SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()],
-                page = requestItemViewModel.Page,
-                requestStatusID = 3,
-                PageType = AppUtility.PageTypeEnum.RequestRequest
-            });
+            return RedirectToAction("_IndexTableData", requestIndexObject);
         }
 
         [Authorize(Roles = "Requests")]

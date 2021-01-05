@@ -126,7 +126,7 @@
                             @employee.Employee.FirstName  @employee.Employee.LastName
                         </td>
                         <td width="11%">
-                            @employee.Employee.JobSubcategoryType.JobCategoryType.Description;
+                            @employee.Employee.JobSubcategoryType?.JobCategoryType?.Description;
                         </td>
                         <td width="11%">
                             @employee.Employee.JobSubcategoryType?.Description

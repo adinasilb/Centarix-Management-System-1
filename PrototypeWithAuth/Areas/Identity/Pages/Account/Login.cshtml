@@ -13,45 +13,56 @@
 
 
     <section>
-        <div class="container col-md-7 offset-2.5">
+        <div class="container col-md-4 offset-2.5">
 
-            <form id="account" method="post">
+            <form id="account" method="post" autocomplete="off">
 
                 <div asp-validation-summary="All" class="text-danger-centarix"></div>
                 @if (Model.SuccessMessage != null)
                 {
                     <p class="text">@Model.SuccessMessage</p>
                 }
-                <div class="form-group text-center">
+                <div class="md-form md-outline">
+                    <div class="form-group text-center">
 
-                    <input asp-for="Input.Email" class="form-control login-field" placeholder="Name" />
+                        <div class="input-group">
+                            <input asp-for="Input.Email" class="form-control login-field " style="font-size: 1.5em !important; line-height: 1.5 !important" placeholder="Name" />
+                        </div>
 
-                    <span asp-validation-for="Input.Email" class="text-danger-centarix"></span>
-                </div>
-                <div class="form-group text-center">
+                        <span asp-validation-for="Input.Email" class="text-danger-centarix"></span>
+                    </div>
+                    </div>
+                    <div class="form-group text-center">
 
-                    <input asp-for="Input.Password" class="form-control mt-4 login-field" placeholder="Password" />
-                    <span asp-validation-for="Input.Password" class="text-danger-centarix"></span>
-                </div>
-                <!--<div class="form-group">
-                <div class="checkbox">
-                    <label asp-for="Input.RememberMe">
-                        <input asp-for="Input.RememberMe" />
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
-                    </label>
-                </div>
-            </div>-->
-                <div class="form-group">
-                    <button type="submit" class="btn mt-5 custom-button custom-button-font danger-color ">Log in</button>
-                </div>
-                <!--<div class="form-group">
-                <p>
-                    <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                </p>
-                <p>
-                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                </p>
-            </div> -->
+                        <div class="md-form md-outline">
+                            <input asp-for="Input.Password" class="form-control mt-4 login-field " placeholder="Password" style="        line-height: 1.5 !important;
+        font-size: 1.5em !important;
+" />
+                            <span toggle="#Input_Password" class=" fa icon-remove_red_eye-24px field-icon toggle-password " style=" font-size:1.5em !important; line-height: 1.5 !important; color:#495057"></span>
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger-centarix"></span>
+                    </div>
+
+
+                    <!--<div class="form-group">
+            <div class="checkbox">
+                <label asp-for="Input.RememberMe">
+                    <input asp-for="Input.RememberMe" />
+                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                </label>
+            </div>
+        </div>-->
+                    <div class="form-group">
+                        <button type="submit" class="mt-4 custom-button custom-button-font danger-color ">Log in</button>
+                    </div>
+                    <!--<div class="form-group">
+            <p>
+                <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+            </p>
+            <p>
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+            </p>
+        </div> -->
             </form>
         </div>
     </section>
@@ -93,6 +104,42 @@
 
 
 
-@section Scripts {
+@*@section Scripts {
 <partial name="_ValidationScriptsPartial" />
-}
+}*@
+<script>
+    $('.toggle-password').on('click', function () {
+        $(this).toggleClass('icon-remove_red_eye-24px fa-eye-slash');
+        $(this).toggleClass('text ');
+        let input = $($(this).attr('toggle'));
+        if (input.attr('type') == 'password') {
+            input.attr('type', 'text');
+        }
+        else {
+            input.attr('type', 'password');
+        }
+    });
+
+</script>
+<style type="text/css">
+    input[type=text].form-control.valid + label:after,
+    input[type=text].form-control:focus.valid + label:after,
+    input[type=text].form-control.invalid + label:after,
+    input[type=text].form-control:focus.invalid + label:after,
+    input[type=password].form-control.valid + label:after,
+    input[type=password].form-control:focus.valid + label:after,
+    input[type=password].form-control.invalid + label:after,
+    input[type=password].form-control:focus.invalid + label:after {
+        top: 3.75rem !important;
+    }
+
+    span.field-icon {
+        position: absolute;
+        display: inline-block;
+        cursor: pointer;
+        right: 0.7rem;
+        top: 0.5rem;
+        color: $input-label-color;
+        z-index: 2;
+    }
+</style>
