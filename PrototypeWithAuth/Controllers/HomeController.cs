@@ -44,7 +44,7 @@ namespace PrototypeWithAuth.Controllers
                 if (User.IsInRole("Timekeeper") && user.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
                 {
                     fillInTimekeeperMissingDays(user);
-                    fillInTimekeeperNotifications(user);
+                    fillInTimekeeperNotifications(user);                  
                 }
                 user.LastLogin = DateTime.Now;
                 _context.Update(user);
