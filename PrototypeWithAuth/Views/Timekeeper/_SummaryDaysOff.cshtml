@@ -3,10 +3,10 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> UserManager
-@{ var years = Enumerable.Range(2010, DateTime.Today.Year - 2010 + 1);}
+@{ var years = Enumerable.Range(AppUtility.YearStartedTimeKeeper, DateTime.Today.Year - AppUtility.YearStartedTimeKeeper + 1);}
 <div class="mb-6">
     <div class="row ">
-        <div class="col-8">
+        <div class="col-10">
             <div class="row">
                 <div class="heading-1 col-9 p-0">Summary of Days Off</div>
                 <div class="col-2 offset-1  pr-0">
@@ -22,40 +22,52 @@
 
     </div>
     <div class="row">
-        <div class="col-8">
+        <div class="col-10">
             <div class="row py-4 pl-3 mt-4 text-center">
-                <div class="col-1">
+                <div class="col">
                     Year
                 </div>
-                <div class="col-3">
+                <div class="col">
                     Total Vacation Days
                 </div>
-                <div class="col-3">
+                <div class="col">
                     Vacation Days Taken
                 </div>
-                <div class="col-3">
+                <div class="col">
                     Vacation Days Left
                 </div>
-                <div class="col-2">
+                <div class="col">
+                    Total Sick Days
+                </div>
+                <div class="col">
                     Sick Days Taken
+                </div>
+                <div class="col">
+                    Sick Days Left
                 </div>
             </div>
 
             <div class="row mt-2 p-4  border  text-center  mb-5" style="border-color: var(--timekeeper-color) !important;">
-                <div class="col-1">
+                <div class="col">
                     @Model.SelectedYear
                 </div>
-                <div class="col-3">
+                <div class="col">
                     @Model.VacationDays
                 </div>
-                <div class="col-3">
+                <div class="col">
                     @Model.VacationDaysTaken.Count()
                 </div>
-                <div class="col-3">
+                <div class="col">
                     @Model.VacationDaysLeft
                 </div>
-                <div class="col-2">
+                <div class="col">
+                    @Model.SickDays
+                </div>
+                <div class="col">
                     @Model.SickDaysTaken.Count()
+                </div>
+                <div class="col">
+                    @Model.SickDaysLeft
                 </div>
             </div>
             <div class="row  mt-6 ">

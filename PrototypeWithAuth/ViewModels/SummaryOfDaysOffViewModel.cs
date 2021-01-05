@@ -7,19 +7,10 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class SummaryOfDaysOffViewModel
     {
-        public int Year { get; set; }
-        public double TotalVacationDays { get; set; }
-        public double VacationDaysTaken { get; set; }
-        public double SickDaysTaken { get; set; }
-        public double TotalSickDays { get; set; }
-        public double SickDaysLeft 
-        {
-            private set {; }
-            get { return TotalSickDays - SickDaysTaken; }
-        }
-        public double VacationDaysLeft 
-        { 
-            private set {; } get { return TotalVacationDays - VacationDaysTaken; } 
-        }
+        public List<PrototypeWithAuth.ViewModels.DaysOffViewModel> DaysOffs { get; set; }
+        public double SickDaysLeft { get; set; }
+        public double VacationDaysLeft { get; set; }
+        public double TotalVacationDaysPerYear { get; set; }
+        public double TotalSickDaysPerYear { get; set; }
     }
 }

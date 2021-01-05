@@ -5,7 +5,7 @@
 @model PrototypeWithAuth.ViewModels.SummaryHoursViewModel
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-@{ var years = Enumerable.Range(2010, DateTime.Today.Year - 2010 + 1);}
+@{ var years = Enumerable.Range(AppUtility.YearStartedTimeKeeper, DateTime.Today.Year - AppUtility.YearStartedTimeKeeper  + 1);}
 <div class="row mb-5">
     <div class="col-10">
 
@@ -218,7 +218,7 @@
                 @Model.EmployeeHours.Where(eh => eh.EmployeeHours.OffDayTypeID == null).Count()
             </div>
             <div class="col-2">
-                @Model.EmployeeHours.Where(eh => eh.EmployeeHours.CompanyDayOffID != null).Count()
+                @Model.TotalHolidaysInMonth
             </div>
             <div class="col-2">
                 @Model.EmployeeHours.Where(eh => eh.EmployeeHours.OffDayTypeID == 1).Count()
