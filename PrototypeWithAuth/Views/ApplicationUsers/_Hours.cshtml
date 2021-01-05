@@ -140,14 +140,13 @@
                             }
                             @if (employee.Employee.EmployeeStatusID == 1)
                             {
-                                var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
+                                var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay0;
                                 var totalInMonth = TimeSpan.FromHours(totalHoursInRange);
                                 totalHoursString = totalHours + ":" + employee.Hours.ToString("mm") + "/" + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
                             }
                             else
-                            {
-
-                                totalHoursString = totalHours + ":" + employee.Hours.ToString("mm");
+                            { 
+                                  totalHoursString = totalHours + ":" + employee.Hours.ToString("mm");
                             }
                             @totalHoursString
                         </td>

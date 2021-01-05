@@ -2172,7 +2172,7 @@ $(function () {
 				$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
 			}
 			if ($(this).hasClass('users')) {
-				$.fn.EnableMaterialSelect('#job-subcategory', 'select-options-NewEmployee_JobSubcategoryTypeID');
+				$.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
 			    $.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
 				$.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
 				$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
