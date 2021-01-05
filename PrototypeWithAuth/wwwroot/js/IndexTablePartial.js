@@ -76,7 +76,6 @@ $(".page-item a").off('click').on("click", function (e) {
 });
 
 
-
 function ajaxPartialIndexTable(status, url, viewClass) {
     console.log("in ajax partial index call");
     var selectedPriceSort = [];
