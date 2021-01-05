@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-6 heading-1 p-0"><label class="m-0 p-0">@System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(Model.CurrentMonth.Month) @Model.SelectedYear Summary</label></div>
             <div class="col-2 offset-2 yearsHours pl-0">
-                <select asp-for="SelectedYear" class="mdb-select timekeeper custom select-dropdown form-control-plaintext" searchable="Search Year">
+                <select asp-for="SelectedYear" class="mdb-select timekeeper custom select-dropdown form-control-plaintext not-form-ddl" searchable="Search Year">
                     <option disabled selected class="d-none" value="">Select Year</option>
                     @foreach (var y in years)
                     {
@@ -34,7 +34,7 @@
          Value = x.ToString(),
          Selected = (x == curMonth)
      }
- ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext ", @name = "DOBMonth", @searchable = "Search here.." })
+ ), htmlAttributes: new { @class = "timekeeper mdb-select  custom select-dropdown form-control-plaintext not-form-ddl", @name = "DOBMonth", @searchable = "Search here.." })
             </div>
 
 

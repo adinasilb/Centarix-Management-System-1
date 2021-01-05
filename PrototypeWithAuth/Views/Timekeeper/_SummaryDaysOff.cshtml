@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="heading-1 col-9 p-0">Summary of Days Off</div>
                 <div class="col-2 offset-1  pr-0">
-                    <select asp-for="SelectedYear" class="mdb-select timekeeper custom select-dropdown form-control-plaintext  daysOffYears">
+                    <select asp-for="SelectedYear" class="mdb-select timekeeper custom select-dropdown form-control-plaintext not-form-ddl  daysOffYears">
                         @foreach (var y in years)
                         {
                             <option value="@y">@y</option>
