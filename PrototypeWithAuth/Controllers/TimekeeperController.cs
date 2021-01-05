@@ -344,30 +344,32 @@ namespace PrototypeWithAuth.Controllers
                 int year = DateTime.Now.Year;
                 while (year >= user.StartedWorking.Year)
                 {
-                    int vacationDays = 0;
-                    double vacationDaysPerMonth = user.VacationDays / 12.0;
+                    double vacationDays = 0;
+                    double sickDays = 0;
                     if (year == user.StartedWorking.Year)
                     {
                         int month = 12 - user.StartedWorking.Month + 1;
-                        double vacationDaysBeforeRound = vacationDaysPerMonth * month;
-                        vacationDays = (int)Math.Ceiling(vacationDaysBeforeRound);
+                         vacationDays = user.VacationDaysPerMonth * month;
+                         sickDays = user.SickDays * month;
                     }
                     else if (year == DateTime.Now.Year)
                     {
                         int month = DateTime.Now.Month;
-                        double vacationDaysBeforeRound = vacationDaysPerMonth * month;
-                        vacationDays = (int)Math.Ceiling(vacationDaysBeforeRound);
+                        vacationDays = (user.VacationDaysPerMonth * month)+user.RollOverVacationDays;
+                        sickDays = (user.SickDaysPerMonth * month)+user.RollOverSickDays;
                     }
                     else
                     {
-                        vacationDays = 16;
+                        vacationDays = user.VacationDays;
+                        sickDays = user.SickDays;
                     }
                     SummaryOfDaysOffViewModel summaryOfDaysOff = new SummaryOfDaysOffViewModel
                     {
                         Year = year,
                         TotalVacationDays = vacationDays,
                         VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count(),
-                        SickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count()
+                        SickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count(),
+                        TotalSickDays = sickDays
                     };
                     daysOffByYear.Add(summaryOfDaysOff);
                     year = year - 1;

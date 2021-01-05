@@ -46,23 +46,28 @@
             <div class="col-4 heading-1 ">
                 <label class="font-weight-bolder text m-0 p-0"> Vacation Days Left: @Model.Select(d => d.VacationDaysLeft).Sum(vd => vd)</label>
             </div>
-
+            <div class="col-4 heading-1 ">
+                <label class="font-weight-bolder text m-0 p-0"> Vacation Days Left: @Model.Select(d => d.SickDaysLeft).Sum(vd => vd)</label>
+            </div>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-7">
         <div class="row p-3 text-center ">
-            <div class="col-3 pl-5 text-left">
+            <div class="col-2 pl-5 text-left">
                 Year
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 Total Vacation Days
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 Vacation Days Taken
             </div>
-            <div class="col-3">
+            <div class="col-2">
+                Total Sick Days
+            </div>
+            <div class="col-2">
                 Sick Days Taken
             </div>
         </div>

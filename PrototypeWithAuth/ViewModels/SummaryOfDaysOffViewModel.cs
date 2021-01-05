@@ -11,6 +11,15 @@ namespace PrototypeWithAuth.ViewModels
         public double TotalVacationDays { get; set; }
         public double VacationDaysTaken { get; set; }
         public double SickDaysTaken { get; set; }
-        public double VacationDaysLeft { private set {; } get { return TotalVacationDays - VacationDaysTaken; } }
+        public double TotalSickDays { get; set; }
+        public double SickDaysLeft 
+        {
+            private set {; }
+            get { return TotalSickDays - SickDaysTaken; }
+        }
+        public double VacationDaysLeft 
+        { 
+            private set {; } get { return TotalVacationDays - VacationDaysTaken; } 
+        }
     }
 }
