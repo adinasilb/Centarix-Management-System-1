@@ -13,11 +13,11 @@ using Abp.Extensions;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ProductSubcategoriesController : Controller
+    public class ProductSubcategoriesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductSubcategoriesController(ApplicationDbContext context)
+        public ProductSubcategoriesController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }

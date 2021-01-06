@@ -150,18 +150,18 @@
                     @if (eh.EmployeeHours.Entry2 != null && eh.EmployeeHours.Exit2 == null)
                     {
                         <br />
-                        <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString(" yyyy-MM-dd")">
+                        <button type="button" class="custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" data-value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
                             Update Hours
                         </button>
 
                     }
                     else if ((eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null))
                     {
-                        <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>
+                        <button type="button" class=" custom-button-table-font table-button timekeeper-color  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" data-value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>
                     }
                     else if ((eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2)))
                     {
-                        <a href="" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours timekeeper-font-color" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</a>
+                        <a href="" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours timekeeper-font-color" data-value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</a>
                         @*<button type="button" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>*@
                     }
                     else if (eh.EmployeeHours.Exit1 == null)
@@ -187,9 +187,18 @@
                 <div class="col p-3" style="width:9%;">
                     @if (eh.EmployeeHoursAwaitingApproval != null)
                     {
-                        <button type="button" class="custom-button-table-font table-button timekeeper-alt-color  open-ehaa-modal" value="@eh.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID.ToString()">
-                            View
-                        </button>
+                        if (eh.EmployeeHoursAwaitingApproval.IsDenied ?? false)
+                        {
+                            <div>
+                                <a href="" class="open-ehaa-modal timekeeper-font-alt-color" value="@eh.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID.ToString()">Request Denied</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <button type="button" class="custom-button-table-font table-button timekeeper-alt-color  open-ehaa-modal" value="@eh.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID.ToString()">
+                                View
+                            </button>
+                        }
                     }
                 </div>
 

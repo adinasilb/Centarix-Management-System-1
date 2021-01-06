@@ -104,6 +104,9 @@
     background-color: var(--timekeeper-alt-color);
 }
 
+.timekeeper-font-alt-color {
+    color: var(--timekeeper-alt-color);
+}
 
 .timekeeper-font-color {
     color: var(--timekeeper-color);

@@ -33,7 +33,7 @@ using Microsoft.AspNetCore.Localization;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class OperationsController : Controller
+    public class OperationsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -54,7 +54,7 @@ namespace PrototypeWithAuth.Controllers
         //    _viewEngine = viewEngine;
         //}
         public OperationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/) : base(context)
         {
             //_Context = Context;
             _context = context;

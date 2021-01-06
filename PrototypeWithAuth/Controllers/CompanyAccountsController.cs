@@ -7,11 +7,11 @@ using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class CompanyAccountsController : Controller
+    public class CompanyAccountsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public CompanyAccountsController(ApplicationDbContext context)
+        public CompanyAccountsController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }

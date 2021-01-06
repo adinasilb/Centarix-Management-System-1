@@ -19,11 +19,11 @@ using X.PagedList;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ParentRequestsController : Controller
+    public class ParentRequestsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public ParentRequestsController(ApplicationDbContext context)
+        public ParentRequestsController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }

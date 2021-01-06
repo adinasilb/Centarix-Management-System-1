@@ -9,7 +9,7 @@
         $.fn.CallPageUser($itemurl);
         return false;
     });
-    $("#suspend-user-modal-icon").click(function (e) {
+    $(".suspend-user-modal-icon").click(function (e) {
         e.preventDefault();
         $.fn.SuspendUserModal($(this).attr('data-userid'), null);
     });

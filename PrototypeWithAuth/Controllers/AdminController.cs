@@ -30,7 +30,7 @@ using OpenCvSharp;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private SignInManager<ApplicationUser> _signManager;
@@ -41,7 +41,7 @@ namespace PrototypeWithAuth.Controllers
 
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder)
+            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder) : base(context)
         {
             _context = context;
             _userManager = userManager;
@@ -252,6 +252,7 @@ namespace PrototypeWithAuth.Controllers
                 IsUser = true,
                 NeedsToResetPassword = true,
                 TwoFactorEnabled = true
+                
             };
             if (UserType == 4)
             {
@@ -263,6 +264,14 @@ namespace PrototypeWithAuth.Controllers
                 /*Employee*/
                 user.IsUser = true;
                 user.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
+                if (user.StartedWorking > AppUtility.DateSoftwareLaunched)
+                {
+                    user.LastLogin = user.StartedWorking;
+                }
+                else
+                {
+                    user.LastLogin = AppUtility.DateSoftwareLaunched;
+                }
                 user.DOB = registerUserViewModel.NewEmployee.DOB;
                 user.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
                 user.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;
@@ -627,7 +636,7 @@ namespace PrototypeWithAuth.Controllers
                     employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
                     employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
                     employeeEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
-                    employeeEditted.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
+                    employeeEditted.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;               
                     employeeEditted.DOB = registerUserViewModel.NewEmployee.DOB;
                     employeeEditted.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
                     employeeEditted.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;

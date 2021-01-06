@@ -18,11 +18,11 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class CalibrationsController : Controller
+    public class CalibrationsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public CalibrationsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment )
+        public CalibrationsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment ) : base(context)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;

@@ -18,11 +18,11 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ExpensesController : Controller
+    public class ExpensesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public ExpensesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ExpensesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context)
         {
             _context = context;
             _userManager = userManager;
