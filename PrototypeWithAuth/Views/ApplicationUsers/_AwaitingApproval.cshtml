@@ -107,7 +107,13 @@
                         @hours.EmployeeHoursAwaitingApproval.TotalHours?.ToString(@"h\:mm")
                     </td>
                     <td width="15%">
-                        <button type="button" class="rounded-pill px-4 py-1 text-white no-box-shadow border-0 approve-hours" style="background-color:var(--user-color)" value="@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID">Approve</button>
+                        <div class="table-icon-div">
+                            <button type="button" class="rounded-pill px-4 py-1 mx-2 text-white no-box-shadow border-0 approve-hours" style="background-color:var(--user-color)" value="@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID">Approve</button>
+                            <a href="" data-approvalid=@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID class="deny-approval-modal-icon" data-toggle="tooltip" data-placement="top" onclick="OpenDenyApprovalModal(@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID)">
+                                <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
+                            </a>
+                        </div>
+                        
                     </td>
 
                 </tr>

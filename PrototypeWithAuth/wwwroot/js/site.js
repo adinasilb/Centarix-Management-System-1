@@ -1655,8 +1655,10 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 	$(".open-update-hours-modal").off('click').click(function (e) {
+		console.log('update hours');
 		e.preventDefault();
-		var val = $(this).val();
+		var val = $(this).attr('data-value');
+		console.log('val' + val);
 		if (val != '') {
 			var date = new Date(val).toISOString();
 			console.log(date)
@@ -2046,14 +2048,14 @@ $(function () {
 	//	alert("sitejs change edits");
 	//};
 
-	$(".open-ehaa-modal").off("click").on("click", function () {
-		//e.preventDefault();
+	$(".open-ehaa-modal").off("click").on("click", function (e) {
+		e.preventDefault();
 		$("#loading").show();
 		$("#ehaaModal").replaceWith('');
-		//alert("in ehaa modal: " + $(this).val());
+		console.log("in ehaa modal: " + $(this).val());
 		$.ajax({
 			async: false,
-			url: '/Timekeeper/_EmployeeHoursAwaitingApproval?ehaaID=' + $(this).val(),
+			url: '/Timekeeper/_EmployeeHoursAwaitingApproval?ehaaID=' + $(this).attr("value"),
 			type: 'GET',
 			cache: false,
 			success: function (data) {
