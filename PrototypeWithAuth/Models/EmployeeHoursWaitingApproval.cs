@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -53,7 +54,6 @@ namespace PrototypeWithAuth.Models
         public int? EmployeeHoursStatusEntry2ID { get; set; }
         [ForeignKey("EmployeeHoursStatusEntry2ID")]
         public EmployeeHoursStatus EmployeeHoursStatusEntry2 { get; set; }
-
         public bool? IsDenied { get; set; }
     }
 }

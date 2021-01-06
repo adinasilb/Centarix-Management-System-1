@@ -126,7 +126,7 @@ namespace PrototypeWithAuth.AppData
         }
 
         public static double ExchangeRateIfNull = 3.5;
-        public static double _GetExchangeRateFromApi = GetExchangeRateFromApi();
+        public static int YearStartedTimeKeeper = 2021;
         public static double GetExchangeRateFromApi()
         {
             var client = new RestClient("https://v6.exchangerate-api.com/v6/96ffcdbcf4b24b1bdf2dc9be/latest/USD");

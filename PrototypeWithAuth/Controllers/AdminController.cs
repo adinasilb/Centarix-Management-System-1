@@ -640,6 +640,8 @@ namespace PrototypeWithAuth.Controllers
                     employeeEditted.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
                     employeeEditted.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
                     employeeEditted.EmployeeStatusID = selectedStatusID;
+                    employeeEditted.RollOverSickDays = registerUserViewModel.NewEmployee.RollOverSickDays;
+                    employeeEditted.RollOverVacationDays = registerUserViewModel.NewEmployee.RollOverVacationDays;
                     //employeeEditted.JobSubategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
 
                     _context.Update(employeeEditted);

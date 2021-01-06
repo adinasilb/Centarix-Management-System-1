@@ -41,7 +41,11 @@ namespace PrototypeWithAuth.Models
         [Display(Name ="Tax Credits")]
         public int TaxCredits { get; set; }
         public double VacationDays { get; set; }
-        public double SickDays { get; set; }
+        public double SickDays 
+        {
+            get { return 18; }
+            private set {; }
+        }
         [Display(Name = "ID Number")]
         public string IDNumber { get; set; }
         public int? DegreeID { get; set; }
@@ -74,8 +78,26 @@ namespace PrototypeWithAuth.Models
 
         public IEnumerable<CentarixID> CentarixIDs { get; set; }
         [Display(Name = "Bonus Sick Days")]
-        public double? RollOverSickDays { get; set; }
+        public double RollOverSickDays { get; set; }
         [Display(Name = "Bonus Vacation Days")]
-        public double? RollOverVacationDays { get; set; }
+        public double RollOverVacationDays { get; set; }
+        private double _VacationDaysPerMonth;
+        public double VacationDaysPerMonth
+        {
+            get
+            {
+                return Math.Round(VacationDays / 12.0, 2, MidpointRounding.AwayFromZero);
+            }
+            private set {; }
+        }
+        private double _SickDaysPerMonth;
+        public double SickDaysPerMonth
+        {
+            get
+            {
+                return Math.Round(SickDays / 12.0, 2, MidpointRounding.AwayFromZero);
+            }
+            private set {; }
+        }
     }
 }

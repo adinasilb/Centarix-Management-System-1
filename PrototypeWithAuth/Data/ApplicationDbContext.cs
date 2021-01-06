@@ -194,6 +194,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
             modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);
+            modelBuilder.Entity<Employee>().Ignore(e => e.SickDays);
+            modelBuilder.Entity<Employee>().Ignore(e => e.SickDaysPerMonth);
+            modelBuilder.Entity<Employee>().Ignore(e => e.VacationDaysPerMonth);
             modelBuilder.Entity<Request>().Ignore(e => e.VAT);
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);

@@ -2199,21 +2199,26 @@ table.visual-locations-table td .visual-locations-div {
 /*
     MULTIPLE EMAIL CSS
 */
-}
+
 .no-hours-reported.select-wrapper input.select-dropdown {
-    max-height: 30px;
-    border-bottom: 0 !important;
-    border-bottom: none !important;
-    border: 2px solid var(--timekeeper-color) !important;
-    color: var(--timekeeper-color);
-    border-radius: .25rem !important;
-    font-size: 14px
-   
+    border: none !important;   
 }
 .no-hours-reported.select-wrapper span.caret {
-    color: var(--timekeeper-color);
-    top: .3rem !important;
+    padding-left: 0 !important;
+    padding-right: .4rem !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: var(--timekeeper-color)
 }
 .no-hours-reported.select-wrapper {
+    border : solid 1px var(--timekeeper-color)
+}
 
+.not-form-ddl.select-wrapper input.select-dropdown {
+
+}
+
+.not-form-ddl.select-wrapper {
+    border: solid 0.094rem var(--black-87);
+    border-radius: .25rem !important
 }
