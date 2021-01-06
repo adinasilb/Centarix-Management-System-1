@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210106175758_PartialOffHourEA")]
+    partial class PartialOffHourEA
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -749,8 +751,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("OffDayTypeID")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan?>("PartialOffDayHours")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("PartialOffDayHours")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("PartialOffDayTypeID")
                         .HasColumnType("int");
@@ -815,8 +817,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("OffDayTypeID")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan?>("PartialOffDayHours")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("PartialOffDayHours")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("PartialOffDayTypeID")
                         .HasColumnType("int");
@@ -1762,7 +1764,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.PartialOffDayType", b =>
                 {
-                    b.Property<int>("PartialOffDayTypeID")
+                    b.Property<int>("OffDayTypeID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -1770,21 +1772,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PartialOffDayTypeID");
+                    b.HasKey("OffDayTypeID");
 
-                    b.ToTable("PartialOffDayTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            PartialOffDayTypeID = 1,
-                            Description = "Partial Sick Day"
-                        },
-                        new
-                        {
-                            PartialOffDayTypeID = 2,
-                            Description = "Partial Vacation Day"
-                        });
+                    b.ToTable("PartialOffDayType");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Payment", b =>

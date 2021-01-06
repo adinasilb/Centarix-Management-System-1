@@ -9,7 +9,7 @@ namespace PrototypeWithAuth.Models
     public class PartialOffDayType
     {
         [Key]
-        public int OffDayTypeID { get; set; }
+        public int PartialOffDayTypeID { get; set; }
         public string Description { get; set; }
         public IEnumerable<EmployeeHours> EmployeeHours { get; set; }
     }

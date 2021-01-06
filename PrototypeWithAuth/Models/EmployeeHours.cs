@@ -32,7 +32,7 @@ namespace PrototypeWithAuth.Models
         public OffDayType OffDayType { get; set; }
         public int? PartialOffDayTypeID { get; set; }
         public PartialOffDayType PartialOffDayType { get; set; }
-        public DateTime PartialOffDayHours { get; set; }
+        public TimeSpan? PartialOffDayHours { get; set; }
 
         private TimeSpan? _TotalHours;
         //[DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
