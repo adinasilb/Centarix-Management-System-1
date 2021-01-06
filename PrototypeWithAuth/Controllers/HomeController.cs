@@ -191,12 +191,8 @@ namespace PrototypeWithAuth.Controllers
             //await _userManager.SetTwoFactorEnabledAsync(user, true);
             return RedirectToAction("Index");
         }
-        private void fillInTimekeeperMissingDays(ApplicationUser user)
-        {
-            if (user.LastLogin == new DateTime())
-            {
-                return;
-            }
+        private void fillInTimekeeperMissingDays(Employee user)
+        {           
             DateTime nextDay = user.LastLogin.AddDays(1);
             var year = nextDay.Year;
             var companyDaysOff = _context.CompanyDayOffs.Where(d => d.Date.Year == year).ToList();
@@ -247,10 +243,6 @@ namespace PrototypeWithAuth.Controllers
 
         private void fillInOrderLate(ApplicationUser user)
         {
-            if (user.LastLogin == new DateTime())
-            {
-                return;
-            }
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
 
@@ -279,10 +271,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private void fillInTimekeeperNotifications(ApplicationUser user)
         {
-            if (user.LastLogin == new DateTime())
-            {
-                return;
-            }
+
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
                 var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null) || (r.Entry2 != null && r.Exit2 == null))

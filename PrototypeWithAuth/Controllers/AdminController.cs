@@ -252,6 +252,7 @@ namespace PrototypeWithAuth.Controllers
                 IsUser = true,
                 NeedsToResetPassword = true,
                 TwoFactorEnabled = true
+                
             };
             if (UserType == 4)
             {
@@ -263,6 +264,14 @@ namespace PrototypeWithAuth.Controllers
                 /*Employee*/
                 user.IsUser = true;
                 user.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
+                if (user.StartedWorking > AppUtility.DateSoftwareLaunched)
+                {
+                    user.LastLogin = user.StartedWorking;
+                }
+                else
+                {
+                    user.LastLogin = AppUtility.DateSoftwareLaunched;
+                }
                 user.DOB = registerUserViewModel.NewEmployee.DOB;
                 user.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
                 user.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;
@@ -627,7 +636,7 @@ namespace PrototypeWithAuth.Controllers
                     employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
                     employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
                     employeeEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
-                    employeeEditted.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
+                    employeeEditted.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;               
                     employeeEditted.DOB = registerUserViewModel.NewEmployee.DOB;
                     employeeEditted.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
                     employeeEditted.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;
