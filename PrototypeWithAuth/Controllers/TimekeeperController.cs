@@ -439,13 +439,14 @@ namespace PrototypeWithAuth.Controllers
             //    EmployeeHoursAwaitingApprovalID = awaitingApproval.EmployeeHoursAwaitingApprovalID
             //};
             var eh = _context.EmployeeHours.Where(eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date).FirstOrDefault();
-         
+           
             var updateHoursDate = updateHoursViewModel.EmployeeHour.Date;
-            int? employeeHoursID = null;
-            if (updateHoursViewModel.EmployeeHour.EmployeeHoursID != 0)
+            if (eh == null)
             {
-                employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
+                _context.Update(updateHoursViewModel.EmployeeHour);
+                await _context.SaveChangesAsync();
             }
+            var employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
             if (ehaa == null)
             {
                 ehaa = new EmployeeHoursAwaitingApproval();
@@ -491,6 +492,7 @@ namespace PrototypeWithAuth.Controllers
             ehaa.Date = updateHoursViewModel.EmployeeHour.Date;
             ehaa.EmployeeHoursStatusEntry1ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID;
             ehaa.EmployeeHoursStatusEntry2ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry2ID;
+            ehaa.IsDenied = false;
             //mark as forgot to report if bool is true and not work from home
             if (updateHoursViewModel.IsForgotToReport && updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID!=1)
             {
@@ -547,7 +549,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private bool checkIfMoreThan2ConsecutiveDays(DateTime? date)
         {
-            var daysWithinRange = _context.EmployeeHours.Where(eh => eh.Date < date?.AddDays(3) && date > eh.Date?.AddDays(-3));
+           // var daysWithinRange = _context.EmployeeHours.Where(eh => eh.Date < date?.AddDays(3) && date > eh.Date.AddDays(-3));
 
             return true;
         }
