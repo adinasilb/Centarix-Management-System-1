@@ -66,9 +66,9 @@
                     <td width="12%">
                         @{
                             var src = "/UserImages/user-image-placeholder.png";
-                            if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                            if (hours.EmployeeHoursAwaitingApproval.Employee.UserImage != null)
                             {
-                                src = src = "\\" + AppUtility.GetLastFiles(UserManager.GetUserAsync(User).Result.UserImage, 2);
+                                src = src = "\\" + AppUtility.GetLastFiles(hours.EmployeeHoursAwaitingApproval.Employee.UserImage, 2);
                             }
                         }
                         <img id="user-image" class="circular-profile-img circular-profile-img-65" src="@src" />
