@@ -176,66 +176,70 @@ namespace PrototypeWithAuth.Controllers
                 SickDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).OrderByDescending(eh => eh.Date),
                 SelectedYear = year
             };
-            if (year < user.StartedWorking.Year)
-            {
-                return daysOffViewModel;
-            }
-            if (year == DateTime.Now.Year && user.StartedWorking.Year!=year)
-            {
-                daysOffViewModel.VacationDays = (user.VacationDaysPerMonth * month) + user.RollOverVacationDays;
-                daysOffViewModel.SickDays = (user.SickDaysPerMonth * month) + user.RollOverSickDays;
-            }
-            else if(user.StartedWorking.Year == year)
-            {
-                daysOffViewModel.VacationDays = user.VacationDaysPerMonth * (13 - user.StartedWorking.Month);
-                daysOffViewModel.SickDays = user.SickDaysPerMonth * (13 - user.StartedWorking.Month);
-            }
-            else
-            {
-                daysOffViewModel.VacationDays = user.VacationDays;
-                daysOffViewModel.SickDays = user.SickDays;
-            }
+            var sickDaysVacationDaysLeft = getVacationSickDaysLeft(user, year);
+            daysOffViewModel.VacationDays = sickDaysVacationDaysLeft.TotalVacationDays;
+            daysOffViewModel.SickDays = sickDaysVacationDaysLeft.TotalSickDays;
             return daysOffViewModel;
         }
 
-        //private double getVacationDaysLeft(Employee user)
-        //{
-        //    int year = DateTime.Now.Year;
-        //    double vacationLeft = 0;
+        private DaysOffViewModel getVacationSickDaysLeft(Employee user, int SelectedYear)
+        {
+            int year = AppUtility.YearStartedTimeKeeper;
+            if (user.StartedWorking.Year > AppUtility.YearStartedTimeKeeper)
+            {
+                year = user.StartedWorking.Year;
+            }
 
-        //    while (year >= user.StartedWorking.Year)
-        //    {
-        //        double vacationDays = 0;
-        //        double vacationDaysPerMonth = user.VacationDays / 12.0;
-        //        if (year == user.StartedWorking.Year)
-        //        {
-        //            int month = 12 - user.StartedWorking.Month + 1; //includes this month, even though month is not finished yet
-        //            double vacationDaysBeforeRound = vacationDaysPerMonth * month;
-        //            vacationDays = (int)Math.Ceiling(vacationDaysBeforeRound);
-        //        }
-        //        else if (year == DateTime.Now.Year)
-        //        {
-        //            int month = DateTime.Now.Month;
-        //            double vacationDaysBeforeRound = vacationDaysPerMonth * month;
-        //            vacationDays = (int)Math.Ceiling(vacationDaysBeforeRound);
-        //        }
-        //        else
-        //        {
-        //            vacationDays = user.VacationDays;
-        //        }
-        //        DaysOffViewModel summaryOfDaysOff = new DaysOffViewModel
-        //        {
-        //            Year = year,
-        //            TotalVacationDays = vacationDays,
-        //            VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count()
+            DaysOffViewModel pastYearViewModel = new DaysOffViewModel();
 
-        //        };
-
-        //        year -= 1;
-        //        vacationLeft += summaryOfDaysOff.VacationDaysLeft ;
-        //    }
-        //    return vacationLeft;
-        //}
+            while (year <= SelectedYear)
+            {
+                double vacationDays = 0;
+                double sickDays = 0;
+                var vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count();
+                var sickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
+                if (year == AppUtility.YearStartedTimeKeeper & year == SelectedYear)
+                {
+                    int month = DateTime.Now.Month;
+                    vacationDays = (user.VacationDaysPerMonth * month) + user.RollOverVacationDays;
+                    sickDays = (user.SickDaysPerMonth * month) + user.RollOverSickDays;
+                }
+                else if (year == AppUtility.YearStartedTimeKeeper)
+                {
+                    int month = DateTime.Now.Month;
+                    vacationDays = user.VacationDays + user.RollOverVacationDays;
+                    sickDays = user.SickDays + user.RollOverSickDays;
+                }
+                else if (year == user.StartedWorking.Year)
+                {
+                    int month = 12 - user.StartedWorking.Month + 1;
+                    vacationDays = user.VacationDaysPerMonth * month;
+                    sickDays = user.SickDays * month;
+                }
+                else if (year == DateTime.Now.Year)
+                {
+                    int month = DateTime.Now.Month;
+                    vacationDays = (user.VacationDaysPerMonth * month) + pastYearViewModel.VacationDaysLeft;
+                    sickDays = (user.SickDaysPerMonth * month) + pastYearViewModel.SickDaysLeft;
+                }
+                else
+                {
+                    vacationDays = user.VacationDays + pastYearViewModel.VacationDaysLeft;
+                    sickDays = user.SickDays + pastYearViewModel.SickDaysLeft;
+                }
+                DaysOffViewModel summaryOfDaysOff = new DaysOffViewModel
+                {
+                    Year = year,
+                    TotalVacationDays = vacationDays,
+                    VacationDaysTaken = vacationDaysTaken,
+                    SickDaysTaken = sickDaysTaken,
+                    TotalSickDays = sickDays
+                };
+                year = year + 1;
+                pastYearViewModel = summaryOfDaysOff;
+            }
+            return pastYearViewModel;
+        }
 
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
@@ -345,19 +349,34 @@ namespace PrototypeWithAuth.Controllers
             {
                 List<DaysOffViewModel> daysOffByYear = new List<DaysOffViewModel>();
                 SummaryOfDaysOffViewModel summaryOfDaysOffViewModel = new SummaryOfDaysOffViewModel();
-                int year = DateTime.Now.Year;
-                var startYear = AppUtility.YearStartedTimeKeeper;
-                if (user.StartedWorking.Year > startYear)
+                int year = AppUtility.YearStartedTimeKeeper;
+                if (user.StartedWorking.Year > AppUtility.YearStartedTimeKeeper)
                 {
-                    startYear = user.StartedWorking.Year;
+                    year = user.StartedWorking.Year;
                 }
-                while (year >= startYear)
+                var thisYear = DateTime.Now.Year;
+
+                DaysOffViewModel pastYearViewModel = new DaysOffViewModel();
+
+                while (year <= thisYear)
                 {
                     double vacationDays = 0;
                     double sickDays = 0;
                     var vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count();
                     var sickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
-                    if (year == user.StartedWorking.Year)
+                    if(year==AppUtility.YearStartedTimeKeeper & year==thisYear)
+                    {
+                        int month = DateTime.Now.Month;
+                        vacationDays = (user.VacationDaysPerMonth * month) + user.RollOverVacationDays;
+                        sickDays = (user.SickDaysPerMonth * month) + user.RollOverSickDays;
+                    }
+                    else if (year == AppUtility.YearStartedTimeKeeper)
+                    {
+                        int month = DateTime.Now.Month;
+                        vacationDays = user.VacationDays + user.RollOverVacationDays;
+                        sickDays = user.SickDays + user.RollOverSickDays;
+                    }
+                    else if (year == user.StartedWorking.Year)
                     {
                         int month = 12 - user.StartedWorking.Month + 1;
                          vacationDays = user.VacationDaysPerMonth * month;
@@ -366,15 +385,13 @@ namespace PrototypeWithAuth.Controllers
                     else if (year == DateTime.Now.Year)
                     {
                         int month = DateTime.Now.Month;
-                        vacationDays = (user.VacationDaysPerMonth * month)+user.RollOverVacationDays;
-                        sickDays = (user.SickDaysPerMonth * month)+user.RollOverSickDays;
-                        summaryOfDaysOffViewModel.VacationDaysLeft = vacationDays - vacationDaysTaken;
-                        summaryOfDaysOffViewModel.SickDaysLeft = sickDays - sickDaysTaken;
+                        vacationDays = (user.VacationDaysPerMonth * month) + pastYearViewModel.VacationDaysLeft;
+                        sickDays = (user.SickDaysPerMonth * month) + pastYearViewModel.SickDaysLeft;
                     }
                     else
                     {
-                        vacationDays = user.VacationDays;
-                        sickDays = user.SickDays;
+                        vacationDays = user.VacationDays + pastYearViewModel.VacationDaysLeft;
+                        sickDays = user.SickDays + pastYearViewModel.SickDaysLeft;
                     }
                     DaysOffViewModel summaryOfDaysOff = new DaysOffViewModel
                     {
@@ -384,12 +401,20 @@ namespace PrototypeWithAuth.Controllers
                         SickDaysTaken = sickDaysTaken,
                         TotalSickDays = sickDays
                     };
+                    if (year == DateTime.Now.Year)
+                    {
+                        summaryOfDaysOffViewModel.VacationDaysLeft = summaryOfDaysOff.VacationDaysLeft;
+                        summaryOfDaysOffViewModel.SickDaysLeft = summaryOfDaysOff.SickDaysLeft;
+                    }
                     daysOffByYear.Add(summaryOfDaysOff);
-                    year = year - 1;
+                    year = year + 1;
+                    pastYearViewModel = summaryOfDaysOff;
+                  
                 }
-                summaryOfDaysOffViewModel.DaysOffs = daysOffByYear;
+                summaryOfDaysOffViewModel.DaysOffs = daysOffByYear.OrderByDescending(d=>d.Year);
                 summaryOfDaysOffViewModel.TotalVacationDaysPerYear = user.VacationDays;
                 summaryOfDaysOffViewModel.TotalSickDaysPerYear = user.SickDays;
+              
                 return summaryOfDaysOffViewModel;
             }
 

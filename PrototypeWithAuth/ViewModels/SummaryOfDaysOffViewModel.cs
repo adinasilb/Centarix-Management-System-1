@@ -7,7 +7,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class SummaryOfDaysOffViewModel
     {
-        public List<PrototypeWithAuth.ViewModels.DaysOffViewModel> DaysOffs { get; set; }
+        public IEnumerable<PrototypeWithAuth.ViewModels.DaysOffViewModel> DaysOffs { get; set; }
         public double SickDaysLeft { get; set; }
         public double VacationDaysLeft { get; set; }
         public double TotalVacationDaysPerYear { get; set; }
