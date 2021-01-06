@@ -41,7 +41,7 @@ namespace PrototypeWithAuth.Controllers
             if (user.LastLogin.Date < DateTime.Today)
             {
                 fillInOrderLate(user);
-                if (User.IsInRole("Timekeeper") && user.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
+                if (User.IsInRole("TimeKeeper") && user.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
                 {
                     fillInTimekeeperMissingDays(user);
                     fillInTimekeeperNotifications(user);                  

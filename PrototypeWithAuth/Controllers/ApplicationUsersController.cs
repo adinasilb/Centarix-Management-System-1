@@ -205,7 +205,8 @@ namespace PrototypeWithAuth.Controllers
         }
         private List<EmployeeHoursAwaitingApprovalViewModel> GetAwaitingApprovalModel()
         {
-            var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatusEntry1).Include(ehwa => ehwa.EmployeeHoursStatusEntry2).ToList();
+            var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatusEntry1).Include(ehwa => ehwa.EmployeeHoursStatusEntry2).ToList()
+                .Where(ehwa=>!ehwa.IsDenied??true);
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = new List<EmployeeHoursAwaitingApprovalViewModel>();
             foreach (EmployeeHoursAwaitingApproval ehaa in employeeHoursAwaitingApproval)
             {
@@ -286,6 +287,41 @@ namespace PrototypeWithAuth.Controllers
 
             return RedirectToAction("_AwaitingApproval");
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Users")]
+        public async Task<IActionResult> DenyApprovalRequestModal(int ehaaID)
+        {
+            var ehaa = _context.EmployeeHoursAwaitingApprovals
+                .Include(ehaa => ehaa.EmployeeHours)
+                .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ehaaID).FirstOrDefault();
+            return PartialView(ehaa);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Users")]
+        public async Task<IActionResult> DenyApprovalRequestModal(EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval)
+        {
+            EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == employeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID).FirstOrDefaultAsync();
+
+            employeeHoursBeingApproved.IsDenied = true;
+
+            try
+            {
+                _context.Update(employeeHoursBeingApproved);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return View("~/Views/Shared/RequestError.cshtml");
+            }
+
+            return RedirectToAction("_AwaitingApproval");
+        }
+
+
     }
 
 }
