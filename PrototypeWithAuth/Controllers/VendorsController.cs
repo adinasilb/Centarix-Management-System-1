@@ -21,12 +21,12 @@ using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class VendorsController : Controller
+    public class VendorsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
 
-        public VendorsController(ApplicationDbContext context, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager)
+        public VendorsController(ApplicationDbContext context, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager) : base(context)
         {
             _context = context;
             _userManager = userManager;

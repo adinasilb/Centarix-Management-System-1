@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class UnitParentTypesController : Controller
+    public class UnitParentTypesController
     {
         //Get the Jsons of Unit Parent Types so you can filter them in JS
         //[HttpGet]

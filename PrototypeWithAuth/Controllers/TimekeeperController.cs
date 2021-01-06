@@ -13,14 +13,14 @@ using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class TimekeeperController : Controller
+    public class TimekeeperController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public TimekeeperController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
-        {
+        public TimekeeperController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager):base(context)
+        {            
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -245,36 +245,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> HoursPage(int month = 0, int year = 0)
         {
-            SummaryHoursViewModel summaryHoursViewModel = SummaryHoursFunction(month, year);
-            return PartialView(summaryHoursViewModel);
-        }
-
-        private SummaryHoursViewModel SummaryHoursFunction(int month, int year)
-        {
             var userid = _userManager.GetUserId(User);
             var user = _context.Employees.Where(u => u.Id == userid).Include(e => e.SalariedEmployee).FirstOrDefault();
-
-            var hours = GetHours(new DateTime(year, month, DateTime.Now.Day));
-            var CurMonth = new DateTime(year, month, DateTime.Now.Day);
-            double? totalhours;
-            if (user.EmployeeStatusID != 1)
-            {
-                totalhours = null;
-            }
-            else
-            {
-                var vacationSickCount = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date).Count();
-                totalhours = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), _context.CompanyDayOffs, vacationSickCount) * user.SalariedEmployee.HoursPerDay;
-            }
-            SummaryHoursViewModel summaryHoursViewModel = new SummaryHoursViewModel()
-            {
-                EmployeeHours = hours,
-                CurrentMonth = CurMonth,
-                TotalHoursInMonth = totalhours,
-                SelectedYear = year,
-                TotalHolidaysInMonth = _context.CompanyDayOffs.Where(cdo=> cdo.Date.Year==year && cdo.Date.Month == month ).Count()
-            };
-            return summaryHoursViewModel;
+            SummaryHoursViewModel summaryHoursViewModel = base.SummaryHoursFunction(month, year, user);
+            return PartialView(summaryHoursViewModel);
         }
 
         [HttpGet]
@@ -284,33 +258,12 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryHours;
-           
-            return PartialView(SummaryHoursFunction(DateTime.Now.Month, DateTime.Now.Year));
-        }
-
-        private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(DateTime monthDate)
-        {
             var userid = _userManager.GetUserId(User);
-            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
-            var hours = _context.EmployeeHours.Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatusEntry1).Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType).Where(eh => eh.EmployeeID == userid).Where(eh => eh.Date.Month == monthDate.Month && eh.Date.Year == monthDate.Year && eh.Date.Date <= DateTime.Now.Date)
-                .OrderByDescending(eh => eh.Date).ToList();
-
-            List<EmployeeHoursAndAwaitingApprovalViewModel> hoursList = new List<EmployeeHoursAndAwaitingApprovalViewModel>();
-            foreach (var hour in hours)
-            {
-                var ehaaavm = new EmployeeHoursAndAwaitingApprovalViewModel()
-                {
-                    EmployeeHours = hour
-                };
-                if (_context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeID == hour.EmployeeID).Where(ehaa => ehaa.Date == hour.Date).Any())
-                {
-                    ehaaavm.EmployeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals
-                        .Where(ehaa => ehaa.EmployeeID == hour.EmployeeID).Where(ehaa => ehaa.Date == hour.Date).FirstOrDefault();
-                }
-                hoursList.Add(ehaaavm);
-            }
-            return hoursList;
+            var user = _context.Employees.Where(u => u.Id == userid).Include(e => e.SalariedEmployee).FirstOrDefault();
+            return PartialView(base.SummaryHoursFunction(DateTime.Now.Month, DateTime.Now.Year, user));
         }
+
+     
 
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]

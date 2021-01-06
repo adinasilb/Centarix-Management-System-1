@@ -18,12 +18,12 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ApplicationUsersController : Controller
+    public class ApplicationUsersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context)
         {
             _context = context;
             _userManager = userManager;

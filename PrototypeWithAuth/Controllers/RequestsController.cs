@@ -38,7 +38,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class RequestsController : Controller
+    public class RequestsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -59,7 +59,7 @@ namespace PrototypeWithAuth.Controllers
         //    _viewEngine = viewEngine;
         //}
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/) : base(context)
         {
             //_Context = Context;
             _context = context;

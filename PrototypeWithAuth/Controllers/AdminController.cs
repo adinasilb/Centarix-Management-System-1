@@ -30,7 +30,7 @@ using OpenCvSharp;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private SignInManager<ApplicationUser> _signManager;
@@ -41,7 +41,7 @@ namespace PrototypeWithAuth.Controllers
 
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder)
+            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder) : base(context)
         {
             _context = context;
             _userManager = userManager;

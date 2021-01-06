@@ -18,7 +18,7 @@ using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.Controllers
         private readonly UrlEncoder _urlEncoder;
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, UrlEncoder urlEncoder)
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, UrlEncoder urlEncoder):base(context)
         {
             _context = context;
             _logger = logger;

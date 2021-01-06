@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ManagerController : Controller
+    public class ManagerController :Controller
     {
         [Authorize(Roles = "Manager")]
         public IActionResult Index()

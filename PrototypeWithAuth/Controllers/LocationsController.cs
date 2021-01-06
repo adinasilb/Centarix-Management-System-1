@@ -21,11 +21,11 @@ using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class LocationsController : Controller
+    public class LocationsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public LocationsController(ApplicationDbContext context)
+        public LocationsController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
