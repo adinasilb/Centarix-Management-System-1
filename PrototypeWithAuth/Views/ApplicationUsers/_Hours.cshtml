@@ -123,10 +123,12 @@
                             <img id="user-image" class="circular-profile-img circular-profile-img-65" src="@src" />
                         </td>
                         <td width="11%">
-                            @employee.Employee.FirstName  @employee.Employee.LastName
+                            <div class="open-user-hours-summary">
+                                @employee.Employee.FirstName  @employee.Employee.LastName
+                            </div>
                         </td>
                         <td width="11%">
-                            @employee.Employee.JobSubcategoryType?.JobCategoryType?.Description;
+                            @employee.Employee.JobSubcategoryType?.JobCategoryType?.Description
                         </td>
                         <td width="11%">
                             @employee.Employee.JobSubcategoryType?.Description
