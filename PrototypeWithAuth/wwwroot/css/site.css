@@ -620,13 +620,17 @@ input.select-dropdown {
     width: 30%;
 }
 
-    .login-button:hover {
-        color: white !important;
-    }
+.login-button:hover {
+    color: white !important;
+}
+
+.validation-summary-errors ul {
+    list-style-type: none;
+    padding: 0;
+}
 
 
 /*general buttons*/
-
 .cancel-button {
     background-color: transparent;
     border: 1px solid rgba(0,0,0,0.32);
