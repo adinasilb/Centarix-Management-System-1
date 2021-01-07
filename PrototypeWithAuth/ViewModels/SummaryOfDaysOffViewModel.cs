@@ -9,7 +9,12 @@ namespace PrototypeWithAuth.ViewModels
     {
         public IEnumerable<PrototypeWithAuth.ViewModels.DaysOffViewModel> DaysOffs { get; set; }
         public double SickDaysLeft { get; set; }
-        public double VacationDaysLeft { get; set; }
+        private double _VacationDaysLeft;
+        public double VacationDaysLeft
+        {
+            get { return Math.Round(_VacationDaysLeft, 2); }
+            set { _VacationDaysLeft = value; }
+        }
         public double TotalVacationDaysPerYear { get; set; }
         public double TotalSickDaysPerYear { get; set; }
     }

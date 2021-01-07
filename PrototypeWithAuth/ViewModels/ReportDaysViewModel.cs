@@ -10,6 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public double VacationDays { get; set; }
         public IEnumerable<EmployeeHours> VacationDaysTaken { get; set; }
+        public double  VacationDaysTakenCount { get; set; }
         public IEnumerable<EmployeeHours> SickDaysTaken { get; set; }
         private double _SickDays;
         public double SickDays
@@ -39,7 +40,7 @@ namespace PrototypeWithAuth.ViewModels
         }
         public double VacationDaysLeft 
         { 
-            get { return VacationDays - VacationDaysTaken.Count(); } private set {; } 
+            get { return VacationDays - VacationDaysTakenCount; } private set {; } 
         }
         public double SickDaysLeft 
         {

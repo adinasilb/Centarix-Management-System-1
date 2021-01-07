@@ -137,7 +137,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryDaysOff;
             var userid = _userManager.GetUserId(User);
-            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
+            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).Include(u => u.SalariedEmployee).FirstOrDefault();
             if (user != null)
             {
                 ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, DateTime.Now.Year);
@@ -155,7 +155,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryDaysOff;
             var userid = _userManager.GetUserId(User);
-            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault();
+            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).Include(u=>u.SalariedEmployee).FirstOrDefault();
             if (user != null)
             {
                 ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, year);
@@ -169,7 +169,6 @@ namespace PrototypeWithAuth.Controllers
             int month = DateTime.Now.Month;
             double vacationDays =  user.VacationDaysPerMonth * month;
             double sickDays = user.SickDays * month;
-            
             var daysOffViewModel = new ReportDaysViewModel
             {
                 VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).OrderByDescending(eh => eh.Date),
@@ -179,6 +178,7 @@ namespace PrototypeWithAuth.Controllers
             var sickDaysVacationDaysLeft = getVacationSickDaysLeft(user, year);
             daysOffViewModel.VacationDays = sickDaysVacationDaysLeft.TotalVacationDays;
             daysOffViewModel.SickDays = sickDaysVacationDaysLeft.TotalSickDays;
+            daysOffViewModel.VacationDaysTakenCount = sickDaysVacationDaysLeft.VacationDaysTaken;
             return daysOffViewModel;
         }
 
@@ -196,7 +196,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 double vacationDays = 0;
                 double sickDays = 0;
-                var vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count();
+                double vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count();
+                if (user.EmployeeStatusID == 1)
+                {
+                    var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                    vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay),2);
+                }
                 var sickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
                 if (year == AppUtility.YearStartedTimeKeeper & year == SelectedYear)
                 {
@@ -295,7 +300,7 @@ namespace PrototypeWithAuth.Controllers
         private SummaryOfDaysOffViewModel ReportDaysOffFunction()
         {
             var userid = _userManager.GetUserId(User);
-            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).FirstOrDefault(); //TODO: make sure this is only employees
+            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).Include(u=>u.SalariedEmployee).FirstOrDefault(); //TODO: make sure this is only employees
 
 
             if (user != null)
@@ -315,8 +320,12 @@ namespace PrototypeWithAuth.Controllers
                 {
                     double vacationDays = 0;
                     double sickDays = 0;
-                    var vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count();
-                    //var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Select(eh=> new { Totalhours = eh.PartialOffDayHours?.TotalHours);
+                    double vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count();
+                    if(user.EmployeeStatusID ==  1)
+                    {
+                        var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                        vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay),2);
+                    }                  
                     var sickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
                     if(year==AppUtility.YearStartedTimeKeeper & year==thisYear)
                     {
@@ -385,7 +394,7 @@ namespace PrototypeWithAuth.Controllers
                 chosenDate = DateTime.Today;
             }
             var userID = _userManager.GetUserId(User);
-            var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).Include(eh=>eh.OffDayType).FirstOrDefault();
+            var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).Include(eh=>eh.OffDayType).Include(e=>e.Employee).FirstOrDefault();
             if (employeeHour == null)
             {
                 employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate };
@@ -420,7 +429,7 @@ namespace PrototypeWithAuth.Controllers
             var updateHoursDate = updateHoursViewModel.EmployeeHour.Date;
             if (eh == null)
             {
-                _context.Update(updateHoursViewModel.EmployeeHour);
+                _context.Update(new EmployeeHours () { Date = updateHoursViewModel.EmployeeHour.Date, EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID });
                 await _context.SaveChangesAsync();
             }
             var employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
@@ -469,6 +478,9 @@ namespace PrototypeWithAuth.Controllers
             ehaa.EmployeeHoursStatusEntry1ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID;
             ehaa.EmployeeHoursStatusEntry2ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry2ID;
             ehaa.IsDenied = false;
+            ehaa.PartialOffDayTypeID = updateHoursViewModel.EmployeeHour.PartialOffDayTypeID;
+            ehaa.PartialOffDayHours = updateHoursViewModel.EmployeeHour.PartialOffDayHours;
+            
             //mark as forgot to report if bool is true and not work from home
             if (updateHoursViewModel.IsForgotToReport && updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID!=1)
             {
