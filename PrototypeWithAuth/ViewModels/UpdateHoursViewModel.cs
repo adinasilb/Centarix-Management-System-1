@@ -12,5 +12,6 @@ namespace PrototypeWithAuth.ViewModels
         public String PageType { get; set; }
         public bool IsForgotToReport { get; set; }
         public int AutoFillEntry1Type { get; set; }
+        public IEnumerable<PartialOffDayType> PartialOffDayTypes {get; set;}
     }
 }

@@ -1643,7 +1643,7 @@ $(function () {
 		});
 	};
 
-	$(".open-work-from-home-modal").off('click').click(function (e) {
+	$(".open-work-from-home-modal, .open-update-hours-modal").off('click').click(function (e) {
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
 		}
@@ -1651,25 +1651,6 @@ $(function () {
 			pageType = "ReportHours";
 		}
 		var itemurl = "UpdateHours?PageType=" + pageType + "&isWorkFromHome=" + true;
-		$("#loading").show();
-		$.fn.CallModal(itemurl);
-	});
-	$(".open-update-hours-modal").off('click').click(function (e) {
-		console.log('update hours');
-		e.preventDefault();
-		var val = $(this).attr('data-value');
-		console.log('val' + val);
-		if (val != '') {
-			var date = new Date(val).toISOString();
-			console.log(date)
-		}
-		if ($(this).hasClass("SummaryHours")) {
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportHours")) {
-			pageType = "ReportHours";
-		}
-		var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + date;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});

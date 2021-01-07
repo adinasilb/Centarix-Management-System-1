@@ -32,6 +32,7 @@ namespace PrototypeWithAuth.Models
         public OffDayType OffDayType { get; set; }
         public int? PartialOffDayTypeID { get; set; }
         public PartialOffDayType PartialOffDayType { get; set; }
+        [DataType(DataType.Time)]
         public TimeSpan? PartialOffDayHours { get; set; }
 
         private TimeSpan? _TotalHours;

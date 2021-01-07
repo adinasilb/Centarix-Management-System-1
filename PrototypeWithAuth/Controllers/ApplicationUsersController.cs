@@ -268,7 +268,9 @@ namespace PrototypeWithAuth.Controllers
                 EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID,
                 EmployeeID = employeeHoursBeingApproved.EmployeeID,
                 Date = employeeHoursBeingApproved.Date,
-                EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID ?? 0
+                EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID ?? 0,
+                PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID,
+                PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours
             };
 
             try

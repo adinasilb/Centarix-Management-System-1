@@ -181,11 +181,29 @@
                     <div class="row  entry2 @displayEntry2 text-center"><div class=" col-6 offset-3"><input type="button" value="- Remove Entry" class="btn  btn-rounded  border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize removeEntry " style="font-size:1rem;" /></div></div>
 
                     <div class="row addEntryButton text-center @displayAdd"> <div class=" col-6 offset-3"><input id="addEntry" type="button" value="+ Add Entry" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize " style="font-size:1rem;" /></div></div>
-
+                    <div class="row">
+                       
+                        <div class="col-6">
+                            <label asp-for="EmployeeHour.PartialOffDayHours" class="control-label">Partial Sick/Vacation</label>
+                            @Html.DropDownListFor(
+                                       vm => vm.EmployeeHour.PartialOffDayTypeID,
+                                       new SelectList(
+                                       Model.PartialOffDayTypes,
+                                       dataValueField: "PartialOffDayTypeID",
+                                       dataTextField: "Description", selectedValue:2),
+                                       htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext" }
+                                       )
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="EmployeeHour.PartialOffDayHours" class="control-label">Hours</label>
+                            <input asp-for="EmployeeHour.PartialOffDayHours" class="form-control-plaintext border-bottom " />
+                            <span asp-validation-for="EmployeeHour.PartialOffDayHours" class="text-danger-centarix"></span>
+                        </div>
+                    </div>
                     <div class="modal-footer  border-0  modal-footer-mt">
                         <div class="mx-auto text-center">
                             <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin " asp-action="UpdateHours" asp-route-PageType="@Model.PageType" value="Save" />
-                            <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>@*FAIGE: should this delete the request?*@
+                            <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -195,4 +213,5 @@
 </div>
 <script>
     $('#EmployeeHour_EmployeeHoursStatusEntry1ID').materialSelect();
-    $('#EmployeeHour_EmployeeHoursStatusEntry2ID').materialSelect();</script>
+    $('#EmployeeHour_EmployeeHoursStatusEntry2ID').materialSelect();
+    $('#EmployeeHour_PartialOffDayTypeID').materialSelect();</script>
