@@ -523,14 +523,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> SickDayConfirmModal(String PageType, DateTime? date)
         {            
-            return PartialView("SickDayConfirmModal", new SickDayViewModel { PageType = PageType, SelectedDate = date ?? DateTime.Now, NeedsDoctorsNote=checkIfMoreThan2ConsecutiveDays(date) });
+            return PartialView("SickDayConfirmModal", new SickDayViewModel { PageType = PageType, SelectedDate = date ?? DateTime.Now });
         }
-        private bool checkIfMoreThan2ConsecutiveDays(DateTime? date)
-        {
-           // var daysWithinRange = _context.EmployeeHours.Where(eh => eh.Date < date?.AddDays(3) && date > eh.Date.AddDays(-3));
 
-            return true;
-        }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> VacationDayConfirmModal(String PageType, DateTime? date)

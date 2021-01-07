@@ -117,10 +117,10 @@
                                 var src = "/UserImages/user-image-placeholder.png";
                                 if (employee.Employee.UserImage != null)
                                 {
-                                    src = "\\" + AppUtility.GetLastFiles(UserManager.GetUserAsync(User).Result.UserImage, 2);
+                                    src = "\\" + AppUtility.GetLastFiles(employee.Employee.UserImage, 2);
                                 }
                             }
-                            <img id="user-image" class="circular-profile-img circular-profile-img-65" src="@src" />
+                            <img  class="circular-profile-img circular-profile-img-65" src="@src" />
                         </td>
                         <td width="11%">
                             <div >
