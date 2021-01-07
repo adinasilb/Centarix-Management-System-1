@@ -239,10 +239,11 @@
                 @Model.TotalHolidaysInMonth
             </div>
             <div class="col-2">
-                @Model.VacationDayInThisMonth
+        
+                @Model.EmployeeHours.Where(eh => eh.EmployeeHours.OffDayTypeID == 1).Count()
             </div>
             <div class="col-2">
-                @Model.EmployeeHours.Where(eh => eh.EmployeeHours.OffDayTypeID == 2).Count()
+                @Model.VacationDayInThisMonth
             </div>
             <div class="col-2">
                 @Model.EmployeeHours.Where(eh => eh.EmployeeHours.EmployeeHoursStatusEntry1ID == 1).Count()
