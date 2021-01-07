@@ -1644,6 +1644,7 @@ $(function () {
 	};
 
 	$(".open-work-from-home-modal, .open-update-hours-modal").off('click').click(function (e) {
+		e.preventDefault()
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
 		}
