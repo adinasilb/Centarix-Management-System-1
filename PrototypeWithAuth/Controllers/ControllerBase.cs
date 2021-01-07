@@ -33,10 +33,10 @@ namespace PrototypeWithAuth.Controllers
                 {
                     EmployeeHours = hour
                 };
-                if (_context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeID == hour.EmployeeID).Where(ehaa => ehaa.Date == hour.Date).Any())
+                var eha = _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursID == hour.EmployeeHoursID).FirstOrDefault();
+                if (eha!=null)
                 {
-                    ehaaavm.EmployeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals
-                        .Where(ehaa => ehaa.EmployeeID == hour.EmployeeID).Where(ehaa => ehaa.Date == hour.Date).FirstOrDefault();
+                    ehaaavm.EmployeeHoursAwaitingApproval = eha;
                 }
                 hoursList.Add(ehaaavm);
             }

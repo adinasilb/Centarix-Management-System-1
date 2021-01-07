@@ -248,11 +248,12 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> HoursPage(int month = 0, int year = 0)
+        public async Task<IActionResult> HoursPage(int month = 0, int year = 0, AppUtility.PageTypeEnum pageType = AppUtility.PageTypeEnum.TimekeeperSummary)
         {
             var userid = _userManager.GetUserId(User);
             var user = _context.Employees.Where(u => u.Id == userid).Include(e => e.SalariedEmployee).FirstOrDefault();
             SummaryHoursViewModel summaryHoursViewModel = base.SummaryHoursFunction(month, year, user);
+            summaryHoursViewModel.PageType = pageType;
             return PartialView(summaryHoursViewModel);
         }
 

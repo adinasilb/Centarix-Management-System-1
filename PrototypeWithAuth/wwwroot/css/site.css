@@ -2207,15 +2207,29 @@ table.visual-locations-table td .visual-locations-div {
 .no-hours-reported.select-wrapper input.select-dropdown {
     border: none !important;   
 }
-.no-hours-reported.select-wrapper span.caret {
+.timekeeper.no-hours-reported.select-wrapper span.caret {
     padding-left: 0 !important;
     padding-right: .4rem !important;
     padding-top: 0;
     padding-bottom: 0;
     color: var(--timekeeper-color)
 }
-.no-hours-reported.select-wrapper {
-    border : solid 1px var(--timekeeper-color)
+.timekeeper.no-hours-reported.select-wrapper {
+    border : solid 1px var(--timekeeper-color);
+    border-radius: .25rem;
+}
+
+.users.no-hours-reported.select-wrapper span.caret {
+    padding-left: 0 !important;
+    padding-right: .4rem !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: var(--user-color)
+}
+
+.users.no-hours-reported.select-wrapper {
+    border: solid 1px var(--user-color); 
+    border-radius: .25rem;
 }
 
 .not-form-ddl.select-wrapper input.select-dropdown {

@@ -1634,7 +1634,7 @@ $(function () {
 	$.fn.SortByMonth = function (month, year) {
 		$.ajax({
 			async: false,
-			url: 'HoursPage?month=' + month + "&year=" + year,
+			url: '/Timekeeper/HoursPage?month=' + month + "&year=" + year + "&pageType=" + $('#masterPageType').val(),
 			type: 'GET',
 			cache: false,
 			success: function (data) {

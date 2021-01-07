@@ -98,6 +98,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> Hours(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0)
         {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Hours;
+
             WorkersHoursViewModel viewModel = hoursPagePopulate(yearlyMonthlyEnum, month, year);
             return View(viewModel);
         }
@@ -119,9 +123,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 month = DateTime.Now.Month;
             }
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Hours;
+            
             IIncludableQueryable<Employee, SalariedEmployee> employees = _context.Users.OfType<Employee>().Where(u => !u.IsSuspended && u.EmployeeStatusID != 4)
               .Include(e => e.EmployeeStatus).Include(e => e.JobSubcategoryType).ThenInclude(js => js.JobCategoryType)
               .Include(e => e.EmployeeHours).Include(e => e.SalariedEmployee);
@@ -175,6 +177,20 @@ namespace PrototypeWithAuth.Controllers
             };
             return viewModel;
         }
+
+        public async Task<IActionResult> UserHours(string userId)
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Hours;
+
+            Employee user = _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == userId).FirstOrDefault();
+
+            SummaryHoursViewModel viewModel = SummaryHoursFunction(DateTime.Now.Month, DateTime.Now.Year, user);
+            viewModel.PageType = PageTypeEnum.UsersWorkers;
+            return View(viewModel);
+        }
+
         [HttpGet]
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> Salary()
