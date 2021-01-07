@@ -13,5 +13,6 @@ namespace PrototypeWithAuth.ViewModels
         public int  SelectedYear { get; set;  }
         public double? TotalHoursInMonth { get; set; }
         public int TotalHolidaysInMonth { get; set; }
+        public double VacationDayInThisMonth { get; set; }
     }
 }

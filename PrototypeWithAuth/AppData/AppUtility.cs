@@ -404,7 +404,7 @@ namespace PrototypeWithAuth.AppData
             }
             return centarixID;
         }
-        public static int GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs, int vacationSickCount)
+        public static double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs, double vacationSickCount)
         {
             DateTime nextDay = firstOfTheMonth;
             DateTime endOfTheMonth = firstOfTheMonth.AddMonths(1);

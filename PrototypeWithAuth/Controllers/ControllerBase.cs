@@ -47,14 +47,19 @@ namespace PrototypeWithAuth.Controllers
             var hours = GetHours(new DateTime(year, month, DateTime.Now.Day), user);
             var CurMonth = new DateTime(year, month, DateTime.Now.Day);
             double? totalhours;
+            double vacationDaysTaken = 0;
             if (user.EmployeeStatusID != 1)
             {
                 totalhours = null;
             }
             else
             {
-                var vacationSickCount = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date).Count();
-                totalhours = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), _context.CompanyDayOffs, vacationSickCount) * user.SalariedEmployee.HoursPerDay;
+                vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count();
+                var sickCount = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year &&  eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
+                var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
+                totalhours = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), _context.CompanyDayOffs, vacationDaysTaken+sickCount) * user.SalariedEmployee.HoursPerDay;
+               
             }
             SummaryHoursViewModel summaryHoursViewModel = new SummaryHoursViewModel()
             {
@@ -62,7 +67,8 @@ namespace PrototypeWithAuth.Controllers
                 CurrentMonth = CurMonth,
                 TotalHoursInMonth = totalhours,
                 SelectedYear = year,
-                TotalHolidaysInMonth = _context.CompanyDayOffs.Where(cdo => cdo.Date.Year == year && cdo.Date.Month == month).Count()
+                TotalHolidaysInMonth = _context.CompanyDayOffs.Where(cdo => cdo.Date.Year == year && cdo.Date.Month == month).Count(),
+                VacationDayInThisMonth = vacationDaysTaken
             };
             return summaryHoursViewModel;
         }
