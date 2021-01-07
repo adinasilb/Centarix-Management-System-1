@@ -1643,7 +1643,7 @@ $(function () {
 		});
 	};
 
-	$(".open-work-from-home-modal, .open-update-hours-modal").off('click').click(function (e) {
+	$(".open-work-from-home-modal").off('click').click(function (e) {
 		e.preventDefault()
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
@@ -1656,6 +1656,23 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
+	$(".open-update-hours-modal").off('click').click(function (e) {
+		e.preventDefault();
+		var val = $(this).attr("value");
+		if (val != '') {
+			var date = new Date(val).toISOString();
+			console.log(date)
+		}
+		if ($(this).hasClass("SummaryHours")) {
+			pageType = "SummaryHours";
+		}
+		if ($(this).hasClass("ReportHours")) {
+			pageType = "ReportHours";
+		}
+		var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + date;
+		$("#loading").show();
+		$.fn.CallModal(itemurl);
+	});
 	$(".report-vacation-days").off('click').click(function (e) {
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
