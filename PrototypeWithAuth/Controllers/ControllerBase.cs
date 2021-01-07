@@ -62,7 +62,8 @@ namespace PrototypeWithAuth.Controllers
                 CurrentMonth = CurMonth,
                 TotalHoursInMonth = totalhours,
                 SelectedYear = year,
-                TotalHolidaysInMonth = _context.CompanyDayOffs.Where(cdo => cdo.Date.Year == year && cdo.Date.Month == month).Count()
+                TotalHolidaysInMonth = _context.CompanyDayOffs.Where(cdo => cdo.Date.Year == year && cdo.Date.Month == month).Count(),
+                User = user
             };
             return summaryHoursViewModel;
         }

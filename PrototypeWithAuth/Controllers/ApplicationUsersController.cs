@@ -178,13 +178,16 @@ namespace PrototypeWithAuth.Controllers
             return viewModel;
         }
 
-        public async Task<IActionResult> UserHours(Employee user, int month = 0, int year = 0)
+        public async Task<IActionResult> UserHours(string userId)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Hours;
 
-            SummaryHoursViewModel viewModel = SummaryHoursFunction(month, year, user);
+            Employee user = _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == userId).FirstOrDefault();
+
+            SummaryHoursViewModel viewModel = SummaryHoursFunction(DateTime.Now.Month, DateTime.Now.Year, user);
+            viewModel.PageType = PageTypeEnum.UsersWorkers;
             return View(viewModel);
         }
 

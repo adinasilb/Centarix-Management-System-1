@@ -120,11 +120,18 @@
     background-color: var(--user-color);
 }
 
+.users-alt-color {
+    background-color: var(--user-color);
+}
+
 .users-filter {
     filter: var(--users-filter);
 }
 
 .users-font-color {
+    color: var(--user-color);
+}
+.users-font-alt-color {
     color: var(--user-color);
 }
 
