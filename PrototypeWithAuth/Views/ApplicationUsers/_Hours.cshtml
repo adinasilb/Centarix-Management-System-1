@@ -123,8 +123,10 @@
                             <img id="user-image" class="circular-profile-img circular-profile-img-65" src="@src" />
                         </td>
                         <td width="11%">
-                            <div class="open-user-hours-summary">
-                                @employee.Employee.FirstName  @employee.Employee.LastName
+                            <div >
+                                <a href="@Url.Action("UserHours")" class="open-user-hours-summary" value=@employee.Employee>
+                                    @employee.Employee.FirstName  @employee.Employee.LastName
+                                </a>
                             </div>
                         </td>
                         <td width="11%">

@@ -98,6 +98,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> Hours(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0)
         {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Hours;
+
             WorkersHoursViewModel viewModel = hoursPagePopulate(yearlyMonthlyEnum, month, year);
             return View(viewModel);
         }
@@ -119,9 +123,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 month = DateTime.Now.Month;
             }
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Hours;
+            
             IIncludableQueryable<Employee, SalariedEmployee> employees = _context.Users.OfType<Employee>().Where(u => !u.IsSuspended && u.EmployeeStatusID != 4)
               .Include(e => e.EmployeeStatus).Include(e => e.JobSubcategoryType).ThenInclude(js => js.JobCategoryType)
               .Include(e => e.EmployeeHours).Include(e => e.SalariedEmployee);
@@ -175,6 +177,17 @@ namespace PrototypeWithAuth.Controllers
             };
             return viewModel;
         }
+
+        public async Task<IActionResult> UserHours(Employee user, int month = 0, int year = 0)
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersWorkers;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Hours;
+
+            SummaryHoursViewModel viewModel = SummaryHoursFunction(month, year, user);
+            return View(viewModel);
+        }
+
         [HttpGet]
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> Salary()

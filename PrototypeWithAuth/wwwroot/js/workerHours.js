@@ -61,9 +61,4 @@
 		$.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
 		return false;
 	});
-
-	$('open-user-hours-summary').click(function (e)){
-		e.preventDefault();
-
-    }
 })
