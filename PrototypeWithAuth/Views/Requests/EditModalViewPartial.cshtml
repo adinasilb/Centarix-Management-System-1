@@ -143,7 +143,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             </div>
             @if (Model.Request.RequestStatusID == 2 || Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 4 || Model.Request.RequestStatusID == 5)
             {
-                <div class="row">
+                <div class="row @hiddenSummary">
                     <div class="col-6 pr-4">
                         <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
                         <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom " disabled />
@@ -199,6 +199,14 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                         <input value="@DateTime.Now.AddMonths(Model.Request.Warranty ?? 0).ToString("dd/mm/yyyy")" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                     </div>
                 }
+                @if(Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                { 
+                    <div class="col-4">
+                        <label asp-for="Request.URL" class="control-label"></label>
+                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
+                    </div>
+                }
 
             </div>
             <div class="row">
@@ -234,11 +242,14 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 }
 
 
-                <div class="col-4">
-                    <label asp-for="Request.URL" class="control-label"></label>
-                    <input asp-for="Request.URL" class="form-control-plaintext border-bottom mark-readonly" disabled />
-                    <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
-                </div>
+                @if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary)
+                {
+                    <div class="col-4">
+                        <label asp-for="Request.URL" class="control-label"></label>
+                        <input asp-for="Request.URL" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                        <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
+                    </div>
+                }
             </div>
         </div>
 
