@@ -478,7 +478,6 @@ namespace PrototypeWithAuth.Controllers
             ehaa.Date = updateHoursViewModel.EmployeeHour.Date;
             ehaa.EmployeeHoursStatusEntry1ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID;
             ehaa.EmployeeHoursStatusEntry2ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry2ID;
-            ehaa.IsDenied = false;
             ehaa.PartialOffDayTypeID = updateHoursViewModel.EmployeeHour.PartialOffDayTypeID;
             ehaa.PartialOffDayHours = updateHoursViewModel.EmployeeHour.PartialOffDayHours;
             
