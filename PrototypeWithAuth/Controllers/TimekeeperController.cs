@@ -603,12 +603,14 @@ namespace PrototypeWithAuth.Controllers
                         {
                             EmployeeID = userID,
                             Date = dateFrom,
-                            OffDayTypeID = offDayTypeID
-                        };
+                            OffDayTypeID = offDayTypeID,
+                            OffDayType = _context.OffDayTypes.Where(odt => odt.OffDayTypeID == offDayTypeID).FirstOrDefault()
+                    };
                     }
                     else if (employeeHour.Entry1 == null && employeeHour.Entry2 == null && employeeHour.TotalHours == null)
                     {
                         employeeHour.OffDayTypeID = offDayTypeID;
+                        employeeHour.OffDayType = _context.OffDayTypes.Where(odt => odt.OffDayTypeID == offDayTypeID).FirstOrDefault();
                     }
 
                     _context.Update(employeeHour);

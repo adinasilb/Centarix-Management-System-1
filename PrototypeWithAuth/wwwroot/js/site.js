@@ -1992,8 +1992,8 @@ $(function () {
 		alert("save sick confirmation");
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
-			var month = $('#months').val();
-			console.log("month: " + month);
+			//var month = $('#months').val();
+			//console.log("month: " + month);
 			pageType = "SummaryHours";
 		}
 		if ($(this).hasClass("ReportDaysOff")) {
@@ -2004,10 +2004,10 @@ $(function () {
 		var dd = parseInt(date[2]);
 		var mm = parseInt(date[1]);
 		var yyyy = parseInt(date[0]);
-		var dateFrom = new Date(yyyy, mm, dd);
+		//var dateFrom = new Date(yyyy, mm, dd);
 		$.ajax({
 			async: true,
-			url: "/Timekeeper/SickDayConfirmModal" + '?dateFrom=' + new Date(date).toISOString() + "&PageType=" + pageType + "&month=" + month,
+			url: "/Timekeeper/SickDayConfirmModal" + '?dateFrom=' + new Date(date).toISOString() + "&PageType=" + pageType + "&month=" + mm,
 			type: 'POST',
 			cache: false,
 			success: function (data) {

@@ -115,20 +115,24 @@
                             }
 
 
-                            <label class="py-3 m-0">@hoursType  @hoursType2</label>
+
                         }
-                        @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null)
-                        {
-                            <div class="py-2">
-                                <select class="mdb-select @pageColor custom select-dropdown no-hours-reported mb-0 @disabled" date="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
-                                    <option value="" selected disabled class="@pageColor-color">No hours reported</option>
-                                    <option value="1" class="open-work-from-home-modal @AppUtility.SidebarEnum.SummaryHours">Worked from home</option>
-                                    <option value="2" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours">Update hours</option>
-                                    <option value="3" class="confirm-report-sick">Report sick day</option>
-                                    <option value="4" class="confirm-report-sick">Report vacation day</option>
-                                </select>
-                            </div>
-                        }
+                    }
+                    @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null)
+                    {
+                        <div class="py-2">
+                            <select class="mdb-select @pageColor custom select-dropdown no-hours-reported mb-0 @disabled" date="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
+                                <option value="" selected disabled class="@pageColor-color">No hours reported</option>
+                                <option value="1" class="open-work-from-home-modal @AppUtility.SidebarEnum.SummaryHours">Worked from home</option>
+                                <option value="2" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours">Update hours</option>
+                                <option value="3" class="confirm-report-sick">Report sick day</option>
+                                <option value="4" class="confirm-report-sick">Report vacation day</option>
+                            </select>
+                        </div>
+                    }
+                    else
+                    {
+                        <label class="py-3 m-0">@hoursType  @hoursType2</label>
                     }
 
 
