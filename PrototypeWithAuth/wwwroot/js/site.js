@@ -1754,15 +1754,19 @@ $(function () {
 	}
 
 	$("body").on("change", "#EmployeeHour_Date.update-hour-date", function (e) {
-		$.fn.GetEmployeeHour($(this).val());
+		$.fn.GetEmployeeHour($(this).val(), $(this).attr("data-workday"));
 	});
 	$("body").on("change", "#EmployeeHour_Date.update-work-from-home", function (e) {
 		$.fn.GetEmployeeHourFromHome($(this).val());
 	});
 
-	$.fn.GetEmployeeHour = function (date) {
+	$.fn.GetEmployeeHour = function (date, workDay) {
 		console.log(date);
-		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString())
+		var workFromHome = false;
+		if (workDay == "1") {
+			workFromHome = true;
+		}
+		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString() + "&isWorkFromHome=" + workFromHome)
 	};
 
 
