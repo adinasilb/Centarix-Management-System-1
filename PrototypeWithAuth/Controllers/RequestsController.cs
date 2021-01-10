@@ -1419,7 +1419,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 return NotFound();
             }
-            var requestsByProduct = _context.Requests.Where(r => r.ProductID == id && (r.RequestStatusID == 2 || r.RequestStatusID == 3))
+            var productId = _context.Requests.Where(r => r.RequestID == id).Select(r => r.ProductID).FirstOrDefault();
+            var requestsByProduct = _context.Requests.Where(r => r.ProductID == productId && (r.RequestStatusID == 3))
                  .Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)

@@ -626,7 +626,7 @@ Model.UnitTypeList,
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
-                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel " disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
+                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -938,7 +938,7 @@ Model.UnitTypeList,
                             @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName)
                         </td>
                         <td>
-                            <ul style="list-style: none;">
+                            <ul style="list-style: none;" class="mb-0 pl-0">
 
                                 @if (item.Unit != null)
                                 {

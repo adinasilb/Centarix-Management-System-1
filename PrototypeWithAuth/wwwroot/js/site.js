@@ -210,12 +210,12 @@ $(function () {
 		console.log('in on change vendor')
 		var vendorid = $(this).val();
 		$.fn.ChangeVendorBusinessId(vendorid);
-		$.fn.CheckVendorAndCatalogNumbers();
+		//$.fn.CheckVendorAndCatalogNumbers();
 	});
 	$("#vendorList").change(function () {
 		var vendorid = $("#vendorList").val();
 		$.fn.ChangeVendorBusinessId(vendorid);
-		CheckVendorAndCatalogNumbers();
+		//CheckVendorAndCatalogNumbers();
 	});
 	$.fn.ChangeVendorBusinessId = function (vendorid) {
 		var newBusinessID = "";
