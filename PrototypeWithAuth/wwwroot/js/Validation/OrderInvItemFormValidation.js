@@ -17,22 +17,24 @@ $.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
 	var vendorID = $("#vendorList").val();
 	var catalogNumber = $("#Request_CatalogNumber").val();
 	var productID = null;
+	var catalogResult = false;
 	if ($(".turn-edit-on-off").length > 0) {
 		productID = $(".turn-edit-on-off").val();
 	}
 	$.ajax({
+		async: false,
 		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
 		type: 'POST',
 		data: { "VendorID": vendorID, "CatalogNumber": catalogNumber, "ProductID": productID },
 		dataType: 'text',
 		success: function (result) {
-			return result;
+			catalogResult = result;
 		},
-		error: function (jqXHR, satus, error) {
+		error: function (jqXHR, status, error) {
 			console.log(status, error);
 		}
 	});
-	return false;
+	return catalogResult;
 }, 'That product has already been created');
 
 $('.ordersItemForm').validate({
