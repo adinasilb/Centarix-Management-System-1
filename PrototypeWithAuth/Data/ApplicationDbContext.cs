@@ -202,6 +202,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
 
+            modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
+
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Seed();
 

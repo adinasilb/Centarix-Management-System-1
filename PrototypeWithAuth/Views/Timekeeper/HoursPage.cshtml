@@ -197,7 +197,7 @@
                 <div class="col p-3" style="width:9%;">
                     @if (eh.EmployeeHoursAwaitingApproval != null)
                     {
-                        if (eh.EmployeeHoursAwaitingApproval.IsDenied ?? false)
+                        if (eh.EmployeeHoursAwaitingApproval.IsDenied)
                         {
                             <div>
                                 <a href="" class="open-ehaa-modal @pageColor-font-alt-color @disabled" value="@eh.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID.ToString()">Request Denied</a>
