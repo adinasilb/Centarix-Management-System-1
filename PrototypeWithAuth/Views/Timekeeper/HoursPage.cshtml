@@ -79,7 +79,7 @@
                     @eh.EmployeeHours.Date.DayOfWeek
                 </div>
                 <div class="col p-3" style="width:12%;">
-                    @eh.EmployeeHours.Date.ToShortDateString()
+                    @eh.EmployeeHours.Date.ToString("dd'/'MM'/'yyyy")
                 </div>
                 <div class="col  " style="width:45%;">
                     @{ var hoursType = "";
