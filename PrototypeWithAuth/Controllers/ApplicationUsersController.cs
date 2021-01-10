@@ -222,7 +222,7 @@ namespace PrototypeWithAuth.Controllers
         private List<EmployeeHoursAwaitingApprovalViewModel> GetAwaitingApprovalModel()
         {
             var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatusEntry1).Include(ehwa => ehwa.EmployeeHoursStatusEntry2).ToList()
-                .Where(ehwa=>!ehwa.IsDenied??true);
+                .Where(ehwa=>!ehwa.IsDenied);
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = new List<EmployeeHoursAwaitingApprovalViewModel>();
             foreach (EmployeeHoursAwaitingApproval ehaa in employeeHoursAwaitingApproval)
             {
