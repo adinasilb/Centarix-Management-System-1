@@ -590,10 +590,12 @@ namespace PrototypeWithAuth.Controllers
             var userID = _userManager.GetUserId(User);
             var companyDaysOff = new List<DateTime>();
             EmployeeHours employeeHour = null;
+
             if (dateTo == new DateTime())
             {
                 if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
                 {
+                    var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == dateFrom).FirstOrDefault();
                     companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date == dateFrom).ToList();
                     employeeHour = _context.EmployeeHours.Where(eh => eh.Date.Date == dateFrom.Date && eh.EmployeeID == userID).FirstOrDefault();
                     if (employeeHour == null)
@@ -614,6 +616,11 @@ namespace PrototypeWithAuth.Controllers
 
                     _context.Update(employeeHour);
                     _context.SaveChanges();
+                    if (ehaa != null)
+                    {
+                        _context.Remove(ehaa);
+                        _context.SaveChanges();
+                    }
                 }
                 return true;
             }
@@ -625,7 +632,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
                     {
-
+                        var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == dateFrom).FirstOrDefault();
                         if (employeeHours.Count() > 0)
                         {
                             employeeHour = employeeHours.Where(eh => eh.Date == dateFrom).FirstOrDefault();
@@ -653,6 +660,10 @@ namespace PrototypeWithAuth.Controllers
                             };
                         }
                         _context.Update(employeeHour);
+                        if (ehaa != null)
+                        {
+                            _context.Remove(ehaa);
+                        }
 
                     }
                     dateFrom = dateFrom.AddDays(1);
