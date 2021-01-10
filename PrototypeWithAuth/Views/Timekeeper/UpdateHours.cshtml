@@ -56,7 +56,7 @@
                             }
                             else
                             {
-                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                <input asp-for="EmployeeHour.Date" data-workday="@Model.AutoFillEntry1Type" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
                             }
 
                             <span asp-validation-for="EmployeeHour.Date" class="text-danger-centarix " />
