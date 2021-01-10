@@ -29,7 +29,7 @@
 
 		}
 		else {
-			alert("didn't go into any edits");
+			//alert("didn't go into any edits");
 		}
 		console.log("url: " + url);
 
@@ -77,7 +77,7 @@
 						cache: true,
 						success: function (data) {
 							$('#usersTable').html(data);
-							alert("Updated CentarixID: " + $("#CentarixID").val());
+							//alert("Updated CentarixID: " + $("#CentarixID").val());
 							$("#OriginalStatusID").attr("CentarixID", $("#CentarixID").val());
 						}
 					});
@@ -121,7 +121,7 @@
 
 		}
 		else if ($('.turn-edit-on-off').hasClass('users')) {
-			alert("in users");
+			//alert("in users");
 			url = "/Admin/EditUserPartial?id=" + id + "&Tab=" + selectedTab;
 
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
@@ -130,7 +130,7 @@
 
 		}
 		else {
-			alert("didn't go into any edits");
+			//alert("didn't go into any edits");
 		}
 		console.log("url: " + url);
 

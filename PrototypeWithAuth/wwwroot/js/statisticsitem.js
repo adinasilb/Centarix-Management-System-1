@@ -8,10 +8,10 @@
 	$.fn.CallRequestsIndexWithSort = function(filter){
 		switch (filter) {
 			case "fb":
-				alert("sort by frequently bought");
+			//	alert("sort by frequently bought");
 				break;
 			case "hp":
-				alert("sort by highest price");
+			//	alert("sort by highest price");
 				break;
 		}
 

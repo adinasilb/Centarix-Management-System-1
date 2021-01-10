@@ -16,7 +16,7 @@
 		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
 		console.log("extn: " + extn);
 		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn !="") {
-			alert("invalid file extension");
+			//alert("invalid file extension");
 			return;
 		}
 
@@ -167,7 +167,7 @@
 	//	alert("djs modal turned on or off!");
 	//});
 	$(".modal .turn-edit-doc-on-off").off("click").on("click", function () {
-		alert('.turneditdoc on and off')
+		//alert('.turneditdoc on and off')
 		var detailsBool = $(".isEdittable").hasClass("details");
 		var editBool = $(".isEdittable").hasClass("edit");
 
