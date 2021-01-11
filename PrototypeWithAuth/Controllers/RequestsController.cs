@@ -1399,26 +1399,32 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
         {
-            return await editModalViewFunction(id, 0, SectionType);
+            return await editModalViewFunction(id, 0, SectionType, PageType);
         }
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalViewPartial(int? id, int? Tab, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public async Task<IActionResult> EditModalViewPartial(int? id, int? Tab, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
         {
-            return await editModalViewFunction(id, Tab, SectionType);
+            return await editModalViewFunction(id, Tab, SectionType, PageType);
         }
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public async Task<IActionResult> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
+            AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
         {
             string ModalViewType = "";
             if (id == null)
             {
                 return NotFound();
             }
-
+            var productId = _context.Requests.Where(r => r.RequestID == id).Select(r => r.ProductID).FirstOrDefault();
+            var requestsByProduct = _context.Requests.Where(r => r.ProductID == productId && (r.RequestStatusID == 3))
+                 .Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                    .ToList();
             var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
@@ -1442,7 +1448,9 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUser)
                 .Where(r => r.Request.RequestID == id).ToListAsync(),
                 CommentTypes = commentTypes,
-                SectionType = SectionType
+                SectionType = SectionType,
+                PageType = PageType,
+                RequestsByProduct = requestsByProduct
 
             };
 

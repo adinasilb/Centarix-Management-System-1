@@ -73,7 +73,7 @@ namespace PrototypeWithAuth.ViewModels
         public int SubCategoryID { get; set; }
         public int VendorID { get; set; }
         public string ApplicationUserID { get; set; }
-        public int /*AppUtility.RequestPageTypeEnum*/ PageType { get; set; }
+        public AppUtility.PageTypeEnum PageType { get; set; }
         public ReceivedLocationViewModel ReceivedLocationViewModel { get; set; }
         public ReceivedModalSublocationsViewModel ReceivedModalSublocationsViewModel { get; set; }
         public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
