@@ -10,7 +10,6 @@ namespace PrototypeWithAuth.Data.Migrations
                 name: "IsDenied",
                 table: "EmployeeHoursAwaitingApprovals",
                 nullable: true);
-            migrationBuilder.UpdateData("EmployeeHoursAwaitingApprovals", "EmployeeHoursAwaitingApprovalID", "*", "IsDenied", false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

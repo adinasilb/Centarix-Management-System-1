@@ -395,10 +395,11 @@ namespace PrototypeWithAuth.Controllers
                 chosenDate = DateTime.Today;
             }
             var userID = _userManager.GetUserId(User);
+            var employee = _context.Employees.Where(e => e.Id == userID).FirstOrDefault();
             var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).Include(eh=>eh.OffDayType).Include(e=>e.Employee).FirstOrDefault();
             if (employeeHour == null)
             {
-                employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate };
+                employeeHour = new EmployeeHours { EmployeeID = userID, Employee=employee, Date = chosenDate };
             }           
             employeeHour.EmployeeHoursStatusEntry1 = _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry1ID).FirstOrDefault();
             employeeHour.EmployeeHoursStatusEntry2 = _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry2ID).FirstOrDefault();
@@ -428,19 +429,14 @@ namespace PrototypeWithAuth.Controllers
             var eh = _context.EmployeeHours.Where(eh => eh.EmployeeID == updateHoursViewModel.EmployeeHour.EmployeeID && eh.Date.Date == updateHoursViewModel.EmployeeHour.Date.Date).FirstOrDefault();
            
             var updateHoursDate = updateHoursViewModel.EmployeeHour.Date;
-            if (eh == null)
-            {
-                _context.Update(new EmployeeHours () { Date = updateHoursViewModel.EmployeeHour.Date, EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID });
-                await _context.SaveChangesAsync();
-            }
-            var employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
+        
             if (ehaa == null)
             {
                 ehaa = new EmployeeHoursAwaitingApproval();
             }
 
             ehaa.EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID;
-            ehaa.EmployeeHoursID = employeeHoursID;
+
             if (updateHoursViewModel.EmployeeHour.Entry1 != null)
             {
                 ehaa.Entry1 = new DateTime(updateHoursDate.Year, updateHoursDate.Month, updateHoursDate.Day, updateHoursViewModel.EmployeeHour.Entry1?.Hour ?? 0, updateHoursViewModel.EmployeeHour.Entry1?.Minute ?? 0, 0);
@@ -480,9 +476,8 @@ namespace PrototypeWithAuth.Controllers
             ehaa.EmployeeHoursStatusEntry2ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry2ID;
             ehaa.PartialOffDayTypeID = updateHoursViewModel.EmployeeHour.PartialOffDayTypeID;
             ehaa.PartialOffDayHours = updateHoursViewModel.EmployeeHour.PartialOffDayHours;
-            
             //mark as forgot to report if bool is true and not work from home
-            if (updateHoursViewModel.IsForgotToReport && updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID!=1)
+            if (updateHoursViewModel.IsForgotToReport && updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID != 1)
             {
                 if (eh != null)
                 {
@@ -491,12 +486,21 @@ namespace PrototypeWithAuth.Controllers
                         ehaa.EmployeeHoursStatusEntry1ID = 3;
                     }
                 }
-                  
+
             }
+            if (eh == null)
+            {
+                updateHoursViewModel.EmployeeHour = new EmployeeHours() { Date = updateHoursViewModel.EmployeeHour.Date, EmployeeID = updateHoursViewModel.EmployeeHour.EmployeeID };
+                _context.Update(updateHoursViewModel.EmployeeHour);
+                await _context.SaveChangesAsync();
+            }
+            
+            var employeeHoursID = updateHoursViewModel.EmployeeHour.EmployeeHoursID;
+            ehaa.EmployeeHoursID = employeeHoursID;
             DateTime Month = ehaa.Date;
 
             _context.Update(ehaa);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
 
             return RedirectToAction(updateHoursViewModel.PageType ?? "ReportHours", new { Month = Month });
