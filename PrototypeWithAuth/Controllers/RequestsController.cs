@@ -32,6 +32,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore.Query;
+using Newtonsoft.Json;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -1868,7 +1869,6 @@ namespace PrototypeWithAuth.Controllers
             AppUtility.PageTypeEnum requestPageTypeEnum = (AppUtility.PageTypeEnum)requestItemViewModel.PageType;
             return RedirectToAction("Index", new
             {
-                page = requestItemViewModel.Page,
                 requestStatusID = requestItemViewModel.RequestStatusID,
                 subcategoryID = requestItemViewModel.SubCategoryID,
                 vendorID = requestItemViewModel.VendorID,
@@ -1895,7 +1895,7 @@ namespace PrototypeWithAuth.Controllers
         //}
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(int? id, bool NewRequestFromProduct = false, String SectionType = "")
+        public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, bool NewRequestFromProduct = false, String SectionType = "")
         {
             var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
@@ -1929,19 +1929,20 @@ namespace PrototypeWithAuth.Controllers
                 CompanyAccounts = companyaccounts,
                 Request = request,
             };
-
+            var reorderViewModel = new ReorderViewModel() { RequestIndexObject = requestIndexObject, RequestItemViewModel = requestItemViewModel };
             //initiating the  following models so that we can use them in an asp-for in the view 
-            return PartialView(requestItemViewModel);
+            return PartialView(reorderViewModel);
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> ReOrderFloatModalView(ReorderViewModel reorderViewModel)
         {
+          //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
             //get the old request that we are reordering
-            var oldRequest = _context.Requests.Where(r => r.RequestID == requestItemViewModel.Request.RequestID)
+            var oldRequest = _context.Requests.Where(r => r.RequestID == reorderViewModel.RequestItemViewModel.Request.RequestID)
                 .Include(r => r.Product)
                 .ThenInclude(p => p.ProductSubcategory).FirstOrDefault();
 
@@ -1959,16 +1960,16 @@ namespace PrototypeWithAuth.Controllers
             reorderRequest.Warranty = oldRequest.Warranty;
             reorderRequest.ExchangeRate = oldRequest.ExchangeRate;
             reorderRequest.Terms = oldRequest.Terms;
-            reorderRequest.Cost = requestItemViewModel.Request.Cost;
+            reorderRequest.Cost = reorderViewModel.RequestItemViewModel.Request.Cost;
             reorderRequest.Currency = oldRequest.Currency;
             reorderRequest.CatalogNumber = oldRequest.CatalogNumber;
             reorderRequest.RequestStatusID = 1; //waiting approval status of new
-            reorderRequest.UnitTypeID = requestItemViewModel.Request.UnitTypeID;
-            reorderRequest.Unit = requestItemViewModel.Request.Unit;
-            reorderRequest.SubSubUnit = requestItemViewModel.Request.SubSubUnit;
-            reorderRequest.SubUnit = requestItemViewModel.Request.SubUnit;
-            reorderRequest.SubUnitTypeID = requestItemViewModel.Request.SubUnitTypeID;
-            reorderRequest.SubSubUnitTypeID = requestItemViewModel.Request.SubSubUnitTypeID;
+            reorderRequest.UnitTypeID = reorderViewModel.RequestItemViewModel.Request.UnitTypeID;
+            reorderRequest.Unit = reorderViewModel.RequestItemViewModel.Request.Unit;
+            reorderRequest.SubSubUnit = reorderViewModel.RequestItemViewModel.Request.SubSubUnit;
+            reorderRequest.SubUnit = reorderViewModel.RequestItemViewModel.Request.SubUnit;
+            reorderRequest.SubUnitTypeID = reorderViewModel.RequestItemViewModel.Request.SubUnitTypeID;
+            reorderRequest.SubSubUnitTypeID = reorderViewModel.RequestItemViewModel.Request.SubSubUnitTypeID;
             reorderRequest.UnitsOrdered = oldRequest.UnitsOrdered;
             reorderRequest.UnitsInStock = oldRequest.UnitsInStock;
             reorderRequest.Quantity = oldRequest.Quantity;
@@ -1992,8 +1993,8 @@ namespace PrototypeWithAuth.Controllers
                     ViewData["ModalViewType"] = "Create";
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
 
-                    await populateRequestItemViewModel(requestItemViewModel, oldRequest);
-                    return PartialView(requestItemViewModel);
+                    await populateRequestItemViewModel(reorderViewModel.RequestItemViewModel, oldRequest);
+                    return PartialView(reorderViewModel.RequestItemViewModel);
                 }
                 catch (Exception ex)
                 {
@@ -2001,20 +2002,20 @@ namespace PrototypeWithAuth.Controllers
                     ViewData["ModalViewType"] = "Create";
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
 
-                    await populateRequestItemViewModel(requestItemViewModel, oldRequest);
-                    return PartialView(requestItemViewModel);
+                    await populateRequestItemViewModel(reorderViewModel.RequestItemViewModel, oldRequest);
+                    return PartialView(reorderViewModel.RequestItemViewModel);
                 }
             }
             else
             {
                 //in case we need to redirect to action
                 //TempData["ModalView"] = true;
-                TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+                TempData["RequestID"] = reorderViewModel.RequestItemViewModel.Request.RequestID;
 
-                await populateRequestItemViewModel(requestItemViewModel, oldRequest);
-                return PartialView(requestItemViewModel);
+                await populateRequestItemViewModel(reorderViewModel.RequestItemViewModel, oldRequest);
+                return PartialView(reorderViewModel.RequestItemViewModel);
             }
-            return RedirectToAction("_IndexTableData", requestIndexObject);
+            return RedirectToAction("_IndexTableData", reorderViewModel.RequestIndexObject);
         }
 
         [Authorize(Roles = "Requests")]
@@ -3529,58 +3530,19 @@ namespace PrototypeWithAuth.Controllers
             return Json(locationInstanceList);
         }
 
-
-        [HttpGet]
-        //[ValidateAntiForgeryToken]
-        [Authorize(Roles = "Requests")]
-        public IActionResult ApproveReorder(int id)
-        {
-            var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).Include(x => x.ParentQuote).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
-            try
-            {
-                request.RequestStatusID = 6; //approved
-                request.ParentQuote.QuoteStatusID = 1; //awaiting quote request
-                _context.Update(request);
-                _context.SaveChanges();
-
-                RequestNotification requestNotification = new RequestNotification();
-                requestNotification.RequestID = request.RequestID;
-                requestNotification.IsRead = false;
-                requestNotification.RequestName = request.Product.ProductName;
-                requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                requestNotification.Description = "item approved";
-                requestNotification.NotificationStatusID = 3;
-                requestNotification.TimeStamp = DateTime.Now;
-                requestNotification.Controller = "Requests";
-                requestNotification.Action = "NotificationsView";
-                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                _context.Update(requestNotification);
-                _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
-            }
-            AppUtility.PageTypeEnum requestPageTypeEnum = AppUtility.PageTypeEnum.RequestRequest;
-
-            return RedirectToAction("Index", new
-            {
-                requestStatusID = 6,
-                PageType = requestPageTypeEnum
-            });
-        }
-
         [HttpGet]
         //[ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests, Operations")]
         public IActionResult Approve(int id, RequestIndexObject requestIndex)
         {
-            var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.ParentQuote).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
             try
             {
                 request.RequestStatusID = 6; //approved
+                if(request is Reorder)
+                {
+                    request.ParentQuote.QuoteStatusID = 1;
+                }
                 _context.Update(request);
                 _context.SaveChanges();
                 RequestNotification requestNotification = new RequestNotification();

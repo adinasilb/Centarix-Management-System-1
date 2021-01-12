@@ -242,6 +242,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         private void fillInOrderLate(ApplicationUser user)
+        
         {
             if (user.LastLogin.Date != DateTime.Now.Date)
             {

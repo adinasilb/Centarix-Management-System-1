@@ -288,7 +288,6 @@ namespace PrototypeWithAuth.Controllers
 
                     return RedirectToAction("Index", new
                     {
-                        page = requestItemViewModel.Page,
                         requestStatusID = requestItemViewModel.Request.RequestStatusID,
                         PageType = AppUtility.PageTypeEnum.RequestRequest
                     });
@@ -865,7 +864,6 @@ namespace PrototypeWithAuth.Controllers
             //AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)requestItemViewModel.PageType;
             return RedirectToAction("Index", new
             {
-                page = requestItemViewModel.Page,
                 requestStatusID = requestItemViewModel.RequestStatusID,
                 subcategoryID = requestItemViewModel.SubCategoryID,
                 vendorID = requestItemViewModel.VendorID,

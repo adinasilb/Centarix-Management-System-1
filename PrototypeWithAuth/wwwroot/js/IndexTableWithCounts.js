@@ -6,7 +6,7 @@
     $(this).addClass("active")
     //reset page number
       $('.page-number').val(1);
-    ajaxPartialIndexTable($(this).attr("value"), "/Requests/_IndexTable", "._IndexTable")
+    ajaxPartialIndexTable($(this).attr("value"), "/Requests/_IndexTable", "._IndexTable", "GET")
 });
 
 //function ajaxCallToPartialTable(status) {

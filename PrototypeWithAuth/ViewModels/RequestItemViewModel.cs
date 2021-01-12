@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using PrototypeWithAuth.AppData;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -56,6 +58,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<Payment> NewPayments { get; set; }
         public double Debt { get; set; } //shekel
         public IEnumerable<PaymentType> PaymentTypes { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
         public Dictionary<int, IEnumerable<CompanyAccount>> CompanyAccountListsByPaymentTypeID { get; set; }
         public IEnumerable<CompanyAccount> CompanyAccounts { get; set; }
 
@@ -64,11 +67,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<LocationInstance> LocationInstances { get; set; }
 
         public List<string> EmailAddresses { get; set; } //to pass back the email addresses in the create modal view
-
-
-
-        //The following properties are for remembering where you are on the request Index to follow through to the right page
-        public int? Page { get; set; }
         public int RequestStatusID { get; set; }
         public int SubCategoryID { get; set; }
         public int VendorID { get; set; }

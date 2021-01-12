@@ -5,12 +5,25 @@ $(".load-order-details").off('click').on("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
     $("#loading").show();
+       var selectedPriceSort = [];
+    $("#priceSortContent .priceSort:checked").each(function (e) {
+        selectedPriceSort.push($(this).attr("enum"));
+    })
     var section = $("#masterSectionType").val()
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-    var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&NewRequestFromProduct=true" + "&SectionType=" + section;
+    var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&NewRequestFromProduct=true" + "&SectionType=" + section+ 
+            "&PageNumber="+ $('.page-number').val()+
+            "&RequestStatusID=" +$(".request-status-id").val()+
+            "&PageType="+ $('#masterPageType').val()+
+            "&SectionType="+ section+
+            "&SidebarType=" + $('#masterSidebarType').val()+
+            "&SelectedPriceSort="+ selectedPriceSort+
+            "&SelectedCurrency="+ $('#tempCurrency').val()+
+            "&SidebarFilterID=" + $('.sideBarFilterID').val()
     $.fn.CallPageRequest($itemurl, "reorder");
     return false;
 });
+ 
 $(".load-product-details").off('click').on("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -54,14 +67,14 @@ $(".order-approved-operation").off('click').on("click", function (e) {
     console.log("approving");
     e.preventDefault();
     $("#loading").show();
-    ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/" + $(this).attr("value"), "._IndexTableWithCounts");
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/?id=" + $(this).attr("value"), "._IndexTableWithCounts",  "GET");
     return false;
 });
 $(".approve-order").off('click').on("click", function (e) {
     console.log("approving");
     e.preventDefault();
     $("#loading").show();
-    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/" + $(this).attr("value"), "._IndexTableWithCounts");
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/?id=" + $(this).attr("value"), "._IndexTableWithCounts",  "GET");
     return false;
 });
 
@@ -71,22 +84,43 @@ $(".page-item a").off('click').on("click", function (e) {
     $("#loading").show();
     var pageNumber = parseInt($(this).html());
     $('.page-number').val(pageNumber);
-    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/" + $(this).attr("value"), "._IndexTableData");
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
     return false;
 });
 
 
-function ajaxPartialIndexTable(status, url, viewClass) {
-    console.log("in ajax partial index call");
+function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
+    console.log("in ajax partial index call"+url);
     var selectedPriceSort = [];
     $("#priceSortContent .priceSort:checked").each(function (e) {
         selectedPriceSort.push($(this).attr("enum"));
     })
-    $.ajax({
+  
+    if(formdata != undefined)
+    {
+        
+        $.ajax({
+          processData: false,
+			contentType: false,
+            //traditional: true,
+			data: formdata,
+			async: true,
+			url: url,
+			type: 'POST',
+			cache: false,
+            success: function (data) {
+                $(viewClass).html(data);
+                $("#loading").hide();
+                return true;
+            }
+        });
+    }
+    else
+    {
+        $.ajax({
         async: true,
         url: url,
-        data: {
-            id: $(this).attr("value"),
+        data:  {            
             PageNumber: $('.page-number').val(),
             RequestStatusID: status,
             PageType: $('#masterPageType').val(),
@@ -97,12 +131,31 @@ function ajaxPartialIndexTable(status, url, viewClass) {
             SidebarFilterID: $('.sideBarFilterID').val()
         },
         traditional: true,
-        type: 'GET',
+        type: type,
         cache: false,
         success: function (data) {
             $(viewClass).html(data);
             $("#loading").hide();
             return true;
         }
-    });
+        });
+    }
+    return false;
 }
+
+
+
+$(".submit-received").off('click').on("click", function (e) {
+    console.log("submit recieved");
+    e.preventDefault();
+    $("#loading").show();
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/" + $(this).attr("value"), "._IndexTableData", "POST");
+    return false;
+});
+$(".submit-delete").off('click').on("click", function (e) {
+    console.log("submit delete");
+    e.preventDefault();
+    $("#loading").show();
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal/" + $(this).attr("value"), "._IndexTableData", "POST");
+    return false;
+});
