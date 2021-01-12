@@ -3352,7 +3352,8 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool IsNotifications = false)
+        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, 
+            AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool IsNotifications = false, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -3362,7 +3363,8 @@ namespace PrototypeWithAuth.Controllers
                 IsEdittable = IsEdittable,
                 //Files = new List<FileInfo>(),
                 SectionType = SectionType,
-                IsNotifications = IsNotifications
+                IsNotifications = IsNotifications,
+                PageType = PageType
 
             };
 

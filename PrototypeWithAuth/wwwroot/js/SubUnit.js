@@ -63,9 +63,11 @@ $(function () {
 		//for the reorder modal
 		$subunit = $("#Request_SubUnit");
 		if ($subunit.val() != null && $subunit.val() > 0) {
-			$.fn.EnableSubUnits();
+			//$.fn.EnableSubUnits();
+			//$.fn.EnableMaterialSelect('#Request_SubUnitTypeID', 'select-options-Request_SubUnitTypeID');
 		}
 		else {
+			console.log('disabling');
 			$.fn.DisableSubUnits();
 		}
 	};
@@ -198,6 +200,7 @@ $(function () {
 				break;
 		}
 		$("#Request_SubUnitTypeID").materialSelect();
+		$.fn.EnableMaterialSelect('#Request_SubUnitTypeID', 'select-options-Request_SubUnitTypeID');
 		switch (optgroup2) {
 			case "Units":
 				console.log("inside optgroup2 units");
@@ -244,6 +247,7 @@ $(function () {
 
 		$('#Request_SubSubUnitTypeID').destroyMaterialSelect();
 		$('#Request_SubSubUnitTypeID').prop('selectedIndex', selectedIndex);
+		console.log($('#Request_SubSubUnitTypeID').prop('selectedIndex'));
 		switch (optgroup) {
 			case "Units":
 				//$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
@@ -265,6 +269,7 @@ $(function () {
 				break;
 		}
 		$("#Request_SubSubUnitTypeID").materialSelect();
+		$.fn.EnableMaterialSelect('#Request_SubSubUnitTypeID', 'select-options-Request_SubUnitTypeID');
 		switch (optgroup2) {
 			case "Units":
 				$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
@@ -309,12 +314,12 @@ $(function () {
 		if (($("#edit #Request_Unit").val() > 0 && $("#edit #Request_UnitTypeID").val())
 			|| ($("#select-options-Request_Unit").val() > 0 && $("#select-options-Request_UnitTypeID").val())) {
 			//console.log("both have values");
-			$.fn.EnableSubUnits();
 			$('.subUnitsCard').removeClass('d-none');
 			$('.sub-close').removeClass('d-none');
 			$('.addSubUnitCard').addClass('d-none');
 			$('.RequestSubsubunitCard').removeClass('d-none');
 			$("#Request_SubUnit").addClass('mark-readonly');
+			$("#Request_SubUnit").prop("disabled", false);
 			$("#Request_SubUnitTypeID").addClass('mark-readonly');
 			$.fn.ChangeSubUnitDropdown();
 		}
@@ -329,12 +334,13 @@ $(function () {
 	$.fn.CheckSubUnitsFilled = function () {
 		if (($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val())
 			|| ($("#Request_SubUnit").val() > 0 && $("#select-options-Request_SubUnitTypeID").val())) {
-			$.fn.EnableSubSubUnits();
+			//$.fn.EnableSubSubUnits();
 			$('.subSubUnitsCard').removeClass('d-none');
 			$('.subsub-close').removeClass('d-none');
 			$('.addSubSubUnitCard').addClass('d-none');
 			//console.log("about to change subsubunitdropdown");
 			$("#Request_SubSubUnit").addClass('mark-readonly');
+			$("#Request_SubSubUnit").prop("disabled", false);
 			$("#Request_SubSubUnitTypeID").addClass('mark-readonly');
 			$.fn.ChangeSubSubUnitDropdown();
 		}
@@ -346,6 +352,7 @@ $(function () {
 	}
 
 	$.fn.CheckCurrency = function () {
+		console.log('check currency')
 		var currencyType = $("#currency").val();
 		switch (currencyType) {
 			case "USD":
@@ -358,23 +365,31 @@ $(function () {
 				$("#unit-price-dollars").prop("disabled", false);
 				$("#unit-price-dollars").removeClass('disabled-text');
 				$("#unit-price-dollars").prop("readonly", false);
-				$("#subunit-price-dollars").prop("disabled", false);
-				$("#subunit-price-dollars").removeClass('disabled-text');
-				$("#subunit-price-dollars").prop("readonly", false);
-				$("#subsubunit-price-dollars").prop("disabled", false);
-				$("#subsubunit-price-dollars").removeClass('disabled-text');
-				$("#subsubunit-price-dollars").prop("readonly", false);
+				if (!$('.subUnitsCard').hasClass('d-none')) {
+					$("#subunit-price-dollars").prop("disabled", false);
+					$("#subunit-price-dollars").removeClass('disabled-text');
+					$("#subunit-price-dollars").prop("readonly", false);
+				}
+				if (!$('.subSubUnitsCard').hasClass('d-none')) {
+					$("#subsubunit-price-dollars").prop("disabled", false);
+					$("#subsubunit-price-dollars").removeClass('disabled-text');
+					$("#subsubunit-price-dollars").prop("readonly", false);
+				}
 				$(".request-cost-dollar-icon").removeClass('disabled-text');
 
 				$("#unit-price-shekel").prop("disabled", true);
 				$("#unit-price-shekel").addClass('disabled-text');
 				$("#unit-price-shekel").prop("readonly", true);
-				$("#subunit-price-shekel").prop("disabled", true);
-				$("#subunit-price-shekel").addClass('disabled-text');
-				$("#subunit-price-shekel").prop("readonly", true);
-				$("#subsubunit-price-shekel").prop("disabled", true);
-				$("#subsubunit-price-shekel").addClass('disabled-text');
-				$("#subsubunit-price-shekel").prop("readonly", true);
+				if (!$('.subUnitsCard').hasClass('d-none')) {
+					$("#subunit-price-shekel").prop("disabled", true);
+					$("#subunit-price-shekel").addClass('disabled-text');
+					$("#subunit-price-shekel").prop("readonly", true);
+				}
+				if (!$('.subSubUnitsCard').hasClass('d-none')) {
+					$("#subsubunit-price-shekel").prop("disabled", true);
+					$("#subsubunit-price-shekel").addClass('disabled-text');
+					$("#subsubunit-price-shekel").prop("readonly", true);
+				}
 				$(".request-cost-shekel-icon").addClass('disabled-text');
 				break;
 			case "NIS":
@@ -388,23 +403,31 @@ $(function () {
 				$("#unit-price-dollars").prop("disabled", true);
 				$("#unit-price-dollars").addClass('disabled-text');
 				$("#unit-price-dollars").prop("readonly", true);
-				$("#subunit-price-dollars").prop("disabled", true);
-				$("#subunit-price-dollars").addClass('disabled-text');
-				$("#subunit-price-dollars").prop("readonly", true);
-				$("#subsubunit-price-dollars").prop("disabled", true);
-				$("#subsubunit-price-dollars").addClass('disabled-text');
-				$("#subsubunit-price-dollars").prop("readonly", true);
+				if (!$('.subUnitsCard').hasClass('d-none')) {
+					$("#subunit-price-dollars").prop("disabled", true);
+					$("#subunit-price-dollars").addClass('disabled-text');
+					$("#subunit-price-dollars").prop("readonly", true);
+				}
+				if (!$('.subSubUnitsCard').hasClass('d-none')) {
+					$("#subsubunit-price-dollars").prop("disabled", true);
+					$("#subsubunit-price-dollars").addClass('disabled-text');
+					$("#subsubunit-price-dollars").prop("readonly", true);
+				}
 				$(".request-cost-dollar-icon").addClass('disabled-text');
 
 				$("#unit-price-shekel").prop("disabled", false);
 				$("#unit-price-shekel").removeClass('disabled-text');
 				$("#unit-price-shekel").prop("readonly", false);
-				$("#subunit-price-shekel").prop("disabled", false);
-				$("#subunit-price-shekel").removeClass('disabled-text');
-				$("#subunit-price-shekel").prop("readonly", false);
-				$("#subsubunit-price-shekel").prop("disabled", false);
-				$("#subsubunit-price-shekel").removeClass('disabled-text');
-				$("#subsubunit-price-shekel").prop("readonly", false);
+				if (!$('.subUnitsCard').hasClass('d-none')) {
+					$("#subunit-price-shekel").prop("disabled", false);
+					$("#subunit-price-shekel").removeClass('disabled-text');
+					$("#subunit-price-shekel").prop("readonly", false);
+				}
+				if (!$('.subSubUnitsCard').hasClass('d-none')) {
+					$("#subsubunit-price-shekel").prop("disabled", false);
+					$("#subsubunit-price-shekel").removeClass('disabled-text');
+					$("#subsubunit-price-shekel").prop("readonly", false);
+				}
 				$(".request-cost-shekel-icon").removeClass('disabled-text');
 
 				break;
@@ -472,7 +495,7 @@ $(function () {
 		//$.fn.CheckSubUnitsFilled();
 		//I don't think that we need $.fn.CheckSubSubUnitsFilled over here b/c we don't need to enable or disable anything and the CalculateSubSubUnits should already run
 		$.fn.CalculateSumPlusVat();
-		$.fn.CheckCurrency();
+		//$.fn.CheckCurrency();
 	});
 
 	$("#currency").change(function (e) {
@@ -493,7 +516,7 @@ $(function () {
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
-		$.fn.CheckCurrency(); //for the reorder modal
+		//$.fn.CheckCurrency(); //for the reorder modal
 	});
 
 	$("#sum-dollars").change(function (e) {

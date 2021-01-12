@@ -496,7 +496,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                        <input  type="number" class="form-control-plaintext border-bottom mark-readonly" name="unit-price-dollars" id="unit-price-dollars"  disabled="disabled" />
+                                        <input  type="number" class="form-control-plaintext border-bottom mark-readonly" name="unit-price-dollars" id="unit-price-dollars" disabled />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -511,10 +511,14 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 </div>
                 @{var cardDisplayNoneSub = "d-none";
                     var plusDisplayNoneSub = "";
+                    var disabled = "";
+                    var subMarkReadOnly = "";
                     if (Model.Request.SubUnit > 0)
                     {
                         cardDisplayNoneSub = "";
                         plusDisplayNoneSub = "d-none";
+                        disabled = "disabled";
+                        subMarkReadOnly = "mark-readonly";
                     }
                 }
                 <div class="col-4 pl-0 RequestSubunitCard">
@@ -532,7 +536,14 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             <div class="row">
                                 <div class="col-md-6 pl-0 form-group">
                                     <label asp-for="Request.SubUnit" class="control-label"></label>
-                                    <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" disabled />
+                                    @if (disabled.Length == 0)
+                                    {
+                                        <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " disabled />
+                                    }
                                     <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -541,7 +552,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 vm => vm.Request.SubUnitTypeID,
 Model.UnitTypeList,
 "",
-         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
+         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext " + @subMarkReadOnly, @disabled = @disabled}
          )
                                     <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                                 </div>
@@ -553,13 +564,13 @@ Model.UnitTypeList,
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" />
+                                            <input class="form-control-plaintext border-bottom @subMarkReadOnly" name="subunit-price-dollars" id="subunit-price-dollars" @disabled />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group">
-                                            <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
-                                            <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
+                                            <span class="input-group-text request-cost-shekel-icon @subMarkReadOnly">&#x20aa;</span>
+                                            <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" @disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -571,6 +582,8 @@ Model.UnitTypeList,
                     var cardDivDisplayNone = "d-none";
                     var cardDisplayNoneSubSub = "d-none";
                     var plusDisplayNoneSubSub = "";
+                    var subsubdisabled = "";
+                    var subsubMarkReadOnly = "";
                     if (Model.Request.SubUnit > 0)
                     {
                         cardDivDisplayNone = "";
@@ -583,6 +596,8 @@ Model.UnitTypeList,
                         {
                             plusDisplayNoneSubSub = "";
                             cardDisplayNoneSubSub = "d-none";
+                            subsubdisabled = "disabled";
+                            subsubMarkReadOnly = "mark-readonly";
                         }
                     }
                 }
@@ -599,7 +614,14 @@ Model.UnitTypeList,
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                    <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                    @if (subsubdisabled.Length == 0)
+                                    {
+                                        <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @subsubMarkReadOnly " />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @subsubMarkReadOnly " disabled />
+                                    }
                                     <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -608,7 +630,7 @@ Model.UnitTypeList,
                                         vm => vm.Request.SubSubUnitTypeID,
                                         Model.UnitTypeList,
                                         "",
-                                        htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
+                                        htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext" + @subsubMarkReadOnly, @subsubdisabled }
                                         )
                                     <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
                                 </div>
@@ -620,13 +642,13 @@ Model.UnitTypeList,
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" />
+                                            <input class="form-control-plaintext border-bottom @subsubMarkReadOnly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" @disabled/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
-                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
+                                            <input class="form-control-plaintext border-bottom @subsubMarkReadOnly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" @disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                         </div>
                                     </div>
                                 </div>

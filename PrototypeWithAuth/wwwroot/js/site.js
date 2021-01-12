@@ -652,16 +652,17 @@ $(function () {
 		console.log("requestId: " + requestId);
 		var isEdittable = $(this).data("val");
 		console.log("isEdittable: " + isEdittable);
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section);
+		var page = $("#masterPageType").val();
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, page);
 		return true;
 	});
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section) {
+	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, page) {
 		$(".documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
 		console.log("urltogo: " + urltogo);
-		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section
+		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&PageType=" + page
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,
@@ -2164,11 +2165,12 @@ $(function () {
 				$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
 				$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
 				$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
-				if (($("#Request_SubSubUnit").hasClass('.mark-readonly'))) {
+				if (($("#Request_SubSubUnitTypeID").hasClass('.mark-readonly'))) {
 					$.fn.EnableSubSubUnits();
 					$.fn.ChangeSubSubUnitDropdown();
 				}
-				if (($("#Request_SubUnit").hasClass('.mark-readonly'))) {
+				if (($("#Request_SubUnitTypeID").n.hasClass('.mark-readonly'))) {
+					console.log('enabling');
 					$.fn.EnableSubUnits();
 					$.fn.ChangeSubUnitDropdown();
 				}

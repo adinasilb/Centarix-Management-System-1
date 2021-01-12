@@ -188,6 +188,7 @@
 			$(".documents-delete-icon.icon-delete-24px").addClass($color);
 
 			$(".delete-document").addClass("delete-file-document");
+			$('.edit-mode-switch-description').text("Edit Mode On");
 		}
 		else if (editBool) {
 			$(".isEdittable").addClass("details");
@@ -200,6 +201,7 @@
 			$(".documents-delete-icon.icon-delete-24px").removeClass($color);
 
 			$(".delete-document").removeClass("delete-file-document");
+			$('.edit-mode-switch-description').text("Edit Mode Off");
 		}
 	});
 	//$(".modal").on("change", ".turn-edit-doc-on-off", function () {

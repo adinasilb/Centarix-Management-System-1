@@ -300,8 +300,8 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
-                                                                <input class="form-control-plaintext border-bottom " name="unit-price-shekel" id="unit-price-shekel" disabled />
+                                                                <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
+                                                                <input class="form-control-plaintext border-bottom disabled-text" name="unit-price-shekel" id="unit-price-shekel" disabled />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -366,8 +366,8 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
-                                                                <input class="form-control-plaintext border-bottom " type="number" min="0" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
+                                                                <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
+                                                                <input class="form-control-plaintext border-bottom disabled-text" type="number" min="0" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -419,8 +419,8 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
-                                                                <input class="form-control-plaintext border-bottom" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled />
+                                                                <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
+                                                                <input class="form-control-plaintext border-bottom disabled-text" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -443,8 +443,8 @@
                                         <div class="form-group">
                                             <label class="control-label"></label>
                                             <div class="input-group">
-                                                <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
-                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom" min="1" readonly />
+                                                <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
+                                                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom disabled-text" min="1" readonly />
                                                 <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
                                             </div>
                                         </div>
@@ -805,7 +805,7 @@
     <script src="~/js/validate.js"></script>
     <script src="~/js/SubUnit.js"></script>
 
-    <script type="text/javascript">
+    <script @*type="text/javascript"*@>
         $(".order-tab").on("click", function (e) {
             if ($(".all-mail").length == 0) {
                 let data = [
