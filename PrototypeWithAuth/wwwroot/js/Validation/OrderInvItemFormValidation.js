@@ -34,6 +34,7 @@ $.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
 			console.log(status, error);
 		}
 	});
+	//alert("catalog result: catalog#: " + catalogNumber + " vendorid: " + vendorID + " is --> " + catalogResult);
 	return catalogResult;
 }, 'That product has already been created');
 
