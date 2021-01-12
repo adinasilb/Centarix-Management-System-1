@@ -1399,20 +1399,20 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+        public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
         {
-            return await editModalViewFunction(id, 0, SectionType, PageType);
+            return await editModalViewFunction(id, 0, SectionType, isEditable);
         }
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalViewPartial(int? id, int? Tab, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+        public async Task<IActionResult> EditModalViewPartial(int? id, int? Tab, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
         {
-            return await editModalViewFunction(id, Tab, SectionType, PageType);
+            return await editModalViewFunction(id, Tab, SectionType, isEditable);
         }
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
-            AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+            bool isEditable = true)
         {
             string ModalViewType = "";
             if (id == null)
@@ -1449,8 +1449,8 @@ namespace PrototypeWithAuth.Controllers
                 .Where(r => r.Request.RequestID == id).ToListAsync(),
                 CommentTypes = commentTypes,
                 SectionType = SectionType,
-                PageType = PageType,
-                RequestsByProduct = requestsByProduct
+                RequestsByProduct = requestsByProduct,
+                isEditable = isEditable
 
             };
 
@@ -3352,8 +3352,8 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, 
-            AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool IsNotifications = false, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable,
+            AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool IsNotifications = false, bool isSummary = false)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -3364,7 +3364,7 @@ namespace PrototypeWithAuth.Controllers
                 //Files = new List<FileInfo>(),
                 SectionType = SectionType,
                 IsNotifications = IsNotifications,
-                PageType = PageType
+                IsSummary = isSummary
 
             };
 

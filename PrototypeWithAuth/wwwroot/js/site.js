@@ -652,17 +652,20 @@ $(function () {
 		console.log("requestId: " + requestId);
 		var isEdittable = $(this).data("val");
 		console.log("isEdittable: " + isEdittable);
-		var page = $("#masterPageType").val();
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, page);
+		var isSummary = false;
+		if ($("#masterPageType").val() == "RequestSummary" || $("#masterPageType").val() == "RequestCart") {
+			isSummary = true;
+        }
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, isSummary);
 		return true;
 	});
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, page) {
+	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, isSummary) {
 		$(".documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
 		console.log("urltogo: " + urltogo);
-		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&PageType=" + page
+		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&isSummary=" + isSummary;
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,
@@ -1993,8 +1996,8 @@ $(function () {
 		alert("save sick confirmation");
 		var pageType = "";
 		if ($(this).hasClass("SummaryHours")) {
-			//var month = $('#months').val();
-			//console.log("month: " + month);
+			var month = $('#months').attr("value");
+			console.log("month: " + month);
 			pageType = "SummaryHours";
 		}
 		if ($(this).hasClass("ReportDaysOff")) {
@@ -2002,13 +2005,13 @@ $(function () {
 		}
 		//alert($('#SelectedDate').val())
 		var date = $('#SelectedDate').val();
-		var dd = parseInt(date[2]);
-		var mm = parseInt(date[1]);
-		var yyyy = parseInt(date[0]);
-		//var dateFrom = new Date(yyyy, mm, dd);
+		//var dd = parseInt(date[2]);
+		//var mm = parseInt(date[1]);
+		//var yyyy = parseInt(date[0]);
+		//var dateFrom = new Date(yyyy, mm, dd);;
 		$.ajax({
 			async: true,
-			url: "/Timekeeper/SickDayConfirmModal" + '?dateFrom=' + new Date(date).toISOString() + "&PageType=" + pageType + "&month=" + mm,
+			url: "/Timekeeper/SickDayConfirmModal" + '?dateFrom=' + new Date(date).toISOString() + "&PageType=" + pageType + "&month=" + month,
 			type: 'POST',
 			cache: false,
 			success: function (data) {

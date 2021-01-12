@@ -32,7 +32,7 @@ $(".load-product-details-summary").on("click", function (e) {
     e.stopPropagation();
     $("#loading").show();
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-    var $itemurl = "/Requests/EditModalView/?id=" + $(this).val() + "&PageType=" + $('#masterPageType').val();
+    var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false";
     $.fn.CallPageRequest($itemurl, "details");
     return false;
 });

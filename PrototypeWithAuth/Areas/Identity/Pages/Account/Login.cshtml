@@ -22,7 +22,7 @@
                 {
                     <p class="text">@Model.SuccessMessage</p>
                 }
-                <div class="md-form md-outline">
+                <div class="md-form md-outline my-1">
                     <div class="form-group text-center">
 
                         <div class="input-group">
@@ -31,38 +31,37 @@
 
                         @*<span asp-validation-for="Input.Email" class="text-danger-centarix"></span>*@
                     </div>
-                    </div>
+                </div>
+                <div class="md-form md-outline my-1">
                     <div class="form-group text-center">
-
-                        <div class="md-form md-outline">
-                            <input asp-for="Input.Password" class="form-control mt-4 login-field " placeholder="Password" style="        line-height: 1.5 !important;
+                        <input asp-for="Input.Password" class="form-control mt-4 login-field " placeholder="Password" style="        line-height: 1.5 !important;
         font-size: 1.5em !important;
 " />
-                            <span toggle="#Input_Password" class=" fa icon-remove_red_eye-24px field-icon toggle-password " style=" font-size:1.5em !important; line-height: 1.5 !important; color:#495057"></span>
-                        </div>
-                        @*<span asp-validation-for="Input.Password" class="text-danger-centarix"></span>*@
+                        <span toggle="#Input_Password" class=" fa icon-remove_red_eye-24px field-icon toggle-password " style=" font-size:1.5em !important; line-height: 1.5 !important; color:#495057"></span>
                     </div>
+                    @*<span asp-validation-for="Input.Password" class="text-danger-centarix"></span>*@
+                </div>
 
 
-                    <!--<div class="form-group">
-            <div class="checkbox">
-                <label asp-for="Input.RememberMe">
-                    <input asp-for="Input.RememberMe" />
-                    @Html.DisplayNameFor(m => m.Input.RememberMe)
-                </label>
-            </div>
-        </div>-->
-                    <div class="form-group">
-                        <button type="submit" class="mt-4 custom-button custom-button-font danger-color ">Log in</button>
-                    </div>
-                    <!--<div class="form-group">
-            <p>
-                <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-            </p>
-            <p>
-                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-            </p>
-        </div> -->
+                <!--<div class="form-group">
+        <div class="checkbox">
+            <label asp-for="Input.RememberMe">
+                <input asp-for="Input.RememberMe" />
+                @Html.DisplayNameFor(m => m.Input.RememberMe)
+            </label>
+        </div>
+    </div>-->
+                <div class="form-group">
+                    <button type="submit" class="mt-2 custom-button custom-button-font danger-color ">Log in</button>
+                </div>
+                <!--<div class="form-group">
+        <p>
+            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+        </p>
+        <p>
+            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+        </p>
+    </div> -->
             </form>
         </div>
     </section>

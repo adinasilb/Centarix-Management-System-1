@@ -82,5 +82,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<AppUtility.CommentTypeEnum> CommentTypes { get; set; }
         public List<Comment> Comments { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
+        public bool isEditable { get; set; }
     }
 }
