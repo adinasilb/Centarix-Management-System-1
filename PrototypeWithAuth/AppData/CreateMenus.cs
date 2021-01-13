@@ -50,19 +50,19 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = "summary-link"
                     });
-                    if (pageType == AppUtility.PageTypeEnum.RequestSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Search",
-                        Controller = "Requests",
-                        Action = "Search",
-                        RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.Requests }
-                },
-                        Classes = AllClasses,
-                        ID = "search-link"
-                    });
+                //    if (pageType == AppUtility.PageTypeEnum.RequestSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                //    MainMenuItems.Add(new MenuItems()
+                //    {
+                //        Description = "Search",
+                //        Controller = "Requests",
+                //        Action = "Search",
+                //        RouteValues = new RouteValueDictionary()
+                //{
+                //    {"SectionType", AppUtility.MenuItems.Requests }
+                //},
+                //        Classes = AllClasses,
+                //        ID = "search-link"
+                //    });
                     if (pageType == AppUtility.PageTypeEnum.RequestLocation) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
@@ -138,19 +138,19 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = "inventory-link"
                     });
-                    if (pageType == AppUtility.PageTypeEnum.OperationsSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Search",
-                        Controller = "Requests",
-                        Action = "Search",
-                        RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.Operations }
-                },
-                        Classes = AllClasses,
-                        ID = "search-link"
-                    });
+                //    if (pageType == AppUtility.PageTypeEnum.OperationsSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                //    MainMenuItems.Add(new MenuItems()
+                //    {
+                //        Description = "Search",
+                //        Controller = "Requests",
+                //        Action = "Search",
+                //        RouteValues = new RouteValueDictionary()
+                //{
+                //    {"SectionType", AppUtility.MenuItems.Operations }
+                //},
+                //        Classes = AllClasses,
+                //        ID = "search-link"
+                //    });
                     break;
                 case AppUtility.MenuItems.Accounting:
                     ActiveClasses = " text-dark accounting-filter";
@@ -255,18 +255,18 @@ namespace PrototypeWithAuth.AppData
                         RouteValues = new RouteValueDictionary(),
                         Classes = AllClasses
                     });
-                    if (pageType == AppUtility.PageTypeEnum.LabManagementSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Search",
-                        Controller = "Requests",
-                        Action = "Search",
-                        RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.LabManagement }
-                },
-                        Classes = AllClasses
-                    });
+                //    if (pageType == AppUtility.PageTypeEnum.LabManagementSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                //    MainMenuItems.Add(new MenuItems()
+                //    {
+                //        Description = "Search",
+                //        Controller = "Requests",
+                //        Action = "Search",
+                //        RouteValues = new RouteValueDictionary()
+                //{
+                //    {"SectionType", AppUtility.MenuItems.LabManagement }
+                //},
+                //        Classes = AllClasses
+                //    });
                     break;
                 case AppUtility.MenuItems.Protocols:
                     break;

@@ -96,32 +96,10 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
         selectedPriceSort.push($(this).attr("enum"));
     })
   
-    if(formdata != undefined)
+    if(formdata == undefined)
     {
-        
-        $.ajax({
-          processData: false,
-			contentType: false,
-            //traditional: true,
-			data: formdata,
-			async: true,
-			url: url,
-			type: 'POST',
-			cache: false,
-            success: function (data) {
-                  $(".modal").modal('hide');
-                $(viewClass).html(data);
-                $("#loading").hide();
-                return true;
-            }
-        });
-    }
-    else
-    {
-        $.ajax({
-        async: true,
-        url: url,
-        data:  {            
+        console.log("formdata is undefined");
+        formdata={            
             PageNumber: $('.page-number').val(),
             RequestStatusID: status,
             PageType: $('#masterPageType').val(),
@@ -130,17 +108,25 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
             SelectedPriceSort: selectedPriceSort,
             SelectedCurrency: $('#tempCurrency').val(),
             SidebarFilterID: $('.sideBarFilterID').val()
-        },
-        traditional: true,
-        type: type,
-        cache: false,
-        success: function (data) {
-            $(viewClass).html(data);
-            $("#loading").hide();
-            return true;
-        }
-        });
+        };
+       console.log(formdata);
     }
+
+    $.ajax({
+    async: true,
+    url: url,
+    data: formdata,
+    traditional: true,
+    type: type,
+    cache: false,
+    success: function (data) {
+            $(".modal").modal('hide');
+        $(viewClass).html(data);
+        $("#loading").hide();
+        return true;
+    }
+    });
+
     return false;
 }
 
@@ -151,12 +137,5 @@ $(".submit-received").off('click').on("click", function (e) {
     e.preventDefault();
     $("#loading").show();
     ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/" + $(this).attr("value"), "._IndexTableData", "POST");
-    return false;
-});
-$(".submit-delete").off('click').on("click", function (e) {
-    console.log("submit delete");
-    e.preventDefault();
-    $("#loading").show();
-    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal/" + $(this).attr("value"), "._IndexTableData", "POST");
     return false;
 });

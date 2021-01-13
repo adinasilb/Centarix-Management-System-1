@@ -465,7 +465,7 @@ namespace PrototypeWithAuth.Controllers
                                      Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
                                  }
                             }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 1);
+            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
             return onePageOfProducts;
         }
 
@@ -693,11 +693,10 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel)
+        public async Task<IActionResult> DeleteModal(int id, RequestIndexObject requestIndexObject)
         {
-            var request = _context.Requests.Where(r => r.RequestID == deleteRequestViewModel.Request.RequestID)
+            var request = _context.Requests.Where(r => r.RequestID == id)
                 .Include(r => r.RequestLocationInstances).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
                 .ThenInclude(ps => ps.ParentCategory)
                 .FirstOrDefault();
@@ -705,7 +704,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 _context.Update(request);
-                _context.SaveChanges();
+                await  _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -715,8 +714,7 @@ namespace PrototypeWithAuth.Controllers
             var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).FirstOrDefault();
             if (parentRequest != null)
             {
-                //todo figure out the soft delete with child of a parent entity so we could chnage it to 0 or null
-                if (parentRequest.Requests.Count() <= 1)
+                if (parentRequest.Requests.Count() ==0)
                 {
                     parentRequest.IsDeleted = true;
                     try
@@ -779,51 +777,25 @@ namespace PrototypeWithAuth.Controllers
                     ViewBag.ErrorText += "/n Data Alert: Request was deleted, but not fully removed from the location: " + locationInstance.LocationInstanceName;
                 }
             }
-
-            if (deleteRequestViewModel.IsReorder)
+            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
             {
-                Reorder quote = (Reorder)request;
-                if (quote.ParentQuote?.QuoteStatusID == 4)
+                if(requestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                 {
-                    return RedirectToAction("LabManageOrders", new
-                    {
-                        RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
-                  .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                  .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                  .Include(r => r.ApplicationUserCreator)
-                  .ToLookup(r => r.Product.Vendor)
-                    });
+                    return RedirectToAction("LabManageQuotes");
                 }
-                return RedirectToAction("LabManageQuotes", new
+                else 
                 {
-                    RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 3)
-                  .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                  .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                  .Include(r => r.ApplicationUserCreator).Include(r => r.ParentQuote)
-                  .ToLookup(r => r.Product.Vendor)
-                });
+                    return RedirectToAction("LabManageOrders");
+                }
 
+            }
+            else if(requestIndexObject.PageType== AppUtility.PageTypeEnum.RequestInventory || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsInventory)
+            {
+                return RedirectToAction("_IndexTableData", requestIndexObject);
             }
             else
             {
-                if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                {
-                    return RedirectToAction("Index", new
-                    {
-                        requestStatusID = request.RequestStatusID,
-                        PageType = AppUtility.PageTypeEnum.RequestRequest
-                    });
-                }
-                else
-                {
-                    // AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)deleteRequestViewModel.PageType;
-                    return RedirectToAction("Index", "Operations", new
-                    {
-                        requestStatusID = request.RequestStatusID,
-                        PageType = AppUtility.PageTypeEnum.RequestRequest
-                    });
-                }
-
+                return RedirectToAction("_IndexTableWithCounts", requestIndexObject);
             }
 
         }
