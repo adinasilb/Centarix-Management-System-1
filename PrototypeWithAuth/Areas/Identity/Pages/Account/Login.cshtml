@@ -43,14 +43,13 @@
                 </div>
 
 
-                <!--<div class="form-group">
-        <div class="checkbox">
-            <label asp-for="Input.RememberMe">
-                <input asp-for="Input.RememberMe" />
-                @Html.DisplayNameFor(m => m.Input.RememberMe)
-            </label>
-        </div>
-    </div>-->
+                <div class="form-group">
+                    <input type="checkbox" class="form-check-input toggle-remember" asp-for="Input.RememberTwoFactor" value="false" />
+                    <label class="" asp-for="Input.RememberTwoFactor">
+                        @Html.DisplayNameFor(m => m.Input.RememberTwoFactor)
+                    </label>
+                    s
+                </div>
                 <div class="form-group">
                     <button type="submit" class="mt-2 custom-button custom-button-font danger-color ">Log in</button>
                 </div>
@@ -118,6 +117,16 @@
             input.attr('type', 'password');
         }
     });
+    $('.toggle-remember').on('click', function () {
+        var val = $(this).val();
+        console.log(val);
+        if (val == 'true') {
+            $(this).val(false);
+        }
+        else {
+            $(this).val(true);
+        }
+    })
 
 </script>
 <style type="text/css">

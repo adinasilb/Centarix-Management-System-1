@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +19,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Diagnostics;
 using System.Web;
+using RestSharp;
+using Microsoft.AspNetCore.Http;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
@@ -64,8 +67,11 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Remember me")]
             public bool RememberMe { get; set; }
+
+            [Display(Name = "Remember Two Factor Authentication")]
+            public bool RememberTwoFactor { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null, string errorMessage=null, string successMessage = null)
@@ -125,6 +131,30 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 }
                 else if (result.RequiresTwoFactor)
                 {
+                    /*if(user.rememberme){
+                     * var hostName = Dns.GetHostName();
+                        var ipAddress = Dns.GetHostEntry(hostName).AddressList[0].ToString();
+                        //if (table has ip address && ip address in range && cookie is not expired){
+                            _context.Update user RequiresTwoFactor = false
+                           _context.save()
+                            var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                            requirestwofactor = true
+                            if (succeeded){
+                                return LocalRedirect(returnUrl);
+                            else{
+                                ModelState.AddModelError(string.Empty, "Something went wrong in ligin.");
+                                return Page();
+                    }
+
+                    else if (input.remembertwofactor){
+                        if (ip address in range){
+                             update remember me  = true
+                            create cookie
+                            add physical address to database
+                        
+                    */
+                    var cookie = HttpContext.Request.Cookies["TwoFactorCookie"];
+
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
                 }
                 //else if (!validPassword)

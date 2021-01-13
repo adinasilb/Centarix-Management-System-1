@@ -69,7 +69,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("AdinaHome"));
+                    Configuration.GetConnectionString("DefaultConnection"));
                 options.EnableSensitiveDataLogging(true);
             });
 
@@ -111,10 +111,21 @@ namespace PrototypeWithAuth
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
-
+                options.Cookie.Name = "LoginCookie";
             });
 
-         
+            services.AddAuthentication()
+                .AddCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(-1);
+                // options.LoginPath = "/Identity/Account/Login";
+                // options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.SlidingExpiration = true;
+                options.Cookie.Name = "TwoFactorCookie";
+            });
+
 
             services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
 
