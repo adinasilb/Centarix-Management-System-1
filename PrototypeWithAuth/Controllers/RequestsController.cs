@@ -32,6 +32,8 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Text.Json;
+using Newtonsoft.Json;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -45,6 +47,7 @@ namespace PrototypeWithAuth.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         //take this out?
         private readonly IHostingEnvironment _hostingEnvironment;
+        private ISession _session;
 
         //private readonly IHttpContextAccessor _Context;
 
@@ -59,7 +62,7 @@ namespace PrototypeWithAuth.Controllers
         //    _viewEngine = viewEngine;
         //}
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/) : base(context)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context)
         {
             //_Context = Context;
             _context = context;
@@ -68,6 +71,7 @@ namespace PrototypeWithAuth.Controllers
             //use the hosting environment for the file uploads
             _hostingEnvironment = hostingEnvironment;
             _viewEngine = viewEngine;
+            //_session = httpContextAccessor.HttpContext.c
         }
 
         [HttpGet]
@@ -1023,6 +1027,9 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.RequestStatusID = 1;
                             _context.Add(requestItemViewModel.Request);
                             _context.SaveChanges();
+                            //_session.Set("OrderNowRequest", requestItemViewModel.Request);
+                            //Sy["OrderNowRequest"] = requestItemViewModel.Request;
+                            HttpContext.Session.SetObject("Request", requestItemViewModel.Request);
 
                             TempData["OpenTermsModal"] = "Single";
                             TempData["Email1"] = requestItemViewModel.EmailAddresses[0];
@@ -2078,6 +2085,8 @@ namespace PrototypeWithAuth.Controllers
             //TempData["Email3"] = TempData["Email3"];
             //TempData["Email4"] = TempData["Email4"];
             //TempData["Email5"] = TempData["Email5"];
+            var Request = HttpContext.Session.GetObject<Request>("Request");
+
             int lastParentRequestOrderNum = 0;
             var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
@@ -4099,6 +4108,7 @@ namespace PrototypeWithAuth.Controllers
 
             return RedirectToAction("AccountingNotifications");
         }
+
 
         /*
          * 

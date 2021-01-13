@@ -8,7 +8,6 @@
 	minDate = new Date(minDate.setMinutes(0));
 	minDate = new Date(minDate.setSeconds(0));
 	minDate = new Date(minDate.setMilliseconds(0));
-
 	return selectedDate >= minDate;
 }, 'Please select a valid date');
 
