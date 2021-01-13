@@ -712,9 +712,11 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
             var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).FirstOrDefault();
+            parentRequest.Requests = _context.Requests.Where(r => r.ParentRequestID == parentRequest.ParentRequestID && r.IsDeleted != true);
+
             if (parentRequest != null)
             {
-                if (parentRequest.Requests.Count() ==0)
+                if (parentRequest.Requests.Count() == 0)
                 {
                     parentRequest.IsDeleted = true;
                     try
@@ -731,10 +733,11 @@ namespace PrototypeWithAuth.Controllers
 
             }
             var parentQuote = _context.ParentQuotes.Where(pr => pr.ParentQuoteID == request.ParentQuoteID).FirstOrDefault();
+            parentQuote.Requests = _context.Requests.Where(r => r.ParentQuoteID == parentQuote.ParentQuoteID && r.IsDeleted != true);
             if (parentQuote != null)
             {
                 //todo figure out the soft delete with child of a parent entity so we could chnage it to 0 or null
-                if (parentQuote.Requests.Count() <= 1)
+                if (parentQuote.Requests.Count() == 0)
                 {
                     parentQuote.IsDeleted = true;
                     try
