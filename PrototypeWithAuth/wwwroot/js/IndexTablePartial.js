@@ -109,6 +109,7 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
 			type: 'POST',
 			cache: false,
             success: function (data) {
+                  $(".modal").modal('hide');
                 $(viewClass).html(data);
                 $("#loading").hide();
                 return true;

@@ -2015,7 +2015,7 @@ namespace PrototypeWithAuth.Controllers
                 await populateRequestItemViewModel(reorderViewModel.RequestItemViewModel, oldRequest);
                 return PartialView(reorderViewModel.RequestItemViewModel);
             }
-            return RedirectToAction("_IndexTableData", reorderViewModel.RequestIndexObject);
+            return RedirectToAction("_IndexTableWithCounts", reorderViewModel.RequestIndexObject);
         }
 
         [Authorize(Roles = "Requests")]

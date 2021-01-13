@@ -310,21 +310,14 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
     </div>
 </div>
 
-@*Javascript that filters according to which parentcategory is selected, you must have the function in the controller for GetSubcategory*@
-@*This will work for the EDIT (putting in the already loaded product subcategory)*@
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
 <script>
-    $(function () {
-        $("#Request_Cost").trigger('change');
-    });
+    $("#Request_Cost").trigger('change');
     $(".submit-reorder").off('click').on("click", function (e) {
         console.log("submit reorder");
         e.preventDefault();
         $("#loading").show();
         var formData = new FormData($("#myForm")[0]);
-        ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/ReOrderFloatModalView', "._IndexTableData", "POST", formData);
+        ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/ReOrderFloatModalView', "._IndexTableWithCounts", "POST", formData);
         //return false;
     });
 </script>
