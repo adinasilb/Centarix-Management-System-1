@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210114072029_AddIpAddressTable")]
+    partial class AddIpAddressTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,9 +245,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("RememberTwoFactor")
                         .HasColumnType("bit");
 
                     b.Property<string>("SecureAppPass")
@@ -1904,29 +1903,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("PaymentTypeID");
 
                     b.ToTable("PaymentTypes");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.PhysicalAddress", b =>
-                {
-                    b.Property<int>("PhysicalAddressID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EmployeeID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("PhysicalAddressID");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.ToTable("PhysicalAddresses");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
@@ -3724,14 +3700,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ParentRequestID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.PhysicalAddress", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>

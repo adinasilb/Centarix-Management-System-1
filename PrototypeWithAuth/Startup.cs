@@ -22,6 +22,7 @@ using PrototypeWithAuth.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using Microsoft.AspNetCore.Http;
 
 namespace PrototypeWithAuth
 {
@@ -114,18 +115,7 @@ namespace PrototypeWithAuth
                 options.Cookie.Name = "LoginCookie";
             });
 
-            services.AddAuthentication()
-                .AddCookie(options =>
-            {
-                // Cookie settings
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromSeconds(-1);
-                // options.LoginPath = "/Identity/Account/Login";
-                // options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-                options.SlidingExpiration = true;
-                options.Cookie.Name = "TwoFactorCookie";
-            });
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
 
@@ -168,8 +158,6 @@ namespace PrototypeWithAuth
 
             //app.UseApplicationInsightsRequestTelemetry();
             //app.UseApplicationInsightsExceptionTelemetry();
-
-
         }
 
         //private async Task ChangePassword(IServiceProvider serviceProvider)

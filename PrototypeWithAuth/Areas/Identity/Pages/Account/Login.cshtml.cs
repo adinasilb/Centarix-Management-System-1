@@ -21,6 +21,8 @@ using System.Diagnostics;
 using System.Web;
 using RestSharp;
 using Microsoft.AspNetCore.Http;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
@@ -32,10 +34,11 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager,
             ILogger<LoginModel> logger,
-            UserManager<ApplicationUser> userManager, ApplicationDbContext context
+            UserManager<ApplicationUser> userManager, ApplicationDbContext context, IHttpContextAccessor httpContextAccessor
           )
         {
             _userManager = userManager;
@@ -43,6 +46,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [BindProperty]
@@ -104,7 +108,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 var user = await _userManager.FindByEmailAsync(Input.Email);
                 //var user = await _userManager.FindByEmailAsync(Input.Email);
-               // var passwordValidator = new PasswordValidator<ApplicationUser>();
+                // var passwordValidator = new PasswordValidator<ApplicationUser>();
                 //var identityUserManager = new UserManager<IdentityUser>(user);
                 var validPassword = await _signInManager.UserManager.CheckPasswordAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -131,29 +135,91 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 }
                 else if (result.RequiresTwoFactor)
                 {
-                    /*if(user.rememberme){
-                     * var hostName = Dns.GetHostName();
-                        var ipAddress = Dns.GetHostEntry(hostName).AddressList[0].ToString();
-                        //if (table has ip address && ip address in range && cookie is not expired){
-                            _context.Update user RequiresTwoFactor = false
-                           _context.save()
-                            var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                            requirestwofactor = true
-                            if (succeeded){
-                                return LocalRedirect(returnUrl);
-                            else{
-                                ModelState.AddModelError(string.Empty, "Something went wrong in ligin.");
-                                return Page();
+                    var myIpAddress = "";
+                    IPAddress ipAddress;
+                    var ipAddressList = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
+                    foreach (var address in ipAddressList)
+                    {
+                        if (myIpAddress == "")
+                        {
+                            if (IPAddress.TryParse(address.ToString(), out ipAddress))
+                            {
+                                switch (ipAddress.AddressFamily)
+                                {
+                                    case AddressFamily.InterNetwork:
+                                        myIpAddress = address.ToString();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
                     }
+                    var ipEnd = myIpAddress.Split(".").LastOrDefault();
+                    var ipEndNum = 501;
+                    Int32.TryParse(ipEnd, out ipEndNum);
 
-                    else if (input.remembertwofactor){
-                        if (ip address in range){
-                             update remember me  = true
-                            create cookie
-                            add physical address to database
-                        
-                    */
-                    var cookie = HttpContext.Request.Cookies["TwoFactorCookie"];
+                    if (user.RememberTwoFactor == true)
+                    {
+                        var cookie = _httpContextAccessor.HttpContext.Request.Cookies["TwoFactorCookie"];
+                        if (cookie != null)
+                        {
+                            var cookieDate = DateTime.Parse(cookie);
+                            if (DateTime.Now.Subtract(cookieDate).TotalDays < 30)
+                            {
+                                string physicalAddress = NetworkInterface
+                                    .GetAllNetworkInterfaces()
+                                    .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                                    .Select(nic => nic.GetPhysicalAddress().ToString())
+                                    .FirstOrDefault();
+                                var pa = _context.PhysicalAddresses.Where(p => p.Address == physicalAddress).Where(p => p.EmployeeID == user.Id).Include(p => p.Address).FirstOrDefault();
+                                if (pa != null)
+                                {
+                                    if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
+                                    {
+                                        user.TwoFactorEnabled = false;
+                                        _context.Update(user);
+                                        _context.SaveChanges();
+                                        result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                                        user.TwoFactorEnabled = true;
+                                        _context.Update(user);
+                                        _context.SaveChanges();
+                                        if (result.Succeeded)
+                                        {
+                                            return LocalRedirect(returnUrl);
+                                        }
+                                        else
+                                        {
+                                            ModelState.AddModelError(string.Empty, "Something went wrong in login. Please try again.");
+                                            return Page();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (Input.RememberTwoFactor)
+                    {
+                        if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
+                        {
+                            user.RememberTwoFactor = true;
+                            _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie", DateTime.Now.ToString());
+                            string address = NetworkInterface
+                                    .GetAllNetworkInterfaces()
+                                    .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                                    .Select(nic => nic.GetPhysicalAddress().ToString())
+                                    .FirstOrDefault();
+                            var physicalAddress = new Models.PhysicalAddress()
+                            {
+                                EmployeeID = user.Id,
+                                Address = address,
+                                DateCreated = DateTime.Now
+                            };
+                            _context.PhysicalAddresses.Add(physicalAddress);
+                            _context.SaveChanges();
+                        }
+                    }
+                       
 
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
                 }
@@ -166,7 +232,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 else if (result.IsLockedOut && validPassword)
                 {
                     _logger.LogInformation("User locked out.");
-                    if (user.NeedsToResetPassword && !user.IsSuspended )
+                    if (user.NeedsToResetPassword && !user.IsSuspended)
                     {
                         //await _signInManager.SignOutAsync();
                         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -182,6 +248,18 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 else
                 {
                     _logger.LogInformation("User login failed.");
+                    if (user == null)
+                    {
+                        ErrorMessage = "Invalid Username";
+                    }
+                    else if (!validPassword)
+                    {
+                        ErrorMessage = "Invalid Password";
+                    }
+                    else
+                    {
+                        ErrorMessage = "Invalid Login Attempt";
+                    }
                     //var user = await _userManager.FindByEmailAsync(Input.Email);
                     //if (user.NeedsToResetPassword)
                     //{
@@ -190,10 +268,11 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     //    return RedirectToPage("./ResetPassword", new { code = code });
                     //}
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    
                     return Page();
                 }
             }
+            ErrorMessage = "";
 
             // If we got this far, something failed, redisplay form
             return Page();
