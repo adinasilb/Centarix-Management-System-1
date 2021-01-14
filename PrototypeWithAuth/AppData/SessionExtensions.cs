@@ -9,7 +9,7 @@ namespace PrototypeWithAuth.AppData
 {
     public static class SessionExtensions
     {
-        public enum SessionNames { Request, Request_Product, Request_ParentQuote, Request_ParentRequest, Comment, Request_PaymentStatusID, RequestList }
+        public enum SessionNames { Comment, RequestList, Payment }
         public static void SetObject(this ISession session, string key, object value)
         {
             session.SetString(key,
