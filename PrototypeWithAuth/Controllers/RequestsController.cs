@@ -614,6 +614,7 @@ namespace PrototypeWithAuth.Controllers
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);            
             return PartialView(viewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject)
@@ -622,6 +623,7 @@ namespace PrototypeWithAuth.Controllers
             SetViewModelCounts(requestIndexObject, viewModel);
             return PartialView(viewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject)
@@ -629,6 +631,7 @@ namespace PrototypeWithAuth.Controllers
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             return PartialView(viewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemTableOwner(RequestIndexObject requestIndexObject)
@@ -640,6 +643,7 @@ namespace PrototypeWithAuth.Controllers
             SetViewModelCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemTableVendor(RequestIndexObject requestIndexObject)
@@ -651,6 +655,7 @@ namespace PrototypeWithAuth.Controllers
             SetViewModelCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemTableType(RequestIndexObject requestIndexObject)
@@ -2984,7 +2989,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReceivedModal(int RequestID, bool IsOperations = false)
+        public async Task<IActionResult> ReceivedModal(int RequestID, RequestIndexObject requestIndexObject)
         {
             //foreach(var li in _context.LocationInstances)
             //{
@@ -3001,7 +3006,7 @@ namespace PrototypeWithAuth.Controllers
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>(),
                 ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync(),
-                SectionType = IsOperations ? AppUtility.MenuItems.Operations : AppUtility.MenuItems.Requests,
+                RequestIndexObject = requestIndexObject,
                 PageRequestStatusID = request.RequestStatusID ?? 0
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
@@ -3297,28 +3302,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
-            if (receivedLocationViewModel.CategoryType == 1)
-            {
-                return RedirectToAction("Index", new
-                {
-                    page = receivedLocationViewModel.Page,
-                    requestStatusID = 3,
-                    subcategoryID = receivedLocationViewModel.SubCategoryID,
-                    vendorID = receivedLocationViewModel.VendorID,
-                    applicationUserID = receivedLocationViewModel.ApplicationUserID
-                });
-            }
-            else
-            {
-                return RedirectToAction("Index", "Operations", new
-                {
-                    page = receivedLocationViewModel.Page,
-                    requestStatusID = receivedLocationViewModel.PageRequestStatusID,
-                    subcategoryID = receivedLocationViewModel.SubCategoryID,
-                    vendorID = receivedLocationViewModel.VendorID,
-                    applicationUserID = receivedLocationViewModel.ApplicationUserID
-                });
-            }
+            return RedirectToAction("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
 
         }
 

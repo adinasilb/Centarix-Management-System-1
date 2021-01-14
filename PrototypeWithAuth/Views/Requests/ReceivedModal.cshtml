@@ -6,7 +6,7 @@
 @{
     var bcColor = "order-inv-background-color";
     var form = "order-inv-form";
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         bcColor = "oper-background-color";
         form = "oper-form";
@@ -28,6 +28,14 @@
                 @*the following hidden fors are here so i can do a request.save in for the info that is being given here.
         in the future might want to change it to loading the request from this request id and then adding in the values
         given here (done in the controller)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
                 @Html.HiddenFor(vm => vm.Request.RequestID)
 
                 @Html.HiddenFor(vm => vm.CategoryType)
@@ -196,8 +204,8 @@
                 <input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" />
                 <div class="modal-footer border-0 modal-footer-mt">
                     <div class="m-auto">
-                        <input type="submit" asp-action="ReceivedModal" class="custom-button custom-button-font @bcColor between-button-margin" />
-                        <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button"  onclick="$(this).closest('.modal').modal('hide');" />
+                        <input type="submit" class="submit-received custom-button custom-button-font @bcColor between-button-margin" />
+                        <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button" onclick="$(this).closest('.modal').modal('hide');" />
                     </div>
 
                 </div>
@@ -209,9 +217,15 @@
 </div>
 
 <script>
-
-            //function loadReceivedModalSubLocations(id) {
-            //    alert("id: " + id);
-            //};
+    $(".submit-received").click( function (e) {
+        $(".submit-received").trigger("submit");
+        console.log("submit recieved");
+        e.preventDefault();
+        $("#loading").show();
+        var formData = new FormData($("#myForm")[0]);
+        console.log(...formData)
+        ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/", "._IndexTableWithCounts", "POST", formData);
+        return false;
+    });
 
 </script>

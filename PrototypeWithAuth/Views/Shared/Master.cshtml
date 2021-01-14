@@ -977,7 +977,21 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
-
+        $.fn.getRequestIndexString = function(){
+            var selectedPriceSort = [];
+            $("#priceSortContent .priceSort:checked").each(function (e) {
+                selectedPriceSort.push($(this).attr("enum"));
+            })
+            return(
+            "&PageNumber=" + $('.page-number').val() +
+                "&RequestStatusID=" + $(".request-status-id").val() +
+                "&PageType=" + $('#masterPageType').val() +
+                "&SectionType=" + $('#masterSectionType').val() +
+                "&SidebarType=" + $('#masterSidebarType').val() +
+                "&SelectedPriceSort=" + selectedPriceSort +
+                "&SelectedCurrency=" + $('#tempCurrency').val() +
+                "&SidebarFilterID=" + $('.sideBarFilterID').val());
+        }
     </script>
 
     @if (IsSectionDefined("requestNavScript"))
