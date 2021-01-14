@@ -32,6 +32,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore.Query;
+using Newtonsoft.Json;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -464,7 +465,7 @@ namespace PrototypeWithAuth.Controllers
                                      Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
                                  }
                             }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 1);
+            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
             return onePageOfProducts;
         }
 
@@ -613,6 +614,7 @@ namespace PrototypeWithAuth.Controllers
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);            
             return PartialView(viewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject)
@@ -621,6 +623,7 @@ namespace PrototypeWithAuth.Controllers
             SetViewModelCounts(requestIndexObject, viewModel);
             return PartialView(viewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject)
@@ -628,6 +631,7 @@ namespace PrototypeWithAuth.Controllers
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             return PartialView(viewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemTableOwner(RequestIndexObject requestIndexObject)
@@ -639,6 +643,7 @@ namespace PrototypeWithAuth.Controllers
             SetViewModelCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemTableVendor(RequestIndexObject requestIndexObject)
@@ -650,6 +655,7 @@ namespace PrototypeWithAuth.Controllers
             SetViewModelCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemTableType(RequestIndexObject requestIndexObject)
@@ -692,11 +698,10 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel)
+        public async Task<IActionResult> DeleteModal(int id, RequestIndexObject requestIndexObject)
         {
-            var request = _context.Requests.Where(r => r.RequestID == deleteRequestViewModel.Request.RequestID)
+            var request = _context.Requests.Where(r => r.RequestID == id)
                 .Include(r => r.RequestLocationInstances).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
                 .ThenInclude(ps => ps.ParentCategory)
                 .FirstOrDefault();
@@ -704,7 +709,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 _context.Update(request);
-                _context.SaveChanges();
+                await  _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -712,10 +717,11 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
             var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).FirstOrDefault();
+            parentRequest.Requests = _context.Requests.Where(r => r.ParentRequestID == parentRequest.ParentRequestID && r.IsDeleted != true);
+
             if (parentRequest != null)
             {
-                //todo figure out the soft delete with child of a parent entity so we could chnage it to 0 or null
-                if (parentRequest.Requests.Count() <= 1)
+                if (parentRequest.Requests.Count() == 0)
                 {
                     parentRequest.IsDeleted = true;
                     try
@@ -732,10 +738,11 @@ namespace PrototypeWithAuth.Controllers
 
             }
             var parentQuote = _context.ParentQuotes.Where(pr => pr.ParentQuoteID == request.ParentQuoteID).FirstOrDefault();
+            parentQuote.Requests = _context.Requests.Where(r => r.ParentQuoteID == parentQuote.ParentQuoteID && r.IsDeleted != true);
             if (parentQuote != null)
             {
                 //todo figure out the soft delete with child of a parent entity so we could chnage it to 0 or null
-                if (parentQuote.Requests.Count() <= 1)
+                if (parentQuote.Requests.Count() == 0)
                 {
                     parentQuote.IsDeleted = true;
                     try
@@ -778,51 +785,25 @@ namespace PrototypeWithAuth.Controllers
                     ViewBag.ErrorText += "/n Data Alert: Request was deleted, but not fully removed from the location: " + locationInstance.LocationInstanceName;
                 }
             }
-
-            if (deleteRequestViewModel.IsReorder)
+            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
             {
-                Reorder quote = (Reorder)request;
-                if (quote.ParentQuote?.QuoteStatusID == 4)
+                if(requestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                 {
-                    return RedirectToAction("LabManageOrders", new
-                    {
-                        RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
-                  .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                  .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                  .Include(r => r.ApplicationUserCreator)
-                  .ToLookup(r => r.Product.Vendor)
-                    });
+                    return RedirectToAction("LabManageQuotes");
                 }
-                return RedirectToAction("LabManageQuotes", new
+                else 
                 {
-                    RequestsByVendor = _context.Requests.OfType<Reorder>().Where(r => r.ParentQuote.QuoteStatusID == 3)
-                  .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                  .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                  .Include(r => r.ApplicationUserCreator).Include(r => r.ParentQuote)
-                  .ToLookup(r => r.Product.Vendor)
-                });
+                    return RedirectToAction("LabManageOrders");
+                }
 
+            }
+            else if(requestIndexObject.PageType== AppUtility.PageTypeEnum.RequestInventory || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsInventory)
+            {
+                return RedirectToAction("_IndexTableData", requestIndexObject);
             }
             else
             {
-                if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                {
-                    return RedirectToAction("Index", new
-                    {
-                        requestStatusID = request.RequestStatusID,
-                        PageType = AppUtility.PageTypeEnum.RequestRequest
-                    });
-                }
-                else
-                {
-                    // AppUtility.RequestPageTypeEnum requestPageTypeEnum = (AppUtility.RequestPageTypeEnum)deleteRequestViewModel.PageType;
-                    return RedirectToAction("Index", "Operations", new
-                    {
-                        requestStatusID = request.RequestStatusID,
-                        PageType = AppUtility.PageTypeEnum.RequestRequest
-                    });
-                }
-
+                return RedirectToAction("_IndexTableWithCounts", requestIndexObject);
             }
 
         }
@@ -1868,7 +1849,6 @@ namespace PrototypeWithAuth.Controllers
             AppUtility.PageTypeEnum requestPageTypeEnum = (AppUtility.PageTypeEnum)requestItemViewModel.PageType;
             return RedirectToAction("Index", new
             {
-                page = requestItemViewModel.Page,
                 requestStatusID = requestItemViewModel.RequestStatusID,
                 subcategoryID = requestItemViewModel.SubCategoryID,
                 vendorID = requestItemViewModel.VendorID,
@@ -1895,7 +1875,7 @@ namespace PrototypeWithAuth.Controllers
         //}
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(int? id, bool NewRequestFromProduct = false, String SectionType = "")
+        public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, bool NewRequestFromProduct = false, String SectionType = "")
         {
             var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
@@ -1929,19 +1909,20 @@ namespace PrototypeWithAuth.Controllers
                 CompanyAccounts = companyaccounts,
                 Request = request,
             };
-
+            var reorderViewModel = new ReorderViewModel() { RequestIndexObject = requestIndexObject, RequestItemViewModel = requestItemViewModel };
             //initiating the  following models so that we can use them in an asp-for in the view 
-            return PartialView(requestItemViewModel);
+            return PartialView(reorderViewModel);
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(RequestItemViewModel requestItemViewModel, RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> ReOrderFloatModalView(ReorderViewModel reorderViewModel)
         {
+          //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
             //get the old request that we are reordering
-            var oldRequest = _context.Requests.Where(r => r.RequestID == requestItemViewModel.Request.RequestID)
+            var oldRequest = _context.Requests.Where(r => r.RequestID == reorderViewModel.RequestItemViewModel.Request.RequestID)
                 .Include(r => r.Product)
                 .ThenInclude(p => p.ProductSubcategory).FirstOrDefault();
 
@@ -1959,16 +1940,16 @@ namespace PrototypeWithAuth.Controllers
             reorderRequest.Warranty = oldRequest.Warranty;
             reorderRequest.ExchangeRate = oldRequest.ExchangeRate;
             reorderRequest.Terms = oldRequest.Terms;
-            reorderRequest.Cost = requestItemViewModel.Request.Cost;
+            reorderRequest.Cost = reorderViewModel.RequestItemViewModel.Request.Cost;
             reorderRequest.Currency = oldRequest.Currency;
             reorderRequest.CatalogNumber = oldRequest.CatalogNumber;
             reorderRequest.RequestStatusID = 1; //waiting approval status of new
-            reorderRequest.UnitTypeID = requestItemViewModel.Request.UnitTypeID;
-            reorderRequest.Unit = requestItemViewModel.Request.Unit;
-            reorderRequest.SubSubUnit = requestItemViewModel.Request.SubSubUnit;
-            reorderRequest.SubUnit = requestItemViewModel.Request.SubUnit;
-            reorderRequest.SubUnitTypeID = requestItemViewModel.Request.SubUnitTypeID;
-            reorderRequest.SubSubUnitTypeID = requestItemViewModel.Request.SubSubUnitTypeID;
+            reorderRequest.UnitTypeID = reorderViewModel.RequestItemViewModel.Request.UnitTypeID;
+            reorderRequest.Unit = reorderViewModel.RequestItemViewModel.Request.Unit;
+            reorderRequest.SubSubUnit = reorderViewModel.RequestItemViewModel.Request.SubSubUnit;
+            reorderRequest.SubUnit = reorderViewModel.RequestItemViewModel.Request.SubUnit;
+            reorderRequest.SubUnitTypeID = reorderViewModel.RequestItemViewModel.Request.SubUnitTypeID;
+            reorderRequest.SubSubUnitTypeID = reorderViewModel.RequestItemViewModel.Request.SubSubUnitTypeID;
             reorderRequest.UnitsOrdered = oldRequest.UnitsOrdered;
             reorderRequest.UnitsInStock = oldRequest.UnitsInStock;
             reorderRequest.Quantity = oldRequest.Quantity;
@@ -1992,8 +1973,8 @@ namespace PrototypeWithAuth.Controllers
                     ViewData["ModalViewType"] = "Create";
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
 
-                    await populateRequestItemViewModel(requestItemViewModel, oldRequest);
-                    return PartialView(requestItemViewModel);
+                    await populateRequestItemViewModel(reorderViewModel.RequestItemViewModel, oldRequest);
+                    return PartialView(reorderViewModel.RequestItemViewModel);
                 }
                 catch (Exception ex)
                 {
@@ -2001,20 +1982,20 @@ namespace PrototypeWithAuth.Controllers
                     ViewData["ModalViewType"] = "Create";
                     TempData["ErrorMessage"] = ex.InnerException.ToString();
 
-                    await populateRequestItemViewModel(requestItemViewModel, oldRequest);
-                    return PartialView(requestItemViewModel);
+                    await populateRequestItemViewModel(reorderViewModel.RequestItemViewModel, oldRequest);
+                    return PartialView(reorderViewModel.RequestItemViewModel);
                 }
             }
             else
             {
                 //in case we need to redirect to action
                 //TempData["ModalView"] = true;
-                TempData["RequestID"] = requestItemViewModel.Request.RequestID;
+                TempData["RequestID"] = reorderViewModel.RequestItemViewModel.Request.RequestID;
 
-                await populateRequestItemViewModel(requestItemViewModel, oldRequest);
-                return PartialView(requestItemViewModel);
+                await populateRequestItemViewModel(reorderViewModel.RequestItemViewModel, oldRequest);
+                return PartialView(reorderViewModel.RequestItemViewModel);
             }
-            return RedirectToAction("_IndexTableData", requestIndexObject);
+            return RedirectToAction("_IndexTableWithCounts", reorderViewModel.RequestIndexObject);
         }
 
         [Authorize(Roles = "Requests")]
@@ -3008,7 +2989,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReceivedModal(int RequestID, bool IsOperations = false)
+        public async Task<IActionResult> ReceivedModal(int RequestID, RequestIndexObject requestIndexObject)
         {
             //foreach(var li in _context.LocationInstances)
             //{
@@ -3025,7 +3006,7 @@ namespace PrototypeWithAuth.Controllers
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>(),
                 ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync(),
-                SectionType = IsOperations ? AppUtility.MenuItems.Operations : AppUtility.MenuItems.Requests,
+                RequestIndexObject = requestIndexObject,
                 PageRequestStatusID = request.RequestStatusID ?? 0
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
@@ -3321,28 +3302,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData["InnerMessage"] = ex.InnerException;
                 return View("~/Views/Shared/RequestError.cshtml");
             }
-            if (receivedLocationViewModel.CategoryType == 1)
-            {
-                return RedirectToAction("Index", new
-                {
-                    page = receivedLocationViewModel.Page,
-                    requestStatusID = 3,
-                    subcategoryID = receivedLocationViewModel.SubCategoryID,
-                    vendorID = receivedLocationViewModel.VendorID,
-                    applicationUserID = receivedLocationViewModel.ApplicationUserID
-                });
-            }
-            else
-            {
-                return RedirectToAction("Index", "Operations", new
-                {
-                    page = receivedLocationViewModel.Page,
-                    requestStatusID = receivedLocationViewModel.PageRequestStatusID,
-                    subcategoryID = receivedLocationViewModel.SubCategoryID,
-                    vendorID = receivedLocationViewModel.VendorID,
-                    applicationUserID = receivedLocationViewModel.ApplicationUserID
-                });
-            }
+            return RedirectToAction("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
 
         }
 
@@ -3532,58 +3492,19 @@ namespace PrototypeWithAuth.Controllers
             return Json(locationInstanceList);
         }
 
-
-        [HttpGet]
-        //[ValidateAntiForgeryToken]
-        [Authorize(Roles = "Requests")]
-        public IActionResult ApproveReorder(int id)
-        {
-            var request = _context.Requests.OfType<Reorder>().Where(r => r.RequestID == id).Include(x => x.ParentQuote).Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
-            try
-            {
-                request.RequestStatusID = 6; //approved
-                request.ParentQuote.QuoteStatusID = 1; //awaiting quote request
-                _context.Update(request);
-                _context.SaveChanges();
-
-                RequestNotification requestNotification = new RequestNotification();
-                requestNotification.RequestID = request.RequestID;
-                requestNotification.IsRead = false;
-                requestNotification.RequestName = request.Product.ProductName;
-                requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                requestNotification.Description = "item approved";
-                requestNotification.NotificationStatusID = 3;
-                requestNotification.TimeStamp = DateTime.Now;
-                requestNotification.Controller = "Requests";
-                requestNotification.Action = "NotificationsView";
-                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                _context.Update(requestNotification);
-                _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
-            }
-            AppUtility.PageTypeEnum requestPageTypeEnum = AppUtility.PageTypeEnum.RequestRequest;
-
-            return RedirectToAction("Index", new
-            {
-                requestStatusID = 6,
-                PageType = requestPageTypeEnum
-            });
-        }
-
         [HttpGet]
         //[ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests, Operations")]
         public IActionResult Approve(int id, RequestIndexObject requestIndex)
         {
-            var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.ParentQuote).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
             try
             {
                 request.RequestStatusID = 6; //approved
+                if(request is Reorder)
+                {
+                    request.ParentQuote.QuoteStatusID = 1;
+                }
                 _context.Update(request);
                 _context.SaveChanges();
                 RequestNotification requestNotification = new RequestNotification();

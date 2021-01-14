@@ -33,5 +33,7 @@ namespace PrototypeWithAuth.ViewModels
         public string ApplicationUserID { get; set; }
         public int /*AppUtility.RequestPageTypeEnum*/ PageType { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
+        public RequestIndexObject RequestIndexObject { get; set; }
+        public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
     }
 }

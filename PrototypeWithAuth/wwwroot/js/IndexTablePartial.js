@@ -5,12 +5,17 @@ $(".load-order-details").off('click').on("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
     $("#loading").show();
+       var selectedPriceSort = [];
+    $("#priceSortContent .priceSort:checked").each(function (e) {
+        selectedPriceSort.push($(this).attr("enum"));
+    })
     var section = $("#masterSectionType").val()
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-    var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&NewRequestFromProduct=true" + "&SectionType=" + section;
+    var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&NewRequestFromProduct=true" + "&SectionType=" + section+ $.fn.getRequestIndexString()
     $.fn.CallPageRequest($itemurl, "reorder");
     return false;
 });
+ 
 $(".load-product-details").off('click').on("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -39,14 +44,9 @@ $(".load-product-details-summary").on("click", function (e) {
 $(".load-receive-and-location").on("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
-    $("#loading").show();
-    var isOperations = false;
-    if($("#masterSectionType").val()=="Operations")
-    {
-        isOperations=true;
-    }   
+    $("#loading").show(); 
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-    var $itemurl = "/Requests/ReceivedModal?RequestID=" + $(this).attr("value") + "&IsOperations=" + isOperations;
+    var $itemurl = "/Requests/ReceivedModal?RequestID=" + $(this).attr("value")+   $.fn.getRequestIndexString()
     $.fn.CallPageRequest($itemurl, "received");
     return false;
 });
@@ -54,14 +54,14 @@ $(".order-approved-operation").off('click').on("click", function (e) {
     console.log("approving");
     e.preventDefault();
     $("#loading").show();
-    ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/" + $(this).attr("value"), "._IndexTableWithCounts");
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/?id=" + $(this).attr("value"), "._IndexTableWithCounts",  "GET");
     return false;
 });
 $(".approve-order").off('click').on("click", function (e) {
     console.log("approving");
     e.preventDefault();
     $("#loading").show();
-    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/" + $(this).attr("value"), "._IndexTableWithCounts");
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/?id=" + $(this).attr("value"), "._IndexTableWithCounts",  "GET");
     return false;
 });
 
@@ -71,22 +71,23 @@ $(".page-item a").off('click').on("click", function (e) {
     $("#loading").show();
     var pageNumber = parseInt($(this).html());
     $('.page-number').val(pageNumber);
-    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/" + $(this).attr("value"), "._IndexTableData");
+    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
     return false;
 });
 
 
-function ajaxPartialIndexTable(status, url, viewClass) {
-    console.log("in ajax partial index call");
+function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
+    console.log("in ajax partial index call"+url);
     var selectedPriceSort = [];
     $("#priceSortContent .priceSort:checked").each(function (e) {
         selectedPriceSort.push($(this).attr("enum"));
     })
-    $.ajax({
-        async: true,
-        url: url,
-        data: {
-            id: $(this).attr("value"),
+  var contentType = true;
+    var processType = true;
+    if(formdata == undefined)
+    {
+        console.log("formdata is undefined");
+        formdata={            
             PageNumber: $('.page-number').val(),
             RequestStatusID: status,
             PageType: $('#masterPageType').val(),
@@ -95,14 +96,35 @@ function ajaxPartialIndexTable(status, url, viewClass) {
             SelectedPriceSort: selectedPriceSort,
             SelectedCurrency: $('#tempCurrency').val(),
             SidebarFilterID: $('.sideBarFilterID').val()
-        },
-        traditional: true,
-        type: 'GET',
-        cache: false,
-        success: function (data) {
-            $(viewClass).html(data);
-            $("#loading").hide();
-            return true;
+        };
+       console.log(formdata);
+    }
+    else{
+        contentType = false;
+            processType = false;
         }
+
+    $.ajax({
+    contentType: contentType,
+    processData: processType,
+    async: true,
+    url: url,
+    data: formdata,
+    traditional: true,
+    type: type,
+    cache: false,
+    success: function (data) {
+            $(".modal").modal('hide');
+        $(viewClass).html(data);
+        $("#loading").hide();
+        return true;
+    },
+    error : function () {
+        $("#loading").hide();
+        return true;
+    }
     });
+
+    return false;
 }
+

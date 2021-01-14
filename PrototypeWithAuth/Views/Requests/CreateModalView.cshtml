@@ -24,8 +24,6 @@
         <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
             @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
-            @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
-            @Html.HiddenFor(model => model.Page)
             @Html.HiddenFor(model => model.RequestStatusID)
             @Html.HiddenFor(model => model.SubCategoryID)
             @Html.HiddenFor(model => model.VendorID)

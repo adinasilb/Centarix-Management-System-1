@@ -416,20 +416,6 @@
         };*@
 
 
-        function AddTempDataMemory() {
-            //console.log("about to get set the hidden fors in the modal view to remember where the user was");
-
-            $("#Page").val(parseInt(@TempData["TempPage"]));
-            $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
-            $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
-            $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
-
-            $("#ApplicationUserID").val("@TempData["TempApplicationUserID"]?.ToString()");
-
-            //console.log("PageType:" + @TempData["TempPageType"]);
-            $("#PageType").val(@TempData["TempPageType"]);
-        };
-
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
             console.log("itemurl " + $itemurl);
@@ -467,47 +453,28 @@
                     switch ($type) {
                         case "details":
                             $.fn.OnOpenModalView();
-                            AddTempDataMemory();
                             $("#Request_Cost").trigger('change');
                             break;
                         case "edit":
                             $.fn.OnOpenModalView();
-                            AddTempDataMemory();
                             break;
                         case "reorder":
                             $.fn.OnOpenModalView();
-                            alert("in reorder");
-                            AddTempDataMemory();
                             $("#Request_Cost").trigger('change');
                             //$.fn.CheckCurrency();
                             break;
                         case "create":
                             $.fn.OnOpenModalView();
-                            AddTempDataMemory();
                             break;
                         case "received":
                             $('.mdb-select').materialSelect();
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
-                            AddTempDataMemory();
-                            break;
-                        case "confirmemail":
-                            AddTempDataMemory();
-                            break;
-                        case "delete":
-                            AddTempDataMemory();
-                            break;
-                        case "quote":
-                            AddTempDataMemory();
-                            break;
-                        case "orderlate":
-                            //AddTempDataMemory();
-                            break;
+                            break;                    
                         case "termsmodal":
                             //alert("in termsmodal success!");
                             $(".terms-disabled").hide();
                             $(".paid-disabled").hide();
                             $('.mdb-select').materialSelect();
-                            AddTempDataMemory();
                             break;
                     }
 
@@ -1010,7 +977,21 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
-
+        $.fn.getRequestIndexString = function(){
+            var selectedPriceSort = [];
+            $("#priceSortContent .priceSort:checked").each(function (e) {
+                selectedPriceSort.push($(this).attr("enum"));
+            })
+            return(
+            "&PageNumber=" + $('.page-number').val() +
+                "&RequestStatusID=" + $(".request-status-id").val() +
+                "&PageType=" + $('#masterPageType').val() +
+                "&SectionType=" + $('#masterSectionType').val() +
+                "&SidebarType=" + $('#masterSidebarType').val() +
+                "&SelectedPriceSort=" + selectedPriceSort +
+                "&SelectedCurrency=" + $('#tempCurrency').val() +
+                "&SidebarFilterID=" + $('.sideBarFilterID').val());
+        }
     </script>
 
     @if (IsSectionDefined("requestNavScript"))

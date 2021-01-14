@@ -32,7 +32,7 @@
 			alert("didn't go into any edits");
 		}
 		console.log("url: " + url);
-
+		console.log(...formData)
 		$.ajax({
 			processData: false,
 			contentType: false,

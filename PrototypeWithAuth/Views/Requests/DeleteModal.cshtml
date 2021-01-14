@@ -102,7 +102,7 @@
                 <div class="modal-footer">
                     <div class="text-center mx-auto modal-footer-mt">
 
-                        <input type="submit" asp-action="DeleteModal" value="Confirm" class="custom-button custom-button-font @bcColor between-button-margin" />
+                        <button type="submit"  class="submit-delete custom-button custom-button-font @bcColor between-button-margin"  value="@Model.Request.RequestID" >Confirm</button>
                         <button type="button" class="custom-cancel custom-button " data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                     </div>
                 </div>
@@ -111,3 +111,34 @@
         </div>
     </div>
 </div>
+<script>
+    $(".submit-delete").off('click').on("click", function (e) {
+        console.log("submit delete");
+        e.preventDefault();
+        $("#loading").show();
+        var PageType = $('#masterPageType').val();
+        var SidebarType = $('#masterSidebarType').val();
+        var viewClass=""
+        if (PageType =="LabManagementQuotes")
+        {
+            if (SidebarType =="Quotes")
+            {
+
+            }
+            else {
+
+            }
+        }
+        else if (PageType == "RequestInventory" || PageType == "OperationsInventory") 
+        {
+
+            viewClass ="_IndexTableData";
+        }
+        else
+        {
+            viewClass ="_IndexTableWithCounts";
+        }
+        ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal?id=" + $(this).attr("value"), "."+viewClass, "POST");
+        return false;
+    });
+</script>
