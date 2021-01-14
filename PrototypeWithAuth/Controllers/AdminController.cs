@@ -295,6 +295,8 @@ namespace PrototypeWithAuth.Controllers
                 registerUserViewModel.Password = newPassword;
             }
             IdentityResult result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
+            await _userManager.ResetAuthenticatorKeyAsync(user);
+            await _userManager.UpdateSecurityStampAsync(user);
             //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
             if (result.Succeeded)
             {
