@@ -2547,12 +2547,14 @@ namespace PrototypeWithAuth.Controllers
                                 await _context.SaveChangesAsync();
 
                             }
-
+                            HttpContext.Session.Clear(); //will clear the session for the future
                         }
                         catch (Exception e)
                         {
                             transaction.Rollback();
+                            //should we clear or keep the session and open a new createmodal? or go back to the terms??
                         }
+
                     }
                     /*
                      * END SAVE THE INFORMATION HERE
