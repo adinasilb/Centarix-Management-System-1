@@ -18,9 +18,7 @@ $.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
 	var catalogNumber = $("#Request_CatalogNumber").val();
 	var productID = null;
 	var catalogResult = false;
-	if ($(".turn-edit-on-off").length > 0) {
-		productID = $(".turn-edit-on-off").val();
-	}
+	
 	$.ajax({
 		async: false,
 		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
@@ -34,7 +32,6 @@ $.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
 			console.log(status, error);
 		}
 	});
-	//alert("catalog result: catalog#: " + catalogNumber + " vendorid: " + vendorID + " is --> " + catalogResult);
 	return catalogResult;
 }, 'That product has already been created');
 
@@ -43,15 +40,21 @@ $('.ordersItemForm').validate({
 		"Request.Product.ProductName": "required",
 		"Request.CatalogNumber": {
 			required: true,
-			UniqueVendorAndCatalogNumber: true
+				remote:{
+		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
+		type: 'POST',
+		data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Request_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
+		return $(".turn-edit-on-off").val();
+	}else{return null}}},
+			},
 		},
 		"Request.Product.ProductSubcategory.ParentCategoryID": "selectRequired",
 		"Request.Product.ProductSubcategoryID": "selectRequired",
 		"Request.SubProject.ProjectID": "selectRequired",
 		"Request.SubProjectID": "selectRequired",
 		"Request.Product.VendorID": {
-			"selectRequired" : true,
-			UniqueVendorAndCatalogNumber: true
+			"selectRequired" : true,	
+			
 		},
 		"Request.ParentQuote.QuoteNumber": {
 			required: true
@@ -111,4 +114,13 @@ $('.ordersItemForm').validate({
 		"Request.SubUnitTypeID": "selectRequired",
 		"Request.SubSubUnitTypeID": "selectRequired"
 	},
+	messages: {
+        "Request.CatalogNumber": {
+            remote: "this product has already been created"
+        },
+		}
+});
+
+$('#vendorList').change(function(){
+	$('#Request_CatalogNumber').valid();
 });

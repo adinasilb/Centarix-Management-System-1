@@ -3470,12 +3470,12 @@ namespace PrototypeWithAuth.Controllers
         public bool CheckUniqueVendorAndCatalogNumber (int VendorID, string CatalogNumber, int? ProductID = null)
         {
             var boolCheck = true;
-            if (VendorID != null && CatalogNumber != null &&
-                ((ProductID == null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber).Where(r => r.Product.VendorID == VendorID).Any())
-                || ProductID != null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber).Where(r => r.Product.VendorID == VendorID).Count() > 1))
+            //validation for the create
+            if (VendorID != null && CatalogNumber != null && ((ProductID == null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID).Any())
             {
-                boolCheck = false;
+                return false;
             }
+            //validation for the edit
             return boolCheck;
         }
         //[HttpGet]
