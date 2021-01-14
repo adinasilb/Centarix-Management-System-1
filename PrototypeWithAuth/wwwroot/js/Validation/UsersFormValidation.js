@@ -24,7 +24,13 @@ $('.usersForm').validate({
 		},
 		"Email": {
 			email: true,
-			required: true
+			required: true,
+			remote:{
+		url: '/Admin/CheckUserEmailExist',
+		type: 'POST',
+		data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Request_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
+		return $(".turn-edit-on-off").val();
+	}else{return null}}},
 		},
 		"PhoneNumber": {
 			required: true,

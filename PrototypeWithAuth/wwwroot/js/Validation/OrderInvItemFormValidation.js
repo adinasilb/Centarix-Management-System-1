@@ -44,7 +44,7 @@ $('.ordersItemForm').validate({
 		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
 		type: 'POST',
 		data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Request_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
-		return $(".turn-edit-on-off").val();
+		return $(".turn-edit-on-off").attr("productID");
 	}else{return null}}},
 			},
 		},
