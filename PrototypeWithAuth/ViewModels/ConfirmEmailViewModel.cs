@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     public class ConfirmEmailViewModel
     {
         public ParentRequest ParentRequest { get; set; }
-        //public List<Request> Requests { get; set; }
+        public List<Request> Requests { get; set; }
         public int VendorId { get; set; }
         public int RequestID { get; set; }
         //public bool IsSingleOrder{ get; set; }

@@ -9,13 +9,14 @@ namespace PrototypeWithAuth.AppData
 {
     public static class SessionExtensions
     {
+        public enum SessionNames { Request, Request_Product, Request_ParentQuote, Request_ParentRequest, Comment, Request_PaymentStatusID, RequestList }
         public static void SetObject(this ISession session, string key, object value)
         {
             session.SetString(key,
                 JsonConvert.SerializeObject(value, Formatting.None,
                         new JsonSerializerSettings()
                         {
-                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize
                             //tells the json not to serialize the children objects ex. requests => product so won't get a loop error
                             //could be in the future we'll want to switch to ReferenceLoopHandling.Serialize to save all the items together but prob not b/c of foreign keys
                         }));

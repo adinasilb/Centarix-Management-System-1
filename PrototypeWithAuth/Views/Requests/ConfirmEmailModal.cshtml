@@ -18,7 +18,7 @@
     TempData["Email5"] = TempData["Email5"]?.ToString() ?? "";
 
     char currency = '₪';
-    if (Model.ParentRequest.Requests.Count() == 1 && Model.ParentRequest.Requests.FirstOrDefault().Currency == AppUtility.CurrencyEnum.USD.ToString())
+    if (Model.Requests.Count() == 1 && Model.Requests.FirstOrDefault().Currency == AppUtility.CurrencyEnum.USD.ToString())
     {
         currency = '$';
     }
@@ -27,7 +27,7 @@
 
 
     var colspan = 1;
-    @if (Model.ParentRequest.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+    @if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
     {
 
         colspan = 3;
@@ -100,16 +100,16 @@
                         <div class="row">
                             <div class="col-4">
                                 <div class="vendor-info">
-                                    <span class="heading-1">@Model.ParentRequest.Requests.FirstOrDefault().Product.Vendor.VendorEnName</span><br>
-                                    <span>ID: @Model.ParentRequest.Requests.FirstOrDefault().Product.Vendor.VendorBuisnessID</span><br>
-                                    <span>@Model.ParentRequest.Requests.FirstOrDefault().Product.Vendor.VendorCity</span><br>
-                                    <span>Tel: @Model.ParentRequest.Requests.FirstOrDefault().Product.Vendor.VendorTelephone</span>
+                                    <span class="heading-1">@Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</span><br>
+                                    <span>ID: @Model.Requests.FirstOrDefault().Product.Vendor.VendorBuisnessID</span><br>
+                                    <span>@Model.Requests.FirstOrDefault().Product.Vendor.VendorCity</span><br>
+                                    <span>Tel: @Model.Requests.FirstOrDefault().Product.Vendor.VendorTelephone</span>
                                 </div>
                             </div>
                             <div class="col-6 offset-2">
                                 <div class="note-message p-4 pl-5">
                                     <span class="heading-1">Please Note</span><br>
-                                    @foreach (var request in Model.ParentRequest.Requests)
+                                    @foreach (var request in Model.Requests)
                                     {
                                         if (!string.IsNullOrEmpty(request.NoteToSupplier))
                                         {
@@ -126,7 +126,7 @@
                             <table class="table confirm-table">
                                 <thead style="background-color: #D0001C; color: #ffffff;">
                                     <tr>
-                                        @if (Model.ParentRequest.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                                        @if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                                         {
                                             <th style="width:40%;">Items</th>
                                             <th style="width:18%;">SKU</th>
@@ -145,11 +145,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @*@for (int i = 0; i < Model.ParentRequest.Requests.Count(); i++)
+                                    @*@for (int i = 0; i < Model.Requests.Count(); i++)
                                         {
 
                                             <tr>
-                                                <td style="font-weight: 500;">@Model.ParentRequest.Requests[i].SubUnit @Model.ParentRequest.Requests[i].Product.ProductName</td>
+                                                <td style="font-weight: 500;">@Model.Requests[i].SubUnit @Model.Requests[i].Product.ProductName</td>
                                                 <td>@Model.Requests[i].CatalogNumber</td>
                                                 @if (@Model.Requests[i].Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                                                 {
@@ -163,7 +163,7 @@
 
 
                                         }*@
-                                    @foreach (var request in Model.ParentRequest.Requests)
+                                    @foreach (var request in Model.Requests)
                                     {
                                         <tr>
                                             <td style="font-weight: 500;">@request.SubUnit @request.Product.ProductName</td>
@@ -178,7 +178,7 @@
                                             <td>@currency @request.Cost</td>
                                         </tr>
                                     }
-                                    @{ double total = Model.ParentRequest.Requests.Sum(r => r.Cost);
+                                    @{ double total = Model.Requests.Sum(r => r.Cost);
                                         double vat = total * .17;
                                         double totalWithVat = total + vat;}
                                     <tr>
@@ -221,7 +221,7 @@
                             <div class="col-md-12">
                                 <div class="payment-terms">
                                     <span style="font-weight:700; font-size:1.5rem;">Payment Terms</span><br>
-                                    <span class="payment-terms">@Model.ParentRequest.Requests.FirstOrDefault().Terms</span>
+                                    <span class="payment-terms">@Model.Requests.FirstOrDefault().Terms</span>
                                 </div>
                             </div>
                         </div>
