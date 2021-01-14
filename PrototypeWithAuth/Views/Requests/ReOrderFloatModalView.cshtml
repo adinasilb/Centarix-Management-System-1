@@ -313,11 +313,27 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 <script>
     $("#Request_Cost").trigger('change');
     $(".submit-reorder").off('click').on("click", function (e) {
-        console.log("submit reorder");
         e.preventDefault();
-        $("#loading").show();
-        var formData = new FormData($("#myForm")[0]);
-        ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/ReOrderFloatModalView', "._IndexTableWithCounts", "POST", formData);
+        console.log("submit reorder");
+        //alert("validate form");
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+          
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $("#loading").show();
+            var formData = new FormData($("#myForm")[0]);
+            ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/ReOrderFloatModalView', "._IndexTableWithCounts", "POST", formData);
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+       
         //return false;
     });
 </script>
