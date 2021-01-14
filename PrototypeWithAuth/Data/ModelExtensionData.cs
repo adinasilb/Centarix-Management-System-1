@@ -1000,8 +1000,8 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 400,
-                    LocationTypeName = "-4°C",
-                    LocationTypePluralName = "-4°C",
+                    LocationTypeName = "4°C",
+                    LocationTypePluralName = "4°C",
                     LocationTypeChildID = 401,
                     Depth = 0
                 },
