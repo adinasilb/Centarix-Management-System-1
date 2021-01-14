@@ -1365,5 +1365,10 @@ namespace PrototypeWithAuth.Controllers
             return Json(subcategories);
         }
 
+        public bool CheckUserEmailExist(bool isEdit, string email, string currentEmail)
+        {
+            return !_context.Users.Where(u => u.Email.ToLower().Equals(email.ToLower())).Any()||(isEdit && currentEmail.ToLower().Equals(email.ToLower()));
+        }
+
     }
 }

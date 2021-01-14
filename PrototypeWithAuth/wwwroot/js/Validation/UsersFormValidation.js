@@ -7,7 +7,9 @@ var isEmployeeOnly = function () {
 var isUserAndIsNotEdit = function () {
 	return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
 }
-
+var isEdit = function () {
+	return $('#myForm').hasClass('editUser');
+}
 var isUser = function () {
 	return $("#NewEmployee_EmployeeStatusID").val() == "4";
 }
@@ -26,11 +28,10 @@ $('.usersForm').validate({
 			email: true,
 			required: true,
 			remote:{
-		url: '/Admin/CheckUserEmailExist',
-		type: 'POST',
-		data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Request_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
-		return $(".turn-edit-on-off").val();
-	}else{return null}}},
+				url: '/Admin/CheckUserEmailExist?isEdit='+isEdit()+"&currentEmail="+$(".turn-edit-on-off").attr("currentEmail"),
+				type: 'POST',
+				data: { "email":function(){ return $("#Email").val()}},
+			}
 		},
 		"PhoneNumber": {
 			required: true,
@@ -128,5 +129,8 @@ $('.usersForm').validate({
 			required: "",
 			min: "",
 		},
+		Email:{
+			remote:"email already exists"
+		}
 	}
 });
