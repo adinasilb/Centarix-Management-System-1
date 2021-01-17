@@ -2078,6 +2078,55 @@ $(function () {
 			}
 		});
 	});
+	$(".back-button").off("click").on("click", function () {
+		console.log('back button');
+		var type = $(".turn-edit-on-off").attr('name');
+		console.log('type' + type);
+		if (type == 'edit') {
+			var section = "";
+			console.log($('#masterSectionType').val());
+			if ($('#masterSectionType').val() == "Operations") {
+				section = "Operations";
+			}
+			else if ($('#masterSectionType').val() == "LabManagement") {
+				section = "LabManagement";
+			}
+			else if ($('#masterSectionType').val() == "Accounting") {
+				section = "Accounting";
+			}
+			else if ($('#masterSectionType').val() == "Users") {
+				section = "Users";
+			}
+			else if ($('#masterSectionType').val() == "Requests") {
+				section = "Requests";
+			}
+			$("#loading").show();
+			$itemurl = "/Requests/ConfirmExit/?MenuItem=" + section;
+			console.log($itemurl);
+			$.ajax({
+				async: true,
+				url: $itemurl,
+				type: 'GET',
+				cache: true,
+				success: function (data) {
+					$("#loading").hide();
+					var modal = $(data);
+					$('body').append(modal);
+					$(".confirm-exit-modal").modal({
+						backdrop: false,
+						keyboard: false,
+					});
+					//shows the modal
+					$(".confirm-exit-modal").modal('show');
+					$(".modal-open-state").attr("text", "open");
+				}
+
+			});
+		}
+		else {
+			$(this).closest('.modal').modal('hide');
+        }
+	})
 
 	$('.turn-edit-on-off').off("click").on("click", function () {
 		//if ($('.modal-open-state').attr("text") == "open") {
