@@ -64,6 +64,21 @@ $(".approve-order").off('click').on("click", function (e) {
     ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/?id=" + $(this).attr("value"), "._IndexTableWithCounts",  "GET");
     return false;
 });
+$(".create-calibration").off('click').on("click", function (e) {
+    e.preventDefault();
+
+    $.ajax({
+    async: true,
+    url: "/Calibrations/CreateCalibration?requestid="+$(this).attr("value"),
+    type: "GET",
+    cache: false,
+    success: function (data) {
+        $('.render-body').html(data)
+           $('#myForm a:first').tab('show');
+    }
+    });
+    return false;
+});
 
 $(".page-item a").off('click').on("click", function (e) {
     console.log("next page");

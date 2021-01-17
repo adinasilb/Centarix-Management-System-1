@@ -181,9 +181,13 @@ span.choose {
     display: none !important;
 }
 
-.RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
+.order-inv-form .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--order-inv-color) !important;
+}
+.supplier-form .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
+    border-radius: 18px;
+    border-color: var(--lab-man-color) !important;
 }
 
 i.fas {
