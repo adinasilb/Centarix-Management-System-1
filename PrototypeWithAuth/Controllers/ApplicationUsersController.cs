@@ -80,13 +80,14 @@ namespace PrototypeWithAuth.Controllers
         {
             IIncludableQueryable<Employee, JobCategoryType> employees = _context.Employees.Where(u => u.EmployeeStatusID != 4).Where(u => !u.IsSuspended)
                 .Include(e => e.EmployeeStatus).Include(e => e.SalariedEmployee).Include(e => e.JobSubcategoryType).ThenInclude(js => js.JobCategoryType);
+            //var ed = employeeDetails.OrderBy(ed => ed.Employee.UserNum);
             EmployeeDetailsViewModel employeeDetailsViewModel = new EmployeeDetailsViewModel
             {
                 Employees = employees.Select(u => new UserWithCentarixIDViewModel
                 {
                     Employee = u,
                     CentarixID = AppUtility.GetEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == u.Id).OrderBy(ci => ci.TimeStamp))
-                }),
+                }).OrderBy(ed => ed.Employee.UserNum),
                 SalariedEmployeeCount = employees.Where(e => e.EmployeeStatusID == 1).Count(),
                 FreelancerCount = employees.Where(e => e.EmployeeStatusID == 2).Count(),
                 AdvisorCount = employees.Where(e => e.EmployeeStatusID == 3).Count(),
