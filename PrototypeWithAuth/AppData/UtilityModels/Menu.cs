@@ -16,6 +16,7 @@ namespace PrototypeWithAuth.Models
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
         public string MenuImageURL { get; set; }
+        public string SmallMenuImageURL { get; set; }
         public RouteValueDictionary RouteValues {get; set;}
     }
 }
