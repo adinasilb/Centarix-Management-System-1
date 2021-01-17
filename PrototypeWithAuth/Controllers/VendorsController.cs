@@ -428,6 +428,8 @@ namespace PrototypeWithAuth.Controllers
                     foreach (var vendorComment in createSupplierViewModel.VendorComments)
                     {
                         vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
+                        vendorComment.ApplicationUserID = _userManager.GetUserId(User);
+                        vendorComment.CommentTimeStamp = DateTime.Now;
                         _context.Update(vendorComment);
 
                     }
@@ -511,7 +513,7 @@ namespace PrototypeWithAuth.Controllers
         {
             VendorComment comment = new VendorComment();
             comment.CommentType = type;
-            AddCommentViewModel addCommentViewModel = new AddCommentViewModel { VendorComment = comment, Index = index };
+            AddCommentViewModel addCommentViewModel = new AddCommentViewModel { VendorComment = comment, Index = index};
             return PartialView(addCommentViewModel);
         }
         [HttpGet]

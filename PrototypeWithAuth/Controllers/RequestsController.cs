@@ -1111,7 +1111,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     //save the new comment
                                     comment.ApplicationUserID = currentUser.Id;
-                                    comment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+                                  
                                     comment.RequestID = requestItemViewModel.Request.RequestID;
                                     _context.Add(comment);
                                 }
@@ -1791,7 +1791,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     //save the new comment
                                     comment.ApplicationUserID = currentUser.Id;
-                                    comment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+                                    comment.CommentTimeStamp = DateTime.Now; 
                                     comment.RequestID = requestItemViewModel.Request.RequestID;
                                     _context.Update(comment);
                                 }

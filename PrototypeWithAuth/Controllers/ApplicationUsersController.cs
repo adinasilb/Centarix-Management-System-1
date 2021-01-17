@@ -171,8 +171,8 @@ namespace PrototypeWithAuth.Controllers
                 YearlyMonthlyEnum = yearlyMonthlyEnum,
                 Employees = workerHoursViewModel,
                 Months = Enumerable.Range(1, 12).ToList(),
-                Years = Enumerable.Range(2010, DateTime.Today.Year - 2009).ToList(),
-                TotalWorkingDaysInMonth = (int)AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(DateTime.Now.Year, month, 1), _context.CompanyDayOffs, 0),
+                Years = Enumerable.Range(AppUtility.YearStartedTimeKeeper, DateTime.Today.Year - (AppUtility.YearStartedTimeKeeper-1)).ToList(),
+                TotalWorkingDaysInMonth = (int)AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), _context.CompanyDayOffs, 0),
                 TotalWorkingDaysInYear = amountInYear == 0 ? AppUtility.GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1), _context.CompanyDayOffs, 0) : amountInYear
             };
             return viewModel;
