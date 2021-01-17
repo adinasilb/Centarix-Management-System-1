@@ -38,7 +38,7 @@
                     </td>
                     <td style="width:20%;"><a href="" class="load-product-details-summary" value=@item.RequestID>@Html.DisplayFor(modelItem => item.RequestName)</a></td>
                     <td style="color: @color; width:20%;">@description</td>
-                    <td> @Html.DisplayFor(modelItem => item.TimeStamp) </td>
+                    <td> @item.TimeStamp.ToString("dd'/'MM'/'yyyy") </td>
                     <td>@Html.DisplayFor(modelItem => item.Vendor) </td>
 
                     @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@

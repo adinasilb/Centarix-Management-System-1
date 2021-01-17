@@ -142,7 +142,7 @@ namespace PrototypeWithAuth.Controllers
                         sickDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 1 && eh.Date.Year == year && eh.Date.Month == month).Count();
                         vacationDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 2 && eh.Date.Year == year && eh.Date.Month == month).Count();
                         var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                        vacationDays = Math.Round(vacationDays + (vacationHours / employee.SalariedEmployee.HoursPerDay), 2);
+                        vacationDays = Math.Round(vacationDays + (vacationHours / employee.SalariedEmployee?.HoursPerDay??1), 2);
                         workDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == null && eh.Date.Year == year && eh.Date.Month == month).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
                         vacationSickCount = sickDays + vacationDays;
@@ -151,7 +151,7 @@ namespace PrototypeWithAuth.Controllers
                         sickDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 1 && eh.Date.Year == year).Count();
                         vacationDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 2 && eh.Date.Year == year).Count();
                         vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                        vacationDays = Math.Round(vacationDays + (vacationHours / employee.SalariedEmployee.HoursPerDay), 2);
+                        vacationDays = Math.Round(vacationDays + (vacationHours / employee.SalariedEmployee?.HoursPerDay ?? 1), 2);
                         workDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == null && eh.Date.Year == year).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
                         vacationSickCount = sickDays + vacationDays;
