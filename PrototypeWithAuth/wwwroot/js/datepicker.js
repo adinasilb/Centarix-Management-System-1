@@ -1601,12 +1601,12 @@
                 if (dp.isSame(maxRange, date, type)) classes += ' -range-to-';
 
                 if (parent.selectedDates.length == 1 && parent.focused) {
-                    if (
-                        (dp.bigger(minRange, date) && dp.less(parent.focused, date)) ||
-                        (dp.less(maxRange, date) && dp.bigger(parent.focused, date)))
-                    {
-                        classes += ' -in-range-'
-                    }
+                    //if (
+                    //    (dp.bigger(minRange, date) && dp.less(parent.focused, date)) ||
+                    //    (dp.less(maxRange, date) && dp.bigger(parent.focused, date)))
+                    //{
+                    //    classes += ' -in-range-'
+                    //}
 
                     if (dp.less(maxRange, date) && dp.isSame(parent.focused, date)) {
                         classes += ' -range-from-'
@@ -1615,16 +1615,16 @@
                         classes += ' -range-to-'
                     }
 
-                } else if (parent.selectedDates.length == 2) {
+                }/* else if (parent.selectedDates.length == 2) {
                     if (dp.bigger(minRange, date) && dp.less(maxRange, date)) {
                         classes += ' -in-range-'
                     }
-                }
+                }*/
             }
 
 
             if (dp.isSame(currentDate, date, type)) classes += ' -current-';
-            if (parent.focused && dp.isSame(date, parent.focused, type)) classes += ' -focus-';
+           // if (parent.focused && dp.isSame(date, parent.focused, type)) classes += ' -focus-';
             if (parent._isSelected(date, type)) classes += ' -selected-';
             if (!parent._isInRange(date, type) || render.disabled) classes += ' -disabled-';
 
@@ -2217,10 +2217,10 @@
             this.update();
         },
 
-        _onMouseEnterRange: function (e) {
-            var name = $(e.target).attr('name');
-            $('.datepicker--time-current-' + name, this.$timepicker).addClass('-focus-');
-        },
+        //_onMouseEnterRange: function (e) {
+        //    var name = $(e.target).attr('name');
+        //    $('.datepicker--time-current-' + name, this.$timepicker).addClass('-focus-');
+        //},
 
         _onMouseOutRange: function (e) {
             var name = $(e.target).attr('name');
