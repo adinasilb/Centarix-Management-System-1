@@ -10,18 +10,30 @@
         <i class="fas fa-long-arrow-alt-left"></i>
     </a>
 </div>
+
 @if ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.RequestRequest || (AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.OperationsRequest)
 {
     <div class="_IndexTableWithCounts">
-       @{  await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
+        @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
     </div>
 
-           }
-           else
-           {
+}
+else
+{
+    if (Model.PagedList.Count == 0)
+    {
+    <div>
+        @{
+            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+        }
+    </div>
+    }
+    else
+    {
     <div class="_IndexTable">
         @{await Html.RenderPartialAsync("_IndexTable", Model); }
     </div>
+    }
 
-            }
+}
 

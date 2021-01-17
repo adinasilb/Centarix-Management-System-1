@@ -6,7 +6,11 @@
 
     if (Model.RequestsByVendor.Count() == 0)
     {
-        <div class="heading-1">There are currently no orders</div>
+    <div >
+        @{
+            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+        }
+    </div>
     }
 }
 <form method="post" enctype="multipart/form-data" style="height: 100%; ">
