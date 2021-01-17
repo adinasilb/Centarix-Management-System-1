@@ -1,0 +1,12 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+@using PrototypeWithAuth.AppData
+@{
+    ViewData["Title"] = "Equipment List";
+
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+
+<div class="_IndexTable">
+    @{ await Html.RenderPartialAsync("_IndexTable", Model);}
+</div>
+

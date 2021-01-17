@@ -684,7 +684,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "List",
                 Controller = "Requests",
-                Action = "Index",
+                Action = "ItemTableEquipment",
                 RouteValues = new RouteValueDictionary()
                 {
                     {"SectionType", AppUtility.MenuItems.LabManagement },
@@ -693,7 +693,7 @@ namespace PrototypeWithAuth.AppData
                 IconName = "icon-format_list_bulleted-24px-01",
                 Classes = Classes
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Categories) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Type) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Categories",

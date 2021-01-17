@@ -34,7 +34,11 @@
                 first = true;
             @:</div><div class="d-flex type-outer-div">
             }
-           
+            var link = "ItemTableType";
+            if(PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
+            {
+                link = "ItemTableEquipmentType";
+            }
                         <div class="type-div">
                             <a href="@Url.ActionLink("ItemTableType", "Requests", new { PageType = PageType, SectionType = SectionType, SidebarType = AppUtility.SidebarEnum.Type, SidebarFilterID = Model.ElementAt(i).ProductSubcategoryID + "" } )" class="text text-dark">
                                 <fieldset class=" type-fieldset">

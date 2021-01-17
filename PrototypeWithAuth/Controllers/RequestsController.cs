@@ -152,7 +152,7 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.ReceivedCount = receivedCount;
         }
 
-        [Authorize(Roles = "Requests")]
+        [Authorize(Roles = "Reports")]
         private async Task<RequestIndexViewModel> GetExpensesItemsViewModel(int page = 1, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null, String SortType = null)
         {
             RequestIndexViewModel viewModel = new RequestIndexViewModel()
@@ -163,7 +163,7 @@ namespace PrototypeWithAuth.Controllers
             return viewModel;
         }
 
-        [Authorize(Roles = "Requests")]
+        [Authorize(Roles = "Requests, LabManagement, Operations")]
         private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject)
         {
             int categoryID = 1;
@@ -174,8 +174,7 @@ namespace PrototypeWithAuth.Controllers
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
          .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Include(x => x.ParentRequest)
-         .OrderBy(r => r.CreationDate);
+         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Include(x => x.ParentRequest);
 
             int sideBarID = 0;
             if (requestIndexObject.SidebarType != AppUtility.SidebarEnum.Owner)
@@ -185,20 +184,10 @@ namespace PrototypeWithAuth.Controllers
 
             if (requestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
             {
-                if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Categories)
-                {
-                    RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
-                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-                        .Include(r => r.ParentRequest).Where(r => r.Product.ProductSubcategoryID == sideBarID ).Include(r => r.ParentRequest);
-
-                }
-                else
-                {
-                    RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
-                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-                        .Include(r => r.ParentRequest);
-                }
-                RequestsPassedIn.OrderByDescending(e => e.ParentRequest.OrderDate);
+       
+                RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory).Include(r=>r.ApplicationUserCreator)
+                    .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
+                    .Include(r => r.ParentRequest);
             }
             else if (ViewData["ReturnRequests"] != null)
             {
@@ -230,14 +219,12 @@ namespace PrototypeWithAuth.Controllers
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    RequestsPassedIn = RequestsPassedIn.OrderByDescending(rpi => rpi.ParentRequest.OrderDate);
                 }
 
                 if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 3)
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    RequestsPassedIn = RequestsPassedIn.OrderByDescending(rpi => rpi.ArrivalDate);
                 }
                 if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 4)
                 {
@@ -324,6 +311,7 @@ namespace PrototypeWithAuth.Controllers
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var receiveIcon = new IconColumnViewModel(" icon-done-24px ", "#00CA72", "load-receive-and-location", "Receive");
             var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
+            var equipmentIcon = new IconColumnViewModel(" icon-settings-24px-1 ", "var(--lab-man-color);", "create-calibration", "Create Calibration");
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
@@ -392,6 +380,10 @@ namespace PrototypeWithAuth.Controllers
                     onePageOfProducts = await GetReceivedInventoryOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                     break;
                 case AppUtility.PageTypeEnum.LabManagementEquipment:
+                    iconList.Add(equipmentIcon);
+                    iconList.Add(reorderIcon);
+                    iconList.Add(deleteIcon);
+                    onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                     break;
                 case AppUtility.PageTypeEnum.ExpensesStatistics:
                     break;
@@ -665,6 +657,30 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             SetViewModelCounts(requestIndexObject, viewModel);
+            return View(viewModel);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ItemTableEquipment()
+        {
+            RequestIndexObject requestIndexObject = new RequestIndexObject() { PageType = AppUtility.PageTypeEnum.LabManagementEquipment, SectionType = AppUtility.MenuItems.LabManagement, SidebarType = AppUtility.SidebarEnum.List };
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            return View(viewModel);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ItemTableEquipmentType()
+        {
+            RequestIndexObject requestIndexObject = new RequestIndexObject() { PageType = AppUtility.PageTypeEnum.LabManagementEquipment, SectionType = AppUtility.MenuItems.LabManagement, SidebarType = AppUtility.SidebarEnum.Type };
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             return View(viewModel);
         }
         [HttpGet]

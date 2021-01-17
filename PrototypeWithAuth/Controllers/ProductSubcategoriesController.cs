@@ -23,13 +23,13 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: ProductSubcategories
-        [Authorize(Roles = "Requests, Operations")]
+        [Authorize(Roles = "Requests, Operations, LabManagement")]
         public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, int categoryType=1)
         {
-            if(PageType.Equals( AppUtility.PageTypeEnum.LabManagementEquipment.ToString()))
+            if(PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Categories;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementEquipment;
                 var equipmentCategories = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
               .Where(ps => ps.ParentCategoryID ==5);
