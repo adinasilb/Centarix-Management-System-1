@@ -1111,7 +1111,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     //save the new comment
                                     comment.ApplicationUserID = currentUser.Id;
-                                    comment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+                                  
                                     comment.RequestID = requestItemViewModel.Request.RequestID;
                                     _context.Add(comment);
                                 }
@@ -1791,7 +1791,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     //save the new comment
                                     comment.ApplicationUserID = currentUser.Id;
-                                    comment.CommentTimeStamp = DateTime.Now; //check if we actually need this line
+                                    comment.CommentTimeStamp = DateTime.Now; 
                                     comment.RequestID = requestItemViewModel.Request.RequestID;
                                     _context.Update(comment);
                                 }
@@ -3470,11 +3470,16 @@ namespace PrototypeWithAuth.Controllers
         public bool CheckUniqueVendorAndCatalogNumber (int VendorID, string CatalogNumber, int? ProductID = null)
         {
             var boolCheck = true;
-            if (VendorID != null && CatalogNumber != null &&
-                ((ProductID == null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber).Where(r => r.Product.VendorID == VendorID).Any())
-                || ProductID != null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber).Where(r => r.Product.VendorID == VendorID).Count() > 1))
+            //validation for the create
+            if (VendorID != null && CatalogNumber != null && (ProductID == null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID).Any()))
             {
-                boolCheck = false;
+                return false;
+            }
+            //validation for the edit
+            var product = _context.Requests.Where(r => r.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID);
+            if ( ProductID != null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID).Any())
+            {
+                return false;
             }
             return boolCheck;
         }

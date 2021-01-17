@@ -126,7 +126,7 @@ namespace PrototypeWithAuth.AppData
         }
 
         public static double ExchangeRateIfNull = 3.5;
-        public static int YearStartedTimeKeeper = 2021;
+        public static int YearStartedTimeKeeper = 2019;
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
         public static double GetExchangeRateFromApi()
         {
