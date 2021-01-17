@@ -6,9 +6,9 @@
 
     if (Model.RequestsByVendor.Count() == 0)
     {
-    <div class="container h-100 flex-column justify-content-center">
+    <div >
         @{
-            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPage.cshtml", Model);
+            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
         }
     </div>
     }

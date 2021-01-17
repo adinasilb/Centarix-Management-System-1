@@ -5,8 +5,18 @@
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-
-<div class="_IndexTable">
-    @{ await Html.RenderPartialAsync("_IndexTable", Model);}
+@if (Model.PagedList.Count == 0)
+    {
+<div>
+    @{
+        await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+    }
 </div>
+    }
+    else
+    {
+<div class="_IndexTable">
+    @{await Html.RenderPartialAsync("_IndexTable", Model); }
+</div>
+    }
 
