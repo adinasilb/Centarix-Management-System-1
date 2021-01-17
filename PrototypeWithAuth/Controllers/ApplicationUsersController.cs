@@ -131,26 +131,30 @@ namespace PrototypeWithAuth.Controllers
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
             foreach (Employee employee in employees)
             {
-                int vacationDays = 0;
+                double vacationDays = 0;
                 int workDays = 0;
-                int sickDays = 0;
-                int vacationSickCount = 0;
+                double sickDays = 0;
+                double vacationSickCount = 0;
                 TimeSpan hours = new TimeSpan();
                 switch (yearlyMonthlyEnum)
                 {
                     case YearlyMonthlyEnum.Monthly:
                         sickDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 1 && eh.Date.Year == year && eh.Date.Month == month).Count();
                         vacationDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 2 && eh.Date.Year == year && eh.Date.Month == month).Count();
+                        var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                        vacationDays = Math.Round(vacationDays + (vacationHours / employee.SalariedEmployee.HoursPerDay), 2);
                         workDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == null && eh.Date.Year == year && eh.Date.Month == month).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
-                        vacationSickCount = employee.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date)?.Count() ?? 0;
+                        vacationSickCount = sickDays + vacationDays;
                         break;
                     case YearlyMonthlyEnum.Yearly:
                         sickDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 1 && eh.Date.Year == year).Count();
                         vacationDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 2 && eh.Date.Year == year).Count();
+                        vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                        vacationDays = Math.Round(vacationDays + (vacationHours / employee.SalariedEmployee.HoursPerDay), 2);
                         workDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == null && eh.Date.Year == year).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
-                        vacationSickCount = employee.EmployeeHours.Where(eh => eh.Date.Year == year && (eh.OffDayTypeID == 2 || eh.OffDayTypeID == 1) && eh.Date <= DateTime.Now.Date)?.Count() ?? 0;
+                        vacationSickCount = sickDays + vacationDays;
                         break;
                 }
 
