@@ -36,7 +36,7 @@ namespace PrototypeWithAuth.AppData
         }
         public enum SidebarEnum {
             None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List,  Calibrate, Categories,  Location, Cart, Notifications,
+            Quotes, List,  Calibrate,  Location, Cart, Notifications,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker, 
             Category,  Details, Hours, Salary, 

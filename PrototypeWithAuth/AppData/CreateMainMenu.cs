@@ -27,7 +27,8 @@ namespace PrototypeWithAuth.AppData
 },
                         { "SidebarType", AppUtility.SidebarEnum.List }
                     },
-                    MenuImageURL = "/images/css/main_menu_icons/inventory.png"
+                    MenuImageURL = "/images/css/main_menu_icons/inventory.png",
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/inventory_menu_button.png"
                 },
                 new Menu()
                 {
@@ -36,7 +37,8 @@ namespace PrototypeWithAuth.AppData
                     MenuViewName = "Protocols",
                     ControllerName = "",
                     ActionName = "",
-                    MenuImageURL = "/images/css/main_menu_icons/protocols.png"
+                    MenuImageURL = "/images/css/main_menu_icons/protocols.png",
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/protocols_menu_button.png"
                 },
                 new Menu()
                 {
@@ -51,7 +53,8 @@ namespace PrototypeWithAuth.AppData
                         { "SectionType", AppUtility.MenuItems.Operations },
                         { "SidebarType", AppUtility.SidebarEnum.List }
                     },
-                    MenuImageURL = "/images/css/main_menu_icons/operation.png"
+                    MenuImageURL = "/images/css/main_menu_icons/operation.png",
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/operations_menu_button.png"
                 },
                 new Menu()
                 {
@@ -60,7 +63,8 @@ namespace PrototypeWithAuth.AppData
                     MenuViewName = "Biomarkers",
                     ControllerName = "",
                     ActionName = "",
-                    MenuImageURL = "/images/css/main_menu_icons/biomarkers.png"
+                    MenuImageURL = "/images/css/main_menu_icons/biomarkers.png",
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/biomarkers_menu_button.png"
                 },
                 new Menu()
                 {
@@ -69,7 +73,8 @@ namespace PrototypeWithAuth.AppData
                     MenuViewName = "Timekeeper",
                     ControllerName = "Timekeeper",
                     ActionName = "ReportHours",
-                    MenuImageURL = "/images/css/main_menu_icons/timekeeper.png"
+                    MenuImageURL = "/images/css/main_menu_icons/timekeeper.png",
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/timekeeper_menu_button.png"
                 },
                 new Menu()
                 {
@@ -78,7 +83,8 @@ namespace PrototypeWithAuth.AppData
                     MenuViewName = "Lab Management",
                     ControllerName = "Vendors",
                     ActionName = "IndexForPayment",
-                    MenuImageURL = "/images/css/main_menu_icons/lab.png"
+                    MenuImageURL = "/images/css/main_menu_icons/lab.png",
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/lab_managment_menu_button.png"
                 },
                 new Menu()
                 {
@@ -87,7 +93,8 @@ namespace PrototypeWithAuth.AppData
                     MenuViewName = "Accounting",
                     ControllerName = "Requests",
                     ActionName = "AccountingPayments",
-                    MenuImageURL = "/images/css/main_menu_icons/accounting.png"
+                    MenuImageURL = "/images/css/main_menu_icons/accounting.png",
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/accounting_menu_button.png"
                 },
                 new Menu()
                 {
@@ -96,7 +103,8 @@ namespace PrototypeWithAuth.AppData
                     MenuViewName = "Reports",
                     ControllerName = "Expenses",
                     ActionName = "SummaryPieCharts",
-                    MenuImageURL = "/images/css/main_menu_icons/expenses.png"
+                    MenuImageURL = "/images/css/main_menu_icons/expenses.png",
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/reports_menu_button.png"
                 },
                 new Menu()
                 {
@@ -105,7 +113,8 @@ namespace PrototypeWithAuth.AppData
                     MenuViewName = "Income",
                     ControllerName = "",
                     ActionName = "",
-                    MenuImageURL = "/images/css/main_menu_icons/income.png"
+                    MenuImageURL = "/images/css/main_menu_icons/income.png",
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/income_menu_button.png"
                 },
                 new Menu()
                 {
@@ -114,7 +123,8 @@ namespace PrototypeWithAuth.AppData
                     MenuViewName = "Users",
                     ControllerName = "Admin",
                     ActionName = "Index",
-                    MenuImageURL = "/images/css/main_menu_icons/users.png"
+                    MenuImageURL = "/images/css/main_menu_icons/users.png",
+                    SmallMenuImageURL = "/images/css/main_menu_small_icons/users_menu_button.png"
                 }
 
             };

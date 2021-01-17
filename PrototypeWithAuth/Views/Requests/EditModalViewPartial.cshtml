@@ -189,14 +189,14 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                                 //adding the amount of months of the warranty to the invoice date
                                 var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
                             }*@
-                        <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty ?? 0).ToString("dd/mm/yyyy")" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                        <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty ?? 0).ToString("dd'/'MM'/'yyyy")" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                     </div>
                 }
                 else
                 {
                     <div class="col-3 @hiddenSummary">
                         <label class="control-label">Estimated End Date</label>
-                        <input value="@DateTime.Now.AddMonths(Model.Request.Warranty ?? 0).ToString("dd/mm/yyyy")" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                        <input value="@DateTime.Now.AddMonths(Model.Request.Warranty ?? 0).ToString("dd'/'MM'/'yyyy")" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
                     </div>
                 }
                 @if(!Model.isEditable)
@@ -221,7 +221,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <div class="col-md-4 @hiddenSummary">
                         <div class="form-group">
                             <label class="control-label">Expected supply date</label>
-                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("yyyy-MM-dd")" class="form-control-plaintext border-bottom mark-readonly" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" disabled />
+                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" class="form-control-plaintext border-bottom mark-readonly" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("dd'/'MM'/'yyyy")" disabled />
                         </div>
                     </div>
 
