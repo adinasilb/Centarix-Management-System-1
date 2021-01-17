@@ -5,7 +5,11 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
     if (Model.RequestsByVendor.Count() == 0)
     {
-        <div class="m-5"><h5>Cart empty</h5></div>
+    <div class="mt-4">
+        @{
+            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPage.cshtml", Model);
+        }
+    </div>
     }
 }
 

@@ -3,6 +3,15 @@
 @{
     ViewData["Title"] = "LabManageQuotes";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+
+    if (Model.RequestsByVendor.Count() == 0)
+    {
+        <div class="container h-100 flex-column justify-content-center">
+            @{
+                await Html.RenderPartialAsync("~/Views/Shared/_EmptyPage.cshtml", Model);
+            }
+        </div>
+    }
 }
 
 <form method="post" enctype="multipart/form-data" style="height: 100%; ">
@@ -96,7 +105,7 @@
                                 <button class="table-button custom-button-table-font lab-man-background-color float-right text-center confirm-quote-resend " value="@request.RequestID">Resend</button>
                             }
                         </td>
-                        <td width="12%" >
+                        <td width="12%">
                             <div class="d-inline-flex">
                                 <div class="table-icon-div"><button class="btn no-box-shadow p-0 load-quote-details m-0" data-title="edit" value="@request.RequestID"> <img src="~/images/css/accounting/icons/payment.png" /></button></div>
                                 <div class="table-icon-div"><button class="btn no-box-shadow p-0 m-0 load-confirm-delete-quote" data-title="delete" value="@request.RequestID" name="@AppUtility.MenuItems.LabManagement"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button></div>
@@ -122,8 +131,8 @@
                     </td>
                     <td colspan="2">
                         @*@if (vendor.Where(r => r.ParentQuote.QuoteStatusID == 1).Count() != 0)
-                        {*@
-                            <button class="custom-button custom-button-font lab-man-background-color float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
+                            {*@
+                        <button class="custom-button custom-button-font lab-man-background-color float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
                         @*}*@
 
                     </td>

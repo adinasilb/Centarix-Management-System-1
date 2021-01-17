@@ -2240,3 +2240,13 @@ table.visual-locations-table td .visual-locations-div {
 .not-form-ddl.select-wrapper {
 
 }
+
+/*
+    EMPTY PAGE
+*/
+.empty-page-text {
+    color: var(--black-50);
+    font-size: 2.25rem;
+    font-weight: 600;
+    margin-top: 60px;
+}
