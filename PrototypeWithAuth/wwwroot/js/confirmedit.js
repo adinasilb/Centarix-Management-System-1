@@ -191,4 +191,14 @@
 		$('.turn-edit-on-off').prop('checked', true);
 		$('.open-document-modal').attr("data-val", true);
 	});
+
+	$(".exit-edit-modal").off("click").on("click", function (e) {
+		$('.confirm-exit-modal').modal('hide');
+		$(".modal").hide();
+	})
+
+	$(".return-edit-modal").off("click").on("click", function (e) {
+		$('.confirm-exit-modal').remove();
+		//$(".modal").attr("data-backdrop", true);
+	})
 });

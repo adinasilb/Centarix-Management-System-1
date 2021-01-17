@@ -51,8 +51,8 @@
                         {
                             <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         }
-                        <div class="back-button">
-                            <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent" onclick="$(this).closest('.modal').modal('hide');">
+                        <div >
+                            <button class="back-button" type="button" data-dismiss="modal" style="border-width: 0; background: transparent" @*onclick="$(this).closest('.modal').modal('hide');*@>
                                 <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                             </button>
                         </div>
