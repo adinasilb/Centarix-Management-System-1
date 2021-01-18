@@ -336,6 +336,12 @@ input:not(input[type=button]) {
     margin-bottom: 0px;
 }
 
+.title-label {
+    font-size: 1.75rem;
+    color: var(--black-87);
+    font-weight: var(--bold-medium);
+}
+
 .form-group {
     margin-bottom: 0 !important;
 }

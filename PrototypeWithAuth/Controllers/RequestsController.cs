@@ -250,20 +250,24 @@ namespace PrototypeWithAuth.Controllers
             }
             AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
             //now that the lists are created sort by vendor or subcategory
-         
+            var sidebarFilterDescription = "";
             switch (requestIndexObject.SidebarType)
             {
                 case AppUtility.SidebarEnum.Vendors:
+                    sidebarFilterDescription = _context.Vendors.Where(v => v.VendorID == sideBarID).Select(v => v.VendorEnName).FirstOrDefault();
                     RequestsPassedIn = RequestsPassedIn
                      .OrderByDescending(r => r.ProductID)
                      .Where(r => r.Product.VendorID == sideBarID);
                     break;
                 case AppUtility.SidebarEnum.Type:
+                    sidebarFilterDescription = _context.ProductSubcategories.Where(p => p.ProductSubcategoryID==sideBarID).Select(p => p.ProductSubcategoryDescription).FirstOrDefault();
                     RequestsPassedIn = RequestsPassedIn
                    .OrderByDescending(r => r.ProductID)
                    .Where(r => r.Product.ProductSubcategoryID == sideBarID);
                     break;
                 case AppUtility.SidebarEnum.Owner:
+                    var owner = _context.Employees.Where(e => e.Id.Equals(requestIndexObject.SidebarFilterID)).FirstOrDefault();
+                    sidebarFilterDescription = owner.FirstName + " " + owner.LastName;
                     RequestsPassedIn = RequestsPassedIn
                     .OrderByDescending(r => r.ProductID)
                     .Where(r => r.ApplicationUserCreatorID == requestIndexObject.SidebarFilterID);
@@ -300,6 +304,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.PriceSortEnums = priceSorts;
             requestIndexViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
             requestIndexViewModel.PageType = requestIndexObject.PageType;
+            requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             return requestIndexViewModel;
         }
 
