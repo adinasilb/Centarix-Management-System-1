@@ -1215,6 +1215,126 @@ namespace PrototypeWithAuth.Data
                     JobCategoryTypeID = 2,
                     Description = "Bioinformatician"
                 },
+                                new JobSubcategoryType
+                                {
+                                    JobSubcategoryTypeID = 301,
+                                    JobCategoryTypeID = 3,
+                                    Description = "Senior Scientist"
+                                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 302,
+                    JobCategoryTypeID = 3,
+                    Description = "Research Associate"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 303,
+                    JobCategoryTypeID = 3,
+                    Description = "Lab Technician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 304,
+                    JobCategoryTypeID = 3,
+                    Description = "Team Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 305,
+                    JobCategoryTypeID = 3,
+                    Description = "Production Worker"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 306,
+                    JobCategoryTypeID = 3,
+                    Description = "Operation Executive"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 307,
+                    JobCategoryTypeID = 3,
+                    Description = "Business Development"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 308,
+                    JobCategoryTypeID = 3,
+                    Description = "Sales"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 309,
+                    JobCategoryTypeID = 3,
+                    Description = "Lab Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 310,
+                    JobCategoryTypeID = 3,
+                    Description = "Bioinformatician"
+                },
+                                new JobSubcategoryType
+                                {
+                                    JobSubcategoryTypeID = 401,
+                                    JobCategoryTypeID = 4,
+                                    Description = "Senior Scientist"
+                                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 402,
+                    JobCategoryTypeID = 4,
+                    Description = "Research Associate"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 403,
+                    JobCategoryTypeID = 4,
+                    Description = "Lab Technician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 404,
+                    JobCategoryTypeID = 4,
+                    Description = "Team Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 405,
+                    JobCategoryTypeID = 4,
+                    Description = "Production Worker"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 406,
+                    JobCategoryTypeID = 4,
+                    Description = "Operation Executive"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 407,
+                    JobCategoryTypeID = 4,
+                    Description = "Business Development"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 408,
+                    JobCategoryTypeID = 4,
+                    Description = "Sales"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 409,
+                    JobCategoryTypeID = 4,
+                    Description = "Lab Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 410,
+                    JobCategoryTypeID = 4,
+                    Description = "Bioinformatician"
+                },
                 new JobSubcategoryType
                 {
                     JobSubcategoryTypeID = 101,
@@ -1377,18 +1497,7 @@ namespace PrototypeWithAuth.Data
                     JobCategoryTypeID = 10,
                     Description = "Bioinformatics Researcher"
                 },
-                new JobSubcategoryType
-                {
-                    JobSubcategoryTypeID = 301,
-                    JobCategoryTypeID = 3,
-                    Description = "Biomarker"
-                },
-                new JobSubcategoryType
-                {
-                    JobSubcategoryTypeID = 401,
-                    JobCategoryTypeID = 4,
-                    Description = "Delivery Systems"
-                },
+              
                 new JobSubcategoryType
                 {
                     JobSubcategoryTypeID = 501,
