@@ -81,9 +81,6 @@ namespace PrototypeWithAuth.Data
 
             modelBuilder.Entity<VendorCategoryType>()
                 .HasKey(v => new { v.VendorID, v.CategoryTypeID });
-            modelBuilder.Entity<JobCategorySubCategory>()
-            .HasKey(j => new { j.JobCategoryTypeID, j.JobSubcategoryTypeID });
-
 
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasQueryFilter(item => !item.IsDeleted)

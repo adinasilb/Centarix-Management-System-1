@@ -1076,7 +1076,7 @@ namespace PrototypeWithAuth.Controllers
                     registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
                     if (registerUserViewModel.NewEmployee.JobSubcategoryTypeID != null)
                     {
-                        registerUserViewModel.JobSubcategoryTypes = _context.JobSubcategoryTypes.Where(js => js.JobCategorySubCategories.Where(jsc=>jsc.j == registerUserViewModel.NewEmployee.JobSubcategoryType.JobCategorySubCategories).ToList();
+                        registerUserViewModel.JobSubcategoryTypes = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == registerUserViewModel.NewEmployee.JobSubcategoryType.JobCategoryTypeID).ToList();
                     }
                     else
                     {

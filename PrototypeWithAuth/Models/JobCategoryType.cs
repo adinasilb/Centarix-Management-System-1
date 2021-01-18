@@ -11,6 +11,6 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int JobCategoryTypeID { get; set; }
         public string Description { get; set; }
-        public IEnumerable<JobCategorySubCategory> JobCategorySubCategories { get; set; }
+        public IEnumerable<JobSubcategoryType> JobSubcategoryTypes { get; set; }
     }
 }
