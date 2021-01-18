@@ -1297,10 +1297,15 @@ table.table tr td button:focus { /*in order to remove button outine on focus. bu
     border-bottom: 1px solid var(--lab-man-color) !important;
 }
 
-    .labmanage .sublocation-index td.filled-location-class:hover, .orders-and-inv .sublocation-index tr:not(:first-child) td:hover {
+    .labmanage .sublocation-index td.filled-location-class:hover{
         color: var(--lab-man-color);
         border-bottom: 1px solid var(--lab-man-color) !important;
     }
+
+.orders-and-inv .sublocation-index tr:not(:first-child) td:hover {
+    color: var(--order-inv-color);
+    border-bottom: 1px solid var(--order-inv-color) !important;
+}
 
 .labmanage .sublocation-index td .btn:hover {
     color: var(--lab-man-color) !important;
@@ -2165,6 +2170,9 @@ td.visual-shelf {
         display: grid;
         margin-left: .2rem !important;
     }
+.table.is20{
+    width:50% !important;
+}
 table.visual-locations-table td .visual-locations-div {
     padding-top: 1.75rem;
     display: grid;

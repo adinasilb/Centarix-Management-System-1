@@ -16,7 +16,7 @@
             break;
     }
 }
-<script src="~/js/VisualLocationsZoom.js"></script>
+@*<script src="~/js/VisualLocationsZoom.js"></script>*@
 @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 
 <div class="modal modal-view " id="visualZoomModal" role="dialog" aria-labelledby="User" data-backdrop="false">
@@ -86,18 +86,9 @@
         e.stopPropagation();
         //takes the item value and calls the Products controller with the ModalView view to render the modal inside
         console.log("val: " + $(this).val());
-        var $itemurl = "Requests/DetailsModalView?id=" + $(this).val();
+        var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false";
         console.log("itemurl: " + $itemurl);
         $("#loading").show();
-        $.fn.CallPage($itemurl, "details");
-        return false;
-    });
-
-    $.fn.CallPage = function ($itemurl, $type) {
-        console.log("in call page function");
-        //delete existing modals
-        $('.modal').replaceWith('');
-        $(".modal-backdrop").remove();
         $.ajax({
             async: true,
             url: $itemurl,
@@ -105,38 +96,21 @@
             cache: true,
             success: function (data) {
                 $("#loading").hide();
-                console.log("success!");
                 var modal = $(data);
                 $('body').append(modal);
-                //replaces the modal-view class with the ModalView view
-                //$(".modal-view").html(data);
-                //turn off data dismiss by clicking out of the box and by pressing esc
-                $(".modal-view").modal({
-                    backdrop: true,
+                $(".editModal").modal({
+                    backdrop: false,
                     keyboard: false,
                 });
-                //shows the modal
-                $(".modal").modal('show');
-                //$(".modal").on('show.bs.modal', function (e) {
-                //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
-                //})
-                //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-                //$(".modal-backdrop").remove();
-                //$('.modal').find('input').first().focus();
-                //$(".modal").popover('hide')
-                switch ($type) {
-                    case "details":
-                        console.log('case "details":');
-                        $.fn.OnOpenModalView();
-                        break;
-                }
+                $(".editModal").modal('show');
+                $('.mdb-select').materialSelect();
+                $('#myForm a:first').tab('show');
 
             }
-            //error: function (/*request, status, error*/) {
-            //    console.log("ajax call went wrong:" /*+ request.responseText*/);
-            //}
         });
-    }
+        return false;
+    });
+
 
     $.fn.OnOpenModalView = function () {
         $('.modal-content a:first').tab('show');

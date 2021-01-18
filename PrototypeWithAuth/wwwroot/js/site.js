@@ -550,15 +550,15 @@ $(function () {
 					backdrop: true,
 					keyboard: true,
 				});
-				$(".modal").modal('show');
+				$("#visualZoomModal").modal('show');
 				//$('.modal-backdrop').remove()
-				var firstTDFilled = $("td.filled-location-class");
+				var firstTDFilled = $(".visualzoom td");
 				var height = firstTDFilled.height();
 				var width = firstTDFilled.width();
 				console.log("h: " + height + "------ w: " + width);
 				//$("td").height(height);
 				//$("td").width(width);
-				$(".visualzoom td").css('height', height);
+				$(".visualzoom td").css('height', width);
 				$(".visualzoom td").css('width', width);
 				//$("td").addClass("danger-color");
 			}
@@ -2132,7 +2132,15 @@ $(function () {
 			});
 		}
 		else {
-			$(this).closest('.modal').modal('hide');
+			if($('#masterPageType').val()=="RequestLocation")
+			{
+				$(this).closest('.editModal').remove();
+			}
+			else
+			{
+				$(this).closest('.modal').modal('hide');
+			}
+			
         }
 	})
 

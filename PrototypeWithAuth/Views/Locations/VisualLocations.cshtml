@@ -38,7 +38,14 @@ else
             <div class="row mt-0">
                 <div class="col-md-12 pr-0">
                     <div class="container text-center ">
-                        <table class="table visual-locations-table  border mt-0">
+                        @{ var is20Class = "";
+                            if (Model.ParentLocationInstance.Width == 1)
+                            {
+                                is20Class = "is20";
+                            }
+                         }
+                        
+                        <table class="table visual-locations-table @is20Class  border mt-0">
                             @{
                                 int z = -1;
                             }
@@ -65,20 +72,22 @@ else
                                                 innerHtml = Model.ChildrenLocationInstances[z].Place;
                                             }
                                         }
-                                          var is25Class = "";
-                                             if (Model.ParentLocationInstance.Width > 3)
-                                             {
-                                                 is25Class = "is25";
-                                             }
-                                         
-                                        <td class="@backgroundClass p-0 @is25Class" ><div class="visual-locations-div location-visual-font">@innerHtml</div></td>
+                                        var is25Class = "";
+                                        if (Model.ParentLocationInstance.Width > 3)
+                                        {
+                                            is25Class = "is25";
+                                        }
+
+
+
+                                        <td class="@backgroundClass p-0 @is25Class"><div class="visual-locations-div location-visual-font">@innerHtml</div></td>
                                         @*<td class="border">
-                                                @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
-                                                {
-                                                    <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
-                                                    z++;
-                                                }
-                                            </td>*@
+                            @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
+                            {
+                                <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
+                                z++;
+                            }
+                        </td>*@
                                     }
                                 </tr>
                             }
