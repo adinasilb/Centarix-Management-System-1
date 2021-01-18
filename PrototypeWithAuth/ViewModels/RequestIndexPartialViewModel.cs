@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.ViewModels
         public int ReceivedCount { get; set; }
         public string SidebarFilterID { get; set; }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
+        public string? SidebarFilterName { get; set; }
 
     }
 }
