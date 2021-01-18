@@ -791,7 +791,7 @@ $(function () {
 		$(".load-location-index-view").removeClass("location-type-selected");
 		$(this).addClass("location-type-selected");
 		$.fn.setUpLocationIndexList($(this).attr("value"))
-		$(".second-col").addClass("d-none");
+	$(".second-col").removeClass("filled-location-class");
 	});
 
 	$.fn.setUpLocationIndexList = function (val) {
@@ -818,6 +818,7 @@ $(function () {
 				$('button[value="' + typeId + '"]').addClass("location-type-selected");
 				myDiv.show();
 				this.html(result);
+				
 
 			}
 		});
@@ -931,8 +932,7 @@ $(function () {
 			//console.log("is parent location!");
 			console.log("this has been clicked by a parent location");
 			//add heading name
-			$(".li-name").html($(this).attr("name"));
-			$(".li-name-container").removeClass("d-none");
+			var name =$(this).attr("name");
 			//remove prev sidebars
 			$("body td").removeClass(parentStylingClass);
 			//add new sidebars
@@ -995,21 +995,22 @@ $(function () {
 					//$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
 					//$("table td.li-name").html($(parentLocation).attr("name"));
 					//$("table td.li-name").removeClass("filled-location-class-color")
-					$(".second-col").removeClass("d-none");
+					$(".second-col").addClass("filled-location-class");
 				}
 				//this.html(result);
 				//add heading name
+				
 
 
 			}
 		});
 
-		$.fn.setUpVisual($(this).val(), isParent);
+		$.fn.setUpVisual($(this).val(), isParent, name);
 
 
 	});
 
-	$.fn.setUpVisual = function (val, isParent) {
+	$.fn.setUpVisual = function (val, isParent, name) {
 		$("#loading2")/*.delay(1000)*/.show(0);
 		console.log("in set up visual");
 		//fill up col three with the visual
@@ -1028,12 +1029,19 @@ $(function () {
 				if ($('.visual-locations-table td').hasClass("is25")) {
 					$('.visual-locations-table td').css("height", width);
 				}
-
+				if(isParent)
+				{
+					$(".li-name").html(name);
+					$(".li-name-container").removeClass("d-none");
+				}
 				if ($(".hasVisual").length > 0 && isParent == true) {
 					$(".li-name").html("");
+
 					$(".li-name-container").addClass("d-none");
-					$(".second-col").addClass("d-none");
+					$(".second-col").removeClass("filled-location-class");
+								
 				}
+				
 				$("#loading2").hide();
 				$("#loading2")/*.delay(1000)*/.hide(0);
 			}
