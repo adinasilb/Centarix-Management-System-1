@@ -1888,21 +1888,25 @@ $(function () {
 		var entry1 = $('#EmployeeHour_Entry1').val();
 		var entry2 = $('#EmployeeHour_Entry2').val();
 		if (entry1 != '' && exit1 != '') {
-			var exit1fullhours = parseFloat(exit1.substr(0, 2)) + parseFloat(exit1.substr(3, 2)) / 60;
-			var entry1fullhours = parseFloat(entry1.substr(0, 2)) + parseFloat(entry1.substr(3, 2)) / 60;
+			exit1split = exit1.split(":");
+			var exit1fullhours = parseFloat(exit1split[0]) + parseFloat(exit1split[1]) / 60;
+			entry1split = entry1.split(":");
+			var entry1fullhours = parseFloat(entry1split[0]) + parseFloat(entry1split[1]) / 60;
 			totalentryhours = exit1fullhours - entry1fullhours;
 		}
 		if (entry2 != '' && exit2 != '') {
-			var exit2fullhours = parseFloat(exit2.substr(0, 2)) + parseFloat(exit2.substr(3, 2)) / 60;
-			var entry2fullhours = parseFloat(entry2.substr(0, 2)) + parseFloat(entry2.substr(3, 2)) / 60;
+			exit2split = exit2.split(":");
+			var exit2fullhours = parseFloat(exit2split[0]) + parseFloat(exit2split[1]) / 60;
+			entry2split = entry2.split(":");
+			var entry2fullhours = parseFloat(entry2split[0]) + parseFloat(entry2split[1]) / 60;
 			var totalentry2hours = exit2fullhours - entry2fullhours;
 			totalentryhours += totalentry2hours;
 		}
 
 		if (totalentryhours != '') {
 			var hours = Math.floor(totalentryhours);
-			if (hours < 10) { hours = '0' + hours }
-			var mins = Math.floor(60 * (totalentryhours - hours));
+			//if (hours < 10) { hours = '0' + hours }
+			var mins = Math.round(60 * (totalentryhours - hours));
 			if (mins < 10) { mins = '0' + mins }
 			var totalHours = hours + ":" + mins;
 		}

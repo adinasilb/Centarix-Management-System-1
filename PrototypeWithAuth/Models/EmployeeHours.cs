@@ -36,7 +36,7 @@ namespace PrototypeWithAuth.Models
         public TimeSpan? PartialOffDayHours { get; set; }
 
         private TimeSpan? _TotalHours;
-        //[DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = @"{0:hh\:mm}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Time)]
         public TimeSpan? TotalHours { 
             get { 
