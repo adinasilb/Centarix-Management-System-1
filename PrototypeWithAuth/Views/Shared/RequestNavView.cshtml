@@ -395,7 +395,14 @@
             $.fn.setUpChartDDlPlaceholders()
             //$('.mdb-select').focusin(function () { $('.search-wrap input.search').focus() });
             $('.timekeeper .dropdown-content').removeClass('w-100');
-            $('.datepicker').pickadate();
+            $('.datepicker').pickadate({format:'dd/mm/yyyy', formatSubmit:'yyyy-MM-dd',
+                onSet : function(context )
+                {
+                    var date = moment(context.select).toISOString()
+                    console.log(context)
+                    $('.picker__input--target').attr("data-val", date);
+                }
+              });
             $('#request-search a:first').tab('show'); @* I had to put this in here b / c otherwise it wasn't coming up on .search-link.click*@
             $('.edit-user a:first').tab('show');
             $('#myForm a:first').tab('show');

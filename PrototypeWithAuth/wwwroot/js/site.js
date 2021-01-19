@@ -343,13 +343,13 @@ $(function () {
 		if (dd < 10) { dd = '0' + dd }
 		if (mm < 10) { mm = '0' + mm }
 		var supplyDate = yyyy + '-' + mm + '-' + dd;
-		$("input[name='expected-supply-days']").val(supplyDate);
+		$("input[name='expected-supply-days']").attr("data-val",supplyDate);
 
 	});
 
 
 	$("#expected-supply-date").change(function () {
-		var date = new Date($(this).val());
+		var date = new Date($(this).attr("data-val"));
 		if (date < new Date()) {
 			return;
 		}
@@ -452,7 +452,7 @@ $(function () {
 	$("#Request_Warranty").change(function () {
 		var date = null;
 		if ($("#Request_ParentRequest_OrderDate").length > 0) {
-			date = $("#Request_ParentRequest_OrderDate").val().split("-");
+			date = $("#Request_ParentRequest_OrderDate").attr("data-val").split("-");
 			var dd = date[2];
 			var mm = parseInt(date[1]); //January is 0! ?? do we still need th get month???
 			var yyyy = date[0];
@@ -483,7 +483,7 @@ $(function () {
 
 		var warrantyDate = yyyy + '-' + mm + '-' + dd;
 
-		$("input[name='WarrantyDate']").val(warrantyDate);
+		$("input[name='WarrantyDate']").attr("data-val",warrantyDate);
 	});
 
 
