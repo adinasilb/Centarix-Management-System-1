@@ -9,17 +9,27 @@ namespace PrototypeWithAuth.AppData
 {
     public static class SessionExtensions
     {
-        public enum SessionNames { Comment, RequestList, Payment }
+        public enum SessionNames { Comment, Request, Payment /*CommentList, RequestList, PaymentList*/ }
         public static void SetObject(this ISession session, string key, object value)
         {
-            session.SetString(key,
-                JsonConvert.SerializeObject(value, Formatting.None,
+            //var simpleJsonString = JsonSerializer.Create();
+            //using (JsonWriter jw = new JsonTextWriter)
+            //{
+            //    var newstring = simpleJsonString.Serialize(jw, value);
+            //}
+
+            //List<string> longJson = new List<string>();
+            //foreach (var val in value)
+            //{
+
+            //}
+
+            var jsonstring = JsonConvert.SerializeObject(value,
                         new JsonSerializerSettings()
                         {
                             ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-                            //tells the json not to serialize the children objects ex. requests => product so won't get a loop error
-                            //could be in the future we'll want to switch to ReferenceLoopHandling.Serialize to save all the items together but prob not b/c of foreign keys
-                        }));
+                        });
+            session.SetString(key, jsonstring);
         }
 
         public static T GetObject<T>(this ISession session, string key)
