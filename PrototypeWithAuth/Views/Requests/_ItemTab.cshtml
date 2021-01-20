@@ -1,0 +1,135 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+
+@{var category = Enum.Parse(typeof(AppUtility.CategoryTypeEnum), Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription);
+        }
+<div class="tab-content">
+    <div id="item" class="tab-pane fade in active show">
+        <div class="modal-sides modal-body-top-p">
+            <span class="heading-1 modal-tab-name">Item</span>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                        <input class="item-category form-control-plaintext border-bottom" readonly value=@category/> 
+                        <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-md-4 px-4">
+                    <div class="form-group sublist">
+                        <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                        @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
+Enumerable.Empty<SelectListItem>(), "Select Sub Category",
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext", @id = "sublist", @searchable = "Select Sub Category" })
+                        <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Project:</label>
+                        @Html.DropDownListFor(
+m => m.Request.SubProject.ProjectID,
+new SelectList(
+Model.Projects,
+"ProjectID",
+"ProjectDescription"
+), "Select a Project",
+new { @class = "mdb-select custom select-dropdown form-control-plaintext Project", @id = "subProject", @searchable = "Select Project" }
+)
+                        <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group SubProject">
+                        <label class="control-label">Sub Project:</label>
+                        @Html.DropDownListFor(vm => vm.Request.SubProjectID,
+Enumerable.Empty<SelectListItem>(), "Select Sub Project",
+new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext", @id = "SubProject", @searchable = "Select Sub Project" })
+                        @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
+                            </select>*@
+                        <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="Request.Product.Vendor" class="control-label"></label>
+                        @Html.DropDownListFor(
+vm => vm.Request.Product.VendorID,
+new SelectList(
+Model.Vendors,
+dataValueField: "VendorID",
+dataTextField: "VendorEnName"),
+//FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+"Select a Vendor",
+htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext", @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
+)
+                        <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <input type="hidden" value="" id="vendor-primary-email" />
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @* IN MIDDLE *@
+                        <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
+                        <input class="vendorBusinessId form-control-plaintext border-bottom" readonly />
+                        @*don't need a validation here because you it's not saving*@
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
+                    <input asp-for="Request.ParentQuote.QuoteNumber" class="form-control-plaintext border-bottom " />
+                    <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
+                    <input asp-for="Request.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom datepicker" value="" />
+                    <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label asp-for="Request.CatalogNumber" class="control-label"></label>
+                    <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom " />
+                    <span asp-validation-for="Request.CatalogNumber" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-md-3 reusables equipment">
+                    <label asp-for="Request.Warranty" class="control-label"></label>
+                    <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom " type="text" />
+                    <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-md-3 reusables equipment">
+                    <label class="control-label">Estimated End Date</label>
+                    @*no date in backend so set to zero*@
+                    <input type="text" name="WarrantyDate" class="form-control-plaintext border-bottom datepicker " disabled="disabled" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
+                    <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days" type="text" />
+                    <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Expected supply date</label>
+                        <input class="form-control-plaintext border-bottom datepicker" type="text" name="expected-supply-days" id="expected-supply-date" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Request.URL" class="control-label"></label>
+                    <input asp-for="Request.URL" class="form-control-plaintext border-bottom " />
+                    <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -71,14 +71,15 @@ namespace PrototypeWithAuth.Data
                new ParentCategory
                {
                    ParentCategoryID = 2,
-                   ParentCategoryDescription = "Reagents",
+                   ParentCategoryDescription = "Reagents And Chemicals",
                    CategoryTypeID = 1
                },
                new ParentCategory
                {
                    ParentCategoryID = 3,
                    ParentCategoryDescription = "Proprietry",
-                   CategoryTypeID = 1
+                   CategoryTypeID = 1,
+                   isProprietary = true
                },
                 new ParentCategory
                 {
@@ -97,18 +98,24 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryID = 6,
                     ParentCategoryDescription = "Operation",
                     CategoryTypeID = 2
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 7,
+                    ParentCategoryDescription = "Cells",
+                    CategoryTypeID = 1
                 }
             );
 
             modelBuilder.Entity<ProductSubcategory>().HasData
               (
 
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 101,
-                    ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "3D Cells Grow"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 101,
+                //    ParentCategoryID = 1,
+                //    ProductSubcategoryDescription = "3D Cells Grow"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 102,
@@ -134,7 +141,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 105,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Dishes"
+                    ProductSubcategoryDescription = "Petri Dishes"
                 },
                 new ProductSubcategory
                 {
@@ -239,12 +246,12 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryDescription = "Media Supplement",
                     ImageURL = "/images/css/CategoryImages/media_supplement.png"
                 },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 213,
-                    ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Plasmid Purification"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 213,
+                //    ParentCategoryID = 2,
+                //    ProductSubcategoryDescription = "Plasmid Purification"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 301,
@@ -276,50 +283,56 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 401,
                     ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Beaker",
-                    ImageURL = "/images/css/CategoryImages/beaker.png"
+                    ProductSubcategoryDescription = "Reusables"
                 },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 402,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Measuring",
-                    ImageURL = "/images/css/CategoryImages/measuring.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 403,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Tube Holders",
-                    ImageURL = "/images/css/CategoryImages/tube_holder.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 404,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Buckets",
-                    ImageURL = "/images/css/CategoryImages/bucket.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 405,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Cooling Racks"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 406,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "-196 Box",
-                    ImageURL = "/images/css/CategoryImages/196box.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 407,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "-80 Box",
-                    ImageURL = "/images/css/CategoryImages/80box.png"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 401,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Beaker",
+                //    ImageURL = "/images/css/CategoryImages/beaker.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 402,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Measuring",
+                //    ImageURL = "/images/css/CategoryImages/measuring.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 403,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Tube Holders",
+                //    ImageURL = "/images/css/CategoryImages/tube_holder.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 404,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Buckets",
+                //    ImageURL = "/images/css/CategoryImages/bucket.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 405,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Cooling Racks"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 406,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "-196 Box",
+                //    ImageURL = "/images/css/CategoryImages/196box.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 407,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "-80 Box",
+                //    ImageURL = "/images/css/CategoryImages/80box.png"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 501,
@@ -569,6 +582,12 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryID = 6,
                     ProductSubcategoryDescription = "Furniture",
                     ImageURL = "/images/css/CategoryImages/furniture.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 701,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Cells"
                 }
               );
             modelBuilder.Entity<RequestStatus>().HasData

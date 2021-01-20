@@ -202,6 +202,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Request>().Ignore(e => e.VAT);
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
+            modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
 
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
 
