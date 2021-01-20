@@ -12,22 +12,10 @@ namespace PrototypeWithAuth.AppData
         public enum SessionNames { Comment, Request, Payment /*CommentList, RequestList, PaymentList*/ }
         public static void SetObject(this ISession session, string key, object value)
         {
-            //var simpleJsonString = JsonSerializer.Create();
-            //using (JsonWriter jw = new JsonTextWriter)
-            //{
-            //    var newstring = simpleJsonString.Serialize(jw, value);
-            //}
-
-            //List<string> longJson = new List<string>();
-            //foreach (var val in value)
-            //{
-
-            //}
-
             var jsonstring = JsonConvert.SerializeObject(value,
                         new JsonSerializerSettings()
                         {
-                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                         });
             session.SetString(key, jsonstring);
         }

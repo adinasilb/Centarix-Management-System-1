@@ -954,8 +954,6 @@ namespace PrototypeWithAuth.Controllers
 
                 bool UpdateContextHere = false;
 
-                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, requestItemViewModel.Request);
                 //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.RequestList.ToString(), new List<Request>() { requestItemViewModel.Request });
 
 
@@ -1047,7 +1045,7 @@ namespace PrototypeWithAuth.Controllers
                             requestItemViewModel.Request.RequestStatusID = 1; //new request
                             requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestItemViewModel.RequestStatusID = 1;
-                            requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                            var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                             HttpContext.Session.SetObject(requestNum, requestItemViewModel.Request);
                             //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.RequestList.ToString(), new List<Request>() { requestItemViewModel.Request });
 
@@ -2311,7 +2309,7 @@ namespace PrototypeWithAuth.Controllers
             //    await _context.SaveChangesAsync();
             //}
 
-            var requestNum = 1;
+            RequestNum = 1;
             foreach (var req in requests)
             {
                 req.ParentRequest = termsViewModel.ParentRequest;
@@ -2336,6 +2334,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(int id)
         {
+            TempData["ParentRequestConfirmEmail"] = null;
             var allRequests = new List<Request>();
             var isRequests = true;
             var RequestNum = 1;
@@ -2353,73 +2352,80 @@ namespace PrototypeWithAuth.Controllers
                 RequestNum++;
             }
             //var allRequests = HttpContext.Session.GetObject<List<Request>>(AppData.SessionExtensions.SessionNames.RequestList.ToString());
-            var parentRequest = allRequests.FirstOrDefault().ParentRequest;
-            //.Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
-            //    .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
-
-            //var parentRequest = HttpContext.Session.GetObject<ParentRequest>(AppData.SessionExtensions.SessionNames.Request_ParentRequest.ToString());
-            //List<Request> parentRequestRequests = new List<Request>();
-            //parentRequestRequests.Add(HttpContext.Session.GetObject<Request>(AppData.SessionExtensions.SessionNames.Request.ToString()));
-            //parentRequestRequests.FirstOrDefault().Product = HttpContext.Session.GetObject<Product>(AppData.SessionExtensions.SessionNames.Request_Product.ToString());
-            //parentRequestRequests.FirstOrDefault().Product.Vendor = _context.Vendors.Where(v => v.VendorID == parentRequestRequests.FirstOrDefault().Product.VendorID).FirstOrDefault();
-            //parentRequestRequests.FirstOrDefault().Product.ProductSubcategory =
-            //    _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == parentRequestRequests.FirstOrDefault().Product.ProductSubcategoryID)
-            //    .Include(ps => ps.ParentCategory)
-            //    .FirstOrDefault();
-            //get multiple requests???? in list????
-
-
-            //var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == id)
-            //        .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
-            //        .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-            //        .FirstOrDefault();
-            ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
+            if (RequestNum > 2) //there was at least one request...
             {
-                ParentRequest = parentRequest,
-                Requests = allRequests,
-                VendorId = id,
-                RequestID = id,
+                var parentRequest = allRequests.FirstOrDefault().ParentRequest;
+                //var parentRequest = HttpContext.Session.GetObject<ParentRequest>(AppData.SessionExtensions.SessionNames.Request_ParentRequest.ToString());
+                //List<Request> parentRequestRequests = new List<Request>();
+                //parentRequestRequests.Add(HttpContext.Session.GetObject<Request>(AppData.SessionExtensions.SessionNames.Request.ToString()));
+                //parentRequestRequests.FirstOrDefault().Product = HttpContext.Session.GetObject<Product>(AppData.SessionExtensions.SessionNames.Request_Product.ToString());
+                //parentRequestRequests.FirstOrDefault().Product.Vendor = _context.Vendors.Where(v => v.VendorID == parentRequestRequests.FirstOrDefault().Product.VendorID).FirstOrDefault();
+                //parentRequestRequests.FirstOrDefault().Product.ProductSubcategory =
+                //    _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == parentRequestRequests.FirstOrDefault().Product.ProductSubcategoryID)
+                //    .Include(ps => ps.ParentCategory)
+                //    .FirstOrDefault();
+                //get multiple requests???? in list????
+
+
+                //var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == id)
+                //        .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
+                //        .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                //        .FirstOrDefault();
+                ConfirmEmailViewModel confirm = new ConfirmEmailViewModel();
+
+                confirm.ParentRequest = parentRequest;
+                confirm.Requests = allRequests;
+                confirm.VendorId = id;
+                confirm.RequestID = id;
                 //IsSingleOrder = isSingleOrder,
                 //Cart = cart
-                SectionType = parentRequest.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1 ? AppUtility.MenuItems.Requests : AppUtility.MenuItems.Operations
-            };
-            //base url needs to be declared - perhaps should be getting from js?
-            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
-            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
+                confirm.SectionType = allRequests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1 ? AppUtility.MenuItems.Requests : AppUtility.MenuItems.Operations;
 
-            //render the purchase order view into a string using a the confirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("PurchaseOrderView", confirm);
-            //instantiate a html to pdf converter object
-            HtmlToPdf converter = new HtmlToPdf();
+                //base url needs to be declared - perhaps should be getting from js?
+                //once deployed need to take base url and put in the parameter for converter.convertHtmlString
+                var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
 
-            PdfDocument doc = new PdfDocument();
-            // create a new pdf document converting an url
-            doc = converter.ConvertHtmlString(renderedView, baseUrl);
+                //render the purchase order view into a string using a the confirmEmailViewModel
+                string renderedView = await RenderPartialViewToString("PurchaseOrderView", confirm);
+                //instantiate a html to pdf converter object
+                HtmlToPdf converter = new HtmlToPdf();
 
-            //save this as confirmemailtempdoc
-            string path1 = Path.Combine("wwwroot", "files");
-            string fileName = Path.Combine(path1, "ConfirmEmailTempDoc.pdf");
-            doc.Save(fileName);
-            doc.Close();
+                PdfDocument doc = new PdfDocument();
+                // create a new pdf document converting an url
+                doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
-            //foreach (var request in confirm.Requests)
-            //{
-            //    //creating the path for the file to be saved
-            //    string path1 = Path.Combine("wwwroot", "files");
-            //    string path2 = Path.Combine(path1, request.RequestID.ToString());
-            //    //create file
-            //    string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-            //    Directory.CreateDirectory(folderPath);
-            //    string uniqueFileName = "OrderPDF.pdf";
-            //    string filePath = Path.Combine(folderPath, uniqueFileName);
-            //    // save pdf document
-            //    doc.Save(filePath);
-            //}
-            // close pdf document
-            //doc.Close();
-            TempData["ParentRequestConfirmEmail"] = null;
+                //save this as confirmemailtempdoc
+                string path1 = Path.Combine("wwwroot", "files");
+                string fileName = Path.Combine(path1, "ConfirmEmailTempDoc.pdf");
+                doc.Save(fileName);
+                doc.Close();
 
-            return PartialView(confirm);
+                //foreach (var request in confirm.Requests)
+                //{
+                //    //creating the path for the file to be saved
+                //    string path1 = Path.Combine("wwwroot", "files");
+                //    string path2 = Path.Combine(path1, request.RequestID.ToString());
+                //    //create file
+                //    string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+                //    Directory.CreateDirectory(folderPath);
+                //    string uniqueFileName = "OrderPDF.pdf";
+                //    string filePath = Path.Combine(folderPath, uniqueFileName);
+                //    // save pdf document
+                //    doc.Save(filePath);
+                //}
+                // close pdf document
+                //doc.Close();
+                TempData["ParentRequestConfirmEmail"] = null;
+
+                return PartialView(confirm);
+            }
+            //.Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.Vendor)
+            //    .Include(pr => pr.Requests).ThenInclude(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
+            else //there was an error and it called confirm email accidentally
+            {
+                return RedirectToAction("Index");
+            }
+
         }
 
 
@@ -2550,6 +2556,11 @@ namespace PrototypeWithAuth.Controllers
                             //req.ProductID = product.ProductID;
                             //req.ParentRequestID = pr.ParentRequestID;
                             //req.PaymentStatusID = HttpContext.Session.GetInt32(AppData.SessionExtensions.SessionNames.Request_PaymentStatusID.ToString());
+
+                            var parentRequest = HttpContext.Session.GetObject<Request>("Request1").ParentRequest;
+                            _context.Add(parentRequest);
+                            await _context.SaveChangesAsync();
+
                             isRequests = true;
                             RequestNum = 1;
                             var listRequests = new List<Request>();
@@ -2559,6 +2570,12 @@ namespace PrototypeWithAuth.Controllers
                                 if (HttpContext.Session.GetObject<Request>(requestName) != null)
                                 {
                                     var requestFromContext = HttpContext.Session.GetObject<Request>(requestName);
+                                    if (requestFromContext.ProductID == null)
+                                    {
+                                        _context.Add(requestFromContext.Product);
+                                        await _context.SaveChangesAsync();
+                                        requestFromContext.ProductID = requestFromContext.Product.ProductID;
+                                    }
                                     _context.Add(requestFromContext);
                                 }
                                 else
@@ -4023,6 +4040,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUserCreator)
                 .ToLookup(r => r.Product.Vendor);
 
+            //HttpContext.Session.RemoveAll();
             return View(cartViewModel);
         }
 
