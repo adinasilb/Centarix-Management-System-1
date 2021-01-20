@@ -185,16 +185,16 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteNumber" class="form-control-plaintext border-bottom " type="text" />
+                                        <input asp-for="Request.ParentQuote.QuoteNumber" class="form-control-plaintext border-bottom "  />
                                         <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteDate"  class="form-control-plaintext border-bottom 
-                                               " />
+                                        <input asp-for="Request.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom datepicker" value="" />
                                         <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
-                                    </div>
 
+                                    </div>
+                                  
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -210,7 +210,7 @@
                                     <div class="col-md-3">
                                         <label class="control-label">Estimated End Date</label>
                                         @*no date in backend so set to zero*@
-                                        <input value="0000-00-00" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom " disabled="disabled" />
+                                        <input type="text" name="WarrantyDate" class="form-control-plaintext border-bottom datepicker " disabled="disabled" />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -222,7 +222,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Expected supply date</label>
-                                            <input value="00/00/0000" class="form-control-plaintext border-bottom" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                            <input  class="form-control-plaintext border-bottom datepicker" type="text" name="expected-supply-days" id="expected-supply-date" />
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -802,7 +802,7 @@
     <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
     <script src="~/js/validate.js"></script>
     <script src="~/js/SubUnit.js"></script>
-
+    <script src="~/js/WarantySupplyDateCalc.js"></script>
     <script @*type="text/javascript"*@>
         $(".order-tab").on("click", function (e) {
             if ($(".all-mail").length == 0) {
