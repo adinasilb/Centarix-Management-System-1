@@ -1909,6 +1909,9 @@ $(function () {
 			var mins = Math.round(60 * (totalentryhours - hours));
 			if (mins < 10) { mins = '0' + mins }
 			var totalHours = hours + ":" + mins;
+			if (hours < 0) {
+				totalHours = NaN;
+            }
 		}
 
 		$('#EmployeeHour_TotalHours').val(totalHours);
