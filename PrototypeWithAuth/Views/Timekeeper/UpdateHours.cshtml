@@ -131,11 +131,11 @@
                             <label class="control-label">Entry 2</label>
                             @if (Model.EmployeeHour.Entry2 == null)
                             {
-                                <input asp-for="EmployeeHour.Entry2" class="form-control-plaintext border-bottom " disabled />
+                                <input type="text" asp-for="EmployeeHour.Entry2" class="form-control-plaintext border-bottom " disabled />
                             }
                             else
                             {
-                                <input asp-for="EmployeeHour.Entry2" class="form-control-plaintext border-bottom " />
+                                <input type="text" asp-for="EmployeeHour.Entry2" class="form-control-plaintext border-bottom " />
                             }
                             <span asp-validation-for="EmployeeHour.Entry2" class="text-danger-centarix"></span>
                         </div>
@@ -144,11 +144,11 @@
 
                             @if (Model.EmployeeHour.Entry2 == null)
                             {
-                                <input asp-for="EmployeeHour.Exit2" class="form-control-plaintext border-bottom " disabled />
+                                <input type="text" asp-for="EmployeeHour.Exit2" class="form-control-plaintext border-bottom " disabled />
                             }
                             else
                             {
-                                <input asp-for="EmployeeHour.Exit2" class="form-control-plaintext border-bottom " />
+                                <input type="text" asp-for="EmployeeHour.Exit2" class="form-control-plaintext border-bottom " />
                             }
                             <span asp-validation-for="EmployeeHour.Exit2" class="text-danger-centarix"></span>
                         </div>
