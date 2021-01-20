@@ -331,6 +331,7 @@
 <div class="modal confirm-email-modal" id="myModal">
 </div>
 @section requestNavScript{
+    <script src="~/js/InitializeDatePicker.js"></script>
     <script>
     $('[data-toggle="tooltip"]').tooltip()
       $(document).ready(function () {
@@ -395,7 +396,7 @@
             $.fn.setUpChartDDlPlaceholders()
             //$('.mdb-select').focusin(function () { $('.search-wrap input.search').focus() });
             $('.timekeeper .dropdown-content').removeClass('w-100');
-           
+
             $('#request-search a:first').tab('show'); @* I had to put this in here b / c otherwise it wasn't coming up on .search-link.click*@
             $('.edit-user a:first').tab('show');
             $('#myForm a:first').tab('show');
@@ -455,6 +456,6 @@
     </script>
     @if (IsSectionDefined("Scripts"))
     {
-    @RenderSection("Scripts", required: true)
+        @RenderSection("Scripts", required: true)
     }
 }

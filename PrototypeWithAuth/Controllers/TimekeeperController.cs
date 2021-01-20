@@ -395,10 +395,11 @@ namespace PrototypeWithAuth.Controllers
                 chosenDate = DateTime.Today;
             }
             var userID = _userManager.GetUserId(User);
+            var user = await _context.Employees.Where(u => u.Id == userID).FirstOrDefaultAsync();
             var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).Include(eh=>eh.OffDayType).Include(e=>e.Employee).FirstOrDefault();
             if (employeeHour == null)
             {
-                employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate };
+                employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, Employee= user};
             }           
             employeeHour.EmployeeHoursStatusEntry1 = _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry1ID).FirstOrDefault();
             employeeHour.EmployeeHoursStatusEntry2 = _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry2ID).FirstOrDefault();

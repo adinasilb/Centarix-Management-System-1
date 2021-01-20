@@ -206,6 +206,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.OrderDate_submit);
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.InvoiceDate_submit);
             modelBuilder.Entity<Request>().Ignore(e => e.ArrivalDate_submit);
+            modelBuilder.Entity<EmployeeHours>().Ignore(e => e.Date_submit);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
 
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();

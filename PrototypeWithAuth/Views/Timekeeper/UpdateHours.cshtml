@@ -1,5 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.UpdateHoursViewModel
 @using PrototypeWithAuth.AppData
+
 <script src="~/js/Validation/UpdateHoursValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/UpdateHours.js"></script>
@@ -52,11 +53,11 @@
                             <label asp-for="EmployeeHour.Date" class="control-label"></label>
                             @if (disabled)
                             {
-                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" readonly />
+                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" readonly />
                             }
                             else
                             {
-                                <input asp-for="EmployeeHour.Date" data-workday="@Model.AutoFillEntry1Type" class="form-control-plaintext  border-bottom update-hour-date " max="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                <input asp-for="EmployeeHour.Date" type="text" data-workday="@Model.AutoFillEntry1Type" class="form-control-plaintext  border-bottom update-hour-date datepicker "  />
                             }
 
                             <span asp-validation-for="EmployeeHour.Date" class="text-danger-centarix " />
@@ -67,7 +68,7 @@
                     <div class="row">
                         <div class="col-3 ">
                             <label class="control-label">Entry</label>
-                            <input type="text" asp-for="EmployeeHour.Entry1" class="form-control-plaintext border-bottom "/>
+                            <input type="text" asp-for="EmployeeHour.Entry1" class="form-control-plaintext border-bottom " />
                             <span asp-validation-for="EmployeeHour.Entry1" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-3 ">
@@ -82,20 +83,20 @@
                         </div>
                         <div class="col-3 ">
                             @*@{
-                    var wfhSelected = "";
-                    var wfoSelected = "";
-                    switch (Model.AutoFillEntry1Type)
-                    {
-                        case 1:
-                            <label>WFH true</label>
-                            wfhSelected = "selected";
-                            break;
-                        case 2:
-                            <label>WFO true</label>
-                            wfoSelected = "selected";
-                            break;
-                    }
-                }*@
+                        var wfhSelected = "";
+                        var wfoSelected = "";
+                        switch (Model.AutoFillEntry1Type)
+                        {
+                            case 1:
+                                <label>WFH true</label>
+                                wfhSelected = "selected";
+                                break;
+                            case 2:
+                                <label>WFO true</label>
+                                wfoSelected = "selected";
+                                break;
+                        }
+                    }*@
                             <label class="control-label"></label>
                             <select class="mdb-select  timekeeper  form-control-plaintext custom select-dropdown  mb-0" asp-for="EmployeeHour.EmployeeHoursStatusEntry1ID">
                                 <option value="" class=""></option>
@@ -216,8 +217,10 @@
         </div>
     </div>
 </div>
+
 <script>
     $('#EmployeeHour_EmployeeHoursStatusEntry1ID').materialSelect();
     $('#EmployeeHour_EmployeeHoursStatusEntry2ID').materialSelect();
     $('#EmployeeHour_PartialOffDayTypeID').materialSelect();
 </script>
+<script src="~/js/InitializeDatePicker.js" asp-append-version="true"></script>

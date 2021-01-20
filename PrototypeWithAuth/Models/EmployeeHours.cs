@@ -28,6 +28,7 @@ namespace PrototypeWithAuth.Models
         public DateTime? Exit2 { get; set; }
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
+        public DateTime Date_submit { get { return Date; } set { Date = value; } }
         public int? OffDayTypeID { get; set; }
         public OffDayType OffDayType { get; set; }
         public int? PartialOffDayTypeID { get; set; }

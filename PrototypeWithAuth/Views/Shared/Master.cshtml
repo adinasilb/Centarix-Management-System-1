@@ -992,6 +992,10 @@
                 "&SelectedCurrency=" + $('#tempCurrency').val() +
                 "&SidebarFilterID=" + $('.sideBarFilterID').val());
         }
+        $.fn.formatDateForSubmit = function(val)
+        {
+            return new Date(val.split("/").reverse().join("-")).toISOString();
+        }
     </script>
 
     @if (IsSectionDefined("requestNavScript"))
