@@ -127,6 +127,7 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         [Display(Name = "Arrival Date")]
         public DateTime ArrivalDate { get; set; }
+        public DateTime ArrivalDate_submit { get { return ArrivalDate; } set { ArrivalDate = value; } }
         [DataType(DataType.Date)]
         public DateTime CreationDate { get; set; }
         public int? ParentQuoteID { get; set; }

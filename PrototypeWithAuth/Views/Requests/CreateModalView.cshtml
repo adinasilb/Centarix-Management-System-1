@@ -76,10 +76,10 @@
                                         </a>
                                     </li>*@
                                 @*<li class="nav-item icon history-tab">
-                                    <a data-toggle="tab" href="#history" class="next-tab nav-link">
-                                        <i class="icon-history-24px" style="font-size: 2rem;"></i><br />History
-                                    </a>
-                                </li>*@
+                                        <a data-toggle="tab" href="#history" class="next-tab nav-link">
+                                            <i class="icon-history-24px" style="font-size: 2rem;"></i><br />History
+                                        </a>
+                                    </li>*@
                                 <li class="nav-item icon order-tab">
                                     <a data-toggle="tab" href="#order" class="next-tab nav-link">
                                         <i class="icon-assignment-24px" style="font-size: 2rem;"></i> <br />Order
@@ -185,7 +185,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
-                                        <input asp-for="Request.ParentQuote.QuoteNumber" class="form-control-plaintext border-bottom "  />
+                                        <input asp-for="Request.ParentQuote.QuoteNumber" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
                                     </div>
                                     <div class="col-md-6">
@@ -194,7 +194,7 @@
                                         <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
 
                                     </div>
-                                  
+
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -222,7 +222,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">Expected supply date</label>
-                                            <input  class="form-control-plaintext border-bottom datepicker" type="text" name="expected-supply-days" id="expected-supply-date" />
+                                            <input class="form-control-plaintext border-bottom datepicker" type="text" name="expected-supply-days" id="expected-supply-date" />
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -315,8 +315,10 @@
 ">
                                                 <span aria-hidden="true">×</span>
                                             </button>
-                                            <div class="mx-2rem addSubUnitCard mt-4"><div class="row " style="display:initial;">
-                                                <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div></div>
+                                            <div class="mx-2rem addSubUnitCard mt-4">
+                                                <div class="row " style="display:initial;">
+                                                    <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div>
+                                                </div>
                                             </div>
                                             <div class="mx-2rem  subUnitsCard d-none mt-4">
 
@@ -697,13 +699,13 @@
                             </div>*@
 
                         @*<div id="history" class="tab-pane fade">
-                            <div class="modal-sides modal-body-top-p">
-                                <span class="heading-1 modal-tab-name">History</span>
-                                <br />
-                                <br />
-                                <h5>This is the History tab.</h5>
-                            </div>
-                        </div>*@
+                                <div class="modal-sides modal-body-top-p">
+                                    <span class="heading-1 modal-tab-name">History</span>
+                                    <br />
+                                    <br />
+                                    <h5>This is the History tab.</h5>
+                                </div>
+                            </div>*@
 
                         <div id="order" class="tab-pane fade">
                             <div class="modal-sides modal-body-top-p">
@@ -803,6 +805,7 @@
     <script src="~/js/validate.js"></script>
     <script src="~/js/SubUnit.js"></script>
     <script src="~/js/WarantySupplyDateCalc.js"></script>
+    <script src="~/js/InitializeDatePicker.js"></script>
     <script @*type="text/javascript"*@>
         $(".order-tab").on("click", function (e) {
             if ($(".all-mail").length == 0) {

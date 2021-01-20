@@ -60,7 +60,7 @@ $('.ordersItemForm').validate({
 		},
 		"Request.ParentQuote.QuoteDate": {
 			required: true,
-			mindate: new Date('1900-12-17T03:24:00')
+			//mindate: new Date('1900-12-17T03:24:00')
 		},
 		"Request.ExpectedSupplyDays": {
 			min: 0,
