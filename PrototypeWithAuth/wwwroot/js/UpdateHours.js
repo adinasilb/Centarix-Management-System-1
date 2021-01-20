@@ -7,7 +7,10 @@
         $('#EmployeeHour_EmployeeHoursStatusEntry2ID').prop("disabled", true)
         $('#EmployeeHour_EmployeeHoursStatusEntry2ID').materialSelect();
         $('#EmployeeHour_Entry2').prop("disabled", true)
+        $('#EmployeeHour_Entry2').val("");
         $('#EmployeeHour_Exit2').prop("disabled", true)
+        $('#EmployeeHour_Exit2').val("");
+        $.fn.UpdateTotalHours();
     });
     $('#addEntry').click(function (e) {
         e.preventDefault();
