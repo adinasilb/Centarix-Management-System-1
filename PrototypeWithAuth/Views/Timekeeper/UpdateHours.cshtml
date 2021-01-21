@@ -11,9 +11,6 @@
             </button>
 
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto; " class="modal-padding UpdateHoursForm">
-                @Html.HiddenFor(r => r.EmployeeHour.EmployeeHoursID)
-                @Html.HiddenFor(r => r.EmployeeHour.OffDayTypeID)
-                @Html.HiddenFor(r => r.EmployeeHour.EmployeeID)
                 <input type="hidden" asp-for="IsForgotToReport" />
                 @{var disabled = false;
                     if (Model.PageType?.Equals("SummaryHours") == true)
@@ -39,18 +36,43 @@
                 </div>
                 <div class="modal-body p-0 border-0 rounded mx-4">
 
+                    <div class="row">
+                        <div class="col-md-6 pr-4">
+                            <label class="control-label">Day</label>
+                            <input asp-for="EmployeeHour.Date.DayOfWeek" class="form-control-plaintext  border-bottom day-of-week " disabled />
+                            <span asp-validation-for="EmployeeHour.Date.DayOfWeek" class="text-danger-centarix " />
+                        </div>
 
-                    <div class="update-hours-Partial">
+                        <div class="col-md-6">
+                            <label asp-for="EmployeeHour.Date" class="control-label"></label>
+                            @if (disabled)
+                            {
+                                <input asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" disabled /> 
+                                <input type="hidden" asp-for="EmployeeHour.Date"  asp-format="{0:dd/MM/yyyy}"/>
+                            }
+                            else
+                            {
+                                <input asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" type="text" data-workday="@Model.AutoFillEntry1Type" class="form-control-plaintext  border-bottom update-hour-date datepicker " />
+                            }
+
+                            <span asp-validation-for="EmployeeHour.Date" class="text-danger-centarix " />
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="update-hours-partial">
                         @{ await Html.RenderPartialAsync("_UpdateHours", Model);}
-                       </div>
+                    </div>
+
                     <div class="modal-footer  border-0  modal-footer-mt">
                         <div class="mx-auto text-center">
                             <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin " asp-action="UpdateHours" asp-route-PageType="@Model.PageType" value="Save" />
                             <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                         </div>
                     </div>
-                </div>
             </form>
         </div>
     </div>
 </div>
+
+<script src="~/js/InitializeDatePicker.js"></script>

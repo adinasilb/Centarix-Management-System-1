@@ -390,17 +390,29 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> UpdateHours(DateTime chosenDate, String PageType, bool isWorkFromHome=false)
         {
+            return PartialView(await GetUpdateHoursViewModel(chosenDate, PageType, isWorkFromHome));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "TimeKeeper")]
+        public async Task<IActionResult> _UpdateHours(DateTime chosenDate, String PageType, bool isWorkFromHome = false)
+        {            
+            return PartialView(await GetUpdateHoursViewModel(chosenDate, PageType, isWorkFromHome));
+        }
+
+        private async Task<UpdateHoursViewModel> GetUpdateHoursViewModel(DateTime chosenDate, String PageType, bool isWorkFromHome = false)
+        {
             if (chosenDate == new DateTime())
             {
                 chosenDate = DateTime.Today;
             }
             var userID = _userManager.GetUserId(User);
             var user = await _context.Employees.Where(u => u.Id == userID).FirstOrDefaultAsync();
-            var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).Include(eh=>eh.OffDayType).Include(e=>e.Employee).FirstOrDefault();
+            var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == chosenDate.Date).Include(eh => eh.OffDayType).Include(e => e.Employee).FirstOrDefault();
             if (employeeHour == null)
             {
-                employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, Employee= user};
-            }           
+                employeeHour = new EmployeeHours { EmployeeID = userID, Date = chosenDate, Employee = user };
+            }
             employeeHour.EmployeeHoursStatusEntry1 = _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry1ID).FirstOrDefault();
             employeeHour.EmployeeHoursStatusEntry2 = _context.EmployeeHoursStatuses.Where(ehs => ehs.EmployeeHoursStatusID == employeeHour.EmployeeHoursStatusEntry2ID).FirstOrDefault();
             UpdateHoursViewModel updateHoursViewModel = new UpdateHoursViewModel() { EmployeeHour = employeeHour, PageType = PageType };
@@ -417,9 +429,8 @@ namespace PrototypeWithAuth.Controllers
                 updateHoursViewModel.AutoFillEntry1Type = 1;
             }
             updateHoursViewModel.PartialOffDayTypes = _context.PartialOffDayTypes;
-            return PartialView(updateHoursViewModel);
+            return updateHoursViewModel;
         }
-
 
         [HttpPost]
         [Authorize(Roles = "TimeKeeper")]

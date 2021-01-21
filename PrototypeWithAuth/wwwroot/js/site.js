@@ -1503,32 +1503,41 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 	$("body").on("change", "#EmployeeHour_Date", function (e) {
-		$('.day-of-week').val($.fn.GetDayOfWeek($(this).attr("data-val")));
+		$('.day-of-week').val($.fn.GetDayOfWeek($.fn.formatDateForSubmit($(this).val())));
 	});
 
 	$.fn.GetDayOfWeek = function (date) {
-		var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-		var dayNum = new Date(date).getDay();
-		console.log("daynum" + dayNum)
-		var dayOfWeek = days[dayNum];
+		var dayOfWeek = moment(date).format("dddd");
+		console.log("dayOfWeek" + dayOfWeek)
 		return dayOfWeek
 	}
 
-	//$("body").on("change", "#EmployeeHour_Date.update-hour-date", function (e) {
-	//	$.fn.GetEmployeeHour($.fn.formatDateForSubmit($(this).val()), $(this).attr("data-workday"));
-	//});
+	$("body").on("change", "#EmployeeHour_Date.update-hour-date", function (e) {
+		e.preventDefault();
+		$.fn.GetEmployeeHour($.fn.formatDateForSubmit($(this).val()), $(this).attr("data-workday"));
+	});
 	//$("body").on("change", "#EmployeeHour_Date.update-work-from-home", function (e) {
 	//	$.fn.GetEmployeeHourFromHome($.fn.formatDateForSubmit($(this).val()));
 	//});
 
-	//$.fn.GetEmployeeHour = function (date, workDay) {
-	//	console.log(date);
-	//	var workFromHome = false;
-	//	if (workDay == "1") {
-	//		workFromHome = true;
-	//	}
-	//	$.fn.CallModal('UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + workFromHome)
-	//};
+	$.fn.GetEmployeeHour = function (date, workDay) {
+		console.log(date);
+		var workFromHome = false;
+		if (workDay == "1") {
+			workFromHome = true;
+		}
+		$.ajax({
+			async: false,
+			url: '_UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + workFromHome,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("#loading").hide();
+		        $(".update-hours-partial").html(data);
+				return false;
+			}
+		});
+	};
 
 
 	//RECEIVEDMODAL:
@@ -1540,10 +1549,10 @@ $(function () {
 		console.log("in clarify, checkbox val: " + $(this).val());
 	};
 
-	$.fn.GetEmployeeHourFromHome = function (date) {
-		console.log(date);
-		$.fn.CallModal('UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + true)
-	};
+	//$.fn.GetEmployeeHourFromHome = function (date) {
+	//	console.log(date);
+	//	$.fn.CallModal('UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + true)
+	//};
 	$.fn.GetEmployeeHourFromToday = function () {
 		$.fn.CallModal('ExitModal');
 	};
