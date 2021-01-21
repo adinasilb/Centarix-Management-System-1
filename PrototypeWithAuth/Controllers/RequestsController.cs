@@ -2484,9 +2484,9 @@ namespace PrototypeWithAuth.Controllers
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
                 //var users = _context.Users.ToList();
                 //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
-                string ownerEmail = currentUser.Email;
+                string ownerEmail = "adinasilberberg@gmail.com"; //currentUser.Email;
                 string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
-                string ownerPassword = currentUser.SecureAppPass;
+                string ownerPassword = "ygotdlspwemkubll" ;//currentUser.SecureAppPass;
                 string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ TempData["Email1"].ToString() == "" ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : TempData["Email1"].ToString();
                 string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
 
