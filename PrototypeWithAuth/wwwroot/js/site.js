@@ -1992,7 +1992,7 @@ $(function () {
 					$.fn.EnableSubSubUnits();
 					$.fn.ChangeSubSubUnitDropdown();
 				}
-				if (($("#Request_SubUnitTypeID").n.hasClass('.mark-readonly'))) {
+				if (($("#Request_SubUnitTypeID").hasClass('.mark-readonly'))) {
 					console.log('enabling');
 					$.fn.EnableSubUnits();
 					$.fn.ChangeSubUnitDropdown();

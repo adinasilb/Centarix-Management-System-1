@@ -22,7 +22,8 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         [Display(Name = "Order Date")]
         public DateTime OrderDate { get; set; }
-        
+        public DateTime OrderDate_submit { get { return OrderDate; } set { OrderDate = value; } }
+
         [Display(Name = "Order Number")]
         public int? OrderNumber { get; set; }
 
@@ -33,6 +34,7 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         [Display(Name = "Invoice Date")]
         public DateTime InvoiceDate { get; set; }
+        public DateTime InvoiceDate_submit { get { return InvoiceDate; } set { InvoiceDate = value; } }
         public IEnumerable<Payment> Payments { get; set; }
         public bool IsDeleted { get; set; } //this is set to true if all the requests under this parentrequest are deleted
         public bool WithoutOrder { get; set; }

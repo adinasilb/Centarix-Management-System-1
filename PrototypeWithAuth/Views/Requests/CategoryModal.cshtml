@@ -1,17 +1,7 @@
-﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+﻿@model PrototypeWithAuth.ViewModels.ChooseCategoryViewModel
 @using PrototypeWithAuth.AppData
 @{
     Layout = null;
-    var bcColor = "order-inv-background-color";
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
-    {
-        bcColor = "oper-background-color";
-    }
-    else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
-    {
-
-        bcColor = "lab-man-background-color";
-    }
 }
 @*<script src="~/js/DeleteDocModal.js"></script>*@
 <div class="modal modal-choose-category fader" id="ChooseCategoryModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
@@ -33,11 +23,11 @@
                                     <div class="card-body text-center">
                                         Choose a Category:
                                         <div class="form-group">
-                                            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-                                            @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
+                                            <label asp-for="ParentCategories" class="control-label"></label>
+                                            @Html.DropDownListFor(c => c.ParentCategories,
                     new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"), "Select a Category",
-                    new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "parentlist", @searchable = "Select Category" })
-                                            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
+                    new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "categorylist", @searchable = "Select Category" })
+                                            <span asp-validation-for="ParentCategories" class="text-danger-centarix"></span>
                                         </div>
                                         <input type="submit" value="Save" href="@Url.Action("DeleteDocumentModal", "Requests")" id="submitCategory" style="display: none;" />
                                     </div>

@@ -85,7 +85,7 @@
                             <div class="row">
                                 <div class="col-4">
                                     <label asp-for="Request.ArrivalDate" class="control-label"></label>
-                                    <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" />
+                                    <input asp-for="Request.ArrivalDate" type="text" class="form-control-plaintext border-bottom datepicker" />
                                     <span asp-validation-for="Request.ArrivalDate" class="text-danger-centarix"></span>
                                 </div>
                                 <div class="col-4">
@@ -215,7 +215,7 @@
         </div>
     </div>
 </div>
-
+<script src="~/js/InitializeDatePicker.js"></script>
 <script>
     $(".submit-received").click( function (e) {
         //alert("validate form");

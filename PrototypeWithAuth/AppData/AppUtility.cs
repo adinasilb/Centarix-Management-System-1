@@ -84,6 +84,7 @@ namespace PrototypeWithAuth.AppData
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
         public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
+        public enum RequestModalType { Create, Edit, Summary}
         public enum OrderTypeEnum { OrderNow, AddToCart, AskForPermission, WithoutOrder}
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {

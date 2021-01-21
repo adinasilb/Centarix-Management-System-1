@@ -4,7 +4,14 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 
-@{var Category = Enum.Parse(typeof(AppUtility.CategoryTypeEnum), Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription);
+@{
+    var Category = Enum.Parse(typeof(AppUtility.CategoryTypeEnum), Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription);
+    var modalType = Model.ModalType;
+    var markReadOnlyClass = "";
+    if (modalType == AppUtility.RequestModalType.Edit)
+    {
+        markReadOnlyClass = "markreadonly";
+    }
 }
 <div id="price" class="tab-pane fade ">
     <div class="modal-sides modal-body-top-p">
@@ -33,19 +40,20 @@
                 </div>
             </div>
         </div>
-        <div class="row" id="edit">
+       @if (!Category.Equals(AppUtility.ParentCategoryEnum.Operation))
+       {<div class="row" id="edit">
             <div class="col-md-4 RequestUnitCard pr-0">
                 <div class="border pt-4" @*style="padding-right: 2rem; padding-left: 2rem;"*@>
                     <div class="mx-2rem">
                         <div class="row">
                             <div class="col-md-4 form-group">
                                 <label asp-for="Request.Unit" class="control-label"></label>
-                                <input asp-for="Request.Unit" class="form-control-plaintext border-bottom" min="1" />
+                                <input asp-for="Request.Unit" class="form-control-plaintext border-bottom @markReadOnlyClass" min="1" />
                                 <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-md-8 form-group dropdown-select-div">
                                 <label asp-for="Request.UnitType" class="control-label"></label>
-                                <select asp-for="Request.UnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext">
+                                <select asp-for="Request.UnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
                                     <option value=""></option>
                                     @foreach (var unitparenttype in Model.UnitTypes)
                                     {
@@ -65,7 +73,7 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <span class="input-group-text border-bottom request-cost-dollar-icon">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom " name="unit-price-dollars" id="unit-price-dollars" />
+                                        <input class="form-control-plaintext border-bottom @markReadOnlyClass" name="unit-price-dollars" id="unit-price-dollars" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -97,12 +105,12 @@
                         <div class="row">
                             <div class="col-md-4 pl-0 form-group">
                                 <label asp-for="Request.SubUnit" class="control-label"></label>
-                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @markReadOnlyClass" min="0" disabled />
                                 <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-md-8 form-group dropdown-select-div">
                                 <label asp-for="Request.SubUnitType" class="control-label"></label>
-                                <select asp-for="Request.SubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext" disabled>
+                                <select asp-for="Request.SubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass" disabled>
                                     <option value=""></option>
                                     @foreach (var unitparenttype in Model.UnitTypes)
                                     {
@@ -133,7 +141,7 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom " type="number" min="0" name="subunit-price-dollars" id="subunit-price-dollars" />
+                                        <input class="form-control-plaintext border-bottom @markReadOnlyClass" type="number" min="0" name="subunit-price-dollars" id="subunit-price-dollars" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -160,12 +168,12 @@
                         <div class="row">
                             <div class="col-md-4 pl-0 form-group">
                                 <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @markReadOnlyClass" min="0" disabled />
                                 <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-md-8 form-group dropdown-select-div">
                                 <label asp-for="Request.SubSubUnitType" class="control-label"></label>
-                                <select asp-for="Request.SubSubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext" disabled>
+                                <select asp-for="Request.SubSubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass" disabled>
                                     <option value=""></option>
                                     @foreach (var unitparenttype in Model.UnitTypes)
                                     {
@@ -186,7 +194,7 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom" name="subsubunit-price-dollars" id="subsubunit-price-dollars" />
+                                        <input class="form-control-plaintext border-bottom @markReadOnlyClass" name="subsubunit-price-dollars" id="subsubunit-price-dollars" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -201,13 +209,14 @@
                 </div>
             </div>
         </div>
+       }
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
                     <label asp-for="Request.Cost" class="control-label">Total:</label>
                     <div class="input-group">
                         <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                        <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
+                        <input class="form-control-plaintext border-bottom @markReadOnlyClass" id="sum-dollars" name="sum-dollars" />
                     </div>
                 </div>
             </div>

@@ -828,13 +828,23 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
+        [HttpGet]
+        public async Task<IActionResult> CategoryModal()
+        {
+            ChooseCategoryViewModel categoryViewModel = new ChooseCategoryViewModel()
+            {
+                ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync()
+            };
+
+            return PartialView(categoryViewModel);
+        }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> CreateModalView(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+        public async Task<IActionResult> CreateModalView(int parentCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
-            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
+            var parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == parentCategoryId).FirstOrDefaultAsync();
+            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.ParentCategoryID == parentCategoryId).ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var subprojects = await _context.SubProjects.ToListAsync();
@@ -847,7 +857,7 @@ namespace PrototypeWithAuth.Controllers
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ParentCategories = parentcategories,
+                ParentCategory = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 Projects = projects,
@@ -858,7 +868,8 @@ namespace PrototypeWithAuth.Controllers
                 CompanyAccounts = companyaccounts,
                 CommentTypes = commentTypes,
                 Comments = new List<Comment>(),
-                EmailAddresses = new List<string>() { "", "", "", "", "" }
+                EmailAddresses = new List<string>() { "", "", "", "", "" },
+                ModalType = AppUtility.RequestModalType.Create
                 //CurrentUser = 
             };
 
@@ -910,7 +921,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.Include(ps => ps.ParentCategory).FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
             //in case we need to return to the modal view
-            requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
+            requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
 
             requestItemViewModel.Projects = await _context.Projects.ToListAsync();
@@ -1227,7 +1238,7 @@ namespace PrototypeWithAuth.Controllers
             List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ParentCategories = parentcategories,
+                //ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Projects = projects,
                 SubProjects = subprojects,
@@ -1427,7 +1438,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     .ToList();
-            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
+            var parentcategory =await _context.ParentCategories.Where(pc => pc.ParentCategoryID == _context.Requests.Where(r => r.RequestID == id).Select(r => r.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefault()).FirstOrDefaultAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
@@ -1438,7 +1449,7 @@ namespace PrototypeWithAuth.Controllers
             List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ParentCategories = parentcategories,
+                ParentCategory = parentcategory,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 Projects = projects,
@@ -1451,10 +1462,16 @@ namespace PrototypeWithAuth.Controllers
                 .Where(r => r.Request.RequestID == id).ToListAsync(),
                 CommentTypes = commentTypes,
                 SectionType = SectionType,
-                RequestsByProduct = requestsByProduct,
-                isEditable = isEditable
-
+                RequestsByProduct = requestsByProduct
             };
+            if (isEditable)
+            {
+                requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
+            }
+            else
+            {
+                requestItemViewModel.ModalType = AppUtility.RequestModalType.Summary;
+            }
 
             ModalViewType = "Edit";
 
