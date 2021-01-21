@@ -56,5 +56,6 @@ namespace PrototypeWithAuth.Models
         public EmployeeHoursStatus EmployeeHoursStatusEntry2 { get; set; }
         public int? CompanyDayOffID { get; set; }
         public CompanyDayOff CompanyDayOff { get; set; }
+        public bool isBonus { get; set; }
     }
 }
