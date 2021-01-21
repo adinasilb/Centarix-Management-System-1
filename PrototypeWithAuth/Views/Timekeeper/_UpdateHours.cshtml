@@ -1,0 +1,153 @@
+﻿@model PrototypeWithAuth.ViewModels.UpdateHoursViewModel
+@using PrototypeWithAuth.AppData
+
+<script src="~/js/Validation/UpdateHoursValidation.js"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
+<script src="~/js/UpdateHours.js"></script>
+<div class="row">
+    <div class="col-3 ">
+        <label class="control-label">Entry</label>
+        <input type="text" asp-for="EmployeeHour.Entry1" class="form-control-plaintext border-bottom " />
+        <span asp-validation-for="EmployeeHour.Entry1" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-3 ">
+        <label class="control-label">Exit</label>
+        <input type="text" asp-for="EmployeeHour.Exit1" class="form-control-plaintext border-bottom " />
+        <span asp-validation-for="EmployeeHour.Exit1" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-3">
+        <label asp-for="EmployeeHour.TotalHours" class="control-label"></label>
+        <input type="text" asp-for="EmployeeHour.TotalHours" class="form-control-plaintext border-bottom " />
+        <span asp-validation-for="EmployeeHour.TotalHours" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-3 ">
+        @*@{
+                var wfhSelected = "";
+                var wfoSelected = "";
+                switch (Model.AutoFillEntry1Type)
+                {
+                    case 1:
+                        <label>WFH true</label>
+                        wfhSelected = "selected";
+                        break;
+                    case 2:
+                        <label>WFO true</label>
+                        wfoSelected = "selected";
+                        break;
+                }
+            }*@
+        <label class="control-label"></label>
+        <select class="mdb-select  timekeeper  form-control-plaintext custom select-dropdown  mb-0" asp-for="EmployeeHour.EmployeeHoursStatusEntry1ID">
+            <option value="" class=""></option>
+            @if (Model.AutoFillEntry1Type == 1)
+            {
+                <option value="1" selected class="">Worked from home</option>
+                <option value="2" class="">Worked from office</option>
+            }
+            else
+            {
+                <option value="1" class="">Worked from home</option>
+                <option value="2" selected class="">Worked from office</option>
+            }
+        </select>
+    </div>
+
+</div>
+@{ var displayEntry2 = "";
+    var displayAdd = "";
+}
+@if (Model.EmployeeHour.Entry2 == null)
+{
+    displayEntry2 = "d-none";
+}
+else
+{
+    displayAdd = "d-none";
+}
+<div class="row entry2 @displayEntry2">
+
+
+    <div class="col-3 ">
+        <label class="control-label">Entry 2</label>
+        @if (Model.EmployeeHour.Entry2 == null)
+        {
+            <input type="text" asp-for="EmployeeHour.Entry2" class="form-control-plaintext border-bottom " disabled />
+        }
+        else
+        {
+            <input type="text" asp-for="EmployeeHour.Entry2" class="form-control-plaintext border-bottom " />
+        }
+        <span asp-validation-for="EmployeeHour.Entry2" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-3 ">
+        <label class="control-label">Exit 2</label>
+
+        @if (Model.EmployeeHour.Entry2 == null)
+        {
+            <input type="text" asp-for="EmployeeHour.Exit2" class="form-control-plaintext border-bottom " disabled />
+        }
+        else
+        {
+            <input type="text" asp-for="EmployeeHour.Exit2" class="form-control-plaintext border-bottom " />
+        }
+        <span asp-validation-for="EmployeeHour.Exit2" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-3 ">
+        <label class="control-label"></label>
+
+    </div>
+    <div class="col-3 ">
+
+        <label class="control-label"></label>
+        @if (Model.EmployeeHour.Entry2 == null)
+        {
+            <select class="mdb-select  timekeeper  form-control-plaintext custom select-dropdown  mb-0" asp-for="EmployeeHour.EmployeeHoursStatusEntry2ID" disabled>
+                <option value="1" class="">Worked from home</option>
+                <option value="2" class="">Worked from office</option>
+            </select>
+        }
+        else
+        {
+            <select class="mdb-select  timekeeper  form-control-plaintext custom select-dropdown  mb-0" asp-for="EmployeeHour.EmployeeHoursStatusEntry2ID">
+                <option value="1" class="">Worked from home</option>
+                <option value="2" class="">Worked from office</option>
+            </select>
+        }
+
+    </div>
+
+
+</div>
+<div class="row  entry2 @displayEntry2 text-center"><div class=" col-6 offset-3"><input type="button" value="- Remove Entry" class="btn  btn-rounded  border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize removeEntry " style="font-size:1rem;" /></div></div>
+
+<div class="row addEntryButton text-center @displayAdd"> <div class=" col-6 offset-3"><input id="addEntry" type="button" value="+ Add Entry" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize " style="font-size:1rem;" /></div></div>
+@if (Model.EmployeeHour.Employee.EmployeeStatusID == 1)
+{
+    <div class="row">
+
+        <div class="col-6">
+            <label asp-for="EmployeeHour.PartialOffDayHours" class="control-label">Partial Vacation</label>
+            @Html.DropDownListFor(
+                       vm => vm.EmployeeHour.PartialOffDayTypeID,
+                       new SelectList(
+                       Model.PartialOffDayTypes.Where(p => p.PartialOffDayTypeID == 2),
+                       dataValueField: "PartialOffDayTypeID",
+                       dataTextField: "Description"),
+                       optionLabel: "Select Option",
+                       htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext" }
+                       )
+        </div>
+        <div class="col-6">
+            <label asp-for="EmployeeHour.PartialOffDayHours" class="control-label">Hours</label>
+            <input type="text" asp-for="EmployeeHour.PartialOffDayHours" class="form-control-plaintext border-bottom " />
+            <span asp-validation-for="EmployeeHour.PartialOffDayHours" class="text-danger-centarix"></span>
+        </div>
+    </div>
+}
+
+<script>
+    $('#EmployeeHour_EmployeeHoursStatusEntry1ID').materialSelect();
+    $('#EmployeeHour_EmployeeHoursStatusEntry2ID').materialSelect();
+    $('#EmployeeHour_PartialOffDayTypeID').materialSelect();
+</script>
+<script src="~/js/InitializeDatePicker.js"></script>
