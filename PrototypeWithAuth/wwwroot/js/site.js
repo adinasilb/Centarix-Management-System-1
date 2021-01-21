@@ -1514,21 +1514,21 @@ $(function () {
 		return dayOfWeek
 	}
 
-	$("body").on("change", "#EmployeeHour_Date.update-hour-date", function (e) {
-		$.fn.GetEmployeeHour($.fn.formatDateForSubmit($(this).val()), $(this).attr("data-workday"));
-	});
-	$("body").on("change", "#EmployeeHour_Date.update-work-from-home", function (e) {
-		$.fn.GetEmployeeHourFromHome($.fn.formatDateForSubmit($(this).val()));
-	});
+	//$("body").on("change", "#EmployeeHour_Date.update-hour-date", function (e) {
+	//	$.fn.GetEmployeeHour($.fn.formatDateForSubmit($(this).val()), $(this).attr("data-workday"));
+	//});
+	//$("body").on("change", "#EmployeeHour_Date.update-work-from-home", function (e) {
+	//	$.fn.GetEmployeeHourFromHome($.fn.formatDateForSubmit($(this).val()));
+	//});
 
-	$.fn.GetEmployeeHour = function (date, workDay) {
-		console.log(date);
-		var workFromHome = false;
-		if (workDay == "1") {
-			workFromHome = true;
-		}
-		$.fn.CallModal('UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + workFromHome)
-	};
+	//$.fn.GetEmployeeHour = function (date, workDay) {
+	//	console.log(date);
+	//	var workFromHome = false;
+	//	if (workDay == "1") {
+	//		workFromHome = true;
+	//	}
+	//	$.fn.CallModal('UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + workFromHome)
+	//};
 
 
 	//RECEIVEDMODAL:
