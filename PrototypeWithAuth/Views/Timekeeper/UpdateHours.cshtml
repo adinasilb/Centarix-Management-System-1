@@ -53,7 +53,7 @@
                             <label asp-for="EmployeeHour.Date" class="control-label"></label>
                             @if (disabled)
                             {
-                                <input asp-for="EmployeeHour.Date" class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" readonly />
+                                <input asp-for="EmployeeHour.Date"  class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" readonly />
                             }
                             else
                             {
@@ -223,4 +223,4 @@
     $('#EmployeeHour_EmployeeHoursStatusEntry2ID').materialSelect();
     $('#EmployeeHour_PartialOffDayTypeID').materialSelect();
 </script>
-<script src="~/js/InitializeDatePicker.js" asp-append-version="true"></script>
+<script src="~/js/InitializeDatePicker.js"></script>

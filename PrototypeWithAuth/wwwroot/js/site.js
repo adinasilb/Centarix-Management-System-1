@@ -1308,7 +1308,7 @@ $(function () {
 				//replaces the modal-view class with the ModalView view
 				//$(".modal-view").html(data);
 				//turn off data dismiss by clicking out of the box and by pressing esc
-				$(".modal-view").modal({
+				$(".modal").modal({
 					backdrop: true,
 					keyboard: false,
 				});
