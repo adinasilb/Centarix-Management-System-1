@@ -73,5 +73,11 @@ namespace PrototypeWithAuth.Controllers
             };
             return summaryHoursViewModel;
         }
+
+
+        public JsonResult GetRequestJson(Request request)
+        {
+            return Json(request);
+        }
     }
 }
