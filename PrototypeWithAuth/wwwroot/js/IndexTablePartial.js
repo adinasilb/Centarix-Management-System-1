@@ -115,6 +115,7 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
        console.log(formdata);
     }
     else{
+                    $(".modal").modal('hide');
         contentType = false;
             processType = false;
         }
@@ -129,7 +130,6 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
     type: type,
     cache: false,
     success: function (data) {
-            $(".modal").modal('hide');
         $(viewClass).html(data);
         $("#loading").hide();
         return true;

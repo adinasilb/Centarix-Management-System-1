@@ -45,7 +45,7 @@
 				$.fn.getMenuItems();
 				//reload index pages
 				if ($('.turn-edit-on-off').hasClass('operations')) {
-					ajaxCallToPartial();
+					    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
 				}
 				else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 
@@ -83,7 +83,7 @@
 					});
 
 				} else if ($('.turn-edit-on-off').hasClass('orders')) {
-					ajaxCallToPartial();
+					    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
 				}
 				//sets up error message if it has the setup in the view
 				//if ($(".hasErrorMessage").length > 0) {
