@@ -1042,19 +1042,6 @@ namespace PrototypeWithAuth.Data
                              Description = " Vacation Day"
                          }
                   );
-
-            modelBuilder.Entity<PartialOffDayType>().HasData(
-            new PartialOffDayType
-            {
-                PartialOffDayTypeID = 1,
-                Description = "Partial Sick Day"
-            },
-             new PartialOffDayType
-             {
-                 PartialOffDayTypeID = 2,
-                 Description = "Partial Vacation Day"
-             }
-          );
             modelBuilder.Entity<EmployeeHoursStatus>().HasData(
                 new EmployeeHoursStatus
                 {

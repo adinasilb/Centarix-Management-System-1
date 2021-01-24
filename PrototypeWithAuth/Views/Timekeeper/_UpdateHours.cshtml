@@ -133,8 +133,8 @@ else
             @Html.DropDownListFor(
                        vm => vm.EmployeeHour.PartialOffDayTypeID,
                        new SelectList(
-                       Model.PartialOffDayTypes.Where(p => p.PartialOffDayTypeID == 2),
-                       dataValueField: "PartialOffDayTypeID",
+                       Model.PartialOffDayTypes.Where(p => p.OffDayTypeID == 2),
+                       dataValueField: "OffDayTypeID",
                        dataTextField: "Description"),
                        optionLabel: "Select Option",
                        htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext" }

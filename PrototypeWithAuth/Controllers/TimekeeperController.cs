@@ -155,10 +155,11 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryDaysOff;
             var userid = _userManager.GetUserId(User);
-            var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).Include(u=>u.SalariedEmployee).FirstOrDefault();
+            var user = _context.Employees.Where(u => u.Id == userid).Include(u=>u.SalariedEmployee).FirstOrDefault();
             if (user != null)
             {
                 ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, year);
+
                 return PartialView(reportDaysViewModel);
             }
 
@@ -202,7 +203,7 @@ namespace PrototypeWithAuth.Controllers
                     var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                     vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay),2);
                 }
-                var sickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
+                var sickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date ).Count();
                 if (year == AppUtility.YearStartedTimeKeeper & year == SelectedYear)
                 {
                     int month = DateTime.Now.Month;
@@ -321,14 +322,14 @@ namespace PrototypeWithAuth.Controllers
                 {
                     double vacationDays = 0;
                     double sickDays = 0;
-                    double vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Count();
+                    double vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date &&eh.IsBonus==false).Count();
                     if(user.EmployeeStatusID ==  1)
                     {
                         var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                         vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay),2);
                     }                  
-                    var sickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
-                    if(year==AppUtility.YearStartedTimeKeeper & year==thisYear)
+                    var sickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date && eh.IsBonus==false).Count();
+                    if(year==AppUtility.YearStartedTimeKeeper && year==thisYear)
                     {
                         int month = DateTime.Now.Month;
                         vacationDays = (user.VacationDaysPerMonth * month) + user.RollOverVacationDays;
@@ -378,7 +379,8 @@ namespace PrototypeWithAuth.Controllers
                 summaryOfDaysOffViewModel.DaysOffs = daysOffByYear.OrderByDescending(d=>d.Year);
                 summaryOfDaysOffViewModel.TotalVacationDaysPerYear = user.VacationDays;
                 summaryOfDaysOffViewModel.TotalSickDaysPerYear = user.SickDays;
-              
+                summaryOfDaysOffViewModel.BonusSickDays = user.BonusSickDays;
+                summaryOfDaysOffViewModel.BonusVacationDays = user.BonusVacationDays;
                 return summaryOfDaysOffViewModel;
             }
 
@@ -428,7 +430,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 updateHoursViewModel.AutoFillEntry1Type = 1;
             }
-            updateHoursViewModel.PartialOffDayTypes = _context.PartialOffDayTypes;
+            updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes;
             return updateHoursViewModel;
         }
 
@@ -481,8 +483,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 ehaa.Exit2 = null;
             }
-            ehaa.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;
-            ehaa.OffDayTypeID = null;
+            ehaa.TotalHours = updateHoursViewModel.EmployeeHour.TotalHours;       
             ehaa.Date = updateHoursViewModel.EmployeeHour.Date;
             ehaa.EmployeeHoursStatusEntry1ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID;
             ehaa.EmployeeHoursStatusEntry2ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry2ID;
@@ -493,6 +494,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (eh != null)
                 {
+                    if(eh.IsBonus)
+                    {
+                        ehaa.IsBonus = true;
+                        ehaa.OffDayTypeID = eh.OffDayTypeID;
+                    }
                     if (eh.OffDayTypeID == null)
                     {
                         ehaa.EmployeeHoursStatusEntry1ID = 3;
@@ -606,7 +612,7 @@ namespace PrototypeWithAuth.Controllers
             var userID = _userManager.GetUserId(User);
             var companyDaysOff = new List<DateTime>();
             EmployeeHours employeeHour = null;
-
+            var user = _context.Employees.Include(eh => eh.SalariedEmployee).Where(e => e.Id == userID).FirstOrDefault();
             if (dateTo == new DateTime())
             {
                 if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
@@ -630,6 +636,15 @@ namespace PrototypeWithAuth.Controllers
                         employeeHour.OffDayType = _context.OffDayTypes.Where(odt => odt.OffDayTypeID == offDayTypeID).FirstOrDefault();
                     }
 
+                    var vacationLeftCount = base.GetUsersOffDaysLeft(user, offDayTypeID, dateFrom.Year);
+                    if(dateFrom.Year != dateTo.Year && dateTo.Year!=1)
+                    {
+                        vacationLeftCount += base.GetUsersOffDaysLeft(user, offDayTypeID, dateTo.Year);
+                    }
+                    if(vacationLeftCount<1)
+                    {
+                        TakeBonusDay(user, offDayTypeID, employeeHour);
+                    }
                     _context.Update(employeeHour);
                     _context.SaveChanges();
                     if (ehaa != null)
@@ -675,6 +690,15 @@ namespace PrototypeWithAuth.Controllers
                                 Date = dateFrom
                             };
                         }
+                        var vacationLeftCount = base.GetUsersOffDaysLeft(user, offDayTypeID, dateFrom.Year);
+                        if (dateFrom.Year != dateTo.Year && dateTo.Year != 1)
+                        {
+                            vacationLeftCount += base.GetUsersOffDaysLeft(user, offDayTypeID, dateTo.Year);
+                        }
+                        if (vacationLeftCount < 1)
+                        {
+                            TakeBonusDay(user, offDayTypeID, employeeHour);
+                        }
                         _context.Update(employeeHour);
                         if (ehaa != null)
                         {
@@ -683,9 +707,31 @@ namespace PrototypeWithAuth.Controllers
 
                     }
                     dateFrom = dateFrom.AddDays(1);
-                }
-                _context.SaveChanges();
+                    _context.SaveChanges();
+                }       
                 return true;
+            }
+        }
+
+        private void TakeBonusDay(Employee user, int offDayTypeID, EmployeeHours employeeHour)
+        {
+            if (offDayTypeID == 2)
+            {
+                if (user.BonusVacationDays >= 1)
+                {
+                    employeeHour.IsBonus = true;
+                    user.BonusVacationDays -= 1;
+                    _context.Update(user);
+                }
+            }
+            else
+            {
+                if (user.BonusSickDays >= 1)
+                {
+                    employeeHour.IsBonus = true;
+                    user.BonusSickDays -= 1;
+                    _context.Update(user);
+                }
             }
         }
 

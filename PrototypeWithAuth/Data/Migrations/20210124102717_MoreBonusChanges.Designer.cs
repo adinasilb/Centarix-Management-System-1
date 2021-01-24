@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210124102717_MoreBonusChanges")]
+    partial class MoreBonusChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1876,6 +1878,33 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("ParentRequests");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.PartialOffDayType", b =>
+                {
+                    b.Property<int>("PartialOffDayTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PartialOffDayTypeID");
+
+                    b.ToTable("PartialOffDayTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            PartialOffDayTypeID = 1,
+                            Description = "Partial Sick Day"
+                        },
+                        new
+                        {
+                            PartialOffDayTypeID = 2,
+                            Description = "Partial Vacation Day"
+                        });
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Payment", b =>
                 {
                     b.Property<int>("PaymentID")
@@ -3643,8 +3672,8 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("OffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.OffDayType", "PartialOffDayType")
-                        .WithMany("EmployeeHoursPartial")
+                    b.HasOne("PrototypeWithAuth.Models.PartialOffDayType", "PartialOffDayType")
+                        .WithMany("EmployeeHours")
                         .HasForeignKey("PartialOffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -3672,12 +3701,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.OffDayType", "OffDayType")
-                        .WithMany("EmployeeHoursAwaitingApprovals")
+                        .WithMany()
                         .HasForeignKey("OffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.OffDayType", "PartialOffDayType")
-                        .WithMany("EmployeeHoursAwaitingApprovalsPartial")
+                    b.HasOne("PrototypeWithAuth.Models.PartialOffDayType", "PartialOffDayType")
+                        .WithMany()
                         .HasForeignKey("PartialOffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

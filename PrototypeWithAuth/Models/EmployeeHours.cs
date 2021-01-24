@@ -30,9 +30,12 @@ namespace PrototypeWithAuth.Models
         public DateTime Date { get; set; }
         public DateTime Date_submit { get { return Date; } set { Date = value; } }
         public int? OffDayTypeID { get; set; }
+        [ForeignKey("OffDayTypeID")]
         public OffDayType OffDayType { get; set; }
         public int? PartialOffDayTypeID { get; set; }
-        public PartialOffDayType PartialOffDayType { get; set; }
+        [ForeignKey("PartialOffDayTypeID")]
+        public OffDayType PartialOffDayType { get; set; }
+
         [DataType(DataType.Time)]
         public TimeSpan? PartialOffDayHours { get; set; }
 
@@ -56,6 +59,6 @@ namespace PrototypeWithAuth.Models
         public EmployeeHoursStatus EmployeeHoursStatusEntry2 { get; set; }
         public int? CompanyDayOffID { get; set; }
         public CompanyDayOff CompanyDayOff { get; set; }
-        public bool isBonus { get; set; }
+        public bool IsBonus { get; set; }
     }
 }
