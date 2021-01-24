@@ -6,7 +6,11 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    Layout = "~/Views/Shared/Master.cshtml";
+    if(!AppUtility.IsAjaxRequest(Context.Request))
+    {
+        Layout = "~/Views/Shared/Master.cshtml";
+    }
+
 
     AppUtility.PageTypeEnum pageType = AppUtility.PageTypeEnum.None;
     var categoryType = AppUtility.CategoryTypeEnum.Lab;
@@ -451,7 +455,24 @@
             $.fn.getMenuItems();
 
 
-        });
+      });
+    //    $(".add-item").on("click", function (e) {
+    //        e.preventDefault();
+    //        console.log("item click")
+    //        $(this).attr("href", "");
+            
+    //    $.ajax({
+    //        processData: false,
+    //        contentType: false,
+    //        async: true,
+    //        url: "/Requests/AddItemView/",
+    //        type: 'GET',
+    //        cache: false,
+    //        success: function (data) {
+    //            $(".request_nav_body").html(data);
+    //        }
+    //    })
+    //});
     </script>
     @if (IsSectionDefined("Scripts"))
     {

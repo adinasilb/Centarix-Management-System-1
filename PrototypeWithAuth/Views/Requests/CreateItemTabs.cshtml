@@ -1,0 +1,77 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> _userManager
+
+<form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style=" overflow: auto;">
+
+    @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
+    @Html.HiddenFor(model => model.RequestStatusID)
+    @Html.HiddenFor(model => model.SubCategoryID)
+    @Html.HiddenFor(model => model.VendorID)
+    @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
+    @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
+    @Html.HiddenFor(model => model.ParentCategory.ParentCategoryDescriptionEnum)
+
+    <input type="hidden" asp-for="@Model.Request.RequestID" />
+
+    <!-- Modal Header -->
+    <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
+        @*class needed here to override bootstraps modal limitations*@
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
+            <br />
+        }
+        <div class="form-group modal-line-1-header modal-sides">
+            <div class="heading-1 modal-title"><input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom" placeholder="(item name)" /></div>
+            <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
+        </div>
+        <div class="row">
+            <div class="col-12 px-0">
+                <div class="container-fluid div-tabs text-center modal-sides">
+                    <ul id="create-modal-tabs" class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons" style="">
+                        <li class="nav-item icon ">
+                            <a data-toggle="tab" href="#item" class="next-tab nav-link active request-item">
+                                <i class="icon-centarix-icons-05" style="font-size: 2rem;"></i>
+                                <br />Item
+                            </a>
+                        </li>
+                        <li class="nav-item icon" id="price-tab">
+                            <a data-toggle="tab" href="#price" class="next-tab nav-link request-price">
+                                <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price
+                            </a>
+                        </li>
+                        <li class="nav-item icon">
+                            <a data-toggle="tab" href="#documents" class="request-documents-tab nav-link next-tab documents-tab">
+                                <i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents
+                            </a>
+                        </li>
+                        <li class="nav-item icon comments-tab">
+                            <a data-toggle="tab" href="#comments" class="next-tab nav-link">
+                                <i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments
+                            </a>
+                        </li>
+                        <li class="nav-item icon order-tab">
+                            <a data-toggle="tab" href="#order" class="next-tab nav-link">
+                                <i class="icon-assignment-24px" style="font-size: 2rem;"></i> <br />Order
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        @{await Html.RenderPartialAsync("ItemData", Model); }
+    </div>
+</form>
+<script>
+    $('.mdb-select').materialSelect();
+</script>
+<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/SubUnit.js"></script>

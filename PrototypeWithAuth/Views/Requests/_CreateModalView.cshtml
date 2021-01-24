@@ -109,9 +109,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-                                            @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-     new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"), "Select a Category",
-  new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "parentlist", @searchable = "Select Category" })
+                                            <input class="item-category form-control-plaintext border-bottom " readonly value=@@Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription />
                                             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>

@@ -1,0 +1,33 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> _userManager
+    <div class="new-modal-body">
+        <div class="container-fluid div-tabs no-box-shadow p-0">
+            <div class="tab-content">
+                <div id="item" class="tab-pane fade in active show">
+                    @{await Html.RenderPartialAsync("_ItemTab", Model); }
+                </div>
+                <div>
+                    @{await Html.RenderPartialAsync("_LocationTab", Model); }
+                </div>
+                <div id="price" class="tab-pane fade ">
+                    @{await Html.RenderPartialAsync("_PriceTab", Model); }
+                </div>
+                <div id="documents" class="tab-pane fade">
+                    @{await Html.RenderPartialAsync("_DocumentsTab", Model); }
+                </div>
+                <div id="comments" class="tab-pane fade">
+                    @{await Html.RenderPartialAsync("_CommentsTab", Model); }
+                </div>
+                <div>
+                    @{await Html.RenderPartialAsync("_HistoryTab", Model); }
+                </div>
+                <div id="order" class="tab-pane fade">
+                    @{await Html.RenderPartialAsync("_OrderTab", Model); }
+                </div>
+            </div>
+        </div>
+     </div>

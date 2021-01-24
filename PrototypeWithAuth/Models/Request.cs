@@ -82,7 +82,10 @@ namespace PrototypeWithAuth.Models
         [Range(0, 255, ErrorMessage = "Field must be positive")]
         [Display(Name = "Warranty (Months)")]
         public byte? Warranty { get; set; } // this is the amount of months of the warranty. the datetime when it ends will be calculated on the frontend (now it's from the date ordered, but should it be from the date received instead?)
-
+        [Display(Name = "Batch/Lot")]
+        public int? Batch { get; set; }
+        [Display(Name = "Expiration Date")]
+        public DateTime? BatchExpiration { get; set; }
         private double _VAT;
         public double VAT { 
             get {

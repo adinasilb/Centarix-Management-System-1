@@ -187,7 +187,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (requestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
             {
-                if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Categories)
+                if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Category)
                 {
                     RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
                         .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
@@ -842,21 +842,24 @@ namespace PrototypeWithAuth.Controllers
 
         }
         [HttpGet]
-        public async Task<IActionResult> CategoryModal()
+        public async Task<IActionResult> AddItemView(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
         {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             ChooseCategoryViewModel categoryViewModel = new ChooseCategoryViewModel()
             {
                 ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync()
             };
 
-            return PartialView(categoryViewModel);
+            return View(categoryViewModel);
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> CreateModalView(int parentCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+        public async Task<IActionResult> CreateItemTabs(int parentCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-            var parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == parentCategoryId).FirstOrDefaultAsync();
+            var parentcategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == parentCategoryId).FirstOrDefaultAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.ParentCategoryID == parentCategoryId).ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
@@ -870,7 +873,7 @@ namespace PrototypeWithAuth.Controllers
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ParentCategory = parentcategories,
+                ParentCategory = parentcategory,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 Projects = projects,
@@ -915,14 +918,8 @@ namespace PrototypeWithAuth.Controllers
             //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            if (AppUtility.IsAjaxRequest(this.Request))
-            {
-                return PartialView(requestItemViewModel);
-            }
-            else
-            {
-                return View(requestItemViewModel);
-            }
+            
+            return PartialView(requestItemViewModel);
         }
 
         [HttpPost]
@@ -935,7 +932,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.Include(ps => ps.ParentCategory).FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
 
             //in case we need to return to the modal view
-            requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
+            //requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
             requestItemViewModel.Projects = await _context.Projects.ToListAsync();
             requestItemViewModel.SubProjects = await _context.SubProjects.ToListAsync();
@@ -950,7 +947,6 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
             requestItemViewModel.Request.ApplicationUserCreator = currentUser;
-            requestItemViewModel.Request.ParentQuote.ApplicationUser = currentUser;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
 
             //all new ones will be "new" until actually ordered after the confirm email
@@ -988,8 +984,6 @@ namespace PrototypeWithAuth.Controllers
                     requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault(); //Why do we need this here?
                     try
                     {
-                        requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
-                        //update session parentquote
                         //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request_ParentQuote.ToString(), requestItemViewModel.Request.ParentQuote);
                         requestItemViewModel.Request.RequestStatusID = 1; //new request
                         //update request
@@ -1013,7 +1007,6 @@ namespace PrototypeWithAuth.Controllers
                             try
                             {
                                 requestItemViewModel.Request.RequestStatusID = 6; //approved
-                                requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                                 UpdateContextHere = true;
                                 //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request.ToString(), requestItemViewModel.Request);
                                 //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request_ParentQuote.ToString(), requestItemViewModel.Request.ParentQuote);
@@ -1067,7 +1060,6 @@ namespace PrototypeWithAuth.Controllers
                         //    break;
                         case AppUtility.OrderTypeEnum.OrderNow:
                             requestItemViewModel.Request.RequestStatusID = 1; //new request
-                            requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestItemViewModel.RequestStatusID = 1;
                             requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                             HttpContext.Session.SetObject(requestNum, requestItemViewModel.Request);
@@ -1085,7 +1077,6 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         default:
                             requestItemViewModel.Request.RequestStatusID = 1; //needs approval
-                            requestItemViewModel.Request.ParentQuote.QuoteStatusID = 4;
                             requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                             HttpContext.Session.SetObject(requestNum, requestItemViewModel.Request);
                             //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.RequestList.ToString(), new List<Request>() { requestItemViewModel.Request });
@@ -1504,7 +1495,7 @@ namespace PrototypeWithAuth.Controllers
             List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ParentCategory = parentcategory,
+                //ParentCategory = parentcategory,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 Projects = projects,
@@ -1828,8 +1819,8 @@ namespace PrototypeWithAuth.Controllers
             product.VendorID = requestItemViewModel.Request.Product.VendorID;
             //in case we need to return to the modal view
             product.ProductName = requestItemViewModel.Request.Product.ProductName;
-            requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync();
-            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
+            var parentCategoryId = requestItemViewModel.Request.Product.ProductSubcategory.ParentCategoryID;
+            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).Where(ps => ps.ParentCategoryID == parentCategoryId).ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
             //redo the unit types when seeded
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
@@ -1970,7 +1961,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, bool NewRequestFromProduct = false, String SectionType = "")
         {
-            var parentcategories = await _context.ParentCategories.ToListAsync();
+            //var parentcategories = await _context.ParentCategories.ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.ToListAsync();
             var vendors = await _context.Vendors.ToListAsync();
             var projects = await _context.Projects.ToListAsync();
@@ -1992,7 +1983,7 @@ namespace PrototypeWithAuth.Controllers
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ParentCategories = parentcategories,
+                //ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 Projects = projects,
@@ -2096,7 +2087,7 @@ namespace PrototypeWithAuth.Controllers
         {
             //in case of error we need to populate these fields
             requestItemViewModel.Request.Product = oldRequest.Product;
-            requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
+            //requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
             requestItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();

@@ -5,7 +5,7 @@
 @using PrototypeWithAuth.AppData
 
 @{
-    var Category = Enum.Parse(typeof(AppUtility.CategoryTypeEnum), Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription);
+    var Category = Model.ParentCategory.ParentCategoryDescription;
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
     if (modalType == AppUtility.RequestModalType.Edit)
@@ -13,7 +13,7 @@
         markReadOnlyClass = "markreadonly";
     }
 }
-<div id="price" class="tab-pane fade ">
+
     <div class="modal-sides modal-body-top-p">
         <div class="row no-mb">
             <div class="col-md-8">
@@ -40,167 +40,168 @@
                 </div>
             </div>
         </div>
-       @if (!Category.Equals(AppUtility.ParentCategoryEnum.Operation))
-       {<div class="row" id="edit">
-            <div class="col-md-4 RequestUnitCard pr-0">
-                <div class="border pt-4" @*style="padding-right: 2rem; padding-left: 2rem;"*@>
-                    <div class="mx-2rem">
-                        <div class="row">
-                            <div class="col-md-4 form-group">
-                                <label asp-for="Request.Unit" class="control-label"></label>
-                                <input asp-for="Request.Unit" class="form-control-plaintext border-bottom @markReadOnlyClass" min="1" />
-                                <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
-                            </div>
-                            <div class="col-md-8 form-group dropdown-select-div">
-                                <label asp-for="Request.UnitType" class="control-label"></label>
-                                <select asp-for="Request.UnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
-                                    <option value=""></option>
-                                    @foreach (var unitparenttype in Model.UnitTypes)
-                                    {
-                                        <optgroup label="@unitparenttype.Key.UnitParentTypeDescription">
-                                            @foreach (var unittype in unitparenttype)
-                                            {
-                                                <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
-                                            }
-                                        </optgroup>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Price Per Unit:</label>
+        @if (!Category.Equals(AppUtility.ParentCategoryEnum.Operation))
+        {<div class="row" id="edit">
+                <div class="col-md-4 RequestUnitCard pr-0">
+                    <div class="border pt-4" @*style="padding-right: 2rem; padding-left: 2rem;"*@>
+                        <div class="mx-2rem">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <span class="input-group-text border-bottom request-cost-dollar-icon">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom @markReadOnlyClass" name="unit-price-dollars" id="unit-price-dollars" />
-                                    </div>
+                                <div class="col-md-4 form-group">
+                                    <label asp-for="Request.Unit" class="control-label"></label>
+                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom @markReadOnlyClass" min="1" />
+                                    <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
-                                        <input class="form-control-plaintext border-bottom disabled-text" name="unit-price-shekel" id="unit-price-shekel" disabled />
+                                <div class="col-md-8 form-group dropdown-select-div">
+                                    <label asp-for="Request.UnitType" class="control-label"></label>
+                                    <select asp-for="Request.UnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
+                                        <option value=""></option>
+                                        @foreach (var unitparenttype in Model.UnitTypes)
+                                        {
+                                            <optgroup label="@unitparenttype.Key.UnitParentTypeDescription">
+                                                @foreach (var unittype in unitparenttype)
+                                                {
+                                                    <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
+                                                }
+                                            </optgroup>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Price Per Unit:</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text border-bottom request-cost-dollar-icon">&#36;</span>
+                                            <input class="form-control-plaintext border-bottom @markReadOnlyClass" name="unit-price-dollars" id="unit-price-dollars" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
+                                            <input class="form-control-plaintext border-bottom disabled-text" name="unit-price-shekel" id="unit-price-shekel" disabled />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 RequestSubunitCard pr-0">
-                <div class="border h-100  ">
-                    <button type="button" class="close sub-close d-none pr-2 pt-2" aria-label="Close" style="
+                <div class="col-md-4 RequestSubunitCard pr-0">
+                    <div class="border h-100  ">
+                        <button type="button" class="close sub-close d-none pr-2 pt-2" aria-label="Close" style="
     /* display: flex; */
     float: right;
 ">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <div class="mx-2rem addSubUnitCard mt-4">
-                        <div class="row " style="display:initial;">
-                            <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div>
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <div class="mx-2rem addSubUnitCard mt-4">
+                            <div class="row " style="display:initial;">
+                                <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mx-2rem  subUnitsCard d-none mt-4">
+                        <div class="mx-2rem  subUnitsCard d-none mt-4">
 
-                        <div class="row">
-                            <div class="col-md-4 pl-0 form-group">
-                                <label asp-for="Request.SubUnit" class="control-label"></label>
-                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @markReadOnlyClass" min="0" disabled />
-                                <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
-                            </div>
-                            <div class="col-md-8 form-group dropdown-select-div">
-                                <label asp-for="Request.SubUnitType" class="control-label"></label>
-                                <select asp-for="Request.SubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass" disabled>
-                                    <option value=""></option>
-                                    @foreach (var unitparenttype in Model.UnitTypes)
-                                    {
-                                        //var unitparenttypedesc = unitparenttype.Key.un
-                                        <optgroup label="@unitparenttype.Key.UnitParentTypeDescription" style="display:none;">
-                                            @foreach (var unittype in unitparenttype)
-                                            {
-                                                <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
-                                            }
-                                        </optgroup>
-                                    }
-                                </select>
-                            </div>
-                            @*<div class="col-md-6 form-group">
-                                    <label asp-for="Request.SubUnitType" class="control-label"></label>
-                                    @Html.DropDownListFor(
-                                        vm => vm.Request.SubUnitTypeID,
-                                        Model.UnitTypeList,
-                                        "",
-                                        htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
-                                    )
-                                    <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
-                                </div>*@
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Price:</label>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom @markReadOnlyClass" type="number" min="0" name="subunit-price-dollars" id="subunit-price-dollars" />
-                                    </div>
+                                <div class="col-md-4 pl-0 form-group">
+                                    <label asp-for="Request.SubUnit" class="control-label"></label>
+                                    <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @markReadOnlyClass" min="0" disabled />
+                                    <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
-                                        <input class="form-control-plaintext border-bottom disabled-text" type="number" min="0" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
+                                <div class="col-md-8 form-group dropdown-select-div">
+                                    <label asp-for="Request.SubUnitType" class="control-label"></label>
+                                    <select asp-for="Request.SubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass" disabled>
+                                        <option value=""></option>
+                                        @foreach (var unitparenttype in Model.UnitTypes)
+                                        {
+                                            //var unitparenttypedesc = unitparenttype.Key.un
+                                            <optgroup label="@unitparenttype.Key.UnitParentTypeDescription" style="display:none;">
+                                                @foreach (var unittype in unitparenttype)
+                                                {
+                                                    <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
+                                                }
+                                            </optgroup>
+                                        }
+                                    </select>
+                                </div>
+                                @*<div class="col-md-6 form-group">
+                                        <label asp-for="Request.SubUnitType" class="control-label"></label>
+                                        @Html.DropDownListFor(
+                                            vm => vm.Request.SubUnitTypeID,
+                                            Model.UnitTypeList,
+                                            "",
+                                            htmlAttributes: new { @class = "mdb-select md-form  colorful-select dropdown-primary", @disabled = "disabled" }
+                                        )
+                                        <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
+                                    </div>*@
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Price:</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text request-cost-dollar-icon">&#36;</span>
+                                            <input class="form-control-plaintext border-bottom @markReadOnlyClass" type="number" min="0" name="subunit-price-dollars" id="subunit-price-dollars" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
+                                            <input class="form-control-plaintext border-bottom disabled-text" type="number" min="0" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 RequestSubsubunitCard pr-0 d-none">
-                <div class="border h-100  ">
-                    <button type="button" class="close subsub-close d-none pr-2 pt-2" aria-label="Close" style="
+                <div class="col-md-4 RequestSubsubunitCard pr-0 d-none">
+                    <div class="border h-100  ">
+                        <button type="button" class="close subsub-close d-none pr-2 pt-2" aria-label="Close" style="
     /* display: flex; */
     float: right;
 ">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <div class="mx-2rem addSubSubUnitCard mt-4"><div class="row " style="display:initial;"><div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div> </div></div>
-                    <div class="mx-2rem  subSubUnitsCard mt-4 d-none">
-                        <div class="row">
-                            <div class="col-md-4 pl-0 form-group">
-                                <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @markReadOnlyClass" min="0" disabled />
-                                <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
-                            </div>
-                            <div class="col-md-8 form-group dropdown-select-div">
-                                <label asp-for="Request.SubSubUnitType" class="control-label"></label>
-                                <select asp-for="Request.SubSubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass" disabled>
-                                    <option value=""></option>
-                                    @foreach (var unitparenttype in Model.UnitTypes)
-                                    {
-                                        //var unitparenttypedesc = unitparenttype.Key.un
-                                        <optgroup label="@unitparenttype.Key.UnitParentTypeDescription">
-                                            @foreach (var unittype in unitparenttype)
-                                            {
-                                                <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
-                                            }
-                                        </optgroup>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Price:</label>
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <div class="mx-2rem addSubSubUnitCard mt-4"><div class="row " style="display:initial;"><div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow" style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div> </div></div>
+                        <div class="mx-2rem  subSubUnitsCard mt-4 d-none">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                        <input class="form-control-plaintext border-bottom @markReadOnlyClass" name="subsubunit-price-dollars" id="subsubunit-price-dollars" />
-                                    </div>
+                                <div class="col-md-4 pl-0 form-group">
+                                    <label asp-for="Request.SubSubUnit" class="control-label"></label>
+                                    <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @markReadOnlyClass" min="0" disabled />
+                                    <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
-                                        <input class="form-control-plaintext border-bottom disabled-text" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled />
+                                <div class="col-md-8 form-group dropdown-select-div">
+                                    <label asp-for="Request.SubSubUnitType" class="control-label"></label>
+                                    <select asp-for="Request.SubSubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass" disabled>
+                                        <option value=""></option>
+                                        @foreach (var unitparenttype in Model.UnitTypes)
+                                        {
+                                            //var unitparenttypedesc = unitparenttype.Key.un
+                                            <optgroup label="@unitparenttype.Key.UnitParentTypeDescription">
+                                                @foreach (var unittype in unitparenttype)
+                                                {
+                                                    <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
+                                                }
+                                            </optgroup>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Price:</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text request-cost-dollar-icon">&#36;</span>
+                                            <input class="form-control-plaintext border-bottom @markReadOnlyClass" name="subsubunit-price-dollars" id="subsubunit-price-dollars" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
+                                            <input class="form-control-plaintext border-bottom disabled-text" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -208,8 +209,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-       }
+        }
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
@@ -269,4 +269,6 @@
             </div>
         </div>
     </div>
-</div>
+<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/SubUnit.js"></script>

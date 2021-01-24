@@ -10,5 +10,6 @@ namespace PrototypeWithAuth.ViewModels
     public class ChooseCategoryViewModel
     {
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
+        public int SelectedCategory { get; set; }
     }
 }

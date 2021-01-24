@@ -5,7 +5,7 @@
 @using PrototypeWithAuth.AppData
 
 @{
-    var category = Enum.Parse(typeof(AppUtility.ParentCategoryEnum), Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription);
+    var category = Model.ParentCategory.ParentCategoryDescription;
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
     var hiddenSummaryClass = "";
@@ -17,60 +17,68 @@
     {
         hiddenSummaryClass = "hidden";
     }
-    var projectCategories =AppUtility.ParentCategoryEnum.Plastics
+    var projectCategories = AppUtility.ParentCategoryEnum.Plastics
         + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
         + " " + AppUtility.ParentCategoryEnum.Cells
         + " " + AppUtility.ParentCategoryEnum.Reusables
-        + " " + AppUtility.ParentCategoryEnum.Equipment;
+        + " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
     var subProjectCategories = AppUtility.ParentCategoryEnum.Plastics
         + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
         + " " + AppUtility.ParentCategoryEnum.Cells
         + " " + AppUtility.ParentCategoryEnum.Reusables
-        + " " + AppUtility.ParentCategoryEnum.Equipment;
+        + " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
     var vendorCategories = AppUtility.ParentCategoryEnum.Plastics
-        + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-        + " " + AppUtility.ParentCategoryEnum.Cells
-        + " " + AppUtility.ParentCategoryEnum.Reusables
-        + " " + AppUtility.ParentCategoryEnum.Equipment;
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
     var companyIDCategories = AppUtility.ParentCategoryEnum.Plastics
-        + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-        + " " + AppUtility.ParentCategoryEnum.Cells
-        + " " + AppUtility.ParentCategoryEnum.Reusables
-        + " " + AppUtility.ParentCategoryEnum.Equipment;
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
     var quoteCategories = AppUtility.ParentCategoryEnum.Plastics
-        + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-        + " " + AppUtility.ParentCategoryEnum.Cells
-        + " " + AppUtility.ParentCategoryEnum.Reusables
-        + " " + AppUtility.ParentCategoryEnum.Equipment;
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
     var catalogCategories = AppUtility.ParentCategoryEnum.Plastics
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
 + " " + AppUtility.ParentCategoryEnum.Cells
 + " " + AppUtility.ParentCategoryEnum.Reusables
-+ " " + AppUtility.ParentCategoryEnum.Equipment;
-    var batchCategories = AppUtility.ParentCategoryEnum.ReagentsAndChemicals;
-    var expireCategories = AppUtility.ParentCategoryEnum.ReagentsAndChemicals;
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+    var batchCategories = AppUtility.ParentCategoryEnum.ReagentsAndChemicals
+        + " d-none";
     var warrantyCategories = AppUtility.ParentCategoryEnum.Reusables
-        + " " + AppUtility.ParentCategoryEnum.Equipment;
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
     var supplyDaysCategories = AppUtility.ParentCategoryEnum.Plastics
-        + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-        + " " + AppUtility.ParentCategoryEnum.Cells
-        + " " + AppUtility.ParentCategoryEnum.Reusables
-        + " " + AppUtility.ParentCategoryEnum.Equipment;
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
     var websiteCategories = AppUtility.ParentCategoryEnum.Plastics
-        + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-        + " " + AppUtility.ParentCategoryEnum.Cells
-        + " " + AppUtility.ParentCategoryEnum.Reusables
-        + " " + AppUtility.ParentCategoryEnum.Equipment;
-        }
-<div class="tab-content">
-    <div id="item" class="tab-pane fade in active show">
-        <div class="modal-sides modal-body-top-p">
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+}
+    
+<div class="modal-sides modal-body-top-p">
             <span class="heading-1 modal-tab-name">Item</span>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-                        <input class="item-category form-control-plaintext border-bottom " readonly value=@category/> 
+                        <input class="item-category form-control-plaintext border-bottom " readonly disabled value=@category />
                         <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -78,23 +86,25 @@
                     <div class="form-group sublist">
                         <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
                         @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
-Enumerable.Empty<SelectListItem>(), "Select Sub Category",
-new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext "+markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
+new SelectList(
+Model.ProductSubcategories,
+"ProductSubcategoryID",
+"ProductSubcategoryDescription"
+), "Select Sub Category",
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
                         <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
                     </div>
                 </div>
                 <div class="col-md-4 @projectCategories">
                     <div class="form-group">
                         <label class="control-label">Project:</label>
-                        @Html.DropDownListFor(
-m => m.Request.SubProject.ProjectID,
+                        @Html.DropDownListFor(m => m.Request.SubProject.ProjectID,
 new SelectList(
 Model.Projects,
 "ProjectID",
 "ProjectDescription"
 ), "Select a Project",
-new { @class = "mdb-select custom select-dropdown form-control-plaintext Project " + projectCategories + markReadOnlyClass, @id = "subProject", @searchable = "Select Project" }
-)
+new { @class = "mdb-select custom select-dropdown form-control-plaintext Project " + projectCategories + " " + markReadOnlyClass, @id = "subProject", @searchable = "Select a Project" })
                         <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -105,7 +115,7 @@ new { @class = "mdb-select custom select-dropdown form-control-plaintext Project
                         <label class="control-label">Sub Project:</label>
                         @Html.DropDownListFor(vm => vm.Request.SubProjectID,
 Enumerable.Empty<SelectListItem>(), "Select Sub Project",
-new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext "+ subProjectCategories + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project" })
+new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project" })
                         @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
                             </select>*@
                         <span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
@@ -122,7 +132,7 @@ dataValueField: "VendorID",
 dataTextField: "VendorEnName"),
 //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
 "Select a Vendor",
-htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
+htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
 )
                         <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
                     </div>
@@ -169,6 +179,16 @@ htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown fo
                     @*no date in backend so set to zero*@
                     <input type="text" name="WarrantyDate" class="form-control-plaintext border-bottom datepicker @warrantyCategories " disabled="disabled" />
                 </div>
+                <div class="col-md-3 @batchCategories @hiddenSummaryClass">
+                    <label asp-for="Request.Batch" class="control-label"></label>
+                    <input asp-for="Request.Batch" class="form-control-plaintext border-bottom @batchCategories @markReadOnlyClass" type="text" />
+                    <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-md-3 reusables equipment @batchCategories @hiddenSummaryClass">
+                    <label asp-for="Request.BatchExpiration" class="control-label"></label>
+                    @*no date in backend so set to zero*@
+                    <input type="text" asp-for="Request.BatchExpiration" class="form-control-plaintext border-bottom datepicker @batchCategories " />
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass">
@@ -189,5 +209,9 @@ htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown fo
                 </div>
             </div>
         </div>
-    </div>
-</div>
+<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/site.js"></script>
+<script src="~/js/SubUnit.js"></script>
+<script src="~/js/WarantySupplyDateCalc.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>

@@ -78,7 +78,7 @@ namespace PrototypeWithAuth.Controllers
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ParentCategories = parentcategories,
+                //ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 PaymentTypes = paymenttypes,
@@ -135,7 +135,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.Include(ps => ps.ParentCategory).FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
 
             //in case we need to return to the modal view
-            requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
+            //requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 2).Count() > 0).ToListAsync();
             requestItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
@@ -334,7 +334,7 @@ namespace PrototypeWithAuth.Controllers
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ParentCategories = parentcategories,
+                //ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 PaymentTypes = paymenttypes,
@@ -555,7 +555,7 @@ namespace PrototypeWithAuth.Controllers
             List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ParentCategories = parentcategories,
+                //ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 PaymentTypes = paymenttypes,
@@ -768,7 +768,7 @@ namespace PrototypeWithAuth.Controllers
             product.VendorID = requestItemViewModel.Request.Product.VendorID;
             product.ProductName = requestItemViewModel.Request.Product.ProductName;
             //in case we need to return to the modal view
-            requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
+            //requestItemViewModel.ParentCategories = await _context.ParentCategories.ToListAsync();
             requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.ToListAsync();
             requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
 
