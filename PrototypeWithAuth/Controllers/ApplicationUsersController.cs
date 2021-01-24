@@ -277,7 +277,37 @@ namespace PrototypeWithAuth.Controllers
         {
             EmployeeHours employeeHours = new EmployeeHours();
             EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).FirstOrDefaultAsync();
-
+            var oldEmployeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
+            var user = await _context.Employees.Include(e=>e.SalariedEmployee).Where(e => e.Id == employeeHoursBeingApproved.EmployeeID).FirstOrDefaultAsync();
+            if(employeeHoursBeingApproved.OffDayTypeID!=null)
+            {
+                //add back to the bonus days
+                if(employeeHoursBeingApproved.IsBonus)
+                {
+                    if (employeeHoursBeingApproved.OffDayTypeID == 2)
+                    {
+                        user.BonusVacationDays += 1;
+                    }
+                    else
+                    {
+                        user.BonusSickDays += 1;
+                    }
+                    _context.Update(user);
+                }              
+                employeeHoursBeingApproved.OffDayTypeID = null;               
+            }
+            if(oldEmployeeHours.PartialOffDayTypeID !=null)
+            {
+                ReturnPartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHoursBeingApproved);
+            }
+            if(employeeHoursBeingApproved.PartialOffDayTypeID != null)
+            {
+                var vacationLeftCount = base.GetUsersOffDaysLeft(user, employeeHoursBeingApproved.PartialOffDayTypeID??2, employeeHoursBeingApproved.Date.Year);
+                if (vacationLeftCount < 1)
+                {
+                    TakePartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID??2, employeeHoursBeingApproved);
+                }
+            }
             employeeHours = new EmployeeHours
             {
                 Entry1 = employeeHoursBeingApproved.Entry1,
@@ -291,7 +321,9 @@ namespace PrototypeWithAuth.Controllers
                 Date = employeeHoursBeingApproved.Date,
                 EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID ?? 0,
                 PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID,
-                PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours
+                PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours,
+                OffDayTypeID = employeeHoursBeingApproved.OffDayTypeID,
+                IsBonus = employeeHoursBeingApproved.IsBonus
             };
 
             try
@@ -309,6 +341,54 @@ namespace PrototypeWithAuth.Controllers
             }
 
             return RedirectToAction("_AwaitingApproval");
+        }
+
+
+        private void TakePartialBonusDay(Employee user, int offDayTypeID, EmployeeHoursAwaitingApproval employeeHour)
+        {
+            var partialHours = employeeHour.PartialOffDayHours?.TotalHours??0;
+            var days = Math.Round(partialHours / user.SalariedEmployee.HoursPerDay, 2);
+            if (offDayTypeID == 2)
+            {
+                if (user.BonusVacationDays >=days)
+                {
+                    employeeHour.IsBonus = true;
+                    user.BonusVacationDays -= days;
+                    _context.Update(user);
+                }
+            }
+            else
+            {
+                if (user.BonusSickDays >= days)
+                {
+                    employeeHour.IsBonus = true;
+                    user.BonusSickDays -= days;
+                    _context.Update(user);
+                }
+            }
+        }
+        private void ReturnPartialBonusDay(Employee user, int offDayTypeID, EmployeeHoursAwaitingApproval employeeHour)
+        {
+            var partialHours = employeeHour.PartialOffDayHours?.TotalHours ?? 0;
+            var days = Math.Round(partialHours / user.SalariedEmployee.HoursPerDay, 2);
+            if (offDayTypeID == 2)
+            {
+                if (user.BonusVacationDays >= days)
+                {
+                    employeeHour.IsBonus = true;
+                    user.BonusVacationDays += days;
+                    _context.Update(user);
+                }
+            }
+            else
+            {
+                if (user.BonusSickDays >= days)
+                {
+                    employeeHour.IsBonus = true;
+                    user.BonusSickDays += days;
+                    _context.Update(user);
+                }
+            }
         }
 
         [HttpGet]

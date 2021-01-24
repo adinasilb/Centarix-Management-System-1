@@ -77,10 +77,14 @@ namespace PrototypeWithAuth.Models
         public bool IsUser { get; set; }
 
         public IEnumerable<CentarixID> CentarixIDs { get; set; }
-        [Display(Name = "Bonus Sick Days")]
+        [Display(Name = "Roll Over Sick Days")]
         public double RollOverSickDays { get; set; }
-        [Display(Name = "Bonus Vacation Days")]
+        [Display(Name = "Roll Over Vacation Days")]
         public double RollOverVacationDays { get; set; }
+        [Display(Name = "Bonus Sick Days")]
+        public double BonusSickDays { get; set; }
+        [Display(Name = "Bonus Vacation Days")]
+        public double BonusVacationDays { get; set; }
         private double _VacationDaysPerMonth;
         public double VacationDaysPerMonth
         {

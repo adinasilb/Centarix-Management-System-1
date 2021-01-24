@@ -19,7 +19,6 @@ namespace PrototypeWithAuth.Data
 
         }
         //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
-        public DbSet<PartialOffDayType> PartialOffDayTypes { get; set; }
         public DbSet<CentarixID> CentarixIDs { get; set; }
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
         public DbSet<CompanyDayOff> CompanyDayOffs { get; set; }
@@ -127,6 +126,7 @@ namespace PrototypeWithAuth.Data
                 .HasOne(r => r.ApplicationUserCreator)
                 .WithMany(au => au.RequestsCreated)
                 .HasForeignKey(r => r.ApplicationUserCreatorID);
+
             modelBuilder.Entity<Request>()
                 .HasOne(r => r.ApplicationUserReceiver)
                 .WithMany(au => au.RequestsReceived)
@@ -179,7 +179,25 @@ namespace PrototypeWithAuth.Data
               .WithMany(ehs => ehs.EmployeeHoursAwaitingApprovals)
               .HasForeignKey(eh => eh.EmployeeHoursStatusEntry2ID);
 
+            modelBuilder.Entity<EmployeeHours>()
+             .HasOne<OffDayType>(eh => eh.PartialOffDayType)
+             .WithMany(odt => odt.EmployeeHoursPartial)
+             .HasForeignKey(eh => eh.PartialOffDayTypeID);
 
+            modelBuilder.Entity<EmployeeHours>()
+              .HasOne<OffDayType>(eh => eh.OffDayType)
+              .WithMany(odt => odt.EmployeeHours)
+              .HasForeignKey(eh => eh.OffDayTypeID);
+
+            modelBuilder.Entity<EmployeeHoursAwaitingApproval>()
+              .HasOne<OffDayType>(eh => eh.PartialOffDayType)
+              .WithMany(odt => odt.EmployeeHoursAwaitingApprovalsPartial)
+              .HasForeignKey(eh => eh.PartialOffDayTypeID);
+
+            modelBuilder.Entity<EmployeeHoursAwaitingApproval>()
+              .HasOne<OffDayType>(eh => eh.OffDayType)
+              .WithMany(odt => odt.EmployeeHoursAwaitingApprovals)
+              .HasForeignKey(eh => eh.OffDayTypeID);
 
             //modelBuilder.Entity<Vendor>()
             //.HasOne<ParentCategory>(v => v.ParentCategory)
@@ -206,6 +224,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.OrderDate_submit);
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.InvoiceDate_submit);
             modelBuilder.Entity<Request>().Ignore(e => e.ArrivalDate_submit);
+            modelBuilder.Entity<EmployeeHours>().Ignore(e => e.Date_submit);
             modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
 

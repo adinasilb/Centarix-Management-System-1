@@ -17,5 +17,7 @@ namespace PrototypeWithAuth.ViewModels
         }
         public double TotalVacationDaysPerYear { get; set; }
         public double TotalSickDaysPerYear { get; set; }
+        public double BonusSickDays { get; set; }
+        public double BonusVacationDays { get; set; }
     }
 }

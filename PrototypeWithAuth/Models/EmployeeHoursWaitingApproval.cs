@@ -57,8 +57,9 @@ namespace PrototypeWithAuth.Models
         [DefaultValue (false)]
         public bool IsDenied { get; set; }
         public int? PartialOffDayTypeID { get; set; }
-        public PartialOffDayType PartialOffDayType { get; set; }
+        public OffDayType PartialOffDayType { get; set; }
         [DataType(DataType.Time)]
         public TimeSpan? PartialOffDayHours { get; set; }
+        public bool IsBonus { get; set; }
     }
 }

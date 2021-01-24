@@ -52,8 +52,7 @@ $('.ordersItemForm').validate({
 		"Request.SubProject.ProjectID": "selectRequired",
 		"Request.SubProjectID": "selectRequired",
 		"Request.Product.VendorID": {
-			"selectRequired" : true,	
-			
+			"selectRequired" : true,				
 		},
 		"Request.ParentQuote.QuoteNumber": {
 			required: true

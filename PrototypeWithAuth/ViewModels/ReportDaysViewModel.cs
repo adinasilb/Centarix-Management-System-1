@@ -47,5 +47,6 @@ namespace PrototypeWithAuth.ViewModels
             get { return SickDays- SickDaysTaken.Count(); }  private set {; } 
         }
         public int SelectedYear { get; set; }
+
     }
 }

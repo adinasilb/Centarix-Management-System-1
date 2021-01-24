@@ -265,6 +265,18 @@
                     <span class="text-danger-centarix" asp-validation-for="NewEmployee.RollOverSickDays"></span>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-4 pl-0">
+                    <label class="control-label" asp-for="NewEmployee.BonusVacationDays"></label>
+                    <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployee.BonusVacationDays" disabled />
+                    <span class="text-danger-centarix" asp-validation-for="NewEmployee.BonusVacationDays"></span>
+                </div>
+                <div class="col-4">
+                    <label class="control-label" asp-for="NewEmployee.BonusSickDays"></label>
+                    <input class="form-control-plaintext border-bottom mark-readonly" asp-for="NewEmployee.BonusSickDays" disabled />
+                    <span class="text-danger-centarix" asp-validation-for="NewEmployee.BonusSickDays"></span>
+                </div>
+            </div>
         </div>
 
             <div id="security" class="tab-pane fade @showSecurity">

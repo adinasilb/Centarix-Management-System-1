@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210121100839_AddedIsBonusDay")]
+    partial class AddedIsBonusDay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -746,9 +748,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime?>("Exit2")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsBonus")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("OffDayTypeID")
                         .HasColumnType("int");
 
@@ -760,6 +759,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<TimeSpan?>("TotalHours")
                         .HasColumnType("time");
+
+                    b.Property<bool>("isBonus")
+                        .HasColumnType("bit");
 
                     b.HasKey("EmployeeHoursID");
 
@@ -811,9 +813,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<DateTime?>("Exit2")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsBonus")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDenied")
                         .ValueGeneratedOnAdd()
@@ -1753,9 +1752,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isProprietary")
-                        .HasColumnType("bit");
-
                     b.HasKey("ParentCategoryID");
 
                     b.HasIndex("CategoryTypeID");
@@ -1767,50 +1763,37 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ParentCategoryID = 1,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Plastics",
-                            isProprietary = false
+                            ParentCategoryDescription = "Plastics"
                         },
                         new
                         {
                             ParentCategoryID = 2,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Reagents And Chemicals",
-                            isProprietary = false
+                            ParentCategoryDescription = "Reagents"
                         },
                         new
                         {
                             ParentCategoryID = 3,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Cells",
-                            isProprietary = false
+                            ParentCategoryDescription = "Proprietry"
                         },
                         new
                         {
                             ParentCategoryID = 4,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Reusable",
-                            isProprietary = false
+                            ParentCategoryDescription = "Reusable"
                         },
                         new
                         {
                             ParentCategoryID = 5,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Equipment",
-                            isProprietary = false
+                            ParentCategoryDescription = "Equipment"
                         },
                         new
                         {
                             ParentCategoryID = 6,
                             CategoryTypeID = 2,
-                            ParentCategoryDescription = "Operation",
-                            isProprietary = false
-                        },
-                        new
-                        {
-                            ParentCategoryID = 7,
-                            CategoryTypeID = 1,
-                            ParentCategoryDescription = "Proprietry",
-                            isProprietary = true
+                            ParentCategoryDescription = "Operation"
                         });
                 });
 
@@ -1890,6 +1873,33 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ApplicationUserID");
 
                     b.ToTable("ParentRequests");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.PartialOffDayType", b =>
+                {
+                    b.Property<int>("PartialOffDayTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PartialOffDayTypeID");
+
+                    b.ToTable("PartialOffDayTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            PartialOffDayTypeID = 1,
+                            Description = "Partial Sick Day"
+                        },
+                        new
+                        {
+                            PartialOffDayTypeID = 2,
+                            Description = "Partial Vacation Day"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Payment", b =>
@@ -2058,6 +2068,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasData(
                         new
                         {
+                            ProductSubcategoryID = 101,
+                            ParentCategoryID = 1,
+                            ProductSubcategoryDescription = "3D Cells Grow"
+                        },
+                        new
+                        {
                             ProductSubcategoryID = 102,
                             ImageURL = "/images/css/CategoryImages/PCR.png",
                             ParentCategoryID = 1,
@@ -2081,7 +2097,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 105,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Petri Dishes"
+                            ProductSubcategoryDescription = "Dishes"
                         },
                         new
                         {
@@ -2188,15 +2204,84 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            ProductSubcategoryID = 213,
+                            ParentCategoryID = 2,
+                            ProductSubcategoryDescription = "Plasmid Purification"
+                        },
+                        new
+                        {
                             ProductSubcategoryID = 301,
+                            ImageURL = "/images/css/CategoryImages/virus.png",
                             ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Cells"
+                            ProductSubcategoryDescription = "Virus"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 302,
+                            ImageURL = "/images/css/CategoryImages/plasmid.png",
+                            ParentCategoryID = 3,
+                            ProductSubcategoryDescription = "Plasmid"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 303,
+                            ImageURL = "/images/css/CategoryImages/primer.png",
+                            ParentCategoryID = 3,
+                            ProductSubcategoryDescription = "Primers"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 304,
+                            ParentCategoryID = 3,
+                            ProductSubcategoryDescription = "Probes"
                         },
                         new
                         {
                             ProductSubcategoryID = 401,
+                            ImageURL = "/images/css/CategoryImages/beaker.png",
                             ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Reusables"
+                            ProductSubcategoryDescription = "Beaker"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 402,
+                            ImageURL = "/images/css/CategoryImages/measuring.png",
+                            ParentCategoryID = 4,
+                            ProductSubcategoryDescription = "Measuring"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 403,
+                            ImageURL = "/images/css/CategoryImages/tube_holder.png",
+                            ParentCategoryID = 4,
+                            ProductSubcategoryDescription = "Tube Holders"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 404,
+                            ImageURL = "/images/css/CategoryImages/bucket.png",
+                            ParentCategoryID = 4,
+                            ProductSubcategoryDescription = "Buckets"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 405,
+                            ParentCategoryID = 4,
+                            ProductSubcategoryDescription = "Cooling Racks"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 406,
+                            ImageURL = "/images/css/CategoryImages/196box.png",
+                            ParentCategoryID = 4,
+                            ProductSubcategoryDescription = "-196 Box"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 407,
+                            ImageURL = "/images/css/CategoryImages/80box.png",
+                            ParentCategoryID = 4,
+                            ProductSubcategoryDescription = "-80 Box"
                         },
                         new
                         {
@@ -2447,50 +2532,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/furniture.png",
                             ParentCategoryID = 6,
                             ProductSubcategoryDescription = "Furniture"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 701,
-                            ImageURL = "/images/css/CategoryImages/virus.png",
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Virus"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 702,
-                            ImageURL = "/images/css/CategoryImages/plasmid.png",
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Plasmid"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 703,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Probes"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 704,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Cells"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 705,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Bacteria with Plasmids"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 706,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Blood"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 707,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Serum"
                         });
                 });
 
@@ -2598,12 +2639,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("ArrivalDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("Batch")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("BatchExpiration")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CatalogNumber")
@@ -3339,12 +3374,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<double>("BonusSickDays")
-                        .HasColumnType("float");
-
-                    b.Property<double>("BonusVacationDays")
-                        .HasColumnType("float");
-
                     b.Property<int?>("CitizenshipID")
                         .HasColumnType("int");
 
@@ -3634,8 +3663,8 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("OffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.OffDayType", "PartialOffDayType")
-                        .WithMany("EmployeeHoursPartial")
+                    b.HasOne("PrototypeWithAuth.Models.PartialOffDayType", "PartialOffDayType")
+                        .WithMany("EmployeeHours")
                         .HasForeignKey("PartialOffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -3663,12 +3692,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.OffDayType", "OffDayType")
-                        .WithMany("EmployeeHoursAwaitingApprovals")
+                        .WithMany()
                         .HasForeignKey("OffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.OffDayType", "PartialOffDayType")
-                        .WithMany("EmployeeHoursAwaitingApprovalsPartial")
+                    b.HasOne("PrototypeWithAuth.Models.PartialOffDayType", "PartialOffDayType")
+                        .WithMany()
                         .HasForeignKey("PartialOffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
