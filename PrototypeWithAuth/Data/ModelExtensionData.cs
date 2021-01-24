@@ -77,9 +77,8 @@ namespace PrototypeWithAuth.Data
                new ParentCategory
                {
                    ParentCategoryID = 3,
-                   ParentCategoryDescription = "Proprietry",
-                   CategoryTypeID = 1,
-                   isProprietary = true
+                   ParentCategoryDescription = "Cells",
+                   CategoryTypeID = 1
                },
                 new ParentCategory
                 {
@@ -102,8 +101,9 @@ namespace PrototypeWithAuth.Data
                 new ParentCategory
                 {
                     ParentCategoryID = 7,
-                    ParentCategoryDescription = "Cells",
-                    CategoryTypeID = 1
+                    ParentCategoryDescription = "Proprietry",
+                    CategoryTypeID = 1,
+                    isProprietary = true
                 }
             );
 
@@ -256,28 +256,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 301,
                     ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Virus",
-                    ImageURL = "/images/css/CategoryImages/virus.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 302,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Plasmid",
-                    ImageURL = "/images/css/CategoryImages/plasmid.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 303,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Primers",
-                    ImageURL = "/images/css/CategoryImages/primer.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 304,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Probes"
+                    ProductSubcategoryDescription = "Cells"
                 },
                 new ProductSubcategory
                 {
@@ -583,12 +562,51 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryDescription = "Furniture",
                     ImageURL = "/images/css/CategoryImages/furniture.png"
                 },
+                 new ProductSubcategory
+                 {
+                     ProductSubcategoryID = 701,
+                     ParentCategoryID = 3,
+                     ProductSubcategoryDescription = "Virus",
+                     ImageURL = "/images/css/CategoryImages/virus.png"
+                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 701,
-                    ParentCategoryID = 7,
+                    ProductSubcategoryID = 702,
+                    ParentCategoryID = 3,
+                    ProductSubcategoryDescription = "Plasmid",
+                    ImageURL = "/images/css/CategoryImages/plasmid.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 703,
+                    ParentCategoryID = 3,
+                    ProductSubcategoryDescription = "Probes"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 704,
+                    ParentCategoryID = 3,
                     ProductSubcategoryDescription = "Cells"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 705,
+                    ParentCategoryID = 3,
+                    ProductSubcategoryDescription = "Bacteria with Plasmids"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 706,
+                    ParentCategoryID = 3,
+                    ProductSubcategoryDescription = "Blood"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 707,
+                    ParentCategoryID = 3,
+                    ProductSubcategoryDescription = "Serum"
                 }
+
               );
             modelBuilder.Entity<RequestStatus>().HasData
           (
