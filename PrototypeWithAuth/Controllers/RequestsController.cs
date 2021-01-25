@@ -860,7 +860,7 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var parentcategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == parentCategoryId).FirstOrDefaultAsync();
-            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.ParentCategoryID == parentCategoryId).ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == parentCategoryId).ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var subprojects = await _context.SubProjects.ToListAsync();

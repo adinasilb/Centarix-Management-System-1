@@ -565,45 +565,45 @@ namespace PrototypeWithAuth.Data
                  new ProductSubcategory
                  {
                      ProductSubcategoryID = 701,
-                     ParentCategoryID = 3,
+                     ParentCategoryID = 7,
                      ProductSubcategoryDescription = "Virus",
                      ImageURL = "/images/css/CategoryImages/virus.png"
                  },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 702,
-                    ParentCategoryID = 3,
+                    ParentCategoryID = 7,
                     ProductSubcategoryDescription = "Plasmid",
                     ImageURL = "/images/css/CategoryImages/plasmid.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 703,
-                    ParentCategoryID = 3,
+                    ParentCategoryID = 7,
                     ProductSubcategoryDescription = "Probes"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 704,
-                    ParentCategoryID = 3,
+                    ParentCategoryID = 7,
                     ProductSubcategoryDescription = "Cells"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 705,
-                    ParentCategoryID = 3,
+                    ParentCategoryID = 7,
                     ProductSubcategoryDescription = "Bacteria with Plasmids"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 706,
-                    ParentCategoryID = 3,
+                    ParentCategoryID = 7,
                     ProductSubcategoryDescription = "Blood"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 707,
-                    ParentCategoryID = 3,
+                    ParentCategoryID = 7,
                     ProductSubcategoryDescription = "Serum"
                 }
 
