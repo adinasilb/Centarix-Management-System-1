@@ -7,7 +7,7 @@
 }
 <div class="row pb-3">
     <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = Model.PageType, SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString()"
-       class="title-label">
+       class="title-label  btn-link heading-1 ">
         <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
         <label class="pl-2">@Model.SidebarFilterName</label>
     </a>
