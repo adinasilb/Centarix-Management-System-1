@@ -277,7 +277,7 @@ namespace PrototypeWithAuth.Controllers
         {
             EmployeeHours employeeHours = new EmployeeHours();
             EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == id).FirstOrDefaultAsync();
-            var oldEmployeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
+            employeeHours = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == employeeHoursBeingApproved.EmployeeHoursID).FirstOrDefaultAsync();
             var user = await _context.Employees.Include(e=>e.SalariedEmployee).Where(e => e.Id == employeeHoursBeingApproved.EmployeeID).FirstOrDefaultAsync();
             if(employeeHoursBeingApproved.OffDayTypeID!=null)
             {
@@ -296,7 +296,7 @@ namespace PrototypeWithAuth.Controllers
                 }              
                 employeeHoursBeingApproved.OffDayTypeID = null;               
             }
-            if(oldEmployeeHours.PartialOffDayTypeID !=null)
+            if(employeeHours?.PartialOffDayTypeID !=null)
             {
                 ReturnPartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHoursBeingApproved);
             }
@@ -308,23 +308,43 @@ namespace PrototypeWithAuth.Controllers
                     TakePartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID??2, employeeHoursBeingApproved);
                 }
             }
-            employeeHours = new EmployeeHours
+            if(employeeHours==null)
             {
-                Entry1 = employeeHoursBeingApproved.Entry1,
-                Entry2 = employeeHoursBeingApproved.Entry2,
-                Exit1 = employeeHoursBeingApproved.Exit1,
-                Exit2 = employeeHoursBeingApproved.Exit2,
-                TotalHours = employeeHoursBeingApproved.TotalHours,
-                EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry1ID,
-                EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID,
-                EmployeeID = employeeHoursBeingApproved.EmployeeID,
-                Date = employeeHoursBeingApproved.Date,
-                EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID ?? 0,
-                PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID,
-                PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours,
-                OffDayTypeID = employeeHoursBeingApproved.OffDayTypeID,
-                IsBonus = employeeHoursBeingApproved.IsBonus
-            };
+                employeeHours = new EmployeeHours
+                {
+                    Entry1 = employeeHoursBeingApproved.Entry1,
+                    Entry2 = employeeHoursBeingApproved.Entry2,
+                    Exit1 = employeeHoursBeingApproved.Exit1,
+                    Exit2 = employeeHoursBeingApproved.Exit2,
+                    TotalHours = employeeHoursBeingApproved.TotalHours,
+                    EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry1ID,
+                    EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID,
+                    EmployeeID = employeeHoursBeingApproved.EmployeeID,
+                    Date = employeeHoursBeingApproved.Date,
+                    EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID ?? 0,
+                    PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID,
+                    PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours,
+                    OffDayTypeID = employeeHoursBeingApproved.OffDayTypeID,
+                    IsBonus = employeeHoursBeingApproved.IsBonus
+                };
+            }
+            else
+            {
+                employeeHours.Entry1 = employeeHoursBeingApproved.Entry1;
+                employeeHours.Entry2 = employeeHoursBeingApproved.Entry2;
+                employeeHours.Exit1 = employeeHoursBeingApproved.Exit1;
+                employeeHours.Exit2 = employeeHoursBeingApproved.Exit2;
+                employeeHours.TotalHours = employeeHoursBeingApproved.TotalHours;
+                employeeHours.EmployeeHoursStatusEntry1ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry1ID;
+                employeeHours.EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID;
+                employeeHours.EmployeeID = employeeHoursBeingApproved.EmployeeID;
+                employeeHours.Date = employeeHoursBeingApproved.Date;
+                employeeHours.EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID ?? 0;
+                employeeHours.PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID;
+                employeeHours.PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours;
+                employeeHours.OffDayTypeID = employeeHoursBeingApproved.OffDayTypeID;
+                employeeHours.IsBonus = employeeHoursBeingApproved.IsBonus;
+            }
 
             try
             {
