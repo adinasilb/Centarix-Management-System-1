@@ -5,7 +5,7 @@
 @using PrototypeWithAuth.AppData
 
 @{
-    var Category = Model.ParentCategory.ParentCategoryDescription;
+    var Category = Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription; 
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
     var disabled = "";

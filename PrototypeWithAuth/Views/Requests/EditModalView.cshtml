@@ -22,7 +22,6 @@
         disabled = "disabled";
     }
 }
-   }
 <div class="modal modal-view right fader on-form-modal @form editModal" aria-labelledby="Request" id="myModal" data-backdrop="false">
 
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
@@ -48,7 +47,7 @@
                 @Html.HiddenFor(model => model.Request.CreationDate)
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
                 <input type="hidden" asp-for="@Model.Request.ProductID" />
-                <input type="hidden" asp-for="@Model.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
+                <input type="hidden" value="@Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" id="categoryDescription" />
 
                 <!-- Modal Header -->
                 <div class="new-modal-header modal-line-1-header-with-back modal-sides">
