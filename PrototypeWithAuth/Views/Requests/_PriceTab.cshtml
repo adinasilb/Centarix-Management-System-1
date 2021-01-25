@@ -106,18 +106,18 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 cardDisplayNoneSub = "";
                 plusDisplayNoneSub = "d-none";
                 disabled = "disabled";
-                subMarkReadOnly = "mark-readonly";
+                subMarkReadOnly = markReadOnlyClass;
             }
         }
         <div class="col-4 pl-0 RequestSubunitCard">
             <div class="border h-100 ">
-                <button type="button" class="close sub-close @cardDisplayNoneSub pr-2 pt-2  mark-readonly" disabled aria-label="Close" style="
+                <button type="button" class="close sub-close @cardDisplayNoneSub pr-2 pt-2  @markReadOnlyClass" disabled aria-label="Close" style="
     /* display: flex; */
     float: right;
 ">
                     <span aria-hidden="true">×</span>
                 </button>
-                <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub"><div class="row " style="display:initial;">          <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow mark-readonly" disabled style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div></div></div>
+                <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub"><div class="row " style="display:initial;">          <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass"  style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div></div></div>
                 <div class="mx-2rem  subUnitsCard @cardDisplayNoneSub mt-4">
 
 
@@ -185,13 +185,13 @@ Model.UnitTypeList,
                     plusDisplayNoneSubSub = "";
                     cardDisplayNoneSubSub = "d-none";
                     subsubdisabled = "disabled";
-                    subsubMarkReadOnly = "mark-readonly";
+                    subsubMarkReadOnly = markReadOnlyClass;
                 }
             }
         }
         <div class="col-4 pl-0 RequestSubsubunitCard @cardDivDisplayNone">
             <div class="border h-100">
-                <button type="button" class="close subsub-close @cardDisplayNoneSubSub pr-2 pt-2 mark-readonly" disabled aria-label="Close" style="
+                <button type="button" class="close subsub-close @cardDisplayNoneSubSub pr-2 pt-2 @markReadOnlyClass" disabled aria-label="Close" style="
     /* display: flex; */
     float: right;
 ">
@@ -201,7 +201,7 @@ Model.UnitTypeList,
                     <div class="row " style="display:initial;">
                         <div class="col-8 offset-2 text-center font-weight-light">
 
-                            <input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow mark-readonly" disabled style="font-size: 5rem; line-height:normal" />
+                            <input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass" disabled style="font-size: 5rem; line-height:normal" />
                             <br>
                             <span class="text-capitalize order-inv-color text">add sub unit</span>
                         </div>

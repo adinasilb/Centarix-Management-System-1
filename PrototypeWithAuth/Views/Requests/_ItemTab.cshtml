@@ -75,14 +75,14 @@
 
 <span class="heading-1 modal-tab-name">Item</span>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="form-group">
             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
             <input class="item-category form-control-plaintext border-bottom " readonly disabled asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" />
             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
         </div>
     </div>
-    <div class="col-md-4 px-4">
+    <div class="col-md-6 px-4">
         <div class="form-group sublist">
             <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
@@ -121,7 +121,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
     <!--<span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
         </div>
     </div>-->
-    <div class="col-md-4 @vendorCategories">
+    <div class="col-md-6 @vendorCategories">
         <div class="form-group">
             <label asp-for="Request.Product.Vendor" class="control-label"></label>
             @Html.DropDownListFor(
@@ -138,7 +138,7 @@ htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown fo
         </div>
     </div>
     <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
-    <div class="col-md-4 @companyIDCategories">
+    <div class="col-md-6 @companyIDCategories">
         <div class="form-group">
             @* IN MIDDLE *@
             <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
