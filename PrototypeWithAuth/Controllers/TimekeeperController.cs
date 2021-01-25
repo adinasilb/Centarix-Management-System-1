@@ -639,17 +639,10 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else if(employeeHour.OffDayTypeID !=null)
                         {
-                            if(employeeHour.OffDayTypeID == 2)
-                            {
-                                user.BonusVacationDays += 1;
-                            }
-                            else
-                            {
-                                user.BonusSickDays += 1;
-                            }
-                            _context.Update(user);
+                            RemoveEmployeeBonusDay(employeeHour, user);
                         }
                         employeeHour.OffDayTypeID = offDayTypeID;
+                        employeeHour.IsBonus = false;
                         employeeHour.OffDayType = _context.OffDayTypes.Where(odt => odt.OffDayTypeID == offDayTypeID).FirstOrDefault();
                     }
                     if (!alreadyOffDay)
@@ -703,17 +696,10 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 else if (employeeHour.OffDayTypeID != null)
                                 {
-                                    if (employeeHour.OffDayTypeID == 2)
-                                    {
-                                        user.BonusVacationDays += 1;
-                                    }
-                                    else
-                                    {
-                                        user.BonusSickDays += 1;
-                                    }
-                                    _context.Update(user);
+                                    RemoveEmployeeBonusDay(employeeHour, user);
                                 }
                                 employeeHour.OffDayTypeID = offDayTypeID;
+                                employeeHour.IsBonus = false;
                             }
                         }
                         else
@@ -752,6 +738,18 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        private void RemoveEmployeeBonusDay(EmployeeHours employeeHour, Employee user)
+        {
+            if (employeeHour.OffDayTypeID == 2 && employeeHour.IsBonus)
+            {
+                user.BonusVacationDays += 1;
+            }
+            else if(employeeHour.IsBonus)
+            {
+                user.BonusSickDays += 1;
+            }
+            _context.Update(user);
+        }
         private void TakeBonusDay(Employee user, int offDayTypeID, EmployeeHours employeeHour)
         {
             if (offDayTypeID == 2)

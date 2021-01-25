@@ -298,14 +298,16 @@ namespace PrototypeWithAuth.Controllers
             }
             if(employeeHours?.PartialOffDayTypeID !=null)
             {
-                ReturnPartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHoursBeingApproved);
+                ReturnPartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID ?? 2, employeeHours);
             }
             if(employeeHoursBeingApproved.PartialOffDayTypeID != null)
             {
+                var partialHours = employeeHours.PartialOffDayHours?.TotalHours ?? 0;
+                var days = Math.Round(partialHours / user.SalariedEmployee.HoursPerDay, 2);
                 var vacationLeftCount = base.GetUsersOffDaysLeft(user, employeeHoursBeingApproved.PartialOffDayTypeID??2, employeeHoursBeingApproved.Date.Year);
-                if (vacationLeftCount < 1)
+                if (vacationLeftCount < days)
                 {
-                    TakePartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID??2, employeeHoursBeingApproved);
+                    TakePartialBonusDay(user, employeeHoursBeingApproved.PartialOffDayTypeID??2, employeeHoursBeingApproved, days);
                 }
             }
             if(employeeHours==null)
@@ -364,10 +366,8 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        private void TakePartialBonusDay(Employee user, int offDayTypeID, EmployeeHoursAwaitingApproval employeeHour)
+        private void TakePartialBonusDay(Employee user, int offDayTypeID, EmployeeHoursAwaitingApproval employeeHour, double days)
         {
-            var partialHours = employeeHour.PartialOffDayHours?.TotalHours??0;
-            var days = Math.Round(partialHours / user.SalariedEmployee.HoursPerDay, 2);
             if (offDayTypeID == 2)
             {
                 if (user.BonusVacationDays >=days)
@@ -387,7 +387,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
-        private void ReturnPartialBonusDay(Employee user, int offDayTypeID, EmployeeHoursAwaitingApproval employeeHour)
+        private void ReturnPartialBonusDay(Employee user, int offDayTypeID, EmployeeHours employeeHour)
         {
             var partialHours = employeeHour.PartialOffDayHours?.TotalHours ?? 0;
             var days = Math.Round(partialHours / user.SalariedEmployee.HoursPerDay, 2);
