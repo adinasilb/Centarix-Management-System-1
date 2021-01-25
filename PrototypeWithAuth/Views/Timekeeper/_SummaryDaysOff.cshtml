@@ -52,13 +52,13 @@
                     @Model.SelectedYear
                 </div>
                 <div class="col">
-                    @Model.VacationDays
+                    @Math.Round(Model.VacationDays, 2)                    
                 </div>
                 <div class="col">
                     @Model.VacationDaysTakenCount
                 </div>
                 <div class="col">
-                    @Model.VacationDaysLeft
+                    @Math.Round(Model.VacationDaysLeft, 2)
                 </div>
                 <div class="col">
                     @Model.SickDays
