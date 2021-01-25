@@ -28,7 +28,7 @@
 				success: function (data) {
                     $(".outer-partial").html(data);
                     $("#loading").hide();
-                    var category = $("#ParentCategory_ParentCategoryDescriptionEnum").val();
+                    var category = $("#categoryDescription").val();
                     $("." + category).removeClass("d-none");
 				}
 			})

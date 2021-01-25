@@ -309,7 +309,7 @@
                     //reset so do not open the modal again
                     $('#tdconfirmemail').val('');
                     $('#tdprconfirmemail').val('');
-                    $.fn.OnOpenModalView();
+                    //$.fn.OnOpenModalView();
                     $(".termsModal").modal('show');
                     AddTempDataMemory();
 
@@ -451,13 +451,19 @@
                     //$(".modal-backdrop").remove();
                     //$('.modal').find('input').first().focus();
                     //$(".modal").popover('hide')
+                    $('.mdb-select').materialSelect();
+                    $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+                    $('.modal-content a:first').tab('show');
                     switch ($type) {
                         case "details":
-                            $.fn.OnOpenModalView();
+                            //$.fn.OnOpenModalView();
                             $("#Request_Cost").trigger('change');
+                            var category = $("#categoryDescription").val();
+                            console.log(category)
+                            $("." + category).removeClass("d-none");
                             break;
                         case "edit":
-                            $.fn.OnOpenModalView();
+                            //$.fn.OnOpenModalView();
                             break;
                         case "reorder":
                             $.fn.OnOpenModalView();
@@ -465,7 +471,7 @@
                             //$.fn.CheckCurrency();
                             break;
                         case "create":
-                            $.fn.OnOpenModalView();
+                            //$.fn.OnOpenModalView();
                             break;
                         case "received":
                             $('.mdb-select').materialSelect();

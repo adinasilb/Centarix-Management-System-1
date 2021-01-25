@@ -873,7 +873,6 @@ namespace PrototypeWithAuth.Controllers
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ParentCategory = parentcategory,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 Projects = projects,
@@ -894,7 +893,9 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.ParentQuote = new ParentQuote();
             requestItemViewModel.Request.SubProject = new SubProject();
-
+            requestItemViewModel.Request.Product.ProductSubcategory = new ProductSubcategory();
+            requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory = parentcategory;
+            requestItemViewModel.Request.Product.ProductSubcategory.ParentCategoryID = parentcategory.ParentCategoryID;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
 
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -1479,13 +1480,26 @@ namespace PrototypeWithAuth.Controllers
                 return NotFound();
             }
             var productId = _context.Requests.Where(r => r.RequestID == id).Select(r => r.ProductID).FirstOrDefault();
+
+            var request = _context.Requests.Include(r => r.Product)
+                .Include(r => r.ParentQuote)
+                .Include(r => r.ParentRequest)
+                .Include(r => r.Product.ProductSubcategory)
+                .Include(r => r.Product.ProductSubcategory.ParentCategory)
+                     .Include(r => r.Product.Vendor)
+                .Include(r => r.RequestStatus)
+                .Include(r => r.ApplicationUserCreator)
+                //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
+                .Include(r => r.SubProject)
+                .Include(r => r.SubProject.Project)
+                .SingleOrDefault(x => x.RequestID == id);
+
             var requestsByProduct = _context.Requests.Where(r => r.ProductID == productId && (r.RequestStatusID == 3))
-                 .Include(r => r.Product.ProductSubcategory)
+                 .Include(r => r.Product.ProductSubcategory).Include(r=>r.Product.ProductSubcategory.ParentCategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     .ToList();
-            var parentcategory =await _context.ParentCategories.Where(pc => pc.ParentCategoryID == _context.Requests.Where(r => r.RequestID == id).Select(r => r.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefault()).FirstOrDefaultAsync();
-            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
+            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
             //redo the unit types when seeded
@@ -1495,7 +1509,6 @@ namespace PrototypeWithAuth.Controllers
             List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                //ParentCategory = parentcategory,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 Projects = projects,
@@ -1521,18 +1534,7 @@ namespace PrototypeWithAuth.Controllers
 
             ModalViewType = "Edit";
 
-            requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
-                .Include(r => r.ParentQuote)
-                .Include(r => r.ParentRequest)
-                .Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.Product.ProductSubcategory.ParentCategory)
-                     .Include(r => r.Product.Vendor)
-                .Include(r => r.RequestStatus)
-                .Include(r => r.ApplicationUserCreator)
-                //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
-                .Include(r => r.SubProject)
-                .Include(r => r.SubProject.Project)
-                .SingleOrDefault(x => x.RequestID == id);
+            requestItemViewModel.Request = request;
 
             //load the correct list of subprojects
             var subprojects = await _context.SubProjects

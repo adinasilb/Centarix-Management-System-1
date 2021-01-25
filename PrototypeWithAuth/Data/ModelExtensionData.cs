@@ -83,7 +83,7 @@ namespace PrototypeWithAuth.Data
                 new ParentCategory
                 {
                     ParentCategoryID = 4,
-                    ParentCategoryDescription = "Reusable",
+                    ParentCategoryDescription = "Reusables",
                     CategoryTypeID = 1
                 },
                 new ParentCategory

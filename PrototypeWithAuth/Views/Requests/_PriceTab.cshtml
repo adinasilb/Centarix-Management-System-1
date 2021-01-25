@@ -8,13 +8,18 @@
     var Category = Model.ParentCategory.ParentCategoryDescription;
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
+    var disabled = "";
     if (modalType == AppUtility.RequestModalType.Edit)
     {
-        markReadOnlyClass = "markreadonly";
+        markReadOnlyClass = "mark-readonly";
+
+    }
+    if(modalType != AppUtility.RequestModalType.Create )
+    {
+        disabled = "disabled";
     }
 }
 
-    <div class="modal-sides modal-body-top-p">
         <div class="row no-mb">
             <div class="col-md-8">
                 <span class="heading-1 modal-tab-name">Price</span>
@@ -48,23 +53,30 @@
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label asp-for="Request.Unit" class="control-label"></label>
-                                    <input asp-for="Request.Unit" class="form-control-plaintext border-bottom @markReadOnlyClass" min="1" />
+                                    @Html.EditorFor(vm=>vm.Request.Unit , new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @disabled } })
                                     <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
                                 </div>
                                 <div class="col-md-8 form-group dropdown-select-div">
                                     <label asp-for="Request.UnitType" class="control-label"></label>
-                                    <select asp-for="Request.UnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
-                                        <option value=""></option>
-                                        @foreach (var unitparenttype in Model.UnitTypes)
-                                        {
-                                            <optgroup label="@unitparenttype.Key.UnitParentTypeDescription">
-                                                @foreach (var unittype in unitparenttype)
-                                                {
-                                                    <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
-                                                }
-                                            </optgroup>
-                                        }
-                                    </select>
+                                    @*<select asp-for="Request.UnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
+            <option value=""></option>
+            @foreach (var unitparenttype in Model.UnitTypes)
+            {
+                <optgroup label="@unitparenttype.Key.UnitParentTypeDescription">
+                    @foreach (var unittype in unitparenttype)
+                    {
+                        <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
+                    }
+                </optgroup>
+            }
+        </select>*@
+                                    @Html.DropDownListFor(
+vm => vm.Request.UnitTypeID,
+Model.UnitTypeList,
+"",
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select "+ markReadOnlyClass, @disabled }
+)
+                                    <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -73,7 +85,7 @@
                                     <div class="col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text border-bottom request-cost-dollar-icon">&#36;</span>
-                                            <input class="form-control-plaintext border-bottom @markReadOnlyClass" name="unit-price-dollars" id="unit-price-dollars" />
+                                            <input class="form-control-plaintext border-bottom @markReadOnlyClass" name="unit-price-dollars" id="unit-price-dollars" @disabled />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -110,19 +122,13 @@
                                 </div>
                                 <div class="col-md-8 form-group dropdown-select-div">
                                     <label asp-for="Request.SubUnitType" class="control-label"></label>
-                                    <select asp-for="Request.SubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass" disabled>
-                                        <option value=""></option>
-                                        @foreach (var unitparenttype in Model.UnitTypes)
-                                        {
-                                            //var unitparenttypedesc = unitparenttype.Key.un
-                                            <optgroup label="@unitparenttype.Key.UnitParentTypeDescription" style="display:none;">
-                                                @foreach (var unittype in unitparenttype)
-                                                {
-                                                    <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
-                                                }
-                                            </optgroup>
-                                        }
-                                    </select>
+                                    @Html.DropDownListFor(
+vm => vm.Request.SubUnitTypeID,
+Model.UnitTypeList,
+"",
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @disabled = "disabled" }
+)
+                                    <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                                 </div>
                                 @*<div class="col-md-6 form-group">
                                         <label asp-for="Request.SubUnitType" class="control-label"></label>
@@ -173,19 +179,13 @@
                                 </div>
                                 <div class="col-md-8 form-group dropdown-select-div">
                                     <label asp-for="Request.SubSubUnitType" class="control-label"></label>
-                                    <select asp-for="Request.SubSubUnitTypeID" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass" disabled>
-                                        <option value=""></option>
-                                        @foreach (var unitparenttype in Model.UnitTypes)
-                                        {
-                                            //var unitparenttypedesc = unitparenttype.Key.un
-                                            <optgroup label="@unitparenttype.Key.UnitParentTypeDescription">
-                                                @foreach (var unittype in unitparenttype)
-                                                {
-                                                    <option value="@unittype.UnitTypeID">@unittype.UnitTypeDescription</option>
-                                                }
-                                            </optgroup>
-                                        }
-                                    </select>
+                                    @Html.DropDownListFor(
+vm => vm.Request.SubSubUnitTypeID,
+Model.UnitTypeList,
+"",
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @disabled="disabled"}
+)
+                                    <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -268,7 +268,6 @@
                 </div>
             </div>
         </div>
-    </div>
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/SubUnit.js"></script>

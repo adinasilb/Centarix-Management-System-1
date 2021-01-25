@@ -1,5 +1,81 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+
+
+    <div class="row modal-tab-name">
+        <span class="heading-1 col-12 modal-tab-name">History</span>
+    </div>
+    <table class="table table-headerspaced table-noheaderlines table-hover text-center">
+        <thead>
+            <tr>
+                <th>
+                    Item Name
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Owner
+                </th>
+
+                <th>
+                    Amount
+                </th>
+                <th>
+                    Total
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.RequestsByProduct)
+            {
+                <tr class="inv-list-item">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName) &nbsp;
+                        @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName)
+                    </td>
+                    <td>
+                        <ul style="list-style: none;" class="mb-0 pl-0">
+
+                            @if (item.Unit != null)
+                            {
+                                <li>
+                                    @Html.DisplayFor(modelItem => item.Unit)
+                                    @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
+                                </li>
+                                @if (item.SubUnit != null)
+                                {
+                                    <li>
+                                        @Html.DisplayFor(modelItem => item.SubUnit)
+                                        @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
+                                    </li>
+                                    @if (item.SubSubUnit != null)
+                                    {
+                                        <li>
+                                            @Html.DisplayFor(modelItem => item.SubSubUnit)
+                                            @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
+                                        </li>
+                                    }
+                                }
+
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cost)
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
