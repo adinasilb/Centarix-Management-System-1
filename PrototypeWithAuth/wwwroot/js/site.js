@@ -1974,53 +1974,7 @@ $(function () {
 
 		}
 		else if (type == 'details') {
-			console.log("in if details");
-			$('.mark-readonly').attr("disabled", false);
-			//TODO: add in mark-readonly fields for subunits
-			//$.fn.CheckUnitsFilled();
-			//$.fn.CheckSubUnitsFilled();
-
-			$('.mark-edditable').data("val", true);
-			$('.edit-mode-switch-description').text("Edit Mode On");
-			$('.turn-edit-on-off').attr('name', 'edit')
-
-			//turn off document modals
-
-
-
-			if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
-				console.log("orders operations")
-				$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
-				$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
-				$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
-				$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
-			}
-			if ($(this).hasClass('orders')) {
-				console.log("orders")
-				$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
-				$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
-				$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
-				if (($("#Request_SubSubUnitTypeID").hasClass('.mark-readonly'))) {
-					$.fn.EnableSubSubUnits();
-					$.fn.ChangeSubSubUnitDropdown();
-				}
-				if (($("#Request_SubUnitTypeID").hasClass('.mark-readonly'))) {
-					console.log('enabling');
-					$.fn.EnableSubUnits();
-					$.fn.ChangeSubUnitDropdown();
-				}
-			}
-			if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
-				$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
-			}
-			if ($(this).hasClass('users')) {
-				$.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
-			    $.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
-				$.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
-				$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
-				$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
-			}
-
+			enableMarkReadonly();
 		}
 		//}
 	});
@@ -2212,5 +2166,6 @@ $(function () {
 
 
 });
+
 
 

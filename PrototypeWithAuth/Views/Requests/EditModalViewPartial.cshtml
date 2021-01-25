@@ -228,7 +228,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 {
                     <div class="col-md-4 @hiddenSummary">
                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days mark-readonly" disabled />
+                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days @mark-readonly" disabled />
                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
                     </div>
                     <div class="col-md-4 @hiddenSummary">

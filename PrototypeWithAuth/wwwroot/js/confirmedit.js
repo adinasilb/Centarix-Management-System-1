@@ -147,15 +147,7 @@
 		});
 	});
 
-	$.fn.TurnToDetails = function () {
-		$('.mark-readonly').prop("disabled", true);
-		$('.mark-readonly input').prop("disabled", true);
-		$('.mark-edditable').data("val", false)
-		$('.edit-mode-switch-description').text("Edit Mode Off");
-		$('.turn-edit-on-off').attr('name', 'details')
-		$('.open-document-modal').data("val", false);
-	};
-
+	
 	$(".cancel-request-edits").off("click").on("click", function (e) {
 		$(".confirm-edit-modal").remove();
 		console.log("cancel request edits");

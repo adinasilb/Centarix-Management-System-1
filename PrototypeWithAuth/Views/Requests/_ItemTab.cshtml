@@ -91,7 +91,7 @@ Model.ProductSubcategories,
 "ProductSubcategoryID",
 "ProductSubcategoryDescription"
 ), "Select Sub Category",
-new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, /*@id = "sublist",*/ @searchable = "Select Sub Category" })
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
             <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
         </div>
     </div>
@@ -198,7 +198,7 @@ htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown fo
     <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass">
         <div class="form-group">
             <label class="control-label">Expected supply date</label>
-            <input class="form-control-plaintext border-bottom datepicker @supplyDaysCategories" type="text" name="expected-supply-days" id="expected-supply-date" />
+            <input class="form-control-plaintext border-bottom datepicker @supplyDaysCategories  @markReadOnlyClass" type="text" name="expected-supply-days" id="expected-supply-date" />
         </div>
     </div>
     <div class="col-md-4 @websiteCategories">

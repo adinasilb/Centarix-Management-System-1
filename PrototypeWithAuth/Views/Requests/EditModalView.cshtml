@@ -47,7 +47,7 @@
                 @Html.HiddenFor(model => model.Request.CreationDate)
                 <input type="hidden" asp-for="@Model.Request.RequestID" />
                 <input type="hidden" asp-for="@Model.Request.ProductID" />
-                <input type="hidden" value="@Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" id="categoryDescription" />
+                <input type="hidden" value="@Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
 
                 <!-- Modal Header -->
                 <div class="new-modal-header modal-line-1-header-with-back modal-sides">
