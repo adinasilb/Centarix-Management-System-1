@@ -59,9 +59,8 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("SubSubUnitTypeID")]
         [Display(Name = "Unit")]
         public UnitType SubSubUnitType { get; set; }
-        public uint UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
-        public uint UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
-        public uint Quantity { get; set; }
+        //public uint UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
+        //public uint UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
 
         ///[DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
         [Range(1, Double.MaxValue, ErrorMessage = "Field must be more than 0")]
