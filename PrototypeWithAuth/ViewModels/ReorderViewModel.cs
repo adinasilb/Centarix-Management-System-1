@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public RequestItemViewModel RequestItemViewModel { get; set; }
         public RequestIndexObject RequestIndexObject { get; set; }
+        public string ErrorMessages { get; set; }
     }
 }
