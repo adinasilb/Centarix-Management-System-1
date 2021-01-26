@@ -427,7 +427,7 @@
             if ($("#tdprconfirmemail").val()) {
                 console.log("tdprconfirmemail");
                 $("#tdprconfirmemail").hide();
-                $itemurl = "/Requests/ConfirmEmailModal/?id=" + @TempData["ParentRequestID"] + "";
+                $itemurl = "/Requests/ConfirmEmailModal/?id=" + $("#orderStepID").val() + "";
                 $("#loading").show();
                 $.fn.CallPage($itemurl, "confirmemail");
             }
@@ -435,20 +435,18 @@
             if ($("#tdterms").val()) {
                 $("#tdterms").hide();
                 //alert("in tdterms.val()");
-                $itemurl = "/Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true";
+                $itemurl = "/Requests/TermsModal/?id=" + $("#orderStepID").val() + "&isSingleRequest=true";
                 console.log("url " + $itemurl)
                 //$("#loading").show();
                 $.fn.CallPage($itemurl, "terms");
-                }
+            }
 
-            if ($("#tdconfirmemail").val()) {
-                console.log("tdconfirmemail");
+            if ($("#tduploadquotes").val()) {
+                console.log("upload qoute modal");
                 $("#tdconfirmemail").hide();
-                $itemurl = "/Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
+                $itemurl = "/Requests/UploadQuoteModal/?id=" + $("#orderStepID").val();
                 //$("#loading").show();
                 $.fn.CallPage($itemurl, "confirmemail");
-
-
 
             }
             $.fn.GetNotifcationCount();
@@ -461,7 +459,7 @@
     //        e.preventDefault();
     //        console.log("item click")
     //        $(this).attr("href", "");
-            
+
     //    $.ajax({
     //        processData: false,
     //        contentType: false,

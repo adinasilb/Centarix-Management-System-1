@@ -41,18 +41,8 @@ namespace PrototypeWithAuth.Controllers
         //take this out?
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        //private readonly IHttpContextAccessor _Context;
-
-        //take this out?
-        private readonly List<Request> _cartRequests = new List<Request>();
-
-        private IQueryable<Request> _searchList = Enumerable.Empty<Request>().AsQueryable();
         private ICompositeViewEngine _viewEngine;
 
-        //public MyController(ICompositeViewEngine viewEngine)
-        //{
-        //    _viewEngine = viewEngine;
-        //}
         public OperationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
             IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/) : base(context)
         {
