@@ -22,6 +22,8 @@ namespace PrototypeWithAuth.ViewModels
         public string SidebarFilterID { get; set; }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
         public string? SidebarFilterName { get; set; }
+        public AppUtility.OrderStepsEnum OrderStepsEnum { get; set; }
+        public int OrderStepID { get; set; }
 
     }
 }
