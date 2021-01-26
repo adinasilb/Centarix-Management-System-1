@@ -86,7 +86,7 @@ namespace PrototypeWithAuth.AppData
         public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
         public enum RequestModalType { Create, Edit, Summary}
         public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased}
-        public enum OrderStepsEnum { TermsModal, UploadQuoteModal, ConfirmEmail}
+        public enum OrderStepsEnum { TermsModal, UploadQuoteModal, ConfirmEmail, UploadOrderModal }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");

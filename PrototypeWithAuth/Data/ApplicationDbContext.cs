@@ -50,7 +50,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<TimekeeperNotification> TimekeeperNotifications { get; set; }
         //public DbSet<Notification<NotificationStatus>> Notifications { get; set; }
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
-        public DbSet<Reorder> Reorder { get; set; }
         public DbSet<ParentQuote> ParentQuotes { get; set; }
         public DbSet<QuoteStatus> QuoteStatuses { get; set; }
         public DbSet<CategoryType> CategoryTypes { get; set; }

@@ -27,7 +27,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
-
+                <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessages</label>
 
                 @*
         NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
@@ -44,6 +44,7 @@
                 @Html.HiddenFor(model => model.RequestItemViewModel.Request.RequestID)
                 @Html.HiddenFor(model => model.RequestItemViewModel.Request.ExchangeRate)
                 @Html.HiddenFor(model => model.RequestItemViewModel.PageType) @*JS shoulde be taking this as a string *@
+                @Html.HiddenFor(model => model.RequestItemViewModel.Request.ApplicationUserCreatorID)
 
                 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 <input type="hidden" asp-for="@Model.RequestItemViewModel.Request.RequestID" />
@@ -123,7 +124,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 </div>
                             </div>
                         </div>
-                        @{ 
+                        @{
                             if (Model.RequestItemViewModel.Request.SubUnit > 0)
                             {
                                                 <div class="col-4 pl-0 RequestSubunitCard">
@@ -170,34 +171,34 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                 </div>
                             }
                         }
-                        
+
                         @{
                             if (Model.RequestItemViewModel.Request.SubUnit > 0)
                             {
                                 if (Model.RequestItemViewModel.Request.SubSubUnit > 0)
                                 {
-                                                <div class="col-4 pl-0 RequestSubsubunitCard">
-                                                    <div class="border h-100">
-                                               
+                                    <div class="col-4 pl-0 RequestSubsubunitCard">
+                                        <div class="border h-100">
 
-                                                        <div class="mx-2rem  subSubUnitsCard mt-4">
-                                                            <div class="row mb-4">
-                                                                <div class="col-md-6  form-group">
-                                                                    <label asp-for="RequestItemViewModel.Request.SubSubUnit" class="control-label"></label>
-                                                                    <input asp-for="RequestItemViewModel.Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
-                                                                    <span asp-validation-for="RequestItemViewModel.Request.SubSubUnit" class="text-danger-centarix"></span>
-                                                                </div>
-                                                                <div class="col-md-6 form-group">
-                                                                    <label asp-for="RequestItemViewModel.Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
-                                                                    @Html.DropDownListFor(
-                                                                        vm => vm.RequestItemViewModel.Request.SubSubUnitTypeID,
-                                                                        Model.RequestItemViewModel.UnitTypeList,
-                                                                        "",
-                                                                        htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
-                                                                        )
-                                                                    <span asp-validation-for="RequestItemViewModel.Request.SubSubUnitType" class="text-danger-centarix"></span>
-                                                                </div>
-                                                            </div>
+
+                                            <div class="mx-2rem  subSubUnitsCard mt-4">
+                                                <div class="row mb-4">
+                                                    <div class="col-md-6  form-group">
+                                                        <label asp-for="RequestItemViewModel.Request.SubSubUnit" class="control-label"></label>
+                                                        <input asp-for="RequestItemViewModel.Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                                        <span asp-validation-for="RequestItemViewModel.Request.SubSubUnit" class="text-danger-centarix"></span>
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+                                                        <label asp-for="RequestItemViewModel.Request.SubSubUnitType" class="control-label" style="font-size:0.85rem;"></label>
+                                                        @Html.DropDownListFor(
+                                                            vm => vm.RequestItemViewModel.Request.SubSubUnitTypeID,
+                                                            Model.RequestItemViewModel.UnitTypeList,
+                                                            "",
+                                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
+                                                            )
+                                                        <span asp-validation-for="RequestItemViewModel.Request.SubSubUnitType" class="text-danger-centarix"></span>
+                                                    </div>
+                                                </div>
 
                                                             <div class="form-group">
                                                                 <label class="control-label">Price:</label>
@@ -222,11 +223,11 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                         </div>
                                                     </div>
 
-                                                </div>
+                                    </div>
                                 }
                             }
                         }
-                        
+
 
                     </div>
                     <div class="row mt-4">
@@ -327,7 +328,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 </button>
 
                             </div>
-                         
+
                             <div class="col-4">
                                 <button type="button" class="custom-cancel custom-button create-modal-submit" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
 
@@ -337,8 +338,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             <div class="col-4">
                                 <span class="small-text">Update the purchase of an item</span>
                             </div>
-                           
-                            
+
+
                         </div>
 
                         <input type="submit" name="OrderType" id="reorderRequest" value="Request" @*asp-action="ReOrderFloatModalView"*@ class="custom-button custom-button-font @bcColor between-button-margin submit-reorder" />

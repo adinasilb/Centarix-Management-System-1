@@ -449,6 +449,14 @@
                 $.fn.CallPage($itemurl, "confirmemail");
 
             }
+          if ($("#tduploadquotes").val()) {
+              console.log("upload order modal");
+              $("#tduploadorders").hide();
+              $itemurl = "/Requests/UploadOrderModal/?id=" + $("#orderStepID").val();
+              //$("#loading").show();
+              $.fn.CallPage($itemurl, "confirmemail");
+
+          }
             $.fn.GetNotifcationCount();
             $.fn.GetNotifications();
             $.fn.getMenuItems();

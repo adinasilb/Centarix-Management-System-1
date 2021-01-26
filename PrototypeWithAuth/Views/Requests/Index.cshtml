@@ -19,7 +19,7 @@
             search = true;
         }
     }
-    <input type="hidden" valuer="OrderStepID" id="orderStepID"/>
+    <input type="hidden" valuer="OrderStepID" id="orderStepID" />
 }
 @switch (Model.OrderStepsEnum)
 {
@@ -31,6 +31,9 @@
         break;
     case AppUtility.OrderStepsEnum.UploadQuoteModal:
         <input type="text" id="tduploadquotes" class="hidden" value="@Model.OrderStepID" />
+        break;
+    case AppUtility.OrderStepsEnum.UploadOrderModal:
+        <input type="text" id="tduploadorders" class="hidden" value="@Model.OrderStepID" />
         break;
 }
 
