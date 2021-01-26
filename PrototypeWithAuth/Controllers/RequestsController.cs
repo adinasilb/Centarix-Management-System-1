@@ -3453,9 +3453,9 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(UploadQuoteViewModel);
         }
         private async Task<List<string>> AddItemAccordingToOrderType(Request oldRequest, Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum)
-        {
-            //get current user
+        {     
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+            var isInBudget = false;
             if (oldRequest != null)
             {
                 newRequest.ProductID = oldRequest.ProductID;
@@ -3472,6 +3472,7 @@ namespace PrototypeWithAuth.Controllers
             else if(checkIfInBudget(newRequest) || OrderTypeEnum == AppUtility.OrderTypeEnum.AlreadyPurchased)
             {
                 newRequest.RequestStatusID = 6;
+                isInBudget = true;
             }
             else
             {
@@ -3486,8 +3487,10 @@ namespace PrototypeWithAuth.Controllers
                 switch (OrderTypeEnum)
                 {
                     case AppUtility.OrderTypeEnum.AddToCart:
+                        AddToCart(newRequest, isInBudget);
                         break;
                     case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                        AlreadyPurchased(newRequest);
                         break;
                     case AppUtility.OrderTypeEnum.OrderNow:
                         break;
@@ -3496,18 +3499,26 @@ namespace PrototypeWithAuth.Controllers
                         break;
                 }
             }
-                   
+
             return new List<string>();
         }
-        private async Task<bool> RequestItem (Request newRequest)
+        private async Task<bool> RequestItem (Request newRequest, bool isInBudget)
         {
 
             try
             {
+                if (isInBudget)
+                {
+                    newRequest.RequestStatusID = 6;
+                }
+                else
+                {
+                    newRequest.RequestStatusID = 1;
+                }
                 newRequest.ParentQuote = new ParentQuote();
                 newRequest.ParentQuote.QuoteStatusID = -1;
+                newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote;
                 _context.Add(newRequest);
-                await _context.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
             {
@@ -3527,15 +3538,20 @@ namespace PrototypeWithAuth.Controllers
             
             return true;
         }
-        private bool AddToCart(Request request)
+        private async Task<bool> AddToCart(Request request, bool isInBudget)
         {
             try
             {
-                request.RequestStatusID = 6; //approved
-                //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request.ToString(), requestItemViewModel.Request);
-                //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request_ParentQuote.ToString(), requestItemViewModel.Request.ParentQuote);
-                _context.Update(request);
-                _context.SaveChanges();
+                request.OrderType = AppUtility.OrderTypeEnum.AddToCart;
+                if (isInBudget)
+                {
+                    _context.Update(request);
+                }
+                else
+                {
+                    var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                    HttpContext.Session.SetObject(requestNum, request);
+                }
                 return true;
             }
             catch (Exception ex)
@@ -3546,14 +3562,28 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        private void AlreadyPurchased()
+        private void AlreadyPurchased(Request  request)
         {
-
+            request.RequestStatusID = 2;
+            request.ParentQuoteID = null;
+            request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased;
+            var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+            HttpContext.Session.SetObject(requestNum, request);
         }
 
-        private void OrderNow()
+        private void OrderNow(Request request, bool isInBudget)
         {
-
+            if (isInBudget)
+            {
+                request.RequestStatusID = 6;
+            }
+            else
+            {
+                request.RequestStatusID = 1;
+            }
+            request.OrderType = AppUtility.OrderTypeEnum.OrderNow;
+            var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+            HttpContext.Session.SetObject(requestNum, request);
         }
 
         [Authorize(Roles = "Reports")]
@@ -3617,8 +3647,8 @@ namespace PrototypeWithAuth.Controllers
 
                 bool UpdateContextHere = false;
 
-                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, requestItemViewModel.Request);
+                //var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                //HttpContext.Session.SetObject(requestNum, requestItemViewModel.Request);
                 //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.RequestList.ToString(), new List<Request>() { requestItemViewModel.Request });
 
 
@@ -3646,93 +3676,26 @@ namespace PrototypeWithAuth.Controllers
                 { 
                     switch (OrderType)
                     {
-                        case AppUtility.OrderTypeEnum.AddToCart:
-                            try
-                            {
-                                requestItemViewModel.Request.RequestStatusID = 6; //approved
-                                UpdateContextHere = true;
-                                //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request.ToString(), requestItemViewModel.Request);
-                                //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request_ParentQuote.ToString(), requestItemViewModel.Request.ParentQuote);
-                                _context.Update(requestItemViewModel.Request);
-                                _context.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                TempData["ErrorMessage"] = ex.Message;
-                                TempData["InnerMessage"] = ex.InnerException;
-                                return View("~/Views/Shared/RequestError.cshtml");
-                            }
-                            break;
-                        case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                           //add to cart was here
+                     //already purchased goes here
 
-                            /*
-                             * There is NO without order right now
-                             * IF this is put back in -- IMPT: Must change over to sessions instead of using the context
-                            */
-
-
-                            requestItemViewModel.Request.ParentRequest = new ParentRequest();
-                            int lastParentRequestOrderNum = 0;
-                            requestItemViewModel.Request.ParentRequest.ApplicationUserID = currentUser.Id;
-                            if (_context.ParentRequests.Any())
-                            {
-                                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
-                            }
-                            requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
-                            requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
-                            requestItemViewModel.Request.ParentRequest.WithoutOrder = true;
-                            requestItemViewModel.Request.RequestStatusID = 2;
-                            requestItemViewModel.RequestStatusID = 2;
-                            requestItemViewModel.Request.ParentQuote = null;
-                            _context.Update(requestItemViewModel.Request);
-                            _context.SaveChanges();
-                            RequestNotification requestNotification = new RequestNotification();
-                            requestNotification.RequestID = requestItemViewModel.Request.RequestID;
-                            requestNotification.IsRead = false;
-                            requestNotification.RequestName = requestItemViewModel.Request.Product.ProductName;
-                            requestNotification.ApplicationUserID = requestItemViewModel.Request.ApplicationUserCreatorID;
-                            requestNotification.Description = "item ordered";
-                            requestNotification.NotificationStatusID = 2;
-                            requestNotification.TimeStamp = DateTime.Now;
-                            requestNotification.Controller = "Requests";
-                            requestNotification.Action = "NotificationsView";
-                            requestNotification.OrderDate = DateTime.Now;
-                            requestNotification.Vendor = requestItemViewModel.Request.Product.Vendor.VendorEnName;
-                            _context.Update(requestNotification);
-                            _context.SaveChanges();
-                            break;
                         case AppUtility.OrderTypeEnum.OrderNow:
-                            requestItemViewModel.Request.RequestStatusID = 1; //new request
-                            requestItemViewModel.RequestStatusID = 1;
-                            requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                            HttpContext.Session.SetObject(requestNum, requestItemViewModel.Request);
-                            //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.RequestList.ToString(), new List<Request>() { requestItemViewModel.Request });
-
-
-                            TempData["OpenTermsModal"] = "Single";
+             
                             TempData["Email1"] = requestItemViewModel.EmailAddresses[0];
                             TempData["Email2"] = requestItemViewModel.EmailAddresses[1];
                             TempData["Email3"] = requestItemViewModel.EmailAddresses[2];
                             TempData["Email4"] = requestItemViewModel.EmailAddresses[3];
                             TempData["Email5"] = requestItemViewModel.EmailAddresses[4];
-                            //TempData["OpenConfirmEmailModal"] = true; //now we want it to go to the terms instead
-                            TempData["RequestID"] = requestItemViewModel.Request.RequestID;
                             break;
-                        default:
-                            requestItemViewModel.Request.RequestStatusID = 1; //needs approval
-                            requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                            HttpContext.Session.SetObject(requestNum, requestItemViewModel.Request);
-                            //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.RequestList.ToString(), new List<Request>() { requestItemViewModel.Request });
-
-                            //_context.Update(requestItemViewModel.Request);
-                            //_context.SaveChanges();
-                            break;
+                    
                     }
                 }
                 try
                 {
                     try
                     {
+                        var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                        var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
                         if (requestItemViewModel.Comments != null)
                         {
                             var x = 1; //to name the comments in session
@@ -3744,7 +3707,8 @@ namespace PrototypeWithAuth.Controllers
                                     comment.ApplicationUserID = currentUser.Id;
 
                                     comment.RequestID = requestItemViewModel.Request.RequestID;
-                                    if (UpdateContextHere)
+                                  
+                                    if (!isSavedUsingSession)
                                     {
                                         _context.Add(comment);
                                     }
@@ -3753,15 +3717,24 @@ namespace PrototypeWithAuth.Controllers
                                         var SessionCommentName = AppData.SessionExtensions.SessionNames.Comment.ToString() + x;
                                         HttpContext.Session.SetObject(SessionCommentName, comment);
                                     }
-                                    //_context.Add(comment);
                                 }
 
                                 x++; //to name the comments in session
                             }
                         }
-                        if (UpdateContextHere)
+                        if (!isSavedUsingSession)
                         {
+
                             await _context.SaveChangesAsync();
+                            //rename temp folder to the request id
+                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                            string requestFolderFrom = Path.Combine(uploadFolder, "0");
+                            string requestFolderTo = Path.Combine(uploadFolder, requestItemViewModel.Request.RequestID.ToString());
+                            if (Directory.Exists(requestFolderTo))
+                            {
+                                Directory.Delete(requestFolderTo);
+                            }
+                            Directory.Move(requestFolderFrom, requestFolderTo);
                         }
                     }
                     catch (Exception ex)
