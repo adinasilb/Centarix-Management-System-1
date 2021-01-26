@@ -4,7 +4,13 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 
-
+@{ 
+    var requestQuoteHide = "";
+    if (Model.isRequestQuote)
+    {
+        requestQuoteHide = "";
+    }
+}
     <div class="row">
         <div class="col-12">
             <span class="heading-1 modal-tab-name">Order</span>
