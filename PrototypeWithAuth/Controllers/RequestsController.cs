@@ -3456,29 +3456,7 @@ namespace PrototypeWithAuth.Controllers
         {     
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             var isInBudget = false;
-            if (oldRequest != null)
-            {
-                newRequest.ProductID = oldRequest.ProductID;
-                newRequest.ApplicationUserCreatorID = currentUser.Id;
-                newRequest.CreationDate = DateTime.Now;
-                newRequest.SubProjectID = oldRequest.SubProjectID;
-                newRequest.SerialNumber = oldRequest.SerialNumber;
-                newRequest.URL = oldRequest.URL;
-                newRequest.Warranty = oldRequest.Warranty;
-                newRequest.ExchangeRate = oldRequest.ExchangeRate;
-                newRequest.Currency = oldRequest.Currency;
-                newRequest.CatalogNumber = oldRequest.CatalogNumber;
-            }
-            else if(checkIfInBudget(newRequest) || OrderTypeEnum == AppUtility.OrderTypeEnum.AlreadyPurchased)
-            {
-                newRequest.RequestStatusID = 6;
-                isInBudget = true;
-            }
-            else
-            {
-                newRequest.RequestStatusID = 1; 
-              
-            }
+    
             var context = new ValidationContext(newRequest, null, null);
             var results = new List<ValidationResult>();
             var validatorCreate = Validator.TryValidateObject(newRequest, context, results, true);
@@ -3493,9 +3471,10 @@ namespace PrototypeWithAuth.Controllers
                         AlreadyPurchased(newRequest);
                         break;
                     case AppUtility.OrderTypeEnum.OrderNow:
+                        OrderNow(newRequest, isInBudget);
                         break;
                     case AppUtility.OrderTypeEnum.RequestPriceQuote:
-                        RequestItem( newRequest);
+                        RequestItem( newRequest, isInBudget);
                         break;
                 }
             }
@@ -3543,15 +3522,17 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 request.OrderType = AppUtility.OrderTypeEnum.AddToCart;
+                
                 if (isInBudget)
                 {
-                    _context.Update(request);
+                    request.RequestStatusID = 6;
+               
                 }
                 else
                 {
-                    var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                    HttpContext.Session.SetObject(requestNum, request);
+                    request.RequestStatusID = 1;
                 }
+                _context.Update(request);
                 return true;
             }
             catch (Exception ex)
