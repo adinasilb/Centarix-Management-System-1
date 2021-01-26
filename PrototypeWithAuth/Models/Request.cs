@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using PrototypeWithAuth.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 using MimeKit.Cryptography;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.Models
 {
@@ -87,31 +88,31 @@ namespace PrototypeWithAuth.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? BatchExpiration { get; set; }
         private double _VAT;
-        public double VAT { 
+        public double VAT {
             get {
-                     return .17 * Cost;
-                }
-           private set { _VAT = value; }
+                return .17 * Cost;
+            }
+            private set { _VAT = value; }
 
         }
- 
+
         private double _PricePerUnit;
         public double PricePerUnit
         {
             get
             {
-                return Cost/Unit;
+                return Cost / Unit;
             }
             private set { _PricePerUnit = value; }
 
         }
-  
+
         private double _TotalWithVat;
         public double TotalWithVat
         {
             get
             {
-                return VAT+Cost;
+                return VAT + Cost;
             }
             private set { _TotalWithVat = value; }
 
@@ -150,7 +151,9 @@ namespace PrototypeWithAuth.Models
 
         public string? NoteToSupplier { get; set; }
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
-  
+
+        public AppUtility.OrderTypeEnum OrderType {get; set;}
+
         
     }
 }
