@@ -2036,9 +2036,6 @@ namespace PrototypeWithAuth.Controllers
             reorderRequest.SubUnit = reorderViewModel.RequestItemViewModel.Request.SubUnit;
             reorderRequest.SubUnitTypeID = reorderViewModel.RequestItemViewModel.Request.SubUnitTypeID;
             reorderRequest.SubSubUnitTypeID = reorderViewModel.RequestItemViewModel.Request.SubSubUnitTypeID;
-            reorderRequest.UnitsOrdered = oldRequest.UnitsOrdered;
-            reorderRequest.UnitsInStock = oldRequest.UnitsInStock;
-            reorderRequest.Quantity = oldRequest.Quantity;
             reorderRequest.ParentQuote = new ParentQuote();
             reorderRequest.ParentQuote.QuoteStatusID = -1;
 
@@ -4383,7 +4380,107 @@ namespace PrototypeWithAuth.Controllers
          * 
          */
 
+        private async Task<bool> RequestItem(int requestID, Request newRequest)
+        {
+            Request oldRequest = new Request();
+            if(requestID == 0)
+            {
+                oldRequest = newRequest;
 
+            }
+            else
+            {
+                oldRequest = _context.Requests.Where(r => r.RequestID == requestID)
+                    .Include(r => r.Product)
+                    .ThenInclude(p => p.ProductSubcategory).FirstOrDefault();
+            }
+
+            
+
+            //get current user
+            var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+
+            //copy over request to new request with new id
+            Reorder reorderRequest = new Reorder();
+            reorderRequest.ProductID = oldRequest.ProductID;
+            reorderRequest.ApplicationUserCreatorID = currentUser.Id;
+            reorderRequest.CreationDate = DateTime.Now;
+            reorderRequest.SubProjectID = oldRequest.SubProjectID;
+            reorderRequest.SerialNumber = oldRequest.SerialNumber;
+            reorderRequest.URL = oldRequest.URL;
+            reorderRequest.Warranty = oldRequest.Warranty;
+            reorderRequest.ExchangeRate = oldRequest.ExchangeRate;
+            //reorderRequest.Terms = oldRequest.Terms;
+            reorderRequest.Cost = newRequest.Cost;
+            reorderRequest.Currency = oldRequest.Currency;
+            reorderRequest.CatalogNumber = oldRequest.CatalogNumber;
+            reorderRequest.RequestStatusID = 1; //waiting approval status of new
+            reorderRequest.UnitTypeID = newRequest.UnitTypeID;
+            reorderRequest.Unit = newRequest.Unit;
+            reorderRequest.SubSubUnit = newRequest.SubSubUnit;
+            reorderRequest.SubUnit = newRequest.SubUnit;
+            reorderRequest.SubUnitTypeID = newRequest.SubUnitTypeID;
+            reorderRequest.SubSubUnitTypeID = newRequest.SubSubUnitTypeID;
+            reorderRequest.ParentQuote = new ParentQuote();
+            reorderRequest.ParentQuote.QuoteStatusID = -1;
+
+
+            var context = new ValidationContext(reorderRequest, null, null);
+            var results = new List<ValidationResult>();
+
+            if (Validator.TryValidateObject(reorderRequest, context, results, true))
+            {
+                try
+                {
+                    _context.Add(reorderRequest);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException ex)
+                {
+                    //ModelState.AddModelError();
+                    ViewData["ModalViewType"] = "Create";
+                    TempData["ErrorMessage"] = ex.InnerException.ToString();
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    //ModelState.AddModelError();
+                    ViewData["ModalViewType"] = "Create";
+                    TempData["ErrorMessage"] = ex.InnerException.ToString();
+                    return false;
+                }
+              
+            }
+            return true;
+        }
+        private bool AddToCart(Request request)
+        {
+            try
+            {
+                request.RequestStatusID = 6; //approved
+                //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request.ToString(), requestItemViewModel.Request);
+                //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request_ParentQuote.ToString(), requestItemViewModel.Request.ParentQuote);
+                _context.Update(request);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                TempData["InnerMessage"] = ex.InnerException;
+                return false;
+            }
+        }
+
+        private void AlreadyPurchased()
+        {
+
+        }
+
+        private void OrderNow()
+        {
+
+        }
     }
 
 

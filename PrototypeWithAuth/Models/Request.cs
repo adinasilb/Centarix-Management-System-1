@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using PrototypeWithAuth.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 using MimeKit.Cryptography;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.Models
 {
@@ -59,9 +60,8 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("SubSubUnitTypeID")]
         [Display(Name = "Unit")]
         public UnitType SubSubUnitType { get; set; }
-        public uint UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
-        public uint UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
-        public uint Quantity { get; set; }
+        //public uint UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
+        //public uint UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
 
         ///[DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
         [Range(1, Double.MaxValue, ErrorMessage = "Field must be more than 0")]
@@ -88,31 +88,31 @@ namespace PrototypeWithAuth.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? BatchExpiration { get; set; }
         private double _VAT;
-        public double VAT { 
+        public double VAT {
             get {
-                     return .17 * Cost;
-                }
-           private set { _VAT = value; }
+                return .17 * Cost;
+            }
+            private set { _VAT = value; }
 
         }
- 
+
         private double _PricePerUnit;
         public double PricePerUnit
         {
             get
             {
-                return Cost/Unit;
+                return Cost / Unit;
             }
             private set { _PricePerUnit = value; }
 
         }
-  
+
         private double _TotalWithVat;
         public double TotalWithVat
         {
             get
             {
-                return VAT+Cost;
+                return VAT + Cost;
             }
             private set { _TotalWithVat = value; }
 
@@ -151,7 +151,9 @@ namespace PrototypeWithAuth.Models
 
         public string? NoteToSupplier { get; set; }
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
-  
+
+        public AppUtility.OrderTypeEnum OrderType {get; set;}
+
         
     }
 }
