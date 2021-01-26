@@ -23,10 +23,10 @@
 }
 @switch (Model.OrderStepsEnum)
 {
-    case AppUtility.OrderStepsEnum.TermsModal:
+    case AppUtility.OrderStepsEnum.ConfirmEmail:
         <input type="text" id="tdprconfirmemail" class="hidden" value="@Model.OrderStepID" />
         break;
-    case AppUtility.OrderStepsEnum.ConfirmEmail:
+    case AppUtility.OrderStepsEnum.TermsModal:
         <input type="text" id="tdterms" class="hidden" value="@Model.OrderStepID" />
         break;
     case AppUtility.OrderStepsEnum.UploadQuoteModal:
