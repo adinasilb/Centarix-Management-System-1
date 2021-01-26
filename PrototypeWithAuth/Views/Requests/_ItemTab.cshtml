@@ -198,7 +198,21 @@ htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown fo
     <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass">
         <div class="form-group">
             <label class="control-label">Expected supply date</label>
-            <input class="form-control-plaintext border-bottom datepicker @supplyDaysCategories  @markReadOnlyClass" type="text" name="expected-supply-days" id="expected-supply-date" />
+            @if (modalType == AppUtility.RequestModalType.Create)
+            {
+                <input value="" class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
+            }
+            else
+            {
+                if (Model.Request.RequestStatusID == 2)
+                {
+                    <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
+                }
+                else
+                {
+                    <input value="@DateTime.Now.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
+                }
+            }
         </div>
     </div>
     <div class="col-md-4 @websiteCategories">

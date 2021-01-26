@@ -108,13 +108,15 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                         <div class="col-md-6">
                                             <div class="input-group">
                                                 <span class="input-group-text">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom " name="unit-price-dollars" id="unit-price-dollars" disabled />
+                                                <input class="form-control-plaintext border-bottom " name="unit-price-dollars" id="unit-price-dollars" disabled 
+                                                       value="@(Math.Round(Model.RequestItemViewModel.Request.PricePerUnit/Model.RequestItemViewModel.Request.ExchangeRate, 2))"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="input-group">
                                                 <span class="input-group-text">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom " name="unit-price-shekel" id="unit-price-shekel" disabled />
+                                                <input class="form-control-plaintext border-bottom " name="unit-price-shekel" id="unit-price-shekel" disabled
+                                                       value="@Model.RequestItemViewModel.Request.PricePerUnit"/>
                                             </div>
                                         </div>
                                     </div>
@@ -150,13 +152,15 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                                     <div class="col-md-6">
                                                                         <div class="input-group">
                                                                             <span class="input-group-text">&#36;</span>
-                                                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" disabled />
+                                                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" disabled 
+                                                                                   value="@(Math.Round(Model.RequestItemViewModel.Request.PricePerSubUnit??0/Model.RequestItemViewModel.Request.ExchangeRate, 2))"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="input-group">
                                                                             <span class="input-group-text">&#x20aa;</span>
-                                                                            <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" disabled />
+                                                                            <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" disabled 
+                                                                                   value="@Model.RequestItemViewModel.Request.PricePerSubUnit"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -201,13 +205,16 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                                     <div class="col-md-6">
                                                                         <div class="input-group">
                                                                             <span class="input-group-text">&#36;</span>
-                                                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" value="" disabled />
+                                                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled
+                                                                                   value="@(Math.Round(Model.RequestItemViewModel.Request.PricePerSubSubUnit??0/Model.RequestItemViewModel.Request.ExchangeRate, 2))"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="input-group">
                                                                             <span class="input-group-text">&#x20aa;</span>
-                                                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled /> <span asp-validation-for="RequestItemViewModel.Request.SubSubUnit" class="text-danger-centarix"></span>
+                                                                            <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled 
+                                                                                   value="@Model.RequestItemViewModel.Request.PricePerSubSubUnit"/> 
+                                                                            <span asp-validation-for="RequestItemViewModel.Request.SubSubUnit" class="text-danger-centarix"></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -228,7 +235,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label class="control-label">Sum:</label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars" disabled value="" />
+                                    <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars" disabled 
+                                           value="@(Math.Round(Model.RequestItemViewModel.Request.Cost/Model.RequestItemViewModel.Request.ExchangeRate,2))" />
                                 </div>
                             </div>
                         </div>
@@ -257,7 +265,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label class="control-label">Sum:</label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                                    <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
+                                           value="@(Math.Round(Model.RequestItemViewModel.Request.TotalWithVat/Model.RequestItemViewModel.Request.ExchangeRate,2))"/>
                                 </div>
                             </div>
                         </div>
@@ -266,7 +275,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label class="control-label">Sum:</label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                                    <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled value="@Model.RequestItemViewModel.Request.TotalWithVat" />
                                 </div>
                             </div>
                         </div>

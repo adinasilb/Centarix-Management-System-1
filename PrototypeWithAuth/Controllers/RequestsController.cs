@@ -1800,13 +1800,13 @@ namespace PrototypeWithAuth.Controllers
                 parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
                 requestItemViewModel.Request.ParentQuote = parentQuote;
             }
-            else
-            {
-                parentQuote = new ParentQuote();
-                parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
-                parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
-                requestItemViewModel.Request.ParentQuote = parentQuote;
-            }
+            //else
+            //{
+            //    parentQuote = new ParentQuote();
+            //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
+            //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
+            //    requestItemViewModel.Request.ParentQuote = parentQuote;
+            //}
             //else if(requestItemViewModel.Request.ParentQuote?.QuoteNumber !=null || requestItemViewModel.Request.ParentQuote?.QuoteDate != null)
             //{ 
             //    parentQuote= new ParentQuote();

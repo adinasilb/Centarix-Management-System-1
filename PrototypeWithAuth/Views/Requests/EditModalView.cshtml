@@ -13,7 +13,7 @@
         form = " supplier-form ";
         tabClass = "lab-man-nav-link";
     }
-    if (Model.ModalType == AppUtility.RequestModalType.Summary)
+    if (Model.ModalType != AppUtility.RequestModalType.Summary)
     {
         summary = "hidden";
     }
@@ -84,7 +84,10 @@
                             <div class="container-fluid div-tabs text-center pl-0">
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
                                     <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link @tabClass next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                                    @if (Model.Request.RequestStatusID == 3)
+                                    {
                                     <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link @tabClass next-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
+                                    }
                                     <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link @tabClass next-tab"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
                                     <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link @tabClass documents-tab next-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
                                     <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link @tabClass next-tab"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>

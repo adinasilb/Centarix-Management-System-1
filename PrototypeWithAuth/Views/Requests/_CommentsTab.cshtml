@@ -4,14 +4,20 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 
-
+@{ 
+    var markReadOnlyClass = "";
+    if (Model.ModalType == AppUtility.RequestModalType.Edit)
+    {
+        markReadOnlyClass = "mark-readonly";
+    }
+}
     <div class="row">
         <div class="col-10"><span class="heading-1 modal-tab-name text-left">Comments and ratings</span></div>
 
         <div class="col-2 container p-0 text-right">
             <ul class="list-unstyled">
                 <li>
-                    <button href="#" id="addRequestComment" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 ">
+                    <button href="#" id="addRequestComment" type="button" data-toggle="popover" disabled data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 @markReadOnlyClass">
                         <i class="order-inv-color icon-add_circle-24px" style="
     font-size: 3rem;
 "></i>
