@@ -4375,10 +4375,12 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("AccountingNotifications");
         }
 
-
-        /*
-         * 
-         */
+        public async Task<IActionResult> UploadQuoteModal(int requestID, AppUtility.MenuItems SectionType)
+        {
+            var request = _context.Requests.Where(r => r.RequestID == requestID).FirstOrDefault();
+            var UploadQuoteViewModel = new UploadQuoteViewModel() { Request = request, SectionType = SectionType };
+            return PartialView(UploadQuoteViewModel);
+        }
 
         private async Task<bool> RequestItem(int requestID, Request newRequest)
         {
