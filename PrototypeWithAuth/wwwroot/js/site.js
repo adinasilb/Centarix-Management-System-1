@@ -1974,7 +1974,7 @@ $(function () {
 
 		}
 		else if (type == 'details') {
-			enableMarkReadonly();
+			enableMarkReadonly($(this));
 		}
 		//}
 	});

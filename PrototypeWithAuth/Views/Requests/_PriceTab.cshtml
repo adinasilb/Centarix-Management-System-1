@@ -83,13 +83,13 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text border-bottom request-cost-dollar-icon">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom @markReadOnlyClass" name="unit-price-dollars" id="unit-price-dollars" @disabledProperty />
+                                    <input class="form-control-plaintext border-bottom @markReadOnlyClass" name="unit-price-dollars" id="unit-price-dollars" value="@(Math.Round(Model.Request.PricePerUnit / Model.Request.ExchangeRate,2))" @disabledProperty />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom disabled-text" name="unit-price-shekel" id="unit-price-shekel" disabled />
+                                    <input class="form-control-plaintext border-bottom disabled-text" name="unit-price-shekel" id="unit-price-shekel" value="@Model.Request.PricePerUnit" disabled />
                                 </div>
                             </div>
                         </div>
@@ -124,14 +124,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                     <div class="row">
                         <div class="col-md-6 pl-0 form-group">
                             <label asp-for="Request.SubUnit" class="control-label"></label>
-                            @if (disabled.Length == 0)
-                            {
-                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " />
-                            }
-                            else
-                            {
-                                <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " disabled />
-                            }
+                            <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " disabled />
                             <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-md-6 form-group">
@@ -152,13 +145,13 @@ Model.UnitTypeList,
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom @subMarkReadOnly" name="subunit-price-dollars" id="subunit-price-dollars" @disabled />
+                                    <input class="form-control-plaintext border-bottom @subMarkReadOnly" name="subunit-price-dollars" id="subunit-price-dollars" @disabled value="@(Math.Round(Model.Request.PricePerSubUnit??0 / Model.Request.ExchangeRate,2))" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text request-cost-shekel-icon @subMarkReadOnly">&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" @disabled />
+                                    <input class="form-control-plaintext border-bottom" name="subunit-price-shekel" id="subunit-price-shekel" @disabled value="@Model.Request.PricePerSubUnit"/>
                                 </div>
                             </div>
                         </div>
@@ -211,14 +204,7 @@ Model.UnitTypeList,
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                            @if (subsubdisabled.Length == 0)
-                            {
-                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @subsubMarkReadOnly " />
-                            }
-                            else
-                            {
-                                <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @subsubMarkReadOnly " disabled />
-                            }
+                            <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @subsubMarkReadOnly " disabled />
                             <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-md-6 form-group">
@@ -239,13 +225,16 @@ Model.UnitTypeList,
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom @subsubMarkReadOnly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" @disabled />
+                                    <input class="form-control-plaintext border-bottom @subsubMarkReadOnly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" @disabled 
+                                           value="@(Math.Round(Model.Request.PricePerSubSubUnit??0 / Model.Request.ExchangeRate,2))"/>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom @subsubMarkReadOnly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" @disabled /> <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
+                                    <input class="form-control-plaintext border-bottom @subsubMarkReadOnly" name="subsubunit-price-shekel" id="subsubunit-price-shekel" @disabled
+                                           value="@Model.Request.PricePerSubSubUnit"/> 
+                                    <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                                 </div>
                             </div>
                         </div>
@@ -263,7 +252,7 @@ Model.UnitTypeList,
             <label asp-for="Request.Cost" class="control-label">Total:</label>
             <div class="input-group">
                 <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                <input class="form-control-plaintext border-bottom @markReadOnlyClass" id="sum-dollars" name="sum-dollars" />
+                <input class="form-control-plaintext border-bottom @markReadOnlyClass" id="sum-dollars" name="sum-dollars" value="@(Math.Round(Model.Request.Cost / Model.Request.ExchangeRate,2))" />
             </div>
         </div>
     </div>
@@ -282,7 +271,7 @@ Model.UnitTypeList,
             <label asp-for="Request.VAT" class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#36;</span>
-                <input class="form-control-plaintext border-bottom vatInDollars disabled-text" disabled />
+                <input class="form-control-plaintext border-bottom vatInDollars disabled-text" disabled  value="@(Math.Round(Model.Request.VAT / Model.Request.ExchangeRate, 2))"/>
             </div>
         </div>
     </div>
@@ -301,7 +290,7 @@ Model.UnitTypeList,
             <label class="control-label">Total + VAT:</label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#36;</span>
-                <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled />
+                <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled value="@(Math.Round(Model.Request.TotalWithVat/Model.Request.ExchangeRate,2))"/>
             </div>
         </div>
     </div>
@@ -310,7 +299,7 @@ Model.UnitTypeList,
             <label class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#x20aa;</span>
-                <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
+                <input asp-for="Request.TotalWithVat" class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled />
             </div>
         </div>
     </div>

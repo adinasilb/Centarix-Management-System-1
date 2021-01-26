@@ -152,12 +152,12 @@ htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown fo
     <div class="row @hiddenSummaryClass @quoteCategories">
         <div class="col-md-6">
             <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
-            <input asp-for="Request.ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom @quoteCategories" />
+            <input asp-for="Request.ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom @quoteCategories @markReadOnlyClass" disabled/>
             <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
         </div>
         <div class="col-md-6">
             <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-            <input asp-for="Request.ParentQuote.QuoteDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories" value="" />
+            <input asp-for="Request.ParentQuote.QuoteDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" value="" disabled />
             <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
 
         </div>
@@ -186,7 +186,7 @@ htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown fo
     </div>
     <div class="col-md-3 reusables equipment @batchCategories @hiddenSummaryClass">
         <label asp-for="Request.BatchExpiration" class="control-label"></label>
-        <input type="text" asp-for="Request.BatchExpiration" class="form-control-plaintext border-bottom datepicker @batchCategories " />
+        <input type="text" asp-for="Request.BatchExpiration" class="form-control-plaintext border-bottom datepicker @batchCategories @markReadOnlyClass" disabled="disabled"/>
     </div>
 </div>
 <div class="row">
@@ -198,7 +198,21 @@ htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown fo
     <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass">
         <div class="form-group">
             <label class="control-label">Expected supply date</label>
-            <input class="form-control-plaintext border-bottom datepicker @supplyDaysCategories  @markReadOnlyClass" type="text" name="expected-supply-days" id="expected-supply-date" />
+            @if (modalType == AppUtility.RequestModalType.Create)
+            {
+                <input value="" class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
+            }
+            else
+            {
+                if (Model.Request.RequestStatusID == 2)
+                {
+                    <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
+                }
+                else
+                {
+                    <input value="@DateTime.Now.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
+                }
+            }
         </div>
     </div>
     <div class="col-md-4 @websiteCategories">

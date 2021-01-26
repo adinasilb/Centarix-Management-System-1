@@ -218,6 +218,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.VacationDaysPerMonth);
             modelBuilder.Entity<Request>().Ignore(e => e.VAT);
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerUnit);
+            modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubUnit);
+            modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubSubUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
             modelBuilder.Entity<ParentQuote>().Ignore(e => e.QuoteDate_submit);
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.OrderDate_submit);

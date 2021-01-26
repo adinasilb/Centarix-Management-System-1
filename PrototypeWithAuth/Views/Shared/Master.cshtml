@@ -417,7 +417,7 @@
 
         };*@
 
-        function enableMarkReadonly() {
+        function enableMarkReadonly(element) {
             console.log("in if details");
             $('.mark-readonly').attr("disabled", false);
             //TODO: add in mark-readonly fields for subunits
@@ -428,7 +428,7 @@
             $('.turn-edit-on-off').attr('name', 'edit');
 
             //turn off document modals
-            if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
+            if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
                 console.log("orders operations");
                 $.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist');
                 $.fn.EnableMaterialSelect('#sublist', 'select-options-sublist');

@@ -90,7 +90,7 @@ namespace PrototypeWithAuth.Models
         private double _VAT;
         public double VAT {
             get {
-                return .17 * Cost;
+                return Math.Round(.17 * Cost,2);
             }
             private set { _VAT = value; }
 
@@ -107,16 +107,39 @@ namespace PrototypeWithAuth.Models
 
         }
 
+        private double? _PricePerSubUnit;
+        public double? PricePerSubUnit
+        {
+            get
+            {
+                return PricePerUnit/SubUnit;
+            }
+            private set { _PricePerSubUnit = value; }
+
+        }
+
+        private double? _PricePerSubSubUnit;
+        public double? PricePerSubSubUnit
+        {
+            get
+            {
+                return PricePerSubUnit / SubSubUnit;
+            }
+            private set { _PricePerSubSubUnit = value; }
+
+        }
+
         private double _TotalWithVat;
         public double TotalWithVat
         {
             get
             {
-                return VAT + Cost;
+                return Math.Round(VAT + Cost,2);
             }
             private set { _TotalWithVat = value; }
 
         }
+
         [Display(Name = "Exchange Rate")]
         [Range(1, Double.MaxValue)]
         public double ExchangeRate { get; set; } // holding the rate of exchange for this specific request
