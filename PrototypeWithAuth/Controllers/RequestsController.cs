@@ -1402,6 +1402,10 @@ namespace PrototypeWithAuth.Controllers
             
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
+            //need to include product to check if in budget
+            reorderViewModel.RequestItemViewModel.Request.Product = oldRequest.Product;
+
+
             reorderViewModel.RequestItemViewModel.Request.ProductID = oldRequest.ProductID;
             reorderViewModel.RequestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
             reorderViewModel.RequestItemViewModel.Request.CreationDate = DateTime.Now;
@@ -3236,7 +3240,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 var monthsSpending = _context.Requests
                       .Where(r => request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                      .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID)
+                      .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && r.Product.VendorID == request.Product.VendorID)
                       .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
                       .Sum(r => r.Cost);
                 if (monthsSpending + request.Cost > request.ApplicationUserCreator.LabMonthlyLimit)
