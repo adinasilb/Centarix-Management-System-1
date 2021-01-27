@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class UploadQuoteViewModel
+    public class UploadQuoteOrderViewModel
     {
         public Request Request { get; set; }
-        public List<string> QuoteFileStrings { get; set; }
+        public List<string> FileStrings { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
+        public RequestIndexObject RequestIndexObject { get; set;}
+
     }
 }

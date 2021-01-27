@@ -3445,41 +3445,89 @@ namespace PrototypeWithAuth.Controllers
 
             return RedirectToAction("AccountingNotifications");
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadQuoteModal(int requestID, AppUtility.MenuItems SectionType)
         {
-            var request = _context.Requests.Where(r => r.RequestID == requestID).FirstOrDefault();
-            var UploadQuoteViewModel = new UploadQuoteViewModel() { Request = request, SectionType = SectionType };
+            var request = _context.Requests.Where(r => r.RequestID == requestID).Include(r=>r.Product).FirstOrDefault();
+            request.ParentQuote = new ParentQuote();
+            var UploadQuoteViewModel = new UploadQuoteOrderViewModel() { Request = request, SectionType = SectionType };
             return PartialView(UploadQuoteViewModel);
         }
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> UploadOrderModal(int requestID, AppUtility.MenuItems SectionType)
+        {
+            var request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault();
+            request.ParentRequest = new ParentRequest();
+            var UploadQuoteViewModel = new UploadQuoteOrderViewModel() { Request = request, SectionType = SectionType };
+            return PartialView(UploadQuoteViewModel);
+        }
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> UploadQuoteModal(UploadQuoteOrderViewModel uploadQuoteOrderViewModel)
+        {
+
+        }
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> UploadOrderModal(UploadQuoteOrderViewModel uploadQuoteOrderViewModel)
+        {
+          
+        }
         private async Task<List<string>> AddItemAccordingToOrderType(Request oldRequest, Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum)
-        {     
+        {   var errors = new List<string>(); 
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-            var isInBudget = false;
-    
+            
+            if (oldRequest != null)
+            {
+                newRequest.ProductID = oldRequest.ProductID;
+                newRequest.ApplicationUserCreatorID = currentUser.Id;
+                newRequest.CreationDate = DateTime.Now;
+                newRequest.SubProjectID = oldRequest.SubProjectID;
+                newRequest.SerialNumber = oldRequest.SerialNumber;
+                newRequest.URL = oldRequest.URL;
+                newRequest.Warranty = oldRequest.Warranty;
+                newRequest.ExchangeRate = oldRequest.ExchangeRate;
+                newRequest.Currency = oldRequest.Currency;
+                newRequest.CatalogNumber = oldRequest.CatalogNumber;
+            }
+            var isInBudget = checkIfInBudget(newRequest);
             var context = new ValidationContext(newRequest, null, null);
             var results = new List<ValidationResult>();
             var validatorCreate = Validator.TryValidateObject(newRequest, context, results, true);
             if (validatorCreate)
             {
-                switch (OrderTypeEnum)
+                try
                 {
-                    case AppUtility.OrderTypeEnum.AddToCart:
-                        AddToCart(newRequest, isInBudget);
-                        break;
-                    case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                        AlreadyPurchased(newRequest);
-                        break;
-                    case AppUtility.OrderTypeEnum.OrderNow:
-                        OrderNow(newRequest, isInBudget);
-                        break;
-                    case AppUtility.OrderTypeEnum.RequestPriceQuote:
-                        RequestItem( newRequest, isInBudget);
-                        break;
+                    switch (OrderTypeEnum)
+                    {
+                        case AppUtility.OrderTypeEnum.AddToCart:
+                            await AddToCart(newRequest, isInBudget);
+                            break;
+                        case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                            AlreadyPurchased(newRequest);
+                            break;
+                        case AppUtility.OrderTypeEnum.OrderNow:
+                            OrderNow(newRequest, isInBudget);
+                            break;
+                        case AppUtility.OrderTypeEnum.RequestPriceQuote:
+                            await RequestItem(newRequest, isInBudget);
+                            break;
+                    }
+
+                }
+                catch (DbUpdateException ex)
+                {
+                    errors.Add(ex.InnerException?.ToString());
+                }
+                catch (Exception ex)
+                {
+                    errors.Add(ex.InnerException?.ToString());
                 }
             }
 
-            return new List<string>();
+            return errors;
         }
         private async Task<bool> RequestItem (Request newRequest, bool isInBudget)
         {
@@ -3501,17 +3549,11 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (DbUpdateException ex)
             {
-                //ModelState.AddModelError();
-                ViewData["ModalViewType"] = "Create";
-                TempData["ErrorMessage"] = ex.InnerException.ToString();
-                return false;
+                throw ex;
             }
             catch (Exception ex)
             {
-                //ModelState.AddModelError();
-                ViewData["ModalViewType"] = "Create";
-                TempData["ErrorMessage"] = ex.InnerException.ToString();
-                return false;
+                throw ex;
             }
               
             
@@ -3535,36 +3577,53 @@ namespace PrototypeWithAuth.Controllers
                 _context.Update(request);
                 return true;
             }
+            catch (DbUpdateException ex)
+            {
+                throw ex;
+            }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return false;
+                throw ex;
             }
         }
 
         private void AlreadyPurchased(Request  request)
         {
-            request.RequestStatusID = 2;
-            request.ParentQuoteID = null;
-            request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased;
-            var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-            HttpContext.Session.SetObject(requestNum, request);
+            try
+            {
+                request.RequestStatusID = 2;
+                request.ParentQuoteID = null;
+                request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased;
+                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                HttpContext.Session.SetObject(requestNum, request);
+            }         
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private void OrderNow(Request request, bool isInBudget)
         {
-            if (isInBudget)
+            try
             {
-                request.RequestStatusID = 6;
+                if (isInBudget)
+                {
+                    request.RequestStatusID = 6;
+                }
+                else
+                {
+                    request.RequestStatusID = 1;
+                }
+                request.OrderType = AppUtility.OrderTypeEnum.OrderNow;
+                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                HttpContext.Session.SetObject(requestNum, request);
             }
-            else
+            catch (Exception ex)
             {
-                request.RequestStatusID = 1;
+                throw ex;
             }
-            request.OrderType = AppUtility.OrderTypeEnum.OrderNow;
-            var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-            HttpContext.Session.SetObject(requestNum, request);
+
         }
 
         [Authorize(Roles = "Reports")]
