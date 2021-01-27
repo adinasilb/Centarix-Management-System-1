@@ -1426,6 +1426,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel);
                         await transaction.CommitAsync();
+                        HttpContext.Session.Clear();
                     }
                     switch (OrderTypeEnum)
                     {
@@ -1442,6 +1443,7 @@ namespace PrototypeWithAuth.Controllers
                     if (addItemErrors.Count > 0)
                     {
                         transaction.Rollback();
+                        HttpContext.Session.Clear();
                         foreach (var e in addItemErrors)
                         {
                             reorderViewModel.ErrorMessages += e + "/n";
@@ -1455,6 +1457,7 @@ namespace PrototypeWithAuth.Controllers
                 catch(Exception ex)
                 {
                     transaction.Rollback();
+                    HttpContext.Session.Clear();
                     reorderViewModel.ErrorMessages += ex.InnerException + "/n";
                     var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
                     reorderViewModel.RequestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
@@ -3567,10 +3570,12 @@ namespace PrototypeWithAuth.Controllers
                         Directory.Move(requestFolderFrom, requestFolderTo);
 
                         await transaction.CommitAsync();
+                        HttpContext.Session.Clear();
                     }
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
+                        HttpContext.Session.Clear();
                         ViewBag.ErrorMessage = ex.InnerException;
                     }
                 }
@@ -3611,7 +3616,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel) {
+        public async Task<object> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel) {
             var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
             var request = HttpContext.Session.GetObject<Request>(requestName);
             request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
@@ -3633,10 +3638,13 @@ namespace PrototypeWithAuth.Controllers
                     Directory.Move(requestFolderFrom, requestFolderTo);
 
                     await transaction.CommitAsync();
+                    HttpContext.Session.Clear();
+
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
+                    HttpContext.Session.Clear();
                     ViewBag.ErrorMessage = ex.InnerException;
                 }
             }
@@ -3833,6 +3841,7 @@ namespace PrototypeWithAuth.Controllers
                         await _context.SaveChangesAsync();
                         MoveDocumentsOutOfTempFolder(requestItemViewModel);
                         await transaction.CommitAsync();
+                        HttpContext.Session.Clear();
                     }
                     var orderStep = AppUtility.OrderStepsEnum.None;
                 
@@ -3853,6 +3862,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
+                    HttpContext.Session.Clear();
                     ViewBag.ErrorMessage = ex.InnerException?.ToString();
                     requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
                     requestItemViewModel.Projects = await _context.Projects.ToListAsync();
@@ -3881,18 +3891,18 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> TermsModal() //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
+        public async Task<IActionResult> TermsModal(int vendorID, RequestIndexObject requestIndexObject) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
-
-            var usingSession = false;
-            //List<Request> Requests = new List<Request>();
-            //ParentQuote Request_ParentQuote = null;
-            //Product Request_Product = null;
-            var firstRequest = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-         
-            bool IsOperations = false;
-            List<Request> requests = null;
-            if (usingSession)
+            List<Request> requests = new List<Request>();
+            if (vendorID != 0)
+            {
+                requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                        .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart)
+                        .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                              .Include(r => r.Product).ThenInclude(r => r.Vendor)
+                              .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
+            }
+            else
             {
                 var isRequests = true;
                 var RequestNum = 1;
@@ -3909,43 +3919,10 @@ namespace PrototypeWithAuth.Controllers
                     }
                     RequestNum++;
                 }
-                //requests = HttpContext.Session.GetObject<List<Request>>(AppData.SessionExtensions.SessionNames.RequestList.ToString());
             }
-            else if (IsCart)
-            {
-                //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.RequestList.ToString(), new List<Request>() { requestItemViewModel.Request });
-                requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                         .Where(r => r.Product.VendorID == id && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart)
-                         .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-                               .Include(r => r.Product).ThenInclude(r => r.Vendor)
-                               .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
-
-                //foreach (Request req in Requests)
-                //{
-                //    req.ParentRequestID = termsViewModel.ParentRequest.ParentRequestID;
-                //    _context.Update(req);
-                //    await _context.SaveChangesAsync();
-                //}
-            }
-
-
-            int lastParentRequestOrderNum = 0;
-            var prs = _context.ParentRequests;
-            if (_context.ParentRequests.Any())
-            {
-                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
-            }
-            ParentRequest pr = new ParentRequest()
-            {
-                ApplicationUserID = _userManager.GetUserId(User),
-                OrderNumber = lastParentRequestOrderNum + 1,
-                OrderDate = DateTime.Now
-            };
-
             var requestNum = 1;
             foreach (var req in requests)
             {
-                req.ParentRequest = pr;
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
                 HttpContext.Session.SetObject(requestName, req);
                 requestNum++;
@@ -3953,7 +3930,7 @@ namespace PrototypeWithAuth.Controllers
 
             TermsViewModel termsViewModel = new TermsViewModel()
             {
-                ParentRequest = pr,
+                ParentRequest = new ParentRequest(),
                 TermsList = new List<SelectListItem>()
                 {
                     new SelectListItem{ Text="Pay Now", Value=AppUtility.TermsModalEnum.PayNow.ToString()},
@@ -3962,10 +3939,7 @@ namespace PrototypeWithAuth.Controllers
                     new SelectListItem{ Text="Paid", Value=AppUtility.TermsModalEnum.PayNow.ToString()}
                 }
             };
-
-            IsOperations = requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2;
-            termsViewModel.SectionType = IsOperations ? AppUtility.MenuItems.Operations : AppUtility.MenuItems.Requests;
-            TempData.Keep();
+            termsViewModel.RequestIndexObject = requestIndexObject;
             return PartialView(termsViewModel);
         }
 
@@ -3973,8 +3947,6 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
         {
-            //_context.Update(termsViewModel.ParentRequest);
-            //await _context.SaveChangesAsync();var isRequests = true;
             var requests = new List<Request>();
             var isRequests = true;
             var RequestNum = 1;
