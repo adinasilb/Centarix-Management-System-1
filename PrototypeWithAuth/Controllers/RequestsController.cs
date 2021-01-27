@@ -3447,18 +3447,25 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(int requestID, AppUtility.MenuItems SectionType)
+        public async Task<IActionResult> UploadQuoteModal(int requestID, AppUtility.MenuItems SectionType, RequestIndexObject requestIndexObject)
         {
-            var request = _context.Requests.Where(r => r.RequestID == requestID).Include(r=>r.Product).FirstOrDefault();
+
+            var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+            var request = HttpContext.Session.GetObject<Request>(requestName);
             request.ParentQuote = new ParentQuote();
+            if(request.RequestStatusID == 6)
+            {
+                requestIndexObject.OrderStep = AppUtility.OrderStepsEnum.TermsModal; 
+            }
             var UploadQuoteViewModel = new UploadQuoteOrderViewModel() { Request = request, SectionType = SectionType };
             return PartialView(UploadQuoteViewModel);
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(int requestID, AppUtility.MenuItems SectionType)
+        public async Task<IActionResult> UploadOrderModal(int requestID, AppUtility.MenuItems SectionType, RequestIndexObject requestIndexObject)
         {
-            var request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault();
+            var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+            var request = HttpContext.Session.GetObject<Request>(requestName);
             request.ParentRequest = new ParentRequest();
             var UploadQuoteViewModel = new UploadQuoteOrderViewModel() { Request = request, SectionType = SectionType };
             return PartialView(UploadQuoteViewModel);
@@ -3468,13 +3475,111 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> UploadQuoteModal(UploadQuoteOrderViewModel uploadQuoteOrderViewModel)
         {
 
+            var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+            var request = HttpContext.Session.GetObject<Request>(requestName);
+            request.ParentQuote = uploadQuoteOrderViewModel.Request.ParentQuote;
+            if (request.RequestStatusID == 6)
+            {
+                uploadQuoteOrderViewModel.RequestIndexObject.OrderStep = AppUtility.OrderStepsEnum.TermsModal;
+                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                HttpContext.Session.SetObject(requestNum, request);
+            }
+            else
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        _context.Update(request);
+                        await _context.SaveChangesAsync();
+                        await SaveCommentsFromSession(request);
+                        //rename temp folder to the request id
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                        string requestFolderFrom = Path.Combine(uploadFolder, "0");
+                        string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
+                        if (Directory.Exists(requestFolderTo))
+                        {
+                            Directory.Delete(requestFolderTo);
+                        }
+                        Directory.Move(requestFolderFrom, requestFolderTo);
+
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                       await transaction.RollbackAsync();
+                       ViewBag.ErrorMessage = ex.InnerException;
+                    }
+                }
+            }
+            return RedirectToAction("_IndexTableWithCounts", uploadQuoteOrderViewModel.RequestIndexObject);
         }
+
+        private async Task SaveCommentsFromSession(Request request)
+        {
+            try
+            {
+                var commentExists = true;
+                var n = 1;
+                do
+                {
+                    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
+                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                    if (comment != null)
+                    //will only go in here if there are comments so will only work if it's there
+                    //IMPT look how to clear the session information if it fails somewhere...
+                    {
+                        comment.RequestID = request.RequestID;
+                        _context.Add(comment);
+                    }
+                    else
+                    {
+                        commentExists = false;
+                    }
+                } while (commentExists);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        
+        }
+
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(UploadQuoteOrderViewModel uploadQuoteOrderViewModel)
-        {
-          
+        public async Task<IActionResult> UploadOrderModal(UploadQuoteOrderViewModel uploadQuoteOrderViewModel) {
+            var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+            var request = HttpContext.Session.GetObject<Request>(requestName);
+            request.ParentRequest = uploadQuoteOrderViewModel.Request.ParentRequest;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Update(request);
+                    await _context.SaveChangesAsync();
+                    await SaveCommentsFromSession(request);
+                    //rename temp folder to the request id
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    string requestFolderFrom = Path.Combine(uploadFolder, "0");
+                    string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
+                    if (Directory.Exists(requestFolderTo))
+                    {
+                        Directory.Delete(requestFolderTo);
+                    }
+                    Directory.Move(requestFolderFrom, requestFolderTo);
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ViewBag.ErrorMessage = ex.InnerException;
+                }
+            }
+            return RedirectToAction("_IndexTableWithCounts", uploadQuoteOrderViewModel.RequestIndexObject);
         }
+
         private async Task<List<string>> AddItemAccordingToOrderType(Request oldRequest, Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum)
         {   var errors = new List<string>(); 
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
@@ -3546,6 +3651,7 @@ namespace PrototypeWithAuth.Controllers
                 newRequest.ParentQuote.QuoteStatusID = -1;
                 newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote;
                 _context.Add(newRequest);
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
             {
@@ -3554,8 +3660,7 @@ namespace PrototypeWithAuth.Controllers
             catch (Exception ex)
             {
                 throw ex;
-            }
-              
+            }              
             
             return true;
         }
@@ -3575,6 +3680,7 @@ namespace PrototypeWithAuth.Controllers
                     request.RequestStatusID = 1;
                 }
                 _context.Update(request);
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (DbUpdateException ex)
@@ -3648,15 +3754,7 @@ namespace PrototypeWithAuth.Controllers
 
             //in case we need to return to the modal view
             //requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
-            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
-            requestItemViewModel.Projects = await _context.Projects.ToListAsync();
-            requestItemViewModel.SubProjects = await _context.SubProjects.ToListAsync();
-            requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
-            requestItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
-            //formatting the select list of the unit types
-            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
-
+        
             //declared outside the if b/c it's used farther down too 
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
@@ -3664,72 +3762,6 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.ApplicationUserCreator = currentUser;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
 
-            //all new ones will be "new" until actually ordered after the confirm email
-            requestItemViewModel.Request.RequestStatusID = 1;
-
-            //in case we need to redirect to action
-            //TempData["ModalView"] = true;
-            //todo why is this here?
-            //todo terms and installements and paid
-            var context = new ValidationContext(requestItemViewModel.Request, null, null);
-            var results = new List<ValidationResult>();
-            var validatorCreate = Validator.TryValidateObject(requestItemViewModel.Request, context, results, true);
-            if (validatorCreate)
-            {
-                /*
-                 * the viewmodel loads the request.product with a primary key of 0
-                 * so if you don't insert the request.productid into the request.product.productid
-                 * it will create a new one instead of updating the existing one
-                 * only need this if using an existing product
-                 */
-                //CREATE MODAL - may need to take this out? shouldn't it always create a new product??
-                //requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
-
-                bool UpdateContextHere = false;
-
-                //var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                //HttpContext.Session.SetObject(requestNum, requestItemViewModel.Request);
-                //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.RequestList.ToString(), new List<Request>() { requestItemViewModel.Request });
-
-
-                //if it is out of the budget get sent to get approved automatically and user is not in role admin !User.IsInRole("Admin")
-                if (/*!User.IsInRole("Admin") &&*/ (OrderType.Equals(AppUtility.OrderTypeEnum.AskForPermission) || !checkIfInBudget(requestItemViewModel.Request)))
-                {
-                    UpdateContextHere = true;
-                    requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault(); //Why do we need this here?
-                    try
-                    {
-                        //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request_ParentQuote.ToString(), requestItemViewModel.Request.ParentQuote);
-                        requestItemViewModel.Request.RequestStatusID = 1; //new request
-                        //update request
-                        //HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request.ToString(), requestItemViewModel.Request);
-                        _context.Update(requestItemViewModel.Request);
-                        _context.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        ViewBag.ErrorHeader += "/n Unable to assign data";
-                        ViewBag.ErrorText += "/n Error assigning the following fields: subproject, quote status, request status";
-                    }
-                }
-                else
-                { 
-                    switch (OrderType)
-                    {
-                           //add to cart was here
-                     //already purchased goes here
-
-                        case AppUtility.OrderTypeEnum.OrderNow:
-             
-                            TempData["Email1"] = requestItemViewModel.EmailAddresses[0];
-                            TempData["Email2"] = requestItemViewModel.EmailAddresses[1];
-                            TempData["Email3"] = requestItemViewModel.EmailAddresses[2];
-                            TempData["Email4"] = requestItemViewModel.EmailAddresses[3];
-                            TempData["Email5"] = requestItemViewModel.EmailAddresses[4];
-                            break;
-                    
-                    }
-                }
                 try
                 {
                     try
@@ -3824,6 +3856,15 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorHeader += "/n Unable to create";
                 ViewBag.ErrorText += "/n The request model failed to validate. Please ensure that all fields were filled in correctly /n";
                 ViewBag.ErrorText += validatorCreate.ToString();
+                requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
+        requestItemViewModel.Projects = await _context.Projects.ToListAsync();
+        requestItemViewModel.SubProjects = await _context.SubProjects.ToListAsync();
+        requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+        requestItemViewModel.RequestStatuses = await _context.RequestStatuses.ToListAsync();
+        //formatting the select list of the unit types
+        var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+        requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
+
                 return View();
                 //TempData["InnerMessage"] = "The request model failed to validate. Please ensure that all fields were filled in correctly";
                 //return View("~/Views/Shared/RequestError.cshtml");
