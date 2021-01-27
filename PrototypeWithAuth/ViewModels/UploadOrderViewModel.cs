@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class UploadQuoteOrderViewModel
+    public class UploadOrderViewModel
     {
-        public Request Request { get; set; }
+        public ParentRequest ParentRequest { get; set; }
         public List<string> FileStrings { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public RequestIndexObject RequestIndexObject { get; set;}

@@ -49,16 +49,7 @@
                 <div class="modal-body">
                     <div class="container">
                         <div class="row">
-                            <div class="col-2">
-                                <label class="control-label">Paid</label>
-                                <select asp-for="Paid" class="mdb-select custom select-dropdown form-control-plaintext" searchable="default value">
-                                    <option value=false>Select</option>
-                                    <option value=true>Yes</option>
-                                    <option value=false>No</option>
-                                </select>
-
-                                <span asp-validation-for="Paid" class="text-danger-centarix"></span>
-                            </div>
+                     
                             <div class="col-2">
                                 <label asp-for="ParentRequest.Discount" class="control-label"></label>
                                 <input type="text" asp-for="ParentRequest.Discount" class="form-control-plaintext border-bottom" />
@@ -72,13 +63,13 @@
                                     new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @id = "Terms", @searchable = "default value" }
                                 )
 
-                                @*<select asp-for="Terms" asp-items="@Model.TermsList" class="form-control-plaintext border-bottom">
-                                        <option value="selected" selected="selected">Select</option>
-                                        <option value="0">Pay Now</option>
-                                        <option value="15">+15</option>
-                                        <option value="30">+30</option>
-                                        <option value="45">+45</option>
-                                    </select>*@
+                            <select asp-for="Terms" class="form-control-plaintext border-bottom">
+                                <option value="selected" selected="selected">Select</option>
+                                <option value="0">Pay Now</option>
+                                <option value="30">+30</option>
+                                <option value="45">Installments</option>
+                                <option value="45">Paid</option>
+                            </select>
                                 <span asp-validation-for="Terms" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-2">

@@ -25,6 +25,7 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Total + VAT")]
             TotalVat=4
         }
+        public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum PageTypeEnum {None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, 
             AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments, 
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,

@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.UploadQuoteOrderViewModel;
+﻿@model PrototypeWithAuth.ViewModels.UploadOrderViewModel;
 @using PrototypeWithAuth.AppData
 @{
     Layout = null;
@@ -43,21 +43,21 @@
                             <div class="heading-1">Upload Order</div>
                         </div>
                         <div class="col-2">
-                            <div class="top-menu">@Model.Request.Product.ProductName</div>
+                       
                         </div>
                         <div class="col-4">
                             <div class="form-group d-inline-flex">
-                                <label asp-for="@Model.Request.ParentRequest.OrderNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                <input asp-for="@Model.Request.ParentRequest.OrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
-                                <span asp-validation-for="@Model.Request.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
+                                <label asp-for="@Model.ParentRequest.OrderNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                <input asp-for="@Model.ParentRequest.OrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
+                                <span asp-validation-for="@Model.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
                             </div>
                         </div>
 
                         <div class="col-3">
                             <div class="form-group d-inline-flex">
-                                <label asp-for="@Model.Request.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                <input asp-for="@Model.Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
-                                <span asp-validation-for="@Model.Request.ParentRequest.OrderDate" class="text-danger-centarix"></span>
+                                <label asp-for="@Model.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                <input asp-for="@Model.ParentRequest.OrderDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
+                                <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
                             </div>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                                 filterClass = "order-inv-filter";
                             }
                         }
-                        <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
+                        <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
                             <div class="card document-border">
                                 <div class="document-card text-center">
                                     <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
