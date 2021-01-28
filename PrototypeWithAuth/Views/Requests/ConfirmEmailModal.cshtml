@@ -42,15 +42,22 @@
 
                 <form action="" method="post" enctype="multipart/form-data" style="height: 100%; ">
                     <input asp-for="RequestID" style="display: none;" />
-
+                    @Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                    @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                    @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                    @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+                    @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+                    @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                    @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                    @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
 
 
                     @*<div class="modal-body">
-                            @if (IsBeingApproved == "True")
-                            {
-                                <h4>Would you like to approve this Request for @Model.Request.Product.ProductName ?</h4>
-                            }
-                        </div>*@
+            @if (IsBeingApproved == "True")
+            {
+                <h4>Would you like to approve this Request for @Model.Request.Product.ProductName ?</h4>
+            }
+        </div>*@
 
                     @*<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">*@
 
@@ -128,23 +135,23 @@
                                 </thead>
                                 <tbody>
                                     @*@for (int i = 0; i < Model.Requests.Count(); i++)
-                                        {
+                        {
 
-                                            <tr>
-                                                <td style="font-weight: 500;">@Model.Requests[i].SubUnit @Model.Requests[i].Product.ProductName</td>
-                                                <td>@Model.Requests[i].CatalogNumber</td>
-                                                @if (@Model.Requests[i].Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                                                {
-                                                    <td>@Model.Requests[i].Unit</td>
-                                                    double unitPrice = (Model.Requests[i].Cost) / Model.Requests[i].Unit;
-                                                    <td>@unitPrice.ToString("N2")</td>
-                                                }
+                            <tr>
+                                <td style="font-weight: 500;">@Model.Requests[i].SubUnit @Model.Requests[i].Product.ProductName</td>
+                                <td>@Model.Requests[i].CatalogNumber</td>
+                                @if (@Model.Requests[i].Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                                {
+                                    <td>@Model.Requests[i].Unit</td>
+                                    double unitPrice = (Model.Requests[i].Cost) / Model.Requests[i].Unit;
+                                    <td>@unitPrice.ToString("N2")</td>
+                                }
 
-                                                <td>@Model.Requests[i].Cost</td>
-                                            </tr>
+                                <td>@Model.Requests[i].Cost</td>
+                            </tr>
 
 
-                                        }*@
+                        }*@
                                     @foreach (var request in Model.Requests)
                                     {
                                         <tr>
@@ -213,7 +220,7 @@
                             <div class="m-auto">
                                 <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
 
-                                <input type="submit" class="custom-cancel custom-button cancel-email" asp-action="CancelEmailModal" value="Cancel Email"/>
+                                <input type="submit" class="custom-cancel custom-button cancel-email" asp-action="CancelEmailModal" value="Cancel Email" />
                             </div>
                         </div>
                     </div>

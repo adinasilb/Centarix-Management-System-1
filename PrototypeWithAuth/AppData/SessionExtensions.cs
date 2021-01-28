@@ -25,10 +25,10 @@ namespace PrototypeWithAuth.AppData
             //}
 
             var jsonstring = JsonConvert.SerializeObject(value,
-                        new JsonSerializerSettings()
-                        {
-                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-                        });
+                       Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings()
+                       {
+                           ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                       });
             session.SetString(key, jsonstring);
         }
 

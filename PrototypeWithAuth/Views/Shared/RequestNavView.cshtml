@@ -422,7 +422,7 @@
             if ($("#tdprconfirmemail").val()) {
                 console.log("tdprconfirmemail");
                 $("#tdprconfirmemail").hide();
-                $itemurl = "/Requests/ConfirmEmailModal/?id=" + $("#orderStepID").val() + "";
+                $itemurl = "/Requests/ConfirmEmailModal/" + $.fn.getRequestIndexString();
                 $("#loading").show();
                 $.fn.CallPage($itemurl, "confirmemail");
             }
@@ -430,28 +430,13 @@
             if ($("#tdterms").val()) {
                 $("#tdterms").hide();
                 //alert("in tdterms.val()");
-                $itemurl = "/Requests/TermsModal/?id=" + $("#orderStepID").val() + "&isSingleRequest=true";
+                $itemurl = "/Requests/TermsModal/" + $.fn.getRequestIndexString() ;
                 console.log("url " + $itemurl)
                 //$("#loading").show();
                 $.fn.CallPage($itemurl, "terms");
             }
 
-            if ($("#tduploadquotes").val()) {
-                console.log("upload qoute modal");
-                $("#tdconfirmemail").hide();
-                $itemurl = "/Requests/UploadQuoteModal/?id=" + $("#orderStepID").val();
-                //$("#loading").show();
-                $.fn.CallPage($itemurl, "confirmemail");
-
-            }
-          if ($("#tduploadorders").val()) {
-              console.log("upload order modal");
-              $("#tduploadorders").hide();
-              $itemurl = "/Requests/UploadOrderModal/?id=" + $("#orderStepID").val();
-              //$("#loading").show();
-              $.fn.CallPage($itemurl, "confirmemail");
-
-          }
+           
             $.fn.GetNotifcationCount();
             $.fn.GetNotifications();
             $.fn.getMenuItems();
