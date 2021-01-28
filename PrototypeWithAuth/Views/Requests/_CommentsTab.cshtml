@@ -27,8 +27,7 @@
                 <div style="display:none;" id="popover-content">
 
                     @foreach (var item in Model.CommentTypes)
-                    {
-                        <div class="row px-3 comment-btn">
+                    {<div class="row px-3 comment-btn">
                             @if (item.Equals(AppUtility.CommentTypeEnum.Comment))
                             {
                                 <i class="icon-comment-24px" style="color: #30BCC9; padding-top: .55rem; font-size: 1.25rem;"></i>

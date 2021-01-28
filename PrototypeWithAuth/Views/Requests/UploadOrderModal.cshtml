@@ -10,7 +10,7 @@
     var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
@@ -28,62 +28,81 @@
 }
 
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
-
-<div class="modal modal-document fader documentsModal @form"  @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<script src="~/js/site.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>
+<div class="modal modal-document fader  @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.documentsModal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
-
-                <div class="modal-header modal-header-padding">
-                    <div class="row  modal-header-padding">
-                        <div class="col-3">
-                            <div class="heading-1">Upload Order</div>
-                        </div>
-                        <div class="col-2">
-                       
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group d-inline-flex">
-                                <label asp-for="@Model.ParentRequest.OrderNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                <input asp-for="@Model.ParentRequest.OrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
-                                <span asp-validation-for="@Model.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-3">
-                            <div class="form-group d-inline-flex">
-                                <label asp-for="@Model.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                <input asp-for="@Model.ParentRequest.OrderDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
-                                <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
+                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+                <div>
+                    <div class="modal-header modal-header-padding">
+                        <div class="container-fluid">
+                            <div class="row ">
+                                <div class="col-4">
+                                    <div class="heading-1">Upload Order</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-body">
+
+                <div class="modal-body mt-5 ">
                     @{
                         var urlAction = Url.Action("DocumentsModal", "Requests");
                         var fontSize = "2rem";
                     }
                     <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-                    <div class=" document-margin ">
-                        @{
-                            var filterClass = "opac87";
-                            if (Model.FileStrings != null && Model.FileStrings.Count > 0)
-                            {
-                                filterClass = "order-inv-filter";
+                    <div class="row">
+                        <div class=" offset-4">
+                            @{
+                                var filterClass = "opac87";
+                                if (Model.FileStrings != null && Model.FileStrings.Count > 0)
+                                {
+                                    filterClass = color;
+                                }
                             }
-                        }
-                        <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@false">
-                            <div class="card document-border">
-                                <div class="document-card text-center">
-                                    <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                            <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
+                                <div class="card document-border">
+                                    <div class="document-card text-center">
+                                        <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                    </div>
+                                </div>
+                            </a>
+                            <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
+                        </div>
+                        <div class="col-3 offset-1">
+                            <div class="row">
+                                <div class="form-group ">
+                                    <label asp-for="@Model.ParentRequest.OrderNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.ParentRequest.OrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" readonly />
+                                    <span asp-validation-for="@Model.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
                                 </div>
                             </div>
-                        </a>
-                        <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+                            <div class="row">
+                                <div class="form-group ">
+                                    <label asp-for="@Model.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.ParentRequest.OrderDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" min="1" />
+                                    <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-0">
+                    <div class="mx-auto modal-footer-mt">
+                        <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin" asp-action="UploadOrderModal" />
+                        <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                     </div>
                 </div>
             </form>

@@ -5,17 +5,17 @@
 
     var bcColor = "order-inv-background-color";
     string form = "";
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
     }
-    else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
     {
         bcColor = "lab-man-background-color";
         form = "supplier-form";
     }
-    else if (Model.SectionType == AppUtility.MenuItems.Requests)
+    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
     {
         bcColor = "order-inv-background-color";
         form = "order-inv-form";

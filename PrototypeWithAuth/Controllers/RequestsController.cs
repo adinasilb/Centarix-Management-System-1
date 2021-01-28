@@ -3655,10 +3655,12 @@ namespace PrototypeWithAuth.Controllers
             var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
             var request = HttpContext.Session.GetObject<Request>(requestName);
             request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
+            request.ParentQuote = null;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
+
                     _context.Update(request);
                     await _context.SaveChangesAsync();
                     await SaveCommentsFromSession(request);
@@ -3683,7 +3685,7 @@ namespace PrototypeWithAuth.Controllers
                     ViewBag.ErrorMessage = ex.InnerException;
                 }
             }
-            return RedirectToAction("_IndexTableWithCounts", uploadQuoteOrderViewModel.RequestIndexObject);
+            return RedirectToAction("Index", uploadQuoteOrderViewModel.RequestIndexObject);
         }
 
         private async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget)
