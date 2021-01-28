@@ -3,20 +3,14 @@
 @{
     Layout = null;
     var bcColor = "order-inv-background-color";
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         bcColor = "oper-background-color";
     }
-    else if (Model.SectionType == AppUtility.MenuItems.Requests)
+    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
     {
         bcColor = "order-inv-background-color";
     }
-    TempData["Email1"] = TempData["Email1"]?.ToString() ?? "";
-    TempData["Email2"] = TempData["Email2"]?.ToString() ?? "";
-    TempData["Email3"] = TempData["Email3"]?.ToString() ?? "";
-    TempData["Email4"] = TempData["Email4"]?.ToString() ?? "";
-    TempData["Email5"] = TempData["Email5"]?.ToString() ?? "";
-
     char currency = '₪';
     if (Model.Requests.Count() == 1 && Model.Requests.FirstOrDefault().Currency == AppUtility.CurrencyEnum.USD.ToString())
     {
@@ -47,20 +41,8 @@
                 </div>
 
                 <form action="" method="post" enctype="multipart/form-data" style="height: 100%; ">
-                    <input asp-for="VendorId" style="display: none;" />
                     <input asp-for="RequestID" style="display: none;" />
-                    <input asp-for="ParentRequest.ParentRequestID" style="display:none;" />
-                    @*@Html.HiddenFor(model => model.IsSingleOrder)*@
-                    @*@Html.HiddenFor(model => model.Cart)*@
-                    @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
-                    @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
-                    @Html.HiddenFor(model => model.Page)
-                    @Html.HiddenFor(model => model.RequestStatusID)
-                    @Html.HiddenFor(model => model.SubCategoryID)
-                    @Html.HiddenFor(model => model.VendorID)
-                    @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
-                    @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
-                    @Html.HiddenFor(model => model.SectionType) @*JS shoulde be taking this as a string *@
+
 
 
                     @*<div class="modal-body">

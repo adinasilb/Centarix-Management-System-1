@@ -38,7 +38,7 @@
                 <span class="small-text">If you want to process a single order immediately</span>
             </div>
             <div class="col-4">
-                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow" asp-action="CreateModalView"
+                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow" asp-action="AddItemView"
                         class="text custom-order-inv custom-button float-right create-modal-submit">
                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
                 </button>
@@ -49,9 +49,21 @@
                 <span class="small-text">If you want to order multiple items</span>
             </div>
             <div class="col-4">
-                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart" asp-action="CreateModalView"
+                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart" asp-action="AddItemView"
                         class="text custom-order-inv custom-button float-right create-modal-submit">
                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+                </button>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 align-vertical-middle-col">
+                <span class="small-text">Ask the secretary to get a price quote</span>
+            </div>
+            <div class="col-4">
+                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.RequestPriceQuote" asp-action="CreateModalView"
+                        class="p-0 custom-order-inv custom-button create-modal-submit submit-reorder">
+                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
                 </button>
 
             </div>
@@ -61,17 +73,17 @@
                 <span class="small-text">If you want to get permission from an executive</span>
             </div>
             <div class="col-4">
-                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AskForPermission" asp-action="CreateModalView"
-                        class="text custom-order-inv custom-button float-right create-modal-submit">
-                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AskForPermission.ToString())
+                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased" asp-action="AddItemView"
+                        class="p-0 custom-order-inv custom-button create-modal-submit submit-reorder">
+                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AlreadyPurchased.ToString())
                 </button>
 
             </div>
         </div>
         @*<input type="submit" name="OrderType" value="Mark As Ordered" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-            <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-            <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-            <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>*@
+        <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+        <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
+        <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>*@
         @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
     </div>
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
