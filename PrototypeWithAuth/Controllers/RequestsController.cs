@@ -1679,7 +1679,13 @@ namespace PrototypeWithAuth.Controllers
                 }
                 RequestNum++;
             }
+            var action = "Index";
 
+
+            if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote)
+            {
+                action = "LabManageOrders";
+            }
             var isEmail = true;
             var emailNum = 1;
             var emails = new List<string>();
@@ -1791,7 +1797,12 @@ namespace PrototypeWithAuth.Controllers
                                     r.Product.ProductSubcategory = null;
                                     r.Product.Vendor = null;
 
-                                    _context.Add(r);
+                                    if(r.OrderType != AppUtility.OrderTypeEnum.OrderNow)
+                                    {
+                                        r.Product = null;
+                                    }
+
+                                    _context.Update(r);
                                     await _context.SaveChangesAsync();
                                 }
 
@@ -1815,22 +1826,29 @@ namespace PrototypeWithAuth.Controllers
                                     }
                                 } while (commentExists);
                                 await _context.SaveChangesAsync();
-                                MoveDocumentsOutOfTempFolder(requests.FirstOrDefault());
+                                if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.OrderNow)
+                                {
+                                    MoveDocumentsOutOfTempFolder(requests.FirstOrDefault());
+                                }
+                      
                                 //save the document
                                 foreach (var request in requests)
                                 {
+
                                     string NewFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
                                     string folderPath = Path.Combine(NewFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
                                     Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
 
                                     string uniqueFileName = 1 + "OrderEmail.pdf";
                                     string filePath = Path.Combine(folderPath, uniqueFileName);
+                                    if(System.IO.File.Exists(filePath))
+                                    {
+                                        System.IO.File.Delete(filePath);
+                                    }
 
                                     System.IO.File.Copy(uploadFile, filePath); //make sure this works for each of them
-                                }
-                                foreach (var request in requests /*_context.Requests.Where(r => r.ParentRequestID == confirmEmail.ParentRequest.ParentRequestID)
-                            .Include(r => r.Product).ThenInclude(p => p.Vendor)*/)
-                                {
+
+                                    request.Product = await _context.Products.Where(p => p.ProductID == request.ProductID).Include(p=>p.Vendor).FirstOrDefaultAsync();
                                     RequestNotification requestNotification = new RequestNotification();
                                     requestNotification.RequestID = request.RequestID;
                                     requestNotification.IsRead = false;
@@ -1842,9 +1860,8 @@ namespace PrototypeWithAuth.Controllers
                                     requestNotification.Controller = "Requests";
                                     requestNotification.Action = "NotificationsView";
                                     requestNotification.OrderDate = DateTime.Now;
-                                    requestNotification.Vendor =_context.Vendors.Where(v=>v.VendorID == request.Product.VendorID).Select(v=>v.VendorEnName).FirstOrDefault();
+                                    requestNotification.Vendor =request.Product.Vendor.VendorEnName;
                                     _context.Update(requestNotification);
-
                                 }
                                 await _context.SaveChangesAsync();
 
@@ -1865,10 +1882,12 @@ namespace PrototypeWithAuth.Controllers
                      */
 
                 }
-                return RedirectToAction("Index", confirmEmailViewModel.RequestIndexObject);
+
+
+                return RedirectToAction(action, confirmEmailViewModel.RequestIndexObject);
 
             }
-            return RedirectToAction("Index", confirmEmailViewModel.RequestIndexObject);
+            return RedirectToAction(action, confirmEmailViewModel.RequestIndexObject);
 
         }
    
@@ -2049,180 +2068,13 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [HttpGet]
-
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ConfirmQuoteOrderEmailModal(int id)
-        {
-            var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
-                .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentRequest).Include(r => r.ParentQuote).ToList();
-            ParentRequest parentRequest = new ParentRequest();
-            parentRequest.OrderDate = DateTime.Now;
-            parentRequest.ApplicationUserID = _userManager.GetUserId(User);
-            int lastParentRequestOrderNum = 0;
-            if (_context.ParentRequests.Any())
-            {
-                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
-            }
-            parentRequest.OrderNumber = lastParentRequestOrderNum;
-            _context.Update(parentRequest);
-            _context.SaveChanges();
-            foreach (var request in requests)
-            {
-                request.ParentRequestID = parentRequest.ParentRequestID;
-                _context.Update(request);
-                _context.SaveChanges();
-            }
-            ConfirmQuoteOrderEmailViewModel confirmEmail = new ConfirmQuoteOrderEmailViewModel
-            {
-                Requests = requests,
-                VendorId = id
-
-            };
-            //base url needs to be declared - perhaps should be getting from js?
-            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
-            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
-
-            //render the purchase order view into a string using a the confirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("PurchaseQuoteOrderView", confirmEmail);
-            //instantiate a html to pdf converter object
-            HtmlToPdf converter = new HtmlToPdf();
-
-            PdfDocument doc = new PdfDocument();
-            // create a new pdf document converting an url
-            doc = converter.ConvertHtmlString(renderedView, baseUrl);
-
-            foreach (var request in requests)
-            {
-                //creating the path for the file to be saved
-                string path1 = Path.Combine("wwwroot", "files");
-                string path2 = Path.Combine(path1, request.RequestID.ToString());
-                //create file
-                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-                Directory.CreateDirectory(folderPath);
-                string uniqueFileName = "OrderPDF.pdf";
-                string filePath = Path.Combine(folderPath, uniqueFileName);
-                // save pdf document
-                doc.Save(filePath);
-            }
-            // close pdf document
-            doc.Close();
-
-            return PartialView(confirmEmail);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ConfirmQuoteOrderEmailModal(ConfirmQuoteOrderEmailViewModel confirmQuoteOrderEmail)
-        {
-            var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.Product.VendorID == confirmQuoteOrderEmail.VendorId && r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
-                     .Include(r => r.ParentRequest).ThenInclude(r => r.ApplicationUser).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
-            string uploadFolder1 = Path.Combine("~", "files");
-            string uploadFolder = Path.Combine("wwwroot", "files");
-            string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
-            string uploadFolder3 = Path.Combine(uploadFolder2, "Orders");
-            string uploadFile = Path.Combine(uploadFolder3, "OrderPDF.pdf");
-
-            if (System.IO.File.Exists(uploadFile))
-            {
-                //instatiate mimemessage
-                var message = new MimeMessage();
-
-                //instantiate the body builder
-                var builder = new BodyBuilder();
-
-
-                string ownerEmail = requests.FirstOrDefault().ParentRequest.ApplicationUser.Email;
-                string ownerUsername = requests.FirstOrDefault().ParentRequest.ApplicationUser.FirstName + " " + requests.FirstOrDefault().ParentRequest.ApplicationUser.LastName;
-                string ownerPassword = requests.FirstOrDefault().ParentRequest.ApplicationUser.SecureAppPass;
-                string vendorEmail = requests.FirstOrDefault().Product.Vendor.OrdersEmail;
-                string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
-
-                //add a "From" Email
-                message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
-
-                // add a "To" Email
-                message.To.Add(new MailboxAddress(vendorName, vendorEmail));
-
-                //subject
-                message.Subject = "Order from Centarix to " + vendorName;
-
-                //body
-                builder.TextBody = @"Please see attached order" + "\n" + "Thank you";
-                builder.Attachments.Add(uploadFile);
-
-                message.Body = builder.ToMessageBody();
-
-                bool wasSent = false;
-
-                using (var client = new SmtpClient())
-                {
-
-                    client.Connect("smtp.gmail.com", 587, false);
-                    client.Authenticate(ownerEmail, ownerPassword);// ownerPassword);//
-
-                    //"FakeUser@123"); // set up two step authentication and get app password
-                    try
-                    {
-                        client.Send(message);
-                        wasSent = true;
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-
-                    client.Disconnect(true);
-                    if (wasSent)
-                    {
-                        var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                        foreach (var quote in requests)
-                        {
-                            quote.RequestStatusID = 2;
-                            quote.ParentRequest.OrderDate = DateTime.Now;
-                            //_context.Update(quote.ParentQuote);
-                            //_context.SaveChanges();
-                            _context.Update(quote);
-                            _context.SaveChanges();
-                            RequestNotification requestNotification = new RequestNotification();
-                            requestNotification.RequestID = quote.RequestID;
-                            requestNotification.IsRead = false;
-                            requestNotification.RequestName = quote.Product.ProductName;
-                            requestNotification.ApplicationUserID = quote.ApplicationUserCreatorID;
-                            requestNotification.Description = "item ordered";
-                            requestNotification.NotificationStatusID = 2;
-                            requestNotification.TimeStamp = DateTime.Now;
-                            requestNotification.Controller = "Requests";
-                            requestNotification.Action = "NotificationsView";
-                            requestNotification.OrderDate = DateTime.Now;
-                            requestNotification.Vendor = quote.Product.Vendor.VendorEnName;
-                            _context.Update(requestNotification);
-                            _context.SaveChanges();
-                        }
-
-                    }
-
-                }
-                return RedirectToAction("LabManageOrders");
-            }
-
-            else
-            {
-                return RedirectToAction("Error");
-            }
-
-
-        }
-
-
-
         /*LABMANAGEMENT*/
         [HttpGet]
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> LabManageQuotes()
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID==6)
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID==6)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator)
@@ -2235,16 +2087,17 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "LabManagement")]
-        public async Task<IActionResult> LabManageOrders()
+        public async Task<IActionResult> LabManageOrders( RequestIndexObject requestIndexObject)
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.ParentQuote.QuoteStatusID == 4)
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID==6)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator)
                 .ToLookup(r => r.Product.Vendor);
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Orders;
+            labManageQuotesViewModel.RequestIndexObjext = requestIndexObject;
             return View(labManageQuotesViewModel);
         }
 
@@ -3839,11 +3692,23 @@ namespace PrototypeWithAuth.Controllers
             List<Request> requests = new List<Request>();
             if (vendorID != 0)
             {
-                requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                        .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart)
-                        .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-                              .Include(r => r.Product).ThenInclude(r => r.Vendor)
-                              .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
+                if(requestIndexObject.SidebarType == AppUtility.SidebarEnum.Cart)
+                {
+                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+          .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart && r.ParentQuote.QuoteStatusID == 4)
+          .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                .Include(r => r.Product).ThenInclude(r => r.Vendor)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
+                }
+                else if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Orders)
+                {
+                    requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+          .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote && r.ParentQuote.QuoteStatusID==4)
+          .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                .Include(r => r.Product).ThenInclude(r => r.Vendor)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
+                }
+  
             }
             else
             {
@@ -3939,7 +3804,12 @@ namespace PrototypeWithAuth.Controllers
                 RequestNum++;
             }
             termsViewModel.RequestIndexObject.OrderStep = AppUtility.OrderStepsEnum.ConfirmEmail;
-            return RedirectToAction("Index", termsViewModel.RequestIndexObject);
+            var action = "Index";
+            if(requests.FirstOrDefault().OrderType==AppUtility.OrderTypeEnum.RequestPriceQuote)
+            {
+                action = "LabManageOrders";
+            }
+            return RedirectToAction(action, termsViewModel.RequestIndexObject);
         }
 
         [Authorize(Roles = "Reports")]

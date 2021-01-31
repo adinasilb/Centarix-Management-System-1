@@ -6,12 +6,16 @@
 
     if (Model.RequestsByVendor.Count() == 0)
     {
-    <div >
-        @{
-            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
-        }
-    </div>
+        <div>
+            @{
+                await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+            }
+        </div>
     }
+}
+@if (Model.RequestIndexObjext.OrderStep == AppUtility.OrderStepsEnum.ConfirmEmail)
+{
+    <input type="text" id="tdprconfirmemail" class="hidden" value="1" />
 }
 <form method="post" enctype="multipart/form-data" style="height: 100%; ">
     @foreach (var vendor in Model.RequestsByVendor)
@@ -121,7 +125,7 @@
                         <span class="text font-weight-bold">Total: @stringTotalCost</span>
                     </td>
                     <td>
-                        <button class="custom-button custom-button-font lab-man-background-color float-right confirm-quote-order " type="button" value="@vendor.Key.VendorID">Order</button>
+                        <button class="custom-button custom-button-font lab-man-background-color float-right load-terms-modal " type="button" value="@vendor.Key.VendorID">Order</button>
                     </td>
                 </tr>
 
