@@ -261,241 +261,8 @@ $(function () {
 	});
 
 
-	$(".expected-supply-days").change(function () {
-		//console.log("---------------------Request ExpectedSupplyDays: " + $(this).val() + " -------------------------------");
-		var date;
-		if ($(".for-supply-date-calc").length > 0) {
-			//console.log("in first of of check roder date")
-			var date = $(".for-supply-date-calc").val().split("-");
-			var dd = parseInt(date[2]);
-			var mm = parseInt(date[1]);
-			var yyyy = parseInt(date[0]);
-		} else {
-			date = new Date();
-			var dd = parseInt(date.getDate());
-			var mm = parseInt(date.getMonth() + 1);
-			var yyyy = parseInt(date.getFullYear());
-		}
-
-		for (i = 0; i < $(this).val(); i++) {
-			switch (mm) {
-				case 1:
-				case 3:
-				case 5:
-				case 7:
-				case 8:
-				case 10:
-				case 12:
-					if (dd == 31) {
-						dd = 1;
-						if (mm == 12) {
-							mm = 1;
-							yyyy = yyyy + 1;
-						}
-						else {
-							mm = mm + 1;
-						}
-					}
-					else {
-						dd = dd + 1;
-					}
-					break;
-				case 4:
-				case 6:
-				case 9:
-				case 11:
-					if (dd == 30) {
-						dd = 1;
-						if (mm == 12) {
-							mm = 1;
-							yyyy = yyyy + 1;
-						}
-						else {
-							mm = mm + 1;
-						}
-					}
-					else {
-						dd = dd + 1;
-					}
-					break;
-				case 2:
-					var endDayOfFeb = 28;
-					if (yyyy % 4 === 0) {
-						endDayOfFeb = 29;
-					}
-					console.log("dd: " + dd)
-					if (dd == endDayOfFeb) {
-						dd = 1;
-						if (mm == 12) {
-							mm = 1;
-							yyyy = yyyy + 1;
-						}
-						else {
-							mm = mm + 1;
-						}
-					}
-					else {
-						dd = dd + 1;
-					}
-					break;
-			}
-		}
-		if (dd < 10) { dd = '0' + dd }
-		if (mm < 10) { mm = '0' + mm }
-		var supplyDate = yyyy + '-' + mm + '-' + dd;
-		$("input[name='expected-supply-days']").val(supplyDate);
-
-	});
 
 
-	$("#expected-supply-date").change(function () {
-		var date = new Date($(this).val());
-		if (date < new Date()) {
-			return;
-		}
-		console.log("-------expected supply date: " + date)
-		var Sdd = parseInt(date.getDate());
-		var Smm = parseInt(date.getMonth() + 1);
-		var Syyyy = parseInt(date.getFullYear());
-		console.log("sdd + smm + syyyy: " + Sdd + " " + Smm + " " + Syyyy);
-		var OrderDate;
-		if ($('.for-supply-date-calc').length > 0) {
-			console.log("in first of of check roder date")
-			OrderDate = $(".for-supply-date-calc").val().split("-");
-			var Idd = parseInt(OrderDate[2]);
-			var Imm = parseInt(OrderDate[1]);
-			var Iyyyy = parseInt(OrderDate[0]);
-		} else {
-			OrderDate = new Date();
-			var Idd = parseInt(OrderDate.getDate());
-			var Imm = parseInt(OrderDate.getMonth() + 1);
-			var Iyyyy = parseInt(OrderDate.getFullYear());
-
-		}
-
-		console.log("idd + imm + iyyyy: " + Idd + " " + Imm + " " + Iyyyy);
-
-		var amountOfDays = 0;
-		var flag = false;
-		while (!flag) {
-			if (Sdd != Idd || Smm != Imm || Syyyy != Iyyyy) {
-				amountOfDays++;
-				switch (Imm) {
-					case 1:
-					case 3:
-					case 5:
-					case 7:
-					case 8:
-					case 10:
-					case 12:
-						if (Idd == 31) {
-							Idd = 1;
-							if (Imm == 12) {
-								Imm = 1;
-								Iyyyy = Iyyyy + 1;
-							}
-							else {
-								Imm = Imm + 1;
-							}
-						}
-						else {
-							Idd = Idd + 1;
-						}
-						break;
-					case 4:
-					case 6:
-					case 9:
-					case 11:
-						if (Idd == 30) {
-							Idd = 1;
-							if (Imm == 12) {
-								Imm = 1;
-								Iyyyy = Iyyyy + 1;
-							}
-							else {
-								Imm = Imm + 1;
-							}
-						}
-						else {
-							Idd = Idd + 1;
-						}
-						break;
-					case 2:
-						var endDayOfFeb = 28;
-						if (Iyyyy % 4 === 0) {
-							endDayOfFeb = 29;
-						}
-						if (Idd == endDayOfFeb) {
-							Idd = 1;
-							if (Imm == 12) {
-								Imm = 1;
-								Iyyyy = Iyyyy + 1;
-							}
-							else {
-								Imm = Imm + 1;
-							}
-						}
-						else {
-							Idd = Idd + 1;
-						}
-						break;
-				}
-				console.log("amount of days: " + amountOfDays);
-			}
-			else {
-				flag = true;
-			}
-		}
-		$(".expected-supply-days").val(amountOfDays);
-	});
-
-	$("#Request_Warranty").change(function () {
-		var date = null;
-		if ($("#Request_ParentRequest_OrderDate").length > 0) {
-			date = $("#Request_ParentRequest_OrderDate").val().split("-");
-			var dd = date[2];
-			var mm = parseInt(date[1]); //January is 0! ?? do we still need th get month???
-			var yyyy = date[0];
-		} else {
-			date = new Date();
-			var dd = date.getDate();
-			var mm = parseInt(date.getMonth() + 1); //January is 0! ?? do we still need th get month???
-			var yyyy = date.getFullYear();
-		}
-		console.log("Date: " + date);
-
-		var newmm = parseInt(mm) + parseInt($(this).val());
-		mm = newmm;
-
-		if (dd < 10) { dd = '0' + dd }
-
-		var flag = true;
-		while (flag) {
-			if (mm > 12) {
-				mm = parseInt(mm) - 12;
-				yyyy = parseInt(yyyy) + 1;
-			}
-			else {
-				flag = false;
-			}
-		}
-		if (mm < 10) { mm = '0' + mm }
-
-		var warrantyDate = yyyy + '-' + mm + '-' + dd;
-
-		$("input[name='WarrantyDate']").val(warrantyDate);
-	});
-
-
-	$("#Request_ExpectedSupplyDays").change(function () {
-		//var date = $("#Request_ParentRequest_InvoiceDate").val();
-		//console.log("Order date: " + date);
-		//console.log("this.val: " + $(this).val());
-		//var supplyDate = Date.addDays($("#Request_ExpectedSupplyDays").val())
-		//console.log("supplyDate: " + supplyDate);
-		//$("input[name='expected-supply-days']").val(supplyDate);
-
-	});
 
 	$.fn.leapYear = function (year) {
 		return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
@@ -503,25 +270,6 @@ $(function () {
 
 
 
-	//LOCATIONS:
-
-
-
-	//Received Modal => fill up the next selectLocationInstance with the right selections
-
-	//$.fn.CallAjax() = function ($url, $div) {
-
-	//	$.ajax({
-	//		//IMPORTANT: ADD IN THE ID
-	//		url: $url,
-	//		type: 'GET',
-	//		cache: false,
-	//		context: $div,
-	//		success: function (result) {
-	//			this.html(result); //do we need to change this to $div?
-	//		}
-	//	});
-	//};
 
 	$(".modal").on('hide.bs.modal', function () {
 		$('.modal-backdrop').remove()
@@ -550,15 +298,15 @@ $(function () {
 					backdrop: true,
 					keyboard: true,
 				});
-				$(".modal").modal('show');
+				$("#visualZoomModal").modal('show');
 				//$('.modal-backdrop').remove()
-				var firstTDFilled = $("td.filled-location-class");
+				var firstTDFilled = $(".visualzoom td");
 				var height = firstTDFilled.height();
 				var width = firstTDFilled.width();
 				console.log("h: " + height + "------ w: " + width);
 				//$("td").height(height);
 				//$("td").width(width);
-				$(".visualzoom td").css('height', height);
+				$(".visualzoom td").css('height', width);
 				$(".visualzoom td").css('width', width);
 				//$("td").addClass("danger-color");
 			}
@@ -791,7 +539,7 @@ $(function () {
 		$(".load-location-index-view").removeClass("location-type-selected");
 		$(this).addClass("location-type-selected");
 		$.fn.setUpLocationIndexList($(this).attr("value"))
-		$(".second-col").addClass("d-none");
+	$(".second-col").removeClass("filled-location-class");
 	});
 
 	$.fn.setUpLocationIndexList = function (val) {
@@ -818,6 +566,7 @@ $(function () {
 				$('button[value="' + typeId + '"]').addClass("location-type-selected");
 				myDiv.show();
 				this.html(result);
+				
 
 			}
 		});
@@ -931,8 +680,7 @@ $(function () {
 			//console.log("is parent location!");
 			console.log("this has been clicked by a parent location");
 			//add heading name
-			$(".li-name").html($(this).attr("name"));
-			$(".li-name-container").removeClass("d-none");
+			var name =$(this).attr("name");
 			//remove prev sidebars
 			$("body td").removeClass(parentStylingClass);
 			//add new sidebars
@@ -995,21 +743,22 @@ $(function () {
 					//$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
 					//$("table td.li-name").html($(parentLocation).attr("name"));
 					//$("table td.li-name").removeClass("filled-location-class-color")
-					$(".second-col").removeClass("d-none");
+					$(".second-col").addClass("filled-location-class");
 				}
 				//this.html(result);
 				//add heading name
+				
 
 
 			}
 		});
 
-		$.fn.setUpVisual($(this).val(), isParent);
+		$.fn.setUpVisual($(this).val(), isParent, name);
 
 
 	});
 
-	$.fn.setUpVisual = function (val, isParent) {
+	$.fn.setUpVisual = function (val, isParent, name) {
 		$("#loading2")/*.delay(1000)*/.show(0);
 		console.log("in set up visual");
 		//fill up col three with the visual
@@ -1028,12 +777,19 @@ $(function () {
 				if ($('.visual-locations-table td').hasClass("is25")) {
 					$('.visual-locations-table td').css("height", width);
 				}
-
+				if(isParent)
+				{
+					$(".li-name").html(name);
+					$(".li-name-container").removeClass("d-none");
+				}
 				if ($(".hasVisual").length > 0 && isParent == true) {
 					$(".li-name").html("");
+
 					$(".li-name-container").addClass("d-none");
-					$(".second-col").addClass("d-none");
+					$(".second-col").removeClass("filled-location-class");
+								
 				}
+				
 				$("#loading2").hide();
 				$("#loading2")/*.delay(1000)*/.hide(0);
 			}
@@ -1552,7 +1308,7 @@ $(function () {
 				//replaces the modal-view class with the ModalView view
 				//$(".modal-view").html(data);
 				//turn off data dismiss by clicking out of the box and by pressing esc
-				$(".modal-view").modal({
+				$(".modal").modal({
 					backdrop: true,
 					keyboard: false,
 				});
@@ -1562,6 +1318,7 @@ $(function () {
 			}
 		});
 	};
+
 	$.fn.CallModal2 = function (url) {
 		console.log("in call modal2, url: " + url);
 		$(".userImageModal").replaceWith('');
@@ -1746,23 +1503,22 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 	$("body").on("change", "#EmployeeHour_Date", function (e) {
-		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
+		$('.day-of-week').val($.fn.GetDayOfWeek($.fn.formatDateForSubmit($(this).val())));
 	});
 
 	$.fn.GetDayOfWeek = function (date) {
-		var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-		var dayNum = new Date(date).getDay();
-		console.log("daynum" + dayNum)
-		var dayOfWeek = days[dayNum];
+		var dayOfWeek = moment(date).format("dddd");
+		console.log("dayOfWeek" + dayOfWeek)
 		return dayOfWeek
 	}
 
 	$("body").on("change", "#EmployeeHour_Date.update-hour-date", function (e) {
-		$.fn.GetEmployeeHour($(this).val(), $(this).attr("data-workday"));
+		e.preventDefault();
+		$.fn.GetEmployeeHour($.fn.formatDateForSubmit($(this).val()), $(this).attr("data-workday"));
 	});
-	$("body").on("change", "#EmployeeHour_Date.update-work-from-home", function (e) {
-		$.fn.GetEmployeeHourFromHome($(this).val());
-	});
+	//$("body").on("change", "#EmployeeHour_Date.update-work-from-home", function (e) {
+	//	$.fn.GetEmployeeHourFromHome($.fn.formatDateForSubmit($(this).val()));
+	//});
 
 	$.fn.GetEmployeeHour = function (date, workDay) {
 		console.log(date);
@@ -1770,7 +1526,17 @@ $(function () {
 		if (workDay == "1") {
 			workFromHome = true;
 		}
-		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString() + "&isWorkFromHome=" + workFromHome)
+		$.ajax({
+			async: false,
+			url: '_UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + workFromHome,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("#loading").hide();
+		        $(".update-hours-partial").html(data);
+				return false;
+			}
+		});
 	};
 
 
@@ -1783,10 +1549,10 @@ $(function () {
 		console.log("in clarify, checkbox val: " + $(this).val());
 	};
 
-	$.fn.GetEmployeeHourFromHome = function (date) {
-		console.log(date);
-		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString() + "&isWorkFromHome=" + true)
-	};
+	//$.fn.GetEmployeeHourFromHome = function (date) {
+	//	console.log(date);
+	//	$.fn.CallModal('UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + true)
+	//};
 	$.fn.GetEmployeeHourFromToday = function () {
 		$.fn.CallModal('ExitModal');
 	};
@@ -1880,23 +1646,32 @@ $(function () {
 		var entry1 = $('#EmployeeHour_Entry1').val();
 		var entry2 = $('#EmployeeHour_Entry2').val();
 		if (entry1 != '' && exit1 != '') {
-			var exit1fullhours = parseFloat(exit1.substr(0, 2)) + parseFloat(exit1.substr(3, 2)) / 60;
-			var entry1fullhours = parseFloat(entry1.substr(0, 2)) + parseFloat(entry1.substr(3, 2)) / 60;
+			exit1split = exit1.split(":");
+			var exit1fullhours = parseFloat(exit1split[0]) + parseFloat(exit1split[1]) / 60;
+			entry1split = entry1.split(":");
+			var entry1fullhours = parseFloat(entry1split[0]) + parseFloat(entry1split[1]) / 60;
 			totalentryhours = exit1fullhours - entry1fullhours;
 		}
 		if (entry2 != '' && exit2 != '') {
-			var exit2fullhours = parseFloat(exit2.substr(0, 2)) + parseFloat(exit2.substr(3, 2)) / 60;
-			var entry2fullhours = parseFloat(entry2.substr(0, 2)) + parseFloat(entry2.substr(3, 2)) / 60;
+			exit2split = exit2.split(":");
+			var exit2fullhours = parseFloat(exit2split[0]) + parseFloat(exit2split[1]) / 60;
+			entry2split = entry2.split(":");
+			var entry2fullhours = parseFloat(entry2split[0]) + parseFloat(entry2split[1]) / 60;
 			var totalentry2hours = exit2fullhours - entry2fullhours;
 			totalentryhours += totalentry2hours;
 		}
 
 		if (totalentryhours != '') {
 			var hours = Math.floor(totalentryhours);
-			if (hours < 10) { hours = '0' + hours }
-			var mins = Math.floor(60 * (totalentryhours - hours));
+			//if (hours < 10) { hours = '0' + hours }
+			var mins = Math.round(60 * (totalentryhours - hours));
 			if (mins < 10) { mins = '0' + mins }
+			
 			var totalHours = hours + ":" + mins;
+			console.log(hours+":"+ mins)
+			if (hours < 0 || isNaN(hours) || isNaN(mins)) {
+				totalHours = "";
+            }
 		}
 
 		$('#EmployeeHour_TotalHours').val(totalHours);
@@ -2078,6 +1853,63 @@ $(function () {
 			}
 		});
 	});
+	$(".back-button").off("click").on("click", function () {
+		console.log('back button');
+		var type = $(".turn-edit-on-off").attr('name');
+		console.log('type' + type);
+		if (type == 'edit') {
+			var section = "";
+			console.log($('#masterSectionType').val());
+			if ($('#masterSectionType').val() == "Operations") {
+				section = "Operations";
+			}
+			else if ($('#masterSectionType').val() == "LabManagement") {
+				section = "LabManagement";
+			}
+			else if ($('#masterSectionType').val() == "Accounting") {
+				section = "Accounting";
+			}
+			else if ($('#masterSectionType').val() == "Users") {
+				section = "Users";
+			}
+			else if ($('#masterSectionType').val() == "Requests") {
+				section = "Requests";
+			}
+			$("#loading").show();
+			$itemurl = "/Requests/ConfirmExit/?MenuItem=" + section;
+			console.log($itemurl);
+			$.ajax({
+				async: true,
+				url: $itemurl,
+				type: 'GET',
+				cache: true,
+				success: function (data) {
+					$("#loading").hide();
+					var modal = $(data);
+					$('body').append(modal);
+					$(".confirm-exit-modal").modal({
+						backdrop: false,
+						keyboard: false,
+					});
+					//shows the modal
+					$(".confirm-exit-modal").modal('show');
+					$(".modal-open-state").attr("text", "open");
+				}
+
+			});
+		}
+		else {
+			if($('#masterPageType').val()=="RequestLocation")
+			{
+				$(this).closest('.editModal').remove();
+			}
+			else
+			{
+				$(this).closest('.modal').modal('hide');
+			}
+			
+        }
+	})
 
 	$('.turn-edit-on-off').off("click").on("click", function () {
 		//if ($('.modal-open-state').attr("text") == "open") {
@@ -2142,53 +1974,7 @@ $(function () {
 
 		}
 		else if (type == 'details') {
-			console.log("in if details");
-			$('.mark-readonly').attr("disabled", false);
-			//TODO: add in mark-readonly fields for subunits
-			//$.fn.CheckUnitsFilled();
-			//$.fn.CheckSubUnitsFilled();
-
-			$('.mark-edditable').data("val", true);
-			$('.edit-mode-switch-description').text("Edit Mode On");
-			$('.turn-edit-on-off').attr('name', 'edit')
-
-			//turn off document modals
-
-
-
-			if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
-				console.log("orders operations")
-				$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
-				$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
-				$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
-				$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
-			}
-			if ($(this).hasClass('orders')) {
-				console.log("orders")
-				$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
-				$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
-				$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
-				if (($("#Request_SubSubUnitTypeID").hasClass('.mark-readonly'))) {
-					$.fn.EnableSubSubUnits();
-					$.fn.ChangeSubSubUnitDropdown();
-				}
-				if (($("#Request_SubUnitTypeID").n.hasClass('.mark-readonly'))) {
-					console.log('enabling');
-					$.fn.EnableSubUnits();
-					$.fn.ChangeSubUnitDropdown();
-				}
-			}
-			if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
-				$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
-			}
-			if ($(this).hasClass('users')) {
-				$.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
-			    $.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
-				$.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
-				$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
-				$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
-			}
-
+			enableMarkReadonly($(this));
 		}
 		//}
 	});
@@ -2380,5 +2166,6 @@ $(function () {
 
 
 });
+
 
 

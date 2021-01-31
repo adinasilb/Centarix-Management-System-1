@@ -20,7 +20,7 @@
         thisid = "table" + Model.SublocationInstances.FirstOrDefault().LocationInstanceParentID;
     }
 
-<div class="col sublocation-index" id="@thisid" parentName="@Model.PrevLocationInstance.LocationInstanceName">
+<div class="col sublocation-index" style="max-width:250px;" id="@thisid" parentName="@Model.PrevLocationInstance.LocationInstanceName">
    
     <table class="table table-sm border-0">
         @foreach (var locationInstance in Model.SublocationInstances)

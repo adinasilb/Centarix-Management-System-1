@@ -64,7 +64,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">*@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="~/css/datepicker.min.css" rel="stylesheet" type="text/css">
+    @*<link href="~/css/datepicker.min.css" rel="stylesheet" type="text/css">*@
 
 </head>
 
@@ -77,7 +77,8 @@
         <img src="~/images/css/Loading/centarix_loading3.gif" />
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderBody()
+    <div class="request_nav_body"> @RenderBody()</div>
+   
 
     <!--  SCRIPTS  -->
     <!-- JQuery -->
@@ -175,9 +176,9 @@
     <script src="~/lib/bootstrap/dist/src/js/pro/collapsible.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/file-input.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/mdb-autocomplete.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker-date.js"></script>
+    @*<script src="~/lib/bootstrap/dist/src/js/pro/picker-date.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/picker-time.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker.js"></script>
+    <script src="~/lib/bootstrap/dist/src/js/pro/picker.js"></script>*@
     <script src="~/lib/bootstrap/dist/src/js/pro/preloading.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/range-input.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/sidenav.js"></script>
@@ -238,10 +239,10 @@
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/moment.js"></script>
     <script src="~/js/moment.min.js"></script>
-    <script src="~/js/datepicker.min.js"></script>
+    @*<script src="~/js/datepicker.min.js"></script>
 
-    <!-- Include English language -->
-    <script src="~/js/datepicker.en.js"></script>
+     Include English language 
+    <script src="~/js/datepicker.en.js"></script>*@
 
     <script>
       
@@ -306,9 +307,10 @@
                     //shows the modal
                     $(".modal").modal('show');
                     //reset so do not open the modal again
-                    $('#tdconfirmemail').val('');
+                    $('#tduploadquotes').val('');
+                    $('#tduploadorders').val('');
                     $('#tdprconfirmemail').val('');
-                    $.fn.OnOpenModalView();
+                    //$.fn.OnOpenModalView();
                     $(".termsModal").modal('show');
                     AddTempDataMemory();
 
@@ -415,20 +417,51 @@
 
         };*@
 
+        function enableMarkReadonly(element) {
+            console.log("in if details");
+            $('.mark-readonly').attr("disabled", false);
+            //TODO: add in mark-readonly fields for subunits
+            //$.fn.CheckUnitsFilled();
+            //$.fn.CheckSubUnitsFilled();
+            $('.mark-edditable').data("val", true);
+            $('.edit-mode-switch-description').text("Edit Mode On");
+            $('.turn-edit-on-off').attr('name', 'edit');
 
-        function AddTempDataMemory() {
-            //console.log("about to get set the hidden fors in the modal view to remember where the user was");
+            //turn off document modals
+            if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
+                console.log("orders operations");
+                $.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist');
+                $.fn.EnableMaterialSelect('#sublist', 'select-options-sublist');
+                $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
+                $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
+            }
+            if ($(this).hasClass('orders')) {
+                console.log("orders");
+                $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
+                $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
+                $.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
+                if (($("#Request_SubSubUnitTypeID").hasClass('.mark-readonly'))) {
+                    $.fn.EnableSubSubUnits();
+                    $.fn.ChangeSubSubUnitDropdown();
+                }
+                if (($("#Request_SubUnitTypeID").hasClass('.mark-readonly'))) {
+                    console.log('enabling');
+                    $.fn.EnableSubUnits();
+                    $.fn.ChangeSubUnitDropdown();
+                }
+            }
+            if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
+                $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+            }
+            if ($(this).hasClass('users')) {
+                $.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
+                $.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
+                $.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
+                $.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
+                $.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
+            }
+        }
 
-            $("#Page").val(parseInt(@TempData["TempPage"]));
-            $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
-            $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
-            $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
-
-            $("#ApplicationUserID").val("@TempData["TempApplicationUserID"]?.ToString()");
-
-            //console.log("PageType:" + @TempData["TempPageType"]);
-            $("#PageType").val(@TempData["TempPageType"]);
-        };
 
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -464,50 +497,37 @@
                     //$(".modal-backdrop").remove();
                     //$('.modal').find('input').first().focus();
                     //$(".modal").popover('hide')
+
                     switch ($type) {
                         case "details":
-                            $.fn.OnOpenModalView();
-                            AddTempDataMemory();
+                            //$.fn.OnOpenModalView();
                             $("#Request_Cost").trigger('change');
-                            break;
-                        case "edit":
-                            $.fn.OnOpenModalView();
-                            AddTempDataMemory();
+                            var category = $("#categoryDescription").val();
+                            console.log(category)
+                            $("." + category).removeClass("d-none");
+                            console.log("in detilas of case")
+                            $.fn.TurnToDetails();
+                            $('.mdb-select').materialSelect();
+                            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+                            $('.modal-content a:first').tab('show');
                             break;
                         case "reorder":
                             $.fn.OnOpenModalView();
-                            alert("in reorder");
-                            AddTempDataMemory();
                             $("#Request_Cost").trigger('change');
                             //$.fn.CheckCurrency();
                             break;
                         case "create":
-                            $.fn.OnOpenModalView();
-                            AddTempDataMemory();
+                            //$.fn.OnOpenModalView();
                             break;
                         case "received":
                             $('.mdb-select').materialSelect();
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
-                            AddTempDataMemory();
-                            break;
-                        case "confirmemail":
-                            AddTempDataMemory();
-                            break;
-                        case "delete":
-                            AddTempDataMemory();
-                            break;
-                        case "quote":
-                            AddTempDataMemory();
-                            break;
-                        case "orderlate":
-                            //AddTempDataMemory();
-                            break;
+                            break;                    
                         case "termsmodal":
                             //alert("in termsmodal success!");
                             $(".terms-disabled").hide();
                             $(".paid-disabled").hide();
                             $('.mdb-select').materialSelect();
-                            AddTempDataMemory();
                             break;
                     }
 
@@ -524,6 +544,14 @@
                 //}
             });
         }
+        $.fn.TurnToDetails = function () {
+            $('.mark-readonly').prop("disabled", true);
+            $('.mark-readonly input').prop("disabled", true);
+            $('.mark-edditable').data("val", false)
+            $('.edit-mode-switch-description').text("Edit Mode Off");
+            $('.turn-edit-on-off').attr('name', 'details')
+            $('.open-document-modal').data("val", false);
+        };
 
 
         $.fn.OnOpenModalView = function () {
@@ -1010,7 +1038,25 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
-
+        $.fn.getRequestIndexString = function(){
+            var selectedPriceSort = [];
+            $("#priceSortContent .priceSort:checked").each(function (e) {
+                selectedPriceSort.push($(this).attr("enum"));
+            })
+            return(
+            "&PageNumber=" + $('.page-number').val() +
+                "&RequestStatusID=" + $(".request-status-id").val() +
+                "&PageType=" + $('#masterPageType').val() +
+                "&SectionType=" + $('#masterSectionType').val() +
+                "&SidebarType=" + $('#masterSidebarType').val() +
+                "&SelectedPriceSort=" + selectedPriceSort +
+                "&SelectedCurrency=" + $('#tempCurrency').val() +
+                "&SidebarFilterID=" + $('.sideBarFilterID').val());
+        }
+        $.fn.formatDateForSubmit = function(val)
+        {
+            return new Date(val.split("/").reverse().join("-")).toISOString();
+        }
     </script>
 
     @if (IsSectionDefined("requestNavScript"))

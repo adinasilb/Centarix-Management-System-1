@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using PrototypeWithAuth.AppData;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -18,7 +20,6 @@ namespace PrototypeWithAuth.ViewModels
         //public ApplicationUser CurrentUser { get; set; }
         public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
         public List<Request> RequestsByProduct { get; set; }
-        public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
@@ -56,6 +57,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<Payment> NewPayments { get; set; }
         public double Debt { get; set; } //shekel
         public IEnumerable<PaymentType> PaymentTypes { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
         public Dictionary<int, IEnumerable<CompanyAccount>> CompanyAccountListsByPaymentTypeID { get; set; }
         public IEnumerable<CompanyAccount> CompanyAccounts { get; set; }
 
@@ -64,11 +66,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<LocationInstance> LocationInstances { get; set; }
 
         public List<string> EmailAddresses { get; set; } //to pass back the email addresses in the create modal view
-
-
-
-        //The following properties are for remembering where you are on the request Index to follow through to the right page
-        public int? Page { get; set; }
         public int RequestStatusID { get; set; }
         public int SubCategoryID { get; set; }
         public int VendorID { get; set; }
@@ -82,6 +79,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<AppUtility.CommentTypeEnum> CommentTypes { get; set; }
         public List<Comment> Comments { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
-        public bool isEditable { get; set; }
+        public AppUtility.RequestModalType ModalType { get; set; }
+        public bool isRequestQuote { get; set; }
     }
 }

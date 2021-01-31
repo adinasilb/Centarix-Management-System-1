@@ -34,25 +34,27 @@
                 first = true;
             @:</div><div class="d-flex type-outer-div">
             }
-           
-            <div class="type-div" >
-                <fieldset class=" type-fieldset">
-                        <a href="@Url.ActionLink("ItemTableType", "Requests", new { PageType = PageType, SectionType = SectionType, SidebarType = AppUtility.SidebarEnum.Type, SidebarFilterID = Model.ElementAt(i).ProductSubcategoryID + "" } )" class="text text-dark">
-                            @if (Model.ElementAt(i).ImageURL != null)
-                            {
-                                <img class=" type-img " src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
-                            }
-                            else
-                            {
+            var link = "ItemTableType";
+            if(PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
+            {
+                link = "ItemTableEquipmentType";
+            }
+                        <div class="type-div">
+                            <a href="@Url.ActionLink("ItemTableType", "Requests", new { PageType = PageType, SectionType = SectionType, SidebarType = AppUtility.SidebarEnum.Type, SidebarFilterID = Model.ElementAt(i).ProductSubcategoryID + "" } )" class="text text-dark">
+                                <fieldset class=" type-fieldset">
+                                    @if (Model.ElementAt(i).ImageURL != null)
+                                    {
+                                        <img class=" type-img " src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
+                                    }
+                                    else
+                                    {
 
-                                <img class=" type-img" src="~/images/css/CategoryImages/placeholder.png" alt="Type Bottle" />
-                            }
-                        <label class="type-label"> @Model.ElementAt(i).ProductSubcategoryDescription</label>
-                         
-                        </a>
-
-                </fieldset>
-            </div>
+                                        <img class=" type-img" src="~/images/css/CategoryImages/placeholder.png" alt="Type Bottle" />
+                                    }
+                                    <label class="type-label"> @Model.ElementAt(i).ProductSubcategoryDescription</label>
+                                </fieldset>
+                            </a>
+                        </div>
         }
 
 

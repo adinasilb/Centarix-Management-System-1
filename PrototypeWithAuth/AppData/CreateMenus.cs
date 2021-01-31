@@ -50,19 +50,19 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = "summary-link"
                     });
-                    if (pageType == AppUtility.PageTypeEnum.RequestSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Search",
-                        Controller = "Requests",
-                        Action = "Search",
-                        RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.Requests }
-                },
-                        Classes = AllClasses,
-                        ID = "search-link"
-                    });
+                //    if (pageType == AppUtility.PageTypeEnum.RequestSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                //    MainMenuItems.Add(new MenuItems()
+                //    {
+                //        Description = "Search",
+                //        Controller = "Requests",
+                //        Action = "Search",
+                //        RouteValues = new RouteValueDictionary()
+                //{
+                //    {"SectionType", AppUtility.MenuItems.Requests }
+                //},
+                //        Classes = AllClasses,
+                //        ID = "search-link"
+                //    });
                     if (pageType == AppUtility.PageTypeEnum.RequestLocation) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
@@ -138,19 +138,19 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = "inventory-link"
                     });
-                    if (pageType == AppUtility.PageTypeEnum.OperationsSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Search",
-                        Controller = "Requests",
-                        Action = "Search",
-                        RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.Operations }
-                },
-                        Classes = AllClasses,
-                        ID = "search-link"
-                    });
+                //    if (pageType == AppUtility.PageTypeEnum.OperationsSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                //    MainMenuItems.Add(new MenuItems()
+                //    {
+                //        Description = "Search",
+                //        Controller = "Requests",
+                //        Action = "Search",
+                //        RouteValues = new RouteValueDictionary()
+                //{
+                //    {"SectionType", AppUtility.MenuItems.Operations }
+                //},
+                //        Classes = AllClasses,
+                //        ID = "search-link"
+                //    });
                     break;
                 case AppUtility.MenuItems.Accounting:
                     ActiveClasses = " text-dark accounting-filter";
@@ -255,18 +255,18 @@ namespace PrototypeWithAuth.AppData
                         RouteValues = new RouteValueDictionary(),
                         Classes = AllClasses
                     });
-                    if (pageType == AppUtility.PageTypeEnum.LabManagementSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Search",
-                        Controller = "Requests",
-                        Action = "Search",
-                        RouteValues = new RouteValueDictionary()
-                {
-                    {"SectionType", AppUtility.MenuItems.LabManagement }
-                },
-                        Classes = AllClasses
-                    });
+                //    if (pageType == AppUtility.PageTypeEnum.LabManagementSearch) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                //    MainMenuItems.Add(new MenuItems()
+                //    {
+                //        Description = "Search",
+                //        Controller = "Requests",
+                //        Action = "Search",
+                //        RouteValues = new RouteValueDictionary()
+                //{
+                //    {"SectionType", AppUtility.MenuItems.LabManagement }
+                //},
+                //        Classes = AllClasses
+                //    });
                     break;
                 case AppUtility.MenuItems.Protocols:
                     break;
@@ -392,14 +392,15 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Add Item",
                 Controller = "Requests",
-                Action = "CreateModalView",
+                Action = "AddItemView",
                 RouteValues = new RouteValueDictionary()
                 {
                     { "PageType", pageType },
                     { "CategoryType", categoryType }
                 },
                 Classes = menuClass,
-                IconName = "icon-add_circle_outline-24px1"
+                IconName = "icon-add_circle_outline-24px1",
+                AjaxLink = "add-item"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -684,7 +685,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "List",
                 Controller = "Requests",
-                Action = "Index",
+                Action = "ItemTableEquipment",
                 RouteValues = new RouteValueDictionary()
                 {
                     {"SectionType", AppUtility.MenuItems.LabManagement },
@@ -693,7 +694,7 @@ namespace PrototypeWithAuth.AppData
                 IconName = "icon-format_list_bulleted-24px-01",
                 Classes = Classes
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Categories) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            if (SidebarTitle == AppUtility.SidebarEnum.Type) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Categories",

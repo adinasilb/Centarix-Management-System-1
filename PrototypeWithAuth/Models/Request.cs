@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using PrototypeWithAuth.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 using MimeKit.Cryptography;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.Models
 {
@@ -59,9 +60,8 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("SubSubUnitTypeID")]
         [Display(Name = "Unit")]
         public UnitType SubSubUnitType { get; set; }
-        public uint UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
-        public uint UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
-        public uint Quantity { get; set; }
+        //public uint UnitsOrdered { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
+        //public uint UnitsInStock { get; set; } //goes on whatever is the current smallest (if they add a smaller unit --> should be changed in the frontend)
 
         ///[DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
         [Range(1, Double.MaxValue, ErrorMessage = "Field must be more than 0")]
@@ -82,37 +82,64 @@ namespace PrototypeWithAuth.Models
         [Range(0, 255, ErrorMessage = "Field must be positive")]
         [Display(Name = "Warranty (Months)")]
         public byte? Warranty { get; set; } // this is the amount of months of the warranty. the datetime when it ends will be calculated on the frontend (now it's from the date ordered, but should it be from the date received instead?)
-
+        [Display(Name = "Batch/Lot")]
+        public int? Batch { get; set; }
+        [Display(Name = "Expiration Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime? BatchExpiration { get; set; }
         private double _VAT;
-        public double VAT { 
+        public double VAT {
             get {
-                     return .17 * Cost;
-                }
-           private set { _VAT = value; }
+                return Math.Round(.17 * Cost,2);
+            }
+            private set { _VAT = value; }
 
         }
- 
+
         private double _PricePerUnit;
         public double PricePerUnit
         {
             get
             {
-                return Cost/Unit;
+                return Cost / Unit;
             }
             private set { _PricePerUnit = value; }
 
         }
-  
+
+        private double? _PricePerSubUnit;
+        public double? PricePerSubUnit
+        {
+            get
+            {
+                return PricePerUnit/SubUnit;
+            }
+            private set { _PricePerSubUnit = value; }
+
+        }
+
+        private double? _PricePerSubSubUnit;
+        public double? PricePerSubSubUnit
+        {
+            get
+            {
+                return PricePerSubUnit / SubSubUnit;
+            }
+            private set { _PricePerSubSubUnit = value; }
+
+        }
+
         private double _TotalWithVat;
         public double TotalWithVat
         {
             get
             {
-                return VAT+Cost;
+                return Math.Round(VAT + Cost,2);
             }
             private set { _TotalWithVat = value; }
 
         }
+
         [Display(Name = "Exchange Rate")]
         [Range(1, Double.MaxValue)]
         public double ExchangeRate { get; set; } // holding the rate of exchange for this specific request
@@ -127,6 +154,7 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         [Display(Name = "Arrival Date")]
         public DateTime ArrivalDate { get; set; }
+        public DateTime ArrivalDate_submit { get { return ArrivalDate; } set { ArrivalDate = value; } }
         [DataType(DataType.Date)]
         public DateTime CreationDate { get; set; }
         public int? ParentQuoteID { get; set; }
@@ -146,7 +174,9 @@ namespace PrototypeWithAuth.Models
 
         public string? NoteToSupplier { get; set; }
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
-  
+
+        public AppUtility.OrderTypeEnum OrderType {get; set;}
+
         
     }
 }

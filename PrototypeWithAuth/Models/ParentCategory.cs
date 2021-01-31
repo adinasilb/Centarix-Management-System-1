@@ -15,11 +15,17 @@ namespace PrototypeWithAuth.Models
         [Required]
         [Display(Name = "Category")]
         public string ParentCategoryDescription { get; set; }
-            
+        public string ParentCategoryDescriptionEnum { get
+            {
+                return ParentCategoryDescription.Replace(" ", "");
+            } }
+
+
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         // public IEnumerable<Vendor> Vendors { get; set; }
 
         public int CategoryTypeID { get; set; }
         public CategoryType CategoryType { get; set; }
+        public bool isProprietary { get; set; }
     }
 }

@@ -5,12 +5,14 @@
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<div class="row">
-    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType =TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString()">
-        <i class="fas fa-long-arrow-alt-left"></i>
+<div class="row pb-3">
+    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType =TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString()"
+       class="title-label">
+        <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
+        <label class="pl-2">@Model.SidebarFilterName</label>
     </a>
 </div>
-@if ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.RequestRequest ||(AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.OperationsRequest)
+@if ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.RequestRequest || (AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.OperationsRequest)
 {
     <div class="_IndexTableWithCounts">
         @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
@@ -19,9 +21,20 @@
 }
 else
 {
-    <div class="_IndexTable">
-        @{await Html.RenderPartialAsync("_IndexTable", Model); }
-    </div>
+    if (Model.PagedList.Count == 0)
+    {
+        <div>
+            @{
+                await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+            }
+        </div>
+    }
+    else
+    {
+        <div class="_IndexTable">
+            @{await Html.RenderPartialAsync("_IndexTable", Model); }
+        </div>
+    }
 
 }
 

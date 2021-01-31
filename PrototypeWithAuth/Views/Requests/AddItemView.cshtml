@@ -1,0 +1,19 @@
+﻿@model PrototypeWithAuth.ViewModels.ChooseCategoryViewModel
+@*@inject UserManager<ApplicationUser> UserManager*@
+@{
+    ViewData["Title"] = "Add Item";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> _userManager
+
+<div class="col-12 create-user mx-auto on-form-modal order-inv-form" style="width: 60%">
+    <div class="on-form-modal-border" >
+        <div class="outer-partial">
+            @{await Html.RenderPartialAsync("ChooseCategory", Model); }
+        </div>
+    </div>
+</div>

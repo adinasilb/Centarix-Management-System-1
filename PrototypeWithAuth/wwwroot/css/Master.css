@@ -1,4 +1,4 @@
-﻿html {
+﻿u;nithtml {
     overflow: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
@@ -334,6 +334,12 @@ input:not(input[type=button]) {
     font-size: .75rem;
     font-weight: var(--bold-regular);
     margin-bottom: 0px;
+}
+
+.title-label {
+    font-size: 1.75rem;
+    color: var(--black-87);
+    font-weight: var(--bold-medium);
 }
 
 .form-group {

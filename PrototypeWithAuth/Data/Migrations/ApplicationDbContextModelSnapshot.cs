@@ -749,6 +749,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime?>("Exit2")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsBonus")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("OffDayTypeID")
                         .HasColumnType("int");
 
@@ -811,6 +814,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<DateTime?>("Exit2")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsBonus")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDenied")
                         .ValueGeneratedOnAdd()
@@ -1161,6 +1167,126 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            JobSubcategoryTypeID = 301,
+                            Description = "Senior Scientist",
+                            JobCategoryTypeID = 3
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 302,
+                            Description = "Research Associate",
+                            JobCategoryTypeID = 3
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 303,
+                            Description = "Lab Technician",
+                            JobCategoryTypeID = 3
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 304,
+                            Description = "Team Manager",
+                            JobCategoryTypeID = 3
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 305,
+                            Description = "Production Worker",
+                            JobCategoryTypeID = 3
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 306,
+                            Description = "Operation Executive",
+                            JobCategoryTypeID = 3
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 307,
+                            Description = "Business Development",
+                            JobCategoryTypeID = 3
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 308,
+                            Description = "Sales",
+                            JobCategoryTypeID = 3
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 309,
+                            Description = "Lab Manager",
+                            JobCategoryTypeID = 3
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 310,
+                            Description = "Bioinformatician",
+                            JobCategoryTypeID = 3
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 401,
+                            Description = "Senior Scientist",
+                            JobCategoryTypeID = 4
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 402,
+                            Description = "Research Associate",
+                            JobCategoryTypeID = 4
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 403,
+                            Description = "Lab Technician",
+                            JobCategoryTypeID = 4
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 404,
+                            Description = "Team Manager",
+                            JobCategoryTypeID = 4
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 405,
+                            Description = "Production Worker",
+                            JobCategoryTypeID = 4
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 406,
+                            Description = "Operation Executive",
+                            JobCategoryTypeID = 4
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 407,
+                            Description = "Business Development",
+                            JobCategoryTypeID = 4
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 408,
+                            Description = "Sales",
+                            JobCategoryTypeID = 4
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 409,
+                            Description = "Lab Manager",
+                            JobCategoryTypeID = 4
+                        },
+                        new
+                        {
+                            JobSubcategoryTypeID = 410,
+                            Description = "Bioinformatician",
+                            JobCategoryTypeID = 4
+                        },
+                        new
+                        {
                             JobSubcategoryTypeID = 101,
                             Description = "CEO",
                             JobCategoryTypeID = 1
@@ -1320,18 +1446,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             JobSubcategoryTypeID = 1005,
                             Description = "Bioinformatics Researcher",
                             JobCategoryTypeID = 10
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 301,
-                            Description = "Biomarker",
-                            JobCategoryTypeID = 3
-                        },
-                        new
-                        {
-                            JobSubcategoryTypeID = 401,
-                            Description = "Delivery Systems",
-                            JobCategoryTypeID = 4
                         },
                         new
                         {
@@ -1531,8 +1645,8 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 0,
                             Limit = 0,
                             LocationTypeChildID = 401,
-                            LocationTypeName = "-4°C",
-                            LocationTypePluralName = "-4°C"
+                            LocationTypeName = "4°C",
+                            LocationTypePluralName = "4°C"
                         },
                         new
                         {
@@ -1663,6 +1777,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isProprietary")
+                        .HasColumnType("bit");
+
                     b.HasKey("ParentCategoryID");
 
                     b.HasIndex("CategoryTypeID");
@@ -1674,37 +1791,50 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ParentCategoryID = 1,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Plastics"
+                            ParentCategoryDescription = "Plastics",
+                            isProprietary = false
                         },
                         new
                         {
                             ParentCategoryID = 2,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Reagents"
+                            ParentCategoryDescription = "Reagents And Chemicals",
+                            isProprietary = false
                         },
                         new
                         {
                             ParentCategoryID = 3,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Proprietry"
+                            ParentCategoryDescription = "Cells",
+                            isProprietary = false
                         },
                         new
                         {
                             ParentCategoryID = 4,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Reusable"
+                            ParentCategoryDescription = "Reusables",
+                            isProprietary = false
                         },
                         new
                         {
                             ParentCategoryID = 5,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Equipment"
+                            ParentCategoryDescription = "Equipment",
+                            isProprietary = false
                         },
                         new
                         {
                             ParentCategoryID = 6,
                             CategoryTypeID = 2,
-                            ParentCategoryDescription = "Operation"
+                            ParentCategoryDescription = "Operation",
+                            isProprietary = false
+                        },
+                        new
+                        {
+                            ParentCategoryID = 7,
+                            CategoryTypeID = 1,
+                            ParentCategoryDescription = "Proprietry",
+                            isProprietary = true
                         });
                 });
 
@@ -1784,33 +1914,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ApplicationUserID");
 
                     b.ToTable("ParentRequests");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.PartialOffDayType", b =>
-                {
-                    b.Property<int>("PartialOffDayTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PartialOffDayTypeID");
-
-                    b.ToTable("PartialOffDayTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            PartialOffDayTypeID = 1,
-                            Description = "Partial Sick Day"
-                        },
-                        new
-                        {
-                            PartialOffDayTypeID = 2,
-                            Description = "Partial Vacation Day"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Payment", b =>
@@ -2002,12 +2105,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ProductSubcategoryID = 101,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "3D Cells Grow"
-                        },
-                        new
-                        {
                             ProductSubcategoryID = 102,
                             ImageURL = "/images/css/CategoryImages/PCR.png",
                             ParentCategoryID = 1,
@@ -2031,7 +2128,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 105,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Dishes"
+                            ProductSubcategoryDescription = "Petri Dishes"
                         },
                         new
                         {
@@ -2138,84 +2235,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
-                            ProductSubcategoryID = 213,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Plasmid Purification"
-                        },
-                        new
-                        {
                             ProductSubcategoryID = 301,
-                            ImageURL = "/images/css/CategoryImages/virus.png",
                             ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Virus"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 302,
-                            ImageURL = "/images/css/CategoryImages/plasmid.png",
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Plasmid"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 303,
-                            ImageURL = "/images/css/CategoryImages/primer.png",
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Primers"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 304,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Probes"
+                            ProductSubcategoryDescription = "Cells"
                         },
                         new
                         {
                             ProductSubcategoryID = 401,
-                            ImageURL = "/images/css/CategoryImages/beaker.png",
                             ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Beaker"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 402,
-                            ImageURL = "/images/css/CategoryImages/measuring.png",
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Measuring"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 403,
-                            ImageURL = "/images/css/CategoryImages/tube_holder.png",
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Tube Holders"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 404,
-                            ImageURL = "/images/css/CategoryImages/bucket.png",
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Buckets"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 405,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Cooling Racks"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 406,
-                            ImageURL = "/images/css/CategoryImages/196box.png",
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "-196 Box"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 407,
-                            ImageURL = "/images/css/CategoryImages/80box.png",
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "-80 Box"
+                            ProductSubcategoryDescription = "Reusables"
                         },
                         new
                         {
@@ -2466,6 +2494,50 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/furniture.png",
                             ParentCategoryID = 6,
                             ProductSubcategoryDescription = "Furniture"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 701,
+                            ImageURL = "/images/css/CategoryImages/virus.png",
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Virus"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 702,
+                            ImageURL = "/images/css/CategoryImages/plasmid.png",
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Plasmid"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 703,
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Probes"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 704,
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Cells"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 705,
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Bacteria with Plasmids"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 706,
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Blood"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 707,
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Serum"
                         });
                 });
 
@@ -2575,6 +2647,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("Batch")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("BatchExpiration")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CatalogNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2586,10 +2664,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Currency")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("ExchangeRate")
@@ -2613,6 +2687,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("NoteToSupplier")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OrderType")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Paid")
                         .HasColumnType("bit");
 
@@ -2627,9 +2704,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
-
-                    b.Property<long>("Quantity")
-                        .HasColumnType("bigint");
 
                     b.Property<int?>("RequestStatusID")
                         .HasColumnType("int");
@@ -2664,12 +2738,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("UnitTypeID")
                         .HasColumnType("int");
 
-                    b.Property<long>("UnitsInStock")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("UnitsOrdered")
-                        .HasColumnType("bigint");
-
                     b.Property<byte?>("Warranty")
                         .HasColumnType("tinyint");
 
@@ -2700,8 +2768,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("UnitTypeID");
 
                     b.ToTable("Requests");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Request");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>
@@ -3308,6 +3374,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
+                    b.Property<double>("BonusSickDays")
+                        .HasColumnType("float");
+
+                    b.Property<double>("BonusVacationDays")
+                        .HasColumnType("float");
+
                     b.Property<int?>("CitizenshipID")
                         .HasColumnType("int");
 
@@ -3441,13 +3513,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             Description = "UpdateHours",
                             Icon = "icon-notification_timekeeper-24px"
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Reorder", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.Request");
-
-                    b.HasDiscriminator().HasValue("Reorder");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -3597,8 +3662,8 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("OffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.PartialOffDayType", "PartialOffDayType")
-                        .WithMany("EmployeeHours")
+                    b.HasOne("PrototypeWithAuth.Models.OffDayType", "PartialOffDayType")
+                        .WithMany("EmployeeHoursPartial")
                         .HasForeignKey("PartialOffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -3626,12 +3691,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.OffDayType", "OffDayType")
-                        .WithMany()
+                        .WithMany("EmployeeHoursAwaitingApprovals")
                         .HasForeignKey("OffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.PartialOffDayType", "PartialOffDayType")
-                        .WithMany()
+                    b.HasOne("PrototypeWithAuth.Models.OffDayType", "PartialOffDayType")
+                        .WithMany("EmployeeHoursAwaitingApprovalsPartial")
                         .HasForeignKey("PartialOffDayTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

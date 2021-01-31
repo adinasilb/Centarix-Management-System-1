@@ -32,7 +32,7 @@
 			alert("didn't go into any edits");
 		}
 		console.log("url: " + url);
-
+		console.log(...formData)
 		$.ajax({
 			processData: false,
 			contentType: false,
@@ -45,7 +45,7 @@
 				$.fn.getMenuItems();
 				//reload index pages
 				if ($('.turn-edit-on-off').hasClass('operations')) {
-					ajaxCallToPartial();
+					    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
 				}
 				else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 
@@ -83,7 +83,7 @@
 					});
 
 				} else if ($('.turn-edit-on-off').hasClass('orders')) {
-					ajaxCallToPartial();
+					    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
 				}
 				//sets up error message if it has the setup in the view
 				//if ($(".hasErrorMessage").length > 0) {
@@ -147,15 +147,7 @@
 		});
 	});
 
-	$.fn.TurnToDetails = function () {
-		$('.mark-readonly').prop("disabled", true);
-		$('.mark-readonly input').prop("disabled", true);
-		$('.mark-edditable').data("val", false)
-		$('.edit-mode-switch-description').text("Edit Mode Off");
-		$('.turn-edit-on-off').attr('name', 'details')
-		$('.open-document-modal').data("val", false);
-	};
-
+	
 	$(".cancel-request-edits").off("click").on("click", function (e) {
 		$(".confirm-edit-modal").remove();
 		console.log("cancel request edits");
@@ -191,4 +183,14 @@
 		$('.turn-edit-on-off').prop('checked', true);
 		$('.open-document-modal').attr("data-val", true);
 	});
+
+	$(".exit-edit-modal").off("click").on("click", function (e) {
+		$('.confirm-exit-modal').modal('hide');
+		$(".modal").hide();
+	})
+
+	$(".return-edit-modal").off("click").on("click", function (e) {
+		$('.confirm-exit-modal').remove();
+		//$(".modal").attr("data-backdrop", true);
+	})
 });

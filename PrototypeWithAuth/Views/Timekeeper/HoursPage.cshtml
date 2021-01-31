@@ -139,7 +139,7 @@
                 </div>
                 <div class="col p-3" style="width:9%;">
 
-                    @eh.EmployeeHours.Entry1?.ToShortTimeString()
+                    @eh.EmployeeHours.Entry1?.ToString("HH:mm")
                     @{ var entry = "";}
                     @if (eh.EmployeeHours.Entry1 == null)
                     {
@@ -151,12 +151,12 @@
                         <br />
 
                     }
-                    @eh.EmployeeHours.Entry2?.ToShortTimeString()
+                    @eh.EmployeeHours.Entry2?.ToString("HH:mm")
 
                 </div>
                 <div class="col p-3" style="width:9%;">
                     @{ var exit = "";}
-                    @eh.EmployeeHours.Exit1?.ToShortTimeString()
+                    @eh.EmployeeHours.Exit1?.ToString("HH:mm")
                     @if (eh.EmployeeHours.Entry2 != null && eh.EmployeeHours.Exit2 == null)
                     {
                         <br />
@@ -184,7 +184,7 @@
                         <br />
 
                     }
-                    @eh.EmployeeHours.Exit2?.ToShortTimeString()
+                    @eh.EmployeeHours.Exit2?.ToString("HH:mm")
 
 
                 </div>

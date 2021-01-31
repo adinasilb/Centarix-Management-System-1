@@ -295,6 +295,8 @@ namespace PrototypeWithAuth.Controllers
                 registerUserViewModel.Password = newPassword;
             }
             IdentityResult result = await _userManager.CreateAsync(user, registerUserViewModel.Password);
+            await _userManager.ResetAuthenticatorKeyAsync(user);
+            await _userManager.UpdateSecurityStampAsync(user);
             //var role = _context.Roles.Where(r => r.Name == "Admin").FirstOrDefault().Id;
             if (result.Succeeded)
             {
@@ -651,6 +653,8 @@ namespace PrototypeWithAuth.Controllers
                     employeeEditted.EmployeeStatusID = selectedStatusID;
                     employeeEditted.RollOverSickDays = registerUserViewModel.NewEmployee.RollOverSickDays;
                     employeeEditted.RollOverVacationDays = registerUserViewModel.NewEmployee.RollOverVacationDays;
+                    employeeEditted.BonusSickDays = registerUserViewModel.NewEmployee.BonusSickDays;
+                    employeeEditted.BonusVacationDays = registerUserViewModel.NewEmployee.BonusVacationDays;
                     //employeeEditted.JobSubategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
 
                     _context.Update(employeeEditted);
@@ -1361,6 +1365,11 @@ namespace PrototypeWithAuth.Controllers
         {
             var subcategories = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == JobCategoryTypeID).ToList();
             return Json(subcategories);
+        }
+
+        public bool CheckUserEmailExist(bool isEdit, string email, string currentEmail)
+        {
+            return !_context.Users.Where(u => u.Email.ToLower().Equals(email.ToLower())).Any()||(isEdit && currentEmail.ToLower().Equals(email.ToLower()));
         }
 
     }

@@ -181,9 +181,13 @@ span.choose {
     display: none !important;
 }
 
-.RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
+.order-inv-form .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--order-inv-color) !important;
+}
+.supplier-form .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
+    border-radius: 18px;
+    border-color: var(--lab-man-color) !important;
 }
 
 i.fas {
@@ -1293,10 +1297,15 @@ table.table tr td button:focus { /*in order to remove button outine on focus. bu
     border-bottom: 1px solid var(--lab-man-color) !important;
 }
 
-    .labmanage .sublocation-index td.filled-location-class:hover, .orders-and-inv .sublocation-index tr:not(:first-child) td:hover {
+    .labmanage .sublocation-index td.filled-location-class:hover{
         color: var(--lab-man-color);
         border-bottom: 1px solid var(--lab-man-color) !important;
     }
+
+.orders-and-inv .sublocation-index tr:not(:first-child) td:hover {
+    color: var(--order-inv-color);
+    border-bottom: 1px solid var(--order-inv-color) !important;
+}
 
 .labmanage .sublocation-index td .btn:hover {
     color: var(--lab-man-color) !important;
@@ -2018,7 +2027,7 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     width: 154px;
     display: inline-flex;
 } .document-margin {
-    margin-right: 3.4rem;
+    margin-right: 3.2rem;
 } .document-margin-bottom {
     margin-bottom: 3.25rem;
 } .document-icon {
@@ -2166,6 +2175,9 @@ td.visual-shelf {
         display: grid;
         margin-left: .2rem !important;
     }
+.table.is20{
+    width:50% !important;
+}
 table.visual-locations-table td .visual-locations-div {
     padding-top: 1.75rem;
     display: grid;
@@ -2244,4 +2256,14 @@ table.visual-locations-table td .visual-locations-div {
 
 .not-form-ddl.select-wrapper {
 
+}
+
+/*
+    EMPTY PAGE
+*/
+.empty-page-text {
+    color: var(--black-50);
+    font-size: 2.25rem;
+    font-weight: 600;
+    margin-top: 60px;
 }

@@ -15,7 +15,7 @@
         color = "lab-man-color";
     }
 
-    if (!Model.isEditable)
+    if (Model.ModalType == AppUtility.RequestModalType.Summary)
     {
         hiddenSummary = "hidden";
 }
@@ -53,7 +53,7 @@
         <div class="switch col-12 switch-margin">
             <label>
                 <label class="edit-mode-switch-description">Edit Mode Off</label>
-                <input type="checkbox" class="turn-edit-on-off  orders @equipment" value="@Model.Request.RequestID" name="details">
+                <input type="checkbox" class="turn-edit-on-off  orders @equipment" value="@Model.Request.RequestID" productID="@Model.Request.ProductID" name="details">
                 <span class="lever"></span>
             </label>
         </div>
@@ -70,9 +70,7 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-                        @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"), "Select Category",
-new { @class = " mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "parentlist", @disabled = "disabled", @searchable = "Select Category" })
+                        <input class="item-category form-control-plaintext border-bottom " readonly value=@@Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription />
                         <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                     </div>
                 </div>
@@ -146,12 +144,12 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 <div class="row @hiddenSummary">
                     <div class="col-6 pr-4">
                         <label asp-for="Request.ParentRequest.OrderNumber" class="control-label"></label>
-                        <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom " disabled />
+                        <input asp-for="Request.ParentRequest.OrderNumber" class="form-control-plaintext border-bottom "  disabled />
                         <span asp-validation-for="Request.ParentRequest.OrderNumber" class="text-danger-centarix"></span>
                     </div>
                     <div class="col-6">
-                        <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                        <input asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom " disabled />
+                        <label asp-for="Request.ParentRequest.OrderDate"  class="control-label"></label>
+                        <input asp-for="Request.ParentRequest.OrderDate"  asp-format="{0:dd/MM/yyyy}" class="form-control-plaintext border-bottom datepicker"  type="text" disabled />
                         <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger-centarix" />
                     </div>
                 </div>
@@ -160,12 +158,12 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             <div class="row @hiddenSummary">
                 <div class="col-md-6 pr-4">
                     <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
-                    <input asp-for="Request.ParentQuote.QuoteNumber" asp-format="" class="form-control-plaintext border-bottom mark-readonly" disabled />
+                    <input asp-for="Request.ParentQuote.QuoteNumber" class="form-control-plaintext border-bottom mark-readonly" disabled />
                     <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
                 </div>
                 <div class="col-md-6">
                     <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-                    <input asp-for="Request.ParentQuote.QuoteDate" class="form-control-plaintext  border-bottom create-modal-quote-date mark-readonly" disabled />
+                    <input asp-for="Request.ParentQuote.QuoteDate" asp-format="{0:dd/MM/yyyy}" class="form-control-plaintext  border-bottom create-modal-quote-date  mark-readonly datepicker" type="text" disabled />
                     <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
                 </div>
             </div>
@@ -189,17 +187,17 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                                 //adding the amount of months of the warranty to the invoice date
                                 var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
                             }*@
-                        <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty ?? 0).ToString("dd/mm/yyyy")" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                        <input value="@Model.Request.ParentRequest.OrderDate.AddMonths(Model.Request.Warranty ?? 0).ToString("dd'/'MM'/'yyyy")" type="text" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext datepicker"  format="{0:dd/MM/yyyy}" disabled="disabled" />
                     </div>
                 }
                 else
                 {
                     <div class="col-3 @hiddenSummary">
                         <label class="control-label">Estimated End Date</label>
-                        <input value="@DateTime.Now.AddMonths(Model.Request.Warranty ?? 0).ToString("dd/mm/yyyy")" type="date" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext" disabled="disabled" />
+                        <input value="@DateTime.Now.AddMonths(Model.Request.Warranty ?? 0).ToString("dd'/'MM'/'yyyy")" type="text" data-val="@DateTime.Now.AddMonths(Model.Request.Warranty ?? 0).ToString("dd-MM-yyyy")" name="WarrantyDate" class="form-control-plaintext border-bottom -plaintext datepicker" disabled="disabled" />
                     </div>
                 }
-                @if(!Model.isEditable)
+                @if(Model.ModalType == AppUtility.RequestModalType.Summary)
                 { 
                     <div class="col-4">
                         <label asp-for="Request.URL" class="control-label"></label>
@@ -221,7 +219,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <div class="col-md-4 @hiddenSummary">
                         <div class="form-group">
                             <label class="control-label">Expected supply date</label>
-                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("yyyy-MM-dd")" class="form-control-plaintext border-bottom mark-readonly" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" disabled />
+                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" class="form-control-plaintext border-bottom mark-readonly datepicker" type="text" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("dd'/'MM'/'yyyy")" disabled />
                         </div>
                     </div>
 
@@ -230,19 +228,19 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 {
                     <div class="col-md-4 @hiddenSummary">
                         <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days mark-readonly" disabled />
+                        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days " disabled />
                         <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
                     </div>
                     <div class="col-md-4 @hiddenSummary">
                         <div class="form-group">
                             <label class="control-label">Expected supply date</label>
-                            <input value="@DateTime.Now.Date.AddDays(Model.Request.ExpectedSupplyDays ?? 0)" class="form-control-plaintext border-bottom mark-readonly" disabled type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                            <input value="" class="form-control-plaintext border-bottom mark-readonly datepicker" disabled type="text" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
                         </div>
                     </div>
                 }
 
 
-                @if (Model.isEditable)
+                @if (Model.ModalType == AppUtility.RequestModalType.Edit)
                 {
                     <div class="col-4">
                         <label asp-for="Request.URL" class="control-label"></label>
@@ -999,7 +997,8 @@ Model.UnitTypeList,
 
 
 </div>
-
+<script src="~/js/WarantySupplyDateCalc.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>

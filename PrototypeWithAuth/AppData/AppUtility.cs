@@ -36,7 +36,7 @@ namespace PrototypeWithAuth.AppData
         }
         public enum SidebarEnum {
             None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List,  Calibrate, Categories,  Location, Cart, Notifications,
+            Quotes, List,  Calibrate,  Location, Cart, Notifications,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker, 
             Category,  Details, Hours, Salary, 
@@ -83,7 +83,10 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
-        public enum OrderTypeEnum { OrderNow, AddToCart, AskForPermission, WithoutOrder}
+        public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
+        public enum RequestModalType { Create, Edit, Summary}
+        public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased}
+        public enum OrderStepsEnum { TermsModal, UploadQuoteModal, ConfirmEmail, UploadOrderModal }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -126,7 +129,7 @@ namespace PrototypeWithAuth.AppData
         }
 
         public static double ExchangeRateIfNull = 3.5;
-        public static int YearStartedTimeKeeper = 2021;
+        public static int YearStartedTimeKeeper = 2019;
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
         public static double GetExchangeRateFromApi()
         {

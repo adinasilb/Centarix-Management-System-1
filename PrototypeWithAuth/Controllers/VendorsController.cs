@@ -127,7 +127,7 @@ namespace PrototypeWithAuth.Controllers
         // Post: Vendors/Search
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accounting")]
+        [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> Search(VendorSearchViewModel vendorSearchViewModel)
 
         {
@@ -258,7 +258,7 @@ namespace PrototypeWithAuth.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accounting")]
+        [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> Create(CreateSupplierViewModel createSupplierViewModel)
         {
             foreach (var ms in ModelState.ToArray())
@@ -322,7 +322,7 @@ namespace PrototypeWithAuth.Controllers
             return await editFunction(id, SectionType);
         }
         // GET: Vendors/Edit/5
-        [Authorize(Roles = "Accounting")]
+        [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> EditPartial(int? id, AppUtility.MenuItems SectionType, int? Tab)
         {
             return await editFunction(id, SectionType, Tab);
@@ -376,7 +376,7 @@ namespace PrototypeWithAuth.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accounting")]
+        [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> Edit(CreateSupplierViewModel createSupplierViewModel)
         {
             //ModelState.Remove()
@@ -428,6 +428,8 @@ namespace PrototypeWithAuth.Controllers
                     foreach (var vendorComment in createSupplierViewModel.VendorComments)
                     {
                         vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
+                        vendorComment.ApplicationUserID = _userManager.GetUserId(User);
+                        vendorComment.CommentTimeStamp = DateTime.Now;
                         _context.Update(vendorComment);
 
                     }
@@ -441,7 +443,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         // GET: Vendors/Delete/5
-        [Authorize(Roles = "Accounting")]
+        [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -462,7 +464,7 @@ namespace PrototypeWithAuth.Controllers
         // POST: Vendors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accounting")]
+        [Authorize(Roles = "Accounting, LabManagement")]
         public IActionResult DeleteConfirmed(int id)
         {
             var vendor = _context.Vendors.Find(id);
@@ -511,7 +513,7 @@ namespace PrototypeWithAuth.Controllers
         {
             VendorComment comment = new VendorComment();
             comment.CommentType = type;
-            AddCommentViewModel addCommentViewModel = new AddCommentViewModel { VendorComment = comment, Index = index };
+            AddCommentViewModel addCommentViewModel = new AddCommentViewModel { VendorComment = comment, Index = index};
             return PartialView(addCommentViewModel);
         }
         [HttpGet]

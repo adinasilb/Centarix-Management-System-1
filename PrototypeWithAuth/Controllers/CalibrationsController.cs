@@ -147,6 +147,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Calibrate;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementEquipment;
+            if(AppUtility.IsAjaxRequest(this.Request))
+            {
+                return PartialView(createCalibrationViewModel);
+            }
             return View(createCalibrationViewModel);
         }
 

@@ -1,0 +1,229 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+
+@{
+    var category = Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum;
+    var modalType = Model.ModalType;
+    var markReadOnlyClass = "";
+    var hiddenSummaryClass = "";
+    if (modalType == AppUtility.RequestModalType.Edit)
+    {
+        markReadOnlyClass = "mark-readonly";
+    }
+    if (modalType == AppUtility.RequestModalType.Summary)
+    {
+        hiddenSummaryClass = "hidden";
+    }
+    var projectCategories = AppUtility.ParentCategoryEnum.Plastics
+        + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
+        + " " + AppUtility.ParentCategoryEnum.Cells
+        + " " + AppUtility.ParentCategoryEnum.Reusables
+        + " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+    var subProjectCategories = AppUtility.ParentCategoryEnum.Plastics
+        + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
+        + " " + AppUtility.ParentCategoryEnum.Cells
+        + " " + AppUtility.ParentCategoryEnum.Reusables
+        + " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+    var vendorCategories = AppUtility.ParentCategoryEnum.Plastics
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+    var companyIDCategories = AppUtility.ParentCategoryEnum.Plastics
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+    var quoteCategories = AppUtility.ParentCategoryEnum.Plastics
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+    var catalogCategories = AppUtility.ParentCategoryEnum.Plastics
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+    var batchCategories = AppUtility.ParentCategoryEnum.ReagentsAndChemicals
+        + " d-none";
+    var warrantyCategories = AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+    var supplyDaysCategories = AppUtility.ParentCategoryEnum.Plastics
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+    var websiteCategories = AppUtility.ParentCategoryEnum.Plastics
++ " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
++ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Reusables
++ " " + AppUtility.ParentCategoryEnum.Equipment
+        + " d-none";
+}
+
+
+<span class="heading-1 modal-tab-name">Item</span>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+            <input class="item-category form-control-plaintext border-bottom " readonly disabled asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" />
+            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    <div class="col-md-6 px-4">
+        <div class="form-group sublist">
+            <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+            @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
+new SelectList(
+Model.ProductSubcategories,
+"ProductSubcategoryID",
+"ProductSubcategoryDescription"
+), "Select Sub Category",
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
+            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    @*<div class="col-md-4 @projectCategories">
+                            <div class="form-group">
+                                <label class="control-label">Project:</label>
+                                @Html.DropDownListFor(m => m.Request.SubProject.ProjectID,
+        new SelectList(
+        Model.Projects,
+        "ProjectID",
+        "ProjectDescription"
+        ), "Select a Project",
+        new { @class = "mdb-select custom select-dropdown form-control-plaintext Project " + projectCategories + " " + markReadOnlyClass, @id = "subProject", @searchable = "Select a Project" })
+                                <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
+                            </div>
+                        </div>*@
+</div>
+<div class="row">
+    <!--<div class="col-md-4 @subProjectCategories">
+                        <div class="form-group SubProject">
+                            <label class="control-label">Sub Project:</label>
+                            @Html.DropDownListFor(vm => vm.Request.SubProjectID,
+    Enumerable.Empty<SelectListItem>(), "Select Sub Project",
+    new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project" })-->
+    @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
+        </select>*@
+    <!--<span asp-validation-for="Request.SubProjectID" class="text-danger-centarix"></span>
+        </div>
+    </div>-->
+    <div class="col-md-6 @vendorCategories">
+        <div class="form-group">
+            <label asp-for="Request.Product.Vendor" class="control-label"></label>
+            @Html.DropDownListFor(
+vm => vm.Request.Product.VendorID,
+new SelectList(
+Model.Vendors,
+dataValueField: "VendorID",
+dataTextField: "VendorEnName"),
+//FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+"Select a Vendor",
+htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
+)
+            <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
+        </div>
+    </div>
+    <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
+    <div class="col-md-6 @companyIDCategories">
+        <div class="form-group">
+            @* IN MIDDLE *@
+            <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
+            <input asp-for="Request.Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom @companyIDCategories" readonly />
+            @*don't need a validation here because you it's not saving*@
+        </div>
+    </div>
+</div>
+@if (modalType != AppUtility.RequestModalType.Create && Model.Request.ParentQuoteID != null)
+{
+    <div class="row @hiddenSummaryClass @quoteCategories">
+        <div class="col-md-6">
+            <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
+            <input asp-for="Request.ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom @quoteCategories @markReadOnlyClass" disabled/>
+            <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
+            <input asp-for="Request.ParentQuote.QuoteDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" value="" disabled />
+            <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
+
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-md-6 @catalogCategories">
+        <label asp-for="Request.CatalogNumber" class="control-label"></label>
+        <input asp-for="Request.CatalogNumber" class="form-control-plaintext border-bottom @catalogCategories @markReadOnlyClass" />
+        <span asp-validation-for="Request.CatalogNumber" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-md-3 @warrantyCategories @hiddenSummaryClass">
+        <label asp-for="Request.Warranty" class="control-label"></label>
+        <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom @warrantyCategories @markReadOnlyClass" type="text" />
+        <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-md-3 reusables equipment @warrantyCategories @hiddenSummaryClass">
+        <label class="control-label">Estimated End Date</label>
+        @*no date in backend so set to zero*@
+        <input type="text" name="WarrantyDate" class="form-control-plaintext border-bottom datepicker @warrantyCategories " disabled="disabled" />
+    </div>
+    <div class="col-md-3 @batchCategories @hiddenSummaryClass">
+        <label asp-for="Request.Batch" class="control-label"></label>
+        <input asp-for="Request.Batch" class="form-control-plaintext border-bottom @batchCategories @markReadOnlyClass" type="text" />
+        <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-md-3 reusables equipment @batchCategories @hiddenSummaryClass">
+        <label asp-for="Request.BatchExpiration" class="control-label"></label>
+        <input type="text" asp-for="Request.BatchExpiration" class="form-control-plaintext border-bottom datepicker @batchCategories @markReadOnlyClass" disabled="disabled"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass">
+        <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
+        <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days @supplyDaysCategories @markReadOnlyClass" type="text" />
+        <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass">
+        <div class="form-group">
+            <label class="control-label">Expected supply date</label>
+            @if (modalType == AppUtility.RequestModalType.Create)
+            {
+                <input value="" class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
+            }
+            else
+            {
+                if (Model.Request.RequestStatusID == 2)
+                {
+                    <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
+                }
+                else
+                {
+                    <input value="@DateTime.Now.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
+                }
+            }
+        </div>
+    </div>
+    <div class="col-md-4 @websiteCategories">
+        <label asp-for="Request.URL" class="control-label"></label>
+        <input asp-for="Request.URL" class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass" />
+        <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
+    </div>
+</div>
+<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/site.js"></script>
+<script src="~/js/SubUnit.js"></script>
+<script src="~/js/WarantySupplyDateCalc.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>

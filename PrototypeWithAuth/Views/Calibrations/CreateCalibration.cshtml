@@ -10,8 +10,11 @@
 @inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Index";
+    if (!AppUtility.IsAjaxRequest(Context.Request))
+    {
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
 
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 <script src="~/js/calibrationpartials.js"></script>
 <div class="col-12  mx-auto on-form-modal supplier-form" style="width: 60%">

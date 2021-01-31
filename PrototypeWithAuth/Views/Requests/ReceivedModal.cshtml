@@ -6,7 +6,7 @@
 @{
     var bcColor = "order-inv-background-color";
     var form = "order-inv-form";
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         bcColor = "oper-background-color";
         form = "oper-form";
@@ -28,6 +28,14 @@
                 @*the following hidden fors are here so i can do a request.save in for the info that is being given here.
         in the future might want to change it to loading the request from this request id and then adding in the values
         given here (done in the controller)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
                 @Html.HiddenFor(vm => vm.Request.RequestID)
 
                 @Html.HiddenFor(vm => vm.CategoryType)
@@ -77,7 +85,7 @@
                             <div class="row">
                                 <div class="col-4">
                                     <label asp-for="Request.ArrivalDate" class="control-label"></label>
-                                    <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" />
+                                    <input asp-for="Request.ArrivalDate" type="text" class="form-control-plaintext border-bottom datepicker" />
                                     <span asp-validation-for="Request.ArrivalDate" class="text-danger-centarix"></span>
                                 </div>
                                 <div class="col-4">
@@ -196,8 +204,8 @@
                 <input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" />
                 <div class="modal-footer border-0 modal-footer-mt">
                     <div class="m-auto">
-                        <input type="submit" asp-action="ReceivedModal" class="custom-button custom-button-font @bcColor between-button-margin" />
-                        <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button"  onclick="$(this).closest('.modal').modal('hide');" />
+                        <input type="submit" class="submit-received custom-button custom-button-font @bcColor between-button-margin" />
+                        <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button" onclick="$(this).closest('.modal').modal('hide');" />
                     </div>
 
                 </div>
@@ -207,11 +215,32 @@
         </div>
     </div>
 </div>
-
+<script src="~/js/InitializeDatePicker.js"></script>
 <script>
+    $(".submit-received").click( function (e) {
+        //alert("validate form");
+        e.preventDefault();
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+      
+            e.stopPropagation();
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            }          
 
-            //function loadReceivedModalSubLocations(id) {
-            //    alert("id: " + id);
-            //};
+        }
+        else {
+            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $("#loading").show();
+            var formData = new FormData($("#myForm")[0]);
+            console.log(...formData)
+            ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/", "._IndexTableWithCounts", "POST", formData);
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+    
+        return false;
+    });
 
 </script>

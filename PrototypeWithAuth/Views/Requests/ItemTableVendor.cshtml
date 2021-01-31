@@ -5,9 +5,11 @@
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<div class="row">
-    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = Model.PageType, SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString()">
-        <i class="fas fa-long-arrow-alt-left"></i>
+<div class="row pb-3">
+    <a href="@Url.ActionLink("Index", "Vendors", new { @PageType = Model.PageType, SectionType = TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString()"
+       class="title-label">
+        <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
+        <label class="pl-2">@Model.SidebarFilterName</label>
     </a>
 </div>
 @if ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.RequestRequest || (AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.OperationsRequest)

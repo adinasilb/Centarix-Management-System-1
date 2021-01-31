@@ -1,0 +1,80 @@
+﻿@model PrototypeWithAuth.ViewModels.UploadQuoteViewModel;
+@using PrototypeWithAuth.AppData
+@{
+    Layout = null;
+    var markDisabled = "details";
+    int requestid;
+
+    var bcColor = "order-inv-background-color";
+    var color = "order-inv-color";
+    var form = "order-inv-form";
+    var deleteDocumentClass = "";
+    var sectionType = AppUtility.MenuItems.Requests.ToString();
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    {
+        form = "oper-form";
+        bcColor = "oper-background-color";
+        color = "operations-filter";
+        sectionType = AppUtility.MenuItems.Operations.ToString();
+    }
+    //else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    //{
+
+    //    form = "supplier-form";
+    //    bcColor = "lab-man-background-color";
+    //    color = "lab-man-filter";
+    //    sectionType = AppUtility.MenuItems.LabManagement.ToString();
+    //}
+}
+
+@*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
+
+<div class="modal modal-document fader documentsModal @form"  @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+    <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.documentsModal').modal('hide');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
+
+                <div class="modal-header modal-header-padding">
+                    <div class="row">
+                        <div class="col-2">
+                            <div class="heading-1">Upload Quote Details</div>
+                        </div>
+                        <div class="col-3 offset-7">
+                     
+                     
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    @{
+                        var urlAction = Url.Action("DocumentsModal", "Requests");
+                        var fontSize = "2rem";
+                    }
+                    <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+                    <div class=" document-margin ">
+                        @{
+                            var filterClass = "opac87";
+                            if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
+                            {
+                                filterClass = "order-inv-filter";
+                            }
+                        }
+                        <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
+                            <div class="card document-border">
+                                <div class="document-card text-center">
+                                    <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

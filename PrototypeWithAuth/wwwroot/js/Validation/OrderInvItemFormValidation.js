@@ -2,13 +2,12 @@
 	if (this.optional(el)) {
 		return true;
 	}
-	var selectedDate = new Date($(el).val());
-
+	var selectedDate = new Date($(el).attr("data-val"));
+	console.log("selected date"+selectedDate)
 	minDate = new Date(minDate.setHours(0));
 	minDate = new Date(minDate.setMinutes(0));
 	minDate = new Date(minDate.setSeconds(0));
 	minDate = new Date(minDate.setMilliseconds(0));
-
 	return selectedDate >= minDate;
 }, 'Please select a valid date');
 
@@ -18,9 +17,7 @@ $.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
 	var catalogNumber = $("#Request_CatalogNumber").val();
 	var productID = null;
 	var catalogResult = false;
-	if ($(".turn-edit-on-off").length > 0) {
-		productID = $(".turn-edit-on-off").val();
-	}
+	
 	$.ajax({
 		async: false,
 		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
@@ -34,7 +31,6 @@ $.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
 			console.log(status, error);
 		}
 	});
-	//alert("catalog result: catalog#: " + catalogNumber + " vendorid: " + vendorID + " is --> " + catalogResult);
 	return catalogResult;
 }, 'That product has already been created');
 
@@ -43,22 +39,27 @@ $('.ordersItemForm').validate({
 		"Request.Product.ProductName": "required",
 		"Request.CatalogNumber": {
 			required: true,
-			UniqueVendorAndCatalogNumber: true
+				remote:{
+		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
+		type: 'POST',
+		data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Request_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
+		return $(".turn-edit-on-off").attr("productID");
+	}else{return null}}},
+			},
 		},
 		"Request.Product.ProductSubcategory.ParentCategoryID": "selectRequired",
 		"Request.Product.ProductSubcategoryID": "selectRequired",
 		"Request.SubProject.ProjectID": "selectRequired",
 		"Request.SubProjectID": "selectRequired",
 		"Request.Product.VendorID": {
-			"selectRequired" : true,
-			UniqueVendorAndCatalogNumber: true
+			"selectRequired" : true,				
 		},
 		"Request.ParentQuote.QuoteNumber": {
 			required: true
 		},
 		"Request.ParentQuote.QuoteDate": {
 			required: true,
-			mindate: new Date('1900-12-17T03:24:00')
+			//mindate: new Date('1900-12-17T03:24:00')
 		},
 		"Request.ExpectedSupplyDays": {
 			min: 0,
@@ -111,4 +112,13 @@ $('.ordersItemForm').validate({
 		"Request.SubUnitTypeID": "selectRequired",
 		"Request.SubSubUnitTypeID": "selectRequired"
 	},
+	messages: {
+        "Request.CatalogNumber": {
+            remote: "this product has already been created"
+        },
+		}
+});
+
+$('#vendorList').change(function(){
+	$('#Request_CatalogNumber').valid();
 });

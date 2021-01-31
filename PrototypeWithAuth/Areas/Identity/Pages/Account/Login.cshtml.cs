@@ -278,7 +278,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     //    return RedirectToPage("./ResetPassword", new { code = code });
                     //}
-                    
+                    ErrorMessage = "Invalid login attempt.";
                     return Page();
                 }
             }

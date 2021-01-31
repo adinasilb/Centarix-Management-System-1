@@ -18,7 +18,6 @@
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
-                @Html.HiddenFor(model => model.Page)
                 @Html.HiddenFor(model => model.RequestStatusID)
                 @Html.HiddenFor(model => model.SubCategoryID)
                 @Html.HiddenFor(model => model.VendorID)
@@ -43,8 +42,8 @@
                         <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
-                    <div class="back-button">
-                        <button type="button" data-dismiss="modal" style="border-width: 0; background: transparent" onclick="$(this).closest('.modal').modal('hide');">
+                    <div >
+                        <button class="back-button" type="button" data-dismiss="modal" style="border-width: 0; background: transparent" @*onclick="$(this).closest('.modal').modal('hide');"*@>
                             <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                         </button>
                     </div>

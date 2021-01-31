@@ -19,7 +19,6 @@
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
-                @Html.HiddenFor(model => model.Page)
                 @Html.HiddenFor(model => model.RequestStatusID)
                 @Html.HiddenFor(model => model.SubCategoryID)
                 @Html.HiddenFor(model => model.VendorID)
@@ -104,9 +103,7 @@
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-                                            @Html.DropDownListFor(c => c.Request.Product.ProductSubcategory.ParentCategoryID,
-         new SelectList(Model.ParentCategories, "ParentCategoryID", "ParentCategoryDescription"),
-         "Select Category", new { @class = " mdb-select custom select-dropdown form-control-plaintext mark-readonly", @id = "parentlist", @disabled = "disabled", @searchable = "Select Category" })
+                                            <input class="item-category form-control-plaintext border-bottom " readonly value=@Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription />
                                             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
                                         </div>
                                     </div>

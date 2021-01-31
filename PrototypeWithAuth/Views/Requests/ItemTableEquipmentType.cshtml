@@ -1,0 +1,38 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+@using PrototypeWithAuth.AppData
+@{
+    ViewData["Title"] = "Type";
+
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+<div class="row">
+    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType =TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString()">
+        <i class="fas fa-long-arrow-alt-left"></i>
+    </a>
+</div>
+@if ((AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.RequestRequest || (AppUtility.PageTypeEnum)TempData[AppUtility.TempDataTypes.PageType.ToString()] == AppUtility.PageTypeEnum.OperationsRequest)
+{
+    <div class="_IndexTableWithCounts">
+        @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
+    </div>
+
+}
+else
+{
+    if (Model.PagedList.Count == 0)
+    {
+        <div>
+            @{
+                await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+            }
+        </div>
+    }
+    else
+    {
+        <div class="_IndexTable">
+            @{await Html.RenderPartialAsync("_IndexTable", Model); }
+        </div>
+    }
+
+}
+

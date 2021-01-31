@@ -1,0 +1,52 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> _userManager
+
+<div class="container-fluid div-tabs no-box-shadow p-0">
+    @if (Model.ModalType == AppUtility.RequestModalType.Edit)
+    {
+        <div class=" row text-right mb- ">
+            <div class="switch col-12 switch-margin">
+                <label>
+                    <label class="edit-mode-switch-description">Edit Mode Off</label>
+                    <input type="checkbox" class="turn-edit-on-off  orders " value="@Model.Request.RequestID" productID="@Model.Request.ProductID" name="details">
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+    }
+    <div class="tab-content">
+        <div id="item" class="tab-pane fade in active show">
+            @{await Html.RenderPartialAsync("_ItemTab", Model); }
+        </div>
+        @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Request.RequestStatusID == 3)
+        {
+            <div id="location" class="tab-pane fade">
+                @{await Html.RenderPartialAsync("_LocationTab", Model); }
+            </div>
+        }
+        <div id="price" class="tab-pane fade ">
+            @{await Html.RenderPartialAsync("_PriceTab", Model); }
+        </div>
+        <div id="documents" class="tab-pane fade">
+            @{await Html.RenderPartialAsync("_DocumentsTab", Model); }
+        </div>
+        <div id="comments" class="tab-pane fade">
+            @{await Html.RenderPartialAsync("_CommentsTab", Model); }
+        </div>
+        @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary))
+        {<div id="history" class="tab-pane fade">
+                @{await Html.RenderPartialAsync("_HistoryTab", Model); }
+            </div>
+        }
+        @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create))
+        {
+            <div id="order" class="tab-pane fade">
+                @{await Html.RenderPartialAsync("_OrderTab", Model); }
+            </div>
+        }
+    </div>
+</div>

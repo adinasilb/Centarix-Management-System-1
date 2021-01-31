@@ -19,27 +19,24 @@
             search = true;
         }
     }
+    <input type="hidden" valuer="OrderStepID" id="orderStepID" />
+}
+@switch (Model.OrderStepsEnum)
+{
+    case AppUtility.OrderStepsEnum.TermsModal:
+        <input type="text" id="tdprconfirmemail" class="hidden" value="@Model.OrderStepID" />
+        break;
+    case AppUtility.OrderStepsEnum.ConfirmEmail:
+        <input type="text" id="tdterms" class="hidden" value="@Model.OrderStepID" />
+        break;
+    case AppUtility.OrderStepsEnum.UploadQuoteModal:
+        <input type="text" id="tduploadquotes" class="hidden" value="@Model.OrderStepID" />
+        break;
+    case AppUtility.OrderStepsEnum.UploadOrderModal:
+        <input type="text" id="tduploadorders" class="hidden" value="@Model.OrderStepID" />
+        break;
+}
 
-}
-
-@if (TempData["OpenConfirmEmailModal"] != null)
-{
-    <input type="text" id="tdconfirmemail" class="hidden" value="@TempData["RequestID"]" />
-}
-@if (TempData["ParentRequestConfirmEmail"] != null)
-{
-    <input type="text" id="tdprconfirmemail" class="hidden" value="@TempData["ParentRequestID"]" />
-}
-@if (TempData["OpenTermsModal"] != null)
-{
-    var termsType = TempData["OpenTermsModal"].ToString();
-    switch (termsType)
-    {
-        case "Single":
-            <input type="text" id="tdterms" class="hidden" value="@TempData["RequestID"]" />
-            break;
-    }
-}
 
 
 <div class="_IndexTableWithCounts">

@@ -71,19 +71,19 @@ namespace PrototypeWithAuth.Data
                new ParentCategory
                {
                    ParentCategoryID = 2,
-                   ParentCategoryDescription = "Reagents",
+                   ParentCategoryDescription = "Reagents And Chemicals",
                    CategoryTypeID = 1
                },
                new ParentCategory
                {
                    ParentCategoryID = 3,
-                   ParentCategoryDescription = "Proprietry",
+                   ParentCategoryDescription = "Cells",
                    CategoryTypeID = 1
                },
                 new ParentCategory
                 {
                     ParentCategoryID = 4,
-                    ParentCategoryDescription = "Reusable",
+                    ParentCategoryDescription = "Reusables",
                     CategoryTypeID = 1
                 },
                 new ParentCategory
@@ -97,18 +97,25 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryID = 6,
                     ParentCategoryDescription = "Operation",
                     CategoryTypeID = 2
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 7,
+                    ParentCategoryDescription = "Proprietry",
+                    CategoryTypeID = 1,
+                    isProprietary = true
                 }
             );
 
             modelBuilder.Entity<ProductSubcategory>().HasData
               (
 
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 101,
-                    ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "3D Cells Grow"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 101,
+                //    ParentCategoryID = 1,
+                //    ProductSubcategoryDescription = "3D Cells Grow"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 102,
@@ -134,7 +141,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 105,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Dishes"
+                    ProductSubcategoryDescription = "Petri Dishes"
                 },
                 new ProductSubcategory
                 {
@@ -239,87 +246,72 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryDescription = "Media Supplement",
                     ImageURL = "/images/css/CategoryImages/media_supplement.png"
                 },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 213,
-                    ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Plasmid Purification"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 213,
+                //    ParentCategoryID = 2,
+                //    ProductSubcategoryDescription = "Plasmid Purification"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 301,
                     ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Virus",
-                    ImageURL = "/images/css/CategoryImages/virus.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 302,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Plasmid",
-                    ImageURL = "/images/css/CategoryImages/plasmid.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 303,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Primers",
-                    ImageURL = "/images/css/CategoryImages/primer.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 304,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Probes"
+                    ProductSubcategoryDescription = "Cells"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 401,
                     ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Beaker",
-                    ImageURL = "/images/css/CategoryImages/beaker.png"
+                    ProductSubcategoryDescription = "Reusables"
                 },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 402,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Measuring",
-                    ImageURL = "/images/css/CategoryImages/measuring.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 403,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Tube Holders",
-                    ImageURL = "/images/css/CategoryImages/tube_holder.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 404,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Buckets",
-                    ImageURL = "/images/css/CategoryImages/bucket.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 405,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Cooling Racks"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 406,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "-196 Box",
-                    ImageURL = "/images/css/CategoryImages/196box.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 407,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "-80 Box",
-                    ImageURL = "/images/css/CategoryImages/80box.png"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 401,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Beaker",
+                //    ImageURL = "/images/css/CategoryImages/beaker.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 402,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Measuring",
+                //    ImageURL = "/images/css/CategoryImages/measuring.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 403,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Tube Holders",
+                //    ImageURL = "/images/css/CategoryImages/tube_holder.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 404,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Buckets",
+                //    ImageURL = "/images/css/CategoryImages/bucket.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 405,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Cooling Racks"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 406,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "-196 Box",
+                //    ImageURL = "/images/css/CategoryImages/196box.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 407,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "-80 Box",
+                //    ImageURL = "/images/css/CategoryImages/80box.png"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 501,
@@ -569,7 +561,52 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryID = 6,
                     ProductSubcategoryDescription = "Furniture",
                     ImageURL = "/images/css/CategoryImages/furniture.png"
+                },
+                 new ProductSubcategory
+                 {
+                     ProductSubcategoryID = 701,
+                     ParentCategoryID = 7,
+                     ProductSubcategoryDescription = "Virus",
+                     ImageURL = "/images/css/CategoryImages/virus.png"
+                 },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 702,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Plasmid",
+                    ImageURL = "/images/css/CategoryImages/plasmid.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 703,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Probes"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 704,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Cells"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 705,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Bacteria with Plasmids"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 706,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Blood"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 707,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Serum"
                 }
+
               );
             modelBuilder.Entity<RequestStatus>().HasData
           (
@@ -1000,8 +1037,8 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 400,
-                    LocationTypeName = "-4°C",
-                    LocationTypePluralName = "-4°C",
+                    LocationTypeName = "4°C",
+                    LocationTypePluralName = "4°C",
                     LocationTypeChildID = 401,
                     Depth = 0
                 },
@@ -1042,19 +1079,6 @@ namespace PrototypeWithAuth.Data
                              Description = " Vacation Day"
                          }
                   );
-
-            modelBuilder.Entity<PartialOffDayType>().HasData(
-            new PartialOffDayType
-            {
-                PartialOffDayTypeID = 1,
-                Description = "Partial Sick Day"
-            },
-             new PartialOffDayType
-             {
-                 PartialOffDayTypeID = 2,
-                 Description = "Partial Vacation Day"
-             }
-          );
             modelBuilder.Entity<EmployeeHoursStatus>().HasData(
                 new EmployeeHoursStatus
                 {
@@ -1213,6 +1237,126 @@ namespace PrototypeWithAuth.Data
                 {
                     JobSubcategoryTypeID = 210,
                     JobCategoryTypeID = 2,
+                    Description = "Bioinformatician"
+                },
+                                new JobSubcategoryType
+                                {
+                                    JobSubcategoryTypeID = 301,
+                                    JobCategoryTypeID = 3,
+                                    Description = "Senior Scientist"
+                                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 302,
+                    JobCategoryTypeID = 3,
+                    Description = "Research Associate"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 303,
+                    JobCategoryTypeID = 3,
+                    Description = "Lab Technician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 304,
+                    JobCategoryTypeID = 3,
+                    Description = "Team Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 305,
+                    JobCategoryTypeID = 3,
+                    Description = "Production Worker"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 306,
+                    JobCategoryTypeID = 3,
+                    Description = "Operation Executive"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 307,
+                    JobCategoryTypeID = 3,
+                    Description = "Business Development"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 308,
+                    JobCategoryTypeID = 3,
+                    Description = "Sales"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 309,
+                    JobCategoryTypeID = 3,
+                    Description = "Lab Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 310,
+                    JobCategoryTypeID = 3,
+                    Description = "Bioinformatician"
+                },
+                                new JobSubcategoryType
+                                {
+                                    JobSubcategoryTypeID = 401,
+                                    JobCategoryTypeID = 4,
+                                    Description = "Senior Scientist"
+                                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 402,
+                    JobCategoryTypeID = 4,
+                    Description = "Research Associate"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 403,
+                    JobCategoryTypeID = 4,
+                    Description = "Lab Technician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 404,
+                    JobCategoryTypeID = 4,
+                    Description = "Team Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 405,
+                    JobCategoryTypeID = 4,
+                    Description = "Production Worker"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 406,
+                    JobCategoryTypeID = 4,
+                    Description = "Operation Executive"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 407,
+                    JobCategoryTypeID = 4,
+                    Description = "Business Development"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 408,
+                    JobCategoryTypeID = 4,
+                    Description = "Sales"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 409,
+                    JobCategoryTypeID = 4,
+                    Description = "Lab Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 410,
+                    JobCategoryTypeID = 4,
                     Description = "Bioinformatician"
                 },
                 new JobSubcategoryType
@@ -1377,18 +1521,7 @@ namespace PrototypeWithAuth.Data
                     JobCategoryTypeID = 10,
                     Description = "Bioinformatics Researcher"
                 },
-                new JobSubcategoryType
-                {
-                    JobSubcategoryTypeID = 301,
-                    JobCategoryTypeID = 3,
-                    Description = "Biomarker"
-                },
-                new JobSubcategoryType
-                {
-                    JobSubcategoryTypeID = 401,
-                    JobCategoryTypeID = 4,
-                    Description = "Delivery Systems"
-                },
+              
                 new JobSubcategoryType
                 {
                     JobSubcategoryTypeID = 501,
