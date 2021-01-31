@@ -172,7 +172,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                                     .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
                                     .Select(nic => nic.GetPhysicalAddress().ToString())
                                     .FirstOrDefault();
-                                var pa = _context.PhysicalAddresses.Where(p => p.Address == physicalAddress).Where(p => p.EmployeeID == user.Id).Include(p => p.Address).FirstOrDefault();
+                                var pa = _context.PhysicalAddresses.Where(p => p.Address == physicalAddress && p.EmployeeID == user.Id).FirstOrDefault();
                                 if (pa != null)
                                 {
                                     if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
@@ -203,19 +203,29 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                         if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
                         {
                             user.RememberTwoFactor = true;
-                            _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie", DateTime.Now.ToString());
+                            var cookieOptions = new CookieOptions
+                            {
+                                Expires = DateTime.Now.AddDays(30)
+                            };
+                            _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie", DateTime.Now.ToString(), cookieOptions);
                             string address = NetworkInterface
                                     .GetAllNetworkInterfaces()
                                     .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
                                     .Select(nic => nic.GetPhysicalAddress().ToString())
                                     .FirstOrDefault();
-                            var physicalAddress = new Models.PhysicalAddress()
+                            var pa = _context.PhysicalAddresses.Where(p => p.Address == address && p.EmployeeID == user.Id).FirstOrDefault();
+                            if (pa == null)
                             {
-                                EmployeeID = user.Id,
-                                Address = address,
-                                DateCreated = DateTime.Now
-                            };
-                            _context.PhysicalAddresses.Add(physicalAddress);
+                                var physicalAddress = new Models.PhysicalAddress()
+                                {
+                                    Employee = _context.Employees.Where(e => e.Id == user.Id).FirstOrDefault(),
+                                    EmployeeID = user.Id,
+                                    Address = address,
+                                    DateCreated = DateTime.Now
+                                };
+                                _context.PhysicalAddresses.Add(physicalAddress);
+                            }
+                           //else?
                             _context.SaveChanges();
                         }
                     }
