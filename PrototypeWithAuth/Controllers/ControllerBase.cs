@@ -129,6 +129,21 @@ namespace PrototypeWithAuth.Controllers
             }
             return offDaysLeft;
         }
-            
+
+
+
+        public void RemoveRequestSessions()
+        {
+            var requiredKeys = HttpContext.Session.Keys.Where(x => x.StartsWith(AppData.SessionExtensions.SessionNames.Request.ToString()) ||
+                x.StartsWith(AppData.SessionExtensions.SessionNames.Comment.ToString()) ||
+                 x.StartsWith(AppData.SessionExtensions.SessionNames.Email.ToString()));
+            foreach (var k in requiredKeys)
+            {
+                HttpContext.Session.Remove(k); //will clear the session for the future
+            }
+
+        }
+
+
     }
 }

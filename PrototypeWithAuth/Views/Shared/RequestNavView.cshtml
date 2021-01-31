@@ -422,7 +422,7 @@
             if ($("#tdprconfirmemail").val()) {
                 console.log("tdprconfirmemail");
                 $("#tdprconfirmemail").hide();
-                $itemurl = "/Requests/ConfirmEmailModal/" + $.fn.getRequestIndexString();
+                $itemurl = "/Requests/ConfirmEmailModal/?" + $.fn.getRequestIndexString();
                 $("#loading").show();
                 $.fn.CallPage($itemurl, "confirmemail");
             }
@@ -430,7 +430,7 @@
             if ($("#tdterms").val()) {
                 $("#tdterms").hide();
                 //alert("in tdterms.val()");
-                $itemurl = "/Requests/TermsModal/" + $.fn.getRequestIndexString() ;
+                $itemurl = "/Requests/TermsModal/?" + $.fn.getRequestIndexString();
                 console.log("url " + $itemurl)
                 //$("#loading").show();
                 $.fn.CallPage($itemurl, "terms");

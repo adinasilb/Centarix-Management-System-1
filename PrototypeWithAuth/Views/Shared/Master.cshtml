@@ -314,7 +314,7 @@
                     $("#tdterms").val('')
                     //$.fn.OnOpenModalView();
                     $(".termsModal").modal('show');
-                    AddTempDataMemory();
+
 
 
                 }
@@ -526,10 +526,6 @@
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
                             break;                    
                         case "termsmodal":
-                            //alert("in termsmodal success!");
-                            $(".terms-disabled").hide();
-                            $(".paid-disabled").hide();
-                            $('.mdb-select').materialSelect();
                             break;
                     }
 
@@ -599,7 +595,7 @@
             e.stopPropagation();
             $("#loading").show();
 
-            var $itemurl = "TermsModal/?id=" + $(this).val() + "&IsCart=true";
+            var $itemurl = "TermsModal/?vendorID=" + $(this).val() + "&"+$.fn.getRequestIndexString();
             console.log("itemurl: " + $itemurl);
             $.fn.CallPageRequest($itemurl, "termsmodal");
             return false;
@@ -1046,7 +1042,7 @@
                 selectedPriceSort.push($(this).attr("enum"));
             })
             return(
-            "&PageNumber=" + $('.page-number').val() +
+            "PageNumber=" + $('.page-number').val() +
                 "&RequestStatusID=" + $(".request-status-id").val() +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +

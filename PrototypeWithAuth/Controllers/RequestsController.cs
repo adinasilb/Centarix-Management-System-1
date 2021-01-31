@@ -877,7 +877,7 @@ namespace PrototypeWithAuth.Controllers
                         await _context.SaveChangesAsync();
                         MoveDocumentsOutOfTempFolder(requestItemViewModel.Request);
                         await transaction.CommitAsync();
-                        HttpContext.Session.Clear();
+                        base.RemoveRequestSessions();
                     }
                     else
                     {
@@ -921,7 +921,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    HttpContext.Session.Clear();
+                    base.RemoveRequestSessions();
                     ViewBag.ErrorMessage = ex.InnerException?.ToString();
                     requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
                     requestItemViewModel.Projects = await _context.Projects.ToListAsync();
@@ -1532,7 +1532,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Request);
                         await transaction.CommitAsync();
-                        HttpContext.Session.Clear();
+                        base.RemoveRequestSessions();
                     }
                     switch (OrderTypeEnum)
                     {
@@ -1550,7 +1550,7 @@ namespace PrototypeWithAuth.Controllers
                 catch(Exception ex)
                 {
                     transaction.Rollback();
-                    HttpContext.Session.Clear();
+                    base.RemoveRequestSessions();
                     reorderViewModel.ErrorMessages += ex.InnerException + "/n";
                     var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
                     reorderViewModel.RequestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
@@ -1683,7 +1683,7 @@ namespace PrototypeWithAuth.Controllers
             var isEmail = true;
             var emailNum = 1;
             var emails = new List<string>();
-            while (isRequests)
+            while (isEmail)
             {
                 var emailName = AppData.SessionExtensions.SessionNames.Email.ToString() + emailNum;
                 var email = HttpContext.Session.GetObject<string>(emailName);
@@ -1786,6 +1786,7 @@ namespace PrototypeWithAuth.Controllers
                                 foreach (var r in requests)
                                 {
                                     r.RequestStatusID = 2;
+                                    confirmEmailViewModel.RequestIndexObject.RequestStatusID = 2;
                                     //remove all includes
                                     r.Product.ProductSubcategory = null;
                                     r.Product.Vendor = null;
@@ -1849,12 +1850,12 @@ namespace PrototypeWithAuth.Controllers
 
                             }
                             await transaction.CommitAsync();
-                            HttpContext.Session.Clear(); //will clear the session for the future
+                            
                         }
                         catch (Exception e)
                         {
                             transaction.Rollback();
-                            HttpContext.Session.Clear();
+                            base.RemoveRequestSessions();
                             ViewBag.ErrorMessage = e.InnerException;
                         }
 
@@ -1870,7 +1871,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index", confirmEmailViewModel.RequestIndexObject);
 
         }
-
+   
         [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> CancelEmailModal(ConfirmEmailViewModel confirmEmailViewModel)
@@ -3575,8 +3576,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel)
         {
-             var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-             var request = HttpContext.Session.GetObject<Request>(requestName);
+            var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+            var request = HttpContext.Session.GetObject<Request>(requestName);
             uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
             request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
             if (request.RequestStatusID == 6  && request.OrderType!=AppUtility.OrderTypeEnum.AddToCart )
@@ -3605,16 +3606,17 @@ namespace PrototypeWithAuth.Controllers
                         Directory.Move(requestFolderFrom, requestFolderTo);
 
                         await transaction.CommitAsync();
-                        HttpContext.Session.Clear();
+                        base.RemoveRequestSessions();
                     }
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
-                        HttpContext.Session.Clear();
+                        base.RemoveRequestSessions();
                         ViewBag.ErrorMessage = ex.InnerException;
                     }
                 }
             }
+            
             return RedirectToAction("Index", uploadQuoteOrderViewModel.RequestIndexObject);
         }
 
@@ -3675,13 +3677,13 @@ namespace PrototypeWithAuth.Controllers
                     Directory.Move(requestFolderFrom, requestFolderTo);
 
                     await transaction.CommitAsync();
-                    HttpContext.Session.Clear();
+                    base.RemoveRequestSessions();
 
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    HttpContext.Session.Clear();
+                    base.RemoveRequestSessions();
                     ViewBag.ErrorMessage = ex.InnerException;
                 }
             }
@@ -3881,6 +3883,11 @@ namespace PrototypeWithAuth.Controllers
                 }
             };
             termsViewModel.RequestIndexObject = requestIndexObject;
+            termsViewModel.RequestIndexObject.PageType = AppUtility.PageTypeEnum.RequestRequest;
+            if (termsViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Cart)
+            {
+                termsViewModel.RequestIndexObject.SidebarType = AppUtility.SidebarEnum.List;
+            }
             return PartialView(termsViewModel);
         }
 
