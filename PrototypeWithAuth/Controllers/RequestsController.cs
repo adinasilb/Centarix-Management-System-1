@@ -908,7 +908,7 @@ namespace PrototypeWithAuth.Controllers
                             break;
                     }
 
-                    return RedirectToAction(action, new RequestIndexObject()
+                    return RedirectToAction(action, "Requests", new RequestIndexObject()
                     {
                         PageType = AppUtility.PageTypeEnum.RequestRequest,
                         SectionType = AppUtility.MenuItems.Requests,
@@ -2221,7 +2221,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> LabManageQuotes()
         {
             LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2)
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID==6)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator)
@@ -3579,7 +3579,7 @@ namespace PrototypeWithAuth.Controllers
              var request = HttpContext.Session.GetObject<Request>(requestName);
             uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
             request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
-            if (request.RequestStatusID == 6  || request.OrderType!=AppUtility.OrderTypeEnum.AddToCart )
+            if (request.RequestStatusID == 6  && request.OrderType!=AppUtility.OrderTypeEnum.AddToCart )
             {
                 uploadQuoteOrderViewModel.RequestIndexObject.OrderStep = AppUtility.OrderStepsEnum.TermsModal;
                 var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
@@ -3740,7 +3740,7 @@ namespace PrototypeWithAuth.Controllers
                     newRequest.RequestStatusID = 1;
                 }
                 newRequest.ParentQuote = new ParentQuote();
-                newRequest.ParentQuote.QuoteStatusID = -1;
+                newRequest.ParentQuote.QuoteStatusID = 1;
                 newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote;
                 _context.Add(newRequest);
                 await _context.SaveChangesAsync();
