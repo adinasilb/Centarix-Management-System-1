@@ -1499,7 +1499,7 @@ namespace PrototypeWithAuth.Controllers
             //get the old request that we are reordering
             var oldRequest = _context.Requests.Where(r => r.RequestID == reorderViewModel.RequestItemViewModel.Request.RequestID)
                 .Include(r => r.Product)
-                .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).FirstOrDefault();
+                .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).Include(r=>r.Product.Vendor).FirstOrDefault();
 
             
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
@@ -1557,9 +1557,25 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("ReOrderFloatModalView", reorderViewModel);
                 }
              }
-           e
+           
             reorderViewModel.RequestIndexObject.OrderStep = orderStep;
-            return RedirectToAction("Index", reorderViewModel.RequestIndexObject);
+            var action = "Index";
+            switch (OrderTypeEnum)
+            {
+                case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                    orderStep = AppUtility.OrderStepsEnum.UploadOrderModal;
+                    action = "UploadOrderModal";
+                    break;
+                case AppUtility.OrderTypeEnum.OrderNow:
+                    orderStep = AppUtility.OrderStepsEnum.UploadQuoteModal;
+                    action = "UploadQuoteModal";
+                    break;
+                case AppUtility.OrderTypeEnum.AddToCart:
+                    orderStep = AppUtility.OrderStepsEnum.UploadQuoteModal;
+                    action = "UploadQuoteModal";
+                    break;
+            }
+            return RedirectToAction(action, reorderViewModel.RequestIndexObject);
         }
 
         [Authorize(Roles = "Requests")]
