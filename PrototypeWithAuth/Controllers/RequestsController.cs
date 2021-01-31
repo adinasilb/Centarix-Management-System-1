@@ -1475,7 +1475,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             Request request = _context.Requests
-                .Include(r => r.Product)
+                .Include(r => r.Product).ThenInclude(p=>p.ProductSubcategory)
                 .Include(r => r.UnitType)
                 .Include(r => r.SubUnitType)
                 .Include(r => r.SubSubUnitType)
@@ -1499,7 +1499,7 @@ namespace PrototypeWithAuth.Controllers
             //get the old request that we are reordering
             var oldRequest = _context.Requests.Where(r => r.RequestID == reorderViewModel.RequestItemViewModel.Request.RequestID)
                 .Include(r => r.Product)
-                .ThenInclude(p => p.ProductSubcategory).FirstOrDefault();
+                .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).FirstOrDefault();
 
             
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
@@ -1507,7 +1507,7 @@ namespace PrototypeWithAuth.Controllers
             //need to include product to check if in budget
             reorderViewModel.RequestItemViewModel.Request.Product = oldRequest.Product;
 
-
+            reorderViewModel.RequestItemViewModel.Request.RequestID = 0;
             reorderViewModel.RequestItemViewModel.Request.ProductID = oldRequest.ProductID;
             reorderViewModel.RequestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
             reorderViewModel.RequestItemViewModel.Request.CreationDate = DateTime.Now;
@@ -1557,9 +1557,9 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("ReOrderFloatModalView", reorderViewModel);
                 }
              }
-           
+           e
             reorderViewModel.RequestIndexObject.OrderStep = orderStep;
-            return RedirectToAction("_IndexTableWithCounts", reorderViewModel.RequestIndexObject);
+            return RedirectToAction("Index", reorderViewModel.RequestIndexObject);
         }
 
         [Authorize(Roles = "Requests")]
@@ -3678,11 +3678,14 @@ namespace PrototypeWithAuth.Controllers
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
             string requestFolderFrom = Path.Combine(uploadFolder, "0");
             string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-            if (Directory.Exists(requestFolderTo))
+            if (Directory.Exists(requestFolderFrom))
             {
-                Directory.Delete(requestFolderTo);
+                if (Directory.Exists(requestFolderTo))
+                {
+                    Directory.Delete(requestFolderTo);
+                }
+                Directory.Move(requestFolderFrom, requestFolderTo);
             }
-            Directory.Move(requestFolderFrom, requestFolderTo);
         }
 
         [HttpGet]

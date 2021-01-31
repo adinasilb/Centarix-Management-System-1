@@ -288,22 +288,22 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                     <div class="form-group mx-auto text-center mb-4 modal-footer-mt">
                         <div class="row">
                             <div class="col-4">
-                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.RequestPriceQuote" asp-action="CreateModalView"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit submit-reorder">
+                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.RequestPriceQuote" 
+                                        class="p-0 custom-order-inv custom-button create-modal-submit submitOrder">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
                                 </button>
 
                             </div>
                             <div class="col-4">
-                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow" asp-action="CreateModalView"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit">
+                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow" 
+                                        class="p-0 custom-order-inv custom-button create-modal-submit  submitOrder">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
                                 </button>
 
                             </div>
                             <div class="col-4">
-                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart" asp-action="CreateModalView"
-                                        class="p-0 custom-order-inv custom-button  create-modal-submit submit-reorder">
+                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart" 
+                                        class="p-0 custom-order-inv custom-button  create-modal-submit submitOrder">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
                                 </button>
 
@@ -322,8 +322,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased" asp-action="CreateModalView"
-                                        class="p-0 custom-order-inv custom-button create-modal-submit submit-reorder">
+                                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased" 
+                                        class="p-0 custom-order-inv custom-button create-modal-submit  submitOrder ">
                                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AlreadyPurchased.ToString())
                                 </button>
 
@@ -342,8 +342,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 
                         </div>
 
-                        <input type="submit" name="OrderType" id="reorderRequest" value="Request" @*asp-action="ReOrderFloatModalView"*@ class="custom-button custom-button-font @bcColor between-button-margin submit-reorder" />
-
+    
                     </div>
                 </div>
             </form>
@@ -352,7 +351,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 </div>
 
 <script>
-    $(".submit-reorder").off('click').on("click", function (e) {
+ $(".submitOrder").off('click').on("click", function (e) {
         e.preventDefault();
         console.log("submit reorder");
         //alert("validate form");
@@ -360,20 +359,46 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
         var valid = $("#myForm").valid();
         console.log("valid form: " + valid)
         if (!valid) {
-          
+
             if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
-            }
+            $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+        }
 
         }
         else {
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
-            ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/ReOrderFloatModalView', "._IndexTableWithCounts", "POST", formData);
+            var orderType = $(this).val();
+            $.ajax({
+            contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/ReOrderFloatModalView?OrderType="+orderType,
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $('.modal').replaceWith('');
+                    $(".modal-backdrop").remove();
+                    var modal = $(data);
+                    $('body').append(modal);
+                    $(".modal").modal({
+            backdrop: true,
+                        keyboard: false,
+                    });
+                    $(".modal").modal('show');
+                    $("#loading").hide();
+                    return true;
+                },
+                error: function () {
+            $("#loading").hide();
+                    return true;
+                }
+            });
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-       
+
         //return false;
-    });
-</script>
+    });</script>
