@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,11 +19,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Diagnostics;
-using System.Web;
 using RestSharp;
 using Microsoft.AspNetCore.Http;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
@@ -55,6 +57,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public string ReturnUrl { get; set; }
+        public bool TwoFactorSessionExpired { get; set; }
 
         [TempData]
         public string ErrorMessage { get; set; }
@@ -161,41 +164,62 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
                     if (user.RememberTwoFactor == true)
                     {
-                        var cookie = _httpContextAccessor.HttpContext.Request.Cookies["TwoFactorCookie"];
+                        string cookie = null;
+                        var isCookie = true;
+                        var cookieNum = 1;
+                        var cookieName = "";
+                        while (isCookie)
+                        {
+                            cookieName = "TwoFactorCookie" + cookieNum;
+                            if (_httpContextAccessor.HttpContext.Request.Cookies[cookieName] != null)
+                            {
+                                if (_httpContextAccessor.HttpContext.Request.Cookies[cookieName] == user.Id)
+                                {
+                                    isCookie = false;
+                                    cookie = _httpContextAccessor.HttpContext.Request.Cookies[cookieName];
+                                }
+                            }
+                            else
+                            {
+                                isCookie = false;
+                            }
+                            cookieNum++;
+                        }
+
                         if (cookie != null)
                         {
-                            var cookieDate = DateTime.Parse(cookie);
-                            if (DateTime.Now.Subtract(cookieDate).TotalDays < 30)
+                            string physicalAddress = NetworkInterface
+                                .GetAllNetworkInterfaces()
+                                .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                                .Select(nic => nic.GetPhysicalAddress().ToString())
+                                .FirstOrDefault();
+                            var pa = _context.PhysicalAddresses.Where(p => p.Address == physicalAddress && p.EmployeeID == user.Id).FirstOrDefault();
+                            if (pa != null)
                             {
-                                string physicalAddress = NetworkInterface
-                                    .GetAllNetworkInterfaces()
-                                    .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-                                    .Select(nic => nic.GetPhysicalAddress().ToString())
-                                    .FirstOrDefault();
-                                var pa = _context.PhysicalAddresses.Where(p => p.Address == physicalAddress && p.EmployeeID == user.Id).FirstOrDefault();
-                                if (pa != null)
+                                if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
                                 {
-                                    if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
+                                    user.TwoFactorEnabled = false;
+                                    _context.Update(user);
+                                    _context.SaveChanges();
+                                    result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                                    user.TwoFactorEnabled = true;
+                                    _context.Update(user);
+                                    _context.SaveChanges();
+                                    if (result.Succeeded)
                                     {
-                                        user.TwoFactorEnabled = false;
-                                        _context.Update(user);
-                                        _context.SaveChanges();
-                                        result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                                        user.TwoFactorEnabled = true;
-                                        _context.Update(user);
-                                        _context.SaveChanges();
-                                        if (result.Succeeded)
-                                        {
-                                            return LocalRedirect(returnUrl);
-                                        }
-                                        else
-                                        {
-                                            ModelState.AddModelError(string.Empty, "Something went wrong in login. Please try again.");
-                                            return Page();
-                                        }
+                                        return LocalRedirect(returnUrl);
+                                    }
+                                    else
+                                    {
+                                        ModelState.AddModelError(string.Empty, "Something went wrong in login. Please try again.");
+                                        return Page();
                                     }
                                 }
                             }
+                        }
+                        else
+                        {
+                            TwoFactorSessionExpired = true;
                         }
                     }
                     else if (Input.RememberTwoFactor)
@@ -203,11 +227,19 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                         if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
                         {
                             user.RememberTwoFactor = true;
+                            _context.Update(user);
+                            var cookieNum = 1;
+                            while (_httpContextAccessor.HttpContext.Request.Cookies["TwoFactorCookie" + cookieNum] != null)
+                            {
+                                cookieNum++;
+                            }
+
                             var cookieOptions = new CookieOptions
                             {
                                 Expires = DateTime.Now.AddDays(30)
                             };
-                            _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie", DateTime.Now.ToString(), cookieOptions);
+                            _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie"+cookieNum, user.Id, cookieOptions);
+
                             string address = NetworkInterface
                                     .GetAllNetworkInterfaces()
                                     .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
@@ -225,13 +257,12 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                                 };
                                 _context.PhysicalAddresses.Add(physicalAddress);
                             }
-                           //else?
                             _context.SaveChanges();
                         }
                     }
                        
 
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, TwoFactorSessionExpired });
                 }
                 //else if (!validPassword)
                 //{
@@ -278,7 +309,6 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     //    return RedirectToPage("./ResetPassword", new { code = code });
                     //}
-                    ErrorMessage = "Invalid login attempt.";
                     return Page();
                 }
             }

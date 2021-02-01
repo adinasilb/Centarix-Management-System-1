@@ -48,16 +48,15 @@
                     </div>
                     @*<span asp-validation-for="Input.Password" class="text-danger-centarix"></span>*@
                 </div>
-
-                <div class="form-group my-2">
+                <div class="form-group my-4">
                     <input type="checkbox" class="form-check-input filled-in toggle-remember" asp-for="Input.RememberTwoFactor" value="false" />
-                    <label class="" asp-for="Input.RememberTwoFactor">
+                    <label class="m-0" asp-for="Input.RememberTwoFactor">
                         @Html.DisplayNameFor(m => m.Input.RememberTwoFactor)
                     </label>
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" class="mt-2 custom-button custom-button-font danger-color ">Log in</button>
+                    <button type="submit" class="custom-button custom-button-font danger-color ">Log in</button>
                 </div>
 
                 <!--<div class="form-group">
