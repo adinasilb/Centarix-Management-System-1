@@ -1037,9 +1037,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult TwoFactorSessionModal()
+        public async Task<IActionResult> TwoFactorSessionModal()
         {
-            var user = _signManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await _signManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
@@ -1049,10 +1049,10 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public bool TwoFactorSessionModal(bool rememberTwoFactor = true)
+        public async Task<bool> TwoFactorSessionModal(bool rememberTwoFactor = true)
         {
             var user = _signManager.GetTwoFactorAuthenticationUserAsync();
-            var appUser = _context.Employees.Where(e => e.Email == user.Result.Email).FirstOrDefault();
+            var appUser = await _context.Employees.Where(e => e.Email == user.Result.Email).FirstOrDefaultAsync();
             if (rememberTwoFactor)
             {
                 var cookieNum = 1;
@@ -1071,7 +1071,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 appUser.RememberTwoFactor = false;
                 _context.Update(appUser);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
 
             return true;
