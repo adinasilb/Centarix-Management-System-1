@@ -9,8 +9,9 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class UploadQuoteViewModel
     {
-        public Request Request { get; set; }
-        public List<string> QuoteFileStrings { get; set; }
-        public AppUtility.MenuItems SectionType { get; set; }
+        public ParentQuote ParentQuote { get; set; }
+        public List<string> FileStrings { get; set; }
+        public RequestIndexObject RequestIndexObject { get; set;}
+
     }
 }

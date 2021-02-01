@@ -10,7 +10,7 @@
     var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
@@ -28,48 +28,81 @@
 }
 
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
-
-<div class="modal modal-document fader documentsModal @form"  @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<script src="~/js/site.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>
+<div class="modal modal-document fader  @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.documentsModal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
-
-                <div class="modal-header modal-header-padding">
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="heading-1">Upload Quote Details</div>
-                        </div>
-                        <div class="col-3 offset-7">
-                     
-                     
+                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+                <div>
+                    <div class="modal-header modal-header-padding">
+                        <div class="container-fluid">
+                            <div class="row ">
+                                <div class="col-4">
+                                    <div class="heading-1">Upload Quote</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-body">
+
+                <div class="modal-body mt-5 ">
                     @{
                         var urlAction = Url.Action("DocumentsModal", "Requests");
                         var fontSize = "2rem";
                     }
                     <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-                    <div class=" document-margin ">
-                        @{
-                            var filterClass = "opac87";
-                            if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
-                            {
-                                filterClass = "order-inv-filter";
+                    <div class="row">
+                        <div class=" offset-4">
+                            @{
+                                var filterClass = "opac87";
+                                if (Model.FileStrings != null && Model.FileStrings.Count > 0)
+                                {
+                                    filterClass = "order-inv-filter";
+                                }
                             }
-                        }
-                        <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@false">
-                            <div class="card document-border">
-                                <div class="document-card text-center">
-                                    <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                            <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
+                                <div class="card document-border">
+                                    <div class="document-card text-center">
+                                        <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                    </div>
+                                </div>
+                            </a>
+                            <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+                        </div>
+                        <div class="col-3 offset-1">
+                            <div class="row">
+                                <div class="form-group ">
+                                    <label asp-for="@Model.ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" />
+                                    <span asp-validation-for="@Model.ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
                                 </div>
                             </div>
-                        </a>
-                        <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+                            <div class="row">
+                                <div class="form-group ">
+                                    <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" min="1" />
+                                    <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-0">
+                    <div class="mx-auto modal-footer-mt">
+                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin" asp-action="UploadQuoteModal" />
+                        <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                     </div>
                 </div>
             </form>

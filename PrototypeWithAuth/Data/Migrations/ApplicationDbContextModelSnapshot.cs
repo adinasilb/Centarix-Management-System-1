@@ -2619,6 +2619,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("Discount")
+                        .HasColumnType("float");
+
                     b.Property<double>("ExchangeRate")
                         .HasColumnType("float");
 

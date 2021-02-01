@@ -304,6 +304,15 @@ Model.UnitTypeList,
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label">Discount</label>
+            <input asp-for="Request.Discount" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
+            <span asp-validation-for="Request.Discount"/>
+        </div>
+    </div>
+</div>
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/SubUnit.js"></script>

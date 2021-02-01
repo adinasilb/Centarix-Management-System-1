@@ -19,21 +19,15 @@
             search = true;
         }
     }
-    <input type="hidden" valuer="OrderStepID" id="orderStepID" />
+    <input type="hidden" valuer="OrderStepID" id="orderStepID" value="1"/>
 }
 @switch (Model.OrderStepsEnum)
 {
-    case AppUtility.OrderStepsEnum.TermsModal:
-        <input type="text" id="tdprconfirmemail" class="hidden" value="@Model.OrderStepID" />
-        break;
     case AppUtility.OrderStepsEnum.ConfirmEmail:
-        <input type="text" id="tdterms" class="hidden" value="@Model.OrderStepID" />
+        <input type="text" id="tdprconfirmemail" class="hidden" value="1" />
         break;
-    case AppUtility.OrderStepsEnum.UploadQuoteModal:
-        <input type="text" id="tduploadquotes" class="hidden" value="@Model.OrderStepID" />
-        break;
-    case AppUtility.OrderStepsEnum.UploadOrderModal:
-        <input type="text" id="tduploadorders" class="hidden" value="@Model.OrderStepID" />
+    case AppUtility.OrderStepsEnum.TermsModal:
+        <input type="text" id="tdterms" class="hidden" value="1" />
         break;
 }
 

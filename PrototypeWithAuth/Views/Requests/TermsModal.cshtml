@@ -3,25 +3,19 @@
 @{
     Layout = null;
 
-    TempData["Email1"] = TempData["Email1"]?.ToString() ?? "";
-    TempData["Email2"] = TempData["Email2"]?.ToString() ?? "";
-    TempData["Email3"] = TempData["Email3"]?.ToString() ?? "";
-    TempData["Email4"] = TempData["Email4"]?.ToString() ?? "";
-    TempData["Email5"] = TempData["Email5"]?.ToString() ?? "";
-
     var bcColor = "order-inv-background-color";
     string form = "";
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
     }
-    else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
     {
         bcColor = "lab-man-background-color";
         form = "supplier-form";
     }
-    else if (Model.SectionType == AppUtility.MenuItems.Requests)
+    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
     {
         bcColor = "order-inv-background-color";
         form = "order-inv-form";
@@ -35,11 +29,18 @@
 <div class="modal modal-view termsModal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
     <div class="modal-dialog-centered modal-xl mx-auto on-form-modal @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
-            <button type="button" class="close modal-close-padding modal-close-style" onclick="$(this).closest('.modal').modal('hide');" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" onclick ="e=>{$(this).closest('.modal').modal('hide'); $('#tdterms').val('')}" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" id="myForm" class="modal-padding termsModalForm">
-
+                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
                 <input type="hidden" asp-for="ParentRequest.ParentRequestID" />
                 <div class="modal-header modal-header-padding">
                     <div class="col-10 float-left">
@@ -49,94 +50,31 @@
                 <div class="modal-body">
                     <div class="container">
                         <div class="row">
-                            <div class="col-2">
-                                <label class="control-label">Paid</label>
-                                <select asp-for="Paid" class="mdb-select custom select-dropdown form-control-plaintext" searchable="default value">
-                                    <option value=false>Select</option>
-                                    <option value=true>Yes</option>
-                                    <option value=false>No</option>
-                                </select>
 
-                                <span asp-validation-for="Paid" class="text-danger-centarix"></span>
-                            </div>
-                            <div class="col-2">
-                                <label asp-for="ParentRequest.Discount" class="control-label"></label>
-                                <input type="text" asp-for="ParentRequest.Discount" class="form-control-plaintext border-bottom" />
-                                <span asp-validation-for="ParentRequest.Discount" class="text-danger-centarix"></span>
-                            </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <label class="control-label">Terms</label>
                                 @Html.DropDownListFor(m => m.Terms,
                                     Model.TermsList,
                                     "Select",
                                     new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @id = "Terms", @searchable = "default value" }
                                 )
-
-                                @*<select asp-for="Terms" asp-items="@Model.TermsList" class="form-control-plaintext border-bottom">
-                                        <option value="selected" selected="selected">Select</option>
-                                        <option value="0">Pay Now</option>
-                                        <option value="15">+15</option>
-                                        <option value="30">+30</option>
-                                        <option value="45">+45</option>
-                                    </select>*@
                                 <span asp-validation-for="Terms" class="text-danger-centarix"></span>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <label asp-for="ParentRequest.Taxes" class="control-label"></label>
                                 <input type="text" asp-for="ParentRequest.Taxes" class="form-control-plaintext border-bottom" />
                                 <span asp-validation-for="ParentRequest.Taxes" class="text-danger-centarix"></span>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <label asp-for="ParentRequest.Shipping" class="control-label"></label>
                                 <input type="text" asp-for="ParentRequest.Shipping" class="form-control-plaintext border-bottom" />
                                 <span asp-validation-for="ParentRequest.Shipping" class="text-danger-centarix"></span>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <label asp-for="ParentRequest.Credit" class="control-label"></label>
                                 <input type="text" asp-for="ParentRequest.Credit" class="form-control-plaintext border-bottom" />
                                 <span asp-validation-for="ParentRequest.Credit" class="text-danger-centarix"></span>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-2">
-                                <div class="form-group">
-                                    <label asp-for="Installments" class="control-label"></label>
-                                    <input asp-for="Installments" class="form-control-plaintext border-bottom " min="0" />
-                                    <span asp-validation-for="Installments" class="text-danger-centarix"></span>
-                                </div>
-                            </div>
-                            <div class="col-10 container terms-modal">
-                                <div class="row mb-0">
-                                    <div class="col">
-                                        <div class="form-group payment-sum">
-                                            <label class="control-label">Sum</label>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-4">
-                                        <div class="form-group payment-date">
-                                            <label class="control-label">Payment Date</label>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="payment-type">
-                                            <label class="control-label">Payment Type</label>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group payment-account">
-                                            <label class="control-label">Account</label>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group payment-reference">
-                                            <label class="control-label">Reference</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <input type="hidden" value="0" id="index" />
                         </div>
                     </div>
                 </div>
@@ -150,3 +88,4 @@
         </div>
     </div>
 </div>
+<script>$(".mdb-select").materialSelect()</script>

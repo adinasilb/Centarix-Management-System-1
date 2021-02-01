@@ -4,7 +4,7 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 
-
+    <script src="~/js/site.js"></script>
 <div class="row"><span class="heading-1 modal-tab-name">Documents</span></div>
 
 @{
@@ -18,7 +18,7 @@
     <div class=" document-margin">
         @{
             var filterClass = "opac87";
-            if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
+            if (Model.OrderFileStrings != null && Model.QuoteFileStrings.Count > 0)
             {
                 filterClass = "order-inv-filter";
             }
@@ -36,7 +36,7 @@
     <div class=" document-margin">
         @{
             filterClass = "opac87";
-            if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
+            if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
             {
                 filterClass = "order-inv-filter";
             }

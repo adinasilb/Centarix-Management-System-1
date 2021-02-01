@@ -101,7 +101,7 @@ namespace PrototypeWithAuth.Models
         {
             get
             {
-                return Cost / Unit;
+                return Cost / Unit==0?1:Unit;
             }
             private set { _PricePerUnit = value; }
 
@@ -176,7 +176,8 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
 
         public AppUtility.OrderTypeEnum OrderType {get; set;}
+        public double Discount { get; set; }
 
-        
+
     }
 }

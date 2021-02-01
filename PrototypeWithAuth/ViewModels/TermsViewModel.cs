@@ -13,7 +13,7 @@ namespace PrototypeWithAuth.ViewModels
         public ParentRequest ParentRequest { get; set; }
         public bool Paid { get; set; }
         public string Discount { get; set; }
-        public string Terms { get; set; }
+        public AppUtility.TermsModalEnum Terms { get; set; }
         public List<SelectListItem> TermsList { get; set; }
         //public int Taxes { get; set; } //does this go here?
         //public int Shipping { get; set; }
@@ -21,5 +21,6 @@ namespace PrototypeWithAuth.ViewModels
         public int Installments { get; set; }
         public List<Payment> NewPayments { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
+        public RequestIndexObject RequestIndexObject { get; set; }
     }
 }

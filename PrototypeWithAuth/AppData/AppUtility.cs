@@ -25,6 +25,7 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Total + VAT")]
             TotalVat=4
         }
+        public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum PageTypeEnum {None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, 
             AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments, 
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,
@@ -86,7 +87,7 @@ namespace PrototypeWithAuth.AppData
         public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
         public enum RequestModalType { Create, Edit, Summary}
         public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased}
-        public enum OrderStepsEnum { TermsModal, UploadQuoteModal, ConfirmEmail, UploadOrderModal }
+        public enum OrderStepsEnum {None, TermsModal, UploadQuoteModal, ConfirmEmail, UploadOrderModal }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");

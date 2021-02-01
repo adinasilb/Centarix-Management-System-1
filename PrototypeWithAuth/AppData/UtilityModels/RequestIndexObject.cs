@@ -74,6 +74,7 @@ namespace PrototypeWithAuth.AppData
             set { _SelectedPriceSort = value; }
         }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
+        public AppUtility.OrderStepsEnum OrderStep { get; set; }
          //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
     }
 }

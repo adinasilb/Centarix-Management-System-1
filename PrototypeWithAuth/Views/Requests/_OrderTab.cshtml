@@ -44,8 +44,8 @@
                 <span class="small-text">If you want to process a single order immediately</span>
             </div>
             <div class="col-4">
-                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow" asp-action="CreateModalView"
-                        class="text custom-order-inv custom-button float-right create-modal-submit">
+                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow" 
+                        class="text custom-order-inv custom-button float-right submitOrder">
                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
                 </button>
             </div>
@@ -55,9 +55,21 @@
                 <span class="small-text">If you want to order multiple items</span>
             </div>
             <div class="col-4">
-                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart" asp-action="CreateModalView"
-                        class="text custom-order-inv custom-button float-right create-modal-submit">
+                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
+                        class="text custom-order-inv custom-button float-right submitOrder">
                     @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+                </button>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 align-vertical-middle-col">
+                <span class="small-text">Ask the secretary to get a price quote</span>
+            </div>
+            <div class="col-4">
+                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
+                        class="p-0 custom-order-inv custom-button create-modal-submit ">
+                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
                 </button>
 
             </div>
@@ -67,20 +79,67 @@
                 <span class="small-text">If you want to get permission from an executive</span>
             </div>
             <div class="col-4">
-                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AskForPermission" asp-action="CreateModalView"
-                        class="text custom-order-inv custom-button float-right create-modal-submit">
-                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AskForPermission.ToString())
+                <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased"
+                        class="p-0 custom-order-inv custom-button create-modal-submit submitOrder">
+                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AlreadyPurchased.ToString())
                 </button>
 
             </div>
         </div>
-        @*<input type="submit" name="OrderType" value="Mark As Ordered" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-            <input type="submit" name="OrderType" value="Add To Cart" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-            <input type="submit" name="OrderType" value="Ask For Permission" asp-action="CreateModalView" class="text order-inv-background-color custom-button custom-button-font create-modal-submit shortened-padding" />
-            <button type="button" class="custom-button custom-cancel float-right text shortened-padding" data-dismiss="modal">Cancel</button>*@
-        @*@Html.ActionLink("Delete", "Delete", new { @id = Model.Product.ProductID }, new { @class = "btn btn-outline-danger" })*@
     </div>
+
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/site.js"></script>
 <script src="~/js/CreateItem.js"></script>
+<script>   $(".submitOrder").off('click').on("click", function (e) {
+        e.preventDefault();
+        console.log("submit reorder");
+        //alert("validate form");
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $("#loading").show();
+            var formData = new FormData($("#myForm")[0]);
+            var orderType = $(this).val();
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/AddItemView?OrderType="+orderType,
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $('.modal').replaceWith('');
+                    $(".modal-backdrop").remove();
+                    var modal = $(data);
+                    $('body').append(modal);
+                    $(".modal").modal({
+                        backdrop: true,
+                        keyboard: false,
+                    });
+                    $(".modal").modal('show');
+                    $("#loading").hide();
+                    return true;
+                },
+                error: function () {
+                    $("#loading").hide();
+                    return true;
+                }
+            });
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+        //return false;
+    });</script>

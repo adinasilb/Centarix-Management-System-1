@@ -9,7 +9,7 @@ namespace PrototypeWithAuth.AppData
 {
     public static class SessionExtensions
     {
-        public enum SessionNames { Comment, Request, Payment /*CommentList, RequestList, PaymentList*/ }
+        public enum SessionNames { Comment, Request, Payment /*CommentList, RequestList, PaymentList*/, Email }
         public static void SetObject(this ISession session, string key, object value)
         {
             //var simpleJsonString = JsonSerializer.Create();
@@ -25,10 +25,10 @@ namespace PrototypeWithAuth.AppData
             //}
 
             var jsonstring = JsonConvert.SerializeObject(value,
-                        new JsonSerializerSettings()
-                        {
-                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-                        });
+                       Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings()
+                       {
+                           ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                       });
             session.SetString(key, jsonstring);
         }
 
