@@ -1501,9 +1501,8 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product)
                 .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).Include(r=>r.Product.Vendor).FirstOrDefault();
 
-            
-            var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-
+         
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
             //need to include product to check if in budget
             reorderViewModel.RequestItemViewModel.Request.Product = oldRequest.Product;
 
@@ -1675,7 +1674,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel)
         {
-
+      
             string uploadFolder = Path.Combine("wwwroot", "files");
             string uploadFile = Path.Combine(uploadFolder, "ConfirmEmailTempDoc.pdf");
 
@@ -1818,6 +1817,7 @@ namespace PrototypeWithAuth.Controllers
                                         r.Product = null;
                                     }
 
+                                    _context.Entry(currentUser).State = EntityState.Detached;
                                     _context.Update(r);
                                     await _context.SaveChangesAsync();
                                 }
