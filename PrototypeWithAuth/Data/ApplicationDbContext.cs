@@ -72,6 +72,8 @@ namespace PrototypeWithAuth.Data
         public DbSet<ParentCategory> ParentCategories { get; set; }
         public DbSet<UnitType> UnitTypes { get; set; }
         public DbSet<UnitParentType> UnitParentTypes { get; set; }
+        public DbSet<IpRange> IpRanges { get; set; }
+        public DbSet<PhysicalAddress> PhysicalAddresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

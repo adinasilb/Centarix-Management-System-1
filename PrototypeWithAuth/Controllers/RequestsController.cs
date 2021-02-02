@@ -1503,11 +1503,10 @@ namespace PrototypeWithAuth.Controllers
             //get the old request that we are reordering
             var oldRequest = _context.Requests.Where(r => r.RequestID == reorderViewModel.RequestItemViewModel.Request.RequestID)
                 .Include(r => r.Product)
-                .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).FirstOrDefault();
+                .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).Include(r=>r.Product.Vendor).FirstOrDefault();
 
-            
-            var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-
+         
+            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
             //need to include product to check if in budget
             reorderViewModel.RequestItemViewModel.Request.Product = oldRequest.Product;
 
@@ -1561,8 +1560,25 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("ReOrderFloatModalView", reorderViewModel);
                 }
              }
+           
             reorderViewModel.RequestIndexObject.OrderStep = orderStep;
-            return RedirectToAction("Index", reorderViewModel.RequestIndexObject);
+            var action = "Index";
+            switch (OrderTypeEnum)
+            {
+                case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                    orderStep = AppUtility.OrderStepsEnum.UploadOrderModal;
+                    action = "UploadOrderModal";
+                    break;
+                case AppUtility.OrderTypeEnum.OrderNow:
+                    orderStep = AppUtility.OrderStepsEnum.UploadQuoteModal;
+                    action = "UploadQuoteModal";
+                    break;
+                case AppUtility.OrderTypeEnum.AddToCart:
+                    orderStep = AppUtility.OrderStepsEnum.UploadQuoteModal;
+                    action = "UploadQuoteModal";
+                    break;
+            }
+            return RedirectToAction(action, reorderViewModel.RequestIndexObject);
         }
 
         [Authorize(Roles = "Requests")]
@@ -1662,7 +1678,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel)
         {
-
+      
             string uploadFolder = Path.Combine("wwwroot", "files");
             string uploadFile = Path.Combine(uploadFolder, "ConfirmEmailTempDoc.pdf");
 
@@ -1805,6 +1821,7 @@ namespace PrototypeWithAuth.Controllers
                                         r.Product = null;
                                     }
 
+                                    _context.Entry(currentUser).State = EntityState.Detached;
                                     _context.Update(r);
                                     await _context.SaveChangesAsync();
                                 }

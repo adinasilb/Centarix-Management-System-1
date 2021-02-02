@@ -13,15 +13,22 @@
 
 
     <section>
-        <div class="container col-md-4 offset-2.5">
+        <div class="container login col-md-4 offset-2.5">
 
             <form id="account" method="post" autocomplete="off">
-
+                @if (Model.ErrorMessage != null && Model.ErrorMessage != "")
+                {
+                    <div class="text-danger-centarix mb-3">@Model.ErrorMessage</div>
+                }
+                else
+                {
                 <div asp-validation-summary="All" class="text-danger-centarix"></div>
+                }
                 @if (Model.SuccessMessage != null)
                 {
                     <p class="text">@Model.SuccessMessage</p>
                 }
+
                 <div class="md-form md-outline my-1">
                     <div class="form-group text-center">
 
@@ -41,19 +48,17 @@
                     </div>
                     @*<span asp-validation-for="Input.Password" class="text-danger-centarix"></span>*@
                 </div>
-
-
-                <!--<div class="form-group">
-        <div class="checkbox">
-            <label asp-for="Input.RememberMe">
-                <input asp-for="Input.RememberMe" />
-                @Html.DisplayNameFor(m => m.Input.RememberMe)
-            </label>
-        </div>
-    </div>-->
-                <div class="form-group">
-                    <button type="submit" class="mt-2 custom-button custom-button-font danger-color ">Log in</button>
+                <div class="form-group my-4">
+                    <input type="checkbox" class="form-check-input filled-in toggle-remember" asp-for="Input.RememberTwoFactor" value="false" />
+                    <label class="m-0" asp-for="Input.RememberTwoFactor">
+                        @Html.DisplayNameFor(m => m.Input.RememberTwoFactor)
+                    </label>
                 </div>
+
+                <div class="form-group">
+                    <button type="submit" class="custom-button custom-button-font danger-color ">Log in</button>
+                </div>
+
                 <!--<div class="form-group">
         <p>
             <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
@@ -118,6 +123,16 @@
             input.attr('type', 'password');
         }
     });
+    $('.toggle-remember').on('click', function () {
+        var val = $(this).val();
+        console.log(val);
+        if (val == 'true') {
+            $(this).val(false);
+        }
+        else {
+            $(this).val(true);
+        }
+    })
 
 </script>
 <style type="text/css">
