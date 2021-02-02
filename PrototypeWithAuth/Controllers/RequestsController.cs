@@ -837,6 +837,10 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;           
             requestItemViewModel.Request.CreationDate = DateTime.Now;
+            if(requestItemViewModel.Request.Currency == null)
+            {
+                requestItemViewModel.Request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
+            }
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -1557,7 +1561,6 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("ReOrderFloatModalView", reorderViewModel);
                 }
              }
-           e
             reorderViewModel.RequestIndexObject.OrderStep = orderStep;
             return RedirectToAction("Index", reorderViewModel.RequestIndexObject);
         }
@@ -1637,7 +1640,7 @@ namespace PrototypeWithAuth.Controllers
             var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
 
             //render the purchase order view into a string using a the confirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("PurchaseOrderView", confirm);
+            string renderedView = await RenderPartialViewToString("OrderEmailView", confirm);
             //instantiate a html to pdf converter object
             HtmlToPdf converter = new HtmlToPdf();
 
@@ -1906,7 +1909,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ConfirmQuoteEmailModal(ConfirmQuoteEmailViewModel confirmQuoteEmail)
+        public async Task<IActionResult> ConfirmQuoteEmailModal(ConfirmEmailViewModel confirmQuoteEmail)
         {
             List<Request> requests;
             if (confirmQuoteEmail.IsResend)
@@ -2020,27 +2023,31 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 1)
-                         .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+                         .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r=>r.Product.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).Include(r => r.ParentQuote).ToList();
             }
             if (requests.Count() == 0)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 2)
                          .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             }
-
-            ConfirmQuoteEmailViewModel confirmEmail = new ConfirmQuoteEmailViewModel
+            RequestIndexObject requestIndexObject = new RequestIndexObject
+            {
+                PageType = AppUtility.PageTypeEnum.LabManagementQuotes,
+                SidebarType = AppUtility.SidebarEnum.Quotes
+            };
+            ConfirmEmailViewModel confirmEmail = new ConfirmEmailViewModel
             {
                 Requests = requests,
                 VendorId = id,
-                RequestID = id
-
+                RequestID = id,
+                RequestIndexObject = requestIndexObject
             };
             //base url needs to be declared - perhaps should be getting from js?
             //once deployed need to take base url and put in the parameter for converter.convertHtmlString
             var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
 
             //render the purchase order view into a string using a the confirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("PurchaseQuoteView", confirmEmail);
+            string renderedView = await RenderPartialViewToString("OrderEmailView", confirmEmail);
             //instantiate a html to pdf converter object
             HtmlToPdf converter = new HtmlToPdf();
 
