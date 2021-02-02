@@ -14,7 +14,7 @@
         }
 		else {
             var categoryId = $("#categorylist").val();
-            var isRequestQuote = $("#isRequestQuote").val();
+            var isRequestQuote = $("#isRequestQuote").is(":checked");
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
