@@ -157,7 +157,7 @@ htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown fo
         </div>
         <div class="col-md-6">
             <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-            <input asp-for="Request.ParentQuote.QuoteDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" value="" disabled />
+            <input asp-for="Request.ParentQuote.QuoteDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled />
             <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
 
         </div>
