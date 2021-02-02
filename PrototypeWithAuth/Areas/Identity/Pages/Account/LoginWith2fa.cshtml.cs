@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
@@ -17,11 +22,14 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginWith2faModel> _logger;
-
-        public LoginWith2faModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginWith2faModel> logger)
+        private readonly ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public LoginWith2faModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginWith2faModel> logger, ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+            _context = context;
         }
 
         [BindProperty]
@@ -31,7 +39,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
         public string ReturnUrl { get; set; }
 
-        public bool TwoFactorSessionExpired { get; set; }
+      
 
         public class InputModel
         {
@@ -43,9 +51,11 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
             [Display(Name = "Remember this machine")]
             public bool RememberMachine { get; set; }
+            public bool InputRememberTwoFactor { get; set; }
+            public bool TwoFactorSessionExpired { get; set; }
         }
 
-        public async Task<IActionResult> OnGetAsync(bool rememberMe = false, string returnUrl = null, bool twoFactorSessionExpired = false)
+        public async Task<IActionResult> OnGetAsync(bool rememberMe = false, string returnUrl = null, bool twoFactorSessionExpired = false, bool InputRememberTwoFactor = false)
         {
             // Ensure the user has gone through the username & password screen first
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
@@ -57,7 +67,11 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
             ReturnUrl = returnUrl;
             RememberMe = rememberMe;
-            TwoFactorSessionExpired = twoFactorSessionExpired;
+            Input = new InputModel
+            {
+                TwoFactorSessionExpired = twoFactorSessionExpired,
+                InputRememberTwoFactor = InputRememberTwoFactor
+            };
             return Page();
         }
 
@@ -83,6 +97,45 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             if (result.Succeeded)
             {
                 _logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id);
+                if(Input.InputRememberTwoFactor && !Input.TwoFactorSessionExpired)
+                {
+                    var myIpAddress = AppUtility.GetMyIPAddress();
+                    var ipEnd = myIpAddress.Split(".").LastOrDefault();
+                    var ipEndNum = 501;
+                    Int32.TryParse(ipEnd, out ipEndNum);
+
+                    if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
+                    {
+                        user.RememberTwoFactor = true;
+                        _context.Update(user);
+                        var cookieNum = 1;
+                        while (_httpContextAccessor.HttpContext.Request.Cookies["TwoFactorCookie" + cookieNum] != null)
+                        {
+                            cookieNum++;
+                        }
+
+                        var cookieOptions = new CookieOptions
+                        {
+                            Expires = DateTime.Now.AddDays(30)
+                        };
+                        _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie" + cookieNum, user.Id, cookieOptions);
+
+                        var address = AppUtility.PhysicalAddress;
+                        var pa = _context.PhysicalAddresses.Where(p => p.Address == address && p.EmployeeID == user.Id).FirstOrDefault();
+                        if (pa == null)
+                        {
+                            var physicalAddress = new Models.PhysicalAddress()
+                            {
+                                Employee = _context.Employees.Where(e => e.Id == user.Id).FirstOrDefault(),
+                                EmployeeID = user.Id,
+                                Address = address,
+                                DateCreated = DateTime.Now
+                            };
+                            _context.PhysicalAddresses.Add(physicalAddress);
+                        }
+                        _context.SaveChanges();
+                    }
+                }
                 return LocalRedirect(returnUrl);
             }
             else if (result.IsLockedOut)

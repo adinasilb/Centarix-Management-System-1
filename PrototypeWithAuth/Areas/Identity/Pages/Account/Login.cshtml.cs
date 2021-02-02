@@ -138,28 +138,9 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 }
                 else if (result.RequiresTwoFactor)
                 {
-                    var myIpAddress = "";
-                    IPAddress ipAddress;
-                    var ipAddressList = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
-                    foreach (var address in ipAddressList)
-                    {
-                        if (myIpAddress == "")
-                        {
-                            if (IPAddress.TryParse(address.ToString(), out ipAddress))
-                            {
-                                switch (ipAddress.AddressFamily)
-                                {
-                                    case AddressFamily.InterNetwork:
-                                        myIpAddress = address.ToString();
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                        }
-                    }
+                    string myIpAddress = AppUtility.GetMyIPAddress();
                     var ipEnd = myIpAddress.Split(".").LastOrDefault();
-                    var ipEndNum = 501;
+                    var ipEndNum = -1;
                     Int32.TryParse(ipEnd, out ipEndNum);
 
                     if (user.RememberTwoFactor == true)
@@ -188,12 +169,8 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
                         if (cookie != null)
                         {
-                            string physicalAddress = NetworkInterface
-                                .GetAllNetworkInterfaces()
-                                .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-                                .Select(nic => nic.GetPhysicalAddress().ToString())
-                                .FirstOrDefault();
-                            var pa = _context.PhysicalAddresses.Where(p => p.Address == physicalAddress && p.EmployeeID == user.Id).FirstOrDefault();
+                       
+                            var pa = _context.PhysicalAddresses.Where(p => p.Address == AppUtility.PhysicalAddress && p.EmployeeID == user.Id).FirstOrDefault();
                             if (pa != null)
                             {
                                 if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
@@ -224,43 +201,9 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     }
                     else if (Input.RememberTwoFactor)
                     {
-                        if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
-                        {
-                            user.RememberTwoFactor = true;
-                            _context.Update(user);
-                            var cookieNum = 1;
-                            while (_httpContextAccessor.HttpContext.Request.Cookies["TwoFactorCookie" + cookieNum] != null)
-                            {
-                                cookieNum++;
-                            }
-
-                            var cookieOptions = new CookieOptions
-                            {
-                                Expires = DateTime.Now.AddDays(30)
-                            };
-                            _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie"+cookieNum, user.Id, cookieOptions);
-
-                            string address = NetworkInterface
-                                    .GetAllNetworkInterfaces()
-                                    .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-                                    .Select(nic => nic.GetPhysicalAddress().ToString())
-                                    .FirstOrDefault();
-                            var pa = _context.PhysicalAddresses.Where(p => p.Address == address && p.EmployeeID == user.Id).FirstOrDefault();
-                            if (pa == null)
-                            {
-                                var physicalAddress = new Models.PhysicalAddress()
-                                {
-                                    Employee = _context.Employees.Where(e => e.Id == user.Id).FirstOrDefault(),
-                                    EmployeeID = user.Id,
-                                    Address = address,
-                                    DateCreated = DateTime.Now
-                                };
-                                _context.PhysicalAddresses.Add(physicalAddress);
-                            }
-                            _context.SaveChanges();
-                        }
+                        return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, TwoFactorSessionExpired, InputRememberTwoFactor = Input.RememberTwoFactor });
                     }
-                       
+
 
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, TwoFactorSessionExpired });
                 }
