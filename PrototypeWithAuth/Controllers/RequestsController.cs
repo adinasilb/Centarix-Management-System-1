@@ -940,7 +940,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> CreateItemTabs(int parentCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+        public async Task<IActionResult> CreateItemTabs(int parentCategoryId, bool isRequestQuote, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var parentcategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == parentCategoryId).FirstOrDefaultAsync();
@@ -968,7 +968,8 @@ namespace PrototypeWithAuth.Controllers
                 CommentTypes = commentTypes,
                 Comments = new List<Comment>(),
                 EmailAddresses = new List<string>() { "", "", "", "", "" },
-                ModalType = AppUtility.RequestModalType.Create
+                ModalType = AppUtility.RequestModalType.Create,
+                isRequestQuote = isRequestQuote
                 //CurrentUser = 
             };
 

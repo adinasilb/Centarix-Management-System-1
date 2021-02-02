@@ -63,7 +63,8 @@ $('.ordersItemForm').validate({
 		},
 		"Request.ExpectedSupplyDays": {
 			min: 0,
-			integer: true
+			integer: true,
+			required: true
 		},
 		"Request.Warranty": {
 			min: 0,

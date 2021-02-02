@@ -28,9 +28,12 @@
                 @{await Html.RenderPartialAsync("_LocationTab", Model); }
             </div>
         }
-        <div id="price" class="tab-pane fade ">
-            @{await Html.RenderPartialAsync("_PriceTab", Model); }
-        </div>
+        @if (!Model.isRequestQuote)
+        {
+            <div id="price" class="tab-pane fade ">
+                @{await Html.RenderPartialAsync("_PriceTab", Model); }
+            </div>
+        }
         <div id="documents" class="tab-pane fade">
             @{await Html.RenderPartialAsync("_DocumentsTab", Model); }
         </div>
