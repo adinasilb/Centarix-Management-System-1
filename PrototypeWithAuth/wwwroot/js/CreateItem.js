@@ -13,7 +13,8 @@
 
         }
 		else {
-			var categoryId = $("#categorylist").val();
+            var categoryId = $("#categorylist").val();
+            var isRequestQuote = $("#isRequestQuote").val();
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
@@ -21,8 +22,8 @@
 			$.ajax({
 				processData: false,
 				contentType: false,
-				async: true,
-				url: "/Requests/CreateItemTabs/?parentCategoryId=" + categoryId,
+                async: true,
+                url: "/Requests/CreateItemTabs/?parentCategoryId=" + categoryId + "&isRequestQuote=" + isRequestQuote,
 				type: 'GET',
 				cache: false,
 				success: function (data) {

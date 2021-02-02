@@ -126,6 +126,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 if (!user.IsSuspended) //don't want to unlock them out if they are suspended
                 {
                     user.LockoutEnd = DateTime.Now;
+                    user.LockoutEnabled = false;
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }

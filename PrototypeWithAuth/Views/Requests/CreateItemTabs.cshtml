@@ -40,11 +40,14 @@
                                 <br />Item
                             </a>
                         </li>
-                        <li class="nav-item icon" id="price-tab">
-                            <a data-toggle="tab" href="#price" class="next-tab nav-link request-price">
-                                <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price
-                            </a>
-                        </li>
+                        @if (!Model.isRequestQuote)
+                        {
+                            <li class="nav-item icon" id="price-tab">
+                                <a data-toggle="tab" href="#price" class="next-tab nav-link request-price">
+                                    <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price
+                                </a>
+                            </li>
+                        }
                         <li class="nav-item icon">
                             <a data-toggle="tab" href="#documents" class="request-documents-tab nav-link next-tab documents-tab">
                                 <i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents

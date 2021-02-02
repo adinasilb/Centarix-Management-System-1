@@ -80,5 +80,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<Comment> Comments { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.RequestModalType ModalType { get; set; }
+        public bool isRequestQuote { get; set; }
     }
 }

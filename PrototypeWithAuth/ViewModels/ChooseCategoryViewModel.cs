@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public int SelectedCategory { get; set; }
+        public bool isRequestQuote { get; set; }
     }
 }

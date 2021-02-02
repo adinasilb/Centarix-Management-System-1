@@ -12,6 +12,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -455,6 +458,38 @@ namespace PrototypeWithAuth.AppData
         {
             return "#000000";
         }
+
+        public static string GetMyIPAddress()
+        {
+            var myIpAddress = "";
+            IPAddress ipAddress;
+            var ipAddressList = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
+            foreach (var address in ipAddressList)
+            {
+                if (myIpAddress == "")
+                {
+                    if (IPAddress.TryParse(address.ToString(), out ipAddress))
+                    {
+                        switch (ipAddress.AddressFamily)
+                        {
+                            case AddressFamily.InterNetwork:
+                                myIpAddress = address.ToString();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+
+            return myIpAddress;
+        }
+
+        public static string PhysicalAddress = NetworkInterface
+                           .GetAllNetworkInterfaces()
+                           .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                           .Select(nic => nic.GetPhysicalAddress().ToString())
+                           .FirstOrDefault();
     }
 
 }
