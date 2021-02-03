@@ -1,4 +1,5 @@
-﻿@model PrototypeWithAuth.ViewModels.CartViewModel
+﻿@model PrototypeWithAuth.ViewModels.OrdersByVendorViewModel
+@using System.Text;
 @using PrototypeWithAuth.AppData
 
 <form method="post" enctype="multipart/form-data" style="height: 100%;">
@@ -22,11 +23,11 @@
                     </td>
                     <td class="py-0" style="width:10%">
                         Price
-                        @*<div class="d-inline-block">
+                        <div class="d-inline-block">
                             @{
-                                await Html.RenderPartialAsync("_PricePopover", Model);
+                                await Html.RenderPartialAsync("_PricePopoverCart", Model);
                             }
-                        </div>*@
+                        </div>
                     </td>
                     <td class="py-0" style="width:10%">
                     </td>
@@ -38,15 +39,14 @@
             </tr>
             <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
             <tbody>
-
-                @foreach (var request in vendor)
+                @for (int i = 0; i < vendor.Count(); i++)
                 {
                     <tr class="text-center inv-list-item">
                         <td class="text-center" width="15%">
-                            <input type="hidden" asp-for="@request.RequestID" />
-                            @if (request.Product.ProductSubcategory.ImageURL != null)
+                            <input type="hidden" asp-for="@vendor.ElementAt(i).RequestID" />
+                            @if (vendor.ElementAt(i).Product.ProductSubcategory.ImageURL != null)
                             {
-                                var imageurl = request.Product.ProductSubcategory.ImageURL;
+                                var imageurl = vendor.ElementAt(i).Product.ProductSubcategory.ImageURL;
                                 <img src="@imageurl" alt="Image" width="75" class="category-image" />
                             }
                             else
@@ -55,34 +55,34 @@
                             }
                         </td>
                         <td width="20%">
-                            @request.Product.ProductName
+                            @vendor.ElementAt(i).Product.ProductName
                         </td>
                         <td width="10%">
-                            @request.Product.Vendor.VendorEnName.ToLower()
+                            @vendor.ElementAt(i).Product.Vendor.VendorEnName.ToLower()
                         </td>
                         <td>
-                            @request.Product.ProductSubcategory.ProductSubcategoryDescription
+                            @vendor.ElementAt(i).Product.ProductSubcategory.ProductSubcategoryDescription
                         </td>
                         <td>
                             <ul style="list-style: none;">
 
-                                @if (request.Unit != null)
+                                @if (vendor.ElementAt(i).Unit != null)
                                 {
                                     <li>
-                                        @Html.DisplayFor(modelItem => request.Unit)
-                                        @Html.DisplayFor(modelItem => request.UnitType.UnitTypeDescription)
+                                        @Html.DisplayFor(modelItem => vendor.ElementAt(i).Unit)
+                                        @Html.DisplayFor(modelItem => vendor.ElementAt(i).UnitType.UnitTypeDescription)
                                     </li>
-                                    @if (request.SubUnit != null)
+                                    @if (vendor.ElementAt(i).SubUnit != null)
                                     {
                                         <li>
-                                            @Html.DisplayFor(modelItem => request.SubUnit)
-                                            @Html.DisplayFor(modelItem => request.SubUnitType.UnitTypeDescription)
+                                            @Html.DisplayFor(modelItem => vendor.ElementAt(i).SubUnit)
+                                            @Html.DisplayFor(modelItem => vendor.ElementAt(i).SubUnitType.UnitTypeDescription)
                                         </li>
-                                        @if (request.SubSubUnit != null)
+                                        @if (vendor.ElementAt(i).SubSubUnit != null)
                                         {
                                             <li>
-                                                @Html.DisplayFor(modelItem => request.SubSubUnit)
-                                                @Html.DisplayFor(modelItem => request.SubSubUnitType.UnitTypeDescription)
+                                                @Html.DisplayFor(modelItem => vendor.ElementAt(i).SubSubUnit)
+                                                @Html.DisplayFor(modelItem => vendor.ElementAt(i).SubSubUnitType.UnitTypeDescription)
                                             </li>
                                         }
                                     }
@@ -94,23 +94,35 @@
                         </td>
                         <td width="10%">
                             @{
-                                var ItemCost = request.Cost;
-                                var decItemCost = (decimal)ItemCost;
-                                var stringItemCost = decItemCost.ToString("C02");
+                                var priceString = "";
+                                var requestPriceList = AppUtility.GetPriceColumn(Model.SelectedPriceSort, vendor.ElementAt(i), Model.SelectedCurrency);
+                                foreach (var price in requestPriceList)
+                                {
+                                    if (price == requestPriceList.First())
+                                    {
+                                        priceString = price;
+                                    }
+                                    else
+                                    {
+                                        priceString = priceString + "<br/>" + price;
+                                    }
+                                }
                             }
-                            @stringItemCost
+
+                            @Html.Raw(priceString)
                         </td>
                         <td width="10%" class="border-right">
                             <div class="d-inline-flex">
                                 <div class="table-icon-div">
                                     <button class="btn no-box-shadow p-0 m-0 load-confirm-delete-quote" data-toggle="tooltip" data-placement="top"
-                                            title="Delete" name="@AppUtility.MenuItems.Requests" value="@request.RequestID">
+                                            title="Delete" name="@AppUtility.MenuItems.Requests" value="@vendor.ElementAt(i).RequestID">
                                         <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
                                     </button>
                                 </div>
                             </div>
                         </td>
                     </tr>
+                    i++;
                 }
                 <tr class="border-0 mb-5 no-hover">
                     <td></td>
@@ -138,3 +150,5 @@
         </table>
     }
 </form>
+
+<script src="~/js/PricePopoverScript.js"></script>
