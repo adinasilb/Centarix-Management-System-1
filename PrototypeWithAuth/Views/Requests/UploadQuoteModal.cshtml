@@ -28,9 +28,10 @@
 }
 
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
+<script src="~/js/validate.js"></script>
 <script src="~/js/site.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
-<div class="modal modal-document fader  @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<div class="modal modal-document fader modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
@@ -92,7 +93,7 @@
                             <div class="row">
                                 <div class="form-group ">
                                     <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                    <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" min="1" />
+                                    <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker"  />
                                     <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
                                 </div>
                             </div>
@@ -101,7 +102,7 @@
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin" asp-action="UploadQuoteModal" />
+                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
                         <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                     </div>
                 </div>
@@ -109,5 +110,55 @@
         </div>
     </div>
 </div>
+<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
+<script>
+    $(".submitQuote").off('click').on("click", function (e) {
+        e.preventDefault();
+        console.log("submit reorder");
+        //alert("validate form");
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
 
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            }
 
+        }
+        else {
+            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $("#loading").show();
+            var formData = new FormData($("#myForm")[0]);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/UploadQuoteModal",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $('.termsModal').replaceWith('');
+                    $(".modal-backdrop").remove();
+                    var modal = $(data);
+                    $('body').append(modal);
+                    $(".termsModal").modal({
+                        backdrop: true,
+                        keyboard: false,
+                    });
+                    $(".termsModal").modal('show');
+                    $("#loading").hide();
+                    return true;
+                },
+                error: function () {
+                    $("#loading").hide();
+                    return true;
+                }
+            });
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+    });
+</script>

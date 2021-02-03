@@ -262,7 +262,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 var RequestPassedInWithInclude = RequestsPassedIn.Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.ParentRequest)
+                    .Include(r => r.ParentRequest).Include(r=>r.ApplicationUserCreator)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                     .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
@@ -3458,6 +3458,7 @@ namespace PrototypeWithAuth.Controllers
             var request = HttpContext.Session.GetObject<Request>(requestName);
             uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
             request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
+            
             if (request.RequestStatusID == 6  && request.OrderType!=AppUtility.OrderTypeEnum.AddToCart )
             {
                 uploadQuoteOrderViewModel.RequestIndexObject.OrderStep = AppUtility.OrderStepsEnum.TermsModal;
@@ -3494,7 +3495,10 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
             }
-            
+            if(request.OrderType== AppUtility.OrderTypeEnum.OrderNow)
+            {
+                return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.RequestIndexObject);
+            }
             return RedirectToAction("Index", uploadQuoteOrderViewModel.RequestIndexObject);
         }
 
@@ -3831,13 +3835,8 @@ namespace PrototypeWithAuth.Controllers
                 HttpContext.Session.SetObject(requestName, req);
                 RequestNum++;
             }
-            termsViewModel.RequestIndexObject.OrderStep = AppUtility.OrderStepsEnum.ConfirmEmail;
-            var action = "Index";
-            if(requests.FirstOrDefault().OrderType==AppUtility.OrderTypeEnum.RequestPriceQuote)
-            {
-                action = "LabManageOrders";
-            }
-            return RedirectToAction(action, termsViewModel.RequestIndexObject);
+
+            return RedirectToAction("ConfirmEmailModal", termsViewModel.RequestIndexObject);
         }
 
         [Authorize(Roles = "Reports")]
