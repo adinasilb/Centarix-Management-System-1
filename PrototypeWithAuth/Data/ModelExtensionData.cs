@@ -107,6 +107,200 @@ namespace PrototypeWithAuth.Data
                 }
             );
 
+            modelBuilder.Entity<UnitTypeParentCategory>().HasData
+              (
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 1,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 2,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 19,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 3,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 17,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 18,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 1,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 2,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 19,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 3,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 7,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 8,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 9,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 10,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 11,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 12,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 13,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 20,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 21,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 22,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 23,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 3
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 1,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 2,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 19,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 3,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 10,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 9,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 20,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 21,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 22,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 13,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 12,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 11,
+                    ParentCategoryID = 7
+                }
+              );
+
             modelBuilder.Entity<ProductSubcategory>().HasData
               (
 
@@ -676,6 +870,12 @@ namespace PrototypeWithAuth.Data
              },
              new UnitType
              {
+                 UnitTypeID = 19,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Case"
+             },
+             new UnitType
+             {
                  UnitTypeID = 3,
                  UnitParentTypeID = 1,
                  UnitTypeDescription = "Pack"
@@ -740,12 +940,36 @@ namespace PrototypeWithAuth.Data
                  UnitParentTypeID = 2,
                  UnitTypeDescription = "ul"
              },
-             new UnitType
-             {
-                 UnitTypeID = 14,
-                 UnitParentTypeID = 2,
-                 UnitTypeDescription = "gal"
-             },
+            new UnitType
+            {
+                UnitTypeID = 14,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "gal"
+            },
+            new UnitType
+            {
+                UnitTypeID = 20,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "pmol"
+            },
+            new UnitType
+            {
+                UnitTypeID = 21,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "nmol"
+            },
+            new UnitType
+            {
+                UnitTypeID = 22,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "umol"
+            },
+            new UnitType
+            {
+                UnitTypeID = 23,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "mol"
+            },
              new UnitType
              {
                  UnitTypeID = 15,

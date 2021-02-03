@@ -12,7 +12,6 @@ namespace PrototypeWithAuth.ViewModels
         public ILookup<Vendor, Request> RequestsByVendor { get; set; }
         public List<PriceSortViewModel> PriceSortEnums { get; set; }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
-        public ILookup<Vendor,List<string>> PriceSortEnumsList { get; set; }
         public List<string> SelectedPriceSort { get; set; }
     }
 }

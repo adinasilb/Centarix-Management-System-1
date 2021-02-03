@@ -944,9 +944,8 @@ namespace PrototypeWithAuth.Controllers
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var subprojects = await _context.SubProjects.ToListAsync();
-
-            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            var unittypeslookup = _context.UnitTypes.Include(u => u.UnitParentType).ToLookup(u => u.UnitParentType);
+            var unittypes = _context.UnitTypes.Where(ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == parentCategoryId).Count()>0).Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
             List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
@@ -957,6 +956,7 @@ namespace PrototypeWithAuth.Controllers
                 Vendors = vendors,
                 Projects = projects,
                 SubProjects = subprojects,
+
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 UnitTypes = unittypeslookup,
                 PaymentTypes = paymenttypes,
@@ -2149,16 +2149,6 @@ namespace PrototypeWithAuth.Controllers
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = ordersByVendorViewModel.SelectedPriceSort.Contains(p.ToString()) }));
             ordersByVendorViewModel.PriceSortEnums = priceSorts;
-            ordersByVendorViewModel.PriceSortEnumsList = ordersByVendorViewModel.RequestsByVendor.SelectMany(r => r).ToLookup(r => r.Product.Vendor, 
-                r => AppUtility.GetPriceColumn(ordersByVendorViewModel.SelectedPriceSort, r, ordersByVendorViewModel.SelectedCurrency));
-            //foreach (var r in ordersByVendorViewModel.RequestsByVendor)
-            //{
-            //    ordersByVendorViewModel.PriceSortEnumsList = ordersByVendorViewModel.RequestsByVendor;
-            //    foreach (var request in r.ToList())
-            //    {
-            //        ordersByVendorViewModel.PriceSortEnumsList.Add(AppUtility.GetPriceColumn(ordersByVendorViewModel.SelectedPriceSort, request, ordersByVendorViewModel.SelectedCurrency));
-            //    }
-            //}
 
             return ordersByVendorViewModel;
         }
@@ -3057,16 +3047,6 @@ namespace PrototypeWithAuth.Controllers
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = cartViewModel.SelectedPriceSort.Contains(p.ToString()) }));
             cartViewModel.PriceSortEnums = priceSorts;
-            cartViewModel.PriceSortEnumsList = cartViewModel.RequestsByVendor.SelectMany(r => r).ToLookup(r => r.Product.Vendor,
-                r => AppUtility.GetPriceColumn(cartViewModel.SelectedPriceSort, r, cartViewModel.SelectedCurrency));
-
-            //foreach (var r in cartViewModel.RequestsByVendor)
-            //{
-            //    foreach (var request in r.ToList())
-            //    {
-            //        cartViewModel.PriceSortEnumsList.Add(AppUtility.GetPriceColumn(cartViewModel.SelectedPriceSort, request, cartViewModel.SelectedCurrency));
-            //    }
-            //}
 
             return cartViewModel;
         }

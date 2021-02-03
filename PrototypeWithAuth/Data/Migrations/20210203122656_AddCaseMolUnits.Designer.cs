@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210203122656_AddCaseMolUnits")]
+    partial class AddCaseMolUnits
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3249,198 +3251,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ParentCategoryID");
 
                     b.ToTable("UnitTypeParentCategory");
-
-                    b.HasData(
-                        new
-                        {
-                            UnitTypeID = 1,
-                            ParentCategoryID = 1
-                        },
-                        new
-                        {
-                            UnitTypeID = 2,
-                            ParentCategoryID = 1
-                        },
-                        new
-                        {
-                            UnitTypeID = 19,
-                            ParentCategoryID = 1
-                        },
-                        new
-                        {
-                            UnitTypeID = 3,
-                            ParentCategoryID = 1
-                        },
-                        new
-                        {
-                            UnitTypeID = 5,
-                            ParentCategoryID = 1
-                        },
-                        new
-                        {
-                            UnitTypeID = 17,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 18,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 1,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 2,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 19,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 3,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 5,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 7,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 8,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 9,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 10,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 11,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 12,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 13,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 20,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 21,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 22,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 23,
-                            ParentCategoryID = 2
-                        },
-                        new
-                        {
-                            UnitTypeID = 5,
-                            ParentCategoryID = 3
-                        },
-                        new
-                        {
-                            UnitTypeID = 1,
-                            ParentCategoryID = 4
-                        },
-                        new
-                        {
-                            UnitTypeID = 2,
-                            ParentCategoryID = 4
-                        },
-                        new
-                        {
-                            UnitTypeID = 19,
-                            ParentCategoryID = 4
-                        },
-                        new
-                        {
-                            UnitTypeID = 3,
-                            ParentCategoryID = 4
-                        },
-                        new
-                        {
-                            UnitTypeID = 5,
-                            ParentCategoryID = 4
-                        },
-                        new
-                        {
-                            UnitTypeID = 5,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 10,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 9,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 20,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 21,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 22,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 13,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 12,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 11,
-                            ParentCategoryID = 7
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Vendor", b =>

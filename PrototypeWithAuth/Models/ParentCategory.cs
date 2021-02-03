@@ -27,5 +27,6 @@ namespace PrototypeWithAuth.Models
         public int CategoryTypeID { get; set; }
         public CategoryType CategoryType { get; set; }
         public bool isProprietary { get; set; }
+        public IEnumerable<UnitTypeParentCategory> UnitTypeParentCategory { get; set; }
     }
 }
