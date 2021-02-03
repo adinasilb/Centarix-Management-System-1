@@ -24,7 +24,7 @@
             <div class="modal-content d-inline-block" style="width:58.96rem;">
 
                 <div class="modal-header pb-0 border-bottom-0">
-                    <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+                    <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.emailModal').modal('hide');">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -46,7 +46,7 @@
                         <div class="m-auto">
                             <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
 
-                            <input type="submit" class="custom-cancel custom-button cancel-email" asp-action="CancelEmailModal @bcColor" value="Cancel Email" />
+                            <input type="button" class="custom-cancel custom-button cancel-email" onclick="$(this).closest('.emailModal').modal('hide');" asp-action="CancelEmailModal @bcColor" value="Cancel Email" />
                         </div>
                     </div>
                     <script>

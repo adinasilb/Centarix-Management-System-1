@@ -32,6 +32,7 @@
                     var category = $("#categoryDescription").val();
                     $("." + category).removeClass("d-none");
 				}
+             
 			})
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
@@ -43,7 +44,7 @@
 			"SelectedCategory": "required"
         }
     })
-    $(".order-tab").on("click", function (e) {
+     $(".order-tab").on("click", function (e) {
         if ($(".all-mail").length == 0) {
             let data = [
                 $("#vendor-primary-email").val()
@@ -61,6 +62,7 @@
             $(".email-ids:first").addClass("supplier-email");
         }
     });
+    
 
     $.fn.UpdatePrimaryOrderEmail = function () {
         if ($(".supplier-email").length > 0) {

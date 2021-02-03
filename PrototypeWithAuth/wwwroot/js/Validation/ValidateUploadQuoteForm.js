@@ -1,4 +1,4 @@
-﻿$('.ordersItemForm').validate({
+﻿$('.uploadQuoteForm').validate({
 	rules: {
 		
 		"Request.ParentQuote.QuoteNumber": {

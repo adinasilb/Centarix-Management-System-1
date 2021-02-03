@@ -11,7 +11,7 @@ $(".load-order-details").off('click').on("click", function (e) {
     })
     var section = $("#masterSectionType").val()
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-    var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&NewRequestFromProduct=true" + "&SectionType=" + section+ "&"+$.fn.getRequestIndexString()
+    var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value")  +  "&"+$.fn.getRequestIndexString()
     $.fn.CallPageRequest($itemurl, "reorder");
     return false;
 });
