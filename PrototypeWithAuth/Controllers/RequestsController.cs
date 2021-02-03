@@ -262,7 +262,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 var RequestPassedInWithInclude = RequestsPassedIn.Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.ParentRequest)
+                    .Include(r => r.ParentRequest).Include(r=>r.ApplicationUserCreator)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                     .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
@@ -282,7 +282,6 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
             requestIndexViewModel.PageType = requestIndexObject.PageType;
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
-            requestIndexViewModel.OrderStepsEnum = requestIndexObject.OrderStep;
             return requestIndexViewModel;
         }
 
@@ -886,47 +885,44 @@ namespace PrototypeWithAuth.Controllers
                     else
                     {
                         var emailNum = 1;
-                        foreach(var e in requestItemViewModel.EmailAddresses)
+                        foreach (var e in requestItemViewModel.EmailAddresses)
                         {
                             var SessionEmailName = AppData.SessionExtensions.SessionNames.Email.ToString() + emailNum;
                             HttpContext.Session.SetObject(SessionEmailName, e);
                             emailNum++;
                         }
-                       
+
                     }
-                    var orderStep = AppUtility.OrderStepsEnum.None;
-                    var action = "Index";
                     switch (OrderType)
                     {
                         case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                            orderStep = AppUtility.OrderStepsEnum.UploadOrderModal;
-                            action = "UploadOrderModal";
-                            break;
+                            return RedirectToAction("UploadOrderModal");
                         case AppUtility.OrderTypeEnum.OrderNow:
-                            orderStep = AppUtility.OrderStepsEnum.UploadQuoteModal;
-                            action = "UploadQuoteModal";
-                            break;
+                            return RedirectToAction("UploadQuoteModal", "Requests", OrderType);
                         case AppUtility.OrderTypeEnum.AddToCart:
-                            orderStep = AppUtility.OrderStepsEnum.UploadQuoteModal;
-                            action = "UploadQuoteModal";
-                            break;
+                            return RedirectToAction("UploadQuoteModal", "Requests", OrderType);
+                        default:
+                            return RedirectToAction("Index", "Requests", new
+                            {
+                                RequestIndexObject = new RequestIndexObject
+                                {
+                                    PageType = AppUtility.PageTypeEnum.RequestRequest,
+                                    SectionType = AppUtility.MenuItems.Requests,
+                                    SidebarType = AppUtility.SidebarEnum.List,
+                                    RequestStatusID = requestItemViewModel.Request.RequestStatusID ?? 1,
+                                }
+                            });
+
                     }
 
-                    return RedirectToAction(action, "Requests", new RequestIndexObject()
-                    {
-                        PageType = AppUtility.PageTypeEnum.RequestRequest,
-                        SectionType = AppUtility.MenuItems.Requests,
-                        SidebarType = AppUtility.SidebarEnum.List,
-                        RequestStatusID = requestItemViewModel.Request.RequestStatusID ?? 1,
-                        OrderStep = orderStep
-                    });
+                   
 
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
                     base.RemoveRequestSessions();
-                    ViewBag.ErrorMessage = ex.InnerException?.ToString();
+                    ViewBag.ErrorMessage = ex.Message?.ToString();
                     requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).ToListAsync();
                     requestItemViewModel.Projects = await _context.Projects.ToListAsync();
                     requestItemViewModel.SubProjects = await _context.SubProjects.ToListAsync();
@@ -1523,7 +1519,6 @@ namespace PrototypeWithAuth.Controllers
             reorderViewModel.RequestItemViewModel.Request.Currency = oldRequest.Currency;
             reorderViewModel.RequestItemViewModel.Request.CatalogNumber = oldRequest.CatalogNumber;
             var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Request);
-            var orderStep = AppUtility.OrderStepsEnum.None;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -1541,13 +1536,10 @@ namespace PrototypeWithAuth.Controllers
                     switch (OrderTypeEnum)
                     {
                         case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                            orderStep = AppUtility.OrderStepsEnum.UploadOrderModal;
                             break;
                         case AppUtility.OrderTypeEnum.OrderNow:
-                            orderStep = AppUtility.OrderStepsEnum.UploadQuoteModal;
                             break;
                         case AppUtility.OrderTypeEnum.AddToCart:
-                            orderStep = AppUtility.OrderStepsEnum.UploadQuoteModal;
                             break;
                     }                    
                 }
@@ -1561,25 +1553,27 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("ReOrderFloatModalView", reorderViewModel);
                 }
              }
-           
-            reorderViewModel.RequestIndexObject.OrderStep = orderStep;
+
             var action = "Index";
             switch (OrderTypeEnum)
             {
                 case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                    orderStep = AppUtility.OrderStepsEnum.UploadOrderModal;
                     action = "UploadOrderModal";
                     break;
                 case AppUtility.OrderTypeEnum.OrderNow:
-                    orderStep = AppUtility.OrderStepsEnum.UploadQuoteModal;
                     action = "UploadQuoteModal";
                     break;
                 case AppUtility.OrderTypeEnum.AddToCart:
-                    orderStep = AppUtility.OrderStepsEnum.UploadQuoteModal;
                     action = "UploadQuoteModal";
                     break;
             }
-            return RedirectToAction(action, reorderViewModel.RequestIndexObject);
+
+            return RedirectToAction(action, "Requests", new
+            {
+                RequestIndexObject = reorderViewModel.RequestIndexObject
+            ,
+                OrderType = OrderTypeEnum
+            }) ;            
         }
 
         [Authorize(Roles = "Requests")]
@@ -3462,10 +3456,10 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType)
         {       
 
-            var UploadQuoteViewModel = new UploadQuoteViewModel() {RequestIndexObject = requestIndexObject };
+            var UploadQuoteViewModel = new UploadQuoteViewModel();
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
@@ -3483,6 +3477,7 @@ namespace PrototypeWithAuth.Controllers
                     UploadQuoteViewModel.FileStrings.Add(newFileString);
                 }
             }
+            UploadQuoteViewModel.OrderTypeEnum = OrderType;
             return PartialView(UploadQuoteViewModel);
         }
         [HttpGet]
@@ -3531,9 +3526,9 @@ namespace PrototypeWithAuth.Controllers
             var request = HttpContext.Session.GetObject<Request>(requestName);
             uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
             request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
+            
             if (request.RequestStatusID == 6  && request.OrderType!=AppUtility.OrderTypeEnum.AddToCart )
             {
-                uploadQuoteOrderViewModel.RequestIndexObject.OrderStep = AppUtility.OrderStepsEnum.TermsModal;
                 var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                 HttpContext.Session.SetObject(requestNum, request);
             }
@@ -3567,8 +3562,11 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
             }
-            
-            return RedirectToAction("Index", uploadQuoteOrderViewModel.RequestIndexObject);
+            if(request.OrderType== AppUtility.OrderTypeEnum.OrderNow)
+            {
+                return RedirectToAction("TermsModal");
+            }
+            return RedirectToAction("Index");
         }
 
         private async Task SaveCommentsFromSession(Request request)
@@ -3904,13 +3902,8 @@ namespace PrototypeWithAuth.Controllers
                 HttpContext.Session.SetObject(requestName, req);
                 RequestNum++;
             }
-            termsViewModel.RequestIndexObject.OrderStep = AppUtility.OrderStepsEnum.ConfirmEmail;
-            var action = "Index";
-            if(requests.FirstOrDefault().OrderType==AppUtility.OrderTypeEnum.RequestPriceQuote)
-            {
-                action = "LabManageOrders";
-            }
-            return RedirectToAction(action, termsViewModel.RequestIndexObject);
+
+            return RedirectToAction("ConfirmEmailModal", termsViewModel.RequestIndexObject);
         }
 
         [Authorize(Roles = "Reports")]

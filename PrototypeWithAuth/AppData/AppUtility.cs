@@ -90,7 +90,6 @@ namespace PrototypeWithAuth.AppData
         public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
         public enum RequestModalType { Create, Edit, Summary}
         public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased}
-        public enum OrderStepsEnum {None, TermsModal, UploadQuoteModal, ConfirmEmail, UploadOrderModal }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -137,7 +136,7 @@ namespace PrototypeWithAuth.AppData
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
         public static double GetExchangeRateFromApi()
         {
-            var client = new RestClient("https://v6.exchangerate-api.com/v6/96ffcdbcf4b24b1bdf2dc9be/latest/USD");
+            var client = new RestClient("https://v6.exchangerate-api.com/v6/65c36323b979e8f4b1b1b0e3/latest/USD");
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             double rate=0.0;

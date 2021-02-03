@@ -14,8 +14,10 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Started Working")]
         [DataType(DataType.Date)]
         public DateTime StartedWorking { get; set; }
+        public DateTime StartedWorking_submit { get { return StartedWorking; } set { StartedWorking = value; } }
         [DataType(DataType.Date)]
         public DateTime DOB { get; set; }
+        public DateTime DOB_submit { get { return DOB; } set { DOB = value; } }
         public int Age
         {
             get
