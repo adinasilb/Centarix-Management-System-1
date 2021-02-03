@@ -29,7 +29,7 @@
 <div class="modal modal-view termsModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
     <div class="modal-dialog-centered modal-xl mx-auto on-form-modal @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
-            <button type="button" class="close modal-close-padding modal-close-style" onclick ="e=>{$(this).closest('.modal').modal('hide'); $('#tdterms').val('')}" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" onclick ="e=>{$(this).closest('.termsModal').modal('hide'); $('#tdterms').val('')}" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" id="myForm" class="modal-padding termsModalForm">
@@ -82,7 +82,7 @@
                     <div class="mx-auto modal-footer-mt">
 
                         <input type="submit" asp value="Save" class="custom-button custom-button-font @bcColor submitTerms" />
-                        <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                        <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.termsModal').modal('hide');">Cancel</button>
                     </div>
                 </div>
                 <input type="hidden" asp-for="ParentRequest.OrderDate" />
@@ -98,8 +98,8 @@
         e.preventDefault();
         console.log("submit reorder");
         //alert("validate form");
-        $("#myForm").data("validator").settings.ignore = "";
-        var valid = $("#myForm").valid();
+        $(".termsModalForm").data("validator").settings.ignore = "";
+        var valid = $(".termsModalForm").valid();
         console.log("valid form: " + valid)
         if (!valid) {
 
@@ -111,7 +111,7 @@
         else {
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
-            var formData = new FormData($("#myForm")[0]);
+            var formData = new FormData($(".termsModalForm")[0]);
             $.ajax({
                 contentType: false,
                 processData: false,
@@ -140,7 +140,7 @@
                 }
             });
         }
-        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $(".termsModalForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 
         //return false;
     });</script>

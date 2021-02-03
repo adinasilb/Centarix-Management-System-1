@@ -13,10 +13,7 @@
         </div>
     }
 }
-@if (Model.RequestIndexObjext.OrderStep == AppUtility.OrderStepsEnum.ConfirmEmail)
-{
-    <input type="text" id="tdprconfirmemail" class="hidden" value="1" />
-}
+
 <form method="post" enctype="multipart/form-data" style="height: 100%; ">
     @foreach (var vendor in Model.RequestsByVendor)
     {

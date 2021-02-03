@@ -33,7 +33,7 @@
 <div class="modal modal-document fader modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modalStep1').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
@@ -102,7 +102,7 @@
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
                         <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin" asp-action="UploadOrderModal" />
-                        <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                        <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');">Cancel</button>
                     </div>
                 </div>
             </form>

@@ -9,30 +9,7 @@
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-
-
-    bool search = false;
-    if (TempData["Search"] != null)
-    {
-        if (TempData["Search"].ToString() == "True")
-        {
-            search = true;
-        }
-    }
-    <input type="hidden" valuer="OrderStepID" id="orderStepID" value="1"/>
 }
-@switch (Model.OrderStepsEnum)
-{
-    case AppUtility.OrderStepsEnum.ConfirmEmail:
-        <input type="text" id="tdprconfirmemail" class="hidden" value="1" />
-        break;
-    case AppUtility.OrderStepsEnum.TermsModal:
-        <input type="text" id="tdterms" class="hidden" value="1" />
-        break;
-}
-
-
-
 <div class="_IndexTableWithCounts">
     @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
 </div>
