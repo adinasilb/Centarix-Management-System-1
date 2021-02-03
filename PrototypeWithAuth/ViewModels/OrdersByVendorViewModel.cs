@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class LabManageQuotesViewModel
+    public class OrdersByVendorViewModel
     {
         public ILookup<Vendor, Request> RequestsByVendor { get; set; }
-        public RequestIndexObject RequestIndexObjext { get; set; }
+        public List<PriceSortViewModel> PriceSortEnums { get; set; }
+        public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
+        public List<string> SelectedPriceSort { get; set; }
     }
 }

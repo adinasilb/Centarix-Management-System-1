@@ -947,9 +947,8 @@ namespace PrototypeWithAuth.Controllers
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var subprojects = await _context.SubProjects.ToListAsync();
-
-            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            var unittypeslookup = _context.UnitTypes.Include(u => u.UnitParentType).ToLookup(u => u.UnitParentType);
+            var unittypes = _context.UnitTypes.Where(ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == parentCategoryId).Count()>0).Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
             List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
@@ -960,6 +959,7 @@ namespace PrototypeWithAuth.Controllers
                 Vendors = vendors,
                 Projects = projects,
                 SubProjects = subprojects,
+
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
                 UnitTypes = unittypeslookup,
                 PaymentTypes = paymenttypes,
@@ -2101,7 +2101,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> LabManageQuotes()
         {
-            LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
+            OrdersByVendorViewModel labManageQuotesViewModel = new OrdersByVendorViewModel();
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID==6)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
@@ -2110,14 +2110,26 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Quotes;
+            LabOrdersFunction(labManageQuotesViewModel);
             return View(labManageQuotesViewModel);
+        }
+
+        public async Task<IActionResult> _LabManageQuotes(OrdersByVendorViewModel labManageQuotesViewModel)
+        {
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator)
+                .ToLookup(r => r.Product.Vendor);
+            LabOrdersFunction(labManageQuotesViewModel);
+            return PartialView(labManageQuotesViewModel);
         }
 
         [HttpGet]
         [Authorize(Roles = "LabManagement")]
-        public async Task<IActionResult> LabManageOrders( RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> LabManageOrders()
         {
-            LabManageQuotesViewModel labManageQuotesViewModel = new LabManageQuotesViewModel();
+            OrdersByVendorViewModel labManageQuotesViewModel = new OrdersByVendorViewModel();
             labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID==6)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator)
@@ -2125,8 +2137,29 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Orders;
-            labManageQuotesViewModel.RequestIndexObjext = requestIndexObject;
+            LabOrdersFunction(labManageQuotesViewModel);
             return View(labManageQuotesViewModel);
+        }
+        public async Task<IActionResult> _LabManageOrders(OrdersByVendorViewModel labManageQuotesViewModel)
+        {
+            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator)
+                .ToLookup(r => r.Product.Vendor);
+            LabOrdersFunction(labManageQuotesViewModel);
+            return PartialView(labManageQuotesViewModel);
+        }
+        private OrdersByVendorViewModel LabOrdersFunction(OrdersByVendorViewModel ordersByVendorViewModel)
+        {
+            if (ordersByVendorViewModel.SelectedPriceSort == null)
+            {
+                ordersByVendorViewModel.SelectedPriceSort = new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
+            }
+            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = ordersByVendorViewModel.SelectedPriceSort.Contains(p.ToString()) }));
+            ordersByVendorViewModel.PriceSortEnums = priceSorts;
+
+            return ordersByVendorViewModel;
         }
 
         /*
@@ -2996,7 +3029,19 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Cart;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            CartViewModel cartViewModel = new CartViewModel();
+            OrdersByVendorViewModel cartViewModel = new OrdersByVendorViewModel();
+            CartFunction(cartViewModel);
+            return View(cartViewModel);
+        }
+
+        public async Task<IActionResult> _Cart(OrdersByVendorViewModel cartViewModel)
+        {
+            CartFunction(cartViewModel);
+            return PartialView(cartViewModel);
+        }
+
+        private OrdersByVendorViewModel CartFunction(OrdersByVendorViewModel cartViewModel)
+        {
             cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
                 .Where(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart)
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
@@ -3004,9 +3049,17 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.ApplicationUserCreator)
                 .ToLookup(r => r.Product.Vendor);
+            if (cartViewModel.SelectedPriceSort == null)
+            {
+                cartViewModel.SelectedPriceSort = new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
+            }
+            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = cartViewModel.SelectedPriceSort.Contains(p.ToString()) }));
+            cartViewModel.PriceSortEnums = priceSorts;
 
-            return View(cartViewModel);
+            return cartViewModel;
         }
+
 
         [HttpGet]
         [Authorize(Roles = "Requests, Users, Biomarkers, Accounting, Admin, Reports, Timekeeper, Operations, Protocols, Income, Operation, Expenses, LabManagement")]

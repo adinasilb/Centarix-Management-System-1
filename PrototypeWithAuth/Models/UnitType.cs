@@ -16,7 +16,7 @@ namespace PrototypeWithAuth.Models
         public string UnitTypeDescription { get; set; }
         public int UnitParentTypeID { get; set; }
         public UnitParentType UnitParentType { get; set; }
-
+        public IEnumerable<UnitTypeParentCategory> UnitTypeParentCategory { get; set; }
 
     }
 }

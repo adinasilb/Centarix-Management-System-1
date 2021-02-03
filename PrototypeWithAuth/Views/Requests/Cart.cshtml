@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.CartViewModel
+﻿@model PrototypeWithAuth.ViewModels.OrdersByVendorViewModel
 @using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "Cart";
@@ -13,7 +13,7 @@
     }
 }
 
-<div class="">
+<div class="partial-orders">
     @{
         await Html.RenderPartialAsync("_Cart", Model);
     }
