@@ -34,9 +34,7 @@ namespace PrototypeWithAuth
             //        logger.LogError(exception, "An error occurred while creating roles");
             //    }
 
-            CreateHostBuilder(args).Build().Run();
-
-          
+            CreateHostBuilder(args).Build().Run();     
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
