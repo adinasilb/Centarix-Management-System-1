@@ -77,10 +77,7 @@ namespace PrototypeWithAuth.Controllers
 
             SetViewModelCounts(requestIndexObject, viewmodel);
 
-            if (ViewBag.ErrorMessage != null)
-            {
-                ViewBag.ErrorMessage = ViewBag.ErrorMessage;
-            }
+            ViewBag.ErrorMessage = TempData["ErrorMessage"];
 
             return View(viewmodel);
         }
@@ -1828,6 +1825,7 @@ namespace PrototypeWithAuth.Controllers
                                 catch (Exception ex)
                                 {
                                     ViewBag.ErrorMessage = ex.InnerException?.ToString();
+                                    throw ex;
                                 }
                                 client.Disconnect(true);
 
@@ -1935,9 +1933,28 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message?.ToString();
+                TempData["ErrorMessage"] = ex.Message;
                 Response.StatusCode = 500;
-                return RedirectToAction("Index", confirmEmailViewModel.RequestIndexObject);
+                if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
+                {
+                    if (confirmEmailViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
+                    {
+                        return RedirectToAction("LabManageQuotes");
+                    }
+                    else
+                    {
+                        return RedirectToAction("LabManageOrders");
+                    }
+
+                }
+                else if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                {
+                    return RedirectToAction("Cart");
+                }
+                else
+                {
+                    return RedirectToAction("Index", confirmEmailViewModel.RequestIndexObject);
+                }
             }
 
         }
@@ -2125,6 +2142,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Quotes;
+            ViewBag.ErrorMessage = TempData["ErrorMessage"];
             LabOrdersFunction(labManageQuotesViewModel);
             return View(labManageQuotesViewModel);
         }
@@ -2152,6 +2170,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Orders;
+            ViewBag.ErrorMessage = TempData["ErrorMessage"];
             LabOrdersFunction(labManageQuotesViewModel);
             return View(labManageQuotesViewModel);
         }
@@ -3034,6 +3053,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             OrdersByVendorViewModel cartViewModel = new OrdersByVendorViewModel();
+            ViewBag.ErrorMessage = TempData["ErrorMessage"];
             CartFunction(cartViewModel);
             return View(cartViewModel);
         }
