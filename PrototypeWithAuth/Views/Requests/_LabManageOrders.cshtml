@@ -9,14 +9,16 @@
         <td colspan="7" class="border-bottom"></td>
     </tr>
     <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
-    @for (int i = 0; i < vendor.Count(); i++)
+    
+    var requests = vendor.Select(r => r).ToList();
+    @for (int i = 0; i < requests.Count; i++)
     {
         <tr class="text-center">
             <td class="text-center" width="15%">
-                <input type="hidden" asp-for="@vendor.ElementAt(i).RequestID" />
-                @if (vendor.ElementAt(i).Product.ProductSubcategory.ImageURL != null)
+                <input type="hidden" asp-for="@requests[i].RequestID" />
+                @if (requests[i].Product.ProductSubcategory.ImageURL != null)
                 {
-                    var imageurl = vendor.ElementAt(i).Product.ProductSubcategory.ImageURL;
+                    var imageurl = requests[i].Product.ProductSubcategory.ImageURL;
                     <img src="@imageurl" alt="Image" width="75" class="category-image" />
                 }
                 else
@@ -25,29 +27,29 @@
                 }
             </td>
             <td width="20%">
-                @vendor.ElementAt(i).Product.ProductName
+                @requests[i].Product.ProductName
             </td>
             <td width="10%">
-                @vendor.ElementAt(i).Product.Vendor.VendorEnName.ToLower()
+                @requests[i].Product.Vendor.VendorEnName.ToLower()
             </td>
             <td>
-                @vendor.ElementAt(i).Product.ProductSubcategory.ProductSubcategoryDescription
+                @requests[i].Product.ProductSubcategory.ProductSubcategoryDescription
             </td>
             <td width="10%">
-                @vendor.ElementAt(i).Unit @vendor.ElementAt(i).UnitType.UnitTypeDescription
-                @if (vendor.ElementAt(i).SubUnitType != null)
+                @requests[i].Unit @requests[i].UnitType.UnitTypeDescription
+                @if (requests[i].SubUnitType != null)
                 {
-                    @vendor.ElementAt(i).SubUnit @vendor.ElementAt(i).SubUnitType.UnitTypeDescription
+                    @requests[i].SubUnit @requests[i].SubUnitType.UnitTypeDescription
                 }
-                @if (vendor.ElementAt(i).SubSubUnitType != null)
+                @if (requests[i].SubSubUnitType != null)
                 {
-                    @vendor.ElementAt(i).SubSubUnit @vendor.ElementAt(i).SubSubUnitType.UnitTypeDescription
+                    @requests[i].SubSubUnit @requests[i].SubSubUnitType.UnitTypeDescription
                 }
             </td>
             <td width="10%">
                 @{
                     var priceString = "";
-                    var requestPriceList = AppUtility.GetPriceColumn(Model.SelectedPriceSort, vendor.ElementAt(i), Model.SelectedCurrency);
+                    var requestPriceList = AppUtility.GetPriceColumn(Model.SelectedPriceSort, requests[i], Model.SelectedCurrency);
                     foreach (var price in requestPriceList)
                     {
                         if (price == requestPriceList.First())
@@ -64,12 +66,12 @@
                 @Html.Raw(priceString)
             </td>
             <td width="15%">
-                @vendor.ElementAt(i).ApplicationUserCreator.FirstName @vendor.ElementAt(i).ApplicationUserCreator.LastName
+                @requests[i].ApplicationUserCreator.FirstName @requests[i].ApplicationUserCreator.LastName
             </td>
             <td width="12%">
                 <div class="d-inline-flex">
                     <div class="table-icon-div">
-                        <button class="btn no-box-shadow p-0 m-0  load-confirm-delete" data-title="delete" name="@AppUtility.MenuItems.LabManagement" value="@vendor.ElementAt(i).RequestID">
+                        <button class="btn no-box-shadow p-0 m-0  load-confirm-delete" data-title="delete" name="@AppUtility.MenuItems.LabManagement" value="@requests[i].RequestID">
                             <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
                         </button>
                     </div>

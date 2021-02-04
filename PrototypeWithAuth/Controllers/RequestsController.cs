@@ -715,18 +715,18 @@ namespace PrototypeWithAuth.Controllers
                         var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).FirstOrDefault();
                         if (parentRequest != null)
                         {
-                            parentRequest.Requests = _context.Requests.Where(r => r.ParentRequestID == parentRequest.ParentRequestID && r.IsDeleted != true);
+                            parentRequest.Requests = _context.Requests.Where(r => r.ParentRequestID == parentRequest.ParentRequestID && r.IsDeleted != true).ToList();
                             if (parentRequest.Requests.Count() == 0)
                             {
                                 parentRequest.IsDeleted = true;
-                                var payments = _context.Payments.Where(p => p.ParentRequestID == parentRequest.ParentRequestID);
+                                var payments = _context.Payments.Where(p => p.ParentRequestID == parentRequest.ParentRequestID).ToList();
                                 foreach (var payment in payments)
                                 {
                                     payment.IsDeleted = true;
+                                    _context.Update(payment);
+                                    await _context.SaveChangesAsync();
                                 }
                                 _context.Update(parentRequest);
-                                await _context.SaveChangesAsync();
-                                _context.Update(payments);
                                 await _context.SaveChangesAsync();
                             }
                         }
