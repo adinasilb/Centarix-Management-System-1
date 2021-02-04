@@ -48,6 +48,7 @@
                 <div>
                     <div class="modal-header modal-header-padding">
                         <div class="container-fluid">
+                            <div class="row text-danger-centarix"> @ViewBag.ErrorMessage </div>
                             <div class="row ">
                                 <div class="col-4">
                                     <div class="heading-1">Upload Order</div>
@@ -92,7 +93,7 @@
                             <div class="row">
                                 <div class="form-group ">
                                     <label asp-for="@Model.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                    <input asp-for="@Model.ParentRequest.OrderDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" min="1" />
+                                    <input asp-for="@Model.ParentRequest.OrderDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
                                     <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
                                 </div>
                             </div>
@@ -101,7 +102,7 @@
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin" asp-action="UploadOrderModal" />
+                        <input type="submit" class="custom-button submitOrder custom-button-font @bcColor between-button-margin" />
                         <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');">Cancel</button>
                     </div>
                 </div>
@@ -109,5 +110,70 @@
         </div>
     </div>
 </div>
-
+<script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
+<script src="~/js/validate.js"></script>
+<script>
+    $(".submitOrder").off('click').on("click", function (e) {
+        e.preventDefault();
+        console.log("submit order doc");
+        //alert("validate form");
+        $(".uploadQuoteForm").data("validator").settings.ignore = "";
+        var valid = $(".uploadQuoteForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid)
+        {
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) 
+            {
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            }
+        }
+        else 
+        {
+            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $("#loading").show();
+            var formData = new FormData($(".uploadQuoteForm")[0]);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/UploadOrderModal",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) 
+                {
+                    if ($('#masterPageType').val() == "RequestRequest") {
+                        $("._IndexTableWithCounts").html(data);
+                    }
+                    else if ($('#masterPageType').val() == "RequestCart") {
+                        $(".render-body").html(data)
+                    }
+                    else {
+                        $("._IndexTableData").html(data);
+                    }
+                    $('.modalStep1').modal('hide');
+                    $('.modal').modal('hide');
+                    $("#loading").hide();
+                    return true;
+                },
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $('.modalStep1').replaceWith('');
+                        $(".modal-backdrop").remove();
+                        var modal = $(jqxhr.responseText);
+                        $('body').append(modal);
+                        $(".modalStep1").modal({
+                            backdrop: true,
+                            keyboard: false,
+                        });
+                        $(".modalStep1").modal('show');
+                    }
+                    $("#loading").hide();
+                    return true;
+                }
+            });
+        }
+        $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+    });</script>
 

@@ -401,7 +401,7 @@ $(function () {
 		var isEdittable = $(this).data("val");
 		console.log("isEdittable: " + isEdittable);
 		var isSummary = false;
-		if ($("#masterPageType").val() == "RequestSummary" || $("#masterPageType").val() == "RequestCart") {
+		if (($("#masterPageType").val() == "RequestSummary" || $("#masterPageType").val() == "RequestCart") && $(".modalStep1").length==0) {
 			isSummary = true;
         }
 		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, isSummary);

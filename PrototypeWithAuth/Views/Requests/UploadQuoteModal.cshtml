@@ -47,8 +47,9 @@
                 @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
                 @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
                 <div>
-                    <div class="modal-header modal-header-padding">
+                    <div class="modal-header modal-header-padding">                    
                         <div class="container-fluid">
+                            <div class="row text-danger-centarix"> @ViewBag.ErrorMessage </div>
                             <div class="row ">
                                 <div class="col-4">
                                     <div class="heading-1">Upload Quote</div>
@@ -161,7 +162,19 @@
                     $("#loading").hide();
                     return true;
                 },
-                error: function () {
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $('.modalStep1').replaceWith('');
+                        $(".modal-backdrop").remove();
+                        var modal = $(jqxhr.responseText);
+                        $('body').append(modal);
+                        $(".modalStep1").modal({
+                            backdrop: true,
+                            keyboard: false,
+                        });
+                        $(".modalStep1").modal('show');
+                    }
+
                     $("#loading").hide();
                     return true;
                 }

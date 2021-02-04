@@ -1,8 +1,13 @@
 ﻿@model List<PrototypeWithAuth.Models.RequestNotification>
+@using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if(AppUtility.IsAjaxRequest(this.Context.Request))
+    {
+        Layout = null;
+    }
 }
 <div class="">
     <table class="table table-headerspaced table-noheaderlines table-hover" style="width:95%;">
