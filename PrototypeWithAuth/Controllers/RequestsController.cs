@@ -2939,6 +2939,19 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                 _context.Update(requestNotification);
                 _context.SaveChanges();
+
+                switch(request.OrderType)
+                {
+                    case AppUtility.OrderTypeEnum.OrderNow:
+                        var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                        HttpContext.Session.SetObject(requestNum, request);
+                        return RedirectToAction("TermsModal", requestIndex);
+                        break;
+                    case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                        break;
+                    default:
+                        break;
+                }
             }
             catch (Exception ex)
             {
