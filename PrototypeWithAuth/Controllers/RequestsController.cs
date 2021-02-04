@@ -738,8 +738,6 @@ namespace PrototypeWithAuth.Controllers
                                 _context.Update(parentQuote);
                                 await _context.SaveChangesAsync();
                             }
-                            Exception e = new Exception();
-                            throw e;
                         }
                         foreach (var requestLocationInstance in request.RequestLocationInstances)
                         {
