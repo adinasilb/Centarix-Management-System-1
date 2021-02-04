@@ -325,7 +325,7 @@ body {
     font-weight: var(--bold-light)
 }
 
-input:not(input[type=button], .heading-1) {
+input:not(input[type=button], input[type=submit], .heading-1) {
     font-size: 1rem !important;
     font-weight: var(--bold-regular) !important;
 }
