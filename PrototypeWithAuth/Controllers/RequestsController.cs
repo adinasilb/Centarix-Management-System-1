@@ -3548,11 +3548,23 @@ namespace PrototypeWithAuth.Controllers
 
                             await transaction.CommitAsync();
                             base.RemoveRequestSessions();
-                            return RedirectToAction("Index", uploadQuoteOrderViewModel.RequestIndexObject);
+                            var action = "Index";
+                            if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                            {
+                                action = "_IndexTableWithCounts";
+                            }
+                            else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                            {
+                                action = "NotificationsView";
+                            }
+                            else
+                            {
+                                action = "_IndexTableData";
+                            }
+                            return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
                         }
                         catch (Exception ex)
                         {
-
                             transaction.Rollback();
                             throw ex;
                         }
@@ -3633,7 +3645,7 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
-                        throw ex; ;
+                        throw ex;
                     }
                 }
                 var action = "Index";
@@ -3875,51 +3887,67 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
         {
-            var requests = new List<Request>();
-            var isRequests = true;
-            var RequestNum = 1;
-            while (isRequests)
+            try
             {
-                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                if (HttpContext.Session.GetObject<Request>(requestName) != null)
+                var requests = new List<Request>();
+                var isRequests = true;
+                var RequestNum = 1;
+                while (isRequests)
                 {
-                    requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
+                    {
+                        requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                    }
+                    else
+                    {
+                        isRequests = false;
+                    }
+                    RequestNum++;
                 }
-                else
+
+
+                var paymentStatusID = 0;
+
+                switch (termsViewModel.Terms)
                 {
-                    isRequests = false;
+                    case AppUtility.TermsModalEnum.PayNow:
+                        paymentStatusID = 3;
+                        break;
+                    case AppUtility.TermsModalEnum.PayWithInMonth:
+                        paymentStatusID = 1;
+                        break;
+                    case AppUtility.TermsModalEnum.Installments:
+                        paymentStatusID = 5;
+                        break;
+                    case AppUtility.TermsModalEnum.Paid:
+                        paymentStatusID = 6;
+                        break;
                 }
-                RequestNum++;
+                foreach (var req in requests)
+                {
+                    req.ParentRequest = termsViewModel.ParentRequest;
+                    req.PaymentStatusID = paymentStatusID;
+                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                    HttpContext.Session.SetObject(requestName, req);
+                    RequestNum++;
+                }
+
+                return RedirectToAction("ConfirmEmailModal", termsViewModel.RequestIndexObject);
             }
-
-
-            var paymentStatusID = 0;
-
-            switch (termsViewModel.Terms)
+            catch (Exception ex)
             {
-                case AppUtility.TermsModalEnum.PayNow:
-                    paymentStatusID = 3;
-                    break;
-                case AppUtility.TermsModalEnum.PayWithInMonth:
-                    paymentStatusID = 1;
-                    break;
-                case AppUtility.TermsModalEnum.Installments:
-                    paymentStatusID = 5;
-                    break;
-                case AppUtility.TermsModalEnum.Paid:
-                    paymentStatusID = 6;
-                    break;
+                ViewBag.ErrorMessage = ex.Message?.ToString();
+                Response.StatusCode = 500;
+                termsViewModel.TermsList = new List<SelectListItem>()
+                {
+                    new SelectListItem{ Text="Pay Now", Value=AppUtility.TermsModalEnum.PayNow.ToString()},
+                    new SelectListItem{ Text="+30", Value=AppUtility.TermsModalEnum.PayWithInMonth.ToString()},
+                    new SelectListItem{ Text="Installements", Value=AppUtility.TermsModalEnum.Installments.ToString()},
+                    new SelectListItem{ Text="Paid", Value=AppUtility.TermsModalEnum.Paid.ToString()}
+                };
+                return PartialView("TermsModal", termsViewModel);
             }
-            foreach (var req in requests)
-            {
-                req.ParentRequest = termsViewModel.ParentRequest;
-                req.PaymentStatusID = paymentStatusID;
-                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                HttpContext.Session.SetObject(requestName, req);
-                RequestNum++;
-            }
-
-            return RedirectToAction("ConfirmEmailModal", termsViewModel.RequestIndexObject);
         }
 
         [Authorize(Roles = "Reports")]

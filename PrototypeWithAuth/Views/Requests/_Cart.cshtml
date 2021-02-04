@@ -39,14 +39,16 @@
             </tr>
             <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
             <tbody>
-                @for (int i = 0; i < vendor.Count(); i++)
+                @{ var requests = vendor.Select(r => r).ToList();}
+                @for (int i = 0; i < requests.Count; i++)
                 {
+
                     <tr class="text-center inv-list-item">
                         <td class="text-center" width="15%">
-                            <input type="hidden" asp-for="@vendor.ElementAt(i).RequestID" />
-                            @if (vendor.ElementAt(i).Product.ProductSubcategory.ImageURL != null)
+                            <input type="hidden" asp-for="@requests[i].RequestID" />
+                            @if (requests[i].Product.ProductSubcategory.ImageURL != null)
                             {
-                                var imageurl = vendor.ElementAt(i).Product.ProductSubcategory.ImageURL;
+                                var imageurl = requests[i].Product.ProductSubcategory.ImageURL;
                                 <img src="@imageurl" alt="Image" width="75" class="category-image" />
                             }
                             else
@@ -55,34 +57,34 @@
                             }
                         </td>
                         <td width="20%">
-                            @vendor.ElementAt(i).Product.ProductName
+                            @requests[i].Product.ProductName
                         </td>
                         <td width="10%">
-                            @vendor.ElementAt(i).Product.Vendor.VendorEnName.ToLower()
+                            @requests[i].Product.Vendor.VendorEnName.ToLower()
                         </td>
                         <td>
-                            @vendor.ElementAt(i).Product.ProductSubcategory.ProductSubcategoryDescription
+                            @requests[i].Product.ProductSubcategory.ProductSubcategoryDescription
                         </td>
                         <td>
                             <ul style="list-style: none;">
 
-                                @if (vendor.ElementAt(i).Unit != null)
+                                @if (requests[i].Unit != null)
                                 {
                                     <li>
-                                        @Html.DisplayFor(modelItem => vendor.ElementAt(i).Unit)
-                                        @Html.DisplayFor(modelItem => vendor.ElementAt(i).UnitType.UnitTypeDescription)
+                                        @Html.DisplayFor(modelItem => requests[i].Unit)
+                                        @Html.DisplayFor(modelItem => requests[i].UnitType.UnitTypeDescription)
                                     </li>
                                     @if (vendor.ElementAt(i).SubUnit != null)
                                     {
                                         <li>
-                                            @Html.DisplayFor(modelItem => vendor.ElementAt(i).SubUnit)
-                                            @Html.DisplayFor(modelItem => vendor.ElementAt(i).SubUnitType.UnitTypeDescription)
+                                            @Html.DisplayFor(modelItem => requests[i].SubUnit)
+                                            @Html.DisplayFor(modelItem => requests[i].SubUnitType.UnitTypeDescription)
                                         </li>
                                         @if (vendor.ElementAt(i).SubSubUnit != null)
                                         {
                                             <li>
-                                                @Html.DisplayFor(modelItem => vendor.ElementAt(i).SubSubUnit)
-                                                @Html.DisplayFor(modelItem => vendor.ElementAt(i).SubSubUnitType.UnitTypeDescription)
+                                                @Html.DisplayFor(modelItem => requests[i].SubSubUnit)
+                                                @Html.DisplayFor(modelItem => requests[i].SubSubUnitType.UnitTypeDescription)
                                             </li>
                                         }
                                     }
@@ -115,14 +117,13 @@
                             <div class="d-inline-flex">
                                 <div class="table-icon-div">
                                     <button class="btn no-box-shadow p-0 m-0 load-confirm-delete-quote" data-toggle="tooltip" data-placement="top"
-                                            title="Delete" name="@AppUtility.MenuItems.Requests" value="@vendor.ElementAt(i).RequestID">
+                                            title="Delete" name="@AppUtility.MenuItems.Requests" value="@requests[i].RequestID">
                                         <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
                                     </button>
                                 </div>
                             </div>
                         </td>
                     </tr>
-                    i++;
                 }
                 <tr class="border-0 mb-5 no-hover">
                     <td></td>
@@ -130,11 +131,11 @@
                     <td></td>
 
                     <td>
-                        <span class="text font-weight-bold">Items: @vendor.Count()</span>
+                        <span class="text font-weight-bold">Items: @requests.Count()</span>
                     </td>
                     <td colspan="2">
                         @{
-                            var totalCost = vendor.Sum(r => r.Cost);
+                            var totalCost = requests.Sum(r => r.Cost);
                             var decTotalCost = (decimal)totalCost;
                             var stringTotalCost = decTotalCost.ToString("C02");
                         }
