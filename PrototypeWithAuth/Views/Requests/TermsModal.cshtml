@@ -49,6 +49,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="container">
+                        <div class="row text-danger-centarix"> @ViewBag.ErrorMessage </div>
                         <div class="row">
 
                             <div class="col-3">
@@ -134,7 +135,19 @@
                     $("#loading").hide();
                     return true;
                 },
-                error: function () {
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $('.termsModal').replaceWith('');
+                        $(".modal-backdrop").remove();
+                        var modal = $(jqxhr.responseText);
+                        $('body').append(modal);
+                        $(".termsModal").modal({
+                            backdrop: true,
+                            keyboard: false,
+                        });
+                        $(".termsModal").modal('show');
+                    }
+
                     $("#loading").hide();
                     return true;
                 }

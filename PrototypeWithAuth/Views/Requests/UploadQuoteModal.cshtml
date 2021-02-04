@@ -102,16 +102,9 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0 p-0">
-                    <div class="mx-auto modal-footer-mt">
-                        @if (Model.OrderTypeEnum == AppUtility.OrderTypeEnum.OrderNow)
-                        {
-                            <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
-
-                        }
-                        else
-                        {
-                            <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin " asp-action="UploadQuoteModal" />
-                        }
+                    <div class="mx-auto modal-footer-mt">     
+                        <input type="hidden" asp-for="OrderTypeEnum"/>
+                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />                       
                         <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');">Cancel</button>
                     </div>
                 </div>
@@ -150,15 +143,33 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $('.termsModal').replaceWith('');
-                    $(".modal-backdrop").remove();
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $(".termsModal").modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    $(".termsModal").modal('show');
+                    if ($("#OrderTypeEnum").val() =="AddToCart")
+                    {
+                        if ($('#masterPageType').val() == "RequestRequest") {
+                            $("._IndexTableWithCounts").html(data);
+                        }
+                        else if ($('#masterPageType').val() == "RequestCart") {
+                            $(".render-body").html(data)
+                        }
+                        else {
+                            $("._IndexTableData").html(data);
+                        }
+                        $('.modalStep1').modal('hide');
+                        $('.modal').modal('hide');
+                    }
+                    else 
+                    {
+                        $('.termsModal').replaceWith('');
+                        $(".modal-backdrop").remove();
+                        var modal = $(data);
+                        $('body').append(modal);
+                        $(".termsModal").modal({
+                            backdrop: true,
+                            keyboard: false,
+                        });
+                        $(".termsModal").modal('show');
+                    }
+             
                     $("#loading").hide();
                     return true;
                 },
