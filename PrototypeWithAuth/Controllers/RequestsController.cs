@@ -3603,6 +3603,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         comment.RequestID = request.RequestID;
                         _context.Add(comment);
+                        n++;
                     }
                     else
                     {
