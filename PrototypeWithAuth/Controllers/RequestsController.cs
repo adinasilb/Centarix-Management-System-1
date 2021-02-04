@@ -3533,51 +3533,58 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel)
         {
-            var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-            var request = HttpContext.Session.GetObject<Request>(requestName);
-            uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
-            request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
-            
-            if (request.RequestStatusID == 6  && request.OrderType!=AppUtility.OrderTypeEnum.AddToCart )
+            try
             {
-                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, request);
-            }
-            else
-            {
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        _context.Update(request);
-                        await _context.SaveChangesAsync();
-                        await SaveCommentsFromSession(request);
-                        //rename temp folder to the request id
-                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                        string requestFolderFrom = Path.Combine(uploadFolder, "0");
-                        string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-                        if (Directory.Exists(requestFolderTo))
-                        {
-                            Directory.Delete(requestFolderTo);
-                        }
-                        Directory.Move(requestFolderFrom, requestFolderTo);
+                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                var request = HttpContext.Session.GetObject<Request>(requestName);
+                uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
+                request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
 
-                        await transaction.CommitAsync();
-                        base.RemoveRequestSessions();
-                    }
-                    catch (Exception ex)
-                    {
-                        await transaction.RollbackAsync();
-                        base.RemoveRequestSessions();
-                        ViewBag.ErrorMessage = ex.InnerException;
-                    }
+                if (request.RequestStatusID == 6 && request.OrderType != AppUtility.OrderTypeEnum.AddToCart)
+                {
+                    var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                    HttpContext.Session.SetObject(requestNum, request);
+                    return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.RequestIndexObject);
                 }
+                else
+                {
+                    using (var transaction = _context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            _context.Update(request);
+                            await _context.SaveChangesAsync();
+                            await SaveCommentsFromSession(request);
+                            //rename temp folder to the request id
+                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                            string requestFolderFrom = Path.Combine(uploadFolder, "0");
+                            string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
+                            if (Directory.Exists(requestFolderTo))
+                            {
+                                Directory.Delete(requestFolderTo);
+                            }
+                            Directory.Move(requestFolderFrom, requestFolderTo);
+
+                            await transaction.CommitAsync();
+                            base.RemoveRequestSessions();
+                            return RedirectToAction("Index", uploadQuoteOrderViewModel.RequestIndexObject);
+                        }
+                        catch (Exception ex)
+                        {
+
+                            transaction.Rollback();
+                            throw ex;
+                        }
+                    }
+                }   
+
             }
-            if(request.OrderType== AppUtility.OrderTypeEnum.OrderNow)
+            catch (Exception ex)
             {
-                return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.RequestIndexObject);
+                ViewBag.ErrorMessage = ex.Message?.ToString();
+                Response.StatusCode = 500;
+                return PartialView("UploadQuoteModal", uploadQuoteOrderViewModel);
             }
-            return RedirectToAction("Index", uploadQuoteOrderViewModel.RequestIndexObject);
         }
 
         private async Task SaveCommentsFromSession(Request request)
@@ -3613,41 +3620,63 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<object> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel) {
-            var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-            var request = HttpContext.Session.GetObject<Request>(requestName);
-            request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
-            request.ParentQuote = null;
-            using (var transaction = _context.Database.BeginTransaction())
+        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel)
+        {
+            try
             {
-                try
+                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                var request = HttpContext.Session.GetObject<Request>(requestName);
+                request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
+                request.ParentQuote = null;
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-
-                    _context.Update(request);
-                    await _context.SaveChangesAsync();
-                    await SaveCommentsFromSession(request);
-                    //rename temp folder to the request id
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolderFrom = Path.Combine(uploadFolder, "0");
-                    string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-                    if (Directory.Exists(requestFolderTo))
+                    try
                     {
-                        Directory.Delete(requestFolderTo);
+
+                        _context.Update(request);
+                        await _context.SaveChangesAsync();
+                        await SaveCommentsFromSession(request);
+                        //rename temp folder to the request id
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                        string requestFolderFrom = Path.Combine(uploadFolder, "0");
+                        string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
+                        if (Directory.Exists(requestFolderTo))
+                        {
+                            Directory.Delete(requestFolderTo);
+                        }
+                        Directory.Move(requestFolderFrom, requestFolderTo);
+
+                        await transaction.CommitAsync();
+                        base.RemoveRequestSessions();
                     }
-                    Directory.Move(requestFolderFrom, requestFolderTo);
-
-                    await transaction.CommitAsync();
-                    base.RemoveRequestSessions();
-
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw ex; ;
+                    }
                 }
-                catch (Exception ex)
+                var action = "Index";
+                if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                 {
-                    await transaction.RollbackAsync();
-                    base.RemoveRequestSessions();
-                    ViewBag.ErrorMessage = ex.InnerException;
+                    action = "_IndexTableWithCounts";
                 }
+                else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                {
+                    action = "NotificationsView";
+                }
+                else
+                {
+                    action = "_IndexTableData";
+                }
+                Response.StatusCode = 200;
+                return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
             }
-            return RedirectToAction("Index", uploadQuoteOrderViewModel.RequestIndexObject);
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message?.ToString();
+                Response.StatusCode = 500;
+                return PartialView("UploadOrderModal", uploadQuoteOrderViewModel);
+            }
         }
 
         private async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget)
