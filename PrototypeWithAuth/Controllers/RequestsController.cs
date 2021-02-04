@@ -667,7 +667,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> DeleteModal(int? id, bool isQuote = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public async Task<IActionResult> DeleteModal(int? id, RequestIndexObject requestIndexObject)
         {
             if (id == null)
             {
@@ -688,120 +688,138 @@ namespace PrototypeWithAuth.Controllers
             DeleteRequestViewModel deleteRequestViewModel = new DeleteRequestViewModel()
             {
                 Request = request,
-                IsReorder = isQuote,
-                SectionType = SectionType
+                RequestIndexObject = requestIndexObject
             };
 
-            return View(deleteRequestViewModel);
+            return PartialView(deleteRequestViewModel);
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> DeleteModal(int id, RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> DeleteModal(DeleteRequestViewModel deleteRequestViewModel)
         {
-            var request = _context.Requests.Where(r => r.RequestID == id)
-                .Include(r => r.RequestLocationInstances).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
-                .ThenInclude(ps => ps.ParentCategory)
-                .FirstOrDefault();
-            request.IsDeleted = true;
             try
             {
-                _context.Update(request);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = "Unable to Delete. " + ex.Message;
-                return NotFound();
-            }
-            var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).FirstOrDefault();
-            parentRequest.Requests = _context.Requests.Where(r => r.ParentRequestID == parentRequest.ParentRequestID && r.IsDeleted != true);
-
-            if (parentRequest != null)
-            {
-                if (parentRequest.Requests.Count() == 0)
+                var request = _context.Requests.Where(r => r.RequestID == deleteRequestViewModel.Request.RequestID)
+                    .Include(r => r.ParentRequest).Include(r => r.RequestLocationInstances).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
+                    .ThenInclude(ps => ps.ParentCategory)
+                    .FirstOrDefault();
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    parentRequest.IsDeleted = true;
                     try
                     {
-                        _context.Update(parentRequest);
+                        request.IsDeleted = true;
+                        _context.Update(request);
                         await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        ViewBag.ErrorHeader += "/n Parent Request Not Deleted";
-                        ViewBag.ErrorText += "/n Data Alert: Request was deleted, but not the Parent Request";
-                    }
-                }
 
-            }
-            var parentQuote = _context.ParentQuotes.Where(pr => pr.ParentQuoteID == request.ParentQuoteID).FirstOrDefault();
-            parentQuote.Requests = _context.Requests.Where(r => r.ParentQuoteID == parentQuote.ParentQuoteID && r.IsDeleted != true);
-            if (parentQuote != null)
-            {
-                //todo figure out the soft delete with child of a parent entity so we could chnage it to 0 or null
-                if (parentQuote.Requests.Count() == 0)
-                {
-                    parentQuote.IsDeleted = true;
-                    try
-                    {
-                        _context.Update(parentQuote);
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        ViewBag.ErrorHeader += "/n Parent Quote Not Deleted";
-                        ViewBag.ErrorText += "/n Data Alert: Request was deleted, but not the Parent Quote";
-                    }
-                }
+                        var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).FirstOrDefault();
+                        if (parentRequest != null)
+                        {
+                            parentRequest.Requests = _context.Requests.Where(r => r.ParentRequestID == parentRequest.ParentRequestID && r.IsDeleted != true);
+                            if (parentRequest.Requests.Count() == 0)
+                            {
+                                parentRequest.IsDeleted = true;
+                                var payments = _context.Payments.Where(p => p.ParentRequestID == parentRequest.ParentRequestID);
+                                foreach (var payment in payments)
+                                {
+                                    payment.IsDeleted = true;
+                                }
+                                _context.Update(parentRequest);
+                                await _context.SaveChangesAsync();
+                                _context.Update(payments);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+                        var parentQuote = _context.ParentQuotes.Where(pr => pr.ParentQuoteID == request.ParentQuoteID).FirstOrDefault();
+                        parentQuote.Requests = _context.Requests.Where(r => r.ParentQuoteID == parentQuote.ParentQuoteID && r.IsDeleted != true).ToList();
+                        if (parentQuote != null)
+                        {
+                            //todo figure out the soft delete with child of a parent entity so we could chnage it to 0 or null
+                            if (parentQuote.Requests.Count() == 0)
+                            {
+                                parentQuote.IsDeleted = true;
+                                _context.Update(parentQuote);
+                                await _context.SaveChangesAsync();
+                            }
 
-            }
-            foreach (var requestLocationInstance in request.RequestLocationInstances)
-            {
-                requestLocationInstance.IsDeleted = true;
-                var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
-                locationInstance.IsFull = false;
-                try
-                {
-                    _context.Update(requestLocationInstance);
-                    _context.SaveChanges();
+                        }
+                        foreach (var requestLocationInstance in request.RequestLocationInstances)
+                        {
+                            requestLocationInstance.IsDeleted = true;
+                            var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
+                            locationInstance.IsFull = false;
+
+                            _context.Update(requestLocationInstance);
+                            await _context.SaveChangesAsync();
+                            _context.Update(locationInstance);
+                            await _context.SaveChangesAsync();
+                        }
+                        var comments = _context.Comments.Where(c => c.RequestID == request.RequestID);
+                        foreach (var comment in comments)
+                        {
+                            comment.IsDeleted = true;
+                            _context.Update(comment);
+                            await _context.SaveChangesAsync();
+                        }
+                        var notifications = _context.RequestNotifications.Where(rn => rn.RequestID == request.RequestID);
+                        foreach (var notification in notifications)
+                        {
+                            _context.Remove(notification);
+                            await _context.SaveChangesAsync();
+                        }
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw e;
+                    }
                 }
-                catch (Exception ex)
+                if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
-                    //TODO: make sure the name won't be null over here
-                    ViewBag.ErrorHeader += "/n Request not removed from location";
-                    ViewBag.ErrorText += "/n Data Alert: Request was deleted, but not fully removed from the location: " + requestLocationInstance.LocationInstance.LocationInstanceName;
+                    if (deleteRequestViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
+                    {
+                        return RedirectToAction("LabManageQuotes");
+                    }
+                    else
+                    {
+                        return RedirectToAction("LabManageOrders");
+                    }
+
                 }
-                try
+                else if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                 {
-                    _context.Update(locationInstance);
-                    _context.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.ErrorHeader += "/n Request not removed from location";
-                    ViewBag.ErrorText += "/n Data Alert: Request was deleted, but not fully removed from the location: " + locationInstance.LocationInstanceName;
-                }
-            }
-            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
-            {
-                if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
-                {
-                    return RedirectToAction("LabManageQuotes");
+                    return RedirectToAction("Cart");
                 }
                 else
                 {
-                    return RedirectToAction("LabManageOrders");
+                    return RedirectToAction("Index", deleteRequestViewModel.RequestIndexObject);
                 }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message?.ToString();
+                Response.StatusCode = 500;
+                if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
+                {
+                    if (deleteRequestViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
+                    {
+                        return RedirectToAction("LabManageQuotes");
+                    }
+                    else
+                    {
+                        return RedirectToAction("LabManageOrders");
+                    }
 
-            }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestInventory || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsInventory)
-            {
-                return RedirectToAction("_IndexTableData", requestIndexObject);
-            }
-            else
-            {
-                return RedirectToAction("_IndexTableWithCounts", requestIndexObject);
+                }
+                else if(deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                {
+                    return RedirectToAction("Cart");
+                }
+                else
+                {
+                    return RedirectToAction("Index", deleteRequestViewModel.RequestIndexObject);
+                }
             }
 
         }
@@ -2899,6 +2917,7 @@ namespace PrototypeWithAuth.Controllers
                 request.RequestStatusID = 6; //approved
                 if (request.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote)
                 {
+                    request.ParentQuote = new ParentQuote();
                     request.ParentQuote.QuoteStatusID = 1;
                 }
                 _context.Update(request);

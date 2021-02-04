@@ -29,6 +29,7 @@ namespace PrototypeWithAuth.Models
         }
 
         public string CommentType { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
 

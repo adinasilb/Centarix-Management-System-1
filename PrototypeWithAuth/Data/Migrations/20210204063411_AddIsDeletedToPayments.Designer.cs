@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210204063411_AddIsDeletedToPayments")]
+    partial class AddIsDeletedToPayments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -500,9 +502,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("CommentType")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
@@ -1929,9 +1928,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("CompanyAccountID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<int>("ParentRequestID")
                         .HasColumnType("int");
 
@@ -1943,6 +1939,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<double>("Sum")
                         .HasColumnType("float");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("PaymentID");
 

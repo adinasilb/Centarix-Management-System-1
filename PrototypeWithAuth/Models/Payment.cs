@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.Models
         public ParentRequest ParentRequest { get; set; }
         public int CompanyAccountID { get; set; }
         public CompanyAccount CompanyAccount{ get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
 

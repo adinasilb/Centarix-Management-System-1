@@ -210,9 +210,15 @@ namespace PrototypeWithAuth.Data
             //.OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ParentQuote>()
-           .HasQueryFilter(item => !item.IsDeleted);
+                .HasQueryFilter(item => !item.IsDeleted);
 
             modelBuilder.Entity<Calibration>()
+                .HasQueryFilter(item => !item.IsDeleted);
+
+            modelBuilder.Entity<Payment>()
+                .HasQueryFilter(item => !item.IsDeleted);
+
+            modelBuilder.Entity<Comment>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);

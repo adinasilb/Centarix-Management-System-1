@@ -2,112 +2,113 @@
 @using PrototypeWithAuth.AppData
 
 
-    @foreach (var vendor in Model.RequestsByVendor)
+@foreach (var vendor in Model.RequestsByVendor)
+{
+    <tr class="text-dark border-0 no-hover h-50" style="line-height:50%;">
+        <td width="10%" class="p-0" rowspan="2"><div class="heading-1">@vendor.Key.VendorEnName.ToLower()</div></td>
+        <td colspan="7" class="border-bottom">
+            <input type="hidden" asp-for="@vendor.Key.VendorID" class="key-vendor-id" />
+        </td>
+    </tr>
+    <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
+
+
+    @for (int i = 0; i < vendor.Count(); i++)
     {
-        <tr class="text-dark border-0 no-hover h-50" style="line-height:50%;">
-            <td width="10%" class="p-0" rowspan="2"><div class="heading-1">@vendor.Key.VendorEnName.ToLower()</div></td>
-            <td colspan="7" class="border-bottom">
-                <input type="hidden" asp-for="@vendor.Key.VendorID" class="key-vendor-id" />
+        <tr class="text-center">
+            <td class="text-center" width="15%">
+                <input type="hidden" asp-for="@vendor.ElementAt(i).RequestID" />
+                @if (vendor.ElementAt(i).Product.ProductSubcategory.ImageURL != null)
+                {
+                    var imageurl = vendor.ElementAt(i).Product.ProductSubcategory.ImageURL;
+                    <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                }
+                else
+                {
+                    <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                }
             </td>
-        </tr>
-        <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
-
-
-        @for (int i = 0; i < vendor.Count(); i++)
-        {
-            <tr class="text-center">
-                <td class="text-center" width="15%">
-                    <input type="hidden" asp-for="@vendor.ElementAt(i).RequestID" />
-                    @if (vendor.ElementAt(i).Product.ProductSubcategory.ImageURL != null)
+            <td width="10%">
+                @vendor.ElementAt(i).Product.ProductName
+            </td>
+            <td width="10%">
+                @vendor.ElementAt(i).Product.Vendor.VendorEnName.ToLower()
+            </td>
+            <td>
+                @vendor.ElementAt(i).Product.ProductSubcategory.ProductSubcategoryDescription
+            </td>
+            <td width="10%">
+                @vendor.ElementAt(i).Unit @vendor.ElementAt(i).UnitType.UnitTypeDescription
+                @if (vendor.ElementAt(i).SubUnitType != null)
+                {
+                    @vendor.ElementAt(i).SubUnit @vendor.ElementAt(i).SubUnitType.UnitTypeDescription
+                }
+                @if (vendor.ElementAt(i).SubSubUnitType != null)
+                {
+                    @vendor.ElementAt(i).SubSubUnit @vendor.ElementAt(i).SubSubUnitType.UnitTypeDescription
+                }
+            </td>
+            <td width="10%">
+                @{
+                    var priceString = "";
+                    var requestPriceList = AppUtility.GetPriceColumn(Model.SelectedPriceSort, vendor.ElementAt(i), Model.SelectedCurrency);
+                    foreach (var price in requestPriceList)
                     {
-                        var imageurl = vendor.ElementAt(i).Product.ProductSubcategory.ImageURL;
-                        <img src="@imageurl" alt="Image" width="75" class="category-image" />
-                    }
-                    else
-                    {
-                        <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
-                    }
-                </td>
-                <td width="10%">
-                    @vendor.ElementAt(i).Product.ProductName
-                </td>
-                <td width="10%">
-                    @vendor.ElementAt(i).Product.Vendor.VendorEnName.ToLower()
-                </td>
-                <td>
-                    @vendor.ElementAt(i).Product.ProductSubcategory.ProductSubcategoryDescription
-                </td>
-                <td width="10%">
-                    @vendor.ElementAt(i).Unit @vendor.ElementAt(i).UnitType.UnitTypeDescription
-                    @if (vendor.ElementAt(i).SubUnitType != null)
-                    {
-                        @vendor.ElementAt(i).SubUnit @vendor.ElementAt(i).SubUnitType.UnitTypeDescription
-                    }
-                    @if (vendor.ElementAt(i).SubSubUnitType != null)
-                    {
-                        @vendor.ElementAt(i).SubSubUnit @vendor.ElementAt(i).SubSubUnitType.UnitTypeDescription
-                    }
-                </td>
-                <td width="10%">
-                    @{
-                        var priceString = "";
-                        var requestPriceList = AppUtility.GetPriceColumn(Model.SelectedPriceSort, vendor.ElementAt(i), Model.SelectedCurrency);
-                        foreach (var price in requestPriceList)
+                        if (price == requestPriceList.First())
                         {
-                            if (price == requestPriceList.First())
-                            {
-                                priceString = price;
-                            }
-                            else
-                            {
-                                priceString = priceString + "<br/>" + price;
-                            }
+                            priceString = price;
+                        }
+                        else
+                        {
+                            priceString = priceString + "<br/>" + price;
                         }
                     }
-
-                    @Html.Raw(priceString)
-                </td>
-                <td width="15%">
-                    @vendor.ElementAt(i).ApplicationUserCreator.FirstName @vendor.ElementAt(i).ApplicationUserCreator.LastName
-                </td>
-                <td width="7%">
-                    @if (vendor.ElementAt(i).ParentQuote.QuoteStatusID == 2)
-                    {
-                        <button class="table-button custom-button-table-font lab-man-background-color float-right text-center confirm-quote-resend " value="@vendor.ElementAt(i).RequestID">Resend</button>
-                    }
-                </td>
-                <td width="12%">
-                    <div class="d-inline-flex">
-                        <div class="table-icon-div"><button class="btn no-box-shadow p-0 load-quote-details m-0" data-title="edit" value="@vendor.ElementAt(i).RequestID"> <img src="~/images/css/accounting/icons/payment.png" /></button></div>
-                        <div class="table-icon-div"><button class="btn no-box-shadow p-0 m-0 load-confirm-delete-quote" data-title="delete" value="@vendor.ElementAt(i).RequestID" name="@AppUtility.MenuItems.LabManagement"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button></div>
-                    </div>
-                </td>
-            </tr>
-        }
-        <tr class="border-0 mb-5 no-hover">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-            </td>
-            <td> <span class="text font-weight-bold">Items: @vendor.Count()</span> </td>
-            <td colspan="1">
-                @{
-                    var totalCost = vendor.Sum(r => r.Cost);
-                    var decTotalCost = (decimal)totalCost;
-                    var stringTotalCost = decTotalCost.ToString("C02");
                 }
-                <span class="text font-weight-bold">Total: @stringTotalCost</span>
-            </td>
-            <td colspan="2">
-                @*@if (vendor.Where(r => r.ParentQuote.QuoteStatusID == 1).Count() != 0)
-                    {*@
-                <button class="custom-button custom-button-font lab-man-background-color float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
-                @*}*@
 
+                @Html.Raw(priceString)
+            </td>
+            <td width="15%">
+                @vendor.ElementAt(i).ApplicationUserCreator.FirstName @vendor.ElementAt(i).ApplicationUserCreator.LastName
+            </td>
+            <td width="7%">
+                @if (vendor.ElementAt(i).ParentQuote.QuoteStatusID == 2)
+                {
+                    <button class="table-button custom-button-table-font lab-man-background-color float-right text-center confirm-quote-resend " value="@vendor.ElementAt(i).RequestID">Resend</button>
+                }
+            </td>
+            <td width="12%">
+                <div class="d-inline-flex">
+                    <div class="table-icon-div"><button class="btn no-box-shadow p-0 load-quote-details m-0" data-title="edit" value="@vendor.ElementAt(i).RequestID"> <img src="~/images/css/accounting/icons/payment.png" /></button></div>
+                    <div class="table-icon-div"><button class="btn no-box-shadow p-0 m-0 load-confirm-delete" data-title="delete" value="@vendor.ElementAt(i).RequestID" name="@AppUtility.MenuItems.LabManagement"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button></div>
+                </div>
             </td>
         </tr>
+    }
+    <tr class="border-0 mb-5 no-hover">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+        </td>
+        <td> <span class="text font-weight-bold">Items: @vendor.Count()</span> </td>
+        <td colspan="1">
+            @{
+                var totalCost = vendor.Sum(r => r.Cost);
+                var decTotalCost = (decimal)totalCost;
+                var stringTotalCost = decTotalCost.ToString("C02");
+            }
+            <span class="text font-weight-bold">Total: @stringTotalCost</span>
+        </td>
+        <td colspan="2">
+            @*@if (vendor.Where(r => r.ParentQuote.QuoteStatusID == 1).Count() != 0)
+                {*@
+            <button class="custom-button custom-button-font lab-man-background-color float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
+            @*}*@
+
+        </td>
+    </tr>
 }
 
 <script src="~/js/PricePopoverScript.js"></script>
+<script src="~/js/ConfirmDeleteScript.js"></script>
