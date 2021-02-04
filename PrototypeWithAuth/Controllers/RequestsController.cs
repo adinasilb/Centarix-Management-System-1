@@ -738,7 +738,8 @@ namespace PrototypeWithAuth.Controllers
                                 _context.Update(parentQuote);
                                 await _context.SaveChangesAsync();
                             }
-
+                            Exception e = new Exception();
+                            throw e;
                         }
                         foreach (var requestLocationInstance in request.RequestLocationInstances)
                         {
@@ -759,6 +760,7 @@ namespace PrototypeWithAuth.Controllers
                             await _context.SaveChangesAsync();
                         }
                         var notifications = _context.RequestNotifications.Where(rn => rn.RequestID == request.RequestID);
+                       
                         foreach (var notification in notifications)
                         {
                             _context.Remove(notification);
@@ -795,7 +797,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message?.ToString();
+                TempData["ErrorMessage"] = ex.Message;
                 Response.StatusCode = 500;
                 if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
