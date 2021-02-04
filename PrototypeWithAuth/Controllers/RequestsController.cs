@@ -2049,7 +2049,7 @@ namespace PrototypeWithAuth.Controllers
             if (requests.Count() == 0)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 2)
-                         .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+                         .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
             }
             RequestIndexObject requestIndexObject = new RequestIndexObject
             {
