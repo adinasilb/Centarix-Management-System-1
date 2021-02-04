@@ -11,6 +11,7 @@
         requestQuoteHide = "";
     }
 }
+    <div class="row text-danger-centarix"> @ViewBag.ErrorMessage </div>
     <div class="row">
         <div class="col-12">
             <span class="heading-1 modal-tab-name">Order</span>
@@ -134,9 +135,13 @@
                     $("#loading").hide();
                     return true;
                 },
-                error: function () {
+                error: function (jqxhr) {
                     $("#loading").hide();
-                    return true;
+                    if (jqxhr.status == 500) {
+                        alert("made it to error")
+                        $("#order").html(jqxhr.responseText);
+                        $(".order-tab").trigger("click");
+                    }
                 }
             });
         }

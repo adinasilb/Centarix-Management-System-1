@@ -12,7 +12,6 @@ namespace PrototypeWithAuth.ViewModels
         public ParentQuote ParentQuote { get; set; }
         public List<string> FileStrings { get; set; }
         public AppUtility.OrderTypeEnum OrderTypeEnum { get; set; }
-        public AppUtility.MenuItems SectionType { get; set; }
-
+        public RequestIndexObject RequestIndexObject { get; set; }
     }
 }
