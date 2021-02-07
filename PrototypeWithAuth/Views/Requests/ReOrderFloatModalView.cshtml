@@ -18,20 +18,21 @@
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/Validation/ReorderFormValidation.js"></script>
 <script src="~/js/SubUnit.js"></script>
-<div class="modal modal-view fader on-form-modal @form " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<script src="~/js/IndexTablePartial.js"></script>
+<div class="modal modal-view reorderModal fader on-form-modal @form " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered modal-xl mx-auto" role="document">
 
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius mx-auto">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.reorderModal').modal('hide');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
 
 
                 @*
-        NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
-            they need the hiddenfors that are right underneath it
+                    NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+                        they need the hiddenfors that are right underneath it
                 *@
                 @Html.HiddenFor(model => model.RequestIndexObject.PageType)
                 @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
@@ -99,7 +100,7 @@
 vm => vm.RequestItemViewModel.Request.UnitTypeID,
 Model.RequestItemViewModel.UnitTypeList,
 "",
-htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id="unitTypeID"}
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id = "unitTypeID" }
 )
                                             <span asp-validation-for="RequestItemViewModel.Request.UnitType" class="text-danger-centarix"></span>
                                         </div>
@@ -144,7 +145,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 vm => vm.RequestItemViewModel.Request.SubUnitTypeID,
                 Model.RequestItemViewModel.UnitTypeList,
                 "",
-                         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id="subUnitTypeID" }
+                         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id = "subUnitTypeID" }
                          )
                                                     <span asp-validation-for="RequestItemViewModel.Request.SubUnitType" class="text-danger-centarix"></span>
                                                 </div>
@@ -196,7 +197,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                             vm => vm.RequestItemViewModel.Request.SubSubUnitTypeID,
                                                             Model.RequestItemViewModel.UnitTypeList,
                                                             "",
-                                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id="subSubUnitTypeID" }
+                                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id = "subSubUnitTypeID" }
                                                             )
                                                         <span asp-validation-for="RequestItemViewModel.Request.SubSubUnitType" class="text-danger-centarix"></span>
                                                     </div>
@@ -341,7 +342,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             </div>
 
                             <div class="col-4">
-                                <button type="button" class="custom-cancel custom-button create-modal-submit" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                                <button type="button" class="custom-cancel custom-button create-modal-submit" data-dismiss="modal" onclick="$(this).closest('.reorderModal').modal('hide');">Cancel</button>
 
                             </div>
                         </div>
@@ -362,30 +363,30 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 </div>
 
 <script>
- $(".submitOrder").off('click').on("click", function (e) {
+    $(".submitOrder").off('click').on("click", function (e) {
         e.preventDefault();
         console.log("submit reorder");
         //alert("validate form");
-        $("#myForm").data("validator").settings.ignore = "";
-        var valid = $("#myForm").valid();
+        $(".reorderForm").data("validator").settings.ignore = "";
+        var valid = $(".reorderForm").valid();
         console.log("valid form: " + valid)
         if (!valid) {
 
             if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-            $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
-        }
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            }
 
         }
         else {
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
-            var formData = new FormData($("#myForm")[0]);
+            var formData = new FormData($(".reorderForm")[0]);
             var orderType = $(this).val();
             $.ajax({
-            contentType: false,
+                contentType: false,
                 processData: false,
                 async: true,
-                url: "/Requests/ReOrderFloatModalView?OrderTypeEnum="+orderType,
+                url: "/Requests/ReOrderFloatModalView?OrderTypeEnum=" + orderType,
                 data: formData,
                 traditional: true,
                 type: "POST",
@@ -396,7 +397,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                     var modal = $(data);
                     $('body').append(modal);
                     $(".modalStep1").modal({
-            backdrop: true,
+                        backdrop: true,
                         keyboard: false,
                     });
                     $(".modalStep1").modal('show');
@@ -405,23 +406,23 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                        $('.modal').replaceWith('');
+                        $('.reorderModal').replaceWith('');
                         $(".modal-backdrop").remove();
                         var modal = $(jqxhr.responseText);
                         $('body').append(modal);
-                        $(".modal").modal({
+                        $(".reorderModal").modal({
                             backdrop: true,
                             keyboard: false,
                         });
-                        $(".modal").modal('show');
+                        $(".reorderModal").modal('show');
                     }
-                   
+
                     $("#loading").hide();
                     return true;
                 }
             });
         }
-        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        $(".reorderForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 
         //return false;
     });</script>

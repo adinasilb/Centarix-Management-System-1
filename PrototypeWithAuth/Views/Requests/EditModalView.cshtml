@@ -76,8 +76,9 @@
                         <div class="modal-product-title" @*style="width: 80%;"*@>
                             <input asp-for="Request.Product.ProductName" class="form-control-plaintext heading-1 border-bottom mark-readonly name" disabled />
                             <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
-                        </div>
 
+                        </div>
+                        <button type="button" value="@Model.Request.RequestID" class="offset-8 load-order-details custom-button custom-button-font order-inv-background-color">Request</button>
                     </div>
                     <div class="row">
                         <div class="col-12 px-0">
@@ -204,5 +205,6 @@
 
         $(el).parents('.dropdown-main').find('span:not(.caret)').text($(el).text());
     };
+
 
 </script>
