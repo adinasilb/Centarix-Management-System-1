@@ -441,12 +441,12 @@
                 console.log("orders");
                 $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
                 $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
-                $.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
-                if (($("#Request_SubSubUnitTypeID").hasClass('.mark-readonly'))) {
+                $.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
+                if (($("#subSubUnitTypeID").hasClass('.mark-readonly'))) {
                     $.fn.EnableSubSubUnits();
                     $.fn.ChangeSubSubUnitDropdown();
                 }
-                if (($("#Request_SubUnitTypeID").hasClass('.mark-readonly'))) {
+                if (($("#subUnitTypeID").hasClass('.mark-readonly'))) {
                     console.log('enabling');
                     $.fn.EnableSubUnits();
                     $.fn.ChangeSubUnitDropdown();
@@ -503,7 +503,7 @@
                     switch ($type) {
                         case "details":
                             //$.fn.OnOpenModalView();
-                            $("#Request_Cost").trigger('change');
+                            $("#cost").trigger('change');
                             var category = $("#categoryDescription").val();
                             console.log(category)
                             $("." + category).removeClass("d-none");
@@ -515,7 +515,7 @@
                             break;
                         case "reorder":
                             $.fn.OnOpenModalView();
-                            $("#Request_Cost").trigger('change');
+                            $("#cost").trigger('change');
                             //$.fn.CheckCurrency();
                             break;
                         case "create":

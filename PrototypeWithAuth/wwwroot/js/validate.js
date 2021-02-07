@@ -190,7 +190,7 @@ $(function () {
 
 	$('.next-tab').click(function () {
 		if ($(this).hasClass('request-price')) {
-			$('#Request_UnitTypeID').rules("remove", "selectRequired");
+			$('#unitTypeID').rules("remove", "selectRequired");
 		}
 
 		//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
@@ -209,7 +209,7 @@ $(function () {
 			}
 			//work around for now - because select hidden are ignored
 			if ($(this).hasClass('request-price')) {
-				$('#Request_UnitTypeID').rules("add", "selectRequired");
+				$('#unitTypeID').rules("add", "selectRequired");
 			}
 		}
 

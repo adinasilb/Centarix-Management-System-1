@@ -27,7 +27,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
-          
+
 
                 @*
         NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
@@ -36,13 +36,14 @@
                 @Html.HiddenFor(model => model.RequestIndexObject.PageType)
                 @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
                 @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
                 @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
                 @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
                 @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
                 @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
                 @Html.HiddenFor(model => model.RequestItemViewModel.Request.RequestID)
-                @Html.HiddenFor(model => model.RequestItemViewModel.Request.ExchangeRate)
+                <input type="hidden" asp-for="RequestItemViewModel.Request.ExchangeRate" id="exchangeRate" />
+                <input type="hidden" asp-for="RequestItemViewModel.Request.Currency" id="currency" />
+
                 @Html.HiddenFor(model => model.RequestItemViewModel.PageType) @*JS shoulde be taking this as a string *@
                 @Html.HiddenFor(model => model.RequestItemViewModel.Request.ApplicationUserCreatorID)
 
@@ -56,31 +57,31 @@
                         <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
                         <br />
                     }
-                 
-                <div class="form-group mb-3 ">
-                    <div class="row px-5 text-danger-centarix"> @ViewBag.ErrorMessage </div>
-                    <div class="row modal-title-line">
-                        <div class="col-1">
-                            @if (Model.RequestItemViewModel.Request.Product.ProductSubcategory.ImageURL != null)
-                            {
-                                var imageurl = Model.RequestItemViewModel.Request.Product.ProductSubcategory.ImageURL;<img src="@imageurl" alt="Image" width="75" class="category-image" />
-                            }
-                            else
-                            {
-                                <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
-                            }
-                        </div>
 
-                        <div class="col-5 heading-1">
-                            @Model.RequestItemViewModel.Request.Product.ProductName
+                    <div class="form-group mb-3 ">
+                        <div class="row px-5 text-danger-centarix"> @ViewBag.ErrorMessage </div>
+                        <div class="row modal-title-line">
+                            <div class="col-1">
+                                @if (Model.RequestItemViewModel.Request.Product.ProductSubcategory.ImageURL != null)
+                                {
+                                    var imageurl = Model.RequestItemViewModel.Request.Product.ProductSubcategory.ImageURL;<img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                                }
+                            </div>
+
+                            <div class="col-5 heading-1">
+                                @Model.RequestItemViewModel.Request.Product.ProductName
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <hr class="col-12" />
                         </div>
 
                     </div>
-                    <div class="row">
-                        <hr class="col-12" />
-                    </div>
-
-                </div>
 
                     <div class="row" id="edit">
                         <div class="col-4 h-100 RequestUnitCard">
@@ -88,7 +89,7 @@
                                 <div class="row mb-4">
                                     <div class="col-md-6 form-group">
                                         <label asp-for="RequestItemViewModel.Request.Unit" class="control-label"></label>
-                                        <input asp-for="RequestItemViewModel.Request.Unit" class="form-control-plaintext border-bottom " min="1" />
+                                        <input asp-for="RequestItemViewModel.Request.Unit" class="form-control-plaintext border-bottom " id="unit" min="1" />
                                         <span asp-validation-for="RequestItemViewModel.Request.Unit" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-md-6">
@@ -98,7 +99,7 @@
 vm => vm.RequestItemViewModel.Request.UnitTypeID,
 Model.RequestItemViewModel.UnitTypeList,
 "",
-htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext" }
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id="unitTypeID"}
 )
                                             <span asp-validation-for="RequestItemViewModel.Request.UnitType" class="text-danger-centarix"></span>
                                         </div>
@@ -134,7 +135,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                             <div class="row mb-4">
                                                 <div class="col-md-6  form-group">
                                                     <label asp-for="RequestItemViewModel.Request.SubUnit" class="control-label"></label>
-                                                    <input asp-for="RequestItemViewModel.Request.SubUnit" class="form-control-plaintext border-bottom" disabled />
+                                                    <input asp-for="RequestItemViewModel.Request.SubUnit" class="form-control-plaintext border-bottom" id="subUnit" />
                                                     <span asp-validation-for="RequestItemViewModel.Request.SubUnit" class="text-danger-centarix"></span>
                                                 </div>
                                                 <div class="col-md-6 form-group">
@@ -143,7 +144,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 vm => vm.RequestItemViewModel.Request.SubUnitTypeID,
                 Model.RequestItemViewModel.UnitTypeList,
                 "",
-                         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
+                         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id="subUnitTypeID" }
                          )
                                                     <span asp-validation-for="RequestItemViewModel.Request.SubUnitType" class="text-danger-centarix"></span>
                                                 </div>
@@ -154,7 +155,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                     <div class="col-md-6">
                                                         <div class="input-group">
                                                             <span class="input-group-text">&#36;</span>
-                                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars" disabled
+                                                            <input class="form-control-plaintext border-bottom" name="subunit-price-dollars" id="subunit-price-dollars"
                                                                    value="@(Math.Round(Model.RequestItemViewModel.Request.PricePerSubUnit??0/Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
                                                         </div>
                                                     </div>
@@ -186,7 +187,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                 <div class="row mb-4">
                                                     <div class="col-md-6  form-group">
                                                         <label asp-for="RequestItemViewModel.Request.SubSubUnit" class="control-label"></label>
-                                                        <input asp-for="RequestItemViewModel.Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" disabled />
+                                                        <input asp-for="RequestItemViewModel.Request.SubSubUnit" class="form-control-plaintext border-bottom" min="0" id="subSubUnit" />
                                                         <span asp-validation-for="RequestItemViewModel.Request.SubSubUnit" class="text-danger-centarix"></span>
                                                     </div>
                                                     <div class="col-md-6 form-group">
@@ -195,7 +196,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                             vm => vm.RequestItemViewModel.Request.SubSubUnitTypeID,
                                                             Model.RequestItemViewModel.UnitTypeList,
                                                             "",
-                                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled" }
+                                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id="subSubUnitTypeID" }
                                                             )
                                                         <span asp-validation-for="RequestItemViewModel.Request.SubSubUnitType" class="text-danger-centarix"></span>
                                                     </div>
@@ -207,7 +208,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                         <div class="col-md-6">
                                                             <div class="input-group">
                                                                 <span class="input-group-text">&#36;</span>
-                                                                <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars" disabled
+                                                                <input class="form-control-plaintext border-bottom mark-readonly" name="subsubunit-price-dollars" id="subsubunit-price-dollars"
                                                                        value="@(Math.Round(Model.RequestItemViewModel.Request.PricePerSubSubUnit??0/Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
                                                             </div>
                                                         </div>
@@ -237,7 +238,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label class="control-label">Sum:</label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars" disabled
+                                    <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars"
                                            value="@(Math.Round(Model.RequestItemViewModel.Request.Cost/Model.RequestItemViewModel.Request.ExchangeRate,2))" />
                                 </div>
                             </div>
@@ -247,18 +248,27 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label asp-for="RequestItemViewModel.Request.Cost" class="control-label"></label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
-                                    <input asp-for="RequestItemViewModel.Request.Cost" class="form-control-plaintext border-bottom" min="1" />
+                                    <input asp-for="RequestItemViewModel.Request.Cost" id="cost" class="form-control-plaintext border-bottom" min="1" readonly />
                                     <span class="text-danger-centarix" asp-validation-for="RequestItemViewModel.Request.Cost"></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label class="control-label">VAT</label>
+                                <label asp-for="RequestItemViewModel.Request.VAT" class="control-label"></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">&#x20aa;</span>
-
-                                    <input class="form-control-plaintext border-bottom vat" disabled value="@Model.RequestItemViewModel.Request.VAT.ToString("N2")" />
+                                    <span class="input-group-text disabled-text">&#36;</span>
+                                    <input class="form-control-plaintext border-bottom vatInDollars disabled-text" disabled value="@(Math.Round(Model.RequestItemViewModel.Request.VAT / Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text disabled-text">&#x20aa;</span>
+                                    <input asp-for="RequestItemViewModel.Request.VAT" class="form-control-plaintext border-bottom disabled-text" id="vat" disabled />
+                                    <span class="text-danger-centarix" asp-validation-for="RequestItemViewModel.Request.VAT"></span>
                                 </div>
                             </div>
                         </div>

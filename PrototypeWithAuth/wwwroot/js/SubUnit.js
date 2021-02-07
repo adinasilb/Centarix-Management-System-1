@@ -9,7 +9,7 @@ $(function () {
 	}
 
 	$.fn.CalculateSumPlusVat = function () {
-		var $exchangeRate = $("#Request_ExchangeRate").val();
+		var $exchangeRate = $("#exchangeRate").val();
 		//console.log("sumShek: " + sumShek);
 
 		//console.log("VatPercentage: " + VatPercentage);
@@ -17,19 +17,19 @@ $(function () {
 		//$("#Request_VAT").val(vatCalc)
 		//var vatInShekel = $("#Request_VAT").val();
 		if ($("#sum-dollars").prop("disabled")) {
-			$sumDollars = parseFloat($("#Request_Cost").val()) / $exchangeRate;
+			$sumDollars = parseFloat($("#cost").val()) / $exchangeRate;
 			$iptBox = $('input[name="sum-dollars"]');
 			$.fn.ShowResults($iptBox, $sumDollars);
 		}
-		else if ($("#Request_Cost").prop("readonly")) {
+		else if ($("#cost").prop("readonly")) {
 			$sumShekel = $("#sum-dollars").val() * $exchangeRate;
-			$iptBox = $("input[name='Request.Cost']");
+			$iptBox = $("#cost");
 			$.fn.ShowResults($iptBox, $sumShekel);
 		}
-		$sumShekel = parseFloat($("#Request_Cost").val());
+		$sumShekel = parseFloat($("#cost").val());
 		var vatCalc = $sumShekel * .17;
 		//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
-		$('#Request_VAT').val(vatCalc.toFixed(2));
+		$('#vat').val(vatCalc.toFixed(2));
 		$('.vatInDollars').val((vatCalc / $exchangeRate).toFixed(2));
 		console.log(vatCalc)
 		console.log($exchangeRate)
@@ -42,26 +42,26 @@ $(function () {
 		$.fn.ShowResults($iptBox, $sumTotalVatDollars);
 	};
 	$.fn.CalculateUnitAmounts = function () {
-		$unitSumShekel = parseFloat($("#Request_Cost").val()) / $("#Request_Unit").val();
+		$unitSumShekel = parseFloat($("#cost").val()) / $("#unit").val();
 		$iptBox = $("input[name='unit-price-shekel']");
 		$.fn.ShowResults($iptBox, $unitSumShekel);
-		var $exchangeRate = $("#Request_ExchangeRate").val();
+		var $exchangeRate = $("#exchangeRate").val();
 		$unitSumDollars = $unitSumShekel / $exchangeRate;
 		$iptBox = $("input[name='unit-price-dollars']");
 		$.fn.ShowResults($iptBox, $unitSumDollars);
 	};
 
 	$.fn.CalculateSubUnitAmounts = function () {
-		$subUnitSumShekel = $("#unit-price-shekel").val() / $("#Request_SubUnit").val();
+		$subUnitSumShekel = $("#unit-price-shekel").val() / $("#subUnit").val();
 		$iptBox = $("input[name='subunit-price-shekel']");
 		$.fn.ShowResults($iptBox, $subUnitSumShekel);
-		var $exchangeRate = $("#Request_ExchangeRate").val();
+		var $exchangeRate = $("#exchangeRate").val();
 		$subUnitSumDollars = $subUnitSumShekel / $exchangeRate;
 		$iptBox = $("input[name='subunit-price-dollars']");
 		$.fn.ShowResults($iptBox, $subUnitSumDollars);
 
 		//for the reorder modal
-		$subunit = $("#Request_SubUnit");
+		$subunit = $("#subUnit");
 		if ($subunit.val() != null && $subunit.val() > 0) {
 			//$.fn.EnableSubUnits();
 			//$.fn.EnableMaterialSelect('#Request_SubUnitTypeID', 'select-options-Request_SubUnitTypeID');
@@ -73,15 +73,15 @@ $(function () {
 	};
 
 	$.fn.CalculateSubSubUnitAmounts = function () {
-		$subSubUnitSumShekel = $("#subunit-price-shekel").val() / $("#Request_SubSubUnit").val();
+		$subSubUnitSumShekel = $("#subunit-price-shekel").val() / $("#subSubUnit").val();
 		$iptBox = $("input[name='subsubunit-price-shekel']");
 		$.fn.ShowResults($iptBox, $subSubUnitSumShekel);
-		var $exchangeRate = $("#Request_ExchangeRate").val();
+		var $exchangeRate = $("#exchangeRate").val();
 		$subSubUnitSumDollars = $subSubUnitSumShekel / $exchangeRate;
 		$iptBox = $("input[name='subsubunit-price-dollars']");
 		$.fn.ShowResults($iptBox, $subSubUnitSumDollars);
 		//for the reorder modal
-		$subsubunit = $("#Request_SubSubUnit");
+		$subsubunit = $("#subSubUnit");
 		if ($subsubunit.val() != null && $subsubunit.val() > 0) {
 			$.fn.EnableSubSubUnits();
 		}
@@ -90,10 +90,10 @@ $(function () {
 		}
 	};
 	$.fn.CalculatePriceShekels = function () {
-		var $exchangeRate = $("#Request_ExchangeRate").val();
+		var $exchangeRate = $("#exchangeRate").val();
 		var $unitPrice = $("#unit-price-shekel").val();
-		var $priceShekels = $unitPrice * $("#Request_Unit").val();
-		$iptBox = $("input[name='Request.Cost']");
+		var $priceShekels = $unitPrice * $("#unit").val();
+		$iptBox = $("#cost");
 		$.fn.ShowResults($iptBox, $priceShekels);
 		var $priceDollars = $priceShekels / $exchangeRate;
 		var $iptBox = $("input[name='sum-dollars']");
@@ -107,12 +107,12 @@ $(function () {
 	};
 	$.fn.CalculatePriceDollars = function () {
 		var $unitPrice = $("#unit-price-dollars").val();
-		var $priceDollars = $unitPrice * $("#Request_Unit").val();
+		var $priceDollars = $unitPrice * $("#unit").val();
 		var $iptBox = $("input[name='sum-dollars']");
 		$.fn.ShowResults($iptBox, $priceDollars);
-		var $exchangeRate = $("#Request_ExchangeRate").val();
+		var $exchangeRate = $("#exchangeRate").val();
 		$priceShekels = $priceDollars * $exchangeRate;
-		$iptBox = $("input[name='Request.Cost']");
+		$iptBox = $("#cost");
 		$.fn.ShowResults($iptBox, $priceShekels);
 		$unitPriceShekels = $unitPrice * $exchangeRate;
 		$iptBox = $("input[name='unit-price-shekel']");
@@ -122,22 +122,22 @@ $(function () {
 		$.fn.CalculateSumPlusVat();
 	};
 	$.fn.EnableSubUnits = function () {
-		$("#Request_SubUnit").prop("disabled", false);
-		$.fn.EnableMaterialSelect('#Request_SubUnitTypeID', 'select-options-Request_SubUnitTypeID');
+		$("#subUnit").prop("disabled", false);
+		$.fn.EnableMaterialSelect('#subUnitTypeID', 'select-options-subUnitTypeID');
 	};
 	$.fn.ChangeSubUnitDropdown = function () {
 		console.log("change subunit dropdown");
-		var selected = $(':selected', $("#Request_UnitTypeID"));
-		var selected2 = $(':selected', $("#select-options-Request_UnitTypeID"));
+		var selected = $(':selected', $("#unitTypeID"));
+		var selected2 = $(':selected', $("#select-options-unitTypeID"));
 		//console.log("u selected: " + selected);
 		var optgroup = selected.closest('optgroup').attr('label');
 		var optgroup2 = selected2.closest('optgroup').attr('label');
 		console.log("u optgroup: " + optgroup);
 		console.log("u optgroup2: " + optgroup2);
 		//the following is based on the fact that the unit types and parents are seeded with primary key values
-		var selectedIndex = $('#select-options-Request_SubUnitTypeID').find(".active").index();
+		var selectedIndex = $('#select-options-subUnitTypeID').find(".active").index();
 		console.log("select index" + selectedIndex)
-		var subOptgroup = $(':selected', $("#Request_SubUnitTypeID")).closest('optgroup').attr('label');
+		var subOptgroup = $(':selected', $("#subUnitTypeID")).closest('optgroup').attr('label');
 		switch (subOptgroup) {
 			case "Units":
 				console.log("Units")
@@ -154,8 +154,8 @@ $(function () {
 				break;
 		}
 
-		$('#Request_SubUnitTypeID').destroyMaterialSelect();
-		$('#Request_SubUnitTypeID').prop('selectedIndex', selectedIndex);
+		$('#subUnitTypeID').destroyMaterialSelect();
+		$('#subUnitTypeID').prop('selectedIndex', selectedIndex);
 		switch (optgroup) {
 			case "Units":
 				console.log("inside optgroup units");
@@ -166,8 +166,8 @@ $(function () {
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").show();
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").css("display", "none");
-				$("#Request_SubUnitTypeID optgroup[label='Units'] option").prop('disabled', false);
-				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
+				$("#subUnitTypeID optgroup[label='Units'] option").prop('disabled', false);
+				$("#subUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
 
 
 				break;
@@ -180,8 +180,8 @@ $(function () {
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', false).prop('hidden', false);
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").hide();
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").show();
-				$("#Request_SubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
-				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
+				$("#subUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
+				$("#subUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
 
 				//	$("#Request_SubUnitTypeID").hide();
 				break;
@@ -193,42 +193,42 @@ $(function () {
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").prop('disabled', true).prop('hidden', true);
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Units'] li").hide();
 				//$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume'] li").hide();
-				$("#Request_SubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
-				$('#select-options-Request_SubUnitTypeID li.optgroup:nth-child(3)').addClass('.active');
-				$("#Request_SubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', true);
+				$("#subUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
+				$('#select-options-subUnitTypeID li.optgroup:nth-child(3)').addClass('.active');
+				$("#subUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', true);
 
 				break;
 		}
-		$("#Request_SubUnitTypeID").materialSelect();
-		$.fn.EnableMaterialSelect('#Request_SubUnitTypeID', 'select-options-Request_SubUnitTypeID');
+		$("#subUnitTypeID").materialSelect();
+		$.fn.EnableMaterialSelect('#subUnitTypeID', 'select-options-subUnitTypeID');
 		switch (optgroup2) {
 			case "Units":
 				console.log("inside optgroup2 units");
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+				$("#select-options-subUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+				$("#select-options-subUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
 				break;
 			case "Weight/Volume":
 				console.log("inside optgroup2 weight/volume");
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+				$("#select-options-subUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+				$("#select-options-subUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
 				break;
 			case "Test":
 				console.log("inside optgroup2 test");
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-				$("#select-options-Request_SubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+				$("#select-options-subUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+				$("#select-options-subUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
 				break;
 		}
 	};
 	//change sub sub unit dropdown
 	$.fn.ChangeSubSubUnitDropdown = function () {
 		console.log("in change subsubunitdropdown");
-		var selected = $(':selected', $("#Request_SubUnitTypeID"));
-		var selected2 = $(':selected', $("#select-options-Request_SubUnitTypeID"));
+		var selected = $(':selected', $("#subUnitTypeID"));
+		var selected2 = $(':selected', $("#select-options-subUnitTypeID"));
 		var optgroup = selected.closest('optgroup').attr('label');
 		var optgroup2 = selected.closest('optgroup').attr('label');
-		var selectedIndex = $('#select-options-Request_SubSubUnitTypeID').find(".active").index();
+		var selectedIndex = $('#select-options-subSubUnitTypeID').find(".active").index();
 		console.log("select index" + selectedIndex)
-		var subOptgroup = $(':selected', $("#Request_SubSubUnitTypeID")).closest('optgroup').attr('label');
+		var subOptgroup = $(':selected', $("#subSubUnitTypeID")).closest('optgroup').attr('label');
 		switch (subOptgroup) {
 			case "Units":
 				console.log("Units")
@@ -245,57 +245,57 @@ $(function () {
 				break;
 		}
 
-		$('#Request_SubSubUnitTypeID').destroyMaterialSelect();
-		$('#Request_SubSubUnitTypeID').prop('selectedIndex', selectedIndex);
-		console.log($('#Request_SubSubUnitTypeID').prop('selectedIndex'));
+		$('#subSubUnitTypeID').destroyMaterialSelect();
+		$('#subSubUnitTypeID').prop('selectedIndex', selectedIndex);
+		console.log($('#subSubUnitTypeID').prop('selectedIndex'));
 		switch (optgroup) {
 			case "Units":
 				//$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
 				//$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-				$("#Request_SubSubUnitTypeID optgroup[label='Units'] option").prop('disabled', false);
-				$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
+				$("#subSubUnitTypeID optgroup[label='Units'] option").prop('disabled', false);
+				$("#subSubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
 				break;
 			case "Weight/Volume":
 				//$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
 				//$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
-				$("#Request_SubSubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
-				$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
+				$("#subSubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
+				$("#subSubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', false);
 				break;
 			case "Test":
 				//$("#Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
 				//$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
-				$("#Request_SubSubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
-				$("#Request_SubSubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', true);
+				$("#subSubUnitTypeID optgroup[label='Units'] option").prop('disabled', true);
+				$("#subSubUnitTypeID optgroup[label='Weight/Volume'] option").prop('disabled', true);
 				break;
 		}
-		$("#Request_SubSubUnitTypeID").materialSelect();
-		$.fn.EnableMaterialSelect('#Request_SubSubUnitTypeID', 'select-options-Request_SubUnitTypeID');
+		$("#subSubUnitTypeID").materialSelect();
+		$.fn.EnableMaterialSelect('#subSubUnitTypeID', 'select-options-subUnitTypeID');
 		switch (optgroup2) {
 			case "Units":
-				$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
-				$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+				$("#select-options-subSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
+				$("#select-options-subSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
 				break;
 			case "Weight/Volume":
-				$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-				$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
+				$("#select-options-subSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+				$("#select-options-subSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', false).prop('hidden', false);
 				break;
 			case "Test":
-				$("#select-options-Request_SubSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
-				$("#select-options-Request_SubSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
+				$("#select-options-subSubUnitTypeID optgroup[label='Units']").prop('disabled', true).prop('hidden', true);
+				$("#select-options-subSubUnitTypeID optgroup[label='Weight/Volume']").prop('disabled', true).prop('hidden', true);
 				break;
 		}
 	};
 
 
 	$.fn.EnableSubSubUnits = function () {
-		$("#Request_SubSubUnit").prop("disabled", false);
-		$.fn.EnableMaterialSelect('#Request_SubSubUnitTypeID', 'select-options-Request_SubSubUnitTypeID');
+		$("#subSubUnit").prop("disabled", false);
+		$.fn.EnableMaterialSelect('#subSubUnitTypeID', 'select-options-subSubUnitTypeID');
 	};
 	$.fn.DisableSubUnits = function () {
-		$("#Request_SubUnit").prop("disabled", true);
-		$("#Request_SubUnitTypeID").destroyMaterialSelect();
-		$("#Request_SubUnitTypeID").prop("disabled", true);
-		$("#Request_SubUnitTypeID").materialSelect();
+		$("#subUnit").prop("disabled", true);
+		$("#subUnitTypeID").destroyMaterialSelect();
+		$("#subUnitTypeID").prop("disabled", true);
+		$("#subUnitTypeID").materialSelect();
 
 		//$("#select-options-Request_SubUnitTypeID").prop("disabled", true);
 		//$("#select-options-Request_SubUnitTypeID").attr("aria-disabled", true);
@@ -304,23 +304,23 @@ $(function () {
 	};
 
 	$.fn.DisableSubSubUnits = function () {
-		$("#Request_SubSubUnit").prop("disabled", true);
-		$("#Request_SubSubUnitTypeID").destroyMaterialSelect();
-		$("#Request_SubSubUnitTypeID").prop("disabled", true);
-		$("#Request_SubSubUnitTypeID").materialSelect();
+		$("#subSubUnit").prop("disabled", true);
+		$("#subSubUnitTypeID").destroyMaterialSelect();
+		$("#subSubUnitTypeID").prop("disabled", true);
+		$("#subSubUnitTypeID").materialSelect();
 	};
 	$.fn.CheckUnitsFilled = function () {
 		console.log("in check units function");
-		if (($("#edit #Request_Unit").val() > 0 && $("#edit #Request_UnitTypeID").val())
-			|| ($("#select-options-Request_Unit").val() > 0 && $("#select-options-Request_UnitTypeID").val())) {
+		if (($("#edit #unit").val() > 0 && $("#edit #unitTypeID").val())
+			|| ($("#select-options-unit").val() > 0 && $("#select-options-unitTypeID").val())) {
 			//console.log("both have values");
 			$('.subUnitsCard').removeClass('d-none');
 			$('.sub-close').removeClass('d-none');
 			$('.addSubUnitCard').addClass('d-none');
 			$('.RequestSubsubunitCard').removeClass('d-none');
-			$("#Request_SubUnit").addClass('mark-readonly');
-			$("#Request_SubUnit").prop("disabled", false);
-			$("#Request_SubUnitTypeID").addClass('mark-readonly');
+			$("#subUnit").addClass('mark-readonly');
+			$("#subUnit").prop("disabled", false);
+			$("#subUnitTypeID").addClass('mark-readonly');
 			$.fn.ChangeSubUnitDropdown();
 		}
 		//else {
@@ -332,16 +332,16 @@ $(function () {
 		//$.fn.CalculateSubSubUnitAmounts();
 	};
 	$.fn.CheckSubUnitsFilled = function () {
-		if (($("#Request_SubUnit").val() > 0 && $("#Request_SubUnitTypeID").val())
-			|| ($("#Request_SubUnit").val() > 0 && $("#select-options-Request_SubUnitTypeID").val())) {
+		if (($("#subUnit").val() > 0 && $("#subUnitTypeID").val())
+			|| ($("#subUnit").val() > 0 && $("#select-options-subUnitTypeID").val())) {
 			//$.fn.EnableSubSubUnits();
 			$('.subSubUnitsCard').removeClass('d-none');
 			$('.subsub-close').removeClass('d-none');
 			$('.addSubSubUnitCard').addClass('d-none');
 			//console.log("about to change subsubunitdropdown");
-			$("#Request_SubSubUnit").addClass('mark-readonly');
-			$("#Request_SubSubUnit").prop("disabled", false);
-			$("#Request_SubSubUnitTypeID").addClass('mark-readonly');
+			$("#subSubUnit").addClass('mark-readonly');
+			$("#subSubUnit").prop("disabled", false);
+			$("#subSubUnitTypeID").addClass('mark-readonly');
 			$.fn.ChangeSubSubUnitDropdown();
 		}
 		//else {
@@ -356,8 +356,8 @@ $(function () {
 		var currencyType = $("#currency").val();
 		switch (currencyType) {
 			case "USD":
-				$("#Request_Cost").prop("readonly", true);
-				$("#Request_Cost").addClass('disabled-text');
+				$("#cost").prop("readonly", true);
+				$("#cost").addClass('disabled-text');
 				$("#sum-dollars").prop("disabled", false);
 				$("#sum-dollars").removeClass('disabled-text');
 
@@ -394,8 +394,8 @@ $(function () {
 				break;
 			case "NIS":
 			case undefined: //for the reorder modal
-				$("#Request_Cost").prop("readonly", false);
-				$("#Request_Cost").removeClass('disabled-text');
+				$("#cost").prop("readonly", false);
+				$("#cost").removeClass('disabled-text');
 				$("#sum-dollars").prop("disabled", true);
 				$("#sum-dollars").addClass('disabled-text');
 
@@ -437,18 +437,18 @@ $(function () {
 
 
 
-	$("#Request_Unit").change(function () {
+	$("#unit").change(function () {
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
 	});
 
-	$(".modal").on("change", "#Request_UnitTypeID", function () {
+	$(".modal").on("change", "#unitTypeID", function () {
 		//$.fn.CheckUnitsFilled();
 		$.fn.ChangeSubUnitDropdown();
 		$.fn.ChangeSubSubUnitDropdown();
 	});
-	$(".modal").on("change", "#Request_SubUnitTypeID", function () {
+	$(".modal").on("change", "#subUnitTypeID", function () {
 		$.fn.ChangeSubSubUnitDropdown();
 	});
 
@@ -457,34 +457,34 @@ $(function () {
 		$.fn.ChangeSubSubUnitDropdown();
 	});
 
-	$("#Request_SubUnit").change(function () {
+	$("#subUnit").change(function () {
 		//console.log("about to check subunitsfilled");
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
 	});
-	$("#Request_UnitTypeID").change(function () {
+	$("#unitTypeID").change(function () {
 		$.fn.ChangeSubUnitDropdown();
 		$.fn.ChangeSubSubUnitDropdown();
 	});
-	$("#Request_SubUnitTypeID").change(function () {
+	$("#subUnitTypeID").change(function () {
 		//	console.log("about to check subunitsfilled");
 		//$.fn.CheckSubUnitsFilled();
 	});
-	$("#select-options-Request_SubUnitTypeID").change(function () {
+	$("#select-options-subUnitTypeID").change(function () {
 		//	console.log("about to check subunitsfilled");
 		//$.fn.CheckSubUnitsFilled();
 	});
 
-	$("#Request_SubSubUnit").change(function () {
+	$("#subSubUnit").change(function () {
 		//	console.log("about to check subunitsfilled");
 		$.fn.CalculateSubSubUnitAmounts();
 	});
 
-	$("#Request_SubSubUnitTypeID").change(function () {
+	$("#subSubUnitTypeID").change(function () {
 		//	console.log("about to check subunitsfilled");
 		//	$.fn.CheckSubUnitsFilled();
 	});
-	$("#select-options-Request_SubSubUnitTypeID").change(function () {
+	$("#select-options-subSubUnitTypeID").change(function () {
 		//console.log("about to check subunitsfilled");
 		//	$.fn.CheckSubUnitsFilled();
 	});
@@ -504,14 +504,14 @@ $(function () {
 	$(".modal").on("change", "#currency", function (e) {
 		$.fn.CheckCurrency();
 	});
-	$("#Request_ExchangeRate").change(function (e) {
+	$("#exchangeRate").change(function (e) {
 		$.fn.CalculateSumPlusVat();
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
 	});
 
-	$("#Request_Cost").change(function (e) {
+	$("#cost").change(function (e) {
 		$.fn.CalculateSumPlusVat();
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();
@@ -520,6 +520,7 @@ $(function () {
 	});
 
 	$("#sum-dollars").change(function (e) {
+		alert("in change sum")
 		$.fn.CalculateSumPlusVat();
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();
@@ -548,10 +549,10 @@ $(function () {
 		$('.RequestSubsubunitCard').addClass('d-none');
 		$('.subSubUnitsCard').addClass('d-none');
 		$('.subsub-close').addClass('d-none');
-		$("#Request_SubUnit").removeClass('mark-readonly');
-		$("#Request_SubSubUnit").removeClass('mark-readonly');
-		$("#Request_SubUnitTypeID").removeClass('mark-readonly');
-		$("#Request_SubSubUnitTypeID").removeClass('mark-readonly');
+		$("#subUnit").removeClass('mark-readonly');
+		$("#subSubUnit").removeClass('mark-readonly');
+		$("#subUnitTypeID").removeClass('mark-readonly');
+		$("#subSubUnitTypeID").removeClass('mark-readonly');
 
 	})
 
@@ -560,8 +561,8 @@ $(function () {
 		$('.subSubUnitsCard').addClass('d-none');
 		$('.subsub-close').addClass('d-none');
 		$('.addSubSubUnitCard').removeClass('d-none');
-		$("#Request_SubSubUnit").removeClass('mark-readonly');
-		$("#Request_SubSubUnitTypeID").removeClass('mark-readonly');
+		$("#subSubUnit").removeClass('mark-readonly');
+		$("#subSubUnitTypeID").removeClass('mark-readonly');
 	})
 
 	$("#unit-price-dollars").change(function () {

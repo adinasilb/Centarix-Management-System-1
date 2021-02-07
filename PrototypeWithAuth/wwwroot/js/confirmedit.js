@@ -166,7 +166,7 @@
 			console.log("orders")
 			$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
 			$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
-			$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
+			$.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
 			$.fn.CheckUnitsFilled();
 			$.fn.CheckSubUnitsFilled();
 		}
