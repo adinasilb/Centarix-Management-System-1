@@ -712,18 +712,18 @@ namespace PrototypeWithAuth.Controllers
                         var parentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).FirstOrDefault();
                         if (parentRequest != null)
                         {
-                            parentRequest.Requests = _context.Requests.Where(r => r.ParentRequestID == parentRequest.ParentRequestID && r.IsDeleted != true);
+                            parentRequest.Requests = _context.Requests.Where(r => r.ParentRequestID == parentRequest.ParentRequestID && r.IsDeleted != true).ToList();
                             if (parentRequest.Requests.Count() == 0)
                             {
                                 parentRequest.IsDeleted = true;
-                                var payments = _context.Payments.Where(p => p.ParentRequestID == parentRequest.ParentRequestID);
+                                var payments = _context.Payments.Where(p => p.ParentRequestID == parentRequest.ParentRequestID).ToList();
                                 foreach (var payment in payments)
                                 {
                                     payment.IsDeleted = true;
+                                    _context.Update(payment);
+                                    await _context.SaveChangesAsync();
                                 }
                                 _context.Update(parentRequest);
-                                await _context.SaveChangesAsync();
-                                _context.Update(payments);
                                 await _context.SaveChangesAsync();
                             }
                         }
@@ -738,7 +738,6 @@ namespace PrototypeWithAuth.Controllers
                                 _context.Update(parentQuote);
                                 await _context.SaveChangesAsync();
                             }
-
                         }
                         foreach (var requestLocationInstance in request.RequestLocationInstances)
                         {
@@ -759,6 +758,7 @@ namespace PrototypeWithAuth.Controllers
                             await _context.SaveChangesAsync();
                         }
                         var notifications = _context.RequestNotifications.Where(rn => rn.RequestID == request.RequestID);
+                       
                         foreach (var notification in notifications)
                         {
                             _context.Remove(notification);
@@ -795,7 +795,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message?.ToString();
+                TempData["ErrorMessage"] = ex.Message;
                 Response.StatusCode = 500;
                 if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -2939,6 +2939,19 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                 _context.Update(requestNotification);
                 _context.SaveChanges();
+
+                switch(request.OrderType)
+                {
+                    case AppUtility.OrderTypeEnum.OrderNow:
+                        var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                        HttpContext.Session.SetObject(requestNum, request);
+                        return RedirectToAction("TermsModal", requestIndex);
+                        break;
+                    case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                        break;
+                    default:
+                        break;
+                }
             }
             catch (Exception ex)
             {
