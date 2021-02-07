@@ -1209,8 +1209,8 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 201,
-                    LocationTypeName = "Shelf",
-                    LocationTypePluralName = "Shelves",
+                    LocationTypeName = "Floor",
+                    LocationTypePluralName = "Floors",
                     LocationTypeParentID = 200,
                     LocationTypeChildID = 202,
                     Depth = 1
@@ -1227,8 +1227,8 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 203,
-                    LocationTypeName = "Box",
-                    LocationTypePluralName = "Boxes",
+                    LocationTypeName = "Shelf",
+                    LocationTypePluralName = "Shelves",
                     LocationTypeParentID = 202,
                     LocationTypeChildID = 204,
                     Depth = 3
@@ -1236,12 +1236,21 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 204,
-                    LocationTypeName = "Box Unit",
-                    LocationTypePluralName = "Box Units",
+                    LocationTypeName = "Box",
+                    LocationTypePluralName = "Boxes",
                     LocationTypeParentID = 203,
-                    Limit = 1,
+                    LocationTypeChildID = 205,
                     Depth = 4
                 },
+                   new LocationType
+                   {
+                       LocationTypeID = 205,
+                       LocationTypeName = "Box Unit",
+                       LocationTypePluralName = "Box Units",
+                       LocationTypeParentID = 204,
+                       Limit = 1,
+                       Depth = 5
+                   },
                 new LocationType
                 {
                     LocationTypeID = 300,
@@ -1285,10 +1294,28 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 501,
-                    LocationTypeName = "Shelf",
-                    LocationTypePluralName = "Shelves",
+                    LocationTypeName = "Location",
+                    LocationTypePluralName = "Locations",
                     LocationTypeParentID = 500,
+                    LocationTypeChildID = 502,
                     Depth = 1
+                },
+                 new LocationType
+                 {
+                     LocationTypeID = 502,
+                     LocationTypeName = "Lab Part",
+                     LocationTypePluralName = "Lab Part",
+                     LocationTypeParentID = 501,
+                     LocationTypeChildID = 503,
+                     Depth = 2
+                 },
+                new LocationType
+                {
+                    LocationTypeID = 503,
+                    LocationTypeName = "Section",
+                    LocationTypePluralName = "Sections",
+                    LocationTypeParentID = 501,
+                    Depth = 3
                 }
             );
             modelBuilder.Entity<OffDayType>().HasData(
