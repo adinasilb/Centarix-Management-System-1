@@ -135,17 +135,27 @@ namespace PrototypeWithAuth.AppData
         public static int YearStartedTimeKeeper = 2019;
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
         public static double GetExchangeRateFromApi()
+        
         {
             var client = new RestClient("https://v6.exchangerate-api.com/v6/65c36323b979e8f4b1b1b0e3/latest/USD");
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             double rate=0.0;
-            dynamic tmp = JsonConvert.DeserializeObject(response.Content);
-            String stringRate = (string)tmp.conversion_rates.ILS;
-            stringRate = stringRate.Replace("{", "");
-            stringRate = stringRate.Replace("}", "");
-            Double.TryParse(stringRate, out rate);
-            return Math.Round(rate, 2);
+            try
+            {
+                dynamic tmp = JsonConvert.DeserializeObject(response.Content);
+                String stringRate = (string)tmp.conversion_rates.ILS;
+                stringRate = stringRate.Replace("{", "");
+                stringRate = stringRate.Replace("}", "");
+                Double.TryParse(stringRate, out rate);
+
+                return Math.Round(rate, 2);
+            }
+            catch (Exception ex)
+            {
+                return 0.0;
+            }
+           
         }
 
         public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)

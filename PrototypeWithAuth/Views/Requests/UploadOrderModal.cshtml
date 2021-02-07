@@ -30,7 +30,7 @@
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 <script src="~/js/site.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
-<div class="modal modal-document fader modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<div class="modal modal-document fader on-form-modal modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modalStep1').modal('hide');">
@@ -65,14 +65,17 @@
                     }
                     <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
                     <div class="row">
-                        <div class=" offset-4">
+                        <div class=" offset-4 text-center">
                             @{
                                 var filterClass = "opac87";
+                                var containsFile = "";
                                 if (Model.FileStrings != null && Model.FileStrings.Count > 0)
                                 {
                                     filterClass = color;
+                                    containsFile = "contains-file";
                                 }
                             }
+                            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()Input" name="@AppUtility.RequestFolderNamesEnum.Orders.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
                             <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
                                 <div class="card document-border">
                                     <div class="document-card text-center">
@@ -93,7 +96,7 @@
                             <div class="row">
                                 <div class="form-group ">
                                     <label asp-for="@Model.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                    <input asp-for="@Model.ParentRequest.OrderDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
+                                    <input asp-for="@Model.ParentRequest.OrderDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" data-val="@Model.ParentRequest.OrderDate.ToString("yyyy-MM-dd")" />
                                     <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
                                 </div>
                             </div>
