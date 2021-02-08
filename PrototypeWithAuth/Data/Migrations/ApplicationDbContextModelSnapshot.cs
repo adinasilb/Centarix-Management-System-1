@@ -245,6 +245,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("RememberTwoFactor")
+                        .HasColumnType("bit");
+
                     b.Property<string>("SecureAppPass")
                         .HasColumnType("nvarchar(max)");
 
@@ -497,6 +500,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("CommentType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
@@ -994,6 +1000,27 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Invoices");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.IpRange", b =>
+                {
+                    b.Property<int>("IpRangeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FromIpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ToIpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IpRangeID");
+
+                    b.ToTable("IpRanges");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.JobCategoryType", b =>
                 {
                     b.Property<int>("JobCategoryTypeID")
@@ -1431,6 +1458,21 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.LabPart", b =>
+                {
+                    b.Property<int>("LabPartID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("LabPartName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LabPartID");
+
+                    b.ToTable("LabParts");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
                 {
                     b.Property<int>("LocationInstanceID")
@@ -1564,9 +1606,9 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 1,
                             Limit = 0,
                             LocationTypeChildID = 202,
-                            LocationTypeName = "Shelf",
+                            LocationTypeName = "Floor",
                             LocationTypeParentID = 200,
-                            LocationTypePluralName = "Shelves"
+                            LocationTypePluralName = "Floors"
                         },
                         new
                         {
@@ -1584,17 +1626,27 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 3,
                             Limit = 0,
                             LocationTypeChildID = 204,
-                            LocationTypeName = "Box",
+                            LocationTypeName = "Shelf",
                             LocationTypeParentID = 202,
-                            LocationTypePluralName = "Boxes"
+                            LocationTypePluralName = "Shelves"
                         },
                         new
                         {
                             LocationTypeID = 204,
                             Depth = 4,
+                            Limit = 0,
+                            LocationTypeChildID = 205,
+                            LocationTypeName = "Box",
+                            LocationTypeParentID = 203,
+                            LocationTypePluralName = "Boxes"
+                        },
+                        new
+                        {
+                            LocationTypeID = 205,
+                            Depth = 5,
                             Limit = 1,
                             LocationTypeName = "Box Unit",
-                            LocationTypeParentID = 203,
+                            LocationTypeParentID = 204,
                             LocationTypePluralName = "Box Units"
                         },
                         new
@@ -1647,9 +1699,29 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationTypeID = 501,
                             Depth = 1,
                             Limit = 0,
-                            LocationTypeName = "Shelf",
+                            LocationTypeChildID = 502,
+                            LocationTypeName = "Location",
                             LocationTypeParentID = 500,
-                            LocationTypePluralName = "Shelves"
+                            LocationTypePluralName = "Locations"
+                        },
+                        new
+                        {
+                            LocationTypeID = 502,
+                            Depth = 2,
+                            Limit = 0,
+                            LocationTypeChildID = 503,
+                            LocationTypeName = "Lab Part",
+                            LocationTypeParentID = 501,
+                            LocationTypePluralName = "Lab Part"
+                        },
+                        new
+                        {
+                            LocationTypeID = 503,
+                            Depth = 3,
+                            Limit = 0,
+                            LocationTypeName = "Section",
+                            LocationTypeParentID = 501,
+                            LocationTypePluralName = "Sections"
                         });
                 });
 
@@ -1753,6 +1825,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isProprietary")
+                        .HasColumnType("bit");
+
                     b.HasKey("ParentCategoryID");
 
                     b.HasIndex("CategoryTypeID");
@@ -1764,37 +1839,50 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ParentCategoryID = 1,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Plastics"
+                            ParentCategoryDescription = "Plastics",
+                            isProprietary = false
                         },
                         new
                         {
                             ParentCategoryID = 2,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Reagents"
+                            ParentCategoryDescription = "Reagents And Chemicals",
+                            isProprietary = false
                         },
                         new
                         {
                             ParentCategoryID = 3,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Proprietry"
+                            ParentCategoryDescription = "Cells",
+                            isProprietary = false
                         },
                         new
                         {
                             ParentCategoryID = 4,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Reusable"
+                            ParentCategoryDescription = "Reusables",
+                            isProprietary = false
                         },
                         new
                         {
                             ParentCategoryID = 5,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Equipment"
+                            ParentCategoryDescription = "Equipment",
+                            isProprietary = false
                         },
                         new
                         {
                             ParentCategoryID = 6,
                             CategoryTypeID = 2,
-                            ParentCategoryDescription = "Operation"
+                            ParentCategoryDescription = "Operation",
+                            isProprietary = false
+                        },
+                        new
+                        {
+                            ParentCategoryID = 7,
+                            CategoryTypeID = 1,
+                            ParentCategoryDescription = "Proprietry",
+                            isProprietary = true
                         });
                 });
 
@@ -1886,6 +1974,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("CompanyAccountID")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ParentRequestID")
                         .HasColumnType("int");
 
@@ -1969,6 +2060,29 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("PaymentTypes");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.PhysicalAddress", b =>
+                {
+                    b.Property<int>("PhysicalAddressID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EmployeeID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PhysicalAddressID");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("PhysicalAddresses");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
                 {
                     b.Property<int>("ProductID")
@@ -2042,12 +2156,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ProductSubcategoryID = 101,
-                            ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "3D Cells Grow"
-                        },
-                        new
-                        {
                             ProductSubcategoryID = 102,
                             ImageURL = "/images/css/CategoryImages/PCR.png",
                             ParentCategoryID = 1,
@@ -2071,7 +2179,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ProductSubcategoryID = 105,
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "Dishes"
+                            ProductSubcategoryDescription = "Petri Dishes"
                         },
                         new
                         {
@@ -2178,84 +2286,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
-                            ProductSubcategoryID = 213,
-                            ParentCategoryID = 2,
-                            ProductSubcategoryDescription = "Plasmid Purification"
-                        },
-                        new
-                        {
                             ProductSubcategoryID = 301,
-                            ImageURL = "/images/css/CategoryImages/virus.png",
                             ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Virus"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 302,
-                            ImageURL = "/images/css/CategoryImages/plasmid.png",
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Plasmid"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 303,
-                            ImageURL = "/images/css/CategoryImages/primer.png",
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Primers"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 304,
-                            ParentCategoryID = 3,
-                            ProductSubcategoryDescription = "Probes"
+                            ProductSubcategoryDescription = "Cells"
                         },
                         new
                         {
                             ProductSubcategoryID = 401,
-                            ImageURL = "/images/css/CategoryImages/beaker.png",
                             ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Beaker"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 402,
-                            ImageURL = "/images/css/CategoryImages/measuring.png",
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Measuring"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 403,
-                            ImageURL = "/images/css/CategoryImages/tube_holder.png",
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Tube Holders"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 404,
-                            ImageURL = "/images/css/CategoryImages/bucket.png",
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Buckets"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 405,
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "Cooling Racks"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 406,
-                            ImageURL = "/images/css/CategoryImages/196box.png",
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "-196 Box"
-                        },
-                        new
-                        {
-                            ProductSubcategoryID = 407,
-                            ImageURL = "/images/css/CategoryImages/80box.png",
-                            ParentCategoryID = 4,
-                            ProductSubcategoryDescription = "-80 Box"
+                            ProductSubcategoryDescription = "Reusables"
                         },
                         new
                         {
@@ -2506,6 +2545,50 @@ namespace PrototypeWithAuth.Data.Migrations
                             ImageURL = "/images/css/CategoryImages/furniture.png",
                             ParentCategoryID = 6,
                             ProductSubcategoryDescription = "Furniture"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 701,
+                            ImageURL = "/images/css/CategoryImages/virus.png",
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Virus"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 702,
+                            ImageURL = "/images/css/CategoryImages/plasmid.png",
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Plasmid"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 703,
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Probes"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 704,
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Cells"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 705,
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Bacteria with Plasmids"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 706,
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Blood"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 707,
+                            ParentCategoryID = 7,
+                            ProductSubcategoryDescription = "Serum"
                         });
                 });
 
@@ -2615,6 +2698,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("Batch")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("BatchExpiration")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CatalogNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2628,9 +2717,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("Discount")
+                        .HasColumnType("float");
 
                     b.Property<double>("ExchangeRate")
                         .HasColumnType("float");
@@ -2653,6 +2741,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("NoteToSupplier")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OrderType")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Paid")
                         .HasColumnType("bit");
 
@@ -2667,9 +2758,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
-
-                    b.Property<long>("Quantity")
-                        .HasColumnType("bigint");
 
                     b.Property<int?>("RequestStatusID")
                         .HasColumnType("int");
@@ -2704,12 +2792,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("UnitTypeID")
                         .HasColumnType("int");
 
-                    b.Property<long>("UnitsInStock")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("UnitsOrdered")
-                        .HasColumnType("bigint");
-
                     b.Property<byte?>("Warranty")
                         .HasColumnType("tinyint");
 
@@ -2740,8 +2822,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("UnitTypeID");
 
                     b.ToTable("Requests");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Request");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestLocationInstance", b =>
@@ -3081,6 +3161,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            UnitTypeID = 19,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Case"
+                        },
+                        new
+                        {
                             UnitTypeID = 3,
                             UnitParentTypeID = 1,
                             UnitTypeDescription = "Pack"
@@ -3153,6 +3239,30 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            UnitTypeID = 20,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "pmol"
+                        },
+                        new
+                        {
+                            UnitTypeID = 21,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "nmol"
+                        },
+                        new
+                        {
+                            UnitTypeID = 22,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "umol"
+                        },
+                        new
+                        {
+                            UnitTypeID = 23,
+                            UnitParentTypeID = 2,
+                            UnitTypeDescription = "mol"
+                        },
+                        new
+                        {
                             UnitTypeID = 15,
                             UnitParentTypeID = 3,
                             UnitTypeDescription = "rxhs"
@@ -3174,6 +3284,213 @@ namespace PrototypeWithAuth.Data.Migrations
                             UnitTypeID = 18,
                             UnitParentTypeID = 3,
                             UnitTypeDescription = "assays"
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.UnitTypeParentCategory", b =>
+                {
+                    b.Property<int>("UnitTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParentCategoryID")
+                        .HasColumnType("int");
+
+                    b.HasKey("UnitTypeID", "ParentCategoryID");
+
+                    b.HasIndex("ParentCategoryID");
+
+                    b.ToTable("UnitTypeParentCategory");
+
+                    b.HasData(
+                        new
+                        {
+                            UnitTypeID = 1,
+                            ParentCategoryID = 1
+                        },
+                        new
+                        {
+                            UnitTypeID = 2,
+                            ParentCategoryID = 1
+                        },
+                        new
+                        {
+                            UnitTypeID = 19,
+                            ParentCategoryID = 1
+                        },
+                        new
+                        {
+                            UnitTypeID = 3,
+                            ParentCategoryID = 1
+                        },
+                        new
+                        {
+                            UnitTypeID = 5,
+                            ParentCategoryID = 1
+                        },
+                        new
+                        {
+                            UnitTypeID = 17,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 18,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 1,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 2,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 19,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 3,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 5,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 7,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 8,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 9,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 10,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 11,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 12,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 13,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 20,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 21,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 22,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 23,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
+                            UnitTypeID = 5,
+                            ParentCategoryID = 3
+                        },
+                        new
+                        {
+                            UnitTypeID = 1,
+                            ParentCategoryID = 4
+                        },
+                        new
+                        {
+                            UnitTypeID = 2,
+                            ParentCategoryID = 4
+                        },
+                        new
+                        {
+                            UnitTypeID = 19,
+                            ParentCategoryID = 4
+                        },
+                        new
+                        {
+                            UnitTypeID = 3,
+                            ParentCategoryID = 4
+                        },
+                        new
+                        {
+                            UnitTypeID = 5,
+                            ParentCategoryID = 4
+                        },
+                        new
+                        {
+                            UnitTypeID = 5,
+                            ParentCategoryID = 7
+                        },
+                        new
+                        {
+                            UnitTypeID = 10,
+                            ParentCategoryID = 7
+                        },
+                        new
+                        {
+                            UnitTypeID = 9,
+                            ParentCategoryID = 7
+                        },
+                        new
+                        {
+                            UnitTypeID = 20,
+                            ParentCategoryID = 7
+                        },
+                        new
+                        {
+                            UnitTypeID = 21,
+                            ParentCategoryID = 7
+                        },
+                        new
+                        {
+                            UnitTypeID = 22,
+                            ParentCategoryID = 7
+                        },
+                        new
+                        {
+                            UnitTypeID = 13,
+                            ParentCategoryID = 7
+                        },
+                        new
+                        {
+                            UnitTypeID = 12,
+                            ParentCategoryID = 7
+                        },
+                        new
+                        {
+                            UnitTypeID = 11,
+                            ParentCategoryID = 7
                         });
                 });
 
@@ -3489,13 +3806,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Reorder", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.Request");
-
-                    b.HasDiscriminator().HasValue("Reorder");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -3772,6 +4082,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.PhysicalAddress", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.Product", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.ProductSubcategory", "ProductSubcategory")
@@ -3937,6 +4255,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.UnitParentType", "UnitParentType")
                         .WithMany("UnitTypes")
                         .HasForeignKey("UnitParentTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.UnitTypeParentCategory", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.ParentCategory", "ParentCategory")
+                        .WithMany("UnitTypeParentCategory")
+                        .HasForeignKey("ParentCategoryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.UnitType", "UnitType")
+                        .WithMany("UnitTypeParentCategory")
+                        .HasForeignKey("UnitTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

@@ -47,7 +47,7 @@
 			date = moment();
 			
 		}
-		var warrantyDate = date.add($(this).val(), "d").format('DD/MM/yyyy');
+		var warrantyDate = date.add($(this).val(), "M").format('DD/MM/yyyy');
 		$("input[name='WarrantyDate']").val(warrantyDate);
 		$("input[name='WarrantyDate']").attr("data-val",warrantyDate.split("/").reverse().join("-"));
 	});

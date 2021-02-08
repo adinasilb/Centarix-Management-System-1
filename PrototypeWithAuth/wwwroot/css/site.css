@@ -2027,7 +2027,7 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     width: 154px;
     display: inline-flex;
 } .document-margin {
-    margin-right: 3.4rem;
+    margin-right: 3rem;
 } .document-margin-bottom {
     margin-bottom: 3.25rem;
 } .document-icon {
@@ -2103,6 +2103,11 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
 /*Checkbox Fill Ins*/
 .form-check {
     padding-left: 0 !important; /*Overridding bootstrap*/
+}
+/*Login*/
+.login .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .order-inv-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .order-inv-form label.btn input[type="checkbox"].filled-in:checked + label:after {
+    border: 2px solid black;
+    background-color: black;
 }
 /*Orders & Inventory*/
 .orders-and-inv .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .order-inv-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .order-inv-form label.btn input[type="checkbox"].filled-in:checked + label:after {

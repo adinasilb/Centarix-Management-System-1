@@ -12,6 +12,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -25,6 +28,7 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Total + VAT")]
             TotalVat=4
         }
+        public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum PageTypeEnum {None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, 
             AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments, 
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,
@@ -83,7 +87,9 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
-        public enum OrderTypeEnum { OrderNow, AddToCart, AskForPermission, WithoutOrder}
+        public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
+        public enum RequestModalType { Create, Edit, Summary}
+        public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased}
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -129,17 +135,28 @@ namespace PrototypeWithAuth.AppData
         public static int YearStartedTimeKeeper = 2021;
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
         public static double GetExchangeRateFromApi()
+        
+        
         {
-            var client = new RestClient("https://v6.exchangerate-api.com/v6/96ffcdbcf4b24b1bdf2dc9be/latest/USD");
+            var client = new RestClient("https://v6.exchangerate-api.com/v6/65c36323b979e8f4b1b1b0e3/latest/USD");
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             double rate=0.0;
-            dynamic tmp = JsonConvert.DeserializeObject(response.Content);
-            String stringRate = (string)tmp.conversion_rates.ILS;
-            stringRate = stringRate.Replace("{", "");
-            stringRate = stringRate.Replace("}", "");
-            Double.TryParse(stringRate, out rate);
-            return Math.Round(rate, 2);
+            try
+            {
+                dynamic tmp = JsonConvert.DeserializeObject(response.Content);
+                String stringRate = (string)tmp.conversion_rates.ILS;
+                stringRate = stringRate.Replace("{", "");
+                stringRate = stringRate.Replace("}", "");
+                Double.TryParse(stringRate, out rate);
+
+                return Math.Round(rate, 2);
+            }
+            catch (Exception ex)
+            {
+                return 0.0;
+            }
+           
         }
 
         public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)
@@ -451,6 +468,38 @@ namespace PrototypeWithAuth.AppData
         {
             return "#000000";
         }
+
+        public static string GetMyIPAddress()
+        {
+            var myIpAddress = "";
+            IPAddress ipAddress;
+            var ipAddressList = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
+            foreach (var address in ipAddressList)
+            {
+                if (myIpAddress == "")
+                {
+                    if (IPAddress.TryParse(address.ToString(), out ipAddress))
+                    {
+                        switch (ipAddress.AddressFamily)
+                        {
+                            case AddressFamily.InterNetwork:
+                                myIpAddress = address.ToString();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+
+            return myIpAddress;
+        }
+
+        public static string PhysicalAddress = NetworkInterface
+                           .GetAllNetworkInterfaces()
+                           .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                           .Select(nic => nic.GetPhysicalAddress().ToString())
+                           .FirstOrDefault();
     }
 
 }

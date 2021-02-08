@@ -1,0 +1,113 @@
+﻿@model PrototypeWithAuth.ViewModels.CartTotalViewModel
+@using PrototypeWithAuth.AppData
+
+@{
+    Layout = null;
+
+    var bcColor = "order-inv-background-color";
+    string form = "";
+    var currency = "₪";
+    if (Model.Request.Currency == "USD")
+    {
+        currency = "$";
+    }
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    {
+        form = "oper-form";
+        bcColor = "oper-background-color";
+    }
+    else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    {
+        bcColor = "lab-man-background-color";
+        form = "supplier-form";
+    }
+    else if (Model.SectionType == AppUtility.MenuItems.Requests)
+    {
+        bcColor = "order-inv-background-color";
+        form = "order-inv-form";
+    }
+}
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<div class="modal modal-view cart-total-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+
+    <div class="modal-dialog-centered modal-lg mx-auto " role="document" style="max-height:100%;  overflow-y:auto;">
+
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
+
+                <div class="modal-header border-bottom modal-header-padding">
+                    <span class="heading-1">?</span>
+                </div>
+
+                <div class="modal-body">
+                    <div class="container-fluid ">
+                        <span class="text ">Details:</span>
+                        <hr />
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label class="control-label ">Current Cart Total for Supplier @Model.Vendor: @Model.VendorCartTotal</label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label class="control-label" style="font-weight:500;">Request Total: @Model.Request.Cost</label>
+                                </div>
+                            </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="text-center mx-auto modal-footer-mt">
+                            <button type="button" class="custom-button custom-button-font @bcColor between-button-margin approve-cart" value="@Model.Request.RequestID">Approve</button>
+                            <button type="button" class="custom-cancel custom-button " data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                        </div>
+                    </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(".approve-cart").off('click').on("click", function (e) {
+        e.preventDefault();
+        console.log("approve cart");
+        $("#loading").show();
+        var val = $(this).attr("value");
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/Approve/?id="+val,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $('.cart-total-modal').hide();
+                    $(".modal-backdrop").remove();
+                    $("#loading").hide();
+                    return true;
+                },
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $('.cart-total-modal').replaceWith('');
+                        $(".modal-backdrop").remove();
+                        var modal = $(jqxhr.responseText);
+                        $('body').append(modal);
+                        $(".cart-total-modal").modal({
+                            backdrop: true,
+                            keyboard: false,
+                        });
+                        $(".cart-total-modal").modal('show');
+                    }
+
+                    $("#loading").hide();
+                    return true;
+                }
+            });
+    });
+</script>

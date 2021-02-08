@@ -6,7 +6,11 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    Layout = "~/Views/Shared/Master.cshtml";
+    if(!AppUtility.IsAjaxRequest(Context.Request))
+    {
+        Layout = "~/Views/Shared/Master.cshtml";
+    }
+
 
     AppUtility.PageTypeEnum pageType = AppUtility.PageTypeEnum.None;
     var categoryType = AppUtility.CategoryTypeEnum.Lab;
@@ -180,11 +184,6 @@
         CancelledEmail = true;
     }
 
-    if (TempData["RequestID"] == null)
-    {
-        TempData["RequestID"] = 0;
-    }
-
 }
 
 @{
@@ -316,7 +315,7 @@
             </div>
             @if (ViewBag.ErrorMessage != null)
             {
-                <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text">Error: @ViewBag.ErrorMessage</span></div><br />
+                <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text view-bag-error">Error: @ViewBag.ErrorMessage</span></div><br />
             }
             <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2 render-body ">
                 <!--class="col-md-10 border-left"-->
@@ -423,7 +422,7 @@
             if ($("#tdprconfirmemail").val()) {
                 console.log("tdprconfirmemail");
                 $("#tdprconfirmemail").hide();
-                $itemurl = "/Requests/ConfirmEmailModal/?id=" + @TempData["ParentRequestID"] + "";
+                $itemurl = "/Requests/ConfirmEmailModal/?" + $.fn.getRequestIndexString();
                 $("#loading").show();
                 $.fn.CallPage($itemurl, "confirmemail");
             }
@@ -431,28 +430,36 @@
             if ($("#tdterms").val()) {
                 $("#tdterms").hide();
                 //alert("in tdterms.val()");
-                $itemurl = "/Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true";
-                console.log("url " + $itemurl)
+                $itemurl = "/Requests/TermsModal/?" + $.fn.getRequestIndexString();
+                console.log("terms url " + $itemurl)
                 //$("#loading").show();
                 $.fn.CallPage($itemurl, "terms");
-                }
-
-            if ($("#tdconfirmemail").val()) {
-                console.log("tdconfirmemail");
-                $("#tdconfirmemail").hide();
-                $itemurl = "/Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
-                //$("#loading").show();
-                $.fn.CallPage($itemurl, "confirmemail");
-
-
-
             }
+
+           
             $.fn.GetNotifcationCount();
             $.fn.GetNotifications();
             $.fn.getMenuItems();
 
 
-        });
+      });
+    //    $(".add-item").on("click", function (e) {
+    //        e.preventDefault();
+    //        console.log("item click")
+    //        $(this).attr("href", "");
+
+    //    $.ajax({
+    //        processData: false,
+    //        contentType: false,
+    //        async: true,
+    //        url: "/Requests/AddItemView/",
+    //        type: 'GET',
+    //        cache: false,
+    //        success: function (data) {
+    //            $(".request_nav_body").html(data);
+    //        }
+    //    })
+    //});
     </script>
     @if (IsSectionDefined("Scripts"))
     {

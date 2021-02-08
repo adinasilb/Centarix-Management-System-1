@@ -77,7 +77,8 @@
         <img src="~/images/css/Loading/centarix_loading3.gif" />
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderBody()
+    <div class="request_nav_body"> @RenderBody()</div>
+   
 
     <!--  SCRIPTS  -->
     <!-- JQuery -->
@@ -306,11 +307,14 @@
                     //shows the modal
                     $(".modal").modal('show');
                     //reset so do not open the modal again
-                    $('#tdconfirmemail').val('');
+                    $('#tduploadquotes').val('');
+                    $('#tduploadorders').val('');
                     $('#tdprconfirmemail').val('');
-                    $.fn.OnOpenModalView();
+                    $('#tdconfirmemail').val('');
+                    $("#tdterms").val('')
+                    //$.fn.OnOpenModalView();
                     $(".termsModal").modal('show');
-                    AddTempDataMemory();
+
 
 
                 }
@@ -415,6 +419,51 @@
 
         };*@
 
+        function enableMarkReadonly(element) {
+            console.log("in if details");
+            $('.mark-readonly').attr("disabled", false);
+            //TODO: add in mark-readonly fields for subunits
+            //$.fn.CheckUnitsFilled();
+            //$.fn.CheckSubUnitsFilled();
+            $('.mark-edditable').data("val", true);
+            $('.edit-mode-switch-description').text("Edit Mode On");
+            $('.turn-edit-on-off').attr('name', 'edit');
+
+            //turn off document modals
+            if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
+                console.log("orders operations");
+                $.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist');
+                $.fn.EnableMaterialSelect('#sublist', 'select-options-sublist');
+                $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
+                $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
+            }
+            if ($(this).hasClass('orders')) {
+                console.log("orders");
+                $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
+                $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
+                $.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
+                if (($("#subSubUnitTypeID").hasClass('.mark-readonly'))) {
+                    $.fn.EnableSubSubUnits();
+                    $.fn.ChangeSubSubUnitDropdown();
+                }
+                if (($("#subUnitTypeID").hasClass('.mark-readonly'))) {
+                    console.log('enabling');
+                    $.fn.EnableSubUnits();
+                    $.fn.ChangeSubUnitDropdown();
+                }
+            }
+            if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
+                $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+            }
+            if ($(this).hasClass('users')) {
+                $.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
+                $.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
+                $.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
+                $.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
+                $.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
+            }
+        }
+
 
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
@@ -450,31 +499,33 @@
                     //$(".modal-backdrop").remove();
                     //$('.modal').find('input').first().focus();
                     //$(".modal").popover('hide')
+
                     switch ($type) {
                         case "details":
-                            $.fn.OnOpenModalView();
-                            $("#Request_Cost").trigger('change');
-                            break;
-                        case "edit":
-                            $.fn.OnOpenModalView();
+                            //$.fn.OnOpenModalView();
+                            $("#cost").trigger('change');
+                            var category = $("#categoryDescription").val();
+                            console.log(category)
+                            $("." + category).removeClass("d-none");
+                            console.log("in detilas of case")
+                            $.fn.TurnToDetails();
+                            $('.mdb-select').materialSelect();
+                            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+                            $('.modal-content a:first').tab('show');
                             break;
                         case "reorder":
                             $.fn.OnOpenModalView();
-                            $("#Request_Cost").trigger('change');
+                            $("#cost").trigger('change');
                             //$.fn.CheckCurrency();
                             break;
                         case "create":
-                            $.fn.OnOpenModalView();
+                            //$.fn.OnOpenModalView();
                             break;
                         case "received":
                             $('.mdb-select').materialSelect();
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
                             break;                    
                         case "termsmodal":
-                            //alert("in termsmodal success!");
-                            $(".terms-disabled").hide();
-                            $(".paid-disabled").hide();
-                            $('.mdb-select').materialSelect();
                             break;
                     }
 
@@ -491,6 +542,14 @@
                 //}
             });
         }
+        $.fn.TurnToDetails = function () {
+            $('.mark-readonly').prop("disabled", true);
+            $('.mark-readonly input').prop("disabled", true);
+            $('.mark-edditable').data("val", false)
+            $('.edit-mode-switch-description').text("Edit Mode Off");
+            $('.turn-edit-on-off').attr('name', 'details')
+            $('.open-document-modal').data("val", false);
+        };
 
 
         $.fn.OnOpenModalView = function () {
@@ -536,7 +595,7 @@
             e.stopPropagation();
             $("#loading").show();
 
-            var $itemurl = "TermsModal/?id=" + $(this).val() + "&IsCart=true";
+            var $itemurl = "TermsModal/?vendorID=" + $(this).val() + "&"+$.fn.getRequestIndexString();
             console.log("itemurl: " + $itemurl);
             $.fn.CallPageRequest($itemurl, "termsmodal");
             return false;
@@ -983,7 +1042,7 @@
                 selectedPriceSort.push($(this).attr("enum"));
             })
             return(
-            "&PageNumber=" + $('.page-number').val() +
+            "PageNumber=" + $('.page-number').val() +
                 "&RequestStatusID=" + $(".request-status-id").val() +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +

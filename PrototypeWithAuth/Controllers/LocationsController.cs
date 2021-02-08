@@ -228,7 +228,6 @@ namespace PrototypeWithAuth.Controllers
                     subLocationViewModel.EmptyShelves80.Add(2, false);
                     List<SelectListItem> boxList = new List<SelectListItem>()
                     {
-                        new SelectListItem() { Value="12", Text="12 x 12"},
                         new SelectListItem() { Value="9", Text="9 x 9"}
                     };
                     subLocationViewModel.BoxTypes = boxList;

@@ -83,15 +83,15 @@
                             </thead>
                             <tbody>
 
-                                @for (int i = 0; i < Model.Reorders.Count(); i++)
+                                @for (int i = 0; i < Model.Requests.Count(); i++)
                                 {
-                                    @Html.HiddenFor(model => Model.Reorders[i].RequestID)
+                                    @Html.HiddenFor(model => Model.Requests[i].RequestID)
                                     <tr class="">
                                         <td class="" width="15%">
-                                            <input type="hidden" asp-for="@Model.Reorders[i].RequestID" />
-                                            @if (Model.Reorders[i].Product.ProductSubcategory.ImageURL != null)
+                                            <input type="hidden" asp-for="@Model.Requests[i].RequestID" />
+                                            @if (Model.Requests[i].Product.ProductSubcategory.ImageURL != null)
                                             {
-                                                var imageurl = Model.Reorders[i].Product.ProductSubcategory.ImageURL;
+                                                var imageurl = Model.Requests[i].Product.ProductSubcategory.ImageURL;
                                                 <img src="@imageurl" alt="Image" width="75" class="category-image" />
                                             }
                                             else
@@ -100,30 +100,30 @@
                                             }
                                         </td>
                                         <td width="15%">
-                                            @Model.Reorders[i].Product.Vendor.VendorEnName
+                                            @Model.Requests[i].Product.Vendor.VendorEnName
                                         </td>
                                         <td width="15%">
-                                            @Model.Reorders[i].Unit &nbsp;@Model.Reorders[i].UnitType.UnitTypeDescription
-                                            @if (Model.Reorders[i].SubUnitType != null)
+                                            @Model.Requests[i].Unit &nbsp;@Model.Requests[i].UnitType.UnitTypeDescription
+                                            @if (Model.Requests[i].SubUnitType != null)
                                             {
                                                 <br />
-                                                @Model.Reorders[i].SubUnit @Model.Reorders[i].SubUnitType.UnitTypeDescription
-                                                @if (Model.Reorders[i].SubSubUnitType != null)
+                                                @Model.Requests[i].SubUnit @Model.Requests[i].SubUnitType.UnitTypeDescription
+                                                @if (Model.Requests[i].SubSubUnitType != null)
                                                 {
-                                                    <br />@Model.Reorders[i].SubSubUnit @Model.Reorders[i].SubSubUnitType.UnitTypeDescription
+                                                    <br />@Model.Requests[i].SubSubUnit @Model.Requests[i].SubSubUnitType.UnitTypeDescription
                                                 }
                                             }
                                         </td>
                                         <td width="15%">
                                             <div class="form-group">
-                                                <input asp-for="@Model.Reorders[i].Cost" class="form-control-plaintext border-bottom cost-validation" min="1" />
-                                                <span asp-validation-for="@Model.Reorders[i].Cost" class="text-danger-centarix"></span>
+                                                <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom cost-validation" min="1" />
+                                                <span asp-validation-for="@Model.Requests[i].Cost" class="text-danger-centarix"></span>
                                             </div>
                                         </td>
                                         <td width="15%">
                                             <div class="form-group">
-                                                <input asp-for="@Model.Reorders[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days supply-days-validation" />
-                                                <span asp-validation-for="@Model.Reorders[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                                <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days supply-days-validation" />
+                                                <span asp-validation-for="@Model.Requests[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
                                             </div>
                                         </td>
                                         <td width="15%" class="border-right">

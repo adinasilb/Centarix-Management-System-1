@@ -21,15 +21,15 @@
 
                 <div class="modal-body border-0 pt-0 rounded">
                     <div class="row font-weight-bolder" style="font-size:1.5rem;">
-                        @Model.Date.DayOfWeek, @Model.Date.ToShortDateString()
+                        @Model.Date.DayOfWeek, @Model.Date.ToString("HH:mm")
                     </div>
                     <br />
                     <div class="row" style="font-size:1.25rem;">
                         @{ var entry2Description = "";}
-                        You have worked from @Model.Entry1?.ToShortTimeString() - @Model.Exit1?.ToShortTimeString()
+                        You have worked from @Model.Entry1?.ToString("HH:mm") - @Model.Exit1?.ToString("HH:mm")
                         @if (Model.Entry2 != null)
                         {
-                            entry2Description = ",\n and from " + Model.Entry2?.ToShortTimeString() + " - " + Model.Exit2?.ToShortTimeString();
+                            entry2Description = ",\n and from " + Model.Entry2?.ToString("HH:mm") + " - " + Model.Exit2?.ToString("HH:mm");
                         }
                         @entry2Description
                     </div>

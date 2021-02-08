@@ -102,7 +102,7 @@
 
 		var div = $("#" + $foldername + " i");
 		
-		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter")) {
+		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file")) {
 			console.log("has class already");
 		} else {
 			console.log("does not class already");
@@ -114,7 +114,8 @@
 			else {
 				div.addClass("order-inv-filter");
 			}
-
+			$("#" + $foldername+"Input").addClass("contains-file");
+		  	$("#" + $foldername+"Input").valid();
 		}
 	};
 

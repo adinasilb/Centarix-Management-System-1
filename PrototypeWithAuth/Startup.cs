@@ -19,15 +19,17 @@ using Microsoft.AspNetCore.Diagnostics;
 using PrototypeWithAuth.AppData;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Models;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using Microsoft.AspNetCore.Http;
 
 namespace PrototypeWithAuth
 {
     public class Startup
     {
-        private  const String ConfirmEmailProvider = "CustomEmailConfirmation";
+        private const String ConfirmEmailProvider = "CustomEmailConfirmation";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -73,7 +75,6 @@ namespace PrototypeWithAuth
                 options.EnableSensitiveDataLogging(true);
             });
 
-
             services.AddControllersWithViews();
 
 
@@ -94,6 +95,7 @@ namespace PrototypeWithAuth
                 config.Filters.Add(new AuthorizeFilter(policy));
                 // config.AllowValidatingTopLevelNodes = true;
             });
+            services.AddSession();
 
             ////allow for data anotations validations
             //services.AddMvcCore()
@@ -101,7 +103,7 @@ namespace PrototypeWithAuth
             // //.AddMvcOptions(opt =>
             // //       opt.Filters.Add<RequestFilterAttribute>());
 
-         
+
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -110,11 +112,11 @@ namespace PrototypeWithAuth
                 options.ExpireTimeSpan = TimeSpan.FromHours(1);
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-                options.SlidingExpiration = true; 
+                options.SlidingExpiration = true;
+                options.Cookie.Name = "LoginCookie";
             });
 
-
-         
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
 
@@ -141,7 +143,7 @@ namespace PrototypeWithAuth
 
             app.UseAuthentication();
             app.UseAuthorization();
-            // app.UseSession();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
@@ -157,8 +159,6 @@ namespace PrototypeWithAuth
 
             //app.UseApplicationInsightsRequestTelemetry();
             //app.UseApplicationInsightsExceptionTelemetry();
-
-
         }
 
         //private async Task ChangePassword(IServiceProvider serviceProvider)

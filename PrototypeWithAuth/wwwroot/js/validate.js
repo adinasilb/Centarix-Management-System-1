@@ -90,6 +90,38 @@ $(function () {
 		}
 		return /[A-Z]/.test(value);
 	}, "Must contain uppercase");
+
+	$.validator.addMethod('mindate', function (v, el, minDate) {
+	if (this.optional(el)) {
+		return true;
+	}
+	var selectedDate = new Date($(el).attr("data-val"));
+	console.log("selected date"+selectedDate)
+	minDate = new Date(minDate.setHours(0));
+	minDate = new Date(minDate.setMinutes(0));
+	minDate = new Date(minDate.setSeconds(0));
+	minDate = new Date(minDate.setMilliseconds(0));
+	return selectedDate >= minDate;
+}, 'Please select a valid date');
+
+		$.validator.addMethod('maxDate', function (v, el, minDate) {
+	if (this.optional(el)) {
+		return true;
+	}
+	var selectedDate = new Date($(el).attr("data-val"));
+	console.log("selected date"+selectedDate)
+		selectedDate = new Date(selectedDate.setHours(0));
+	selectedDate = new Date(selectedDate.setMinutes(0));
+	selectedDate = new Date(selectedDate.setSeconds(0));
+	selectedDate = new Date(selectedDate.setMilliseconds(0));
+	minDate = new Date(minDate.setHours(0));
+	minDate = new Date(minDate.setMinutes(0));
+	minDate = new Date(minDate.setSeconds(0));
+	minDate = new Date(minDate.setMilliseconds(0));
+				console.log("min date"+minDate)
+	return selectedDate <= minDate;
+}, 'Please select a valid date');
+
 	$.validator.addMethod("lowercase", function (value, element) {
 		if (this.optional(element)) {
 			return true;
@@ -158,7 +190,7 @@ $(function () {
 
 	$('.next-tab').click(function () {
 		if ($(this).hasClass('request-price')) {
-			$('#Request_UnitTypeID').rules("remove", "selectRequired");
+			$('#unitTypeID').rules("remove", "selectRequired");
 		}
 
 		//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
@@ -177,7 +209,7 @@ $(function () {
 			}
 			//work around for now - because select hidden are ignored
 			if ($(this).hasClass('request-price')) {
-				$('#Request_UnitTypeID').rules("add", "selectRequired");
+				$('#unitTypeID').rules("add", "selectRequired");
 			}
 		}
 

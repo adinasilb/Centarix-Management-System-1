@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 using Abp.Extensions;
 using System.Linq.Dynamic.Core;
 using OpenCvSharp;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -38,10 +39,11 @@ namespace PrototypeWithAuth.Controllers
         private RoleManager<IdentityRole> _roleManager;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly UrlEncoder _urlEncoder;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder) : base(context)
+            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder, IHttpContextAccessor httpContextAccessor) : base(context)
         {
             _context = context;
             _userManager = userManager;
@@ -49,6 +51,7 @@ namespace PrototypeWithAuth.Controllers
             _roleManager = roleManager;
             _hostingEnvironment = hostingEnvironment;
             _urlEncoder = urlEncoder;
+            _httpContextAccessor = httpContextAccessor;
             //CreateSingleRole();
         }
 
@@ -1032,6 +1035,47 @@ namespace PrototypeWithAuth.Controllers
             //return View("~/Views/Home/IndexAdmin.cshtml");
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> TwoFactorSessionModal()
+        {
+            var user = await _signManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+            }
+            return PartialView();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<bool> TwoFactorSessionModal(bool rememberTwoFactor = true)
+        {
+            var user = _signManager.GetTwoFactorAuthenticationUserAsync();
+            var appUser = await _context.Employees.Where(e => e.Email == user.Result.Email).FirstOrDefaultAsync();
+            if (rememberTwoFactor)
+            {
+                var cookieNum = 1;
+                while (_httpContextAccessor.HttpContext.Request.Cookies["TwoFactorCookie" + cookieNum] != null)
+                {
+                    cookieNum++;
+                }
+
+                var cookieOptions = new CookieOptions
+                {
+                    Expires = DateTime.Now.AddDays(30)
+                };
+                _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie" + cookieNum, appUser.Id, cookieOptions);
+            }
+            else
+            {
+                appUser.RememberTwoFactor = false;
+                _context.Update(appUser);
+                await _context.SaveChangesAsync();
+            }
+
+            return true;
+        }
 
         public async Task<IActionResult> editUserFunction(string id, int? Tab = 0)
         {

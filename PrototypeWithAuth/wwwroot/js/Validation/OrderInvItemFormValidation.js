@@ -1,17 +1,4 @@
-﻿$.validator.addMethod('mindate', function (v, el, minDate) {
-	if (this.optional(el)) {
-		return true;
-	}
-	var selectedDate = new Date($(el).attr("data-val"));
-	console.log("selected date"+selectedDate)
-	minDate = new Date(minDate.setHours(0));
-	minDate = new Date(minDate.setMinutes(0));
-	minDate = new Date(minDate.setSeconds(0));
-	minDate = new Date(minDate.setMilliseconds(0));
-	return selectedDate >= minDate;
-}, 'Please select a valid date');
-
-
+﻿
 $.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
 	var vendorID = $("#vendorList").val();
 	var catalogNumber = $("#Request_CatalogNumber").val();
@@ -63,7 +50,8 @@ $('.ordersItemForm').validate({
 		},
 		"Request.ExpectedSupplyDays": {
 			min: 0,
-			integer: true
+			integer: true,
+			required: true
 		},
 		"Request.Warranty": {
 			min: 0,

@@ -5,19 +5,26 @@
     Layout = "~/Views/Shared/_LoginView.cshtml";
 }
 
-
+@*@{ 
+    var twoFactorExpired = false;
+    if(Model.TwoFactorSessionExpired)
+    {
+        twoFactorExpired = true;
+    }
+}*@
 <section>
     <div class="container col-md-4 offset-2.5">
 
         <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
-
+            <input asp-for="Input.TwoFactorSessionExpired" type="hidden" id="twoFactorSession" />
+            <input asp-for="Input.InputRememberTwoFactor" type="hidden"  />
             <input asp-for="RememberMe" type="hidden" />
             <div asp-validation-summary="All" class="text-danger-centarix"></div>
             <div class="form-group text-center">
                 <input asp-for="Input.TwoFactorCode" class="form-control login-field " style="font-size: 1.5em !important; line-height: 1.5 !important" placeholder="Authentication Code" />
                 @*<span asp-validation-for="Input.TwoFactorCode" class="text-danger-centarix"></span>*@
             </div>
-            </br>
+            <br />
             <div class="form-group">
                 <button type="submit" class="mt-4 custom-button custom-button-font danger-color ">Verify</button>
             </div>
@@ -25,6 +32,18 @@
         </form>
     </div>
 </section>
+
+<script>
+    $(document).ready(function () {
+        if ($("#twoFactorSession").val() == "True") {
+            console.log("remember two factor")
+            $.fn.CallModal("/../../Admin/TwoFactorSessionModal");
+        }
+        else {
+            console.log($("#twoFactorSession").val());
+        }
+    })
+</script>
 
 @*<h1>@ViewData["Title"]</h1>
     <hr />

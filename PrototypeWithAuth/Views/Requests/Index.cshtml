@@ -9,39 +9,7 @@
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-
-
-    bool search = false;
-    if (TempData["Search"] != null)
-    {
-        if (TempData["Search"].ToString() == "True")
-        {
-            search = true;
-        }
-    }
-
 }
-
-@if (TempData["OpenConfirmEmailModal"] != null)
-{
-    <input type="text" id="tdconfirmemail" class="hidden" value="@TempData["RequestID"]" />
-}
-@if (TempData["ParentRequestConfirmEmail"] != null)
-{
-    <input type="text" id="tdprconfirmemail" class="hidden" value="@TempData["ParentRequestID"]" />
-}
-@if (TempData["OpenTermsModal"] != null)
-{
-    var termsType = TempData["OpenTermsModal"].ToString();
-    switch (termsType)
-    {
-        case "Single":
-            <input type="text" id="tdterms" class="hidden" value="@TempData["RequestID"]" />
-            break;
-    }
-}
-
-
 <div class="_IndexTableWithCounts">
     @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
 </div>

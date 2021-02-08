@@ -71,19 +71,19 @@ namespace PrototypeWithAuth.Data
                new ParentCategory
                {
                    ParentCategoryID = 2,
-                   ParentCategoryDescription = "Reagents",
+                   ParentCategoryDescription = "Reagents And Chemicals",
                    CategoryTypeID = 1
                },
                new ParentCategory
                {
                    ParentCategoryID = 3,
-                   ParentCategoryDescription = "Proprietry",
+                   ParentCategoryDescription = "Cells",
                    CategoryTypeID = 1
                },
                 new ParentCategory
                 {
                     ParentCategoryID = 4,
-                    ParentCategoryDescription = "Reusable",
+                    ParentCategoryDescription = "Reusables",
                     CategoryTypeID = 1
                 },
                 new ParentCategory
@@ -97,18 +97,219 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryID = 6,
                     ParentCategoryDescription = "Operation",
                     CategoryTypeID = 2
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 7,
+                    ParentCategoryDescription = "Proprietry",
+                    CategoryTypeID = 1,
+                    isProprietary = true
                 }
             );
+
+            modelBuilder.Entity<UnitTypeParentCategory>().HasData
+              (
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 1,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 2,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 19,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 3,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 17,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 18,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 1,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 2,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 19,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 3,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 7,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 8,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 9,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 10,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 11,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 12,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 13,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 20,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 21,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 22,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 23,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 3
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 1,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 2,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 19,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 3,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 10,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 9,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 20,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 21,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 22,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 13,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 12,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 11,
+                    ParentCategoryID = 7
+                }
+              );
 
             modelBuilder.Entity<ProductSubcategory>().HasData
               (
 
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 101,
-                    ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "3D Cells Grow"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 101,
+                //    ParentCategoryID = 1,
+                //    ProductSubcategoryDescription = "3D Cells Grow"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 102,
@@ -134,7 +335,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 105,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Dishes"
+                    ProductSubcategoryDescription = "Petri Dishes"
                 },
                 new ProductSubcategory
                 {
@@ -239,87 +440,72 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryDescription = "Media Supplement",
                     ImageURL = "/images/css/CategoryImages/media_supplement.png"
                 },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 213,
-                    ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Plasmid Purification"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 213,
+                //    ParentCategoryID = 2,
+                //    ProductSubcategoryDescription = "Plasmid Purification"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 301,
                     ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Virus",
-                    ImageURL = "/images/css/CategoryImages/virus.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 302,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Plasmid",
-                    ImageURL = "/images/css/CategoryImages/plasmid.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 303,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Primers",
-                    ImageURL = "/images/css/CategoryImages/primer.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 304,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Probes"
+                    ProductSubcategoryDescription = "Cells"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 401,
                     ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Beaker",
-                    ImageURL = "/images/css/CategoryImages/beaker.png"
+                    ProductSubcategoryDescription = "Reusables"
                 },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 402,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Measuring",
-                    ImageURL = "/images/css/CategoryImages/measuring.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 403,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Tube Holders",
-                    ImageURL = "/images/css/CategoryImages/tube_holder.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 404,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Buckets",
-                    ImageURL = "/images/css/CategoryImages/bucket.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 405,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Cooling Racks"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 406,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "-196 Box",
-                    ImageURL = "/images/css/CategoryImages/196box.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 407,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "-80 Box",
-                    ImageURL = "/images/css/CategoryImages/80box.png"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 401,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Beaker",
+                //    ImageURL = "/images/css/CategoryImages/beaker.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 402,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Measuring",
+                //    ImageURL = "/images/css/CategoryImages/measuring.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 403,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Tube Holders",
+                //    ImageURL = "/images/css/CategoryImages/tube_holder.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 404,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Buckets",
+                //    ImageURL = "/images/css/CategoryImages/bucket.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 405,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Cooling Racks"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 406,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "-196 Box",
+                //    ImageURL = "/images/css/CategoryImages/196box.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 407,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "-80 Box",
+                //    ImageURL = "/images/css/CategoryImages/80box.png"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 501,
@@ -569,7 +755,52 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryID = 6,
                     ProductSubcategoryDescription = "Furniture",
                     ImageURL = "/images/css/CategoryImages/furniture.png"
+                },
+                 new ProductSubcategory
+                 {
+                     ProductSubcategoryID = 701,
+                     ParentCategoryID = 7,
+                     ProductSubcategoryDescription = "Virus",
+                     ImageURL = "/images/css/CategoryImages/virus.png"
+                 },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 702,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Plasmid",
+                    ImageURL = "/images/css/CategoryImages/plasmid.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 703,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Probes"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 704,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Cells"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 705,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Bacteria with Plasmids"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 706,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Blood"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 707,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Serum"
                 }
+
               );
             modelBuilder.Entity<RequestStatus>().HasData
           (
@@ -639,6 +870,12 @@ namespace PrototypeWithAuth.Data
              },
              new UnitType
              {
+                 UnitTypeID = 19,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Case"
+             },
+             new UnitType
+             {
                  UnitTypeID = 3,
                  UnitParentTypeID = 1,
                  UnitTypeDescription = "Pack"
@@ -703,12 +940,36 @@ namespace PrototypeWithAuth.Data
                  UnitParentTypeID = 2,
                  UnitTypeDescription = "ul"
              },
-             new UnitType
-             {
-                 UnitTypeID = 14,
-                 UnitParentTypeID = 2,
-                 UnitTypeDescription = "gal"
-             },
+            new UnitType
+            {
+                UnitTypeID = 14,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "gal"
+            },
+            new UnitType
+            {
+                UnitTypeID = 20,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "pmol"
+            },
+            new UnitType
+            {
+                UnitTypeID = 21,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "nmol"
+            },
+            new UnitType
+            {
+                UnitTypeID = 22,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "umol"
+            },
+            new UnitType
+            {
+                UnitTypeID = 23,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "mol"
+            },
              new UnitType
              {
                  UnitTypeID = 15,
@@ -948,8 +1209,8 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 201,
-                    LocationTypeName = "Shelf",
-                    LocationTypePluralName = "Shelves",
+                    LocationTypeName = "Floor",
+                    LocationTypePluralName = "Floors",
                     LocationTypeParentID = 200,
                     LocationTypeChildID = 202,
                     Depth = 1
@@ -966,8 +1227,8 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 203,
-                    LocationTypeName = "Box",
-                    LocationTypePluralName = "Boxes",
+                    LocationTypeName = "Shelf",
+                    LocationTypePluralName = "Shelves",
                     LocationTypeParentID = 202,
                     LocationTypeChildID = 204,
                     Depth = 3
@@ -975,12 +1236,21 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 204,
-                    LocationTypeName = "Box Unit",
-                    LocationTypePluralName = "Box Units",
+                    LocationTypeName = "Box",
+                    LocationTypePluralName = "Boxes",
                     LocationTypeParentID = 203,
-                    Limit = 1,
+                    LocationTypeChildID = 205,
                     Depth = 4
                 },
+                   new LocationType
+                   {
+                       LocationTypeID = 205,
+                       LocationTypeName = "Box Unit",
+                       LocationTypePluralName = "Box Units",
+                       LocationTypeParentID = 204,
+                       Limit = 1,
+                       Depth = 5
+                   },
                 new LocationType
                 {
                     LocationTypeID = 300,
@@ -1024,10 +1294,28 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 501,
-                    LocationTypeName = "Shelf",
-                    LocationTypePluralName = "Shelves",
+                    LocationTypeName = "Location",
+                    LocationTypePluralName = "Locations",
                     LocationTypeParentID = 500,
+                    LocationTypeChildID = 502,
                     Depth = 1
+                },
+                 new LocationType
+                 {
+                     LocationTypeID = 502,
+                     LocationTypeName = "Lab Part",
+                     LocationTypePluralName = "Lab Part",
+                     LocationTypeParentID = 501,
+                     LocationTypeChildID = 503,
+                     Depth = 2
+                 },
+                new LocationType
+                {
+                    LocationTypeID = 503,
+                    LocationTypeName = "Section",
+                    LocationTypePluralName = "Sections",
+                    LocationTypeParentID = 501,
+                    Depth = 3
                 }
             );
             modelBuilder.Entity<OffDayType>().HasData(

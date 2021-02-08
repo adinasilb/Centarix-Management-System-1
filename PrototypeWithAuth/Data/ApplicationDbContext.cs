@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.Data
 
         }
         //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+        public DbSet<LabPart> LabParts { get; set; }
         public DbSet<CentarixID> CentarixIDs { get; set; }
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
         public DbSet<CompanyDayOff> CompanyDayOffs { get; set; }
@@ -50,7 +51,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<TimekeeperNotification> TimekeeperNotifications { get; set; }
         //public DbSet<Notification<NotificationStatus>> Notifications { get; set; }
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
-        public DbSet<Reorder> Reorder { get; set; }
         public DbSet<ParentQuote> ParentQuotes { get; set; }
         public DbSet<QuoteStatus> QuoteStatuses { get; set; }
         public DbSet<CategoryType> CategoryTypes { get; set; }
@@ -73,6 +73,8 @@ namespace PrototypeWithAuth.Data
         public DbSet<ParentCategory> ParentCategories { get; set; }
         public DbSet<UnitType> UnitTypes { get; set; }
         public DbSet<UnitParentType> UnitParentTypes { get; set; }
+        public DbSet<IpRange> IpRanges { get; set; }
+        public DbSet<PhysicalAddress> PhysicalAddresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -80,6 +82,9 @@ namespace PrototypeWithAuth.Data
 
             modelBuilder.Entity<VendorCategoryType>()
                 .HasKey(v => new { v.VendorID, v.CategoryTypeID });
+
+            modelBuilder.Entity<UnitTypeParentCategory>()
+                .HasKey(u => new { u.UnitTypeID, u.ParentCategoryID });
 
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasQueryFilter(item => !item.IsDeleted)
@@ -206,9 +211,15 @@ namespace PrototypeWithAuth.Data
             //.OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ParentQuote>()
-           .HasQueryFilter(item => !item.IsDeleted);
+                .HasQueryFilter(item => !item.IsDeleted);
 
             modelBuilder.Entity<Calibration>()
+                .HasQueryFilter(item => !item.IsDeleted);
+
+            modelBuilder.Entity<Payment>()
+                .HasQueryFilter(item => !item.IsDeleted);
+
+            modelBuilder.Entity<Comment>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
@@ -219,12 +230,17 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.VacationDaysPerMonth);
             modelBuilder.Entity<Request>().Ignore(e => e.VAT);
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerUnit);
+            modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubUnit);
+            modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubSubUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
             modelBuilder.Entity<ParentQuote>().Ignore(e => e.QuoteDate_submit);
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.OrderDate_submit);
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.InvoiceDate_submit);
             modelBuilder.Entity<Request>().Ignore(e => e.ArrivalDate_submit);
             modelBuilder.Entity<EmployeeHours>().Ignore(e => e.Date_submit);
+            modelBuilder.Entity<Employee>().Ignore(e => e.StartedWorking_submit);
+            modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
+            modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
 
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();

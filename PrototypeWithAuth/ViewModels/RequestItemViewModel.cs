@@ -20,7 +20,6 @@ namespace PrototypeWithAuth.ViewModels
         //public ApplicationUser CurrentUser { get; set; }
         public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
         public List<Request> RequestsByProduct { get; set; }
-        public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
@@ -80,6 +79,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<AppUtility.CommentTypeEnum> CommentTypes { get; set; }
         public List<Comment> Comments { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
-        public bool isEditable { get; set; }
+        public AppUtility.RequestModalType ModalType { get; set; }
+        public bool isRequestQuote { get; set; }
     }
 }
