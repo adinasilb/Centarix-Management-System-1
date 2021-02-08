@@ -142,8 +142,10 @@
                 traditional: true,
                 type: "POST",
                 cache: false,
-                success: function (data) {
-                    if ($("#OrderTypeEnum").val() =="AddToCart")
+                success: function (data, textStatus, jqxhr) {
+                    console.log(data)
+                    console.log("status code"+jqxhr.status)
+                    if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210")
                     {
                         if ($('#masterPageType').val() == "RequestRequest") {
                             $("._IndexTableWithCounts").html(data);

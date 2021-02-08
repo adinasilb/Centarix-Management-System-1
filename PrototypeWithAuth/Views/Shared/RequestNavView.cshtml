@@ -315,7 +315,7 @@
             </div>
             @if (ViewBag.ErrorMessage != null)
             {
-                <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text">Error: @ViewBag.ErrorMessage</span></div><br />
+                <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text view-bag-error">Error: @ViewBag.ErrorMessage</span></div><br />
             }
             <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2 render-body ">
                 <!--class="col-md-10 border-left"-->
@@ -431,7 +431,7 @@
                 $("#tdterms").hide();
                 //alert("in tdterms.val()");
                 $itemurl = "/Requests/TermsModal/?" + $.fn.getRequestIndexString();
-                console.log("url " + $itemurl)
+                console.log("terms url " + $itemurl)
                 //$("#loading").show();
                 $.fn.CallPage($itemurl, "terms");
             }
