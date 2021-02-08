@@ -388,6 +388,10 @@ namespace PrototypeWithAuth.Controllers
                                  new RequestIndexPartialColumnViewModel()
                                  {
                                      Title = "", Width=10, Icons = iconList,  AjaxID = r.RequestID
+                                 },
+                                  new RequestIndexPartialColumnViewModel()
+                                 {
+                                      Width=0, AjaxLink = " d-none order-type"+r.RequestID, AjaxID = (int)r.OrderType, Value = new List<string>(){r.OrderType.ToString()}
                                  }
                             }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
@@ -592,6 +596,10 @@ namespace PrototypeWithAuth.Controllers
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             SetViewModelCounts(requestIndexObject, viewModel);
+            if (TempData["RequestStatus"]?.ToString() == "1")
+            {
+                Response.StatusCode = 210;
+            }
             return PartialView(viewModel);
         }
 
@@ -2913,34 +2921,12 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests, Operations")]
-        public IActionResult Approve(int id, RequestIndexObject requestIndex)
+        public async Task<IActionResult> Approve(int id, RequestIndexObject requestIndex)
         {
             var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.ParentQuote).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
             try
             {
-                request.RequestStatusID = 6; //approved
-                if (request.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote)
-                {
-                    request.ParentQuote = new ParentQuote();
-                    request.ParentQuote.QuoteStatusID = 1;
-                }
-                _context.Update(request);
-                _context.SaveChanges();
-                RequestNotification requestNotification = new RequestNotification();
-                requestNotification.RequestID = request.RequestID;
-                requestNotification.IsRead = false;
-                requestNotification.RequestName = request.Product.ProductName;
-                requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                requestNotification.Description = "item approved";
-                requestNotification.NotificationStatusID = 3;
-                requestNotification.TimeStamp = DateTime.Now;
-                requestNotification.Controller = "Requests";
-                requestNotification.Action = "NotificationsView";
-                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                _context.Update(requestNotification);
-                _context.SaveChanges();
-
-                switch(request.OrderType)
+                switch (request.OrderType)
                 {
                     case AppUtility.OrderTypeEnum.OrderNow:
                         var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
@@ -2949,18 +2935,50 @@ namespace PrototypeWithAuth.Controllers
                         break;
                     case AppUtility.OrderTypeEnum.AlreadyPurchased:
                         break;
+                    case AppUtility.OrderTypeEnum.RequestPriceQuote:
+                    case AppUtility.OrderTypeEnum.AddToCart:
+                        using (var transaction = _context.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                request.RequestStatusID = 6; //approved
+                                request.ParentQuote = new ParentQuote();
+                                request.ParentQuote.QuoteStatusID = 1;
+                                _context.Update(request);
+                                await _context.SaveChangesAsync();
+                                RequestNotification requestNotification = new RequestNotification();
+                                requestNotification.RequestID = request.RequestID;
+                                requestNotification.IsRead = false;
+                                requestNotification.RequestName = request.Product.ProductName;
+                                requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
+                                requestNotification.Description = "item approved";
+                                requestNotification.NotificationStatusID = 3;
+                                requestNotification.TimeStamp = DateTime.Now;
+                                requestNotification.Controller = "Requests";
+                                requestNotification.Action = "NotificationsView";
+                                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
+                                _context.Update(requestNotification);
+                                await _context.SaveChangesAsync();
+                                await transaction.CommitAsync();
+                            }
+                            catch (Exception ex)
+                            {
+                                transaction.Rollback();
+                                throw ex;
+                            }
+                        }
+                        break;
                     default:
                         break;
                 }
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
+                ViewBag.ErrorMessage = ex.Message;
+                Response.StatusCode = 500;
+                await Response.WriteAsync(ex.Message);
             }
             return RedirectToAction("_IndexTableWithCounts", requestIndex);
-
 
         }
 
@@ -3504,7 +3522,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
                 UploadQuoteViewModel.OrderTypeEnum = OrderType;
-            UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
+                UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
                 return PartialView(UploadQuoteViewModel);
   
             
@@ -3557,6 +3575,10 @@ namespace PrototypeWithAuth.Controllers
                 var request = HttpContext.Session.GetObject<Request>(requestName);
                 uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
                 request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
+                if(request.RequestStatusID == 1)
+                {
+                    TempData["RequestStatus"] = 1;
+                }
 
                 if (request.RequestStatusID == 6 && request.OrderType != AppUtility.OrderTypeEnum.AddToCart)
                 {
@@ -3999,6 +4021,23 @@ namespace PrototypeWithAuth.Controllers
             return viewModel;
         }
 
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _CartTotalModal(int requestID, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
+        {
+            var request = await _context.Requests.Where(r => r.RequestID == requestID).FirstOrDefaultAsync();
+            var vendor = await _context.Requests.Where(r => r.RequestID == requestID).Select(r => r.Product.Vendor).FirstOrDefaultAsync();
+            var vendorCartTotal = Math.Round(_context.Requests.Where(r => r.Product.VendorID == vendor.VendorID).Select(r => r.Cost).Sum(), 2);
+            CartTotalViewModel viewModel = new CartTotalViewModel()
+            {
+                Request = request,
+                Vendor = vendor,
+                SectionType = sectionType,
+                VendorCartTotal = vendorCartTotal
+            };
+            return PartialView(viewModel);
+        }
 
     }
 

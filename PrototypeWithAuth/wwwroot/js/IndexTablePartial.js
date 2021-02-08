@@ -76,9 +76,57 @@ $(".order-approved-operation").off('click').on("click", function (e) {
 });
 $(".approve-order").off('click').on("click", function (e) {
     console.log("approving");
+    var val = $(this).attr("value");
     e.preventDefault();
     $("#loading").show();
-    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/?id=" + $(this).attr("value"), "._IndexTableWithCounts",  "GET");
+    console.log(".order-type"+val)
+    if ($(".order-type" + val).val() == "1") {
+        console.log("terms")
+        $.ajax({
+            async: true,
+            url: "/Requests/Approve/?id=" + val,
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $('.termsModal').replaceWith('');
+                $(".modal-backdrop").remove();
+                var modal = $(data);
+                $('body').append(modal);
+                $(".termsModal").modal({
+                    backdrop: true,
+                    keyboard: false,
+                });
+                $(".termsModal").modal('show');
+                $("#loading").hide();
+            }
+        })
+    }
+    else if ($(".order-type" + val).val() == "2") {
+        console.log("cart")
+        $.ajax({
+            async: true,
+            url: "/Requests/_CartTotalModal/?requestID=" + val + "&sectionType=" + $('#masterSectionType').val(),
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                $('.cart-total-modal').replaceWith('');
+                $(".modal-backdrop").remove();
+                var modal = $(data);
+                $('body').append(modal);
+                $(".cart-total-modal").modal({
+                    backdrop: true,
+                    keyboard: false,
+                });
+                $(".cart-total-modal").modal('show');
+                $("#loading").hide();
+            }
+        })
+    }
+    else {
+        ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/?id=" + val, "._IndexTableWithCounts", "GET");
+    }
     return false;
 });
 $(".create-calibration").off('click').on("click", function (e) {
@@ -146,14 +194,15 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
     traditional: true,
     type: type,
     cache: false,
-    success: function (data) {
+        success: function (data) {
         $(viewClass).html(data);
         $("#loading").hide();
         return true;
     },
-    error : function () {
-        $("#loading").hide();
-        return true;
+        error: function () {
+            $(".error-msg").html(Response.responseText)
+            $("#loading").hide();
+            return true;
     }
     });
 

@@ -5,9 +5,13 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Mvc.Core.Common
-
+@if (AppUtility.IsAjaxRequest(Context.Request))
+{
+    <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text error-msg"></span></div>
+    <br />
+}
 <div class="">
-    <input type="hidden" asp-for="PageNumber" class="page-number"/>
+    <input type="hidden" asp-for="PageNumber" class="page-number" />
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <tbody>
             @for (int i = 0; i < Model.PagedList.Count; i++)
@@ -21,7 +25,7 @@
                     *@
                     @foreach (var col in Model.PagedList[i].Columns)
                     {
-                        <td width="@col.Width%">
+                        <td width="@col.Width%" class="@(col.Width==0 ? "p-0" :"")">
                             @if (col.Image != null)
                             {
                                 <img src="@col.Image" alt="Image" width="75" class="category-image" />
