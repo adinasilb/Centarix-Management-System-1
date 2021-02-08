@@ -31,7 +31,7 @@
 
 <script src="~/js/site.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
-<div class="modal modal-document fader modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<div class="modal modal-document fader modalStep1 on-form-modal @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modalStep1').modal('hide');">
@@ -65,16 +65,21 @@
                         var fontSize = "2rem";
                     }
                     <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+                    @{
+                        var filterClass = "opac87";
+                        var containsFile = "";
+                        if (Model.FileStrings != null && Model.FileStrings.Count > 0)
+                        {
+                            filterClass = "order-inv-filter";
+                            containsFile = "contains-file";
+                        }
+                    }
+              
                     <div class="row">
-                        <div class=" offset-4">
-                            @{
-                                var filterClass = "opac87";
-                                if (Model.FileStrings != null && Model.FileStrings.Count > 0)
-                                {
-                                    filterClass = "order-inv-filter";
-                                }
-                            }
-                            <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
+                        <div class=" offset-4 text-center">
+                            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
+                            <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" name="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
+
                                 <div class="card document-border">
                                     <div class="document-card text-center">
                                         <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>

@@ -32,6 +32,8 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 	$("#" + $foldername + " i").removeClass('order-inv-filter')
 	$("#" + $foldername + " i").removeClass('lab-man-filter')
 	$("#" + $foldername + " i").addClass('opac87');
+	$("#" + $foldername+"Input").removeClass("contains-file");
+	$("#" + $foldername+"Input").valid();
 };
 
 $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionType)  {

@@ -35,7 +35,7 @@
             <div class="col-6">
                 <div class="form-group">
                     <label asp-for="Request.ExchangeRate" class="control-label"></label>
-                    <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " />
+                    <input asp-for="Request.ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
                     <span asp-validation-for="Request.ExchangeRate" class="text-danger-centarix"></span>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                     <div class="row">
                         <div class="col-md-4 form-group">
                             <label asp-for="Request.Unit" class="control-label"></label>
-                            @Html.EditorFor(vm => vm.Request.Unit, new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1" } })
+                            @Html.EditorFor(vm => vm.Request.Unit, new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id="unit" } })
                             <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-md-8 form-group dropdown-select-div">
@@ -72,7 +72,7 @@
 vm => vm.Request.UnitTypeID,
 Model.UnitTypeList,
 "",
-htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @disabledProperty = disabledProperty }
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @disabledProperty = disabledProperty, @id = "unitTypeID" }
 )
                             <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                         </div>
@@ -124,7 +124,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                     <div class="row">
                         <div class="col-md-6 pl-0 form-group">
                             <label asp-for="Request.SubUnit" class="control-label"></label>
-                            <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " disabled />
+                            <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " id="subUnit" disabled />
                             <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-md-6 form-group">
@@ -133,7 +133,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 vm => vm.Request.SubUnitTypeID,
 Model.UnitTypeList,
 "",
- htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext " + @subMarkReadOnly, @disabled = @disabled }
+ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext " + @subMarkReadOnly, @disabled = @disabled, @id="subUnit" }
  )
                             <span asp-validation-for="Request.SubUnitType" class="text-danger-centarix"></span>
                         </div>
@@ -204,7 +204,7 @@ Model.UnitTypeList,
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                            <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @subsubMarkReadOnly " disabled />
+                            <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @subsubMarkReadOnly " disabled id="subSubUnit" />
                             <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-md-6 form-group">
@@ -213,7 +213,7 @@ Model.UnitTypeList,
                                 vm => vm.Request.SubSubUnitTypeID,
                                 Model.UnitTypeList,
                                 "",
-                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext " + @subsubMarkReadOnly, @disabled }
+                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext " + @subsubMarkReadOnly, @disabled, @id = "subSubUnit" }
                                 )
                             <span asp-validation-for="Request.SubSubUnitType" class="text-danger-centarix"></span>
                         </div>
@@ -261,7 +261,7 @@ Model.UnitTypeList,
             <label class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
-                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom disabled-text" min="1" readonly />
+                <input asp-for="Request.Cost" class="form-control-plaintext border-bottom disabled-text" min="1" readonly id="cost" />
                 <span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>
             </div>
         </div>
@@ -280,7 +280,7 @@ Model.UnitTypeList,
             <label class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#x20aa;</span>
-                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom disabled-text" disabled />
+                <input asp-for="Request.VAT" class="form-control-plaintext border-bottom disabled-text" id="vat" disabled />
                 <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>
             </div>
         </div>
