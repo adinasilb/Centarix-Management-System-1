@@ -4026,9 +4026,12 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _CartTotalModal(int requestID, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
         {
-            var request = await _context.Requests.Where(r => r.RequestID == requestID).FirstOrDefaultAsync();
+            var request = await _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.ApplicationUserCreator).FirstOrDefaultAsync();
             var vendor = await _context.Requests.Where(r => r.RequestID == requestID).Select(r => r.Product.Vendor).FirstOrDefaultAsync();
-            var vendorCartTotal = Math.Round(_context.Requests.Where(r => r.Product.VendorID == vendor.VendorID).Select(r => r.Cost).Sum(), 2);
+            var vendorCartTotal = _context.Requests.Where(r => r.Product.VendorID == vendor.VendorID && r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && 
+            r.OrderType == AppUtility.OrderTypeEnum.AddToCart && r.RequestStatusID!= 1)
+                .Select(r => r.Cost).Sum();
+            vendorCartTotal = Math.Round(vendorCartTotal, 2);
             CartTotalViewModel viewModel = new CartTotalViewModel()
             {
                 Request = request,

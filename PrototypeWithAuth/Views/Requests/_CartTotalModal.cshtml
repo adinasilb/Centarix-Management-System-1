@@ -6,11 +6,6 @@
 
     var bcColor = "order-inv-background-color";
     string form = "";
-    var currency = "₪";
-    if (Model.Request.Currency == "USD")
-    {
-        currency = "$";
-    }
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
@@ -40,26 +35,26 @@
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
 
                 <div class="modal-header border-bottom modal-header-padding">
-                    <span class="heading-1">?</span>
+                    <span class="heading-1">@Model.Request.ApplicationUserCreator.FirstName @Model.Request.ApplicationUserCreator.LastName Budget Summary</span>
                 </div>
 
                 <div class="modal-body">
                     <div class="container-fluid ">
-                        <span class="text ">Details:</span>
-                        <hr />
                         <div class="row">
-                            <div class="col-4">
+                            <div class="">
                                 <div class="form-group">
-                                    <label class="control-label ">Current Cart Total for Supplier @Model.Vendor: @Model.VendorCartTotal</label>
+                                    <label class="control-label text">Current Cart Total for Supplier @Model.Vendor.VendorEnName:  ₪@String.Format("{0:n}", Model.VendorCartTotal)</label>
                                 </div>
                             </div>
-                            <div class="col-4">
+                        </div>
+                        <div class="row">
+                            <div class="">
                                 <div class="form-group">
-                                    <label class="control-label" style="font-weight:500;">Request Total: @Model.Request.Cost</label>
+                                    <label class="control-label text" style="font-weight:500;">Current Request Total:  ₪@String.Format("{0:n}", Model.Request.Cost)</label>
                                 </div>
                             </div>
-                                </div>
-                            </div>
+                        </div>
+                    </div>
                     </div>
                     <div class="modal-footer">
                         <div class="text-center mx-auto modal-footer-mt">
@@ -89,6 +84,7 @@
                 success: function (data) {
                     $('.cart-total-modal').hide();
                     $(".modal-backdrop").remove();
+                    $("._IndexTableWithCounts").html(data);
                     $("#loading").hide();
                     return true;
                 },

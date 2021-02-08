@@ -27,6 +27,7 @@ $.ajax({
                     keyboard: false,
                 });
                 $(".reorderModal").modal('show');
+                $(".mdb-select").materialSelect();
             }
 
     });

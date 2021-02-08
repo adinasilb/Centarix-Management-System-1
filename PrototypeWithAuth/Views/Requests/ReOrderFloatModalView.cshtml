@@ -100,7 +100,7 @@
 vm => vm.RequestItemViewModel.Request.UnitTypeID,
 Model.RequestItemViewModel.UnitTypeList,
 "",
-htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id = "unitTypeID" }
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "unitTypeID" }
 )
                                             <span asp-validation-for="RequestItemViewModel.Request.UnitType" class="text-danger-centarix"></span>
                                         </div>
@@ -145,7 +145,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 vm => vm.RequestItemViewModel.Request.SubUnitTypeID,
                 Model.RequestItemViewModel.UnitTypeList,
                 "",
-                         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id = "subUnitTypeID" }
+                         htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "subUnitTypeID" }
                          )
                                                     <span asp-validation-for="RequestItemViewModel.Request.SubUnitType" class="text-danger-centarix"></span>
                                                 </div>
@@ -197,7 +197,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                             vm => vm.RequestItemViewModel.Request.SubSubUnitTypeID,
                                                             Model.RequestItemViewModel.UnitTypeList,
                                                             "",
-                                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @disabled = "disabled", @id = "subSubUnitTypeID" }
+                                                            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext", @id = "subSubUnitTypeID" }
                                                             )
                                                         <span asp-validation-for="RequestItemViewModel.Request.SubSubUnitType" class="text-danger-centarix"></span>
                                                     </div>
@@ -381,6 +381,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($(".reorderForm")[0]);
+            console.log(...formData)
             var orderType = $(this).val();
             $.ajax({
                 contentType: false,
