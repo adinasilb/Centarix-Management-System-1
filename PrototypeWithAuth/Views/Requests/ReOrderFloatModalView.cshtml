@@ -240,7 +240,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <div class="input-group">
                                     <span class="input-group-text">&#36;</span>
                                     <input class="form-control-plaintext border-bottom" name="sum-dollars" id="sum-dollars"
-                                           value="@(Math.Round(Model.RequestItemViewModel.Request.Cost/Model.RequestItemViewModel.Request.ExchangeRate,2))" />
+                                           value="@(String.Format("{0:n}", Math.Round(Model.RequestItemViewModel.Request.Cost/Model.RequestItemViewModel.Request.ExchangeRate,2)))" />
                                 </div>
                             </div>
                         </div>
@@ -249,7 +249,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label asp-for="RequestItemViewModel.Request.Cost" class="control-label"></label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
-                                    <input asp-for="RequestItemViewModel.Request.Cost" id="cost" class="form-control-plaintext border-bottom" min="1" readonly />
+                                    <input asp-for="RequestItemViewModel.Request.Cost" id="cost" class="form-control-plaintext border-bottom" min="1" />
                                     <span class="text-danger-centarix" asp-validation-for="RequestItemViewModel.Request.Cost"></span>
                                 </div>
                             </div>
@@ -259,7 +259,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label asp-for="RequestItemViewModel.Request.VAT" class="control-label"></label>
                                 <div class="input-group">
                                     <span class="input-group-text disabled-text">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom vatInDollars disabled-text" disabled value="@(Math.Round(Model.RequestItemViewModel.Request.VAT / Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
+                                    <input class="form-control-plaintext border-bottom vatInDollars disabled-text" disabled value="@String.Format("{0:n}", (Math.Round(Model.RequestItemViewModel.Request.VAT / Model.RequestItemViewModel.Request.ExchangeRate, 2)))" />
                                 </div>
                             </div>
                         </div>
@@ -275,7 +275,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label class="control-label">Sum:</label>
+                                <label class="control-label">Total:</label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#36;</span>
                                     <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
@@ -285,7 +285,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label class="control-label">Sum:</label>
+                                <label class="control-label"></label>
                                 <div class="input-group">
                                     <span class="input-group-text">&#x20aa;</span>
                                     <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled value="@Model.RequestItemViewModel.Request.TotalWithVat" />

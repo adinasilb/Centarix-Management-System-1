@@ -62,7 +62,7 @@
                             <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                         </button>
                     </div>
-                    <div class="row modal-title-line">
+                    <div class="row modal-title-line justify-content-between">
                         @*<div class="col-md-2 px-0">*@
                         @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
                         {
@@ -78,7 +78,9 @@
                             <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
 
                         </div>
-                        <button type="button" value="@Model.Request.RequestID" class="offset-8 load-order-details custom-button custom-button-font order-inv-background-color">Request</button>
+                        <div class = "d-flex align-items-center">
+                            <button type="button" value="@Model.Request.RequestID" class="load-order-details custom-button custom-button-font order-inv-background-color m-auto">Request</button>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-12 px-0">
