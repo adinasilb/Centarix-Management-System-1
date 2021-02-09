@@ -1314,7 +1314,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 503,
                     LocationTypeName = "Section",
                     LocationTypePluralName = "Sections",
-                    LocationTypeParentID = 501,
+                    LocationTypeParentID = 502,
                     Depth = 3
                 }
             );

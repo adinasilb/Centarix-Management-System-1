@@ -637,10 +637,8 @@ namespace PrototypeWithAuth.Controllers
                             }
                             addLocationViewModel.LocationInstance.CompanyLocationNo = CoNo2;
                             string nameAbbrev2 = addLocationViewModel.LocationInstance.LocationInstanceName;
-                            addLocationViewModel.LocationInstance.Height = 1;
-                            subLocationViewModel.LocationInstances[0].LocationInstanceParent = addLocationViewModel.LocationInstance;
-                            _context.Add(addLocationViewModel.LocationInstance);
 
+                            _context.Add(addLocationViewModel.LocationInstance);
                             try
                             {
                                 _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
@@ -651,17 +649,16 @@ namespace PrototypeWithAuth.Controllers
                                 //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
                                 return RedirectToAction("Index");
                             }
-                            _context.Add(subLocationViewModel.LocationInstances[0]);
-                            _context.SaveChanges();
+
                             string typeName2 = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[0].LocationTypeID)
                                     .FirstOrDefault().LocationTypeName.Substring(0, 1);
-                            int typeId2 = subLocationViewModel.LocationInstances[1].LocationTypeID;
+                            int typeId2 = subLocationViewModel.LocationInstances[0].LocationTypeID;
                             string place2 = "";
                             int parentId2 = 0;
                             string attachedName2 = "";
                             //CoNo++;
                             //addLocationViewModel.LocationInstance.CompanyLocationNo = CoNo;
-                            parentId1 = subLocationViewModel.LocationInstances[0].LocationInstanceID;
+                            parentId1 = addLocationViewModel.LocationInstance.LocationInstanceID;
                             attachedName1 = nameAbbrev2 + typeName2;
                             int typeNumber2 = 1;
 
@@ -673,32 +670,36 @@ namespace PrototypeWithAuth.Controllers
                                 int unicode = x + 65;
                                 char character = (char)unicode;
                                 place1 = character.ToString();
-
-                                string FullPlace1 = place1 + (x + 1).ToString();
-                                string currentName = attachedName1 + (typeNumber2).ToString(); //add number to the type x + y is the current number but is zero based so add one
-                                typeNumber2++; //increment this
-                                LocationInstance newSublocationInstance = new LocationInstance()
+                                int sublocationWidth1 = subLocationViewModel.LocationInstances[0].Width;
+                                //if (sublocationWidth1 == 0) { sublocationWidth1 = 1; }
+                                for (int y = 0; y < sublocationWidth1; y++)
                                 {
-                                    LocationInstanceName = currentName,
-                                    LocationInstanceParentID = parentId1,
-                                    LocationTypeID = typeId2,
-                                    CompanyLocationNo = CoNo2,
-                                    Place = FullPlace1
-                                };
-                                _context.Add(newSublocationInstance);
-                                try
-                                {
-                                    _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
+                                    string FullPlace1 = place1 + (y + 1).ToString();
+                                    string currentName = attachedName1 + (typeNumber2).ToString(); //add number to the type x + y is the current number but is zero based so add one
+                                    typeNumber2++; //increment this
+                                    LocationInstance newSublocationInstance = new LocationInstance()
+                                    {
+                                        LocationInstanceName = currentName,
+                                        LocationInstanceParentID = parentId1,
+                                        LocationTypeID = typeId2,
+                                        CompanyLocationNo = CoNo2,
+                                        Place = FullPlace1
+                                    };
+                                    _context.Add(newSublocationInstance);
+                                    try
+                                    {
+                                        _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
+                                        transaction.Commit();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        transaction.Rollback();
+                                        //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
+                                        return RedirectToAction("Index");
+                                    }
+                                    placeholderInstanceIds[0].Add(newSublocationInstance.LocationInstanceID);
                                 }
-                                catch (Exception e)
-                                {
-                                    transaction.Rollback();
-                                    //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
-                                    return RedirectToAction("Index");
-                                }
-                                placeholderInstanceIds[0].Add(newSublocationInstance.LocationInstanceID);
                             }
-                            
                             break;
                         default:
                             //add reference to parent

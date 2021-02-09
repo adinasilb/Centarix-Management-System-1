@@ -118,25 +118,29 @@
         case 500: //-25
             <div class="row">
                 <input type="hidden" asp-for="LocationInstances[0].Height" value="1"/>
-                <input asp-for="LocationInstances[0].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" style="display: none;" />
+   
                 <div class="col-6">
+         
+                    <input asp-for="LocationInstances[0].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" style="display: none;" />
                     @Html.DropDownListFor(
 
-                       m => m.LocationInstances[0].LocationRoomInstanceID,                  
+                       m => m.LocationInstances[0].LocationRoomInstanceID,
                             Model.LocationRoomInstances,
                            "Room",
                   htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext " }
                    )
                 </div>
                 <div class="col-6 ">
-                    <select class = "addLocationFont mdb-select custom select-dropdown form-control-plaintext " asp-for="LocationInstances[0].LabPartID" id="labPartDDL">
+                    <input type="hidden" asp-for="LocationInstances[1].Height" value="1" />
+                    <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />
+                    <select class="addLocationFont mdb-select custom select-dropdown form-control-plaintext " asp-for="LocationInstances[1].LabPartID" id="labPartDDL">
                         <option selected>lab part</option>
-                        @foreach(var lp in Model.LabParts)
+                        @foreach (var lp in Model.LabParts)
                         {
                             <option value="@lp.LabPartID" data-val="@lp.HasShelves">@lp.LabPartName</option>
                         }
                     </select>
-              
+
                 </div>
             </div>
 
