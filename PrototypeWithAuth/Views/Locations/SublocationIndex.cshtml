@@ -25,8 +25,8 @@
     <table class="table table-sm border-0">
         @foreach (var locationInstance in Model.SublocationInstances)
         {
-            var indexOfTypeLetter = @locationInstance.LocationInstanceName.LastIndexOf(locationInstance.LocationType.LocationTypeName[0]);
-            var locationInstanceName = @locationInstance.LocationInstanceName.Remove(0, indexOfTypeLetter+1).Insert(0,locationInstance.LocationType.LocationTypeName+" ");
+            var indexOfTypeLetter = locationInstance.LocationInstanceName.LastIndexOf(locationInstance.LocationType.LocationTypeName[0]);
+            var locationInstanceName = locationInstance.LocationInstanceName.Remove(0, indexOfTypeLetter+1).Insert(0,locationInstance.LocationType.LocationTypeName+" ");
             if (!locationInstance.IsEmptyShelf)
             {
                 <tr class="border-0" name="@locationInstance.LocationInstanceParentID">
