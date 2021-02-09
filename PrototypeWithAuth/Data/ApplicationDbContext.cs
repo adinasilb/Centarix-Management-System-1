@@ -19,6 +19,8 @@ namespace PrototypeWithAuth.Data
 
         }
         //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+        public DbSet<LocationRoomInstance> LocationRoomInstances { get; set; }
+        public DbSet<LocationRoomType> LocationRoomTypes { get; set; }
         public DbSet<LabPart> LabParts { get; set; }
         public DbSet<CentarixID> CentarixIDs { get; set; }
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
@@ -241,6 +243,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.StartedWorking_submit);
             modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
             modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
+            modelBuilder.Entity<LocationRoomInstance>().Ignore(e => e.LocationDisplayName);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
 
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();

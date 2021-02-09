@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210208123431_AddLocationInstanceRoom")]
+    partial class AddLocationInstanceRoom
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1465,47 +1467,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("HasShelves")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LabPartName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LabPartID");
 
                     b.ToTable("LabParts");
-
-                    b.HasData(
-                        new
-                        {
-                            LabPartID = 1,
-                            HasShelves = true,
-                            LabPartName = "Closet"
-                        },
-                        new
-                        {
-                            LabPartID = 2,
-                            HasShelves = true,
-                            LabPartName = "Glass Closet"
-                        },
-                        new
-                        {
-                            LabPartID = 3,
-                            HasShelves = false,
-                            LabPartName = "Table"
-                        },
-                        new
-                        {
-                            LabPartID = 4,
-                            HasShelves = false,
-                            LabPartName = "Drawer"
-                        },
-                        new
-                        {
-                            LabPartID = 5,
-                            HasShelves = false,
-                            LabPartName = "Shelf"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
@@ -1572,50 +1539,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LocationRoomTypeID");
 
                     b.ToTable("LocationRoomInstances");
-
-                    b.HasData(
-                        new
-                        {
-                            LocationRoomInstanceID = 1,
-                            LocationNumber = 1,
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 2,
-                            LocationNumber = 2,
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 3,
-                            LocationNumber = 1,
-                            LocationRoomTypeID = 2
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 4,
-                            LocationNumber = 1,
-                            LocationRoomTypeID = 3
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 5,
-                            LocationNumber = 1,
-                            LocationRoomTypeID = 4
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 6,
-                            LocationNumber = 1,
-                            LocationRoomTypeID = 5
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 7,
-                            LocationNumber = 1,
-                            LocationRoomTypeID = 6
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomType", b =>
