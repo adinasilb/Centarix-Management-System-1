@@ -143,7 +143,6 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Exchange Rate")]
         [Range(1, Double.MaxValue)]
         public double ExchangeRate { get; set; } // holding the rate of exchange for this specific request
-
         public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
         [Display(Name = "Expected Supply Days")]
 

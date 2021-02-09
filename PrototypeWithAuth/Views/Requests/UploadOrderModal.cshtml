@@ -147,7 +147,7 @@
                 success: function (data) 
                 {
                     if ($('#masterPageType').val() == "RequestRequest") {
-                        $("._IndexTableWithCounts").html(data);
+                        $(".render-body").html(data)
                     }
                     else if ($('#masterPageType').val() == "RequestCart") {
                         $(".render-body").html(data)

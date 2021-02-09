@@ -61,9 +61,9 @@ $('.ordersItemForm').validate({
 			//url: true
 		},
 		"Request.ExchangeRate": {
-			required: function () {
-				return $("#currency").val() == "dollar" || $("#currency").val() == null;
-			},
+			//required: function () {
+			//	return $("#currency").val() == "dollar" || $("#currency").val() == null;
+			//},
 			number: true,
 			min: 1
 		},

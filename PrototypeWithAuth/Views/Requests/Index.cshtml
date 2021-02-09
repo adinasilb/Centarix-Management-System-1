@@ -9,6 +9,10 @@
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (AppUtility.IsAjaxRequest(this.Context.Request))
+    {
+        Layout = null;
+    }
 }
 <div class="_IndexTableWithCounts">
     @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}

@@ -148,12 +148,14 @@
                 type: "POST",
                 cache: false,
                 success: function (data, textStatus, jqxhr) {
-                    console.log(data)
-                    console.log("status code"+jqxhr.status)
+                    //console.log(data)
+                    console.log("status code" + jqxhr.status)
+                    console.log($("#OrderTypeEnum").val())
                     if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210")
                     {
+                        console.log("Index");
                         if ($('#masterPageType').val() == "RequestRequest") {
-                            $("._IndexTableWithCounts").html(data);
+                            $(".render-body").html(data)
                         }
                         else if ($('#masterPageType').val() == "RequestCart") {
                             $(".render-body").html(data)

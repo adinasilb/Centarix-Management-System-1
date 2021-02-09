@@ -1,6 +1,6 @@
 ﻿
 
-$("body, .modal").off('click').on("click", ".load-order-details", function (e) {
+$("body, .modal").off('click').on("click", ".load-reorder-details", function (e) {
     console.log("in order details");
     e.preventDefault();
     e.stopPropagation();
@@ -27,7 +27,7 @@ $.ajax({
                     keyboard: false,
                 });
                 $(".reorderModal").modal('show');
-                $(".mdb-select").materialSelect();
+                $(".reorder-unit").materialSelect();
             }
 
     });
@@ -50,7 +50,8 @@ $(".load-product-details").off('click').on("click", function (e) {
     $.fn.CallPageRequest($itemurl, "details");
     return false;
 });
-$(".load-product-details-summary").on("click", function (e) {
+
+$("body, .modal").off('click', ".load-product-details-summary").on("click", ".load-product-details-summary", function (e) {
     e.preventDefault();
     e.stopPropagation();
     $("#loading").show();
@@ -59,6 +60,7 @@ $(".load-product-details-summary").on("click", function (e) {
     $.fn.CallPageRequest($itemurl, "details");
     return false;
 });
+
 $(".load-receive-and-location").on("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -68,6 +70,7 @@ $(".load-receive-and-location").on("click", function (e) {
     $.fn.CallPageRequest($itemurl, "received");
     return false;
 });
+
 $(".order-approved-operation").off('click').on("click", function (e) {
     console.log("approving");
     e.preventDefault();
@@ -75,6 +78,7 @@ $(".order-approved-operation").off('click').on("click", function (e) {
     ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/?id=" + $(this).attr("value"), "._IndexTableWithCounts",  "GET");
     return false;
 });
+
 $(".approve-order").off('click').on("click", function (e) {
     console.log("approving");
     var val = $(this).attr("value");

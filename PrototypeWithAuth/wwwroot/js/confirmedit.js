@@ -185,8 +185,9 @@
 	});
 
 	$(".exit-edit-modal").off("click").on("click", function (e) {
-		$('.confirm-exit-modal').modal('hide');
+		$('.confirm-exit-modal').remove();
 		$(".modal").hide();
+		$(".modal").replaceWith('');
 	})
 
 	$(".return-edit-modal").off("click").on("click", function (e) {

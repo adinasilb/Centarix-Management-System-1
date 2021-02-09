@@ -837,7 +837,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             ChooseCategoryViewModel categoryViewModel = new ChooseCategoryViewModel()
             {
-                ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1).ToListAsync()
+                ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1 && !pc.isProprietary).ToListAsync()
             };
 
             return View(categoryViewModel);
@@ -849,7 +849,7 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-
+                RemoveRequestSessions();
                 //why do we need this here?
                 requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
                 requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.Include(ps => ps.ParentCategory).FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
@@ -924,9 +924,9 @@ namespace PrototypeWithAuth.Controllers
                             case AppUtility.OrderTypeEnum.AlreadyPurchased:
                                 return RedirectToAction("UploadOrderModal");
                             case AppUtility.OrderTypeEnum.OrderNow:
-                                return RedirectToAction("UploadQuoteModal", "Requests", OrderType);
+                                return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                             case AppUtility.OrderTypeEnum.AddToCart:
-                                return RedirectToAction("UploadQuoteModal", "Requests", OrderType);
+                                return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                             default:
                                 return RedirectToAction("Index", "Requests", new
                                 {
@@ -1874,6 +1874,7 @@ namespace PrototypeWithAuth.Controllers
                                         {
                                             commentExists = false;
                                         }
+                                        n++;
                                     } while (commentExists);
                                     await _context.SaveChangesAsync();
                                     if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.OrderNow)

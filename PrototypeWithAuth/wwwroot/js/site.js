@@ -1902,10 +1902,12 @@ $(function () {
 			if($('#masterPageType').val()=="RequestLocation")
 			{
 				$(this).closest('.editModal').remove();
+				$(this).closest('.editModal').replaceWith('');
 			}
 			else
 			{
 				$(this).closest('.modal').modal('hide');
+				$(this).closest('.modal').replaceWith('');
 			}
 			
         }

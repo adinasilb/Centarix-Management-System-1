@@ -108,7 +108,7 @@
                             double unitPrice = (request.Cost) / request.Unit;
                             <td>@currency @unitPrice.ToString("N2")</td>
                         }
-                        <td>@currency @request.Discount</td>
+                        <td>@request.Discount%</td>
                         <td>@currency @request.Cost</td>
                     </tr>
                 }
