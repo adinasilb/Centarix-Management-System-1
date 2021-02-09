@@ -14,6 +14,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<LocationInstance> LocationInstances { get; set; }
 
         public List<SelectListItem> BoxTypes { get; set; }
+        public List<LocationRoomInstance> LocationRoomInstances { get; set; }
         public Dictionary<int, bool> EmptyShelves80 { get; set; }
         public bool ESTest { get; set; }
         public List<SelectListItem> EmptySelectList { get; set; }

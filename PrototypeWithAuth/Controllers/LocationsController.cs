@@ -428,10 +428,10 @@ namespace PrototypeWithAuth.Controllers
                                     height = subLocationViewModel.LocationInstances[1].Height;
                                     width = 1;
                                 }
-                                else if (b == 2)
+                                else if (b == 3)
                                 {
-                                    height = subLocationViewModel.LocationInstances[3].Height;
-                                    width = subLocationViewModel.LocationInstances[3].Height;
+                                    height = subLocationViewModel.LocationInstances[4].Height;
+                                    width = subLocationViewModel.LocationInstances[4].Height;
                                 }
                                 string attachedName = "";
                                 int amountOfParentLevels = 1;
@@ -465,7 +465,7 @@ namespace PrototypeWithAuth.Controllers
                                         char character = (char)unicode;
                                         place = character.ToString();
                                         int sublocationWidth = subLocationViewModel.LocationInstances[b].Width;
-                                        if (b == 3) { sublocationWidth = sublocationHeight; }
+                                        if (b == 4) { sublocationWidth = sublocationHeight; }
                                         else if (sublocationWidth == 0) { sublocationWidth = 1; }
                                         for (int y = 0; y < sublocationWidth; y++)
                                         {
@@ -795,6 +795,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             break;
                     }
+                    await transaction.CommitAsync();
                 }
             }
             return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.LabManagement });
