@@ -44,7 +44,18 @@ $(".empty-shelf-check").on("change", function () {
 	alert("empty shelf changed!");
 });
 
-
+$("#labPartDDL").on("change", function () {
+	$.ajax({
+            async: true,
+            type: 'GET',
+            cache: false,
+            url: "/Locations/HasShelfBlock?id="+$(this).val(),
+            success: function (data) {
+                $(".hasShelfBlock").html(data);
+            }
+    });
+	
+});
 //DROPDOWN MENU
 
 

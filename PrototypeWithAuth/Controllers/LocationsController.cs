@@ -205,7 +205,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public IActionResult SubLocation(int ParentLocationTypeID)
+        public async Task<IActionResult> SubLocation(int ParentLocationTypeID)
         {
             SubLocationViewModel subLocationViewModel = new SubLocationViewModel();
             bool go = true;
@@ -232,6 +232,22 @@ namespace PrototypeWithAuth.Controllers
                     };
                     subLocationViewModel.BoxTypes = boxList;
                     break;
+                case 500:
+                    subLocationViewModel.LabParts = await _context.LabParts.ToListAsync();
+                    var locationRooms = await _context.LocationRoomInstances.Include(l=>l.LocationRoomType).ToListAsync();
+                    List<SelectListItem> locationRoomsSelectList = new List<SelectListItem>();
+                    foreach(var r in locationRooms)
+                    {
+                        var description = r.LocationRoomType.LocationRoomTypeDescription;
+                        var isMoreOfType = locationRooms.Where(l => l.LocationRoomType == r.LocationRoomType && l.LocationRoomInstanceID!=r.LocationRoomInstanceID).Any();
+                        if(isMoreOfType)
+                        {
+                            description += r.LocationNumber;
+                        }
+                        locationRoomsSelectList.Add(new SelectListItem() { Value = r.LocationRoomInstanceID + "", Text = description });
+                    }
+                    subLocationViewModel.LocationRoomInstances = locationRoomsSelectList;
+                    break;
             }
             while (go)
             {
@@ -251,7 +267,8 @@ namespace PrototypeWithAuth.Controllers
             subLocationViewModel.LocationInstances = new List<LocationInstance>();
             foreach (var item in subLocationViewModel.LocationTypes)
             {
-                subLocationViewModel.LocationInstances.Add(new LocationInstance());
+                subLocationViewModel.LocationInstances.Add(new LocationInstance() {});
+                
             }
             if (AppUtility.IsAjaxRequest(Request))
             {
@@ -813,6 +830,18 @@ namespace PrototypeWithAuth.Controllers
                     _context.SaveChanges();
                 }
             }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> HasShelfBlock(int id)
+        {
+            var part = await _context.LabParts.Where(lp => lp.LabPartID == id).FirstOrDefaultAsync();
+            if(part.HasShelves)
+            {
+                return PartialView();
+            }
+            return PartialView("Default");
         }
 
 

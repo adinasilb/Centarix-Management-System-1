@@ -121,38 +121,36 @@
                 <div class="col-6">
                     @Html.DropDownListFor(
 
-                       m => m.LocationInstances[0].LocationRoomInstanceID,
-                      new SelectList(
-                            Model.LocationRoomInstances.Select,
-                            "LocationRoomInstanceID",
-                            "ProductSubcategoryDescription"
-                            ), "Select Sub Category",
-                  htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " }
+                       m => m.LocationInstances[0].LocationRoomInstanceID,                  
+                            Model.LocationRoomInstances,
+                           "Room",
+                  htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext " }
                    )
                 </div>
-                <div class="col-6">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">
-                        Width
-                        <input asp-for="LocationInstances[0].Width" type="text" min="0" class="form-control-plaintext border-bottom" />
-                    </span>
+                <div class="col-6 ">
+                    <select class = "addLocationFont mdb-select custom select-dropdown form-control-plaintext " asp-for="LocationInstances[0].LabPartID" id="labPartDDL">
+                        <option selected>lab part</option>
+                        @foreach(var lp in Model.LabParts)
+                        {
+                            <option value="@lp.LabPartID" data-val="@lp.HasShelves">@lp.LabPartName</option>
+                        }
+                    </select>
+              
                 </div>
             </div>
-          
-            <div class="row">
-                <input asp-for="LocationInstances[0].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" style="display: none;" />
-                <div class="col-6">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">
-                        Height
-                        <input asp-for="LocationInstances[0].Height" min="0" type="text" class="form-control-plaintext border-bottom" />
-                    </span>
+
+
+
+                <div class="row">
+                    <div class="col-4 px-2 hasShelfBlock">
+                        @*<span class="addLocationFont">
+                            @Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[1].LocationTypePluralName):
+                        </span>
+                        <input asp-for="LocationInstances[1].Height" min="0" class="form-control-plaintext border-bottom" />
+                        <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />*@
+                    </div>
                 </div>
-                <div class="col-6">
-                    <span style="line-height:2.5rem; font-size:1.2rem;">
-                        Width
-                        <input asp-for="LocationInstances[0].Width" type="text" min="0" class="form-control-plaintext border-bottom" />
-                    </span>
-                </div>
-            </div>
+
             break;
         default:
             <div class="container" style="display:flex; justify-content:space-around;">
