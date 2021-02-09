@@ -10,6 +10,9 @@ $(function () {
 
 	$.fn.CalculateSumPlusVat = function () {
 		var $exchangeRate = $("#exchangeRate").val();
+		if ($exchangeRate == "0") {
+			$exchangeRate = "1";
+        }
 		//console.log("sumShek: " + sumShek);
 
 		//console.log("VatPercentage: " + VatPercentage);
@@ -31,9 +34,6 @@ $(function () {
 		//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
 		$('#vat').val(vatCalc.toFixed(2));
 		$('.vatInDollars').val((vatCalc / $exchangeRate).toFixed(2));
-		console.log(vatCalc)
-		console.log($exchangeRate)
-		console.log((vatCalc / $exchangeRate).toFixed(2))
 		$sumTotalVatShekel = $sumShekel + vatCalc;
 		$iptBox = $("input[name='sumPlusVat-Shekel']");
 		$.fn.ShowResults($iptBox, $sumTotalVatShekel);
@@ -200,6 +200,7 @@ $(function () {
 				break;
 		}
 		$("#subUnitTypeID").materialSelect();
+		//$("#subUnit").prop("disabled", false);
 		$.fn.EnableMaterialSelect('#subUnitTypeID', 'select-options-subUnitTypeID');
 		switch (optgroup2) {
 			case "Units":
@@ -322,6 +323,7 @@ $(function () {
 			$("#subUnit").prop("disabled", false);
 			$("#subUnitTypeID").addClass('mark-readonly');
 			$.fn.ChangeSubUnitDropdown();
+			$.fn.CheckCurrency();
 		}
 		//else {
 		//	$.fn.DisableSubUnits();
@@ -343,6 +345,7 @@ $(function () {
 			$("#subSubUnit").prop("disabled", false);
 			$("#subSubUnitTypeID").addClass('mark-readonly');
 			$.fn.ChangeSubSubUnitDropdown();
+			$.fn.CheckCurrency();
 		}
 		//else {
 		//	$.fn.DisableSubSubUnits();
@@ -463,15 +466,17 @@ $(function () {
 		$.fn.CalculateSubSubUnitAmounts();
 	});
 	$("#unitTypeID").change(function () {
+		console.log("about to check unitsfilled");
+		$(".addSubUnit").prop('disabled', false);
 		$.fn.ChangeSubUnitDropdown();
 		$.fn.ChangeSubSubUnitDropdown();
 	});
-	$("#subUnitTypeID").change(function () {
-		//	console.log("about to check subunitsfilled");
-		//$.fn.CheckSubUnitsFilled();
-	});
+	$("body, .modal").on("change", "#subUnitTypeID",(function () {
+		console.log("about to check subunitsfilled");
+		$(".addSubSubUnit").prop('disabled', false);
+	}));
 	$("#select-options-subUnitTypeID").change(function () {
-		//	console.log("about to check subunitsfilled");
+		//console.log("about to check subunitsfilled select");
 		//$.fn.CheckSubUnitsFilled();
 	});
 
