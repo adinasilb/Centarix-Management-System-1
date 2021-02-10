@@ -119,9 +119,11 @@ namespace PrototypeWithAuth.Controllers
         {
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
             {
-                ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault()
+                ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).Include(m=>m.LabPart).FirstOrDefault()
             };
-            if (!visualLocationsViewModel.ParentLocationInstance.IsEmptyShelf)
+  
+       
+            if (!visualLocationsViewModel.ParentLocationInstance.IsEmptyShelf )
             {
                 visualLocationsViewModel.ChildrenLocationInstances =
                     _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
@@ -654,6 +656,7 @@ namespace PrototypeWithAuth.Controllers
                                     subLocationViewModel.LocationInstances[i].Height =1;
                                     subLocationViewModel.LocationInstances[i].Width = 1;
                                     subLocationViewModel.LocationInstances[i].LocationInstanceName = "sdfsd";
+                                 
                                     _context.Add(subLocationViewModel.LocationInstances[i]);
                                     await _context.SaveChangesAsync();
                                 }
@@ -672,6 +675,8 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         subLocationViewModel.LocationInstances[i].Height = 1;
                                     }
+                                    var labPart = await _context.LabParts.Where(lp => lp.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID).FirstOrDefaultAsync();
+                                    subLocationViewModel.LocationInstances[i].IsEmptyShelf = labPart.HasShelves;
                                     await _context.SaveChangesAsync();
                                 }
                                 
