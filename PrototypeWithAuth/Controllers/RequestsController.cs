@@ -1005,23 +1005,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.Product.ProductSubcategory.ParentCategoryID = parentcategory.ParentCategoryID;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
 
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string requestFolder = Path.Combine(uploadFolder, "0");
-
-            if (Directory.Exists(requestFolder))
-            {
-                System.IO.DirectoryInfo di = new DirectoryInfo(requestFolder);
-                foreach (FileInfo file in di.GetFiles())
-                {
-                    file.Delete();
-                }
-                foreach (DirectoryInfo dir in di.EnumerateDirectories())
-                {
-                    dir.Delete(true);
-                }
-                Directory.Delete(requestFolder);
-            }
-            Directory.CreateDirectory(requestFolder);
+            DeleteTemporaryDocuments();
 
             //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
@@ -1520,88 +1504,96 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(ReorderViewModel reorderViewModel, AppUtility.OrderTypeEnum OrderTypeEnum)
+        public async Task<IActionResult> ReOrderFloatModalView(ReorderViewModel reorderViewModel, AppUtility.OrderTypeEnum OrderTypeEnum, bool isCancel = false)
         {
-            try
+            if (isCancel)
             {
-                //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
-                //get the old request that we are reordering
-                var oldRequest = _context.Requests.Where(r => r.RequestID == reorderViewModel.RequestItemViewModel.Request.RequestID)
-                    .Include(r => r.Product)
-                    .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
-
-
-                var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
-                //need to include product to check if in budget
-                reorderViewModel.RequestItemViewModel.Request.Product = oldRequest.Product;
-
-                reorderViewModel.RequestItemViewModel.Request.RequestID = 0;
-                reorderViewModel.RequestItemViewModel.Request.ProductID = oldRequest.ProductID;
-                reorderViewModel.RequestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
-                reorderViewModel.RequestItemViewModel.Request.CreationDate = DateTime.Now;
-                reorderViewModel.RequestItemViewModel.Request.SubProjectID = oldRequest.SubProjectID;
-                reorderViewModel.RequestItemViewModel.Request.SerialNumber = oldRequest.SerialNumber;
-                reorderViewModel.RequestItemViewModel.Request.URL = oldRequest.URL;
-                reorderViewModel.RequestItemViewModel.Request.Warranty = oldRequest.Warranty;
-                reorderViewModel.RequestItemViewModel.Request.ExchangeRate = oldRequest.ExchangeRate;
-                reorderViewModel.RequestItemViewModel.Request.Currency = oldRequest.Currency;
-                reorderViewModel.RequestItemViewModel.Request.CatalogNumber = oldRequest.CatalogNumber;
-                var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Request);
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    try
-                    {
-
-                        await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Request, OrderTypeEnum, isInBudget);
-                        var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                        var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
-                        if (!isSavedUsingSession)
-                        {
-                            MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Request);
-                            await transaction.CommitAsync();
-                            base.RemoveRequestSessions();
-                        }
-                        switch (OrderTypeEnum)
-                        {
-                            case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                                break;
-                            case AppUtility.OrderTypeEnum.OrderNow:
-                                break;
-                            case AppUtility.OrderTypeEnum.AddToCart:
-                                break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        base.RemoveRequestSessions();
-                        throw ex;
-                    }
-                }
-
-                var action = "Index";
-                switch (OrderTypeEnum)
-                {
-                    case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                        action = "UploadOrderModal";
-                        break;
-                    case AppUtility.OrderTypeEnum.OrderNow:
-                        action = "UploadQuoteModal";
-                        break;
-                    case AppUtility.OrderTypeEnum.AddToCart:
-                        action = "UploadQuoteModal";
-                        break;
-                }
-                reorderViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
-                return RedirectToAction(action, "Requests", reorderViewModel.RequestIndexObject);
+                DeleteTemporaryDocuments();
+                return Redirect("Requests");
             }
-            catch (Exception ex)
+            else
             {
-                ViewBag.ErrorMessage = ex.Message?.ToString();
-                Response.StatusCode = 500;
-                var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-                reorderViewModel.RequestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
-                return PartialView("ReOrderFloatModalView", reorderViewModel);
+                try
+                {
+                    //  ReorderViewModel reorderViewModel = JsonConvert.DeserializeObject<ReorderViewModel>(json);
+                    //get the old request that we are reordering
+                    var oldRequest = _context.Requests.Where(r => r.RequestID == reorderViewModel.RequestItemViewModel.Request.RequestID)
+                        .Include(r => r.Product)
+                        .ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).FirstOrDefault();
+
+
+                    var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
+                    //need to include product to check if in budget
+                    reorderViewModel.RequestItemViewModel.Request.Product = oldRequest.Product;
+
+                    reorderViewModel.RequestItemViewModel.Request.RequestID = 0;
+                    reorderViewModel.RequestItemViewModel.Request.ProductID = oldRequest.ProductID;
+                    reorderViewModel.RequestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
+                    reorderViewModel.RequestItemViewModel.Request.CreationDate = DateTime.Now;
+                    reorderViewModel.RequestItemViewModel.Request.SubProjectID = oldRequest.SubProjectID;
+                    reorderViewModel.RequestItemViewModel.Request.SerialNumber = oldRequest.SerialNumber;
+                    reorderViewModel.RequestItemViewModel.Request.URL = oldRequest.URL;
+                    reorderViewModel.RequestItemViewModel.Request.Warranty = oldRequest.Warranty;
+                    reorderViewModel.RequestItemViewModel.Request.ExchangeRate = oldRequest.ExchangeRate;
+                    reorderViewModel.RequestItemViewModel.Request.Currency = oldRequest.Currency;
+                    reorderViewModel.RequestItemViewModel.Request.CatalogNumber = oldRequest.CatalogNumber;
+                    var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Request);
+                    using (var transaction = _context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+
+                            await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Request, OrderTypeEnum, isInBudget);
+                            var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                            var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
+                            if (!isSavedUsingSession)
+                            {
+                                MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Request);
+                                await transaction.CommitAsync();
+                                base.RemoveRequestSessions();
+                            }
+                            switch (OrderTypeEnum)
+                            {
+                                case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                                    break;
+                                case AppUtility.OrderTypeEnum.OrderNow:
+                                    break;
+                                case AppUtility.OrderTypeEnum.AddToCart:
+                                    break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            base.RemoveRequestSessions();
+                            throw ex;
+                        }
+                    }
+
+                    var action = "Index";
+                    switch (OrderTypeEnum)
+                    {
+                        case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                            action = "UploadOrderModal";
+                            break;
+                        case AppUtility.OrderTypeEnum.OrderNow:
+                            action = "UploadQuoteModal";
+                            break;
+                        case AppUtility.OrderTypeEnum.AddToCart:
+                            action = "UploadQuoteModal";
+                            break;
+                    }
+                    reorderViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
+                    return RedirectToAction(action, "Requests", reorderViewModel.RequestIndexObject);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = ex.Message?.ToString();
+                    Response.StatusCode = 500;
+                    var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+                    reorderViewModel.RequestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
+                    return PartialView("ReOrderFloatModalView", reorderViewModel);
+                }
             }
         }
 
@@ -3126,9 +3118,55 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests, Users, Biomarkers, Accounting, Admin, Reports, Timekeeper, Operations, Protocols, Income, Operation, Expenses, LabManagement")]
-        public async Task<IActionResult> ConfirmExit(AppUtility.MenuItems MenuItem = AppUtility.MenuItems.Requests)
+        public async Task<IActionResult> ConfirmExit(AppUtility.MenuItems MenuItem = AppUtility.MenuItems.Requests, string url = "")
         {
-            return PartialView(MenuItem);
+            ConfirmExitViewModel confirmExit = new ConfirmExitViewModel()
+            {
+                SectionType = MenuItem,
+                URL = url
+            };
+            return PartialView(confirmExit);
+        }
+        [HttpPost]
+        [Authorize(Roles = "Requests, Users, Biomarkers, Accounting, Admin, Reports, Timekeeper, Operations, Protocols, Income, Operation, Expenses, LabManagement")]
+        public async Task<IActionResult> ConfirmExit(ConfirmExitViewModel confirmExit)
+        {
+            DeleteTemporaryDocuments();
+
+            if (confirmExit.URL.IsEmpty())
+            {
+                var requestIndex = new RequestIndexObject()
+                {
+                    PageType = confirmExit.PageType,
+                    SectionType = confirmExit.SectionType
+                };
+                return RedirectToAction("Index", requestIndex);
+            }
+            else
+            {
+                return Redirect(confirmExit.URL);
+            }
+        }
+
+        private void DeleteTemporaryDocuments()
+        {
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string requestFolder = Path.Combine(uploadFolder, "0");
+
+            if (Directory.Exists(requestFolder))
+            {
+                System.IO.DirectoryInfo di = new DirectoryInfo(requestFolder);
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in di.EnumerateDirectories())
+                {
+                    dir.Delete(true);
+                }
+                Directory.Delete(requestFolder);
+            }
+            Directory.CreateDirectory(requestFolder);
         }
 
         [HttpGet]

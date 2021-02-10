@@ -185,9 +185,32 @@
 	});
 
 	$(".exit-edit-modal").off("click").on("click", function (e) {
-		$('.confirm-exit-modal').remove();
-		$(".modal").hide();
-		$(".modal").replaceWith('');
+		var url = $(this).attr("value");
+		var itemurl = "/Requests/ConfirmExit/";
+		console.log(itemurl);
+		var formData = {
+			SectionType : $('#masterSectionType').val(),
+			PageType : $('#masterPageType').val(),
+			URL : url
+		}
+		console.log(formData);
+		$.ajax({
+			contentType: false,
+			processData: true,
+			async: true,
+			url: $itemurl,
+			type: 'POST',
+			data: formData,
+			cache: true,
+			success: function (data) {
+				$("#loading").hide();
+				location.href = url;
+				$('.confirm-exit-modal').remove();
+				$(".modal").hide();
+				$(".modal").replaceWith('');
+				$(".save-item").removeClass("save-item");
+			}
+		});
 	})
 
 	$(".return-edit-modal").off("click").on("click", function (e) {

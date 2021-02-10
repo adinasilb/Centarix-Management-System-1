@@ -1,9 +1,9 @@
 ﻿@using PrototypeWithAuth.AppData;
-@model AppUtility.MenuItems
+@model PrototypeWithAuth.ViewModels.ConfirmExitViewModel
 @{
     Layout = null;
     var bcColor = "order-inv-background-color";
-    switch (Model)
+    switch (Model.SectionType)
     {
         case AppUtility.MenuItems.Operations:
             bcColor = "oper-background-color";
@@ -43,11 +43,11 @@
 
                 <div class="modal-body">
                     <div class="row">
-                        Are you sure you would like to exit the edit modal without saving changes?
+                        Are you sure you would like to exit without saving changes?
                     </div>
                     <div class="row text-center">
 
-                        <button class="text custom-button custom-button-font @bcColor exit-edit-modal between-button-margin">Yes</button>
+                        <button class="text custom-button custom-button-font @bcColor exit-edit-modal between-button-margin" value="@Model.URL">Yes</button>
                         <button class="custom-button custom-cancel text return-edit-modal ">No</button>
 
                         @*<button class="custom-button custom-cancel float-right text cancel-request-edits">Cancel</button>*@
