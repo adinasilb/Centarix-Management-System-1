@@ -1314,10 +1314,128 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 503,
                     LocationTypeName = "Section",
                     LocationTypePluralName = "Sections",
-                    LocationTypeParentID = 501,
+                    LocationTypeParentID = 502,
                     Depth = 3
                 }
             );
+            modelBuilder.Entity<LocationRoomType>().HasData(
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 1,
+                        LocationRoomTypeDescription = "Laboratory",
+                        LocationAbbreviation = "L"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 2,
+                        LocationRoomTypeDescription = "Tissue Culture",
+                        LocationAbbreviation = ""
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 3,
+                        LocationRoomTypeDescription = "Equipment Room",
+                        LocationAbbreviation = "E"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 4,
+                        LocationRoomTypeDescription = "Refrigerator Room",
+                        LocationAbbreviation = "R"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 5,
+                        LocationRoomTypeDescription = "Washing Room",
+                        LocationAbbreviation = "W"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 6,
+                        LocationRoomTypeDescription = "Storage Room",
+                        LocationAbbreviation = "S"
+                    }
+                );
+            modelBuilder.Entity<LocationRoomInstance>().HasData(
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 1,
+                           LocationNumber = 1,
+                           LocationRoomTypeID = 1
+
+                       },
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 2,
+                           LocationNumber = 2,
+                           LocationRoomTypeID = 1
+
+                       },
+                       new LocationRoomInstance
+                       {
+                           LocationRoomInstanceID = 3,
+                           LocationNumber = 1,
+                           LocationRoomTypeID = 2
+
+                       },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 4,
+                            LocationNumber = 1,
+                            LocationRoomTypeID = 3
+
+                        },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 5,
+                            LocationNumber = 1,
+                            LocationRoomTypeID = 4
+
+                        },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 6,
+                            LocationNumber = 1,
+                            LocationRoomTypeID = 5
+
+                        },
+                        new LocationRoomInstance
+                        {
+                            LocationRoomInstanceID = 7,
+                            LocationNumber = 1,
+                            LocationRoomTypeID = 6
+
+                        }
+                 );
+            modelBuilder.Entity<LabPart>().HasData(
+                    new LabPart
+                    {
+                        LabPartID = 1,
+                        LabPartName = "Closet" ,
+                        HasShelves = true
+                    },
+                    new LabPart
+                    {
+                        LabPartID = 2,
+                        LabPartName = "Glass Closet",
+                        HasShelves = true
+                    },
+                    new LabPart
+                    {
+                        LabPartID = 3,
+                        LabPartName = "Table",
+                    },
+                    new LabPart
+                    {
+                        LabPartID = 4,
+                        LabPartName = "Drawer",
+                    },
+                    new LabPart
+                    {
+                        LabPartID = 5,
+                        LabPartName = "Shelf"
+                    }
+               );
             modelBuilder.Entity<OffDayType>().HasData(
                         new OffDayType
                         {

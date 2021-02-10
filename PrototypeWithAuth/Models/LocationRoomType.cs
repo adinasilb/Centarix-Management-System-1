@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class LabPart
+    public class LocationRoomType
     {
         [Key]
-        public int LabPartID { get; set; }
-        public string LabPartName { get; set; }
-        public bool HasShelves { get; set; }
+        public int LocationRoomTypeID { get; set; }
+        public string LocationRoomTypeDescription { get; set; }
+        public string LocationAbbreviation { get; set; }
     }
 }

@@ -205,7 +205,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public IActionResult SubLocation(int ParentLocationTypeID)
+        public async Task<IActionResult> SubLocation(int ParentLocationTypeID)
         {
             SubLocationViewModel subLocationViewModel = new SubLocationViewModel();
             bool go = true;
@@ -232,6 +232,22 @@ namespace PrototypeWithAuth.Controllers
                     };
                     subLocationViewModel.BoxTypes = boxList;
                     break;
+                case 500:
+                    subLocationViewModel.LabParts = await _context.LabParts.ToListAsync();
+                    var locationRooms = await _context.LocationRoomInstances.Include(l=>l.LocationRoomType).ToListAsync();
+                    List<SelectListItem> locationRoomsSelectList = new List<SelectListItem>();
+                    foreach(var r in locationRooms)
+                    {
+                        var description = r.LocationRoomType.LocationRoomTypeDescription;
+                        var isMoreOfType = locationRooms.Where(l => l.LocationRoomType == r.LocationRoomType && l.LocationRoomInstanceID!=r.LocationRoomInstanceID).Any();
+                        if(isMoreOfType)
+                        {
+                            description += r.LocationNumber;
+                        }
+                        locationRoomsSelectList.Add(new SelectListItem() { Value = r.LocationRoomInstanceID + "", Text = description });
+                    }
+                    subLocationViewModel.LocationRoomInstances = locationRoomsSelectList;
+                    break;
             }
             while (go)
             {
@@ -251,7 +267,8 @@ namespace PrototypeWithAuth.Controllers
             subLocationViewModel.LocationInstances = new List<LocationInstance>();
             foreach (var item in subLocationViewModel.LocationTypes)
             {
-                subLocationViewModel.LocationInstances.Add(new LocationInstance());
+                subLocationViewModel.LocationInstances.Add(new LocationInstance() {});
+                
             }
             if (AppUtility.IsAjaxRequest(Request))
             {
@@ -428,10 +445,10 @@ namespace PrototypeWithAuth.Controllers
                                     height = subLocationViewModel.LocationInstances[1].Height;
                                     width = 1;
                                 }
-                                else if (b == 2)
+                                else if (b == 3)
                                 {
-                                    height = subLocationViewModel.LocationInstances[3].Height;
-                                    width = subLocationViewModel.LocationInstances[3].Height;
+                                    height = subLocationViewModel.LocationInstances[4].Height;
+                                    width = subLocationViewModel.LocationInstances[4].Height;
                                 }
                                 string attachedName = "";
                                 int amountOfParentLevels = 1;
@@ -465,7 +482,7 @@ namespace PrototypeWithAuth.Controllers
                                         char character = (char)unicode;
                                         place = character.ToString();
                                         int sublocationWidth = subLocationViewModel.LocationInstances[b].Width;
-                                        if (b == 3) { sublocationWidth = sublocationHeight; }
+                                        if (b == 4) { sublocationWidth = sublocationHeight; }
                                         else if (sublocationWidth == 0) { sublocationWidth = 1; }
                                         for (int y = 0; y < sublocationWidth; y++)
                                         {
@@ -795,6 +812,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             break;
                     }
+                    await transaction.CommitAsync();
                 }
             }
             return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.LabManagement });
@@ -812,6 +830,18 @@ namespace PrototypeWithAuth.Controllers
                     _context.SaveChanges();
                 }
             }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> HasShelfBlock(int id)
+        {
+            var part = await _context.LabParts.Where(lp => lp.LabPartID == id).FirstOrDefaultAsync();
+            if(part.HasShelves)
+            {
+                return PartialView();
+            }
+            return PartialView("Default");
         }
 
 

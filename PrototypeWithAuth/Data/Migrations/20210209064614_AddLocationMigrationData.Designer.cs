@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210209064614_AddLocationMigrationData")]
+    partial class AddLocationMigrationData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1530,16 +1532,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsFull")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LabPartID")
-                        .HasColumnType("int");
-
                     b.Property<string>("LocationInstanceName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("LocationInstanceParentID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LocationRoomInstanceID")
                         .HasColumnType("int");
 
                     b.Property<int>("LocationTypeID")
@@ -1553,11 +1549,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("LocationInstanceID");
 
-                    b.HasIndex("LabPartID");
-
                     b.HasIndex("LocationInstanceParentID");
-
-                    b.HasIndex("LocationRoomInstanceID");
 
                     b.HasIndex("LocationTypeID");
 
@@ -1885,7 +1877,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 3,
                             Limit = 0,
                             LocationTypeName = "Section",
-                            LocationTypeParentID = 502,
+                            LocationTypeParentID = 501,
                             LocationTypePluralName = "Sections"
                         });
                 });
@@ -4176,19 +4168,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationInstance", b =>
                 {
-                    b.HasOne("PrototypeWithAuth.Models.LabPart", "LabPart")
-                        .WithMany()
-                        .HasForeignKey("LabPartID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("PrototypeWithAuth.Models.LocationInstance", "LocationInstanceParent")
                         .WithMany()
                         .HasForeignKey("LocationInstanceParentID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.LocationRoomInstance", "LocationRoomInstance")
-                        .WithMany()
-                        .HasForeignKey("LocationRoomInstanceID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.LocationType", "LocationType")
