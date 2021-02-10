@@ -1509,7 +1509,7 @@ namespace PrototypeWithAuth.Controllers
             if (isCancel)
             {
                 DeleteTemporaryDocuments();
-                return Redirect("Requests");
+                return PartialView("Default");
             }
             else
             {
@@ -3144,7 +3144,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                return Redirect(confirmExit.URL);
+                return PartialView("Default");
             }
         }
 
