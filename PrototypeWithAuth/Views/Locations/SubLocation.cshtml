@@ -30,7 +30,7 @@
                         m => m.LocationInstances[2].Height,
                         Model.BoxTypes,
                         "",
-                        new { @class = "mdb-select custom select-dropdown form-control-plaintext " }
+                        new { @class = "mdb-select custom select-dropdown form-control-plaintext  sub-select" }
                     )
                     <input asp-for="LocationInstances[2].LocationTypeID" value="@Model.LocationTypes.ToList()[2].LocationTypeID" style="display: none;" />
                 </div>
@@ -97,7 +97,7 @@
                         m => m.LocationInstances[4].Height,
                         Model.BoxTypes,
                         "",
-                        new { @class = "mdb-select custom select-dropdown form-control-plaintext " }
+                        new { @class = "mdb-select custom select-dropdown form-control-plaintext  sub-select " }
                     )
                     <input asp-for="LocationInstances[4].LocationTypeID" value="@Model.LocationTypes.ToList()[4].LocationTypeID" style="display: none;" />
                 </div>
@@ -127,13 +127,13 @@
                        m => m.LocationInstances[0].LocationRoomInstanceID,
                             Model.LocationRoomInstances,
                            "Room",
-                  htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext " }
+                  htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext  sub-select" }
                    )
                 </div>
                 <div class="col-6 ">
                     <input type="hidden" asp-for="LocationInstances[1].Height" value="1" />
                     <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />
-                    <select class="addLocationFont mdb-select custom select-dropdown form-control-plaintext " asp-for="LocationInstances[1].LabPartID" id="labPartDDL">
+                    <select class="addLocationFont mdb-select custom select-dropdown form-control-plaintext sub-select" asp-for="LocationInstances[1].LabPartID" id="labPartDDL">
                         <option selected>lab part</option>
                         @foreach (var lp in Model.LabParts)
                         {

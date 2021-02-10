@@ -44,31 +44,17 @@
                         <div class="row">
                             <div class="form-group col-12">
                                 @*<label asp-for="LocationTypesDepthOfZero" class="control-label">Type of storage</label>*@
-                                <div class=" form-control-plaintext border-bottom p-0">
-                                    <span class="choose p-0"></span>
-                                    <div class="dropdown dropdown-main">
-                                        <div class="select ">
-                                            <span class="caret py-0">
-                                                ▼
-                                            </span>
-                                            <span class="addLocationFont">Select Type:</span>
-
-                                        </div>
-
-                                        <ul class="p-0 locationinstance dropdown-menu ">
-                                            @foreach (var locationType in Model.LocationTypesDepthOfZero)
-                                            {
-                                                <li onclick="LoadSublocations(this.id)" id="@locationType.LocationTypeID">
-                                                    @locationType.LocationTypeName
-                                                </li>
-                                            }
-                                        </ul>
-
-                                    </div>
+                                <div class=" form-control-plaintext p-0">
+                                    <select class="addLocationFont mdb-select custom select-dropdown form-control-plaintext " asp-for="LocationInstance.LocationTypeID" id="locationTypeDDL">
+                                        <option selected>Location Type</option>
+                                        @foreach (var lp in Model.LocationTypesDepthOfZero)
+                                        {
+                                            <option value="@lp.LocationTypeID">@lp.LocationTypeName</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="LocationInstance.LocationTypeID" class="text-danger-centarix"></span>
+                     
                                 </div>
-                                <span asp-validation-for="LocationInstance.LocationTypeID" class="text-danger-centarix"></span>
-                                <input type="hidden" asp-for="LocationInstance.LocationTypeID" />
-                            </div>
 
                         </div>
 
@@ -95,27 +81,21 @@
 </div>
 
 <script>
-
-    function LoadSublocations(str) {
-        //$("#loading-content").load("dataSearch.php?" + str, hideLoader);
-        console.log("load sublocations, str: " + str);
-        var id = parseInt(str);
+    $("#locationTypeDDL").materialSelect();
+    $("#locationTypeDDL").change(function() {    
+        var id = $(this).val();
         var myDiv = $(".divSublocations");
-        //var selectedId = $(this).children("option:selected").val();
-        //console.log("selectedId: " + selectedId);
         $.ajax({
-            //IMPORTANT: ADD IN THE ID
             async: true,
-            url: "/Locations/SubLocation/?ParentLocationTypeID=" + str + "",
+            url: "/Locations/SubLocation/?ParentLocationTypeID=" + id + "",
             type: 'GET',
             cache: true,
             context: myDiv,
             success: function (result) {
                 this.html(result);
-                $('.mdb-select').materialSelect();
+                $('.sub-select').materialSelect();
                 $("input[type='hidden']").remove();
-                //$(".mdb-select-empty").materialSelect();
             }
         });
-    }
+    });
 </script>
