@@ -53,28 +53,28 @@
                                         }
                                     </select>
                                     <span asp-validation-for="LocationInstance.LocationTypeID" class="text-danger-centarix"></span>
-                     
+
                                 </div>
 
-                        </div>
+                            </div>
 
-                        <div class="col-md-12 divSublocations mx-0 px-0">
+
+                        </div>
+                        <div class="row divSublocations mx-0 px-0">
                         </div>
                         <br />
-                    </div>
-
-                    <div class="modal-footer-no">
-                        <div class="text-center modal-footer-mt">
-                            <input id="submitAddLocation" type="submit" value="Save" asp-action="AddLocation" class="lab-man-background-color custom-button custom-button-font open-loading between-button-margin" />@*style="margin-right:11rem;"*@
-                            @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
-                                {
-                                    <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
-                                }*@
-                            <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button "  onclick="$(this).closest('.modal').modal('hide');"/>
+                        <div class="modal-footer-no">
+                            <div class="text-center modal-footer-mt">
+                                <input id="submitAddLocation" type="submit" value="Save" asp-action="AddLocation" class="lab-man-background-color custom-button custom-button-font open-loading between-button-margin" />@*style="margin-right:11rem;"*@
+                                @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
+                {
+                    <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
+                }*@
+                                <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button " onclick="$(this).closest('.modal').modal('hide');" />
+                            </div>
+                            <br />
                         </div>
-                        <br />
                     </div>
-                </div>
             </form>
         </div>
     </div>

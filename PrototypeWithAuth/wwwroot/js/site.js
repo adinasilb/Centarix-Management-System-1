@@ -699,14 +699,14 @@ $(function () {
 
 			console.log("is not parent location");
 			//remove all columns to the right
-			var thisLocationInstanceID = $(this).val();
-			console.log("thisLocationInstanceID: " + thisLocationInstanceID);
+			var thisLocationInstanceTypeID = $(this).attr("typeid");
+			console.log("thisLocationInstanceID: " + thisLocationInstanceTypeID);
 			$(".sublocation-index").each(function () {
-				var sublocationIndexParsed = $(this).children("table").children("tbody").children("tr:first-child").children("td").children("button").val();
+				var sublocationIndexParsed = $(this).children("table").children("tbody").children("tr:first-child").children("td").children("button").attr("typeid");
 				console.log("sublocationIndexParsed: " + sublocationIndexParsed);
-				if (parseInt(sublocationIndexParsed) > parseInt(thisLocationInstanceID)) {
+				if (parseInt(sublocationIndexParsed) > parseInt(thisLocationInstanceTypeID)) {
 					console.log("hiding " + sublocationIndexParsed + "...");
-					$(this).hide();
+					$(this).replaceWith('');
 				}
 			});
 		}

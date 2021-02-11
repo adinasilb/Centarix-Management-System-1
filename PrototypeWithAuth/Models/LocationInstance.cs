@@ -31,6 +31,7 @@ namespace PrototypeWithAuth.Models
         public LocationRoomInstance LocationRoomInstance { get; set; }
         public int? LabPartID { get; set; }
         public LabPart LabPart { get; set; }
+        public int LocationNumber { get; set; }
 
     }
 }

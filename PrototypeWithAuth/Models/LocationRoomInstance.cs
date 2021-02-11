@@ -10,20 +10,7 @@ namespace PrototypeWithAuth.Models
     {
        [Key]
        public int LocationRoomInstanceID { get; set; }
-       public int LocationNumber { get; set; }
        public int LocationRoomTypeID { get; set; }
        public LocationRoomType LocationRoomType { get; set; }
-       public string LocationDisplayName
-        {
-            get
-            {  
-                if(LocationRoomType ==null)
-                {
-                    return "";
-                }
-                return LocationRoomType.LocationAbbreviation + LocationNumber;
-            }
-            private set {; }
-        }
     }
 }

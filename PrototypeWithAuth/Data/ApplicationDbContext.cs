@@ -243,7 +243,6 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.StartedWorking_submit);
             modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
             modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
-            modelBuilder.Entity<LocationRoomInstance>().Ignore(e => e.LocationDisplayName);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
 
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();

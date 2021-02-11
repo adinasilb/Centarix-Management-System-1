@@ -241,11 +241,10 @@ namespace PrototypeWithAuth.Controllers
                     foreach(var r in locationRooms)
                     {
                         var description = r.LocationRoomType.LocationRoomTypeDescription;
-                        var isMoreOfType = locationRooms.Where(l => l.LocationRoomType == r.LocationRoomType && l.LocationRoomInstanceID!=r.LocationRoomInstanceID).Any();
-                        if(isMoreOfType)
-                        {
-                            description += r.LocationNumber;
-                        }
+                        var roomByTypeCount = locationRooms.Where(l => l.LocationRoomType == r.LocationRoomType && l.LocationRoomInstanceID!=r.LocationRoomInstanceID).Count();
+
+                        description += roomByTypeCount+1;
+
                         locationRoomsSelectList.Add(new SelectListItem() { Value = r.LocationRoomInstanceID + "", Text = description });
                     }
                     subLocationViewModel.LocationRoomInstances = locationRoomsSelectList;
@@ -628,46 +627,73 @@ namespace PrototypeWithAuth.Controllers
                             }
                             break;
                         case 500:
-                            addLocationViewModel.LocationInstance.Height = 1;
-                            addLocationViewModel.LocationInstance.Width = 1;
-                            _context.Add(addLocationViewModel.LocationInstance);
-                            _context.SaveChanges();
+                            var Parent25 = _context.LocationInstances.Where(l => l.LocationTypeID == 500).FirstOrDefault();
+                            if (Parent25 != null)
+                            {
+                                addLocationViewModel.LocationInstance = Parent25;
+                            }
+                            else
+                            {
+                                addLocationViewModel.LocationInstance.Height = 1;
+                                addLocationViewModel.LocationInstance.Width = 1;
+                                _context.Add(addLocationViewModel.LocationInstance);
+                                await _context.SaveChangesAsync();
+                            }                           
+                     
                             for (int i = 0; i < subLocationViewModel.LocationInstances.Count(); i++)
                             {
                                 var childHeight = subLocationViewModel.LocationInstances[i].Height;
-                                if (i == subLocationViewModel.LocationInstances.Count()-1)
+                                if (i == 2)
                                 {
-                                    for(int y=0; y<childHeight; y++)
+                                    for (int y = 0; y < childHeight; y++)
                                     {
                                         _context.Add(new LocationInstance()
                                         {
                                             LocationInstanceParentID = subLocationViewModel.LocationInstances[i - 1].LocationInstanceID,
                                             LocationTypeID = subLocationViewModel.LocationInstances[i].LocationTypeID,
-                                            Height = subLocationViewModel.LocationInstances[i].Height =1,
+                                            Height = subLocationViewModel.LocationInstances[i].Height = 1,
                                             Width = subLocationViewModel.LocationInstances[i].Width = 1,
                                             LocationInstanceName = "sdfsd"
-                                    });
+                                        });
                                     }
                                     await _context.SaveChangesAsync();
                                 }
-                                else if(i == 0)
+                                else if (i == 0)
                                 {
-                                    subLocationViewModel.LocationInstances[i].LocationInstanceParentID = addLocationViewModel.LocationInstance.LocationInstanceID;
-                                    subLocationViewModel.LocationInstances[i].Height =1;
-                                    subLocationViewModel.LocationInstances[i].Width = 1;
-                                    subLocationViewModel.LocationInstances[i].LocationInstanceName = "sdfsd";
-                                 
-                                    _context.Add(subLocationViewModel.LocationInstances[i]);
-                                    await _context.SaveChangesAsync();
+                                    var room = _context.LocationInstances.Include(l=>l.LocationRoomInstance).ThenInclude(r=>r.LocationRoomType).Where(l => l.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefault();
+                                    if(room!=null)
+                                    {
+                                        subLocationViewModel.LocationInstances[i] = room;
+                                    }
+                                    else
+                                    {
+                                        subLocationViewModel.LocationInstances[i].LocationInstanceParentID = addLocationViewModel.LocationInstance.LocationInstanceID;
+                                        subLocationViewModel.LocationInstances[i].Height = 1;
+                                        subLocationViewModel.LocationInstances[i].Width = 1;
+                                        subLocationViewModel.LocationInstances[i].LocationRoomInstance = await _context.LocationRoomInstances.Include(lr=>lr.LocationRoomType).Where(lr => lr.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefaultAsync();
+                                        var description = subLocationViewModel.LocationInstances[i].LocationRoomInstance.LocationRoomType.LocationAbbreviation;
+                                        var roomByTypeCount = _context.LocationRoomInstances.Where(l => l.LocationRoomType == subLocationViewModel.LocationInstances[i].LocationRoomInstance.LocationRoomType && l.LocationRoomInstanceID != subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).Count();
+                                        description += roomByTypeCount + 1;
+
+                                        subLocationViewModel.LocationInstances[i].LocationInstanceName = description;
+                                        _context.Add(subLocationViewModel.LocationInstances[i]);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                
                                 }
-                                else
+                                else if(i==1)
                                 {
-                                    subLocationViewModel.LocationInstances[i].LocationInstanceParentID = subLocationViewModel.LocationInstances[i-1].LocationInstanceID;
-                            
+                                    subLocationViewModel.LocationInstances[i].LocationInstanceParentID = subLocationViewModel.LocationInstances[i - 1].LocationInstanceID;
+
                                     subLocationViewModel.LocationInstances[i].Width = 1;
-                                    subLocationViewModel.LocationInstances[i].LocationInstanceName = "sdfsd";
+                                    subLocationViewModel.LocationInstances[i].LabPart = await _context.LabParts.Where(lp => lp.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID).FirstOrDefaultAsync();
+                                    var labPartName = subLocationViewModel.LocationInstances[i].LabPart.LabPartName;
+                                    var labPartByTypeCount = _context.LocationInstances.Where(l => l.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID && l.LocationInstanceParentID== subLocationViewModel.LocationInstances[i].LocationInstanceParentID).Count();
+                                    labPartName += labPartByTypeCount + 1;
+
+                                    subLocationViewModel.LocationInstances[i].LocationInstanceName = labPartName;
                                     _context.Add(subLocationViewModel.LocationInstances[i]);
-                                    if(subLocationViewModel.LocationInstances.Count()> 2)
+                                    if (subLocationViewModel.LocationInstances.Count() > 2)
                                     {
                                         subLocationViewModel.LocationInstances[i].Height = subLocationViewModel.LocationInstances[i + 1].Height;
                                     }
@@ -676,12 +702,12 @@ namespace PrototypeWithAuth.Controllers
                                         subLocationViewModel.LocationInstances[i].Height = 1;
                                     }
                                     var labPart = await _context.LabParts.Where(lp => lp.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID).FirstOrDefaultAsync();
-                                    subLocationViewModel.LocationInstances[i].IsEmptyShelf = labPart.HasShelves;
+                                    subLocationViewModel.LocationInstances[i].IsEmptyShelf = !labPart.HasShelves;
                                     await _context.SaveChangesAsync();
                                 }
-                                
+
                             }
-                                break;
+                            break;
                         default:
                             //add reference to parent
                             //filling up the heights and widths with the ones put in for the location below them
@@ -798,6 +824,11 @@ namespace PrototypeWithAuth.Controllers
             }
             return RedirectToAction("Index", "Locations", new { SectionType = AppUtility.MenuItems.LabManagement });
         }
+
+        //private int GetLocationNumber(int typeID, bool isPart, bool isRoom)
+        //{
+        //    _context.LocationInstances.Where(l=>l.LocationTypeID == typeID && l.loap)
+        //}
 
         public void DeleteLocationsIfFailed(LocationInstance ParentLocationInstance, List<List<int>> placeholderIds)
         {
