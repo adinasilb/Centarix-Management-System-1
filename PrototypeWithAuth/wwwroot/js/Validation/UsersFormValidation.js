@@ -38,8 +38,7 @@ $('.usersForm').validate({
 			minlength: 9
 		},
 		"NewEmployee.DOB": {
-			required: isEmployee,
-			date: true
+			required: isEmployee
 		},
 		"NewEmployee.JobSubcategoryType.JobCategoryTypeID":{
 			selectRequired: isEmployee,
