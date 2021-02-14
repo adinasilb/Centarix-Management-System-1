@@ -35,29 +35,46 @@
                     <table class="table table-sm border visualzoom bg-white" style="table-layout: fixed;">
                         @{
                             int z = -1;
+                            var is25 = false;
+                            if (Model.ChildrenLocationInstances[0].LocationTypeID >= 500)
+                            {
+                                is25 = true;
+                            }
+
                         }
                         @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
                         {
-                            <tr class="thick-border">
-                                @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                        <tr class="thick-border">
+                            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                            {
+                                z++;
+                                var backgroundClass = "thick-border";
+                                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                                 {
-                                    z++;
-                                    var backgroundClass = "thick-border";
-                                    @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                                    if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
                                     {
-                                        if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                                        backgroundClass += bcColor;
+                                        var innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
+                                        var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
+                                        <td class="@backgroundClass">
+
+                                            @*@Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })*@
+
+                                            @*<a href="@Url.ActionLink("DetailsView", "Requests", new { @id = requestID })" class="btn btn-block text-light pb-5">@innerHtml</a>*@
+
+
+                                            <button class="btn btn-block vlz-filled load-order-details" value="@requestID" style="font-size:1.0625rem;">@innerHtml</button>
+
+                                            <span style="color:white;"> @Model.ChildrenLocationInstances[z].Place</span>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        @if (is25)
                                         {
-                                            backgroundClass += bcColor;
-                                            var innerHtml = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().Request.Product.ProductName;
-                                            var requestID = Model.ChildrenLocationInstances[z].RequestLocationInstances.FirstOrDefault().RequestID;
-                                            <td class="@backgroundClass">
-
-                                                @*@Html.ActionLink(innerHtml, "DetailsModalView", "Requests", new { @id = requestID }, new { @class = "btn btn-block text-light" })*@
-
-                                                @*<a href="@Url.ActionLink("DetailsView", "Requests", new { @id = requestID })" class="btn btn-block text-light pb-5">@innerHtml</a>*@
-                                                <button class="btn btn-block vlz-filled load-order-details" value="@requestID" style="font-size:1.0625rem;">@innerHtml</button>
-
-                                                <span style="color:white;"> @Model.ChildrenLocationInstances[z].Place</span>
+                                            var name = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
+                                            <td style="vertical-align:bottom;" class="@backgroundClass">
+                                                @name
                                             </td>
                                         }
                                         else
@@ -66,9 +83,11 @@
                                                 @Model.ChildrenLocationInstances[z].Place
                                             </td>
                                         }
+
                                     }
                                 }
-                            </tr>
+                            }
+                        </tr>
                         }
                     </table>
                 </div>

@@ -1371,43 +1371,50 @@ namespace PrototypeWithAuth.Data
                        new LocationRoomInstance
                        {
                            LocationRoomInstanceID = 1,
-                           LocationRoomTypeID = 1
+                           LocationRoomTypeID = 1,
+                           LocationRoomInstanceName = "Laboratory 1"
 
                        },
                        new LocationRoomInstance
                        {
                            LocationRoomInstanceID = 2,
-                           LocationRoomTypeID = 1
+                           LocationRoomTypeID = 1,
+                           LocationRoomInstanceName = "Laboratory 2"
 
                        },
                        new LocationRoomInstance
                        {
                            LocationRoomInstanceID = 3,
-                           LocationRoomTypeID = 2
+                           LocationRoomTypeID = 2,
+                           LocationRoomInstanceName = "Tissue Culture 1"
 
                        },
                         new LocationRoomInstance
                         {
                             LocationRoomInstanceID = 4,
-                            LocationRoomTypeID = 3
+                            LocationRoomTypeID = 3,
+                            LocationRoomInstanceName = "Equipment Room 1"
 
                         },
                         new LocationRoomInstance
                         {
                             LocationRoomInstanceID = 5,
-                            LocationRoomTypeID = 4
+                            LocationRoomTypeID = 4,
+                            LocationRoomInstanceName = "Refrigerator Room 1"
 
                         },
                         new LocationRoomInstance
                         {
                             LocationRoomInstanceID = 6,
-                            LocationRoomTypeID = 5
+                            LocationRoomTypeID = 5,
+                            LocationRoomInstanceName = "Washing Room 1"
 
                         },
                         new LocationRoomInstance
                         {
                             LocationRoomInstanceID = 7,
-                            LocationRoomTypeID = 6
+                            LocationRoomTypeID = 6,
+                            LocationRoomInstanceName = "Storage Room 1"
 
                         }
                  );
@@ -1416,27 +1423,32 @@ namespace PrototypeWithAuth.Data
                     {
                         LabPartID = 1,
                         LabPartName = "Closet" ,
+                        LabPartNameAbbrev ="C",
                         HasShelves = true
                     },
                     new LabPart
                     {
                         LabPartID = 2,
                         LabPartName = "Glass Closet",
+                        LabPartNameAbbrev = "G",
                         HasShelves = true
                     },
                     new LabPart
                     {
                         LabPartID = 3,
+                        LabPartNameAbbrev = "T",
                         LabPartName = "Table",
                     },
                     new LabPart
                     {
                         LabPartID = 4,
+                        LabPartNameAbbrev = "D",
                         LabPartName = "Drawer",
                     },
                     new LabPart
                     {
                         LabPartID = 5,
+                        LabPartNameAbbrev = "S",
                         LabPartName = "Shelf"
                     }
                );

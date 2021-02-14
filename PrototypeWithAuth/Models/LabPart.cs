@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int LabPartID { get; set; }
         public string LabPartName { get; set; }
+        public string LabPartNameAbbrev { get; set; }
         public bool HasShelves { get; set; }
     }
 }

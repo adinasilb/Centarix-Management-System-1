@@ -237,15 +237,12 @@ namespace PrototypeWithAuth.Controllers
                 case 500:
                     subLocationViewModel.LabParts = await _context.LabParts.ToListAsync();
                     var locationRooms = await _context.LocationRoomInstances.Include(l=>l.LocationRoomType).ToListAsync();
+                    var locationRoomTypes = await _context.LocationRoomTypes.ToListAsync();
                     List<SelectListItem> locationRoomsSelectList = new List<SelectListItem>();
                     foreach(var r in locationRooms)
-                    {
-                        var description = r.LocationRoomType.LocationRoomTypeDescription;
-                        var roomByTypeCount = locationRooms.Where(l => l.LocationRoomType == r.LocationRoomType && l.LocationRoomInstanceID!=r.LocationRoomInstanceID).Count();
+                    {                     
 
-                        description += roomByTypeCount+1;
-
-                        locationRoomsSelectList.Add(new SelectListItem() { Value = r.LocationRoomInstanceID + "", Text = description });
+                        locationRoomsSelectList.Add(new SelectListItem() { Value = r.LocationRoomInstanceID + "", Text = r.LocationRoomInstanceName });
                     }
                     subLocationViewModel.LocationRoomInstances = locationRoomsSelectList;
                     break;
@@ -627,6 +624,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             break;
                         case 500:
+                            var childeNameAbbrev="";
                             var Parent25 = _context.LocationInstances.Where(l => l.LocationTypeID == 500).FirstOrDefault();
                             if (Parent25 != null)
                             {
@@ -645,6 +643,7 @@ namespace PrototypeWithAuth.Controllers
                                 var childHeight = subLocationViewModel.LocationInstances[i].Height;
                                 if (i == 2)
                                 {
+                                    var childLocationType = _context.LocationTypes.Where(lt => lt.LocationTypeID == subLocationViewModel.LocationInstances[i].LocationTypeID).FirstOrDefault();
                                     for (int y = 0; y < childHeight; y++)
                                     {
                                         _context.Add(new LocationInstance()
@@ -653,7 +652,7 @@ namespace PrototypeWithAuth.Controllers
                                             LocationTypeID = subLocationViewModel.LocationInstances[i].LocationTypeID,
                                             Height = subLocationViewModel.LocationInstances[i].Height = 1,
                                             Width = subLocationViewModel.LocationInstances[i].Width = 1,
-                                            LocationInstanceName = "sdfsd"
+                                            LocationInstanceAbbrev =childeNameAbbrev+ childLocationType.LocationTypeNameAbbre+(y+1) 
                                         });
                                     }
                                     await _context.SaveChangesAsync();
@@ -671,11 +670,14 @@ namespace PrototypeWithAuth.Controllers
                                         subLocationViewModel.LocationInstances[i].Height = 1;
                                         subLocationViewModel.LocationInstances[i].Width = 1;
                                         subLocationViewModel.LocationInstances[i].LocationRoomInstance = await _context.LocationRoomInstances.Include(lr=>lr.LocationRoomType).Where(lr => lr.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefaultAsync();
-                                        var description = subLocationViewModel.LocationInstances[i].LocationRoomInstance.LocationRoomType.LocationAbbreviation;
+                                        var descriptionAbbrev = subLocationViewModel.LocationInstances[i].LocationRoomInstance.LocationRoomType.LocationAbbreviation;
                                         var roomByTypeCount = _context.LocationRoomInstances.Where(l => l.LocationRoomType == subLocationViewModel.LocationInstances[i].LocationRoomInstance.LocationRoomType && l.LocationRoomInstanceID != subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).Count();
-                                        description += roomByTypeCount + 1;
-
+                                        descriptionAbbrev += roomByTypeCount + 1;
+                                        var description = subLocationViewModel.LocationInstances[i].LocationRoomInstance.LocationRoomType.LocationRoomTypeDescription;
+                                        description += " " + (roomByTypeCount + 1);
                                         subLocationViewModel.LocationInstances[i].LocationInstanceName = description;
+                                        subLocationViewModel.LocationInstances[i].LocationInstanceAbbrev = childeNameAbbrev +descriptionAbbrev;
+                                        childeNameAbbrev = subLocationViewModel.LocationInstances[i].LocationInstanceAbbrev;
                                         _context.Add(subLocationViewModel.LocationInstances[i]);
                                         await _context.SaveChangesAsync();
                                     }
@@ -689,8 +691,10 @@ namespace PrototypeWithAuth.Controllers
                                     subLocationViewModel.LocationInstances[i].LabPart = await _context.LabParts.Where(lp => lp.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID).FirstOrDefaultAsync();
                                     var labPartName = subLocationViewModel.LocationInstances[i].LabPart.LabPartName;
                                     var labPartByTypeCount = _context.LocationInstances.Where(l => l.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID && l.LocationInstanceParentID== subLocationViewModel.LocationInstances[i].LocationInstanceParentID).Count();
-                                    labPartName += labPartByTypeCount + 1;
-
+                                    labPartName +=" "+ (labPartByTypeCount+ 1);
+                                    var labPartNameAbrev =childeNameAbbrev+ subLocationViewModel.LocationInstances[i].LabPart.LabPartNameAbbrev;
+                                    labPartNameAbrev += (labPartByTypeCount + 1);
+                                    childeNameAbbrev = labPartNameAbrev;
                                     subLocationViewModel.LocationInstances[i].LocationInstanceName = labPartName;
                                     _context.Add(subLocationViewModel.LocationInstances[i]);
                                     if (subLocationViewModel.LocationInstances.Count() > 2)

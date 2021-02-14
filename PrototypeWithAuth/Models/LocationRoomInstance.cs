@@ -12,5 +12,6 @@ namespace PrototypeWithAuth.Models
        public int LocationRoomInstanceID { get; set; }
        public int LocationRoomTypeID { get; set; }
        public LocationRoomType LocationRoomType { get; set; }
+       public String LocationRoomInstanceName { get; set; }
     }
 }
