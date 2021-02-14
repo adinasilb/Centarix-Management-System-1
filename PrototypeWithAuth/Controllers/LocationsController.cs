@@ -382,17 +382,7 @@ namespace PrototypeWithAuth.Controllers
                                                 Place = FullPlace
                                             };
                                             _context.Add(newSublocationInstance);
-                                            try
-                                            {
-                                                _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
-                                                transaction.Commit();
-                                            }
-                                            catch (Exception e)
-                                            {
-                                                //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
-                                                transaction.Rollback();
-                                                return RedirectToAction("Index");
-                                            }
+                                            await _context.SaveChangesAsync();
                                             placeholderInstanceIds[a].Add(newSublocationInstance.LocationInstanceID);
                                             namesPlaceholder[a].Add(newSublocationInstance.LocationInstanceName);
                                         }
@@ -413,16 +403,7 @@ namespace PrototypeWithAuth.Controllers
                             addLocationViewModel.LocationInstance.CompanyLocationNo = CompanyLocNo;
 
                             _context.Add(addLocationViewModel.LocationInstance);
-                            try
-                            {
-                                _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
-                            }
-                            catch (Exception e)
-                            {
-                                //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
-                                transaction.Rollback();
-                                return RedirectToAction("Index");
-                            }
+                            await   _context.SaveChangesAsync(); 
 
                             nameAbbrev = addLocationViewModel.LocationInstance.LocationInstanceName;
                             previousH = addLocationViewModel.LocationInstance.Height;
@@ -500,33 +481,18 @@ namespace PrototypeWithAuth.Controllers
                                                 Place = FullPlace
                                             };
                                             _context.Add(newSublocationInstance);
-                                            try
-                                            {
-                                                _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
-                                            }
-                                            catch (Exception e)
-                                            {
-                                                transaction.Rollback();
-                                                //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
-                                                return RedirectToAction("Index");
-                                            }
+                                            await _context.SaveChangesAsync(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
+                                            
+
                                             if (b == 0) //Testing Shelves
                                             {
                                                 if (subLocationViewModel.EmptyShelves80?.ContainsKey(x) == true && subLocationViewModel.EmptyShelves80[x])
                                                 {
                                                     newSublocationInstance.IsEmptyShelf = true;
                                                     _context.Update(newSublocationInstance);
-                                                    try
-                                                    {
-                                                        _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
-                                                        transaction.Commit();
-                                                    }
-                                                    catch (Exception e)
-                                                    {
-                                                        transaction.Rollback();
-                                                        //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
-                                                        return RedirectToAction("Index");
-                                                    }
+
+                                                    await   _context.SaveChangesAsync(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
+
                                                 }
                                                 else
                                                 {
@@ -560,17 +526,8 @@ namespace PrototypeWithAuth.Controllers
                             string nameAbbrev1 = addLocationViewModel.LocationInstance.LocationInstanceName;
 
                             _context.Add(addLocationViewModel.LocationInstance);
-                            try
-                            {
-                                _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
-                            }
-                            catch (Exception e)
-                            {
-                                transaction.Rollback();
-                                //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
-                                return RedirectToAction("Index");
-                            }
-
+                            await _context.SaveChangesAsync(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
+   
                             string typeName1 = _context.LocationTypes.Where(x => x.LocationTypeID == subLocationViewModel.LocationInstances[0].LocationTypeID)
                                     .FirstOrDefault().LocationTypeName.Substring(0, 1);
                             int typeId1 = subLocationViewModel.LocationInstances[0].LocationTypeID;
@@ -608,17 +565,7 @@ namespace PrototypeWithAuth.Controllers
                                         Place = FullPlace1
                                     };
                                     _context.Add(newSublocationInstance);
-                                    try
-                                    {
-                                        _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
-                                        transaction.Commit();
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        transaction.Rollback();
-                                        //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
-                                        return RedirectToAction("Index");
-                                    }
+                                    await _context.SaveChangesAsync(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
                                     placeholderInstanceIds[0].Add(newSublocationInstance.LocationInstanceID);
                                 }
                             }
@@ -652,7 +599,8 @@ namespace PrototypeWithAuth.Controllers
                                             LocationTypeID = subLocationViewModel.LocationInstances[i].LocationTypeID,
                                             Height = subLocationViewModel.LocationInstances[i].Height = 1,
                                             Width = subLocationViewModel.LocationInstances[i].Width = 1,
-                                            LocationInstanceAbbrev =childeNameAbbrev+ childLocationType.LocationTypeNameAbbre+(y+1) 
+                                            LocationInstanceAbbrev =childeNameAbbrev+ childLocationType.LocationTypeNameAbbre+(y+1) ,
+                                            IsEmptyShelf = true
                                         });
                                     }
                                     await _context.SaveChangesAsync();
@@ -696,6 +644,7 @@ namespace PrototypeWithAuth.Controllers
                                     labPartNameAbrev += (labPartByTypeCount + 1);
                                     childeNameAbbrev = labPartNameAbrev;
                                     subLocationViewModel.LocationInstances[i].LocationInstanceName = labPartName;
+                                    subLocationViewModel.LocationInstances[i].LocationInstanceAbbrev = labPartNameAbrev;
                                     _context.Add(subLocationViewModel.LocationInstances[i]);
                                     if (subLocationViewModel.LocationInstances.Count() > 2)
                                     {
@@ -719,16 +668,7 @@ namespace PrototypeWithAuth.Controllers
                             addLocationViewModel.LocationInstance.Width = subLocationViewModel.LocationInstances[0].Width;
                             addLocationViewModel.LocationInstance.LocationTypeID = subLocationViewModel.LocationTypeParentID;
                             _context.Add(addLocationViewModel.LocationInstance);
-                            try
-                            {
-                                _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
-                            }
-                            catch (Exception e)
-                            {
-                                transaction.Rollback();
-                                //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
-                                return RedirectToAction("Index");
-                            }
+                            await _context.SaveChangesAsync();
 
                             int companyLocationNo = _context.LocationInstances.OrderByDescending(li => li.CompanyLocationNo).First().CompanyLocationNo;
 
@@ -803,17 +743,7 @@ namespace PrototypeWithAuth.Controllers
                                                 Place = FullPlace
                                             };
                                             _context.Add(newSublocationInstance);
-                                            try
-                                            {
-                                                _context.SaveChanges(); //DO WE NEED THIS HERE OR CAN WE DO IT ONCE AT THE END
-                                                transaction.Commit();
-                                            }
-                                            catch (Exception e)
-                                            {
-                                                transaction.Rollback();
-                                                //DeleteLocationsIfFailed(addLocationViewModel.LocationInstance, placeholderInstanceIds);
-                                                return RedirectToAction("Index");
-                                            }
+                                            await _context.SaveChangesAsync();
                                             placeholderInstanceIds[z].Add(newSublocationInstance.LocationInstanceID);
                                             namesPlaceholder[z].Add(newSublocationInstance.LocationInstanceName);
                                         }

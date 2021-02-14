@@ -578,7 +578,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private string GetLocationInstanceNameBefore(LocationInstance locationInstance)
         {
-            var newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceName;
+            var newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceAbbrev;
             return newLIName;
         }
 

@@ -36,7 +36,7 @@
 
                         <div class="row">
                             <div class="form-group col-12 ">
-                                <label asp-for="LocationInstance.LocationInstanceName" class="addLocationFont mb-0"> </label> @*"Name"*@
+                                <label asp-for="LocationInstance.LocationInstanceName" class=" mb-0"> </label> @*"Name"*@
                                 <input asp-for="LocationInstance.LocationInstanceName" type="text" class="form-control-plaintext border-bottom" />
 
                             </div>
@@ -45,7 +45,7 @@
                             <div class="form-group col-12">
                                 @*<label asp-for="LocationTypesDepthOfZero" class="control-label">Type of storage</label>*@
                                 <div class=" form-control-plaintext p-0">
-                                    <select class="addLocationFont mdb-select custom select-dropdown form-control-plaintext " asp-for="LocationInstance.LocationTypeID" id="locationTypeDDL">
+                                    <select class=" mdb-select custom select-dropdown form-control-plaintext " asp-for="LocationInstance.LocationTypeID" id="locationTypeDDL">
                                         <option selected>Location Type</option>
                                         @foreach (var lp in Model.LocationTypesDepthOfZero)
                                         {
