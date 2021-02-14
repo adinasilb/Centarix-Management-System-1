@@ -221,7 +221,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else //we just want what is in inventory
             {
-                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3);
+                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID==7);
             }
             AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
             //now that the lists are created sort by vendor or subcategory
@@ -318,6 +318,7 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
+
                     }
                     break;
                 case AppUtility.PageTypeEnum.OperationsRequest:
@@ -862,7 +863,7 @@ namespace PrototypeWithAuth.Controllers
                 RemoveRequestSessions();
                 //why do we need this here?
                 requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
-                requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.Include(ps => ps.ParentCategory).FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategoryID);
+                requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.Include(ps => ps.ParentCategory).FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ProductSubcategoryID);
 
                 //in case we need to return to the modal view
                 //requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
@@ -870,21 +871,27 @@ namespace PrototypeWithAuth.Controllers
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
 
-                requestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
+                 requestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
                 requestItemViewModel.Request.CreationDate = DateTime.Now;
-                if (requestItemViewModel.Request.Currency == null)
+                var isInBudget = false;
+                if (requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID!=7)//is proprietry
                 {
-                    requestItemViewModel.Request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
+                    if (requestItemViewModel.Request.Currency == null)
+                    {
+                        requestItemViewModel.Request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
+                    }
+                    isInBudget = checkIfInBudget(requestItemViewModel.Request);
                 }
-
+          
                 using (var transaction = _context.Database.BeginTransaction())
                 {
                     try
                     {
-                        var isInBudget = checkIfInBudget(requestItemViewModel.Request);
+                        
                         await AddItemAccordingToOrderType(requestItemViewModel.Request, OrderType, isInBudget);
                         var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                         var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
+
                         if (requestItemViewModel.Comments != null)
                         {
                             var x = 1; //to name the comments in session
@@ -3802,6 +3809,9 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.OrderTypeEnum.RequestPriceQuote:
                             await RequestItem(newRequest, isInBudget);
                             break;
+                        case AppUtility.OrderTypeEnum.Save:
+                            await SaveItem(newRequest);
+                            break;
                     }
 
                 }
@@ -3832,6 +3842,27 @@ namespace PrototypeWithAuth.Controllers
                 newRequest.ParentQuote = new ParentQuote();
                 newRequest.ParentQuote.QuoteStatusID = 1;
                 newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote;
+                _context.Add(newRequest);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return true;
+        }
+        private async Task<bool> SaveItem(Request newRequest)
+        {
+
+            try
+            {
+                newRequest.RequestStatusID = 7;
+                newRequest.OrderType = AppUtility.OrderTypeEnum.Save;
                 _context.Add(newRequest);
                 await _context.SaveChangesAsync();
             }

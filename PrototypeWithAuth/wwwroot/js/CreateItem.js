@@ -63,6 +63,7 @@
                 $("." + category).prop("disabled", false);
                 $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
                 $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
+                $(".proprietryHidenCategory").attr("disabled", false);
             }
         })
     })

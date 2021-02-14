@@ -833,6 +833,11 @@ namespace PrototypeWithAuth.Data
                 {
                     RequestStatusID = 6,
                     RequestStatusDescription = "Approved" // request page, under order
+                },
+                new RequestStatus
+                {
+                    RequestStatusID = 7,
+                    RequestStatusDescription = "Saved To Inventory" 
                 }
              );
             modelBuilder.Entity<UnitParentType>().HasData

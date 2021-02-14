@@ -84,6 +84,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+   
             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID,
 new SelectList(
 Model.ParentCategories,
@@ -104,6 +105,7 @@ Model.ProductSubcategories,
 "ProductSubcategoryDescription"
 ), "Select Sub Category",
 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
+            <input type="hidden" asp-for="Request.Product.ProductSubcategory.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
             <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
         </div>
     </div>
