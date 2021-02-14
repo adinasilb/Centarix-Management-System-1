@@ -36,7 +36,7 @@
 
                         <div class="row">
                             <div class="form-group col-12 ">
-                                <label asp-for="LocationInstance.LocationInstanceName" class="addLocationFont mb-0"> </label> @*"Name"*@
+                                <label asp-for="LocationInstance.LocationInstanceName" class=" mb-0"> </label> @*"Name"*@
                                 <input asp-for="LocationInstance.LocationInstanceName" type="text" class="form-control-plaintext border-bottom" />
 
                             </div>
@@ -44,78 +44,58 @@
                         <div class="row">
                             <div class="form-group col-12">
                                 @*<label asp-for="LocationTypesDepthOfZero" class="control-label">Type of storage</label>*@
-                                <div class=" form-control-plaintext border-bottom p-0">
-                                    <span class="choose p-0"></span>
-                                    <div class="dropdown dropdown-main">
-                                        <div class="select ">
-                                            <span class="caret py-0">
-                                                ▼
-                                            </span>
-                                            <span class="addLocationFont">Select Type:</span>
+                                <div class=" form-control-plaintext p-0">
+                                    <select class=" mdb-select custom select-dropdown form-control-plaintext " asp-for="LocationInstance.LocationTypeID" id="locationTypeDDL">
+                                        <option selected>Location Type</option>
+                                        @foreach (var lp in Model.LocationTypesDepthOfZero)
+                                        {
+                                            <option value="@lp.LocationTypeID">@lp.LocationTypeName</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="LocationInstance.LocationTypeID" class="text-danger-centarix"></span>
 
-                                        </div>
-
-                                        <ul class="p-0 locationinstance dropdown-menu ">
-                                            @foreach (var locationType in Model.LocationTypesDepthOfZero)
-                                            {
-                                                <li onclick="LoadSublocations(this.id)" id="@locationType.LocationTypeID">
-                                                    @locationType.LocationTypeName
-                                                </li>
-                                            }
-                                        </ul>
-
-                                    </div>
                                 </div>
-                                <span asp-validation-for="LocationInstance.LocationTypeID" class="text-danger-centarix"></span>
-                                <input type="hidden" asp-for="LocationInstance.LocationTypeID" />
+
                             </div>
 
-                        </div>
 
-                        <div class="col-md-12 divSublocations mx-0 px-0">
+                        </div>
+                        <div class="row divSublocations mx-0 px-0">
                         </div>
                         <br />
-                    </div>
-
-                    <div class="modal-footer-no">
-                        <div class="text-center modal-footer-mt">
-                            <input id="submitAddLocation" type="submit" value="Save" asp-action="AddLocation" class="lab-man-background-color custom-button custom-button-font open-loading between-button-margin" />@*style="margin-right:11rem;"*@
-                            @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
-                                {
-                                    <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
-                                }*@
-                            <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button "  onclick="$(this).closest('.modal').modal('hide');"/>
+                        <div class="modal-footer-no">
+                            <div class="text-center modal-footer-mt">
+                                <input id="submitAddLocation" type="submit" value="Save" asp-action="AddLocation" class="lab-man-background-color custom-button custom-button-font open-loading between-button-margin" />@*style="margin-right:11rem;"*@
+                                @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
+                {
+                    <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
+                }*@
+                                <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button " onclick="$(this).closest('.modal').modal('hide');" />
+                            </div>
+                            <br />
                         </div>
-                        <br />
                     </div>
-                </div>
             </form>
         </div>
     </div>
 </div>
 
 <script>
-
-    function LoadSublocations(str) {
-        //$("#loading-content").load("dataSearch.php?" + str, hideLoader);
-        console.log("load sublocations, str: " + str);
-        var id = parseInt(str);
+    $("#locationTypeDDL").materialSelect();
+    $("#locationTypeDDL").change(function() {    
+        var id = $(this).val();
         var myDiv = $(".divSublocations");
-        //var selectedId = $(this).children("option:selected").val();
-        //console.log("selectedId: " + selectedId);
         $.ajax({
-            //IMPORTANT: ADD IN THE ID
             async: true,
-            url: "/Locations/SubLocation/?ParentLocationTypeID=" + str + "",
+            url: "/Locations/SubLocation/?ParentLocationTypeID=" + id + "",
             type: 'GET',
             cache: true,
             context: myDiv,
             success: function (result) {
                 this.html(result);
-                $('.mdb-select').materialSelect();
+                $('.sub-select').materialSelect();
                 $("input[type='hidden']").remove();
-                //$(".mdb-select-empty").materialSelect();
             }
         });
-    }
+    });
 </script>

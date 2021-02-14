@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210211071050_AddLocationTypeNameAbbrev")]
+    partial class AddLocationTypeNameAbbrev
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1471,9 +1473,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("LabPartName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LabPartNameAbbrev")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("LabPartID");
 
                     b.ToTable("LabParts");
@@ -1483,36 +1482,31 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             LabPartID = 1,
                             HasShelves = true,
-                            LabPartName = "Closet",
-                            LabPartNameAbbrev = "C"
+                            LabPartName = "Closet"
                         },
                         new
                         {
                             LabPartID = 2,
                             HasShelves = true,
-                            LabPartName = "Glass Closet",
-                            LabPartNameAbbrev = "G"
+                            LabPartName = "Glass Closet"
                         },
                         new
                         {
                             LabPartID = 3,
                             HasShelves = false,
-                            LabPartName = "Table",
-                            LabPartNameAbbrev = "T"
+                            LabPartName = "Table"
                         },
                         new
                         {
                             LabPartID = 4,
                             HasShelves = false,
-                            LabPartName = "Drawer",
-                            LabPartNameAbbrev = "D"
+                            LabPartName = "Drawer"
                         },
                         new
                         {
                             LabPartID = 5,
                             HasShelves = false,
-                            LabPartName = "Shelf",
-                            LabPartNameAbbrev = "S"
+                            LabPartName = "Shelf"
                         });
                 });
 
@@ -1540,9 +1534,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("LabPartID")
                         .HasColumnType("int");
-
-                    b.Property<string>("LocationInstanceAbbrev")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LocationInstanceName")
                         .HasColumnType("nvarchar(max)");
@@ -1585,9 +1576,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("LocationRoomInstanceName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("LocationRoomTypeID")
                         .HasColumnType("int");
 
@@ -1601,43 +1589,36 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             LocationRoomInstanceID = 1,
-                            LocationRoomInstanceName = "Laboratory 1",
                             LocationRoomTypeID = 1
                         },
                         new
                         {
                             LocationRoomInstanceID = 2,
-                            LocationRoomInstanceName = "Laboratory 2",
                             LocationRoomTypeID = 1
                         },
                         new
                         {
                             LocationRoomInstanceID = 3,
-                            LocationRoomInstanceName = "Tissue Culture 1",
                             LocationRoomTypeID = 2
                         },
                         new
                         {
                             LocationRoomInstanceID = 4,
-                            LocationRoomInstanceName = "Equipment Room 1",
                             LocationRoomTypeID = 3
                         },
                         new
                         {
                             LocationRoomInstanceID = 5,
-                            LocationRoomInstanceName = "Refrigerator Room 1",
                             LocationRoomTypeID = 4
                         },
                         new
                         {
                             LocationRoomInstanceID = 6,
-                            LocationRoomInstanceName = "Washing Room 1",
                             LocationRoomTypeID = 5
                         },
                         new
                         {
                             LocationRoomInstanceID = 7,
-                            LocationRoomInstanceName = "Storage Room 1",
                             LocationRoomTypeID = 6
                         });
                 });
@@ -1669,7 +1650,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             LocationRoomTypeID = 2,
-                            LocationAbbreviation = "TC",
+                            LocationAbbreviation = "",
                             LocationRoomTypeDescription = "Tissue Culture"
                         },
                         new
@@ -2876,9 +2857,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("Amount")
-                        .HasColumnType("int");
-
                     b.Property<long?>("AmountWithInLocation")
                         .HasColumnType("bigint");
 
@@ -2947,9 +2925,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("ParentRequestID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Passage")
                         .HasColumnType("int");
 
                     b.Property<int?>("PaymentStatusID")

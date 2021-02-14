@@ -21,6 +21,7 @@ namespace PrototypeWithAuth.Models
       
         [Display(Name = "Location")]
         public string LocationInstanceName { get; set; }
+        public string LocationInstanceAbbrev { get; set; }
         public string Place { get; set; }
         public bool IsEmptyShelf { get; set; }
         public bool ContainsItems { get; set; }
@@ -31,6 +32,7 @@ namespace PrototypeWithAuth.Models
         public LocationRoomInstance LocationRoomInstance { get; set; }
         public int? LabPartID { get; set; }
         public LabPart LabPart { get; set; }
+        public int LocationNumber { get; set; }
 
     }
 }

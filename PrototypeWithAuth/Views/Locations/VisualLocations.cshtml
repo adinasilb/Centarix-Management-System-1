@@ -48,7 +48,14 @@ else
                         <table class="table visual-locations-table @is20Class float-right border mt-0">
                             @{
                                 int z = -1;
+                                var is25 = false;
+                                if (Model.ChildrenLocationInstances[0].LocationTypeID >= 500)
+                                {
+                                    is25 = true;
+                                }
+
                             }
+
                             @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
                             {
                                 <tr>
@@ -72,15 +79,13 @@ else
                                                 innerHtml = Model.ChildrenLocationInstances[z].Place;
                                             }
                                         }
-                                        var is25Class = "";
-                                        if (Model.ParentLocationInstance.Width > 3)
+
+                                        if(is25)
                                         {
-                                            is25Class = "is25";
+                                            innerHtml = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
                                         }
 
-
-
-                                        <td class="@backgroundClass p-0 @is25Class"><div class="visual-locations-div location-visual-font">@innerHtml</div></td>
+                                        <td class="@backgroundClass p-0"><div class="visual-locations-div location-visual-font">@innerHtml</div></td>
                                         @*<td class="border">
                             @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
                             {

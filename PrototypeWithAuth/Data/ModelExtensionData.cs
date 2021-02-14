@@ -1176,6 +1176,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 101,
                     LocationTypeName = "Rack",
                     LocationTypePluralName = "Racks",
+                    LocationTypeNameAbbre = "R",
                     LocationTypeParentID = 100,
                     LocationTypeChildID = 102,
                     Depth = 1
@@ -1185,6 +1186,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 102,
                     LocationTypeName = "Box",
                     LocationTypePluralName = "Boxes",
+                    LocationTypeNameAbbre = "B",
                     LocationTypeParentID = 101,
                     LocationTypeChildID = 103,
                     Depth = 2
@@ -1193,6 +1195,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 103,
                     LocationTypeName = "Box Unit",
+                    LocationTypeNameAbbre = "B",
                     LocationTypePluralName = "Box Units",
                     LocationTypeParentID = 102,
                     Limit = 1,
@@ -1211,6 +1214,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 201,
                     LocationTypeName = "Floor",
                     LocationTypePluralName = "Floors",
+                    LocationTypeNameAbbre = "F",
                     LocationTypeParentID = 200,
                     LocationTypeChildID = 202,
                     Depth = 1
@@ -1220,6 +1224,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 202,
                     LocationTypeName = "Rack",
                     LocationTypePluralName = "Racks",
+                    LocationTypeNameAbbre = "R",
                     LocationTypeParentID = 201,
                     LocationTypeChildID = 203,
                     Depth = 2
@@ -1229,6 +1234,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 203,
                     LocationTypeName = "Shelf",
                     LocationTypePluralName = "Shelves",
+                    LocationTypeNameAbbre = "S",
                     LocationTypeParentID = 202,
                     LocationTypeChildID = 204,
                     Depth = 3
@@ -1238,6 +1244,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 204,
                     LocationTypeName = "Box",
                     LocationTypePluralName = "Boxes",
+                    LocationTypeNameAbbre = "B",
                     LocationTypeParentID = 203,
                     LocationTypeChildID = 205,
                     Depth = 4
@@ -1247,6 +1254,7 @@ namespace PrototypeWithAuth.Data
                        LocationTypeID = 205,
                        LocationTypeName = "Box Unit",
                        LocationTypePluralName = "Box Units",
+                       LocationTypeNameAbbre = "B",
                        LocationTypeParentID = 204,
                        Limit = 1,
                        Depth = 5
@@ -1264,6 +1272,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 301,
                     LocationTypeName = "Shelf",
                     LocationTypePluralName = "Shelves",
+                    LocationTypeNameAbbre = "S",
                     LocationTypeParentID = 300,
                     Depth = 1
                 },
@@ -1280,6 +1289,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 401,
                     LocationTypeName = "Shelf",
                     LocationTypePluralName = "Shelves",
+                    LocationTypeNameAbbre = "S",
                     LocationTypeParentID = 400,
                     Depth = 1
                 },
@@ -1304,7 +1314,7 @@ namespace PrototypeWithAuth.Data
                  {
                      LocationTypeID = 502,
                      LocationTypeName = "Lab Part",
-                     LocationTypePluralName = "Lab Part",
+                     LocationTypePluralName = "Lab Parts",
                      LocationTypeParentID = 501,
                      LocationTypeChildID = 503,
                      Depth = 2
@@ -1314,6 +1324,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 503,
                     LocationTypeName = "Section",
                     LocationTypePluralName = "Sections",
+                    LocationTypeNameAbbre ="S",
                     LocationTypeParentID = 502,
                     Depth = 3
                 }
@@ -1329,7 +1340,7 @@ namespace PrototypeWithAuth.Data
                     {
                         LocationRoomTypeID = 2,
                         LocationRoomTypeDescription = "Tissue Culture",
-                        LocationAbbreviation = ""
+                        LocationAbbreviation = "TC"
                     },
                     new LocationRoomType
                     {
@@ -1360,50 +1371,50 @@ namespace PrototypeWithAuth.Data
                        new LocationRoomInstance
                        {
                            LocationRoomInstanceID = 1,
-                           LocationNumber = 1,
-                           LocationRoomTypeID = 1
+                           LocationRoomTypeID = 1,
+                           LocationRoomInstanceName = "Laboratory 1"
 
                        },
                        new LocationRoomInstance
                        {
                            LocationRoomInstanceID = 2,
-                           LocationNumber = 2,
-                           LocationRoomTypeID = 1
+                           LocationRoomTypeID = 1,
+                           LocationRoomInstanceName = "Laboratory 2"
 
                        },
                        new LocationRoomInstance
                        {
                            LocationRoomInstanceID = 3,
-                           LocationNumber = 1,
-                           LocationRoomTypeID = 2
+                           LocationRoomTypeID = 2,
+                           LocationRoomInstanceName = "Tissue Culture 1"
 
                        },
                         new LocationRoomInstance
                         {
                             LocationRoomInstanceID = 4,
-                            LocationNumber = 1,
-                            LocationRoomTypeID = 3
+                            LocationRoomTypeID = 3,
+                            LocationRoomInstanceName = "Equipment Room 1"
 
                         },
                         new LocationRoomInstance
                         {
                             LocationRoomInstanceID = 5,
-                            LocationNumber = 1,
-                            LocationRoomTypeID = 4
+                            LocationRoomTypeID = 4,
+                            LocationRoomInstanceName = "Refrigerator Room 1"
 
                         },
                         new LocationRoomInstance
                         {
                             LocationRoomInstanceID = 6,
-                            LocationNumber = 1,
-                            LocationRoomTypeID = 5
+                            LocationRoomTypeID = 5,
+                            LocationRoomInstanceName = "Washing Room 1"
 
                         },
                         new LocationRoomInstance
                         {
                             LocationRoomInstanceID = 7,
-                            LocationNumber = 1,
-                            LocationRoomTypeID = 6
+                            LocationRoomTypeID = 6,
+                            LocationRoomInstanceName = "Storage Room 1"
 
                         }
                  );
@@ -1412,27 +1423,32 @@ namespace PrototypeWithAuth.Data
                     {
                         LabPartID = 1,
                         LabPartName = "Closet" ,
+                        LabPartNameAbbrev ="C",
                         HasShelves = true
                     },
                     new LabPart
                     {
                         LabPartID = 2,
                         LabPartName = "Glass Closet",
+                        LabPartNameAbbrev = "G",
                         HasShelves = true
                     },
                     new LabPart
                     {
                         LabPartID = 3,
+                        LabPartNameAbbrev = "T",
                         LabPartName = "Table",
                     },
                     new LabPart
                     {
                         LabPartID = 4,
+                        LabPartNameAbbrev = "D",
                         LabPartName = "Drawer",
                     },
                     new LabPart
                     {
                         LabPartID = 5,
+                        LabPartNameAbbrev = "S",
                         LabPartName = "Shelf"
                     }
                );
