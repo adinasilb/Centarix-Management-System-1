@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
@@ -20,6 +21,8 @@ namespace PrototypeWithAuth.ViewModels
         //public ApplicationUser CurrentUser { get; set; }
         public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
         public List<Request> RequestsByProduct { get; set; }
+        public ParentCategory ParentCategory { get; set; }
+        public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public IEnumerable<Vendor> Vendors { get; set; }
         public IEnumerable<RequestStatus> RequestStatuses { get; set; }
@@ -30,24 +33,26 @@ namespace PrototypeWithAuth.ViewModels
         public bool Paid { get; set; }
         public bool PayNow { get; set; }
         public bool PayLater { get; set; }
-        public List<string> OrderFileStrings { get; set; }
-        public List<string> InvoiceFileStrings { get; set; }
-        public List<string> ShipmentFileStrings { get; set; }
-        public List<string> QuoteFileStrings { get; set; }
-        public List<string> InfoFileStrings { get; set; }
-        public List<string> PictureFileStrings { get; set; }
-        public List<string> ReturnFileStrings { get; set; }
-        public List<string> CreditFileStrings { get; set; }
+
+        public List<DocumentFolder> DocumentsInfo { get; set; }
+        //public List<string> OrderFileStrings { get; set; }
+        //public List<string> InvoiceFileStrings { get; set; }
+        //public List<string> ShipmentFileStrings { get; set; }
+        //public List<string> QuoteFileStrings { get; set; }
+        //public List<string> InfoFileStrings { get; set; }
+        //public List<string> PictureFileStrings { get; set; }
+        //public List<string> ReturnFileStrings { get; set; }
+        //public List<string> CreditFileStrings { get; set; }
 
         //The PDFs that are passed into the controller:
-        public List<IFormFile> OrderFiles { get; set; } //this needs to be changed b/c it is the pdf created by the order
-        public List<IFormFile> InvoiceFiles { get; set; }
-        public List<IFormFile> ShipmentFiles { get; set; }
-        public List<IFormFile> QuoteFiles { get; set; }
-        public List<IFormFile> InfoFiles { get; set; }
-        public List<IFormFile> PictureFiles { get; set; }
-        public List<IFormFile> ReturnFiles { get; set; }
-        public List<IFormFile> CreditFiles { get; set; }
+        //public List<IFormFile> OrderFiles { get; set; } //this needs to be changed b/c it is the pdf created by the order
+        //public List<IFormFile> InvoiceFiles { get; set; }
+        //public List<IFormFile> ShipmentFiles { get; set; }
+        //public List<IFormFile> QuoteFiles { get; set; }
+        //public List<IFormFile> InfoFiles { get; set; }
+        //public List<IFormFile> PictureFiles { get; set; }
+        //public List<IFormFile> ReturnFiles { get; set; }
+        //public List<IFormFile> CreditFiles { get; set; }
 
 
         public FileInfo[] OrderFilesFound { get; set; }

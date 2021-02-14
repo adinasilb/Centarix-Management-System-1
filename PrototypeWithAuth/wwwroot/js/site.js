@@ -39,13 +39,13 @@ $(function () {
 	});
 
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
-	$("#parentlist").change(function () {
+	$("#parentlist").off("change").on("change", function () {
 		$.fn.parentListChange();
 	});
 
-	$('.modal').on('change', '#parentlist', function () {
-		$.fn.parentListChange();
-	});
+	//$('.modal').off("change").on('change', '#parentlist', function () {
+	//	$.fn.parentListChange();
+	//});
 
 
 	$.fn.parentListChange = function () {
@@ -56,6 +56,7 @@ $(function () {
 		console.log("url: " + url);
 
 		$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+			console.log(" in json")
 			var firstitem1 = '<option value=""> Select Subcategory</option>';
 			$("#sublist").empty();
 			$("#sublist").append(firstitem1);
@@ -1980,6 +1981,16 @@ $(function () {
 		}
 		//}
 	});
+	$.fn.DisableMaterialSelect = function (selectID, dataActivates) {
+		var selectedIndex = $('#' + dataActivates).find(".active").index();
+		selectedIndex = selectedIndex - 1;
+		$(selectID).destroyMaterialSelect();
+		$(selectID).prop("disabled", true);
+		$(selectID).prop('selectedIndex', selectedIndex);
+		$(selectID).attr("disabled", true)
+		$('[data-activates="' + dataActivates + '"]').prop('disabled', true);
+		$(selectID).materialSelect();
+    }
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
@@ -2150,6 +2161,38 @@ $(function () {
 		});
 	})
 
+	$(".save-item").on("click", function (e) {
+		e.preventDefault();
+		var url = "";
+		if ($(this).hasClass("side-menu")) {
+			url = $(this).parent("a").attr("href");
+		}
+		else {
+			var url = $(this).attr("href")
+		}
+		$itemurl = "/Requests/ConfirmExit/?url=" + url;
+		console.log($itemurl);
+		$.ajax({
+			async: true,
+			url: $itemurl,
+			type: 'GET',
+			cache: true,
+			success: function (data) {
+				$("#loading").hide();
+				var modal = $(data);
+				$('body').append(modal);
+				$(".confirm-exit-modal").modal({
+					backdrop: false,
+					keyboard: false,
+				});
+				//shows the modal
+				$(".confirm-exit-modal").modal('show');
+				$(".modal-open-state").attr("text", "open");
+			}
+
+		});
+
+	})
 
 	//$('body').on('click', '.callIndexPartial', function () {
 	//	var url = $(this).attr('url');

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -230,6 +230,7 @@
 
 
   <ItemGroup>
+    <Folder Include="Views\Operations\" />
     <Folder Include="wwwroot\files\287\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />

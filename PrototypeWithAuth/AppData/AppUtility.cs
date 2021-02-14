@@ -67,7 +67,7 @@ namespace PrototypeWithAuth.AppData
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual } //Listed in the site.js (if you change here must change there)
+        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map } //Listed in the site.js (if you change here must change there)
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum {  NIS, USD }
@@ -87,7 +87,7 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
-        public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
+        public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietry, Reusables, Equipment, Operation, Cells}
         public enum RequestModalType { Create, Edit, Summary}
         public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased}
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
@@ -410,6 +410,44 @@ namespace PrototypeWithAuth.AppData
             return amountColumn;
         }
 
+        public static string GetDocumentIcon(RequestFolderNamesEnum folderName)
+        {
+            var iconClass = "";
+            switch (folderName)
+            {
+                case RequestFolderNamesEnum.Quotes:
+                    iconClass = "icon-centarix-icons-03";
+                    break;
+                case RequestFolderNamesEnum.Orders:
+                    iconClass = "icon-chrome_reader_mode-24px";
+                    break;
+                case RequestFolderNamesEnum.Invoices:
+                    iconClass = "icon-book-24px";
+                    break;
+                case RequestFolderNamesEnum.Shipments:
+                    iconClass = "icon-local_shipping-24px";
+                    break;
+                case RequestFolderNamesEnum.Info:
+                    iconClass = "icon-info-24px-2";
+                    break;
+                case RequestFolderNamesEnum.Pictures:
+                    iconClass = "icon-camera_alt-24px";
+                    break;
+                case RequestFolderNamesEnum.Returns:
+                    iconClass = "icon-remove_shopping_cart-24px";
+                    break;
+                case RequestFolderNamesEnum.Credits:
+                    iconClass = "icon-insert_drive_file-24px-1";
+                    break;
+                case RequestFolderNamesEnum.S:
+                    iconClass = "icon-chrome_reader_mode-24px";
+                    break;
+                case RequestFolderNamesEnum.Map:
+                    iconClass = "icon-chrome_reader_mode-24px";
+                    break;
+            }
+            return iconClass;
+        }
         public static string GetEmployeeCentarixID(IEnumerable<CentarixID> centarixIDs)
         {
             string centarixID = "";

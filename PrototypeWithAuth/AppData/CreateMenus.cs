@@ -473,11 +473,10 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Add Item",
                 Controller = "Requests",
-                Action = "CreateModalView",
+                Action = "AddItemView",
                 RouteValues = new RouteValueDictionary()
                 {
-                    { "PageType", pageType },
-                    { "CategoryType", categoryType }
+                    { "PageType", AppUtility.PageTypeEnum.RequestSummary}
                 },
                 Classes = menuClass,
                 IconName = "icon-add_circle_outline-24px1"

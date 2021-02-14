@@ -28,7 +28,7 @@
                 @{await Html.RenderPartialAsync("_LocationTab", Model); }
             </div>
         }
-        @if (!Model.isRequestQuote)
+        @if (!Model.Request.Product.ProductSubcategory.ParentCategory.isProprietary)
         {
             <div id="price" class="tab-pane fade ">
                 @{await Html.RenderPartialAsync("_PriceTab", Model); }

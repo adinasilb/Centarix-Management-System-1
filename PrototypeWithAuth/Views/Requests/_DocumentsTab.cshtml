@@ -13,150 +13,64 @@
 }
 
 <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-
 <div class="row document-margin-bottom">
-    <div class=" document-margin">
-        @{
-            var filterClass = "opac87";
-            if (Model.QuoteFileStrings != null && Model.QuoteFileStrings.Count > 0)
-            {
-                filterClass = "order-inv-filter";
+    @for(int i =0; i<4; i++)
+    {
+        if(i < Model.DocumentsInfo?.Count)
+        {
+            var folder = Model.DocumentsInfo?[i];
+        <div class=" @(i == 3 ? "" : "document-margin")">
+            @{
+                var filterClass = "opac87";
+                if (folder.FileStrings != null && folder.FileStrings.Count > 0)
+                {
+                    filterClass = "order-inv-filter";
+                }
             }
-        }
-        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
-            <div class="card document-border ">
-                <div class="document-card text-center">
-                    <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                </div>
+            <a href="" class="open-document-modal" data-string="@folder.FolderName.ToString()" data-id="@Model.Request.RequestID" id="@folder.FolderName.ToString()" data-val="@true">
+                <div class="card document-border ">
+                    <div class="document-card text-center">
+                        <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                    </div>
 
-            </div>
-        </a>
-        <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
-    </div>
-    <div class=" document-margin">
-        @{
-            filterClass = "opac87";
-            if (Model.OrderFileStrings != null && Model.OrderFileStrings.Count > 0)
-            {
-                filterClass = "order-inv-filter";
-            }
-        }
-        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true">
-            <div class="card document-border">
-                <div class="document-card text-center">
-                    <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                 </div>
-            </div>
-        </a>
-        <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
-    </div>
-    <div class=" document-margin ">
-        @{
-            filterClass = "opac87";
-            if (Model.InvoiceFileStrings != null && Model.InvoiceFileStrings.Count > 0)
-            {
-                filterClass = "order-inv-filter";
-            }
+            </a>
+            <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
+        </div>
         }
-        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@true">
-            <div class="card document-border">
-                <div class=" document-card text-center">
-                    <i class="icon-book-24px @filterClass document-icon" alt="order" style="font-size:@fontSize;"></i>
-                </div>
+    }
 
-            </div>
-        </a>
-        <label class="control-label text-center text document-text-margin" style="width:100%;">Invoice</label>
-    </div>
-    <div class="">
-        @{
-            filterClass = "opac87";
-            if (Model.ShipmentFileStrings != null && Model.ShipmentFileStrings.Count > 0)
-            {
-                filterClass = "order-inv-filter";
-            }
-        }
-        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Shipments.ToString()" data-val="@true">
-            <div class="card document-border">
-                <div class="document-card text-center">
-                    <i class="icon-local_shipping-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                </div>
-
-            </div>
-        </a>
-        <label class="control-label text-center text document-text-margin" style="width:100%;">Shipment</label>
-    </div>
 </div>
+@if (Model.DocumentsInfo.Count > 4)
+{
 <div class="row document-margin-bottom">
-    <div class=" document-margin">
-        @{
-            filterClass = "opac87";
-            if (Model.InfoFileStrings != null && Model.InfoFileStrings.Count > 0)
-            {
-                filterClass = "order-inv-filter";
+    @for (int i = 4; i < Model.DocumentsInfo.Count; i++)
+    {
+        if (i < Model.DocumentsInfo?.Count)
+        {
+            var folder = Model.DocumentsInfo[i];
+        <div class=" @(i == 7 ? "" : "document-margin")">
+            @{
+                var filterClass = "opac87";
+                if (folder.FileStrings != null && folder.FileStrings.Count > 0)
+                {
+                    filterClass = "order-inv-filter";
+                }
             }
-        }
-        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Info.ToString()" data-val="@true">
-            <div class="card document-border">
-                <div class="document-card text-center">
-                    <i class="icon-info-24px-2 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+            <a href="" class="open-document-modal" data-string="@folder.FolderName.ToString()" data-id="@Model.Request.RequestID" id="@folder.FolderName.ToString()" data-val="@true">
+                <div class="card document-border ">
+                    <div class="document-card text-center">
+                        <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                    </div>
+
                 </div>
-            </div>
-        </a>
-        <label class="control-label text-center text document-text-margin" style="width:100%;">Info</label>
-    </div>
-    <div class=" document-margin">
-        @{
-            filterClass = "opac87";
-            if (Model.PictureFileStrings != null && Model.PictureFileStrings.Count > 0)
-            {
-                filterClass = "order-inv-filter";
-            }
+            </a>
+            <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
+        </div>
         }
-        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Pictures.ToString()" data-val="@true">
-            <div class="card document-border">
-                <div class="document-card text-center">
-                    <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                </div>
-            </div>
-        </a>
-        <label class="control-label text-center text document-text-margin" style="width:100%;">Picture</label>
-    </div>
-    <div class=" document-margin">
-        @{
-            filterClass = "opac87";
-            if (Model.ReturnFileStrings != null && Model.ReturnFileStrings.Count > 0)
-            {
-                filterClass = "order-inv-filter";
-            }
-        }
-        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Returns.ToString()" data-val="@true">
-            <div class="card document-border">
-                <div class="document-card text-center">
-                    <i class="icon-remove_shopping_cart-24px document-icon @filterClass" alt="order" style="font-size:@fontSize"></i>
-                </div>
-            </div>
-        </a>
-        <label class="control-label text-center text  document-text-margin" style="width:100%;">Return</label>
-    </div>
-    <div class="">
-        @{
-            filterClass = "opac87";
-            if (Model.CreditFileStrings != null && Model.CreditFileStrings.Count > 0)
-            {
-                filterClass = "order-inv-filter";
-            }
-        }
-        <a href="" class="open-document-modal" data-string="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-id="@Model.Request.RequestID" id="@AppUtility.RequestFolderNamesEnum.Credits.ToString()" data-val="@true">
-            <div class="card document-border">
-                <div class="document-card text-center">
-                    <i class="icon-insert_drive_file-24px-1 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                </div>
-            </div>
-        </a>
-        <label class="control-label text-center text document-text-margin" style="width:100%;">Credit</label>
-    </div>
+    }
 </div>
+}
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/site.js"></script>

@@ -1,5 +1,6 @@
 ﻿$(function () {
-    $("#submitCategory").click(function (e) {
+    $("#submitCategory").on("click", function (e) {
+        console.log("submit category")
         e.preventDefault();
         $("#myForm").data("validator").settings.ignore = "";
         var valid = $("#myForm").valid();
@@ -13,10 +14,7 @@
 
         }
 		else {
-            var categoryId = $("#categorylist").val();
-            var isRequestQuote = $("#isRequestQuote").is(":checked");
-            $(".top-menu").addClass("save-item");
-            $(".side-menu").addClass("save-item");
+            //var categoryId = $("#categorylist").val();
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
@@ -25,8 +23,9 @@
 				processData: false,
 				contentType: false,
                 async: true,
-                url: "/Requests/CreateItemTabs/?parentCategoryId=" + categoryId + "&isRequestQuote=" + isRequestQuote,
-				type: 'GET',
+                url: "/Requests/CreateItemTabs",
+                type: 'GET',
+                data: formData,
 				cache: false,
 				success: function (data) {
                     $(".outer-partial").html(data);
@@ -41,38 +40,33 @@
 
         return false;
     });
-    $(".save-item").on("click", function (e) {
-        e.preventDefault();
-        var url = "";
-        if ($(this).hasClass("side-menu")) {
-            url = $(this).parent("a").attr("href");
-        }
-        else {
-            var url = $(this).attr("href")
-        }
-        $itemurl = "/Requests/ConfirmExit/?url=" + url;
-        console.log($itemurl);
+    $("#sublist").off("change").on("change", function (e) {
+        console.log("subcategory change")
+        var subcategoryID = $("#sublist").val()
+        var pageType = $("#masterPageType").val()
+        //var formData = new FormData($("#myForm")[0]);
+        //console.log(...formData)
         $.ajax({
+            //processData: true,
+            //contentType: true,
             async: true,
-            url: $itemurl,
+            url: "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType,
             type: 'GET',
-            cache: true,
+            cache: false,
+            //data: formData,
             success: function (data) {
+                $(".outer-partial").html(data);
                 $("#loading").hide();
-                var modal = $(data);
-                $('body').append(modal);
-                $(".confirm-exit-modal").modal({
-                    backdrop: false,
-                    keyboard: false,
-                });
-                //shows the modal
-                $(".confirm-exit-modal").modal('show');
-                $(".modal-open-state").attr("text", "open");
+                var category = $("#categoryDescription").val();
+                console.log("category "+ category)
+                $("." + category).removeClass("d-none");
+                $("." + category).prop("disabled", false);
+                $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
+                $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
             }
-
-        });
-
+        })
     })
+   
 	$(".categoryForm").validate({
 		rules: {
 			"SelectedCategory": "required"

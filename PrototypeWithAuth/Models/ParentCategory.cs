@@ -17,7 +17,7 @@ namespace PrototypeWithAuth.Models
         public string ParentCategoryDescription { get; set; }
         public string ParentCategoryDescriptionEnum { get
             {
-                return ParentCategoryDescription.Replace(" ", "");
+                return ParentCategoryDescription?.Replace(" ", "");
             } }
 
 

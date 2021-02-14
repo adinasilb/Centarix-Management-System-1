@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -130,7 +132,29 @@ namespace PrototypeWithAuth.Controllers
             return offDaysLeft;
         }
 
-
+        public void GetExistingFileStrings(RequestItemViewModel requestItem, AppUtility.RequestFolderNamesEnum folderName, string uploadFolderParent)
+        {
+            string uploadFolder = Path.Combine(uploadFolderParent, folderName.ToString());
+            DocumentFolder folder = new DocumentFolder()
+            {
+                FolderName = folderName
+            };
+            if (Directory.Exists(uploadFolder))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder);
+                //searching for the partial file name in the directory
+                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                folder.FileStrings = new List<string>();
+                foreach (var orderfile in orderfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+                    folder.FileStrings.Add(newFileString);
+                }
+            }
+            folder.Icon = AppUtility.GetDocumentIcon(folderName);
+            
+            requestItem.DocumentsInfo.Add(folder);
+        }
 
         public void RemoveRequestSessions()
         {

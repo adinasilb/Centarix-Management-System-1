@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.ChooseCategoryViewModel
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
 @*@inject UserManager<ApplicationUser> UserManager*@
 @{
     ViewData["Title"] = "Add Item";
@@ -11,9 +11,9 @@
 @inject UserManager<ApplicationUser> _userManager
 
 <div class="col-12 create-user mx-auto on-form-modal order-inv-form" style="width: 60%">
-    <div class="on-form-modal-border" >
+    <div class="on-form-modal-border">
         <div class="outer-partial">
-            @{await Html.RenderPartialAsync("ChooseCategory", Model); }
+            @{await Html.RenderPartialAsync("CreateItemTabs", Model); }
         </div>
     </div>
 </div>

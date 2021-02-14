@@ -34,6 +34,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Text.Json;
 using Newtonsoft.Json;
+using PrototypeWithAuth.AppData.UtilityModels;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -835,12 +836,21 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            ChooseCategoryViewModel categoryViewModel = new ChooseCategoryViewModel()
+            
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
+            var categoryType = 1;
+            if (PageType.ToString().StartsWith("Operation"))
             {
-                ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1 && !pc.isProprietary).ToListAsync()
-            };
+                categoryType = 2;
+            }
+            requestItemViewModel = await FillRequestItemViewModel(categoryType);
+            if (PageType == AppUtility.PageTypeEnum.RequestSummary)
+            {
+                requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1 && pc.isProprietary).ToListAsync();
+            }
+            requestItemViewModel.PageType = PageType;
 
-            return View(categoryViewModel);
+            return View(requestItemViewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -866,6 +876,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     requestItemViewModel.Request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
                 }
+
                 using (var transaction = _context.Database.BeginTransaction())
                 {
                     try
@@ -961,16 +972,49 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> CreateItemTabs(int parentCategoryId, bool isRequestQuote, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+        public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-            var parentcategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == parentCategoryId).FirstOrDefaultAsync();
-            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == parentCategoryId).ToListAsync();
-            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
+            var categoryType = 1;
+            if (PageType.ToString().StartsWith("Operations"))
+            {
+                categoryType = 2;
+            }
+            
+            RequestItemViewModel requestItemViewModel = await FillRequestItemViewModel(categoryType, productSubCategoryId);
+            requestItemViewModel.PageType = PageType;
+            
+            //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+
+            return PartialView(requestItemViewModel);
+        }
+
+        private async Task<RequestItemViewModel> FillRequestItemViewModel( int categoryTypeId, int productSubcategoryId = 0)
+        {
+            var productSubcategory = await _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == productSubcategoryId).FirstOrDefaultAsync();
+            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.isProprietary).ToListAsync();
+            var productsubcategories = new List<ProductSubcategory>();
+            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            if (productSubcategory != null)
+            {
+                parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
+                productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
+                unittypes = _context.UnitTypes.Where(ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == productSubcategory.ParentCategoryID).Count() > 0).Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+            }
+            else
+            {
+                productSubcategory = new ProductSubcategory()
+                {
+                    ParentCategory = new ParentCategory()
+                };
+            }
+            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var subprojects = await _context.SubProjects.ToListAsync();
-            var unittypes = _context.UnitTypes.Where(ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == parentCategoryId).Count()>0).Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
@@ -978,7 +1022,8 @@ namespace PrototypeWithAuth.Controllers
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
-                ProductSubcategories = productsubactegories,
+                ParentCategories = parentcategories,
+                ProductSubcategories = productsubcategories,
                 Vendors = vendors,
                 Projects = projects,
                 SubProjects = subprojects,
@@ -990,28 +1035,55 @@ namespace PrototypeWithAuth.Controllers
                 CommentTypes = commentTypes,
                 Comments = new List<Comment>(),
                 EmailAddresses = new List<string>() { "", "", "", "", "" },
-                ModalType = AppUtility.RequestModalType.Create,
-                isRequestQuote = isRequestQuote
-                //CurrentUser = 
+                ModalType = AppUtility.RequestModalType.Create
             };
-
+            
             requestItemViewModel.Request = new Request();
             requestItemViewModel.Request.ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
             requestItemViewModel.Request.Product = new Product();
             requestItemViewModel.Request.ParentQuote = new ParentQuote();
             requestItemViewModel.Request.SubProject = new SubProject();
-            requestItemViewModel.Request.Product.ProductSubcategory = new ProductSubcategory();
-            requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory = parentcategory;
-            requestItemViewModel.Request.Product.ProductSubcategory.ParentCategoryID = parentcategory.ParentCategoryID;
+            requestItemViewModel.Request.Product.ProductSubcategory = productSubcategory;
+            requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory = productSubcategory.ParentCategory;
+            requestItemViewModel.Request.Product.ProductSubcategory.ParentCategoryID = productSubcategory.ParentCategoryID;
             requestItemViewModel.Request.CreationDate = DateTime.Now;
 
+            requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
+            
+            if (productSubcategory != null && productSubcategory.ParentCategory.isProprietary)
+            {
+                if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
+                {
+                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.S, "");
+
+                }
+                if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
+                    && productSubcategory.ProductSubcategoryDescription != "Cells")
+                {
+                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, "");
+
+                }
+                if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
+                    && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
+                {
+                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Map, "");
+
+                }
+            }
+            else
+            {
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Shipments, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Pictures, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, "");
+            }
+
             DeleteTemporaryDocuments();
-
-            //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-
-            return PartialView(requestItemViewModel);
+            return requestItemViewModel;
         }
 
         [Authorize(Roles = "Requests")]
@@ -1089,109 +1161,44 @@ namespace PrototypeWithAuth.Controllers
             //    .Where(sp => sp.ProjectID == requestItemViewModel.Request.SubProject.ProjectID)
             //    .ToListAsync();
             //requestItemViewModel.SubProjects = subprojects;
-
             //may be able to do this together - combining the path for the orders folders
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
             string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
-            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-            string uploadFolderInvoices = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
-            string uploadFolderShipments = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Shipments.ToString());
-            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-            string uploadFolderInfo = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Info.ToString());
-            string uploadFolderPictures = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
-            string uploadFolderReturns = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Returns.ToString());
-            string uploadFolderCredits = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Credits.ToString());
+            requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
+            
             //the partial file name that we will search for (1- because we want the first one)
             //creating the directory from the path made earlier
-
-            if (Directory.Exists(uploadFolderOrders))
+            var productSubcategory = requestItemViewModel.Request.Product.ProductSubcategory;
+            if (productSubcategory.ParentCategory.isProprietary)
             {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
-                //searching for the partial file name in the directory
-                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                requestItemViewModel.OrderFileStrings = new List<String>();
-                foreach (var orderfile in orderfilesfound)
+                if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
                 {
-                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    requestItemViewModel.OrderFileStrings.Add(newFileString);
+                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.S, uploadFolder2);
+                    
+                }
+                if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
+                    && productSubcategory.ProductSubcategoryDescription != "Cells")
+                {
+                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, uploadFolder2);
+                    
+                }
+                if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
+                    && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
+                {
+                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Map, uploadFolder2);
+                    
                 }
             }
-            if (Directory.Exists(uploadFolderInvoices))
+            else
             {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInvoices);
-                FileInfo[] invoicefilesfound = DirectoryToSearch.GetFiles("*.*");
-                requestItemViewModel.InvoiceFileStrings = new List<string>();
-                foreach (var invoicefile in invoicefilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(invoicefile.FullName, 4);
-                    requestItemViewModel.InvoiceFileStrings.Add(newFileString);
-                }
-            }
-            if (Directory.Exists(uploadFolderShipments))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderShipments);
-                FileInfo[] shipmentfilesfound = DirectoryToSearch.GetFiles("*.*");
-                requestItemViewModel.ShipmentFileStrings = new List<string>();
-                foreach (var shipmentfile in shipmentfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(shipmentfile.FullName, 4);
-                    requestItemViewModel.ShipmentFileStrings.Add(newFileString);
-                }
-            }
-            if (Directory.Exists(uploadFolderQuotes))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
-                FileInfo[] quotefilesfound = DirectoryToSearch.GetFiles("*.*");
-                requestItemViewModel.QuoteFileStrings = new List<string>();
-                foreach (var quotefile in quotefilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(quotefile.FullName, 4);
-                    requestItemViewModel.QuoteFileStrings.Add(newFileString);
-                }
-            }
-            if (Directory.Exists(uploadFolderInfo))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderInfo);
-                FileInfo[] infofilesfound = DirectoryToSearch.GetFiles("*.*");
-                requestItemViewModel.InfoFileStrings = new List<string>();
-                foreach (var infofile in infofilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(infofile.FullName, 4);
-                    requestItemViewModel.InfoFileStrings.Add(newFileString);
-                }
-            }
-            if (Directory.Exists(uploadFolderPictures))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderPictures);
-                FileInfo[] picturefilesfound = DirectoryToSearch.GetFiles("*.*");
-                requestItemViewModel.PictureFileStrings = new List<string>();
-                foreach (var picturefile in picturefilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(picturefile.FullName, 4);
-                    requestItemViewModel.PictureFileStrings.Add(newFileString);
-                }
-            }
-            if (Directory.Exists(uploadFolderReturns))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderReturns);
-                FileInfo[] returnfilesfound = DirectoryToSearch.GetFiles("*.*");
-                requestItemViewModel.ReturnFileStrings = new List<string>();
-                foreach (var returnfile in returnfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(returnfile.FullName, 4);
-                    requestItemViewModel.ReturnFileStrings.Add(newFileString);
-                }
-            }
-            if (Directory.Exists(uploadFolderCredits))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderCredits);
-                FileInfo[] creditfilesfound = DirectoryToSearch.GetFiles("*.*");
-                requestItemViewModel.CreditFileStrings = new List<string>();
-                foreach (var creditfile in creditfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(creditfile.FullName, 4);
-                    requestItemViewModel.CreditFileStrings.Add(newFileString);
-                }
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, uploadFolder2);
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, uploadFolder2);
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Shipments, uploadFolder2);
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, uploadFolder2);
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, uploadFolder2);
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Pictures, uploadFolder2);
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, uploadFolder2);
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, uploadFolder2);
             }
 
             //first get the list of payment types there are
