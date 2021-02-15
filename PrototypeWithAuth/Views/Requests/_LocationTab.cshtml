@@ -8,7 +8,7 @@
     <div class="row modal-tab-name">
         <span class="heading-1 col-12 modal-tab-name">Location</span>
     </div>
-    @if (Model.ReceivedLocationViewModel != null)
+    @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary &&Model.RequestStatusID==7)
     {
         <div class="row">
             <div class="col-2">

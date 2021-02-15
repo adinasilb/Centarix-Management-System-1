@@ -345,13 +345,13 @@ namespace PrototypeWithAuth.Controllers
                                         lastCompanyLocNo++;
                                         addLocationViewModel.LocationInstance.CompanyLocationNo = lastCompanyLocNo;
                                         parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
-                                        attachedName = nameAbbrev + typeName;
+                                        attachedName = typeName;
                                         first = false;
                                     }
                                     else
                                     {
                                         parentId = placeholderInstanceIds[a - 1][w]; //get the first id in the list in the depth before
-                                        attachedName = namesPlaceholder[a - 1][w] + typeName; //NEEDS TO BE DONE BETTER
+                                        attachedName =  typeName; //NEEDS TO BE DONE BETTER
                                     }
                                     int typeNumber = 1; //the number of this depth added to this name
                                                         //RESET THE HEIGHTS ANDS WIDTHS TO ACCOUNT FOR FIRSTS BEFORE RUNNIN OR ITLL CRASHs
@@ -443,13 +443,13 @@ namespace PrototypeWithAuth.Controllers
                                         CompanyLocNo++;
                                         addLocationViewModel.LocationInstance.CompanyLocationNo = CompanyLocNo;
                                         parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
-                                        attachedName = nameAbbrev + typeName;
+                                        attachedName =  typeName;
                                         first = false;
                                     }
                                     else
                                     {
                                         parentId = placeholderInstanceIds[b - 1][w]; //get the first id in the list in the depth before
-                                        attachedName = namesPlaceholder[b - 1][w] + typeName; //NEEDS TO BE DONE BETTER
+                                        attachedName =  typeName; //NEEDS TO BE DONE BETTER
                                     }
                                     int typeNumber = 1; //the number of this depth added to this name
                                                         //RESET THE HEIGHTS ANDS WIDTHS TO ACCOUNT FOR FIRSTS BEFORE RUNNIN OR ITLL CRASHs
@@ -537,7 +537,7 @@ namespace PrototypeWithAuth.Controllers
                             //CoNo++;
                             //addLocationViewModel.LocationInstance.CompanyLocationNo = CoNo;
                             parentId1 = addLocationViewModel.LocationInstance.LocationInstanceID;
-                            attachedName1 = nameAbbrev1 + typeName1;
+                            attachedName1 =  typeName1;
                             int typeNumber1 = 1;
 
                             int sublocationHeight1 = subLocationViewModel.LocationInstances[0].Height;
@@ -711,13 +711,13 @@ namespace PrototypeWithAuth.Controllers
                                         companyLocationNo++;
                                         addLocationViewModel.LocationInstance.CompanyLocationNo = companyLocationNo;
                                         parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
-                                        attachedName = nameAbbreviation + typeName;
+                                        attachedName =  typeName;
                                         first = false;
                                     }
                                     else
                                     {
                                         parentId = placeholderInstanceIds[z - 1][w]; //get the first id in the list in the depth before
-                                        attachedName = namesPlaceholder[z - 1][w] + typeName; //NEEDS TO BE DONE BETTER
+                                        attachedName =  typeName; //NEEDS TO BE DONE BETTER
                                     }
                                     int typeNumber = 1; //the number of this depth added to this name
                                                         //RESET THE HEIGHTS ANDS WIDTHS TO ACCOUNT FOR FIRSTS BEFORE RUNNIN OR ITLL CRASHs
