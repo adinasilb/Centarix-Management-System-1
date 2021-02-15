@@ -610,7 +610,11 @@ namespace PrototypeWithAuth.Controllers
                                     var room = _context.LocationInstances.Include(l=>l.LocationRoomInstance).ThenInclude(r=>r.LocationRoomType).Where(l => l.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefault();
                                     if(room!=null)
                                     {
+                                        room.Height += 1;
                                         subLocationViewModel.LocationInstances[i] = room;
+
+                                        _context.Update(subLocationViewModel.LocationInstances[i]);
+                                        await _context.SaveChangesAsync();
                                     }
                                     else
                                     {
