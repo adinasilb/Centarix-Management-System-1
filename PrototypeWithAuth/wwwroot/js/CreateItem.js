@@ -44,8 +44,8 @@
         console.log("subcategory change")
         var subcategoryID = $("#sublist").val()
         var pageType = $("#masterPageType").val()
-        //var formData = new FormData($("#myForm")[0]);
-        //console.log(...formData)
+        var itemName = $("#Request_Product_ProductName").val()
+        if (subcategoryID != "") {
         $.ajax({
             //processData: true,
             //contentType: true,
