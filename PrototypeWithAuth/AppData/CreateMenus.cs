@@ -45,7 +45,8 @@ namespace PrototypeWithAuth.AppData
                         { 
                             {"PageType",  AppUtility.PageTypeEnum.RequestSummary },
                             { "SectionType", AppUtility.MenuItems.Requests },
-                            { "SidebarType", AppUtility.SidebarEnum.List }
+                            { "SidebarType", AppUtility.SidebarEnum.List },
+                               { "RequestStatusID", 3 },
                         },
                         Classes = AllClasses,
                         ID = "summary-link"
@@ -133,7 +134,8 @@ namespace PrototypeWithAuth.AppData
                         {
                             {"PageType",  AppUtility.PageTypeEnum.OperationsInventory },
                             { "SectionType", AppUtility.MenuItems.Operations },
-                            { "SidebarType", AppUtility.SidebarEnum.List }
+                            { "SidebarType", AppUtility.SidebarEnum.List },
+                            { "RequestStatusID", 3 },
                         },
                         Classes = AllClasses,
                         ID = "inventory-link"
@@ -463,7 +465,8 @@ namespace PrototypeWithAuth.AppData
                 {
                     {"PageType",  pageType },
                     { "SectionType", AppUtility.MenuItems.Requests },
-                    { "SidebarType", AppUtility.SidebarEnum.List }
+                    { "SidebarType", AppUtility.SidebarEnum.List },
+                    { "RequestStatusID", 3 },
                 },
                 Classes = menuClass,
                 IconName = "icon-format_list_bulleted-24px-01"
