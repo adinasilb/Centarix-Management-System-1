@@ -24,13 +24,16 @@
 	});
 
 	$(".open-sublocations-types").on("click", function () {
+		console.log("select location")
 		var id = $(this).attr("id");
+		console.log(id)
 		loadReceivedModalSubLocations(id);
 	});
 
 	//AJAX load full partial view for modalview manage locations
 	function loadReceivedModalSubLocations(val) {
 		var myDiv = $(".divSublocations");
+		console.log(myDiv)
 		$.ajax({
 			//IMPORTANT: ADD IN THE ID
 			url: "/Requests/ReceivedModalSublocations/?LocationTypeID=" + val,
