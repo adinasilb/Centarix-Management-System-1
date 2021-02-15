@@ -189,7 +189,7 @@ $(function () {
 	});
 
 	$('.next-tab').click(function () {
-		if ($(this).hasClass('request-price')) {
+		if ($(this).hasClass('request-price') ) {
 			$('#unitTypeID').rules("remove", "selectRequired");
 		}
 
