@@ -45,6 +45,8 @@ $(".empty-shelf-check").on("change", function () {
 });
 
 $("#labPartDDL").on("change", function () {
+	if($(this).val()!="")
+	{
 	$.ajax({
             async: true,
             type: 'GET',
@@ -54,12 +56,13 @@ $("#labPartDDL").on("change", function () {
                 $(".hasShelfBlock").html(data);
             }
     });
+		}
 	
 });
 //DROPDOWN MENU
 
 
-$('.modal').on('change', '.emptyShelf', function () {
+$('.modal').off('change', '.emptyShelf').on('change', '.emptyShelf', function () {
 	console.log('emptyShelf change')
 	var val = $(this).prop('checked');
 	var id = $(this).attr('id');
