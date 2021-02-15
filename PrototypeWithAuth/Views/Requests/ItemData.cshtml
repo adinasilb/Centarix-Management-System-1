@@ -45,7 +45,7 @@
                 @{await Html.RenderPartialAsync("_HistoryTab", Model); }
             </div>
         }
-        @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create) || !Model.ModalType.Equals(AppUtility.RequestModalType.Summary))
+        @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create))
         {
             <div id="order" class="tab-pane fade order-tab">
                 @{await Html.RenderPartialAsync("_OrderTab", Model); }
