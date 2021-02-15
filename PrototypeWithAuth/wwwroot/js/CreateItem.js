@@ -61,9 +61,10 @@
                 console.log("category "+ category)
                 $("." + category).removeClass("d-none");
                 $("." + category).prop("disabled", false);
-                $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
-                $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
+                $.fn.DisableMaterialSelectWithOutMaterialSelect("#parentlist", 'select-options-parentlist');
+                $.fn.DisableMaterialSelectWithOutMaterialSelect("#sublist", 'select-options-sublist');
                 $(".proprietryHidenCategory").attr("disabled", false);
+                $(".mdb-select").materialSelect();
             }
         })
     })

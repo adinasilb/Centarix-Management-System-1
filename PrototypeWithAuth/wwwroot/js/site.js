@@ -1981,7 +1981,7 @@ $(function () {
 		}
 		//}
 	});
-	$.fn.DisableMaterialSelect = function (selectID, dataActivates) {
+	$.fn.DisableMaterialSelectWithOutMaterialSelect = function (selectID, dataActivates) {
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
 		selectedIndex = selectedIndex - 1;
 		$(selectID).destroyMaterialSelect();
@@ -1989,7 +1989,7 @@ $(function () {
 		$(selectID).prop('selectedIndex', selectedIndex);
 		$(selectID).attr("disabled", true)
 		$('[data-activates="' + dataActivates + '"]').prop('disabled', true);
-		$(selectID).materialSelect();
+		//$(selectID).materialSelect();
     }
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
@@ -2161,7 +2161,7 @@ $(function () {
 		});
 	})
 
-	$(".save-item").on("click", function (e) {
+	$(".save-item").off("click").on("click", function (e) {
 		e.preventDefault();
 		var url = "";
 		if ($(this).hasClass("side-menu")) {
@@ -2172,6 +2172,7 @@ $(function () {
 		}
 		$itemurl = "/Requests/ConfirmExit/?url=" + url;
 		console.log($itemurl);
+		$(".confirm-exit-modal").replaceWith('');
 		$.ajax({
 			async: true,
 			url: $itemurl,
@@ -2181,6 +2182,7 @@ $(function () {
 				$("#loading").hide();
 				var modal = $(data);
 				$('body').append(modal);
+					
 				$(".confirm-exit-modal").modal({
 					backdrop: false,
 					keyboard: false,

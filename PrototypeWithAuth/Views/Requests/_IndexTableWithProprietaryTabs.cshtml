@@ -1,0 +1,62 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+@using PrototypeWithAuth.AppData
+@{
+
+            string nonProprietaryText = "";
+            string proprietaryText = "";
+
+
+            string nonProprietaryClass = "";
+            string proprietaryClass = "";
+
+
+            int requestStatusID = Model.RequestStatusID;
+
+            nonProprietaryText = "Non Proprietary [" + Model.NonProprietaryCount + "]";
+            proprietaryText = "Proprietary [" + Model.ProprietaryCount + "]";
+
+
+            nonProprietaryClass = "new-button pt-4 ";
+            proprietaryClass = "new-button pt-4 ";
+
+
+            var activeClasses = "new-button active  pt-4";
+            if (Model.PageType == AppUtility.PageTypeEnum.OperationsRequest)
+            {
+                activeClasses += " new-oper-button ";
+                nonProprietaryClass += " new-oper-button ";
+                proprietaryClass += " new-oper-button ";
+
+            }
+
+            switch (Model.RequestStatusID)
+            {
+
+                case 7:
+                    proprietaryClass = activeClasses;
+                    break;
+                default:
+                    nonProprietaryClass = activeClasses;
+                    break;
+            }
+
+
+        }
+<div class="">
+    <div class="item-table">
+        <ul class="pl-0">
+            <li class="list-inline-item active m-0">
+                <a class="@nonProprietaryClass countStatus" value="1" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@nonProprietaryClass</label> </a>
+            </li>
+            <li class="list-inline-item m-0">
+                <a class="@proprietaryClass countStatus" value="6" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@proprietaryClass</label> </a>
+
+            </li>
+
+        </ul>
+    </div>
+</div>
+<div class="_IndexTable">
+    @{ await Html.RenderPartialAsync("_IndexTable", Model);}
+</div>
+<script src="~/js/IndexTableWithCounts.js"></script>

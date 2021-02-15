@@ -1,30 +1,9 @@
 ﻿
-$.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
-	var vendorID = $("#vendorList").val();
-	var catalogNumber = $("#Request_CatalogNumber").val();
-	var productID = null;
-	var catalogResult = false;
-	
-	$.ajax({
-		async: false,
-		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
-		type: 'POST',
-		data: { "VendorID": vendorID, "CatalogNumber": catalogNumber, "ProductID": productID },
-		dataType: 'text',
-		success: function (result) {
-			catalogResult = result;
-		},
-		error: function (jqXHR, status, error) {
-			console.log(status, error);
-		}
-	});
-	return catalogResult;
-}, 'That product has already been created');
-
+$(function () {
 $('.ordersItemForm').validate({
 	rules: {
 		"Request.Product.ProductName": "required",
-		"Request.CatalogNumber": {
+		"Request.Product.CatalogNumber": {
 			required: true,
 				remote:{
 		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
@@ -101,12 +80,38 @@ $('.ordersItemForm').validate({
 		"Request.SubSubUnitTypeID": "selectRequired"
 	},
 	messages: {
-        "Request.CatalogNumber": {
+        "Request.Product.CatalogNumber": {
             remote: "this product has already been created"
         },
 		}
 });
 
+$.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
+	var vendorID = $("#vendorList").val();
+	var catalogNumber = $("#Request_CatalogNumber").val();
+	var productID = null;
+	var catalogResult = false;
+	
+	$.ajax({
+		async: false,
+		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
+		type: 'POST',
+		data: { "VendorID": vendorID, "CatalogNumber": catalogNumber, "ProductID": productID },
+		dataType: 'text',
+		success: function (result) {
+			catalogResult = result;
+		},
+		error: function (jqXHR, status, error) {
+			console.log(status, error);
+		}
+	});
+	return catalogResult;
+}, 'That product has already been created');
+
+
 $('#vendorList').change(function(){
-	$('#Request_CatalogNumber').valid();
+	$('#Request_Product_CatalogNumber').valid();
 });
+	
+});
+

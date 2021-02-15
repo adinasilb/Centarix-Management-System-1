@@ -28,8 +28,9 @@
 }
 
 
-<div class="IndexTableRequest">
-    @{ await Html.RenderPartialAsync("_IndexTable", Model);}
+<div class="_IndexTableWithProprietaryTabs">
+    @{ await Html.RenderPartialAsync("_IndexTableWithProprietaryTabs", Model);}
 </div>
+
 
 <script src="~/js/PricePopoverScript.js"></script>
