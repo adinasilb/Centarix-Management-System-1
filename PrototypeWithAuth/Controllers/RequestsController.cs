@@ -1898,10 +1898,7 @@ namespace PrototypeWithAuth.Controllers
                                     foreach (var r in requests)
                                     {
                                         r.RequestStatusID = 2;
-                                        //remove all includes
-                                        r.Product.ProductSubcategory = null;
-                                        r.Product.Vendor = null;
-
+                                 
                                         if (r.OrderType != AppUtility.OrderTypeEnum.OrderNow)
                                         {
                                             r.Product = null;
