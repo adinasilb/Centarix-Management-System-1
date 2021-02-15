@@ -626,6 +626,10 @@ namespace PrototypeWithAuth.Controllers
         private string GetLocationInstanceNameBefore(LocationInstance locationInstance)
         {
             var newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceAbbrev;
+            if(newLIName==null)
+            {
+                newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceName;
+            }
             return newLIName;
         }
 
@@ -1110,6 +1114,12 @@ namespace PrototypeWithAuth.Controllers
 
             if (productSubcategory != null && productSubcategory.ParentCategory.isProprietary)
             {
+                requestItemViewModel.ReceivedLocationViewModel = new ReceivedLocationViewModel()
+                {
+                    Request = requestItemViewModel.Request,
+                    locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
+                    locationInstancesSelected = new List<LocationInstance>(),
+                };
                 requestItemViewModel.RequestStatusID = 7;
                 if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
                 {
