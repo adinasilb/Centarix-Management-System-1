@@ -216,7 +216,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
             {
-                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product.ProductSubcategory)
+                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 7).Include(r => r.Product.ProductSubcategory)
                      .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
             }
             else //we just want what is in inventory
@@ -557,6 +557,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetSummaryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
+
             onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
@@ -4106,13 +4107,13 @@ namespace PrototypeWithAuth.Controllers
             var vendorCartTotal = _context.Requests.Where(r => r.Product.VendorID == vendor.VendorID && r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && 
             r.OrderType == AppUtility.OrderTypeEnum.AddToCart && r.RequestStatusID!= 1)
                 .Select(r => r.Cost).Sum();
-            vendorCartTotal = Math.Round(vendorCartTotal, 2);
+            vendorCartTotal = Math.Round(vendorCartTotal??0, 2);
             CartTotalViewModel viewModel = new CartTotalViewModel()
             {
                 Request = request,
                 Vendor = vendor,
                 SectionType = sectionType,
-                VendorCartTotal = vendorCartTotal
+                VendorCartTotal = vendorCartTotal??0
             };
             return PartialView(viewModel);
         }

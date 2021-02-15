@@ -105,14 +105,14 @@
                         @if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
                             <td>@request.Unit</td>
-                            double unitPrice = (request.Cost) / request.Unit;
+                            double unitPrice = (request.Cost ?? 0) / request.Unit;
                             <td>@currency @unitPrice.ToString("N2")</td>
                         }
                         <td>@request.Discount%</td>
                         <td>@currency @request.Cost</td>
                     </tr>
                 }
-                @{ double total = Model.Requests.Sum(r => r.Cost);
+                @{ double total = Model.Requests.Sum(r => r.Cost ?? 0);
                     double vat = total * .17;
                     double totalWithVat = total + vat;}
                 <tr>

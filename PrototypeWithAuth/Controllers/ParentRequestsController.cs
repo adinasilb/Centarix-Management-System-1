@@ -77,13 +77,13 @@ namespace PrototypeWithAuth.Controllers
                 MonthlyTotalsViewModel monthlyTotalsViewModel = new MonthlyTotalsViewModel();
                 monthlyTotalsViewModel.Month = req.Month;
                 monthlyTotalsViewModel.Year = req.Year;
-                monthlyTotalsViewModel.GrandTotal = requestsinMonthAndYear.Sum(r => r.Cost);
-                monthlyTotalsViewModel.PlasticsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 1).AsEnumerable().Sum(m => m.Cost);
-                monthlyTotalsViewModel.ReagentsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 2).AsEnumerable().Sum(m => m.Cost);
-                monthlyTotalsViewModel.ProprietyTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 3).AsEnumerable().Sum(m => m.Cost);
-                monthlyTotalsViewModel.ReusableTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 4).AsEnumerable().Sum(m => m.Cost);
-                monthlyTotalsViewModel.EquipmentTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).AsEnumerable().Sum(m => m.Cost);
-                monthlyTotalsViewModel.OperationsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 6).AsEnumerable().Sum(m => m.Cost);
+                monthlyTotalsViewModel.GrandTotal = requestsinMonthAndYear.Sum(r => r.Cost ?? 0);
+                monthlyTotalsViewModel.PlasticsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 1).AsEnumerable().Sum(m => m.Cost ?? 0);
+                monthlyTotalsViewModel.ReagentsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 2).AsEnumerable().Sum(m => m.Cost ?? 0);
+                monthlyTotalsViewModel.ProprietyTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 3).AsEnumerable().Sum(m => m.Cost ?? 0);
+                monthlyTotalsViewModel.ReusableTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 4).AsEnumerable().Sum(m => m.Cost ?? 0);
+                monthlyTotalsViewModel.EquipmentTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).AsEnumerable().Sum(m => m.Cost ?? 0);
+                monthlyTotalsViewModel.OperationsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 6).AsEnumerable().Sum(m => m.Cost ?? 0);
                 monthlyTotals.Add(monthlyTotalsViewModel);
             }
 

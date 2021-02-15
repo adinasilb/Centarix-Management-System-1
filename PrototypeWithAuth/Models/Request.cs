@@ -85,8 +85,6 @@ namespace PrototypeWithAuth.Models
 
         [Range(0, 2147483647, ErrorMessage = "Field must be a positive number")]
         public byte? ExpectedSupplyDays { get; set; } // will need to cast it to datetime when calulating the expected supply date, in the front end
-        /*public string RequestComment { get; set; }*/ //can take this out - Adina
-
 
         [DataType(DataType.Date)]
         public DateTime CreationDate { get; set; }
@@ -120,14 +118,13 @@ namespace PrototypeWithAuth.Models
         public string Currency { get; set; }
         [Range(1, Double.MaxValue, ErrorMessage = "Field must be more than 0")]
         [Display(Name = "Price")]
-        [Required]
-        public double Cost { get; set; } //this is always shekel no matter what currency is
+        public double? Cost { get; set; } //this is always shekel no matter what currency is
         private double _VAT;
         public double VAT
         {
             get
             {
-                return Math.Round(.17 * Cost, 2);
+                return Math.Round(.17 * Cost ?? 0, 2);
             }
             private set { _VAT = value; }
 
@@ -171,7 +168,7 @@ namespace PrototypeWithAuth.Models
         {
             get
             {
-                return Math.Round(VAT + Cost, 2);
+                return Math.Round(VAT + Cost ?? 0, 2);
             }
             private set { _TotalWithVat = value; }
 
@@ -184,9 +181,7 @@ namespace PrototypeWithAuth.Models
 
 
 
-        /// <summary>
         /// received fields
-        /// </summary>
         [DataType(DataType.Date)]
         [Display(Name = "Arrival Date")]
         public DateTime ArrivalDate { get; set; }

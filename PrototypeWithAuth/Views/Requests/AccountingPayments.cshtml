@@ -34,7 +34,7 @@
                                 var vendorsCount = Model.Requests.Count();
                                 for (int x = 0; x < vendorsCount; x++)
                                 {
-                                    totalCost += Model.Requests.ElementAt(x).Select(r => r.Cost).Sum(c => c);
+                                    totalCost += Model.Requests.ElementAt(x).Select(r => r.Cost ?? 0).Sum(c => c);
                                 }
                             }
 
