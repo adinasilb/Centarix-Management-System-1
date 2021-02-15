@@ -1982,7 +1982,7 @@ $(function () {
 		}
 		//}
 	});
-	$.fn.DisableMaterialSelectWithOutMaterialSelect = function (selectID, dataActivates) {
+	$.fn.DisableMaterialSelect = function (selectID, dataActivates) {
 		console.log(selectID)
 		console.log(dataActivates)
 		console.log($('#' + dataActivates))
@@ -1994,7 +1994,7 @@ $(function () {
 		$(selectID).prop('selectedIndex', selectedIndex);
 		$(selectID).attr("disabled", true)
 		$('[data-activates="' + dataActivates + '"]').prop('disabled', true);
-		//$(selectID).materialSelect();
+		$(selectID).materialSelect();
     }
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {

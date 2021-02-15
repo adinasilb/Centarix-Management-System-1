@@ -57,15 +57,16 @@
                 //data: formData,
                 success: function (data) {
                     $(".outer-partial").html(data);
+                      $(".mdb-select").materialSelect();
                     $("#loading").hide();
                     var category = $("#categoryDescription").val();
                     console.log("category " + category)
                     $("." + category).removeClass("d-none");
                     $("." + category).prop("disabled", false);
-                    $.fn.DisableMaterialSelectWithOutMaterialSelect("#parentlist", 'select-options-parentlist');
-                    $.fn.DisableMaterialSelectWithOutMaterialSelect("#sublist", 'select-options-sublist');
+                    $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
+                    $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
                     $(".proprietryHidenCategory").attr("disabled", false);
-                    $(".mdb-select").materialSelect();
+             
                 }
             })
         }
