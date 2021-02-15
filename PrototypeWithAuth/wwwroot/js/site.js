@@ -1983,12 +1983,8 @@ $(function () {
 		//}
 	});
 	$.fn.DisableMaterialSelect = function (selectID, dataActivates) {
-		console.log(selectID)
-		console.log(dataActivates)
-		console.log($('#' + dataActivates).html())
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
 		selectedIndex = selectedIndex - 1;
-		console.log(selectedIndex)
 		$(selectID).destroyMaterialSelect();
 		$(selectID).prop("disabled", true);
 		$(selectID).prop('selectedIndex', selectedIndex);
