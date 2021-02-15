@@ -51,10 +51,10 @@ $(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function ()
             async: true,
             type: 'GET',
             cache: false,
-            url: "/Locations/HasShelfBlock?id="+$(this).val()+"&roomID="+$(".locationRoom").val(),
+            url: "/Locations/HasShelfBlock?id="+$(this).val()+"&roomID="+$("select.locationRoom").val(),
             success: function (data) {
                 $(".hasShelfBlock").html(data);
-				$(".25Name").val($(".25Name").val()+$(".labPartName").val())
+				$(".labPartNameLabel").html($(".labPartName").val())
             }
     });
 		}
@@ -63,6 +63,9 @@ $(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function ()
 
 
 $(".locationRoom").off("change").on("change", function () {
+	if($(this).val()!="")
+	{
+	   $("#select-options-labPartDDL").find(".active").removeClass("active");
 	   $.fn.EnableMaterialSelect('#labPartDDL', 'select-options-labPartDDL');
 	  	$.ajax({
             async: true,
@@ -70,9 +73,14 @@ $(".locationRoom").off("change").on("change", function () {
             cache: false,
             url: "/Locations/GetLocationRoomName?id="+$(this).val(),
             success: function (data) {
-				$(".25Name").val($(".25Name").val()+data)
+				$(".roomName").html(data)
+				$(".labPartNameLabel").html();
             }
     }); 
+		}
+	else{
+		$.fn.DisableMaterialSelect('#labPartDDL', 'select-options-labPartDDL'); 
+		}
 });
 
 $('.modal').off('change', '.emptyShelf').on('change', '.emptyShelf', function () {
