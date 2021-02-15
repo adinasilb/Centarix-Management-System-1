@@ -1978,6 +1978,7 @@ $(function () {
 		}
 		else if (type == 'details') {
 			enableMarkReadonly($(this));
+			$(".proprietryHidenCategory").attr("disabled", false);
 		}
 		//}
 	});
