@@ -628,7 +628,11 @@ namespace PrototypeWithAuth.Controllers
             var newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceAbbrev;
             if(newLIName==null)
             {
-                newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceName;
+                while (locationInstance.LocationInstanceParentID != null)
+                {
+                    newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).Include(li=>li.LocationInstanceParent).FirstOrDefault().LocationInstanceName+newLIName;
+                    locationInstance = locationInstance.LocationInstanceParent;
+                }                
             }
             return newLIName;
         }
