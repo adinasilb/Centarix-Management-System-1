@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 <div class="row pb-3">
-    <a href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType =TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString()"
+    <a style="z-index:2000" href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType =TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString()"
        class="title-label  btn-link heading-1 ">
         <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
         <label class="pl-2">@Model.SidebarFilterName</label>
@@ -31,9 +31,10 @@ else
     }
     else
     {
-        <div class="_IndexTable">
-            @{await Html.RenderPartialAsync("_IndexTable", Model); }
+        <div class="_IndexTableWithProprietaryTabs">
+            @{ await Html.RenderPartialAsync("_IndexTableWithProprietaryTabs", Model);}
         </div>
+
     }
 
 }
