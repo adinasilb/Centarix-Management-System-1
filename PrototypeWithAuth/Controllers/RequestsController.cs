@@ -1126,6 +1126,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     .ToList();
+            var parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
@@ -1136,6 +1137,7 @@ namespace PrototypeWithAuth.Controllers
             List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
             {
+                ParentCategories = parentcategories,
                 ProductSubcategories = productsubactegories,
                 Vendors = vendors,
                 Projects = projects,

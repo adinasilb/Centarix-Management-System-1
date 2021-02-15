@@ -531,8 +531,8 @@
 
                 },
                 error: function (xhr, status, error) {
-                    var err = eval("(" + xhr.responseText + ")");
-                    console.log("in error..." + err.Description);
+                    //var err = eval("(" + xhr.responseText + ")");
+                    console.log("in error..." + error.Description);
                     $("#loading").hide();
                     //alert(err.Message);
                 }
