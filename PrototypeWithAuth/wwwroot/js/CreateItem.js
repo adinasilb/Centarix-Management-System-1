@@ -45,28 +45,30 @@
         var subcategoryID = $("#sublist").val()
         var pageType = $("#masterPageType").val()
         var itemName = $("#Request_Product_ProductName").val()
+        console.log("subcategory "+subcategoryID)
         if (subcategoryID != "") {
-        $.ajax({
-            //processData: true,
-            //contentType: true,
-            async: true,
-            url: "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType,
-            type: 'GET',
-            cache: false,
-            //data: formData,
-            success: function (data) {
-                $(".outer-partial").html(data);
-                $("#loading").hide();
-                var category = $("#categoryDescription").val();
-                console.log("category "+ category)
-                $("." + category).removeClass("d-none");
-                $("." + category).prop("disabled", false);
-                $.fn.DisableMaterialSelectWithOutMaterialSelect("#parentlist", 'select-options-parentlist');
-                $.fn.DisableMaterialSelectWithOutMaterialSelect("#sublist", 'select-options-sublist');
-                $(".proprietryHidenCategory").attr("disabled", false);
-                $(".mdb-select").materialSelect();
-            }
-        })
+            $.ajax({
+                //processData: true,
+                //contentType: true,
+                async: true,
+                url: "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName,
+                type: 'GET',
+                cache: false,
+                //data: formData,
+                success: function (data) {
+                    $(".outer-partial").html(data);
+                    $("#loading").hide();
+                    var category = $("#categoryDescription").val();
+                    console.log("category " + category)
+                    $("." + category).removeClass("d-none");
+                    $("." + category).prop("disabled", false);
+                    $.fn.DisableMaterialSelectWithOutMaterialSelect("#parentlist", 'select-options-parentlist');
+                    $.fn.DisableMaterialSelectWithOutMaterialSelect("#sublist", 'select-options-sublist');
+                    $(".proprietryHidenCategory").attr("disabled", false);
+                    $(".mdb-select").materialSelect();
+                }
+            })
+        }
     })
    
 	$(".categoryForm").validate({

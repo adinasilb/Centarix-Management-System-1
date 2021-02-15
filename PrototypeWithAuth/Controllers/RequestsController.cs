@@ -1071,9 +1071,10 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Request.CreationDate = DateTime.Now;
 
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
-            
+
             if (productSubcategory != null && productSubcategory.ParentCategory.isProprietary)
             {
+                requestItemViewModel.RequestStatusID = 7;
                 if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
                 {
                     GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.S, "");
