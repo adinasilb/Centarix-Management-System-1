@@ -372,7 +372,7 @@ namespace PrototypeWithAuth.Controllers
                     onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                     break;
                 case AppUtility.PageTypeEnum.RequestSummary:
-                    iconList.Add(reorderIcon);
+                  
                     iconList.Add(deleteIcon);
                     switch (requestIndexObject.RequestStatusID)
                     {
@@ -380,6 +380,7 @@ namespace PrototypeWithAuth.Controllers
                             onePageOfProducts = await GetSummaryProprietaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                         default:
+                            iconList.Add(reorderIcon);
                             onePageOfProducts = await GetSummaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                     }
@@ -666,6 +667,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             SetViewModelCounts(requestIndexObject, viewModel);
+            SetViewModelProprietaryCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
 
@@ -678,6 +680,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             SetViewModelCounts(requestIndexObject, viewModel);
+            SetViewModelProprietaryCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
 
@@ -690,6 +693,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             SetViewModelCounts(requestIndexObject, viewModel);
+            SetViewModelProprietaryCounts(requestIndexObject, viewModel);
             return View(viewModel);
         }
         [HttpGet]
@@ -702,6 +706,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
 
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+
             return View(viewModel);
         }
         [HttpGet]

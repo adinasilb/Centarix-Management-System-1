@@ -29,7 +29,11 @@ namespace PrototypeWithAuth.AppData
         {
             get
             {
-                if (_RequestStatusID == 0)
+                if (_RequestStatusID == 0 && PageType == AppUtility.PageTypeEnum.RequestSummary)
+                {
+                    return 3;
+                }
+                else if (_RequestStatusID == 0)
                 {
                     return 1;
                 }
