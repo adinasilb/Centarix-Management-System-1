@@ -143,7 +143,7 @@
         <div class="row">
             <div class="form-group col-12 ">
                 <label class=" mb-0">Location Name </label> @*"Name"*@
-                <input name="LocationInstance.LocationInstanceName" id="LocationInstance_LocationInstanceName" type="text" class="form-control-plaintext border-bottom 25Name" disabled />
+                <input name="LocationInstance.LocationInstanceName" id="LocationInstance_LocationInstanceName" type="text" class="form-control-plaintext border-bottom 25Name" disabled value="25°C" />
 
             </div>
         </div>
@@ -159,13 +159,13 @@
                        m => m.LocationInstances[0].LocationRoomInstanceID,
                             Model.LocationRoomInstances,
                            "Room",
-                  htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext  sub-select" }
+                  htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext  sub-select locationRoom" }
                    )
                 </div>
                 <div class="col-6 ">
                     <input type="hidden" asp-for="LocationInstances[1].Height" value="1" />
                     <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />
-                    <select class=" mdb-select custom select-dropdown form-control-plaintext sub-select" asp-for="LocationInstances[1].LabPartID" id="labPartDDL">
+                    <select class=" mdb-select custom select-dropdown form-control-plaintext sub-select" asp-for="LocationInstances[1].LabPartID" id="labPartDDL" disabled>
                         <option value="">lab part</option>
                         @foreach (var lp in Model.LabParts)
                         {
