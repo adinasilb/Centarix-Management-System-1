@@ -22,23 +22,17 @@
     <div id="item" class="tab-pane fade in active show">
         @{await Html.RenderPartialAsync("_ItemTab", Model); }
     </div>
-    @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Request.RequestStatusID == 3)
+    @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Request.RequestStatusID == 3 || Model.RequestStatusID == 7)
     {
         <div id="location" class="tab-pane fade">
             @{await Html.RenderPartialAsync("_LocationTab", Model); }
         </div>
     }
-    @if (Model.Request.Product.ProductSubcategory.ParentCategory.isProprietary)
+    @if (!Model.Request.Product.ProductSubcategory.ParentCategory.isProprietary)
     {
-        <div id="units" class="tab-pane fade ">
-            @{await Html.RenderPartialAsync("_UnitsTab", Model); }
+        <div id="price" class="tab-pane fade ">
+            @{await Html.RenderPartialAsync("_PriceTab", Model); }
         </div>
-    }
-    else
-    {
-    <div id="price" class="tab-pane fade ">
-        @{await Html.RenderPartialAsync("_PriceTab", Model); }
-    </div>
     }
     <div id="documents" class="tab-pane fade">
         @{await Html.RenderPartialAsync("_DocumentsTab", Model); }
