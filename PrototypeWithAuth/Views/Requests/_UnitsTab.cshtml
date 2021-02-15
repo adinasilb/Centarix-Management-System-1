@@ -1,0 +1,45 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+
+@{
+    var Category = Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription;
+    var modalType = Model.ModalType;
+    var markReadOnlyClass = "";
+    var disabledProperty = "";
+    if (modalType == AppUtility.RequestModalType.Edit)
+    {
+        markReadOnlyClass = "mark-readonly";
+
+    }
+
+}
+
+<div class="row no-mb">
+    <div class="col-md-8">
+        <span class="heading-1 modal-tab-name">Units</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 form-group">
+        <label asp-for="Request.Unit" class="control-label"></label>
+        @Html.EditorFor(vm => vm.Request.Unit, new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit" } })
+        <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-md-8 form-group dropdown-select-div">
+        <label asp-for="Request.UnitType" class="control-label"></label>
+        @Html.DropDownListFor(
+            vm => vm.Request.UnitTypeID,
+            Model.UnitTypeList,
+            "",
+            htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @disabledProperty = disabledProperty, @id = "unitTypeID" }
+            )
+        <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
+    </div>
+</div>
+
+<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/SubUnit.js"></script>

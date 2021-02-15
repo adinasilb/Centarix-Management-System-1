@@ -49,7 +49,15 @@
                                 <br />Item
                             </a>
                         </li>
-                        @if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary)
+                        @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary && Model.RequestStatusID == 7)
+                        {
+                            <li class="nav-item icon" id="unit-tab">
+                                <a data-toggle="tab" href="#units" class="next-tab nav-link request-units">
+                                    <i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Units
+                                </a>
+                            </li>
+                        }
+                        else
                         {
                             <li class="nav-item icon" id="price-tab">
                                 <a data-toggle="tab" href="#price" class="next-tab nav-link request-price">

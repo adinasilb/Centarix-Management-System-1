@@ -861,6 +861,7 @@ namespace PrototypeWithAuth.Controllers
             if (PageType == AppUtility.PageTypeEnum.RequestSummary)
             {
                 requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1 && pc.isProprietary).ToListAsync();
+                requestItemViewModel.RequestStatusID = 7;
             }
             requestItemViewModel.PageType = PageType;
 
