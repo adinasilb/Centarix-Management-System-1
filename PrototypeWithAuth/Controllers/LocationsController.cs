@@ -573,13 +573,15 @@ namespace PrototypeWithAuth.Controllers
                         case 500:
                             var childeNameAbbrev="";
                             var Parent25 = _context.LocationInstances.Where(l => l.LocationTypeID == 500).FirstOrDefault();
+                           
                             if (Parent25 != null)
                             {
                                 addLocationViewModel.LocationInstance = Parent25;
                             }
                             else
                             {
-                                addLocationViewModel.LocationInstance.Height = 1;
+                                var roomInstanceCount = _context.LocationRoomInstances.Count();
+                                addLocationViewModel.LocationInstance.Height = roomInstanceCount;
                                 addLocationViewModel.LocationInstance.Width = 1;
                                 _context.Add(addLocationViewModel.LocationInstance);
                                 await _context.SaveChangesAsync();
