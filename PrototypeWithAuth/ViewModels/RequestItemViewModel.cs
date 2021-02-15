@@ -72,9 +72,6 @@ namespace PrototypeWithAuth.ViewModels
 
         public List<string> EmailAddresses { get; set; } //to pass back the email addresses in the create modal view
         public int RequestStatusID { get; set; }
-        public int SubCategoryID { get; set; }
-        public int VendorID { get; set; }
-        public string ApplicationUserID { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
         public ReceivedLocationViewModel ReceivedLocationViewModel { get; set; }
         public ReceivedModalSublocationsViewModel ReceivedModalSublocationsViewModel { get; set; }
@@ -85,6 +82,5 @@ namespace PrototypeWithAuth.ViewModels
         public List<Comment> Comments { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.RequestModalType ModalType { get; set; }
-        public bool isRequestQuote { get; set; }
     }
 }

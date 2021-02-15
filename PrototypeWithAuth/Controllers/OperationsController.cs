@@ -557,10 +557,6 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index", new
             {
                 requestStatusID = requestItemViewModel.RequestStatusID,
-                subcategoryID = requestItemViewModel.SubCategoryID,
-                vendorID = requestItemViewModel.VendorID,
-                applicationUserID = requestItemViewModel.ApplicationUserID,
-                //PageType = requestPageTypeEnum
             });
         }
 

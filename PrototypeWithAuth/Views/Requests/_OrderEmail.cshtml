@@ -101,7 +101,7 @@
                 {
                     <tr>
                         <td style="font-weight: 500;">@request.SubUnit @request.Product.ProductName</td>
-                        <td>@request.CatalogNumber</td>
+                        <td>@request.Product.CatalogNumber</td>
                         @if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
                             <td>@request.Unit</td>

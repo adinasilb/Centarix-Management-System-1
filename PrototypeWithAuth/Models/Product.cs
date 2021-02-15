@@ -43,5 +43,9 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Image")]
         public string ProductMedia { get; set; }
 
+        [Required]
+        [Display(Name = "Catalog Number")]
+        public string CatalogNumber { get; set; }
+
     }
 }
