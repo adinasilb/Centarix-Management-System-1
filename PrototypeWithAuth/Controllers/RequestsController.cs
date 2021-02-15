@@ -1487,9 +1487,6 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index", new
             {
                 requestStatusID = requestItemViewModel.RequestStatusID,
-                subcategoryID = requestItemViewModel.SubCategoryID,
-                vendorID = requestItemViewModel.VendorID,
-                applicationUserID = requestItemViewModel.ApplicationUserID,
                 PageType = requestPageTypeEnum
             });
         }
@@ -1550,7 +1547,6 @@ namespace PrototypeWithAuth.Controllers
                     reorderViewModel.RequestItemViewModel.Request.Warranty = oldRequest.Warranty;
                     reorderViewModel.RequestItemViewModel.Request.ExchangeRate = oldRequest.ExchangeRate;
                     reorderViewModel.RequestItemViewModel.Request.Currency = oldRequest.Currency;
-                    reorderViewModel.RequestItemViewModel.Request.CatalogNumber = oldRequest.CatalogNumber;
                     var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Request);
                     using (var transaction = _context.Database.BeginTransaction())
                     {
@@ -2900,13 +2896,13 @@ namespace PrototypeWithAuth.Controllers
         {
             var boolCheck = true;
             //validation for the create
-            if (VendorID != null && CatalogNumber != null && (ProductID == null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID).Any()))
+            if (VendorID != null && CatalogNumber != null && (ProductID == null && _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID).Any()))
             {
                 return false;
             }
             //validation for the edit
-            var product = _context.Requests.Where(r => r.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID);
-            if (ProductID != null && _context.Requests.Where(r => r.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID).Any())
+            var product = _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID);
+            if (ProductID != null && _context.Requests.Where(r => r.Product.CatalogNumber == CatalogNumber && r.Product.VendorID == VendorID && r.ProductID != ProductID).Any())
             {
                 return false;
             }

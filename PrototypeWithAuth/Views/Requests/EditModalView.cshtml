@@ -37,9 +37,6 @@
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
                 @Html.HiddenFor(model => model.RequestStatusID)
-                @Html.HiddenFor(model => model.SubCategoryID)
-                @Html.HiddenFor(model => model.VendorID)
-                @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
                 @*Requests search view model*@
                 @Html.HiddenFor(model => model.Request.ApplicationUserCreatorID)
