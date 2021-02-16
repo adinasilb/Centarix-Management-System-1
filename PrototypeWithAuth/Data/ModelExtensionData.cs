@@ -101,7 +101,7 @@ namespace PrototypeWithAuth.Data
                 new ParentCategory
                 {
                     ParentCategoryID = 7,
-                    ParentCategoryDescription = "Proprietry",
+                    ParentCategoryDescription = "Proprietary",
                     CategoryTypeID = 1,
                     isProprietary = true
                 }

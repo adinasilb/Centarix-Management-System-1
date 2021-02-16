@@ -932,7 +932,7 @@ namespace PrototypeWithAuth.Controllers
                  requestItemViewModel.Request.ApplicationUserCreatorID = currentUser.Id;
                 requestItemViewModel.Request.CreationDate = DateTime.Now;
                 var isInBudget = false;
-                if (requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID!=7)//is proprietry
+                if (requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum != AppUtility.ParentCategoryEnum.Proprietary.ToString())//is proprietry
                 {
                     if (requestItemViewModel.Request.Currency == null)
                     {
@@ -1033,6 +1033,10 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = ex.Message?.ToString();
                 Response.StatusCode = 500;
                 //Response.WriteAsync(ex.Message?.ToString());
+                if(requestItemViewModel.RequestStatusID == 7)
+                {
+                    return PartialView("CreateItemTabs", requestItemViewModel);
+                }
                 return PartialView("_OrderTab", requestItemViewModel);
             }
         }
@@ -3923,10 +3927,47 @@ namespace PrototypeWithAuth.Controllers
 
             try
             {
-                newRequest.RequestStatusID = 7;
-                newRequest.OrderType = AppUtility.OrderTypeEnum.Save;
-                _context.Add(newRequest);
-                await _context.SaveChangesAsync();
+                        newRequest.RequestStatusID = 7;
+                        newRequest.OrderType = AppUtility.OrderTypeEnum.Save;
+                        _context.Add(newRequest);
+                        await _context.SaveChangesAsync();
+                        var commentExists = true;
+                        var n = 1;
+                        do
+                        {
+                            var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
+                            var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                            if (comment != null)
+                            //will only go in here if there are comments so will only work if it's there
+                            //IMPT look how to clear the session information if it fails somewhere...
+                            {
+                                comment.RequestID = newRequest.RequestID;
+                                _context.Add(comment);
+                            }
+                            else
+                            {
+                                commentExists = false;
+                            }
+                            n++;
+                        } while (commentExists);
+                        await _context.SaveChangesAsync();
+                        MoveDocumentsOutOfTempFolder(newRequest);
+
+                        //request.Product = await _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
+                        //RequestNotification requestNotification = new RequestNotification();
+                        //requestNotification.RequestID = request.RequestID;
+                        //requestNotification.IsRead = false;
+                        //requestNotification.RequestName = request.Product.ProductName;
+                        //requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
+                        //requestNotification.Description = "item ordered";
+                        //requestNotification.NotificationStatusID = 2;
+                        //requestNotification.TimeStamp = DateTime.Now;
+                        //requestNotification.Controller = "Requests";
+                        //requestNotification.Action = "NotificationsView";
+                        //requestNotification.OrderDate = DateTime.Now;
+                        //requestNotification.Vendor = request.Product.Vendor.VendorEnName;
+                        //_context.Update(requestNotification);
+                        //await _context.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
             {

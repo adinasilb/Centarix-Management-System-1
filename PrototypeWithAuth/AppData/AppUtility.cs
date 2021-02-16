@@ -87,7 +87,7 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
-        public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietry, Reusables, Equipment, Operation, Cells}
+        public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
         public enum RequestModalType { Create, Edit, Summary}
         public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save}
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
