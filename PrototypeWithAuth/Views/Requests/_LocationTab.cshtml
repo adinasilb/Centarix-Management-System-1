@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
-@{ 
+@{
     var disabled = "disabled";
     if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary && Model.RequestStatusID == 7)
     {
@@ -11,9 +11,9 @@
     }
 }
 
-    <div class="row modal-tab-name">
-        <span class="heading-1 col-12 modal-tab-name">Location</span>
-    </div>
+<div class="row modal-tab-name">
+    <span class="heading-1 col-12 modal-tab-name">Location</span>
+</div>
 @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary && Model.RequestStatusID == 7)
 {
     <div class="row">
@@ -33,7 +33,7 @@
 
                         <ul class="p-0 locationinstance dropdown-menu ">
                             @if (Model.ReceivedLocationViewModel != null)
-                            { 
+                            {
                                 foreach (var locationType in Model.ReceivedLocationViewModel.locationTypesDepthZero)
                                 {
                                     <li id="@locationType.LocationTypeID" class="open-sublocations-types" @*onclick="loadReceivedModalSubLocations(this.id)"*@>
@@ -117,11 +117,11 @@
                                                     @if (i < depth)
                                                     {
                                                         @*@for (int w=0; w<=Model.ChildrenLocationInstances.Count; w++)
-                                                {
-                                                    <li id="@Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceID" onclick="SLI(this)" value="@Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceID">
-                                                        @Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceName
-                                                    </li>
-                                                }*@
+                                                            {
+                                                                <li id="@Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceID" onclick="SLI(this)" value="@Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceID">
+                                                                    @Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceName
+                                                                </li>
+                                                            }*@
                                                         @foreach (var location in Model.ChildrenLocationInstances[depth - 1 - ((i + (count - (count - depth))) - depth)])
                                                         {
                                                             <li id="@location.LocationInstanceID" onclick="SLI(this)" value="@location.LocationInstanceID">
@@ -141,18 +141,19 @@
 
                 }
             </div>
-            </div>
+        </div>
     </div>
     <div class="row">
         <div class="visualView col-6 m-auto text-center">
             @if (Model.ReceivedModalVisualViewModel != null)
             {
-            <div>
-                @{ await Html.RenderPartialAsync("ReceivedModalVisual", Model.ReceivedModalVisualViewModel); }
-            </div>
+                <div>
+                    @{ await Html.RenderPartialAsync("ReceivedModalVisual", Model.ReceivedModalVisualViewModel); }
+                </div>
             }
         </div>
-        </div>
+    </div>
 
 }
 <script src="~/js/receivedmodal.js"></script>
+<script src="~/js/site.js"></script>

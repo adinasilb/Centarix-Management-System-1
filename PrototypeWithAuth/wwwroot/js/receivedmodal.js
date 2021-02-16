@@ -56,8 +56,9 @@
 	//    alert("sli clicked!");
 	//    SLI($(this));
 	//});
-	$(".modal").off("click", ".SLI-click").on("click", ".SLI-click", function () {
+	$(".modal, body").off("click", ".SLI-click").on("click", ".SLI-click", function () {
 		//alert("clicked SLI");
+		console.log("clicked SLI")
 		SLI($(this));
 	});
 
@@ -67,6 +68,7 @@
 		var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
 		$(nextSelect).html('');
 		console.log(nextSelect)
+		console.log("selected")
 		var locationInstanceParentId = $(el).val();
 		var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
 

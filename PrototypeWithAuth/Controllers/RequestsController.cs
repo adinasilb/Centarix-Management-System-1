@@ -1472,6 +1472,7 @@ namespace PrototypeWithAuth.Controllers
                  * only need this if using an existing product
                  */
                 requestItemViewModel.Request.Product = product;
+                requestItemViewModel.Request.Product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategory.ProductSubcategoryID;
                 // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
                 requestItemViewModel.Request.SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Request.SubProjectID).FirstOrDefault();
                 try
