@@ -56,7 +56,7 @@
 	//    alert("sli clicked!");
 	//    SLI($(this));
 	//});
-	$(".modal, body").off("click", ".SLI-click").on("click", ".SLI-click", function () {
+	$(".SLI-click").off("click").on("click", function (e) {
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
