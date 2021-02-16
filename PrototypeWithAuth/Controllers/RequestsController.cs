@@ -914,7 +914,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType)
+        public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel, AppUtility.OrderTypeEnum OrderType)
         {
             try
             {
@@ -978,8 +978,11 @@ namespace PrototypeWithAuth.Controllers
                         }
                         if (!isSavedUsingSession)
                         {
-
                             await _context.SaveChangesAsync();
+                            if (receivedModalVisualViewModel != null)
+                            {
+                                SaveLocations(receivedModalVisualViewModel, requestItemViewModel.Request);
+                            }
                             MoveDocumentsOutOfTempFolder(requestItemViewModel.Request);
                             await transaction.CommitAsync();
                             base.RemoveRequestSessions();
@@ -2635,68 +2638,10 @@ namespace PrototypeWithAuth.Controllers
         {
             var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
-
-            bool hasLocationInstances = false;
+            var hasLocationInstances = false;
             if (receivedLocationViewModel.CategoryType == 1)
             {
-                foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
-                {
-                    if (place.Placed)
-                    {
-                        hasLocationInstances = true;
-                        //getting the parentlocationinstanceid
-                        var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
-                        var mayHaveParent = true;
-                        while (mayHaveParent)
-                        {
-                            if (liParent.LocationInstanceParentID != null)
-                            {
-                                liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
-                            }
-                            else
-                            {
-                                mayHaveParent = false;
-                            }
-                        }
-
-                        //adding the requestlocationinstance
-                        var rli = new RequestLocationInstance()
-                        {
-                            LocationInstanceID = place.LocationInstanceId,
-                            RequestID = requestReceived.RequestID,
-                            ParentLocationInstanceID = liParent.LocationInstanceID
-                        };
-                        _context.Add(rli);
-                        try
-                        {
-                            await _context.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-
-                        //updating the locationinstance
-                        var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
-                        if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 204)
-                        {
-                            locationInstance.IsFull = true;
-                        }
-                        else
-                        {
-                            locationInstance.ContainsItems = true;
-                        }
-                        _context.Update(locationInstance);
-                        try
-                        {
-                            await _context.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                    }
-                }
+                SaveLocations(receivedModalVisualViewModel, requestReceived, hasLocationInstances);
                 //foreach (LocationInstance locationInstance in receivedModalVisualViewModel.ChildrenLocationInstances)
                 //{
                 //    bool flag = false;
@@ -2811,6 +2756,68 @@ namespace PrototypeWithAuth.Controllers
             }
             return RedirectToAction("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
 
+        }
+
+        private void SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool hasLocationInstances = false)
+        {
+            foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
+            {
+                if (place.Placed)
+                {
+                    hasLocationInstances = true;
+                    //getting the parentlocationinstanceid
+                    var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+                    var mayHaveParent = true;
+                    while (mayHaveParent)
+                    {
+                        if (liParent.LocationInstanceParentID != null)
+                        {
+                            liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
+                        }
+                        else
+                        {
+                            mayHaveParent = false;
+                        }
+                    }
+
+                    //adding the requestlocationinstance
+                    var rli = new RequestLocationInstance()
+                    {
+                        LocationInstanceID = place.LocationInstanceId,
+                        RequestID = requestReceived.RequestID,
+                        ParentLocationInstanceID = liParent.LocationInstanceID
+                    };
+                    _context.Add(rli);
+                    try
+                    {
+                        _context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                    //updating the locationinstance
+                    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
+                    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 204)
+                    {
+                        locationInstance.IsFull = true;
+                    }
+                    else
+                    {
+                        locationInstance.ContainsItems = true;
+                    }
+                    _context.Update(locationInstance);
+                    try
+                    {
+                        _context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
         }
 
 
@@ -3931,43 +3938,42 @@ namespace PrototypeWithAuth.Controllers
                         newRequest.OrderType = AppUtility.OrderTypeEnum.Save;
                         _context.Add(newRequest);
                         await _context.SaveChangesAsync();
-                        var commentExists = true;
-                        var n = 1;
-                        do
-                        {
-                            var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                            var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
-                            if (comment != null)
-                            //will only go in here if there are comments so will only work if it's there
-                            //IMPT look how to clear the session information if it fails somewhere...
-                            {
-                                comment.RequestID = newRequest.RequestID;
-                                _context.Add(comment);
-                            }
-                            else
-                            {
-                                commentExists = false;
-                            }
-                            n++;
-                        } while (commentExists);
-                        await _context.SaveChangesAsync();
+                        //var commentExists = true;
+                        //var n = 1;
+                        //do
+                        //{
+                        //    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
+                        //    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                        //    if (comment != null)
+                        //    //will only go in here if there are comments so will only work if it's there
+                        //    //IMPT look how to clear the session information if it fails somewhere...
+                        //    {
+                        //        comment.RequestID = newRequest.RequestID;
+                        //        _context.Add(comment);
+                        //    }
+                        //    else
+                        //    {
+                        //        commentExists = false;
+                        //    }
+                        //    n++;
+                        //} while (commentExists);
+                        //await _context.SaveChangesAsync();
                         MoveDocumentsOutOfTempFolder(newRequest);
 
-                        //request.Product = await _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
-                        //RequestNotification requestNotification = new RequestNotification();
-                        //requestNotification.RequestID = request.RequestID;
-                        //requestNotification.IsRead = false;
-                        //requestNotification.RequestName = request.Product.ProductName;
-                        //requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                        //requestNotification.Description = "item ordered";
-                        //requestNotification.NotificationStatusID = 2;
-                        //requestNotification.TimeStamp = DateTime.Now;
-                        //requestNotification.Controller = "Requests";
-                        //requestNotification.Action = "NotificationsView";
-                        //requestNotification.OrderDate = DateTime.Now;
-                        //requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                        //_context.Update(requestNotification);
-                        //await _context.SaveChangesAsync();
+                newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
+                RequestNotification requestNotification = new RequestNotification();
+                requestNotification.RequestID = newRequest.RequestID;
+                requestNotification.IsRead = false;
+                requestNotification.RequestName = newRequest.Product.ProductName;
+                requestNotification.ApplicationUserID = newRequest.ApplicationUserCreatorID;
+                requestNotification.Description = "item created";
+                requestNotification.NotificationStatusID = 2;
+                requestNotification.TimeStamp = DateTime.Now;
+                requestNotification.Controller = "Requests";
+                requestNotification.Action = "NotificationsView";
+                requestNotification.OrderDate = DateTime.Now;
+                _context.Update(requestNotification);
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
             {
