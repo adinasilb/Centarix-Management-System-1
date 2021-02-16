@@ -51,7 +51,9 @@ $(".load-product-details").off('click').on("click", function (e) {
     return false;
 });
 
-$("body, .modal").off('click', ".load-product-details-summary").on("click", ".load-product-details-summary", function (e) {
+//$("body, .modal").off('click', ".load-product-details-summary").on("click", ".load-product-details-summary", function (e) {
+     
+$(".load-product-details-summary").off('click').on("click", function (e) {
     e.preventDefault();
     e.stopPropagation();
     $("#loading").show();

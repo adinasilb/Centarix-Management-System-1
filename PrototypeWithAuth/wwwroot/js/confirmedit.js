@@ -157,8 +157,8 @@
 		$('.turn-edit-on-off').attr('name', 'edit')
 		if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
 			console.log("orders operations")
-			$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
-			$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
+			//$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
+			//$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
 			$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
 			$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
 		}
@@ -204,9 +204,13 @@
 			cache: true,
 			success: function (data) {
 				$("#loading").hide();
-				location.href = url;
+				if(url != "")
+				{
+					location.href = url;
+				}
+
 				$('.confirm-exit-modal').remove();
-				$(".modal").hide();
+				$(".modal").modal('hide');
 				$(".modal").replaceWith('');
 				$(".save-item").removeClass("save-item");
 			}

@@ -115,7 +115,9 @@
 				div.addClass("order-inv-filter");
 			}
 			$("#" + $foldername+"Input").addClass("contains-file");
-		  	$("#" + $foldername+"Input").valid();
+			if ($("#" + $foldername+"Input").rules()) {
+					$("#" + $foldername+"Input").valid();
+			}
 		}
 	};
 

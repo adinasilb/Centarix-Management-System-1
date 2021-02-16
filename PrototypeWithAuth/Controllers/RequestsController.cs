@@ -1447,8 +1447,9 @@ namespace PrototypeWithAuth.Controllers
             //}
 
             var product = _context.Products.Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == requestItemViewModel.Request.ProductID);
-            product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
+           // product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
             product.VendorID = requestItemViewModel.Request.Product.VendorID;
+            product.CatalogNumber = requestItemViewModel.Request.Product.CatalogNumber;
             //in case we need to return to the modal view
             product.ProductName = requestItemViewModel.Request.Product.ProductName;
             var parentCategoryId = requestItemViewModel.Request.Product.ProductSubcategory.ParentCategoryID;
