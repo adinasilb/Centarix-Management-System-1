@@ -18,7 +18,7 @@
 }
 @*<script src="~/js/VisualLocationsZoom.js"></script>*@
 @*<script src="~/js/site.js" asp-append-version="true"></script>*@
-
+    <script src="~/js/IndexTablePartial.js"></script>
 <div class="modal modal-view " id="visualZoomModal" role="dialog" aria-labelledby="User" data-backdrop="false">
     <div class="modal-dialog modal-lg no-box-shadow" role="document" style="max-height:100%; width: 90%; max-width: 100%">
         <div class="modal-content d-inline-block no-box-shadow  bg-transparent" >
@@ -63,7 +63,7 @@
                                             @*<a href="@Url.ActionLink("DetailsView", "Requests", new { @id = requestID })" class="btn btn-block text-light pb-5">@innerHtml</a>*@
 
 
-                                            <button class="btn btn-block vlz-filled load-order-details" value="@requestID" style="font-size:1.0625rem;">@innerHtml</button>
+                                            <button class="btn btn-link no-hover vlz-filled load-product-details-summary" value="@requestID" style="font-size:1.0625rem;">@innerHtml</button>
 
                                             <span style="color:white;"> @Model.ChildrenLocationInstances[z].Place</span>
                                         </td>
@@ -98,73 +98,3 @@
     </div>
 </div>
 
-<script>
-    $(".load-order-details").on("click", function (e) {
-        console.log("in order details");
-        e.preventDefault();
-        e.stopPropagation();
-        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        console.log("val: " + $(this).val());
-        var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false";
-        console.log("itemurl: " + $itemurl);
-        $("#loading").show();
-        $.ajax({
-            async: true,
-            url: $itemurl,
-            type: 'GET',
-            cache: true,
-            success: function (data) {
-                $("#loading").hide();
-                var modal = $(data);
-                $('body').append(modal);
-                $(".editModal").modal({
-                    backdrop: false,
-                    keyboard: false,
-                });
-                $(".editModal").modal('show');
-                $('.mdb-select').materialSelect();
-                $('#myForm a:first').tab('show');
-
-            }
-        });
-        return false;
-    });
-
-
-    $.fn.OnOpenModalView = function () {
-        $('.modal-content a:first').tab('show');
-        var parentCategoryId = $("#parentlist").val();
-        var subcategoryId1 = $("#sublist").val();
-        var url = "/Requests/GetSubCategoryList";
-
-        $.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
-            var item = "";
-            $.each(data, function (i, subCategory) {
-                item += '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>'
-            });
-            $("#sublist").html(item);
-            $("#sublist").val(subcategoryId1).change();
-        });
-
-        //For the order files
-
-        //goes into this function
-        $(".custom-file-input").on("change", function () {
-            var fileLabel = $(this).next(".custom-file-label");
-            var files = $(this)[0].files;
-            if (files.length > 1) {
-                fileLabel.html(files.length + ' files selected');
-            }
-            else {
-                fileLabel.html(files[0].name);
-            }
-        });
-
-        //get the current vendor id (if loading an already existing product)
-        var vendorid = $("#vendorList").val();
-        //call a function to lad the vendor business id from the vendor id
-        $.fn.ChangeVendorBusinessId(vendorid);
-
-    }
-
-</script>

@@ -35,7 +35,7 @@
         @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
         {
             <div class="d-flex align-items-center col-4">
-                <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save"  name="OrderType" class=" custom-button custom-button-font order-inv-background-color m-auto">Save</button>
+                <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save"  name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font order-inv-background-color m-auto">Save</button>
             </div>
         }
     </div>

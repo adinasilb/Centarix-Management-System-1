@@ -285,7 +285,7 @@ $(function () {
 		console.log("myDiv: " + myDiv);
 		var parentId = $(this).val();
 		$("#visualZoomModal").replaceWith('');
-		$(".modal").replaceWith('');
+		$("#visualZoomModal").replaceWith('');
 		//console.log("about to call ajax with a parentid of: " + parentId);
 		$.ajax({
 			async: true,

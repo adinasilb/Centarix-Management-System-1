@@ -586,8 +586,8 @@ namespace PrototypeWithAuth.Controllers
                         {
                              new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details-summary", AjaxID=r.RequestID},
-                            //new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                            // new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
+                             new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
+                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
                              new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },                             
                              new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=10, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
@@ -1007,15 +1007,22 @@ namespace PrototypeWithAuth.Controllers
                             case AppUtility.OrderTypeEnum.AddToCart:
                                 return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                             default:
-                                return RedirectToAction("Index", "Requests", new
+                                if(requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
                                 {
-                                    RequestIndexObject = new RequestIndexObject
+                                    return RedirectToAction("IndexInventory", "Requests", new
                                     {
-                                        PageType = AppUtility.PageTypeEnum.RequestRequest,
-                                        SectionType = AppUtility.MenuItems.Requests,
+                                        PageType = requestItemViewModel.PageType,
+                                        SectionType = requestItemViewModel.SectionType,
                                         SidebarType = AppUtility.SidebarEnum.List,
                                         RequestStatusID = requestItemViewModel.Request.RequestStatusID ?? 1,
-                                    }
+                                    });
+                                }
+                                return RedirectToAction("Index", "Requests", new
+                                {
+                                        PageType = requestItemViewModel.PageType,
+                                        SectionType = requestItemViewModel.SectionType,
+                                        SidebarType = AppUtility.SidebarEnum.List,
+                                        RequestStatusID = requestItemViewModel.Request.RequestStatusID ?? 1,
                                 });
 
                         }
@@ -1310,7 +1317,7 @@ namespace PrototypeWithAuth.Controllers
             //if it has => (which it should once its in a details view)
             requestItemViewModel.LocationInstances = new List<LocationInstance>();
             requestLocationInstances.ForEach(rli => requestItemViewModel.LocationInstances.Add(rli.LocationInstance));
-            if (request1.RequestStatusID == 3 || request1.RequestStatusID == 5 || request1.RequestStatusID == 4)
+            if (request1.RequestStatusID == 3 || request1.RequestStatusID == 5 || request1.RequestStatusID == 4 || request1.RequestStatusID == 7)
             {
                 ReceivedLocationViewModel receivedLocationViewModel = new ReceivedLocationViewModel()
                 {
