@@ -74,7 +74,7 @@ $(".locationRoom").off("change").on("change", function () {
             url: "/Locations/GetLocationRoomName?id="+$(this).val(),
             success: function (data) {
 				$(".roomName").html(data)
-				$(".labPartNameLabel").html();
+				$(".labPartNameLabel").html('');
             }
     }); 
 		}
