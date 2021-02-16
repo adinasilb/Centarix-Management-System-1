@@ -40,7 +40,7 @@
     <div id="comments" class="tab-pane fade">
         @{await Html.RenderPartialAsync("_CommentsTab", Model); }
     </div>
-    @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary))
+    @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) && Model.RequestStatusID != 7)
     {<div id="history" class="tab-pane fade">
             @{await Html.RenderPartialAsync("_HistoryTab", Model); }
         </div>

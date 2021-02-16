@@ -98,7 +98,10 @@
                                     }
                                     <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link @tabClass documents-tab next-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
                                     <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link @tabClass next-tab"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>
-                                    <li class="nav-item icon @summary"><a data-toggle="tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
+                                    @if (Model.Request.RequestStatusID != 7)
+                                    {
+                                        <li class="nav-item icon @summary"><a data-toggle="tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
+                                    }
 
                                 </ul>
                             </div>
