@@ -20,6 +20,7 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.MenuItems SectionType { get; set; }
         public bool IsNotifications { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
+        public AppUtility.RequestModalType ModalType { get; set; }
         public bool IsSummary { get; set; }
     }
 }
