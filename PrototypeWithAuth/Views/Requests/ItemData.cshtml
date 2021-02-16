@@ -40,6 +40,7 @@
 }
 
 <div class="container-fluid div-tabs no-box-shadow p-0">
+    <input type="hidden" value="@Model.ModalType" id="modalType" />
     @if (Model.ModalType == AppUtility.RequestModalType.Edit)
     {
         <div class=" row text-right mb- ">

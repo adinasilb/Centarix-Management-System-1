@@ -795,9 +795,10 @@ namespace PrototypeWithAuth.Controllers
                             }
                         }
                         var parentQuote = _context.ParentQuotes.Where(pr => pr.ParentQuoteID == request.ParentQuoteID).FirstOrDefault();
-                        parentQuote.Requests = _context.Requests.Where(r => r.ParentQuoteID == parentQuote.ParentQuoteID && r.IsDeleted != true).ToList();
+                        
                         if (parentQuote != null)
                         {
+                            parentQuote.Requests = _context.Requests.Where(r => r.ParentQuoteID == parentQuote.ParentQuoteID && r.IsDeleted != true).ToList();
                             //todo figure out the soft delete with child of a parent entity so we could chnage it to 0 or null
                             if (parentQuote.Requests.Count() == 0)
                             {
@@ -854,6 +855,10 @@ namespace PrototypeWithAuth.Controllers
                 else if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                 {
                     return RedirectToAction("Cart");
+                }
+                else if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                {
+                    return RedirectToAction("IndexInventory", deleteRequestViewModel.RequestIndexObject);
                 }
                 else
                 {

@@ -403,7 +403,8 @@ $(function () {
 		console.log("isEdittable: " + isEdittable);
 		console.log($("#masterSidebarType").val())
 		var isSummary = false;
-		if (($("#masterPageType").val() == "RequestSummary" && $("#masterSidebarType").val() !="Add" || $("#masterPageType").val() == "RequestCart") && $(".modalStep1").length==0) {
+		console.log($("#modalType").val())
+		if (($("#modalType").val()=="Summary" || $("#masterPageType").val() == "RequestCart") && $(".modalStep1").length==0) {
 			isSummary = true;
         }
 		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, isSummary);
