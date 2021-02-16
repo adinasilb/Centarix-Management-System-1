@@ -2668,10 +2668,17 @@ namespace PrototypeWithAuth.Controllers
         {
             var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
-            var hasLocationInstances = false;
+            bool hasLocationInstances = false;
+            foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
+            {
+                if (place.Placed)
+                {
+                    hasLocationInstances = true;
+                }
+            }
             if (receivedLocationViewModel.CategoryType == 1)
             {
-                SaveLocations(receivedModalVisualViewModel, requestReceived, hasLocationInstances);
+                SaveLocations(receivedModalVisualViewModel, requestReceived);
                 //foreach (LocationInstance locationInstance in receivedModalVisualViewModel.ChildrenLocationInstances)
                 //{
                 //    bool flag = false;
@@ -2788,13 +2795,12 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        private void SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool hasLocationInstances = false)
+        private void SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
         {
             foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
             {
                 if (place.Placed)
                 {
-                    hasLocationInstances = true;
                     //getting the parentlocationinstanceid
                     var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
                     var mayHaveParent = true;
