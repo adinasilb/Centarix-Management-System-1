@@ -2598,6 +2598,7 @@ namespace PrototypeWithAuth.Controllers
             var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
             LocationInstance secondChildLi = null;
             bool Is80Freezer = false;
+            bool Is25Freezer = false;
             var hasEmptyShelves = false;
             if (firstChildLI != null)
             {
@@ -2613,7 +2614,17 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-            if (parentLocationInstance.IsEmptyShelf == true || (secondChildLi != null && !Is80Freezer) || (Is80Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
+            if (parentLocationInstance.LocationTypeID == 501) //check if it containes empty shelves ONLY IF 25
+            {
+                Is25Freezer = true;
+                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmptyShelf == true).ToList();
+                if (shelves.Any())
+                {
+                    hasEmptyShelves = true;
+                }
+            }
+
+            if (parentLocationInstance.IsEmptyShelf == true || (secondChildLi != null && !Is80Freezer) || (Is80Freezer && !hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }

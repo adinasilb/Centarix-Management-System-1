@@ -161,8 +161,8 @@
 			var item = "<li>Select Location Instance</li>";
 			$.each(result, function (i, field) {
 				var emptyText = "";
-				if (field.isEmptyShelf) {
-					emptyText = " (Empty)";
+				if (field.isEmptyShelf && field.labPartID<=0) {
+					emptyText = " (nr)";
 				}
 				item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" >' + field.locationInstanceName + emptyText + '</li>'
 			});

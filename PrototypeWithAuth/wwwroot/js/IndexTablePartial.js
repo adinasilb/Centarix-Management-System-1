@@ -33,6 +33,22 @@ $.ajax({
     });
     return false;
 });
+
+$(".load-order-details").off('click').on("click", function (e) {
+    console.log("in order details");
+    e.preventDefault();
+    e.stopPropagation();
+    $("#loading").show();
+       var selectedPriceSort = [];
+    $("#priceSortContent .priceSort:checked").each(function (e) {
+        selectedPriceSort.push($(this).attr("enum"));
+    })
+    var section = $("#masterSectionType").val()
+    //takes the item value and calls the Products controller with the ModalView view to render the modal inside
+    var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value")  +  "&"+$.fn.getRequestIndexString()
+    $.fn.CallPageRequest($itemurl, "reorder");
+    return false;
+});
  
 $(".load-product-details").off('click').on("click", function (e) {
     e.preventDefault();

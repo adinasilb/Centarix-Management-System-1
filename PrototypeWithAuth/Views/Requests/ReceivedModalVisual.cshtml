@@ -56,7 +56,7 @@
                         }
                         var labelClass = "tiny-label-font-size m-0";
 
-                        if (Model.ChildrenLocationInstances[z].LocationTypeID == 201 && Model.ChildrenLocationInstances[z].IsEmptyShelf)
+                        if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && Model.ChildrenLocationInstances[z].IsEmptyShelf)
                         {
                             classes += " open-new-visual";
                             <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
@@ -69,7 +69,7 @@
                                 </div>
                             </td>
                         }
-                        else if (Model.ChildrenLocationInstances[z].LocationTypeID == 201 && !Model.ChildrenLocationInstances[z].IsEmptyShelf)
+                        else if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && !Model.ChildrenLocationInstances[z].IsEmptyShelf)
                         {
 
                             classes += " open-new-visual";
