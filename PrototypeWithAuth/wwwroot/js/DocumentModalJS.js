@@ -115,7 +115,7 @@
 				div.addClass("order-inv-filter");
 			}
 			$("#" + $foldername+"Input").addClass("contains-file");
-			if ($("#" + $foldername+"Input")) {
+			if ($("#" + $foldername+"Input").rules()) {
 					$("#" + $foldername+"Input").valid();
 			}
 		}

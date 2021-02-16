@@ -204,9 +204,13 @@
 			cache: true,
 			success: function (data) {
 				$("#loading").hide();
-				location.href = url;
+				if(url != "")
+				{
+					location.href = url;
+				}
+
 				$('.confirm-exit-modal').remove();
-				$(".modal").hide();
+				$(".modal").modal('hide');
 				$(".modal").replaceWith('');
 				$(".save-item").removeClass("save-item");
 			}
