@@ -214,6 +214,8 @@
 					$(this).children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
 					$(this).addClass('location-selected')
 					$('#locationSelected').val(true);
+					$('#locationSelected').removeClass("error")
+					$("#locationSelected-error").replaceWith('');
 				}
 			}
 		}

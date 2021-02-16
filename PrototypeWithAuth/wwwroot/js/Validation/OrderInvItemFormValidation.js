@@ -77,9 +77,14 @@ $('.ordersItemForm').validate({
 		},
 		"Request.UnitTypeID": "selectRequired",
 		"Request.SubUnitTypeID": "selectRequired",
-		"Request.SubSubUnitTypeID": "selectRequired"
+		"Request.SubSubUnitTypeID": "selectRequired",
+		"locationSelected": {
+			required: true
+			}
+
 	},
-	messages: {
+	messages:{
+		"locationSelected": "Please choose a location before submitting",
         "Request.Product.CatalogNumber": {
             remote: "this product has already been created"
         },
