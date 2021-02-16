@@ -67,8 +67,8 @@ $(function () {
 			//$.fn.EnableMaterialSelect('#Request_SubUnitTypeID', 'select-options-Request_SubUnitTypeID');
 		}
 		else {
-			console.log('disabling');
-			$.fn.DisableSubUnits();
+			//console.log('disabling');
+			//$.fn.DisableSubUnits();
 		}
 	};
 
@@ -86,7 +86,7 @@ $(function () {
 			$.fn.EnableSubSubUnits();
 		}
 		else {
-			$.fn.DisableSubSubUnits();
+			//$.fn.DisableSubSubUnits();
 		}
 	};
 	$.fn.CalculatePriceShekels = function () {

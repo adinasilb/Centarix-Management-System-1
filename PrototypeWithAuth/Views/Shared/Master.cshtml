@@ -437,25 +437,27 @@
                 $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
                 $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
             }
-            if ($(this).hasClass('orders')) {
+            if ($(element).hasClass('orders')) {
                 console.log("orders");
                 $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
                 $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
                 $.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
-                if (($("#subSubUnitTypeID").hasClass('.mark-readonly'))) {
+                console.log($("#subSubUnitTypeID"))
+                if ($("#subSubUnitTypeID").hasClass('mark-readonly')) {
                     $.fn.EnableSubSubUnits();
                     $.fn.ChangeSubSubUnitDropdown();
                 }
-                if (($("#subUnitTypeID").hasClass('.mark-readonly'))) {
+                console.log($("#subUnitTypeID"))
+                if ($("#subUnitTypeID").hasClass('mark-readonly')) {
                     console.log('enabling');
                     $.fn.EnableSubUnits();
                     $.fn.ChangeSubUnitDropdown();
                 }
             }
-            if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
+            if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
                 $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
             }
-            if ($(this).hasClass('users')) {
+            if ($(element).hasClass('users')) {
                 $.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
                 $.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
                 $.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');

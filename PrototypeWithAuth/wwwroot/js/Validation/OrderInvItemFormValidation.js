@@ -28,7 +28,7 @@ $('.ordersItemForm').validate({
 			//mindate: new Date('1900-12-17T03:24:00')
 		},
 		"Request.ExpectedSupplyDays": {
-			min: 0,
+			min: 1,
 			integer: true,
 			required: true
 		},
@@ -88,7 +88,7 @@ $('.ordersItemForm').validate({
 
 $.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
 	var vendorID = $("#vendorList").val();
-	var catalogNumber = $("#Request_CatalogNumber").val();
+	var catalogNumber = $("#Request_Product_CatalogNumber").val();
 	var productID = null;
 	var catalogResult = false;
 	

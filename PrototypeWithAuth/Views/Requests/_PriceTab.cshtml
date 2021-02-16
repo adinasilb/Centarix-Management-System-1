@@ -72,7 +72,7 @@
 vm => vm.Request.UnitTypeID,
 Model.UnitTypeList,
 "",
-htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @disabledProperty = disabledProperty, @id = "unitTypeID" }
+htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
 )
                             <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
                         </div>
@@ -172,14 +172,9 @@ Model.UnitTypeList,
                 {
                     plusDisplayNoneSubSub = "d-none";
                     cardDisplayNoneSubSub = "";
-                }
-                else
-                {
-                    plusDisplayNoneSubSub = "";
-                    cardDisplayNoneSubSub = "d-none";
-                    subsubdisabled = "disabled";
                     subsubMarkReadOnly = markReadOnlyClass;
-                }
+                    subsubdisabled = "disabled";
+                }              
             }
         }
         <div class="col-4 pl-0 RequestSubsubunitCard @cardDivDisplayNone">
