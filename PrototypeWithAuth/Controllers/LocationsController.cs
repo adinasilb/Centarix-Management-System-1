@@ -573,13 +573,15 @@ namespace PrototypeWithAuth.Controllers
                         case 500:
                             var childeNameAbbrev="";
                             var Parent25 = _context.LocationInstances.Where(l => l.LocationTypeID == 500).FirstOrDefault();
+                           
                             if (Parent25 != null)
                             {
                                 addLocationViewModel.LocationInstance = Parent25;
                             }
                             else
                             {
-                                addLocationViewModel.LocationInstance.Height = 1;
+                                var roomInstanceCount = _context.LocationRoomInstances.Count();
+                                addLocationViewModel.LocationInstance.Height = roomInstanceCount;
                                 addLocationViewModel.LocationInstance.Width = 1;
                                 _context.Add(addLocationViewModel.LocationInstance);
                                 await _context.SaveChangesAsync();
@@ -610,7 +612,11 @@ namespace PrototypeWithAuth.Controllers
                                     var room = _context.LocationInstances.Include(l=>l.LocationRoomInstance).ThenInclude(r=>r.LocationRoomType).Where(l => l.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefault();
                                     if(room!=null)
                                     {
+                                        room.Height += 1;
                                         subLocationViewModel.LocationInstances[i] = room;
+
+                                        _context.Update(subLocationViewModel.LocationInstances[i]);
+                                        await _context.SaveChangesAsync();
                                     }
                                     else
                                     {
@@ -780,17 +786,24 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> HasShelfBlock(int id)
+        public async Task<IActionResult> HasShelfBlock(int id, int roomID)
         {
             var part = await _context.LabParts.Where(lp => lp.LabPartID == id).FirstOrDefaultAsync();
-            if(part.HasShelves)
-            {
-                return PartialView();
-            }
-            return PartialView("Default");
+            var locationOfTypeCount = _context.LocationInstances.Where(li => li.LabPartID == id && roomID== li.LocationInstanceParent.LocationRoomInstanceID).Count();
+            var viewModel = new HasShelfViewModel() { HasShelves = part.HasShelves, LocationName = part.LabPartNameAbbrev+(locationOfTypeCount+1) };
+            return PartialView(viewModel);
+           
         }
+        
 
-
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<string> GetLocationRoomName(int id)
+        {
+            var room = await _context.LocationRoomInstances.Where(lp => lp.LocationRoomInstanceID == id).Include(lp=>lp.LocationRoomType).FirstOrDefaultAsync();
+            var roomByTypeCount = _context.LocationRoomInstances.Where(l => l.LocationRoomType == room.LocationRoomType && l.LocationRoomInstanceID != room.LocationRoomInstanceID).Count();
+            return room.LocationRoomType.LocationAbbreviation + (roomByTypeCount+1);
+        }
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public IActionResult AddLocationType()

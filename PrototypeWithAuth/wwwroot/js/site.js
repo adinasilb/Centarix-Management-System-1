@@ -531,11 +531,6 @@ $(function () {
 	//});
 
 
-	$(".open-loading").on("click", function (e) {
-		$("#loading").show();
-	});
-
-
 	$(".load-location-index-view").off("click").on("click", function (e) {
 		//clear the div to restart filling with new children
 		$(".load-location-index-view").removeClass("location-type-selected");

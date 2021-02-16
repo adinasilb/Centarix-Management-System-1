@@ -34,13 +34,12 @@
 
                     <div class="modal-body" style=" min-height:500px;">
 
-
                         <div class="row">
                             <div class="form-group col-12">
                                 @*<label asp-for="LocationTypesDepthOfZero" class="control-label">Type of storage</label>*@
                                 <div class=" form-control-plaintext p-0">
-                                    <select class=" mdb-select custom select-dropdown form-control-plaintext " asp-for="LocationInstance.LocationTypeID" id="locationTypeDDL">
-                                        <option selected>Location Type</option>
+                                    <select class=" mdb-select custom select-dropdown form-control-plaintext " asp-for="LocationInstance.LocationTypeID" id="locationTypeDDL" >
+                                        <option value="">Location Type</option>
                                         @foreach (var lp in Model.LocationTypesDepthOfZero)
                                         {
                                             <option value="@lp.LocationTypeID">@lp.LocationTypeName</option>
@@ -54,13 +53,12 @@
 
 
                         </div>
-                    
                         <div class="row divSublocations mx-0 px-0">
                         </div>
                         <br />
                         <div class="modal-footer-no">
                             <div class="text-center modal-footer-mt">
-                                <input id="submitAddLocation" type="submit" value="Save" asp-action="AddLocation" class="lab-man-background-color custom-button custom-button-font open-loading between-button-margin" />@*style="margin-right:11rem;"*@
+                                <input id="submitAddLocation" type="submit" value="Save" asp-action="AddLocation" class="lab-man-background-color custom-button custom-button-font  between-button-margin" />@*style="margin-right:11rem;"*@
                                 @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
                 {
                     <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
@@ -79,18 +77,21 @@
     $("#locationTypeDDL").materialSelect();
     $("#locationTypeDDL").change(function() {    
         var id = $(this).val();
-        var myDiv = $(".divSublocations");
-        $.ajax({
-            async: true,
-            url: "/Locations/SubLocation/?ParentLocationTypeID=" + id + "",
-            type: 'GET',
-            cache: true,
-            context: myDiv,
-            success: function (result) {
-                this.html(result);
-                $('.sub-select').materialSelect();
-                $("input[type='hidden']").remove();
-            }
-        });
+        if (id != "") {
+            var myDiv = $(".divSublocations");
+            $.ajax({
+                async: true,
+                url: "/Locations/SubLocation/?ParentLocationTypeID=" + id + "",
+                type: 'GET',
+                cache: true,
+                context: myDiv,
+                success: function (result) {
+                    this.html(result);
+                    $('.sub-select').materialSelect();
+                    $("input[type='hidden']").remove();
+                }
+            });
+        }
+        
     });
 </script>
