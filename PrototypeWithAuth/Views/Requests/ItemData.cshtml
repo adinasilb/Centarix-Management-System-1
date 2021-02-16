@@ -5,6 +5,40 @@
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> _userManager
 
+@{ string showItem = "";
+    string showLocation = "";
+    string showPrice = "";
+    string showDocuments = "";
+    string showComments = "";
+    string showHistory = "";
+    string showOrder = "";
+    switch (Model.Tab)
+    {
+        case 1:
+            showItem = " active show ";
+            break;
+        case 2:
+            showLocation = " active show ";
+            break;
+        case 3:
+            showPrice = " active show ";
+            break;
+        case 4:
+            showDocuments = " active show ";
+            break;
+        case 5:
+            showComments = " active show ";
+            break;
+        case 6:
+            showHistory = " active show ";
+            break;
+        case 7:
+            showOrder = " active show ";
+            break;
+
+    }
+}
+
 <div class="container-fluid div-tabs no-box-shadow p-0">
     @if (Model.ModalType == AppUtility.RequestModalType.Edit)
     {
@@ -19,35 +53,35 @@
         </div>
     }
 <div class="tab-content">
-    <div id="item" class="tab-pane fade in active show">
+    <div id="item" class="tab-pane fade in @showItem" value="1">
         @{await Html.RenderPartialAsync("_ItemTab", Model); }
     </div>
     @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Request.RequestStatusID == 3 || Model.RequestStatusID == 7)
     {
-        <div id="location" class="tab-pane fade">
+        <div id="location" class="tab-pane fade @showLocation" value="2">
             @{await Html.RenderPartialAsync("_LocationTab", Model); }
         </div>
     }
     @if (!Model.Request.Product.ProductSubcategory.ParentCategory.isProprietary)
     {
-        <div id="price" class="tab-pane fade ">
+        <div id="price" class="tab-pane fade @showPrice" value="3">
             @{await Html.RenderPartialAsync("_PriceTab", Model); }
         </div>
     }
-    <div id="documents" class="tab-pane fade">
+    <div id="documents" class="tab-pane fade @showDocuments" value="4">
         @{await Html.RenderPartialAsync("_DocumentsTab", Model); }
     </div>
-    <div id="comments" class="tab-pane fade">
+    <div id="comments" class="tab-pane fade @showComments" value="5">
         @{await Html.RenderPartialAsync("_CommentsTab", Model); }
     </div>
     @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary))
-    {<div id="history" class="tab-pane fade">
+    {<div id="history" class="tab-pane fade @showHistory" value="6">
             @{await Html.RenderPartialAsync("_HistoryTab", Model); }
         </div>
     }
     @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create))
     {
-        <div id="order" class="tab-pane fade order-tab">
+        <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
             @{await Html.RenderPartialAsync("_OrderTab", Model); }
         </div>
     }

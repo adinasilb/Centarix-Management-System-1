@@ -125,8 +125,10 @@
 			url = "/Admin/EditUserPartial?id=" + id + "&Tab=" + selectedTab;
 
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
-			section = $("#SectionType").val();
-			url = "/Requests/EditModalViewPartial?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section;
+			selectedTab = $('.tab-content').children('.active').attr("value");
+			console.log(selectedTab)
+			section = $("#masterSectionType").val();
+			url = "/Requests/ItemData?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section;
 
 		}
 		else {
@@ -143,6 +145,9 @@
 				//open the confirm edit modal
 				$('.partial-div').html(data);
 				$('.name').val($('.old-name').val())
+				if ($('.turn-edit-on-off').hasClass('orders')) {
+					$.fn.LoadEditModalDetails();
+				}
 			}
 		});
 	});

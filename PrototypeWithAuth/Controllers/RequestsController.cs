@@ -1165,21 +1165,27 @@ namespace PrototypeWithAuth.Controllers
             DeleteTemporaryDocuments();
             return requestItemViewModel;
         }
-
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ItemData(int? id, int? Tab = 0, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
+        {
+            var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable);
+            return PartialView(requestItemViewModel);
+        }
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
         {
-            return await editModalViewFunction(id, 0, SectionType, isEditable);
+            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable);
+            return PartialView(requestItemViewModel);
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
+        public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             bool isEditable = true)
         {
             string ModalViewType = "";
             if (id == null)
             {
-                return NotFound();
+                return null;
             }
             var productId = _context.Requests.Where(r => r.RequestID == id).Select(r => r.ProductID).FirstOrDefault();
 
@@ -1409,7 +1415,7 @@ namespace PrototypeWithAuth.Controllers
             //ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", addNewItemViewModel.Request.ProductID);
             //ViewData["RequestStatusID"] = new SelectList(_context.RequestStatuses, "RequestStatusID", "RequestStatusID", addNewItemViewModel.Request.RequestStatusID);
 
-            return PartialView(requestItemViewModel);
+            return requestItemViewModel;
 
         }
 

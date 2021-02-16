@@ -77,7 +77,7 @@ namespace PrototypeWithAuth.ViewModels
         public ReceivedModalSublocationsViewModel ReceivedModalSublocationsViewModel { get; set; }
         public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
         public LocationType ParentDepthZeroOfSelected { get; set; }
-        public int Tab { get; set; }
+        public int Tab { get; set; } = 1;
         public List<AppUtility.CommentTypeEnum> CommentTypes { get; set; }
         public List<Comment> Comments { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
