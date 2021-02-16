@@ -471,7 +471,7 @@
             console.log("in call page function");
             console.log("itemurl " + $itemurl);
             //delete existing modals
-            $('.modal').replaceWith('');
+            $('.modal:not(#visualZoomModal)').replaceWith('');
             $(".modal-backdrop").remove();
             $('#loading').show();
             $.ajax({

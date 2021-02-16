@@ -8,7 +8,7 @@ $('.ordersItemForm').validate({
 				remote:{
 		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
 		type: 'POST',
-		data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Request_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
+		data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Request_Product_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
 		return $(".turn-edit-on-off").attr("productID");
 	}else{return null}}},
 			},
@@ -86,30 +86,9 @@ $('.ordersItemForm').validate({
 		}
 });
 
-$.validator.addMethod("UniqueVendorAndCatalogNumber", function () {
-	var vendorID = $("#vendorList").val();
-	var catalogNumber = $("#Request_Product_CatalogNumber").val();
-	var productID = null;
-	var catalogResult = false;
-	
-	$.ajax({
-		async: false,
-		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
-		type: 'POST',
-		data: { "VendorID": vendorID, "CatalogNumber": catalogNumber, "ProductID": productID },
-		dataType: 'text',
-		success: function (result) {
-			catalogResult = result;
-		},
-		error: function (jqXHR, status, error) {
-			console.log(status, error);
-		}
-	});
-	return catalogResult;
-}, 'That product has already been created');
 
-
-$('#vendorList').change(function(){
+$("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , function(){
+	alert("in change vendor")
 	$('#Request_Product_CatalogNumber').valid();
 });
 	
