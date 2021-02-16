@@ -401,8 +401,9 @@ $(function () {
 		console.log("requestId: " + requestId);
 		var isEdittable = $(this).data("val");
 		console.log("isEdittable: " + isEdittable);
+		console.log($("#masterSidebarType").val())
 		var isSummary = false;
-		if (($("#masterPageType").val() == "RequestSummary" || $("#masterPageType").val() == "RequestCart") && $(".modalStep1").length==0) {
+		if (($("#masterPageType").val() == "RequestSummary" && $("#masterSidebarType").val() !="Add" || $("#masterPageType").val() == "RequestCart") && $(".modalStep1").length==0) {
 			isSummary = true;
         }
 		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, isSummary);
