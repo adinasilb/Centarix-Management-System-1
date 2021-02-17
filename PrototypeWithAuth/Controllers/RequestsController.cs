@@ -2682,7 +2682,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
-                        SaveLocations(receivedModalVisualViewModel, requestReceived);
+                        await SaveLocations(receivedModalVisualViewModel, requestReceived);
 
                         if (hasLocationInstances)
                         {
@@ -2737,7 +2737,6 @@ namespace PrototypeWithAuth.Controllers
                         requestNotification.Action = "NotificationsView";
                         requestNotification.Vendor = requestReceived.Product.Vendor.VendorEnName;
                         _context.Update(requestNotification);
-                        throw new Exception();
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
                     }
@@ -2774,7 +2773,7 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        private void SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
+        private async Task  SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
         {
             foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
             {
@@ -2814,7 +2813,7 @@ namespace PrototypeWithAuth.Controllers
 
                     //updating the locationinstance
                     var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
-                    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 204)
+                    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
                     {
                         locationInstance.IsFull = true;
                     }
