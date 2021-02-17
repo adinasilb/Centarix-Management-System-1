@@ -2671,12 +2671,19 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-                    .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
-                    var hasLocationInstances = false;
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
+                    bool hasLocationInstances = false;
+                    foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
+                    {
+                        if (place.Placed)
+                        {
+                            hasLocationInstances = true;
+                        }
+                    }
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
-                        await SaveLocations(receivedModalVisualViewModel, requestReceived, hasLocationInstances);
-                       
+                        SaveLocations(receivedModalVisualViewModel, requestReceived);
+
                         if (hasLocationInstances)
                         {
                             if (receivedLocationViewModel.Clarify)
