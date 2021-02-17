@@ -214,10 +214,10 @@ namespace PrototypeWithAuth
 
             var adminuser = new Employee()
             {
-                UserName = "adinasilberberg@gmail.com",
-                Email = "adinasilberberg@gmail.com",
-                FirstName = "Adina",
-                LastName = "Gayer",
+                UserName = "debbie@centarix.com",
+                Email = "debbie@centarix.com",
+                FirstName = "Debbie",
+                LastName = "Shulman",
                 EmailConfirmed = true,
                 TwoFactorEnabled = true,
                 EmployeeStatusID = 4,
@@ -227,7 +227,7 @@ namespace PrototypeWithAuth
                 UserNum = 0,
                 IsUser = true,
             };
-            var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
+            var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirTestSite.2020");
             adminuser.EmailConfirmed = true;
             var result = await UserManager.UpdateAsync(adminuser);
             if (createAdminUser.Succeeded)
