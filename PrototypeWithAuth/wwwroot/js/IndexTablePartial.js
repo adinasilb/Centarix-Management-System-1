@@ -203,10 +203,10 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
        console.log(formdata);
     }
     else{
-                    $(".modal").modal('hide');
+        $(".modal").modal('hide');
         contentType = false;
-            processType = false;
-        }
+        processType = false;
+   }
 
     $.ajax({
     contentType: contentType,
@@ -217,16 +217,37 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
     traditional: true,
     type: type,
     cache: false,
-        success: function (data) {
-        $(viewClass).html(data);
+    success: function (data) {
+    $(viewClass).html(data);
+    $("#loading").hide();
+    return true;
+},
+    error: function (jqxhr) {
+      
         $("#loading").hide();
+
+          if (jqxhr.status == 500) {
+                $('.modal').replaceWith('');
+                $(".modal-backdrop").remove();
+                var modal = $(jqxhr.responseText);
+               $('body').append(modal);
+              if($(".modal").length>0)
+                {
+                   
+                    $(".modal").modal({
+                        backdrop: true,
+                        keyboard: false,
+                    });
+                    $(".modal").modal('show');
+             }
+              else{
+                    $(".error-msg").html(jqxhr.responseText)
+              }
+               
+           }
+
         return true;
-    },
-        error: function () {
-            $(".error-msg").html(Response.responseText)
-            $("#loading").hide();
-            return true;
-    }
+}
     });
 
     return false;
