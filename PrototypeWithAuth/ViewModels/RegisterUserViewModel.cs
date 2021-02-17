@@ -140,6 +140,5 @@ namespace PrototypeWithAuth.ViewModels
         [TempData]
         public string StatusMessage { get; set; }
         public bool ConfirmedEmail { get; set; }
-        public List<string> Errors { get; set; }
     }
 }

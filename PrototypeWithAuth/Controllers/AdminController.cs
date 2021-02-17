@@ -170,7 +170,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    registerUserViewModel.Errors = new List<string>();
                     
                     int userid = 0;
                     int usernum = 1;
@@ -451,8 +450,8 @@ namespace PrototypeWithAuth.Controllers
                     else
                     {
                         foreach (IdentityError e in result.Errors)
-                        {                           
-                            registerUserViewModel.Errors.Add("User Failed to add. Please try again. " + e.Code.ToString() + " " + e.Description.ToString());
+                        {
+                            registerUserViewModel.ErrorMessage +=  "User Failed to add. Please try again. " + e.Code.ToString() + " " + e.Description.ToString();
                         }
                         //refill Model to view errors
                         TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
@@ -471,7 +470,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    registerUserViewModel.Errors.Add(ex.Message);
+                    registerUserViewModel.ErrorMessage += ex.Message;
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
                     TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
                     TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
