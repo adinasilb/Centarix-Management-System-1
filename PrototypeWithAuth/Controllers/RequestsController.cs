@@ -2767,13 +2767,12 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        private async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool hasLocationInstances = false)
+        private void SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
         {
             foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
             {
                 if (place.Placed)
                 {
-                    hasLocationInstances = true;
                     //getting the parentlocationinstanceid
                     var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
                     var mayHaveParent = true;
