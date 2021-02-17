@@ -11,10 +11,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using PrototypeWithAuth.Models;
 using Microsoft.AspNetCore.Mvc;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class RegisterUserViewModel
+    public class RegisterUserViewModel : ViewModelBase
     {
         public string ApplicationUserID { get; set; } //this is used for the Edit form
         public int UserNum { get; set; }

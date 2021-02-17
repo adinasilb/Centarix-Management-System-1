@@ -1,5 +1,6 @@
 ﻿using Org.BouncyCastle.Asn1.Mozilla;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using X.PagedList;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class RequestIndexViewModel
+    public class RequestIndexViewModel : ViewModelBase
     {
         public IPagedList<PrototypeWithAuth.Models.Request> PagedList { get; set; }
         public List<PriceSortViewModel> PriceSortEnums { get; set; }

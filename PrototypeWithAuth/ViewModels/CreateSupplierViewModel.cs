@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class CreateSupplierViewModel
+    public class CreateSupplierViewModel : ViewModelBase
     {
         public Vendor Vendor { get; set; }
         public List<VendorContactWithDeleteViewModel> VendorContacts { get; set; }

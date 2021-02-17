@@ -5,10 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class CartTotalViewModel
+    public class CartTotalViewModel : ViewModelBase
     {
         public Vendor Vendor { get; set; }
         public double VendorCartTotal { get; set; }

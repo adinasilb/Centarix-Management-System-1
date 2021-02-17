@@ -6,11 +6,11 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class PaymentNotificationsViewModel
+    public class PaymentNotificationsViewModel : ViewModelBase
     {
         
         public IEnumerable<IEnumerable<ParentRequest>> ParentRequests { get; set; }

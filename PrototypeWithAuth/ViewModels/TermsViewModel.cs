@@ -5,10 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class TermsViewModel
+    public class TermsViewModel : ViewModelBase
     {
         public ParentRequest ParentRequest { get; set; }
         public bool Paid { get; set; }
