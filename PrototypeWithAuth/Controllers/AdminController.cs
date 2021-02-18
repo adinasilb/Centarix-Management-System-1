@@ -1022,7 +1022,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [AllowAnonymous]
         public async Task<bool> TwoFactorSessionModal(bool rememberTwoFactor = true)
-        {
+        {            
             var user = _signManager.GetTwoFactorAuthenticationUserAsync();
             var appUser = await _context.Employees.Where(e => e.Email == user.Result.Email).FirstOrDefaultAsync();
             if (rememberTwoFactor)
