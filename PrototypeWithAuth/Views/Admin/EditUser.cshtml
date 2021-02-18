@@ -58,17 +58,11 @@
                         <input class="modal-product-title heading-1 userName form-control-plaintext border-0" disabled value="@Model.FirstName @Model.LastName" />
                     </div>
 
-                    <div class="row">
-                        @if (Model.ErrorMessage != null)
-                        {
-                           <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
-                           
-                        }
-                    </div>
+                 
                     <div class="row">
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center pl-0">
-                                <span class="error-message"></span>
+                               
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 nav-tabs-icons">
                                     <li class="nav-item icon">
                                         <a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link user-nav-link next-tab">

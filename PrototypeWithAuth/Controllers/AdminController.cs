@@ -843,16 +843,16 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         //should we move the delete here and test for the extension just in case it breaks over there
-                        throw new Exception();
-                        await transaction.CommitAsync();
-                    }                    
-                    
+
+                    }
+        
+                    await transaction.CommitAsync();
                 }
                 catch (DbUpdateException ex)
                 {
                     await transaction.RollbackAsync();
                     Response.StatusCode = 500;
-                    registerUserViewModel.ErrorMessage = ex.InnerException?.ToString();
+                    registerUserViewModel.ErrorMessage = ex.Message;
                     FillViewDropdowns(registerUserViewModel);
                     return PartialView("EditUser", registerUserViewModel);
                 }
@@ -860,7 +860,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     Response.StatusCode = 500;
-                    registerUserViewModel.ErrorMessage = ex.InnerException?.ToString();
+                    registerUserViewModel.ErrorMessage = ex.Message;
                     FillViewDropdowns(registerUserViewModel);
                     return PartialView("EditUser", registerUserViewModel);
                 }
@@ -882,6 +882,9 @@ namespace PrototypeWithAuth.Controllers
             registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
             if(registerUserViewModel.NewEmployee !=null)
             {
+                //get CentarixID
+                registerUserViewModel.CentarixID = AppUtility.GetEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == registerUserViewModel.ApplicationUserID).OrderBy(ci => ci.TimeStamp));
+
                 if (registerUserViewModel.NewEmployee.JobSubcategoryTypeID != null)
                 {
                     registerUserViewModel.JobSubcategoryTypes = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == registerUserViewModel.NewEmployee.JobSubcategoryType.JobCategoryTypeID).ToList();
@@ -1064,9 +1067,7 @@ namespace PrototypeWithAuth.Controllers
                     ConfirmedEmail = userSelected.EmailConfirmed
                 };
 
-                //get CentarixID
-                registerUserViewModel.CentarixID = AppUtility.GetEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == userSelected.Id).OrderBy(ci => ci.TimeStamp));
-
+                
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                 DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
                 FileInfo[] files1 = dir1.GetFiles(registerUserViewModel.UserNum + ".*");

@@ -1052,6 +1052,8 @@
 
         $.fn.AppendModalToBody = function(data)
         {
+            $(".modal").modal('hide');
+            $(".modal").replaceWith('');
             var modal = $(data);
             $('body').append(modal);
             $(".modal").modal({
@@ -1060,6 +1062,9 @@
             });
             //shows the modal
             $(".modal").modal('show');
+            $('.modal-content a:first').tab('show');
+            $(".mdb-select").materialSelect();
+
         }
     </script>
 
