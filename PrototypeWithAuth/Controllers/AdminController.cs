@@ -971,21 +971,29 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> SuspendUserModal(ApplicationUser applicationUser)
         {
-            applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
-            if (applicationUser.LockoutEnabled == true && (applicationUser.LockoutEnd > DateTime.Now))
+            try
             {
-                applicationUser.IsSuspended = false;
-                applicationUser.LockoutEnabled = false;
-                applicationUser.LockoutEnd = DateTime.Now;
+                applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
+                if (applicationUser.LockoutEnabled == true && (applicationUser.LockoutEnd > DateTime.Now))
+                {
+                    applicationUser.IsSuspended = false;
+                    applicationUser.LockoutEnabled = false;
+                    applicationUser.LockoutEnd = DateTime.Now;
+                }
+                else
+                {
+                    applicationUser.IsSuspended = true;
+                    applicationUser.LockoutEnabled = true;
+                    applicationUser.LockoutEnd = new DateTime(2999, 01, 01);
+                }
+                _context.Update(applicationUser);
+                await _context.SaveChangesAsync();
             }
-            else
+            catch (Exception ex)
             {
-                applicationUser.IsSuspended = true;
-                applicationUser.LockoutEnabled = true;
-                applicationUser.LockoutEnd = new DateTime(2999, 01, 01);
+                return RedirectToAction("Index",new { ErrorMessage= ex.Message });
             }
-            _context.Update(applicationUser);
-            _context.SaveChanges();
+
             return RedirectToAction("Index");
         }
 

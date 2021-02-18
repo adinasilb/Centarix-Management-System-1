@@ -23,7 +23,7 @@
                     @Model.Email
                 </div>
                 <div class="modal-body ">
-
+            
                     @Html.HiddenFor(model => model.Id)
                     <span class="text">Are you sure you would like to @suspendText this user?</span>
                     <div class="modal-footer-mt ">
@@ -36,9 +36,9 @@
                             {
                                 <input type="submit" value="Suspend" asp-action="SuspendUserModal" class="custom-button custom-button-font users-background-color between-button-margin" />
                             }
-                            <input type="button" data-dismiss="modal" value="Cancel" class="custom-cancel custom-button"  onclick="$(this).closest('.modal').modal('hide');"/>
+                            <input type="button" data-dismiss="modal" value="Cancel" class="custom-cancel custom-button" onclick="$(this).closest('.modal').modal('hide');" />
                         </div>
-                       
+
                     </div>
                 </div>
             </form>
