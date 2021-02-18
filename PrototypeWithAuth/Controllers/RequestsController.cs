@@ -1045,7 +1045,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message?.ToString();
+                requestItemViewModel.ErrorMessage = ex.Message?.ToString();
                 Response.StatusCode = 500;
                 //Response.WriteAsync(ex.Message?.ToString());
                 if(requestItemViewModel.RequestStatusID == 7)
