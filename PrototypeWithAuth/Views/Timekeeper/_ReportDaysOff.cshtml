@@ -13,30 +13,37 @@
 <div class="row   mb-5 text-center ">
     <div class="col-8">
         <div class="row  entry-exit-background p-5 ">
-            <div class="col-6 ">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6 ">
 
-                <button class="custom-button-font custom-button timekeeper-alt-color report-off-day @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.VacationDay" type="button">
-                    <i class="icon-luggage-24px-1 mx-2" style="font-size: 1.25rem;position: relative;"></i>Report vacation day
-                </button>
-                <br />
-                <label class=" text mt-3 " style=" color: #808080;">@Model.TotalVacationDaysPerYear Vacation Days Per Year</label>
+                        <button class="custom-button-font custom-button timekeeper-alt-color report-off-day @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.VacationDay" type="button">
+                            <i class="icon-luggage-24px-1 mx-2" style="font-size: 1.25rem;position: relative;"></i>Report vacation day
+                        </button>
+                        <br />
+                        <label class=" text mt-3 " style=" color: #808080;">@Model.TotalVacationDaysPerYear Vacation Days Per Year</label>
+                    </div>
+
+                    <div class="col-6  ">
+                        <button class="custom-button-font custom-button timekeeper-color report-off-day  @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.SickDay" style="" type="button">
+                            <i class="icon-sick-24px-1 mx-2" style="font-size: 1.25rem;position: relative;">
+                            </i> Report sick leave
+                        </button>
+                        <br />
+                        <label class=" text mt-3 " style=" color: #808080;">@Model.TotalSickDaysPerYear Sick Days Per Year</label>
+
+                    </div>
+
+                </div>
+
+                <div class="row ">
+                    <div class="offset-3 col-6  ">
+                        <button class="custom-button-font custom-button disabled-color report-off-day  @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.MaternityLeave" style="" type="button">
+                            Report Maternity Leave
+                        </button>
+                    </div>
+                </div>
             </div>
-
-            <div class="col-6  ">
-                <button class="custom-button-font custom-button timekeeper-color report-off-day  @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.SickDay" style="" type="button">
-                    <i class="icon-sick-24px-1 mx-2" style="font-size: 1.25rem;position: relative;">
-                    </i> Report sick leave
-                </button>
-                <br />
-                <label class=" text mt-3 " style=" color: #808080;">@Model.TotalSickDaysPerYear Sick Days Per Year</label>
-              
-            </div>
-
-        </div>
-        <div class="row ">
-            <button class="custom-button-font custom-button timekeeper-color report-off-day  @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.MaternityLeave" style="" type="button">
-                Report Maternity Leave
-            </button>
         </div>
 
     </div>
