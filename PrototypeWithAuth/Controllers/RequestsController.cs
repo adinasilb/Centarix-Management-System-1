@@ -3866,7 +3866,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message?.ToString();
+                uploadQuoteOrderViewModel.ErrorMessage = ex.Message?.ToString();
                 Response.StatusCode = 500;
                 return PartialView("UploadOrderModal", uploadQuoteOrderViewModel);
             }

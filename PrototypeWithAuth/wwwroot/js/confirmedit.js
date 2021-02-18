@@ -90,11 +90,10 @@
 				//	alert("error message: " + $(".hasErrorMessage").val());
 				//	$(".error-message").html($(".hasErrorMessage").val());
 				//}
-			}//,
-			//error: function (xhr, ajaxOptions, errorThrown) {
-			//	alert("error: " + xhr.responseText);
-			//	$(".error-msg").html(xhr.responseText);
-			//}
+			},
+			error: function (xhr) {
+				$.fn.AppendModalToBody(xhr.responseText);
+			}
 		});
 		$.fn.TurnToDetails();
 	});
