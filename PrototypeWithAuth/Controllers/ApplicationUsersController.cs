@@ -447,9 +447,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
+                return RedirectToAction("_AwaitingApproval", new { ErrorMessage= ex.Message});
             }
 
             return RedirectToAction("_AwaitingApproval");
