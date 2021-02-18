@@ -222,7 +222,11 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _AwaitingApproval(string? ErrorMessage = null)
         {
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = GetAwaitingApprovalModel();
-            awaitingApproval[0].ErrorMessage = ErrorMessage;
+            if (awaitingApproval.Count>0)
+            {
+                awaitingApproval[0].ErrorMessage = ErrorMessage;
+            }
+
             return PartialView(awaitingApproval);
         }
         private List<EmployeeHoursAwaitingApprovalViewModel> GetAwaitingApprovalModel()
