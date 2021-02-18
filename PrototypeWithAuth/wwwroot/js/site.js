@@ -1432,34 +1432,15 @@ $(function () {
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
-	$(".report-vacation-days").off('click').click(function (e) {
-		var pageType = "";
-		if ($(this).hasClass("SummaryHours")) {
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
-		var itemurl = "Vacation?PageType=" + pageType;
+
+	$(".report-off-day").off('click').click(function (e) {
+		var offDayType = $(this).attr("value");
+		var pageType = $("#masterPageType").val();
+		var itemurl = "OffDayModal?PageType=" + pageType + "&OffDayType=" + offDayType;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
 
-	$(".report-sick-days").off('click').click(function (e) {
-		$("#loading").show();
-		var pageType = "";
-		var selectedDate = null;
-		if ($(this).hasClass("SummaryHours")) {
-			selectedDate = $(this).val();
-			console.log("selecteddate: " + selectedDate)
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
-		var itemurl = "SickDay?PageType=" + pageType + "&date=" + selectedDate;
-		$.fn.CallModal(itemurl);
-	});
 	$('.no-hours-reported').off('change').change(function (e) {
 		var selectedDate = $(this).attr("date");
 		var pageType = "SummaryHours";
@@ -1475,31 +1456,24 @@ $(function () {
 				$.fn.CallModal(itemurl);
 				break;
 			case "3":
-				var itemurl = "SickDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
+				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SickDay";
 				$.fn.CallModal(itemurl);
 				break;
 			case "4":
-				var itemurl = "VacationDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
+				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=VacationDay";
 				$.fn.CallModal(itemurl);
 				break;
 		}
 	});
-	$(".confirm-report-sick").off('click').click(function (e) {
+	//$(".confirm-report-offDay").off('click').click(function (e) {
 
-		$("#loading").show();
-		var pageType = "";
-		var selectedDate = null;
-		if ($(this).hasClass("SummaryHours")) {
-			selectedDate = $(this).val();
-			console.log("selecteddate: " + selectedDate)
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
-		var itemurl = "SickDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
-		$.fn.CallModal(itemurl);
-	});
+	//	$("#loading").show();
+	//	var pageType = $("#masterPageType").val();
+	//	var	selectedDate = $(this).val();
+	//	console.log("selecteddate: " + selectedDate);
+	//	var itemurl = "OffDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
+	//	$.fn.CallModal(itemurl);
+	//});
 	$("body").on("change", "#EmployeeHour_Date", function (e) {
 		$('.day-of-week').val($.fn.GetDayOfWeek($.fn.formatDateForSubmit($(this).val())));
 	});
@@ -1688,8 +1662,9 @@ $(function () {
 	//		msg = '<span class="msg">Hidden input value: ';
 	//	$('.msg').html(msg + input + '</span>');
 	//}); 
-	$.fn.SaveOffDays = function (url, pageType, month) {
+	$.fn.SaveOffDays = function (url, month) {
 		alert("in save off days, url: " + url);
+		
 		var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
 		var dateRangeFromDay = rangeFrom.attr('data-date');
@@ -1698,7 +1673,8 @@ $(function () {
 		var dateRangeToDay = rangeTo.attr('data-date');
 		var dateRangeToMonth = rangeTo.attr('data-month');
 		var dateRangeToYear = rangeTo.attr('data-year');
-		var dateFrom = new Date(dateRangeFromYear, dateRangeFromMonth, dateRangeFromDay, 0, 0, 0).toISOString();
+		
+		var dateFrom = new Date(dateRangeFromYear, dateRangeFromMonth, dateRangeFromDay, 0, 0, 0).toUTCString();
 		var dateTo = '';
 		if (dateRangeToDay == undefined) {
 			dateTo = null;
@@ -1707,12 +1683,21 @@ $(function () {
 			dateTo = new Date(dateRangeToYear, dateRangeToMonth, dateRangeToDay, 0, 0, 0).toISOString();
 		}
 
+		$("#Month").val(month);
+		$("#FromDate").val(dateFrom);
+		$("#ToDate").val(dateTo);
+
+		var formData = new FormData($("#myForm")[0]);
+		console.log(...formData)
 		console.log(dateFrom + "-" + dateTo);
 		alert("about to go into ajax, url: " + url);
 		$.ajax({
+			processData: false,
+			contentType: false,
 			async: true,
-			url: "/Timekeeper/" + url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType + "&month=" + month,
+			url: "/Timekeeper/" + url , //+ '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType +  "&month=" + month,
 			type: 'POST',
+			data: formData,
 			cache: true,
 			success: function (data) {
 				console.log(data)
@@ -1725,105 +1710,47 @@ $(function () {
 					alert("else")
 					$(".render-body").html(data);
 				}
-
-
 			}
 
 		});
 	}
 
-	$("#saveVacation").off('click').click(function (e) {
+	$("#saveOffDay").off('click').click(function (e) {
 		e.preventDefault();
 
-		var pageType = "";
-		if ($(this).hasClass("SummaryHours")) {
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
+		var pageType = $('#masterPageType').val()
 
-		$.fn.SaveOffDays("SaveVacation", pageType, "");
+		$.fn.SaveOffDays("OffDayModal", pageType, "");
 	});
 
-	$.fn.SaveSick = function () {
-		var pageType = "";
-		if ($("#saveSick").hasClass("SummaryHours")) {
-			var month = $('#months').val();
-			console.log("month: " + month);
-			pageType = "SummaryHours";
-		}
-		if ($("#saveSick").hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
-		$.fn.SaveOffDays("SaveSick", pageType, month);
-	}
 
-	$(".modal").off('click').on("click", "#saveSick", function (e) {
-		e.preventDefault();
-		$.fn.SaveSick();
-	});
-
-	$(".modal").on("click", "#saveSickConfirmation", function (e) {
+	$(".modal").on("click", "#saveOffDayConfirmation", function (e) {
 		e.preventDefault();
 		alert("save sick confirmation");
-		var pageType = "";
-		if ($(this).hasClass("SummaryHours")) {
-			var month = $('#months').attr("value");
-			console.log("month: " + month);
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
 		//alert($('#SelectedDate').val())
-		var date = $('#SelectedDate').val();
+		$("#FromDate").val($('#SelectedDate').val());
+		$("#Month").val($("#months").val());
 		//var dd = parseInt(date[2]);
 		//var mm = parseInt(date[1]);
 		//var yyyy = parseInt(date[0]);
 		//var dateFrom = new Date(yyyy, mm, dd);;
+		var formData = new FormData($("#myForm")[0])
 		$.ajax({
+			processData: false,
+			contentType: false,
 			async: true,
-			url: "/Timekeeper/SickDayConfirmModal" + '?dateFrom=' + new Date(date).toISOString() + "&PageType=" + pageType + "&month=" + month,
+			url: "/Timekeeper/OffDayConfirmModal",
 			type: 'POST',
+			data: formData,
 			cache: false,
 			success: function (data) {
 				$(".modal").modal('hide');
 				$("#hoursTable").html(data);
-
 			}
 		});
 	});
 
-	$("body").off('click').on("click", "#saveVacationConfirmation", function (e) {
-		e.preventDefault();
-		var pageType = "";
-		if ($(this).hasClass("SummaryHours")) {
-			var month = $('#months').val();
-			console.log("month: " + month);
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
-		//alert($('#SelectedDate').val())
-		var date = $('#SelectedDate').val();
-		var dd = parseInt(date[2]);
-		var mm = parseInt(date[1]);
-		var yyyy = parseInt(date[0]);
-		var dateFrom = new Date(yyyy, mm, dd);
-		$.ajax({
-			async: true,
-			url: "/Timekeeper/VacationDayConfirmModal" + '?dateFrom=' + new Date(date).toISOString() + "&PageType=" + pageType + "&month=" + month,
-			type: 'POST',
-			cache: false,
-			success: function (data) {
-				$(".modal").modal('hide');
-				$("#hoursTable").html(data);
-
-			}
-		});
-	});
+	
 	//function ChangeEdits() {
 	//	alert("sitejs change edits");
 	//};
