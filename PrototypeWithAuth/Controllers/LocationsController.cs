@@ -770,19 +770,6 @@ namespace PrototypeWithAuth.Controllers
         //    _context.LocationInstances.Where(l=>l.LocationTypeID == typeID && l.loap)
         //}
 
-        public void DeleteLocationsIfFailed(LocationInstance ParentLocationInstance, List<List<int>> placeholderIds)
-        {
-            _context.Remove(ParentLocationInstance);
-            foreach (List<int> listID in placeholderIds)
-            {
-                foreach (int liID in listID)
-                {
-                    var currentInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == liID).FirstOrDefault();
-                    _context.Remove(currentInstance);
-                    _context.SaveChanges();
-                }
-            }
-        }
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
@@ -791,8 +778,7 @@ namespace PrototypeWithAuth.Controllers
             var part = await _context.LabParts.Where(lp => lp.LabPartID == id).FirstOrDefaultAsync();
             var locationOfTypeCount = _context.LocationInstances.Where(li => li.LabPartID == id && roomID== li.LocationInstanceParent.LocationRoomInstanceID).Count();
             var viewModel = new HasShelfViewModel() { HasShelves = part.HasShelves, LocationName = part.LabPartNameAbbrev+(locationOfTypeCount+1) };
-            return PartialView(viewModel);
-           
+            return PartialView(viewModel);           
         }
         
 
@@ -803,63 +789,6 @@ namespace PrototypeWithAuth.Controllers
             var room = await _context.LocationRoomInstances.Where(lp => lp.LocationRoomInstanceID == id).Include(lp=>lp.LocationRoomType).FirstOrDefaultAsync();
             var roomByTypeCount = _context.LocationRoomInstances.Where(l => l.LocationRoomType == room.LocationRoomType && l.LocationRoomInstanceID != room.LocationRoomInstanceID).Count();
             return room.LocationRoomType.LocationAbbreviation + (roomByTypeCount+1);
-        }
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public IActionResult AddLocationType()
-        {
-            AddLocationTypeViewModel addLocationTypeViewModel = new AddLocationTypeViewModel
-            {
-                Sublocations = new List<string>()
-            };
-            addLocationTypeViewModel.Sublocations.Add(""); // instantiating an empty sublocation, the rest will not go thru the view - its hard coded into the js
-            return PartialView(addLocationTypeViewModel);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Requests")]
-        public IActionResult AddLocationType(AddLocationTypeViewModel addLocationTypeViewModel)
-        {
-            int foriegnKeyParent = 0; //retain primary key to be a foriegn key for next model
-
-            for (int i = 0; i < addLocationTypeViewModel.Sublocations.Count; i++)
-            {
-                if (i == 0)
-                {
-                    var listOfLocationNames = _context.LocationTypes.Where(lt => lt.LocationTypeName == addLocationTypeViewModel.Sublocations[0]).Where(lt => lt.Depth == 0).ToList();
-                    if (listOfLocationNames.Count > 0)
-                    {
-                        AddLocationTypeViewModel addLocationTypeViewModelErrorDoubleName = new AddLocationTypeViewModel();
-                        return View(addLocationTypeViewModelErrorDoubleName);
-                    }
-                }
-
-                LocationType locationType = new LocationType()
-                {
-                    LocationTypeName = addLocationTypeViewModel.Sublocations[i],
-                    Depth = i
-                };
-
-                if (foriegnKeyParent > 0)
-                {
-                    locationType.LocationTypeParentID = foriegnKeyParent;
-                }
-                _context.Add(locationType);
-                _context.SaveChanges();
-                if (foriegnKeyParent > 0)
-                {
-                    var prevRecord = _context.LocationTypes.Where(pr => pr.LocationTypeID == foriegnKeyParent).FirstOrDefault();
-                    prevRecord.LocationTypeChildID = locationType.LocationTypeID;
-                    _context.Update(locationType);
-                    _context.SaveChanges();
-                }
-                foriegnKeyParent = locationType.LocationTypeID;
-
-            };
-
-
-
-            return RedirectToAction("Index");
         }
 
     }

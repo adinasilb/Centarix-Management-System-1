@@ -268,9 +268,7 @@ namespace PrototypeWithAuth.Controllers
             var userid = _userManager.GetUserId(User);
             var user = _context.Employees.Where(u => u.Id == userid).Include(e => e.SalariedEmployee).FirstOrDefault();
             return PartialView(base.SummaryHoursFunction(DateTime.Now.Month, DateTime.Now.Year, user));
-        }
-
-     
+        }     
 
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]

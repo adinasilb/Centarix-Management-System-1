@@ -172,25 +172,7 @@ namespace PrototypeWithAuth.Controllers
             TwoFactorAuthenticationViewModel twoFactorAuthenticationViewModel = new TwoFactorAuthenticationViewModel { };
             return View(twoFactorAuthenticationViewModel);
         }
-        [HttpPost]
-        public async Task<IActionResult> Login2FA(TwoFactorAuthenticationViewModel twoFactorAuthenticationViewModel)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            // Strip spaces and hypens
-            var verificationCode = twoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
-
-            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
-
-            if (!is2faTokenValid)
-            {
-                ModelState.AddModelError(string.Empty, "Invalid authentication code.");
-                return View(twoFactorAuthenticationViewModel);
-            }
-
-            //await _userManager.SetTwoFactorEnabledAsync(user, true);
-            return RedirectToAction("Index");
-        }
+       
         private void fillInTimekeeperMissingDays(Employee user)
         {           
             DateTime nextDay = user.LastLogin.AddDays(1);
