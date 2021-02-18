@@ -364,7 +364,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         throw ex;
                     }
-                    throw new Exception();
+                    await transaction.CommitAsync();
                 }
                 catch (Exception ex)
                 {
