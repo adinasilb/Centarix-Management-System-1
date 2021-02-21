@@ -35,9 +35,36 @@
 
 
             <div class="form-group modal-line-1-header modal-sides row">
-                <div class="heading-1 modal-title col-8"><input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom heading-1" placeholder="(item name)" /></div>
-                <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
-                @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary || Model.SectionType==AppUtility.MenuItems.Operations)
+                @if (Model.SectionType != AppUtility.MenuItems.Operations)
+                {
+                    <div class="heading-1 modal-title col-8"><input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom heading-1" placeholder="(item name)" /></div>
+                    <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
+                }
+                else
+                {
+                    <div class="col-md-4 ">
+                        <div class="form-group">
+                            @Html.DropDownListFor(
+                vm => vm.Request.Product.VendorID,
+                new SelectList(
+                Model.Vendors,
+                dataValueField: "VendorID",
+                dataTextField: "VendorEnName"),
+                //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+                "Select a Vendor",
+                htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext heading-1 " + " " , @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
+                )
+                            <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
+                        </div>
+                    </div>
+                    <input class="" type="hidden" value="" id="vendor-primary-email" />
+                    <div class="col-md-4">
+                        <div class="form-group">                           
+                            <input asp-for="Request.Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom heading-1" readonly />
+                        </div>
+                    </div>
+                }
+                @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary || Model.SectionType == AppUtility.MenuItems.Operations)
                 {
                     <div class="d-flex align-items-center col-4">
                         <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto">Save</button>
@@ -107,5 +134,8 @@
             console.log("form ready")
             $(".top-menu").addClass("save-item");
             $(".side-menu").addClass("save-item");
+            $("#vendorList").materialSelect();
+
         })
+       
     </script>

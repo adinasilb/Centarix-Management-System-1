@@ -1071,6 +1071,7 @@ namespace PrototypeWithAuth.Controllers
             }
             
             RequestItemViewModel requestItemViewModel = await FillRequestItemViewModel(categoryType, productSubCategoryId);
+            requestItemViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync(); 
             requestItemViewModel.SectionType = sectionType;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.Request.Product.ProductName = itemName;
