@@ -31,7 +31,7 @@ using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class AdminController : ControllerBase
+    public class AdminController : SharedController
     {
         private readonly ApplicationDbContext _context;
         private SignInManager<ApplicationUser> _signManager;
@@ -434,10 +434,7 @@ namespace PrototypeWithAuth.Controllers
                             //should we move the delete here and test for the extension just in case it breaks over there
                         }
 
-                        if (IsUser)
-                        {
-                            SendConfimationEmail(user);
-                        }
+                        
                         //}
                         //else
                         //{
@@ -467,6 +464,11 @@ namespace PrototypeWithAuth.Controllers
                     }
                     
                    await transaction.CommitAsync();
+
+                    if (IsUser)
+                    {
+                        SendConfimationEmail(user);
+                    }
                 }
                 catch (Exception ex)
                 {

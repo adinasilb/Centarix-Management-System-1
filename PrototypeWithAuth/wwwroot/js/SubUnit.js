@@ -226,7 +226,7 @@ $(function () {
 		var selected = $(':selected', $("#subUnitTypeID"));
 		var selected2 = $(':selected', $("#select-options-subUnitTypeID"));
 		var optgroup = selected.closest('optgroup').attr('label');
-		var optgroup2 = selected.closest('optgroup').attr('label');
+		var optgroup2 = selected2.closest('optgroup').attr('label');
 		var selectedIndex = $('#select-options-subSubUnitTypeID').find(".active").index();
 		console.log("select index" + selectedIndex)
 		var subOptgroup = $(':selected', $("#subSubUnitTypeID")).closest('optgroup').attr('label');

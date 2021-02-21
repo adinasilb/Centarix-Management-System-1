@@ -41,7 +41,7 @@ using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class RequestsController : ControllerBase
+    public class RequestsController : SharedController
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -919,7 +919,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel, AppUtility.OrderTypeEnum OrderType)
+        public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel? receivedModalVisualViewModel = null)
         {
             try
             {

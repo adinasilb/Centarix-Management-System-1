@@ -33,7 +33,7 @@ using Microsoft.AspNetCore.Localization;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class OperationsController : ControllerBase
+    public class OperationsController : SharedController
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;

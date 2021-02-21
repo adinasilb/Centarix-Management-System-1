@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ExpensesController : ControllerBase
+    public class ExpensesController : SharedController
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;

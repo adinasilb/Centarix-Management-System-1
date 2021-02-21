@@ -13,7 +13,7 @@ using Abp.Extensions;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ProductSubcategoriesController : ControllerBase
+    public class ProductSubcategoriesController : SharedController
     {
         private readonly ApplicationDbContext _context;
 

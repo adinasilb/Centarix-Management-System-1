@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class CalibrationsController : ControllerBase
+    public class CalibrationsController : SharedController
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;

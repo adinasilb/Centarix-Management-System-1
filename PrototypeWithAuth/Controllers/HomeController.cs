@@ -18,7 +18,7 @@ using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class HomeController : ControllerBase
+    public class HomeController : SharedController
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;

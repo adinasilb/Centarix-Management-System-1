@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ApplicationUsersController : ControllerBase
+    public class ApplicationUsersController : SharedController
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;

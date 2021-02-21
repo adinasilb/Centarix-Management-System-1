@@ -21,7 +21,7 @@ using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class LocationsController : ControllerBase
+    public class LocationsController : SharedController
     {
         private readonly ApplicationDbContext _context;
 

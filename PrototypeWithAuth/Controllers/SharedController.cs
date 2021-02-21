@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ControllerBase : Controller
+    public class SharedController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ControllerBase(ApplicationDbContext context)
+        public SharedController(ApplicationDbContext context)
         {
             _context = context;
         }

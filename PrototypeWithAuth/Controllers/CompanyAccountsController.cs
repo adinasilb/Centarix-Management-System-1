@@ -7,7 +7,7 @@ using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class CompanyAccountsController : ControllerBase
+    public class CompanyAccountsController : SharedController
     {
         private readonly ApplicationDbContext _context;
 
