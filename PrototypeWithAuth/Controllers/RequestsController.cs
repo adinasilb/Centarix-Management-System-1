@@ -894,15 +894,15 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddItemView(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+        public async Task<IActionResult> AddItemView(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
             var categoryType = 1;
-            if (PageType.ToString().StartsWith("Operation"))
+            if (SectionType == AppUtility.MenuItems.Operations)
             {
                 categoryType = 2;
             }
@@ -913,7 +913,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.RequestStatusID = 7;
             }
             requestItemViewModel.PageType = PageType;
-
+            requestItemViewModel.SectionType = SectionType;
             return View(requestItemViewModel);
         }
         [HttpPost]
@@ -1062,12 +1062,16 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var categoryType = 1;
+            var sectionType = AppUtility.MenuItems.Requests;
             if (PageType.ToString().StartsWith("Operations"))
             {
+                sectionType = AppUtility.MenuItems.Operations;
                 categoryType = 2;
+              
             }
             
             RequestItemViewModel requestItemViewModel = await FillRequestItemViewModel(categoryType, productSubCategoryId);
+            requestItemViewModel.SectionType = sectionType;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.Request.Product.ProductName = itemName;
             

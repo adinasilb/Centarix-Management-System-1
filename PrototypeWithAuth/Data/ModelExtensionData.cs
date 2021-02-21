@@ -593,7 +593,7 @@ namespace PrototypeWithAuth.Data
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 801,
-                    ParentCategoryID = 6,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Rent",
                     ImageURL = "/images/css/CategoryImages/rent.png"
                 },
@@ -607,14 +607,14 @@ namespace PrototypeWithAuth.Data
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 808,
-                    ParentCategoryID = 6,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Branding",
                     ImageURL = "/images/css/CategoryImages/branding.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 809,
-                    ParentCategoryID = 6,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Shipment",
                     ImageURL = "/images/css/CategoryImages/shippment.png"
                 },
