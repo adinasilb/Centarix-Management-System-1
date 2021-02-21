@@ -37,7 +37,7 @@
             <div class="form-group modal-line-1-header modal-sides row">
                 <div class="heading-1 modal-title col-8"><input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom heading-1" placeholder="(item name)" /></div>
                 <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
-                @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary || Model.SectionType==AppUtility.MenuItems.Operations)
                 {
                     <div class="d-flex align-items-center col-4">
                         <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto">Save</button>
