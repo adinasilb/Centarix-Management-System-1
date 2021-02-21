@@ -1166,6 +1166,13 @@ namespace PrototypeWithAuth.Controllers
 
                 }
             }
+            else if(parentcategories.FirstOrDefault().CategoryTypeID==2)
+            {
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Details, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, "");
+            }
             else
             {
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, "");
