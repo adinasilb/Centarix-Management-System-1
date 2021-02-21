@@ -83,7 +83,7 @@ $(function () {
 		//for the reorder modal
 		$subsubunit = $("#subSubUnit");
 		if ($subsubunit.val() != null && $subsubunit.val() > 0) {
-			$.fn.EnableSubSubUnits();
+			//$.fn.EnableSubSubUnits();
 		}
 		else {
 			//$.fn.DisableSubSubUnits();
@@ -201,7 +201,7 @@ $(function () {
 		}
 		$("#subUnitTypeID").materialSelect();
 		//$("#subUnit").prop("disabled", false);
-		$.fn.EnableMaterialSelect('#subUnitTypeID', 'select-options-subUnitTypeID');
+		//$.fn.EnableMaterialSelect('#subUnitTypeID', 'select-options-subUnitTypeID');
 		switch (optgroup2) {
 			case "Units":
 				console.log("inside optgroup2 units");
@@ -270,7 +270,7 @@ $(function () {
 				break;
 		}
 		$("#subSubUnitTypeID").materialSelect();
-		$.fn.EnableMaterialSelect('#subSubUnitTypeID', 'select-options-subUnitTypeID');
+		//$.fn.EnableMaterialSelect('#subSubUnitTypeID', 'select-options-subUnitTypeID');
 		switch (optgroup2) {
 			case "Units":
 				$("#select-options-subSubUnitTypeID optgroup[label='Units']").prop('disabled', false).prop('hidden', false);
@@ -537,10 +537,12 @@ $(function () {
 
 	$('.addSubUnit').click(function () {
 		$.fn.CheckUnitsFilled();
+		$.fn.EnableMaterialSelect('#subUnitTypeID', 'select-options-subUnitTypeID');
 	})
 
 	$('.addSubSubUnit').click(function () {
 		$.fn.CheckSubUnitsFilled();
+		$.fn.EnableMaterialSelect('#subSubUnitTypeID', 'select-options-subSubUnitTypeID');
 	})
 
 
