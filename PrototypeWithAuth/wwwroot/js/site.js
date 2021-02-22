@@ -1663,9 +1663,6 @@ $(function () {
 	//	$('.msg').html(msg + input + '</span>');
 	//}); 
 	$.fn.SaveOffDays = function (url, month) {
-		alert("in save off days, url: " + url);
-		console.log(     $('#vacation-dates').datepicker().data('datepicker').minRange)
-		console.log(     $('#vacation-dates').datepicker().data('datepicker').maxRange)
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
 		var dateRangeToDay = rangeTo.attr('data-date');
 
