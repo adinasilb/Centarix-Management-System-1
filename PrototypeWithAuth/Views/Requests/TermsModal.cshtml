@@ -32,7 +32,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" onclick ="$(this).closest('.termsModal').modal('hide');" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" id="myForm" class="modal-padding termsModalForm">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="modal-padding termsModalForm">
                 @Html.HiddenFor(model => model.RequestIndexObject.PageType)
                 @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
                 @Html.HiddenFor(model => model.RequestIndexObject.SectionType)

@@ -461,6 +461,7 @@ namespace PrototypeWithAuth.Controllers
                         registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
                         return View("CreateUser", registerUserViewModel);
                     }
+                    //throw new Exception();
                    await transaction.CommitAsync();
                 }
                 catch (Exception ex)
