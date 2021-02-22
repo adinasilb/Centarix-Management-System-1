@@ -86,12 +86,12 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryDescription = "Reusables",
                     CategoryTypeID = 1
                 },
-                new ParentCategory
-                {
-                    ParentCategoryID = 5,
-                    ParentCategoryDescription = "Equipment",
-                    CategoryTypeID = 1
-                },
+                //new ParentCategory
+                //{
+                //    ParentCategoryID = 5,
+                //    ParentCategoryDescription = "Equipment",
+                //    CategoryTypeID = 1
+                //},
                 new ParentCategory
                 {
                     ParentCategoryID = 6,
@@ -353,13 +353,13 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryDescription = "PCR Plates",
                     ImageURL = "/images/css/CategoryImages/PCR.png"
                 },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 103,
-                    ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Blood Tubes",
-                    ImageURL = "/images/css/CategoryImages/blood_tubes.png"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 103,
+                //    ParentCategoryID = 1,
+                //    ProductSubcategoryDescription = "Blood Tubes",
+                //    ImageURL = "/images/css/CategoryImages/blood_tubes.png"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 104,
@@ -395,6 +395,12 @@ namespace PrototypeWithAuth.Data
                 },
                 new ProductSubcategory
                 {
+                    ProductSubcategoryID = 109,
+                    ParentCategoryID = 1,
+                    ProductSubcategoryDescription = "Robot Tips"
+                },
+                new ProductSubcategory
+                {
                     ProductSubcategoryID = 201,
                     ParentCategoryID = 2,
                     ProductSubcategoryDescription = "Chemical Powder",
@@ -404,7 +410,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 202,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "DNA Enzyme",
+                    ProductSubcategoryDescription = "Enzyme",
                     ImageURL = "/images/css/CategoryImages/dna_enzyme.png"
                 },
                 new ProductSubcategory
@@ -542,58 +548,58 @@ namespace PrototypeWithAuth.Data
                 //    ProductSubcategoryDescription = "-80 Box",
                 //    ImageURL = "/images/css/CategoryImages/80box.png"
                 //},
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 501,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 502,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument Parts"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 503,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument Check"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 504,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument Fixing"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 505,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument Calibration"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 506,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument Warranty"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 507,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Lab Software"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 508,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Lab Furniture"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 501,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 502,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument Parts"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 503,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument Check"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 504,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument Fixing"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 505,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument Calibration"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 506,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument Warranty"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 507,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Lab Software"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 508,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Lab Furniture"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 801,
-                    ParentCategoryID = 6,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Rent",
                     ImageURL = "/images/css/CategoryImages/rent.png"
                 },
@@ -607,14 +613,14 @@ namespace PrototypeWithAuth.Data
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 808,
-                    ParentCategoryID = 6,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Branding",
                     ImageURL = "/images/css/CategoryImages/branding.png"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 809,
-                    ParentCategoryID = 6,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Shipment",
                     ImageURL = "/images/css/CategoryImages/shippment.png"
                 },

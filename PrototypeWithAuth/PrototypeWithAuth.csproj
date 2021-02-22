@@ -173,6 +173,10 @@
     <Compile Remove="Data\Migrations\20210209072438_AddFKToLocationInstance.Designer.cs" />
     <Compile Remove="Data\Migrations\20210209073115_AddFKToLocationInstance.cs" />
     <Compile Remove="Data\Migrations\20210209073115_AddFKToLocationInstance.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210222080644_AddedProductHebrewName.cs" />
+    <Compile Remove="Data\Migrations\20210222080644_AddedProductHebrewName.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210222083146_AddedProductHebrewName.cs" />
+    <Compile Remove="Data\Migrations\20210222083146_AddedProductHebrewName.Designer.cs" />
   </ItemGroup>
 
 

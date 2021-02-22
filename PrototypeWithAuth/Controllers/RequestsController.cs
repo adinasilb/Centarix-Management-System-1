@@ -894,28 +894,30 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddItemView(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+        public async Task<IActionResult> AddItemView(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
             var categoryType = 1;
-            if (PageType.ToString().StartsWith("Operation"))
+            if (SectionType == AppUtility.MenuItems.Operations)
             {
                 categoryType = 2;
             }
-            requestItemViewModel = await FillRequestItemViewModel(categoryType);
+            
             if (PageType == AppUtility.PageTypeEnum.RequestSummary)
-            {
-                requestItemViewModel.ParentCategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1 && pc.isProprietary).ToListAsync();
-                requestItemViewModel.RequestStatusID = 7;
+            {                
+                requestItemViewModel.IsProprietary = true;
             }
-            requestItemViewModel.PageType = PageType;
+            requestItemViewModel = await FillRequestItemViewModel(requestItemViewModel, categoryType);
 
+            requestItemViewModel.PageType = PageType;
+            requestItemViewModel.SectionType = SectionType;
             return View(requestItemViewModel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
@@ -1062,12 +1064,18 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var categoryType = 1;
+            var sectionType = AppUtility.MenuItems.Requests;
             if (PageType.ToString().StartsWith("Operations"))
             {
+                sectionType = AppUtility.MenuItems.Operations;
                 categoryType = 2;
             }
+
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
+
+            requestItemViewModel= await FillRequestItemViewModel(requestItemViewModel, categoryType, productSubCategoryId);
             
-            RequestItemViewModel requestItemViewModel = await FillRequestItemViewModel(categoryType, productSubCategoryId);
+            requestItemViewModel.SectionType = sectionType;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.Request.Product.ProductName = itemName;
             
@@ -1077,11 +1085,9 @@ namespace PrototypeWithAuth.Controllers
 
             return PartialView(requestItemViewModel);
         }
-
-        private async Task<RequestItemViewModel> FillRequestItemViewModel( int categoryTypeId, int productSubcategoryId = 0)
+        private async Task<RequestItemViewModel> FillRequestDropdowns(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, int categoryTypeId)
         {
-            var productSubcategory = await _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == productSubcategoryId).FirstOrDefaultAsync();
-            var parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.isProprietary).ToListAsync();
+            var parentcategories = new List<ParentCategory>();
             var productsubcategories = new List<ProductSubcategory>();
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             if (productSubcategory != null)
@@ -1092,10 +1098,14 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                productSubcategory = new ProductSubcategory()
+                if (requestItemViewModel.IsProprietary)
                 {
-                    ParentCategory = new ParentCategory()
-                };
+                    parentcategories = await _context.ParentCategories.Where(pc => pc.isProprietary).ToListAsync();
+                }
+                else
+                {
+                    parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.isProprietary).ToListAsync();
+                }
             }
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
@@ -1105,23 +1115,35 @@ namespace PrototypeWithAuth.Controllers
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
             List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
 
-            RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
-            {
-                ParentCategories = parentcategories,
-                ProductSubcategories = productsubcategories,
-                Vendors = vendors,
-                Projects = projects,
-                SubProjects = subprojects,
+            requestItemViewModel.ParentCategories = parentcategories;
+            requestItemViewModel.ProductSubcategories = productsubcategories;
+            requestItemViewModel.Vendors = vendors;
+            requestItemViewModel.Projects = projects;
+            requestItemViewModel.SubProjects = subprojects;
 
-                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
-                UnitTypes = unittypeslookup,
-                PaymentTypes = paymenttypes,
-                CompanyAccounts = companyaccounts,
-                CommentTypes = commentTypes,
-                Comments = new List<Comment>(),
-                EmailAddresses = new List<string>() { "", "", "", "", "" },
-                ModalType = AppUtility.RequestModalType.Create
-            };
+            requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
+            requestItemViewModel.UnitTypes = unittypeslookup;
+            requestItemViewModel.CommentTypes = commentTypes;
+            //requestItemViewModel.PaymentTypes = paymenttypes;
+            //requestItemViewModel.CompanyAccounts = companyaccounts;
+            return requestItemViewModel;
+        }
+        private async Task<RequestItemViewModel> FillRequestItemViewModel(RequestItemViewModel requestItemViewModel, int categoryTypeId, int productSubcategoryId = 0)
+        {
+            var productSubcategory = await _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == productSubcategoryId).FirstOrDefaultAsync();
+            requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId);
+            
+            if (productSubcategory == null)
+            {
+                productSubcategory = new ProductSubcategory()
+                {
+                    ParentCategory = new ParentCategory()
+                };
+            }
+
+            requestItemViewModel.Comments = new List<Comment>();
+            requestItemViewModel.EmailAddresses = new List<string>() { "", "", "", "", "" };
+            requestItemViewModel.ModalType = AppUtility.RequestModalType.Create;
             
             requestItemViewModel.Request = new Request();
             requestItemViewModel.Request.ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
@@ -1161,6 +1183,13 @@ namespace PrototypeWithAuth.Controllers
                     GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Map, "");
 
                 }
+            }
+            else if(requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID==2)
+            {
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Details, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, "");
             }
             else
             {
