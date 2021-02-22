@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class DocumentsModalViewModel
+    public class DocumentsModalViewModel : ViewModelBase
     {
         public AppUtility.RequestFolderNamesEnum RequestFolderName { get; set; }
         public List<Request> Requests { get; set; }

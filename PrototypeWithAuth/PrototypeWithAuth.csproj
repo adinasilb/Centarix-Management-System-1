@@ -9,24 +9,12 @@
 
   <ItemGroup>
     <Compile Remove="Models\LocationModels\**" />
-    <Compile Remove="wwwroot\files\65\**" />
-    <Compile Remove="wwwroot\files\66\**" />
-    <Compile Remove="wwwroot\files\68\**" />
     <Compile Remove="wwwroot\images\NewFolder\**" />
     <Content Remove="Models\LocationModels\**" />
-    <Content Remove="wwwroot\files\65\**" />
-    <Content Remove="wwwroot\files\66\**" />
-    <Content Remove="wwwroot\files\68\**" />
     <Content Remove="wwwroot\images\NewFolder\**" />
     <EmbeddedResource Remove="Models\LocationModels\**" />
-    <EmbeddedResource Remove="wwwroot\files\65\**" />
-    <EmbeddedResource Remove="wwwroot\files\66\**" />
-    <EmbeddedResource Remove="wwwroot\files\68\**" />
     <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
     <None Remove="Models\LocationModels\**" />
-    <None Remove="wwwroot\files\65\**" />
-    <None Remove="wwwroot\files\66\**" />
-    <None Remove="wwwroot\files\68\**" />
     <None Remove="wwwroot\images\NewFolder\**" />
   </ItemGroup>
 
@@ -185,6 +173,10 @@
     <Compile Remove="Data\Migrations\20210209072438_AddFKToLocationInstance.Designer.cs" />
     <Compile Remove="Data\Migrations\20210209073115_AddFKToLocationInstance.cs" />
     <Compile Remove="Data\Migrations\20210209073115_AddFKToLocationInstance.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210222080644_AddedProductHebrewName.cs" />
+    <Compile Remove="Data\Migrations\20210222080644_AddedProductHebrewName.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210222083146_AddedProductHebrewName.cs" />
+    <Compile Remove="Data\Migrations\20210222083146_AddedProductHebrewName.Designer.cs" />
   </ItemGroup>
 
 
@@ -231,7 +223,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Operations\" />
-    <Folder Include="wwwroot\files\287\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
   </ItemGroup>

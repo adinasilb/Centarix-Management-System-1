@@ -29,11 +29,7 @@
                 <input type="hidden" id="UserImagePath" value="" />
 
                 <div class="new-modal-header modal-line-1-header-with-back modal-sides" style="padding: 0.5em 6em">
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
-                        <br />
-                    }
+                 
                     <div class="back-button">
                         <button class ="back-button" type="button" @*data-dismiss="modal"*@ style="border-width: 0; background: transparent"  @*onclick="$(this).closest('.modal').modal('hide');*@>
                             <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
@@ -62,11 +58,11 @@
                         <input class="modal-product-title heading-1 userName form-control-plaintext border-0" disabled value="@Model.FirstName @Model.LastName" />
                     </div>
 
-                    <div class="row"><span class="error error-msg text-danger-centarix heading-1"></span></div>
+                 
                     <div class="row">
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center pl-0">
-                                <span class="error-message"></span>
+                               
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 nav-tabs-icons">
                                     <li class="nav-item icon">
                                         <a data-toggle="tab" href="#details" id="user-details-tab" class="nav-link user-nav-link next-tab">

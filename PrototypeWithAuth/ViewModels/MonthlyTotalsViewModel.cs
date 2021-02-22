@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using PrototypeWithAuth.Models;
 using System.Transactions;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class MonthlyTotalsViewModel
+    public class MonthlyTotalsViewModel : ViewModelBase
     {
 
         public int Month { get; set; }

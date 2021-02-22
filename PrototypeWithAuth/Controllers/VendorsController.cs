@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.Exceptions;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Data.Migrations;
 using PrototypeWithAuth.Models;
@@ -261,60 +262,93 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting, LabManagement")]
         public async Task<IActionResult> Create(CreateSupplierViewModel createSupplierViewModel)
         {
-            foreach (var ms in ModelState.ToArray())
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                if (ms.Key.StartsWith("VendorContact"))
+                try
                 {
-                    ModelState.Remove(ms.Key);
-                }
-            }
-            if (ModelState.IsValid)
-            {
-                _context.Add(createSupplierViewModel.Vendor);
-                _context.SaveChanges();
-                foreach (var type in createSupplierViewModel.VendorCategoryTypes)
-                {
-                    _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
-                }
-                _context.SaveChanges();
-                //delete contacts that need to be deleted
-                foreach (var vc in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
-                {
-                    if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
+                    foreach (var ms in ModelState.ToArray())
                     {
-                        var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vc.VendorContactID).FirstOrDefault();
-                        _context.Remove(dvc);
+                        if (ms.Key.StartsWith("VendorContact"))
+                        {
+                            ModelState.Remove(ms.Key);
+                        }
+                    }
+                    if (ModelState.IsValid)
+                    {
+                        _context.Add(createSupplierViewModel.Vendor);
+                        _context.SaveChanges();
+                        foreach (var type in createSupplierViewModel.VendorCategoryTypes)
+                        {
+                            _context.Add(new VendorCategoryType { VendorID = createSupplierViewModel.Vendor.VendorID, CategoryTypeID = type });
+                        }
+                        _context.SaveChanges();
+                        //delete contacts that need to be deleted
+                        foreach (var vc in createSupplierViewModel.VendorContacts.Where(vc => vc.Delete))
+                        {
+                            if (vc.VendorContact.VendorContactID != 0) //only will delete if it's a previously loaded ones
+                            {
+                                var dvc = _context.VendorContacts.Where(vc => vc.VendorContactID == vc.VendorContactID).FirstOrDefault();
+                                _context.Remove(dvc);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+
+
+                        //update and add contacts
+                        foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
+                        {
+                            vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
+                            _context.Update(vendorContact.VendorContact);
+
+                        }
                         await _context.SaveChangesAsync();
+                        var userid = _userManager.GetUserAsync(User).Result.Id;
+                        if (createSupplierViewModel.VendorComments != null)
+                        {
+                            foreach (var vendorComment in createSupplierViewModel.VendorComments)
+                            {
+                                vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
+                                vendorComment.ApplicationUserID = userid;
+                                vendorComment.CommentTimeStamp = DateTime.Now;
+                                _context.Add(vendorComment);
+
+                            }
+                        }
+                        await _context.SaveChangesAsync();
+                        //throw new Exception();
+                        await transaction.CommitAsync();
+                        return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
+                        
                     }
-                }
-
-
-                //update and add contacts
-                foreach (var vendorContact in createSupplierViewModel.VendorContacts.Where(vc => !vc.Delete))
-                {
-                    vendorContact.VendorContact.VendorID = createSupplierViewModel.Vendor.VendorID;
-                    _context.Update(vendorContact.VendorContact);
-
-                }
-                await _context.SaveChangesAsync();
-                var userid = _userManager.GetUserAsync(User).Result.Id;
-                if (createSupplierViewModel.VendorComments != null)
-                {
-                    foreach (var vendorComment in createSupplierViewModel.VendorComments)
+                    else
                     {
-                        vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
-                        vendorComment.ApplicationUserID = userid;
-                        vendorComment.CommentTimeStamp = DateTime.Now;
-                        _context.Add(vendorComment);
+                        throw new ModelStateInvalidException();
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    TempData[AppUtility.TempDataTypes.MenuType.ToString()] = createSupplierViewModel.SectionType;
+                    //tempdata page type for active tab link
+                    if (createSupplierViewModel.SectionType == AppUtility.MenuItems.LabManagement)
+                    {
+                        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
 
                     }
+                    else if (createSupplierViewModel.SectionType == AppUtility.MenuItems.Accounting)
+                    {
+                        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
+                    }
+                    TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
+                    createSupplierViewModel.ErrorMessage += ex.Message;
+                    createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+                    createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+                    return View("Create", createSupplierViewModel);
                 }
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
             }
 
-
-            return View(createSupplierViewModel);
         }
 
         public async Task<IActionResult> Edit(int? id, AppUtility.MenuItems SectionType)

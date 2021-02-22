@@ -5,6 +5,16 @@
 @inject UserManager<ApplicationUser> UserManager
 <table class="table table-headerspaced col-12 ">
     <tbody>
+       @if(Model.Count()>0)
+       { 
+            <tr>
+                @if (Model[0].ErrorMessage != null)
+                {
+                    <span class="text danger-text view-bag-error">Error: @Model[0].ErrorMessage</span>
+
+                }
+            </tr>
+        }
         <tr class="text-center " style="border-color:transparent; border-bottom: 1px solid lightgrey;">
             <td width="12%"></td>
             <td class="text-left" width="10%">

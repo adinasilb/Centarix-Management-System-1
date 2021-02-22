@@ -129,7 +129,7 @@
     }
     else if (pageType == AppUtility.PageTypeEnum.OperationsInventory || pageType == AppUtility.PageTypeEnum.OperationsRequest)
     {
-        SidebarMenuItems = CreateMenus.CreateOperationsRequestsSidebar(pageType, sidebarType, originalNavClasses, "operations-filter");
+        SidebarMenuItems = CreateMenus.CreateOperationsRequestsSidebar(pageType, sidebarType, originalNavClasses, "operations-filter", pageType , AppUtility.CategoryTypeEnum.Operations);
     }
     else if (pageType == AppUtility.PageTypeEnum.OperationsSearch)
     {
@@ -313,10 +313,7 @@
                 </div>
                 @*</nav>*@
             </div>
-            @if (ViewBag.ErrorMessage != null)
-            {
-                <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text view-bag-error">Error: @ViewBag.ErrorMessage</span></div><br />
-            }
+          
             <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2 render-body ">
                 <!--class="col-md-10 border-left"-->
                 @RenderBody()

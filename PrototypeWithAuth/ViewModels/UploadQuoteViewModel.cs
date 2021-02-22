@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class UploadQuoteViewModel
+    public class UploadQuoteViewModel : ViewModelBase
     {
         public ParentQuote ParentQuote { get; set; }
         public List<string> FileStrings { get; set; }

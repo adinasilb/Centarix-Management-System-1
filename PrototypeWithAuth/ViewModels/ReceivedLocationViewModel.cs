@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class ReceivedLocationViewModel
+    public class ReceivedLocationViewModel : ViewModelBase
     {
         public ApplicationUser applicationUserHolder { get; set; }
         public int LocationTypeID { get; set; }//this is just here for now so we have a place to store the dropdownlistfor but I don't know if we actually needs to save it b/c we don't need to access it

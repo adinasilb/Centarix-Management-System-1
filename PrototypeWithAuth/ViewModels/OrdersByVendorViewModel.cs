@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class OrdersByVendorViewModel
+    public class OrdersByVendorViewModel : ViewModelBase
     {
         public ILookup<Vendor, Request> RequestsByVendor { get; set; }
         public List<PriceSortViewModel> PriceSortEnums { get; set; }

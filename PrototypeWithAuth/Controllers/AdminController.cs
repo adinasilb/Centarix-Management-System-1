@@ -64,16 +64,16 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
 
-            ViewBag.ErrorMessage = ErrorMessage;
+          
             UserIndexViewModel userIndexViewModel = GetUserIndexViewModel();
+            userIndexViewModel.ErrorMessage = ErrorMessage;
             return View(userIndexViewModel);
         }
 
         [HttpGet]
         [Authorize(Roles = "Users")]
         public IActionResult _Index()
-        {
-            ViewBag.ErrorMessage = ViewBag.ErrorMessage;
+        {         
             UserIndexViewModel userIndexViewModel = GetUserIndexViewModel();
             return PartialView(userIndexViewModel);
         }
@@ -109,12 +109,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 StartedWorking = DateTime.Today
             };
-            registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
-            registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
-            registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
-            registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
-            registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
-
+            FillViewDropdowns(registerUserViewModel);
             registerUserViewModel.OrderRoles = new List<UserRoleViewModel>()
             {
                 new UserRoleViewModel(){ MenuItemsID= AppUtility.MenuItems.Requests, Name="General", Selected=false }
@@ -170,7 +165,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    registerUserViewModel.Errors = new List<string>();
                     
                     int userid = 0;
                     int usernum = 1;
@@ -394,7 +388,9 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     await _userManager.AddToRoleAsync(user, AppUtility.MenuItems.Users.ToString());
                                 }
+                            
                             }
+                           
                         }
                         catch (Exception ex)
                         {
@@ -448,8 +444,8 @@ namespace PrototypeWithAuth.Controllers
                     else
                     {
                         foreach (IdentityError e in result.Errors)
-                        {                           
-                            registerUserViewModel.Errors.Add("User Failed to add. Please try again. " + e.Code.ToString() + " " + e.Description.ToString());
+                        {
+                            registerUserViewModel.ErrorMessage +=  "User Failed to add. Please try again. " + e.Code.ToString() + " " + e.Description.ToString();
                         }
                         //refill Model to view errors
                         TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
@@ -462,7 +458,7 @@ namespace PrototypeWithAuth.Controllers
                         registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
                         return View("CreateUser", registerUserViewModel);
                     }
-                    
+                    //throw new Exception();
                    await transaction.CommitAsync();
 
                     if (IsUser)
@@ -473,7 +469,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    registerUserViewModel.Errors.Add(ex.Message);
+                    registerUserViewModel.ErrorMessage += ex.Message;
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
                     TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
                     TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
@@ -555,338 +551,354 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> EditUser(RegisterUserViewModel registerUserViewModel)
         {
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                int selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
-                Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
-                int oldSelectedStatus = employeeEditted.EmployeeStatusID;
-                bool changedEmployeeStatus = false;
-                if (selectedStatusID != oldSelectedStatus)
+                try
                 {
-                    changedEmployeeStatus = true;
-                }
-                if (selectedStatusID == 4)
-                {
-                    //never was an employee only was a user and wants to update info                 
-                    employeeEditted.UserName = registerUserViewModel.Email;
-                    employeeEditted.FirstName = registerUserViewModel.FirstName;
-                    employeeEditted.LastName = registerUserViewModel.LastName;
-                    employeeEditted.Email = registerUserViewModel.Email;
-                    employeeEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
-                    employeeEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
-                    //are users allowed to update their password
-                    if (registerUserViewModel.SecureAppPass != null)
+                    int selectedStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
+                    Employee employeeEditted = await _context.Employees.Where(e => e.Id == registerUserViewModel.ApplicationUserID).FirstOrDefaultAsync();
+                    int oldSelectedStatus = employeeEditted.EmployeeStatusID;
+                    bool changedEmployeeStatus = false;
+                    if (selectedStatusID != oldSelectedStatus)
                     {
-                        employeeEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
+                        changedEmployeeStatus = true;
                     }
-                    employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
-                    employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
-                    employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
-                    employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
-                    employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
-                    employeeEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
-                    employeeEditted.EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
-                    _context.Update(employeeEditted);
-                    await _context.SaveChangesAsync();
-
-                    if (changedEmployeeStatus)
+                    if (selectedStatusID == 4)
                     {
-                        await AddNewCentarixID(employeeEditted.Id, 4);
-                    }
-                }
-                else
-                {
-                    // still wants to remain an employee
-                    employeeEditted.UserName = registerUserViewModel.Email;
-                    employeeEditted.FirstName = registerUserViewModel.FirstName;
-                    employeeEditted.LastName = registerUserViewModel.LastName;
-                    employeeEditted.Email = registerUserViewModel.Email;
-                    employeeEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
-                    employeeEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
-                    //are users allowed to update their password
-                    if (registerUserViewModel.SecureAppPass != null)
-                    {
-                        employeeEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
-                    }
-                    employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
-                    employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
-                    employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
-                    employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
-                    employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
-                    employeeEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
-                    employeeEditted.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;               
-                    employeeEditted.DOB = registerUserViewModel.NewEmployee.DOB;
-                    employeeEditted.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
-                    employeeEditted.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;
-                    employeeEditted.IncomeTax = registerUserViewModel.NewEmployee.IncomeTax;
-                    employeeEditted.TaxCredits = registerUserViewModel.NewEmployee.TaxCredits;
-                    employeeEditted.VacationDays = registerUserViewModel.NewEmployee.VacationDays;
-                    employeeEditted.JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
-                    employeeEditted.DegreeID = registerUserViewModel.NewEmployee.DegreeID;
-                    employeeEditted.IDNumber = registerUserViewModel.NewEmployee.IDNumber;
-                    employeeEditted.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
-                    employeeEditted.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
-                    employeeEditted.EmployeeStatusID = selectedStatusID;
-                    employeeEditted.RollOverSickDays = registerUserViewModel.NewEmployee.RollOverSickDays;
-                    employeeEditted.RollOverVacationDays = registerUserViewModel.NewEmployee.RollOverVacationDays;
-                    employeeEditted.BonusSickDays = registerUserViewModel.NewEmployee.BonusSickDays;
-                    employeeEditted.BonusVacationDays = registerUserViewModel.NewEmployee.BonusVacationDays;
-                    //employeeEditted.JobSubategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
-
-                    _context.Update(employeeEditted);
-
-
-                    switch (selectedStatusID)
-                    {
-                        case 1: /*Salaried Employee*/
-                            var salariedEmployee = _context.SalariedEmployees.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
-                            if (salariedEmployee == null)
-                            {
-                                salariedEmployee = new SalariedEmployee();
-                            }
-                            if (changedEmployeeStatus)
-                            {
-                                await AddNewCentarixID(employeeEditted.Id, 1);
-                            }
-                            salariedEmployee.EmployeeId = employeeEditted.Id;
-                            salariedEmployee.HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay;
-                            employeeEditted.SalariedEmployee = salariedEmployee;
-                            break;
-                        case 2: /*Freelancer*/
-                            Freelancer freelancer = _context.Freelancers.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
-                            if (freelancer == null)
-                            {
-                                freelancer = new Freelancer();
-                            }
-                            if (changedEmployeeStatus)
-                            {
-                                await AddNewCentarixID(employeeEditted.Id, 2);
-                            }
-                            freelancer.EmployeeId = employeeEditted.Id;
-                            employeeEditted.Freelancer = freelancer;
-                            break;
-                        case 3: /*Advisor*/
-                            Advisor advisor = _context.Advisors.Where(a => a.EmployeeID == employeeEditted.Id).FirstOrDefault();
-                            if (advisor == null)
-                            {
-                                advisor = new Advisor();
-                            }
-                            if (changedEmployeeStatus)
-                            {
-                                await AddNewCentarixID(employeeEditted.Id, 3);
-                            }
-                            advisor.EmployeeID = employeeEditted.Id;
-                            employeeEditted.Advisor = advisor;
-                            break;
-                    }
-                    await _context.SaveChangesAsync();
-                }
-                //add new centarixID
-
-                if (!String.IsNullOrEmpty(registerUserViewModel.Password))
-                {
-                    string resetToken = await _userManager.GeneratePasswordResetTokenAsync(employeeEditted);
-                    IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(employeeEditted, resetToken, registerUserViewModel.Password);
-                    if (passwordChangeResult.Succeeded)
-                    {
-                        employeeEditted.NeedsToResetPassword = true;
-                        await _userManager.ResetAuthenticatorKeyAsync(employeeEditted);
-                        await _userManager.UpdateSecurityStampAsync(employeeEditted);
-                        employeeEditted.LockoutEnabled = true;
-                        employeeEditted.LockoutEnd = new DateTime(2999, 01, 01);
+                        //never was an employee only was a user and wants to update info                 
+                        employeeEditted.UserName = registerUserViewModel.Email;
+                        employeeEditted.FirstName = registerUserViewModel.FirstName;
+                        employeeEditted.LastName = registerUserViewModel.LastName;
+                        employeeEditted.Email = registerUserViewModel.Email;
+                        employeeEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
+                        employeeEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
+                        //are users allowed to update their password
+                        if (registerUserViewModel.SecureAppPass != null)
+                        {
+                            employeeEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
+                        }
+                        employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
+                        employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
+                        employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
+                        employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
+                        employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
+                        employeeEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
+                        employeeEditted.EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID;
                         _context.Update(employeeEditted);
                         await _context.SaveChangesAsync();
 
-                        if (!registerUserViewModel.NewEmployee.IsUser)
+                        if (changedEmployeeStatus)
                         {
-                            employeeEditted.IsUser = true;
-                            _context.Update(employeeEditted);
-                            await _context.SaveChangesAsync();
-
-                            SendConfimationEmail(employeeEditted);
+                            await AddNewCentarixID(employeeEditted.Id, 4);
                         }
                     }
                     else
                     {
-                        //TODO: alert the user that it didn't succeed!!!
-                    }
-                }
-
-                //if password isn't blank - reset the password):
-                //if (registerUserViewModel.Password != null)
-                //{
-                //    ApplicationUser cUser = await _userManager.FindByIdAsync(registerUserViewModel.ApplicationUserID);
-                //    string hashpassword = _userManager.PasswordHasher.HashPassword(cUser, registerUserViewModel.Password);
-                //    cUser.PasswordHash = hashpassword;
-                //    await _userManager.UpdateAsync(cUser);
-                //}
-
-
-                IList<string> rolesList = await _userManager.GetRolesAsync(employeeEditted).ConfigureAwait(false);
-
-                if (rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && !registerUserViewModel.OrderRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Requests.ToString());
-                }
-                else if (!rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && registerUserViewModel.OrderRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Requests.ToString());
-                }
-
-                if (rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) && !registerUserViewModel.ProtocolRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Protocols.ToString());
-                }
-                else if (!rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) && registerUserViewModel.ProtocolRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Protocols.ToString());
-                }
-
-                if (rolesList.Contains(AppUtility.MenuItems.Operations.ToString()) && !registerUserViewModel.OperationRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Operations.ToString());
-                }
-                else if (!rolesList.Contains(AppUtility.MenuItems.Operations.ToString()) && registerUserViewModel.OperationRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Operations.ToString());
-                }
-
-                if (rolesList.Contains(AppUtility.MenuItems.Biomarkers.ToString()) && !registerUserViewModel.BiomarkerRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Biomarkers.ToString());
-                }
-                else if (!rolesList.Contains(AppUtility.MenuItems.Biomarkers.ToString()) && registerUserViewModel.BiomarkerRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Biomarkers.ToString());
-                }
-
-                if (rolesList.Contains(AppUtility.MenuItems.TimeKeeper.ToString()) && !registerUserViewModel.TimekeeperRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString());
-                }
-                else if (!rolesList.Contains(AppUtility.MenuItems.TimeKeeper.ToString()) && registerUserViewModel.TimekeeperRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString());
-                }
-
-                if (rolesList.Contains(AppUtility.MenuItems.LabManagement.ToString()) && !registerUserViewModel.LabManagementRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.LabManagement.ToString());
-                }
-                else if (!rolesList.Contains(AppUtility.MenuItems.LabManagement.ToString()) && registerUserViewModel.LabManagementRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.LabManagement.ToString());
-                }
-
-                if (rolesList.Contains(AppUtility.MenuItems.Accounting.ToString()) && !registerUserViewModel.AccountingRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Accounting.ToString());
-                }
-                else if (!rolesList.Contains(AppUtility.MenuItems.Accounting.ToString()) && registerUserViewModel.AccountingRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Accounting.ToString());
-                }
-
-                if (rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) && !registerUserViewModel.ExpenseesRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Reports.ToString());
-                }
-                else if (!rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) && registerUserViewModel.ExpenseesRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Reports.ToString());
-                }
-
-                if (rolesList.Contains(AppUtility.MenuItems.Income.ToString()) && !registerUserViewModel.IncomeRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Income.ToString());
-                }
-                else if (!rolesList.Contains(AppUtility.MenuItems.Income.ToString()) && registerUserViewModel.IncomeRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Income.ToString());
-                }
-
-                if (rolesList.Contains(AppUtility.MenuItems.Users.ToString()) && !registerUserViewModel.UserRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Users.ToString());
-                }
-                else if (!rolesList.Contains(AppUtility.MenuItems.Users.ToString()) && registerUserViewModel.UserRoles[0].Selected)
-                {
-                    var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Users.ToString());
-                }
-
-
-
-                if (registerUserViewModel.UserImageSaved == "true")
-                {
-                    //delete old photo
-                    string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
-                    DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
-                    FileInfo[] files1 = dir1.GetFiles(registerUserViewModel.UserNum + ".*");
-                    if (files1.Length > 0)
-                    {
-                        foreach (FileInfo file in files1)
+                        // still wants to remain an employee
+                        employeeEditted.UserName = registerUserViewModel.Email;
+                        employeeEditted.FirstName = registerUserViewModel.FirstName;
+                        employeeEditted.LastName = registerUserViewModel.LastName;
+                        employeeEditted.Email = registerUserViewModel.Email;
+                        employeeEditted.NormalizedEmail = registerUserViewModel.Email.ToUpper();
+                        employeeEditted.PhoneNumber = registerUserViewModel.PhoneNumber;
+                        //are users allowed to update their password
+                        if (registerUserViewModel.SecureAppPass != null)
                         {
-                            System.IO.File.Delete(file.FullName);
+                            employeeEditted.SecureAppPass = registerUserViewModel.SecureAppPass;
                         }
-                    }
+                        employeeEditted.LabMonthlyLimit = registerUserViewModel.LabMonthlyLimit;
+                        employeeEditted.LabUnitLimit = registerUserViewModel.LabUnitLimit;
+                        employeeEditted.LabOrderLimit = registerUserViewModel.LabOrderLimit;
+                        employeeEditted.OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit;
+                        employeeEditted.OperationUnitLimit = registerUserViewModel.OperationUnitLimit;
+                        employeeEditted.OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit;
+                        employeeEditted.StartedWorking = registerUserViewModel.NewEmployee.StartedWorking;
+                        employeeEditted.DOB = registerUserViewModel.NewEmployee.DOB;
+                        employeeEditted.GrossSalary = registerUserViewModel.NewEmployee.GrossSalary;
+                        employeeEditted.EmployerTax = registerUserViewModel.NewEmployee.EmployerTax;
+                        employeeEditted.IncomeTax = registerUserViewModel.NewEmployee.IncomeTax;
+                        employeeEditted.TaxCredits = registerUserViewModel.NewEmployee.TaxCredits;
+                        employeeEditted.VacationDays = registerUserViewModel.NewEmployee.VacationDays;
+                        employeeEditted.JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
+                        employeeEditted.DegreeID = registerUserViewModel.NewEmployee.DegreeID;
+                        employeeEditted.IDNumber = registerUserViewModel.NewEmployee.IDNumber;
+                        employeeEditted.MaritalStatusID = registerUserViewModel.NewEmployee.MaritalStatusID;
+                        employeeEditted.CitizenshipID = registerUserViewModel.NewEmployee.CitizenshipID;
+                        employeeEditted.EmployeeStatusID = selectedStatusID;
+                        employeeEditted.RollOverSickDays = registerUserViewModel.NewEmployee.RollOverSickDays;
+                        employeeEditted.RollOverVacationDays = registerUserViewModel.NewEmployee.RollOverVacationDays;
+                        employeeEditted.BonusSickDays = registerUserViewModel.NewEmployee.BonusSickDays;
+                        employeeEditted.BonusVacationDays = registerUserViewModel.NewEmployee.BonusVacationDays;
+                        //employeeEditted.JobSubategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
 
-                    //add new photo
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
-                    DirectoryInfo dir = new DirectoryInfo(uploadFolder);
-                    FileInfo[] files = dir.GetFiles("TempUserImage" + ".*");
-                    if (files.Length > 0)
-                    {
-                        //File exists
-                        foreach (FileInfo file in files)
-                        {
-                            //System.IO.File.Move(file., user.UserNum.ToString());
-                            file.MoveTo(Path.Combine(uploadFolder, registerUserViewModel.UserNum.ToString() + file.Extension));
-                            employeeEditted.UserImage = file.FullName;
-                        }
                         _context.Update(employeeEditted);
+
+
+                        switch (selectedStatusID)
+                        {
+                            case 1: /*Salaried Employee*/
+                                var salariedEmployee = _context.SalariedEmployees.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
+                                if (salariedEmployee == null)
+                                {
+                                    salariedEmployee = new SalariedEmployee();
+                                }
+                                if (changedEmployeeStatus)
+                                {
+                                    await AddNewCentarixID(employeeEditted.Id, 1);
+                                }
+                                salariedEmployee.EmployeeId = employeeEditted.Id;
+                                salariedEmployee.HoursPerDay = registerUserViewModel.NewEmployee.SalariedEmployee.HoursPerDay;
+                                employeeEditted.SalariedEmployee = salariedEmployee;
+                                break;
+                            case 2: /*Freelancer*/
+                                Freelancer freelancer = _context.Freelancers.Where(x => x.EmployeeId == employeeEditted.Id).FirstOrDefault();
+                                if (freelancer == null)
+                                {
+                                    freelancer = new Freelancer();
+                                }
+                                if (changedEmployeeStatus)
+                                {
+                                    await AddNewCentarixID(employeeEditted.Id, 2);
+                                }
+                                freelancer.EmployeeId = employeeEditted.Id;
+                                employeeEditted.Freelancer = freelancer;
+                                break;
+                            case 3: /*Advisor*/
+                                Advisor advisor = _context.Advisors.Where(a => a.EmployeeID == employeeEditted.Id).FirstOrDefault();
+                                if (advisor == null)
+                                {
+                                    advisor = new Advisor();
+                                }
+                                if (changedEmployeeStatus)
+                                {
+                                    await AddNewCentarixID(employeeEditted.Id, 3);
+                                }
+                                advisor.EmployeeID = employeeEditted.Id;
+                                employeeEditted.Advisor = advisor;
+                                break;
+                        }
                         await _context.SaveChangesAsync();
                     }
+                    //add new centarixID
 
-                    //should we move the delete here and test for the extension just in case it breaks over there
+                    if (!String.IsNullOrEmpty(registerUserViewModel.Password))
+                    {
+                        string resetToken = await _userManager.GeneratePasswordResetTokenAsync(employeeEditted);
+                        IdentityResult passwordChangeResult = await _userManager.ResetPasswordAsync(employeeEditted, resetToken, registerUserViewModel.Password);
+                        if (passwordChangeResult.Succeeded)
+                        {
+                            employeeEditted.NeedsToResetPassword = true;
+                            await _userManager.ResetAuthenticatorKeyAsync(employeeEditted);
+                            await _userManager.UpdateSecurityStampAsync(employeeEditted);
+                            employeeEditted.LockoutEnabled = true;
+                            employeeEditted.LockoutEnd = new DateTime(2999, 01, 01);
+                            _context.Update(employeeEditted);
+                            await _context.SaveChangesAsync();
 
+                            if (!registerUserViewModel.NewEmployee.IsUser)
+                            {
+                                employeeEditted.IsUser = true;
+                                _context.Update(employeeEditted);
+                                await _context.SaveChangesAsync();
+
+                                SendConfimationEmail(employeeEditted);
+                            }
+                        }
+                        else
+                        {
+                            //TODO: alert the user that it didn't succeed!!!
+                        }
+                    }
+
+                    //if password isn't blank - reset the password):
+                    //if (registerUserViewModel.Password != null)
+                    //{
+                    //    ApplicationUser cUser = await _userManager.FindByIdAsync(registerUserViewModel.ApplicationUserID);
+                    //    string hashpassword = _userManager.PasswordHasher.HashPassword(cUser, registerUserViewModel.Password);
+                    //    cUser.PasswordHash = hashpassword;
+                    //    await _userManager.UpdateAsync(cUser);
+                    //}
+
+
+                    IList<string> rolesList = await _userManager.GetRolesAsync(employeeEditted).ConfigureAwait(false);
+
+                    if (rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && !registerUserViewModel.OrderRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Requests.ToString());
+                    }
+                    else if (!rolesList.Contains(AppUtility.MenuItems.Requests.ToString()) && registerUserViewModel.OrderRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Requests.ToString());
+                    }
+
+                    if (rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) && !registerUserViewModel.ProtocolRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Protocols.ToString());
+                    }
+                    else if (!rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) && registerUserViewModel.ProtocolRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Protocols.ToString());
+                    }
+
+                    if (rolesList.Contains(AppUtility.MenuItems.Operations.ToString()) && !registerUserViewModel.OperationRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Operations.ToString());
+                    }
+                    else if (!rolesList.Contains(AppUtility.MenuItems.Operations.ToString()) && registerUserViewModel.OperationRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Operations.ToString());
+                    }
+
+                    if (rolesList.Contains(AppUtility.MenuItems.Biomarkers.ToString()) && !registerUserViewModel.BiomarkerRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Biomarkers.ToString());
+                    }
+                    else if (!rolesList.Contains(AppUtility.MenuItems.Biomarkers.ToString()) && registerUserViewModel.BiomarkerRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Biomarkers.ToString());
+                    }
+
+                    if (rolesList.Contains(AppUtility.MenuItems.TimeKeeper.ToString()) && !registerUserViewModel.TimekeeperRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString());
+                    }
+                    else if (!rolesList.Contains(AppUtility.MenuItems.TimeKeeper.ToString()) && registerUserViewModel.TimekeeperRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString());
+                    }
+
+                    if (rolesList.Contains(AppUtility.MenuItems.LabManagement.ToString()) && !registerUserViewModel.LabManagementRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.LabManagement.ToString());
+                    }
+                    else if (!rolesList.Contains(AppUtility.MenuItems.LabManagement.ToString()) && registerUserViewModel.LabManagementRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.LabManagement.ToString());
+                    }
+
+                    if (rolesList.Contains(AppUtility.MenuItems.Accounting.ToString()) && !registerUserViewModel.AccountingRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Accounting.ToString());
+                    }
+                    else if (!rolesList.Contains(AppUtility.MenuItems.Accounting.ToString()) && registerUserViewModel.AccountingRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Accounting.ToString());
+                    }
+
+                    if (rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) && !registerUserViewModel.ExpenseesRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Reports.ToString());
+                    }
+                    else if (!rolesList.Contains(AppUtility.MenuItems.Reports.ToString()) && registerUserViewModel.ExpenseesRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Reports.ToString());
+                    }
+
+                    if (rolesList.Contains(AppUtility.MenuItems.Income.ToString()) && !registerUserViewModel.IncomeRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Income.ToString());
+                    }
+                    else if (!rolesList.Contains(AppUtility.MenuItems.Income.ToString()) && registerUserViewModel.IncomeRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Income.ToString());
+                    }
+
+                    if (rolesList.Contains(AppUtility.MenuItems.Users.ToString()) && !registerUserViewModel.UserRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.RemoveFromRoleAsync(employeeEditted, AppUtility.MenuItems.Users.ToString());
+                    }
+                    else if (!rolesList.Contains(AppUtility.MenuItems.Users.ToString()) && registerUserViewModel.UserRoles[0].Selected)
+                    {
+                        var rolesResult = await _userManager.AddToRoleAsync(employeeEditted, AppUtility.MenuItems.Users.ToString());
+                    }
+
+
+
+                    if (registerUserViewModel.UserImageSaved == "true")
+                    {
+                        //delete old photo
+                        string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                        DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
+                        FileInfo[] files1 = dir1.GetFiles(registerUserViewModel.UserNum + ".*");
+                        if (files1.Length > 0)
+                        {
+                            foreach (FileInfo file in files1)
+                            {
+                                System.IO.File.Delete(file.FullName);
+                            }
+                        }
+
+                        //add new photo
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
+                        DirectoryInfo dir = new DirectoryInfo(uploadFolder);
+                        FileInfo[] files = dir.GetFiles("TempUserImage" + ".*");
+                        if (files.Length > 0)
+                        {
+                            //File exists
+                            foreach (FileInfo file in files)
+                            {
+                                //System.IO.File.Move(file., user.UserNum.ToString());
+                                file.MoveTo(Path.Combine(uploadFolder, registerUserViewModel.UserNum.ToString() + file.Extension));
+                                employeeEditted.UserImage = file.FullName;
+                            }
+                            _context.Update(employeeEditted);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        //should we move the delete here and test for the extension just in case it breaks over there
+
+                    }
+        
+                    await transaction.CommitAsync();
                 }
-
-                //var folderName = "UserImages";
-                //string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, folderName);
-                //var directory = Directory.CreateDirectory(uploadFolder);
-                //if (registerUserViewModel.UserImage != null) //test for more than one???
-                //{
-                //    //create file
-                //    var indexOfDot = registerUserViewModel.UserImage.FileName.IndexOf(".");
-                //    var extension = registerUserViewModel.UserImage.FileName.Substring(indexOfDot, registerUserViewModel.UserImage.FileName.Length - indexOfDot);
-                //    string uniqueFileName = userEditted.UserNum.ToString() + extension;
-                //    string filePath = Path.Combine(uploadFolder, uniqueFileName);
-                //    var stream = new FileStream(filePath, FileMode.Create);
-                //    registerUserViewModel.UserImage.CopyTo(stream);
-
-                //    var pathToSave = Path.Combine(folderName, uniqueFileName);
-                //    userEditted.UserImage = "/" + pathToSave;
-                //    _context.Update(employeeEditted);
-                //    await _context.SaveChangesAsync();
-                //    stream.Close();
-                //}
-
-            }
-            catch (DbUpdateException ex)
-            {
-                Response.StatusCode = 500;
-                Response.WriteAsync(ex.InnerException?.ToString());
-            }
-            catch (Exception e)
-            {
-                Response.StatusCode = 500;
-                Response.WriteAsync(e.InnerException?.ToString());
+                catch (DbUpdateException ex)
+                {
+                    await transaction.RollbackAsync();
+                    Response.StatusCode = 500;
+                    registerUserViewModel.ErrorMessage = ex.Message;
+                    FillViewDropdowns(registerUserViewModel);
+                    return PartialView("EditUser", registerUserViewModel);
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    Response.StatusCode = 500;
+                    registerUserViewModel.ErrorMessage = ex.Message;
+                    FillViewDropdowns(registerUserViewModel);
+                    return PartialView("EditUser", registerUserViewModel);
+                }
             }
 
             //return RedirectToAction("Index");
             return new EmptyResult();
         }
+        private void FillViewDropdowns(RegisterUserViewModel registerUserViewModel)
+        {
+            registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jc => jc).ToList();
+            registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
+            registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
+            registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
+            registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
+            registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == registerUserViewModel.ApplicationUserID).Where(u => !u.IsSuspended)
+                  .Include(s => s.SalariedEmployee).Include(e => e.JobSubcategoryType).FirstOrDefault();
+            registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
+            registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
+            if(registerUserViewModel.NewEmployee !=null)
+            {
+                //get CentarixID
+                registerUserViewModel.CentarixID = AppUtility.GetEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == registerUserViewModel.ApplicationUserID).OrderBy(ci => ci.TimeStamp));
 
+                if (registerUserViewModel.NewEmployee.JobSubcategoryTypeID != null)
+                {
+                    registerUserViewModel.JobSubcategoryTypes = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == registerUserViewModel.NewEmployee.JobSubcategoryType.JobCategoryTypeID).ToList();
+                }
+                else
+                {
+                    registerUserViewModel.JobSubcategoryTypes = new List<JobSubcategoryType>();
+                }
+            }
+          
+        }
         public string GetProbableNextCentarixID(int StatusID)
         {
             var EmployeeStatus = _context.EmployeeStatuses.Where(es => es.EmployeeStatusID == StatusID).FirstOrDefault();
@@ -938,24 +950,6 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Users")]
-        public IActionResult DeleteUserModal(string Id)
-        {
-            ApplicationUser user = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
-            return PartialView(user);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Users")]
-        public async Task<IActionResult> DeleteUserModal(ApplicationUser applicationUser)
-        {
-            applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
-            applicationUser.IsDeleted = true;
-            _context.Update(applicationUser);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
-        }
-        [HttpGet]
-        [Authorize(Roles = "Users")]
         public async Task<IActionResult> UserImageModal()
         {
             return PartialView();
@@ -980,21 +974,29 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> SuspendUserModal(ApplicationUser applicationUser)
         {
-            applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
-            if (applicationUser.LockoutEnabled == true && (applicationUser.LockoutEnd > DateTime.Now))
+            try
             {
-                applicationUser.IsSuspended = false;
-                applicationUser.LockoutEnabled = false;
-                applicationUser.LockoutEnd = DateTime.Now;
+                applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
+                if (applicationUser.LockoutEnabled == true && (applicationUser.LockoutEnd > DateTime.Now))
+                {
+                    applicationUser.IsSuspended = false;
+                    applicationUser.LockoutEnabled = false;
+                    applicationUser.LockoutEnd = DateTime.Now;
+                }
+                else
+                {
+                    applicationUser.IsSuspended = true;
+                    applicationUser.LockoutEnabled = true;
+                    applicationUser.LockoutEnd = new DateTime(2999, 01, 01);
+                }
+                _context.Update(applicationUser);
+                await _context.SaveChangesAsync();
             }
-            else
+            catch (Exception ex)
             {
-                applicationUser.IsSuspended = true;
-                applicationUser.LockoutEnabled = true;
-                applicationUser.LockoutEnd = new DateTime(2999, 01, 01);
+                return RedirectToAction("Index",new { ErrorMessage= ex.Message });
             }
-            _context.Update(applicationUser);
-            _context.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
@@ -1023,7 +1025,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [AllowAnonymous]
         public async Task<bool> TwoFactorSessionModal(bool rememberTwoFactor = true)
-        {
+        {            
             var user = _signManager.GetTwoFactorAuthenticationUserAsync();
             var appUser = await _context.Employees.Where(e => e.Email == user.Result.Email).FirstOrDefaultAsync();
             if (rememberTwoFactor)
@@ -1076,9 +1078,7 @@ namespace PrototypeWithAuth.Controllers
                     ConfirmedEmail = userSelected.EmailConfirmed
                 };
 
-                //get CentarixID
-                registerUserViewModel.CentarixID = AppUtility.GetEmployeeCentarixID(_context.CentarixIDs.Where(ci => ci.EmployeeID == userSelected.Id).OrderBy(ci => ci.TimeStamp));
-
+                
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "UserImages");
                 DirectoryInfo dir1 = new DirectoryInfo(uploadFolder1);
                 FileInfo[] files1 = dir1.GetFiles(registerUserViewModel.UserNum + ".*");
@@ -1089,21 +1089,8 @@ namespace PrototypeWithAuth.Controllers
                         registerUserViewModel.UserImage = file.FullName;
                     }
                 }
-                registerUserViewModel.NewEmployee = _context.Employees.Where(u => u.Id == id).Where(u => !u.IsSuspended)
-                  .Include(s => s.SalariedEmployee).Include(e => e.JobSubcategoryType).FirstOrDefault();
-                    registerUserViewModel.EmployeeStatuses = _context.EmployeeStatuses.Select(es => es).ToList();
-                    registerUserViewModel.JobCategoryTypes = _context.JobCategoryTypes.Select(jt => jt).ToList();
-                    if (registerUserViewModel.NewEmployee.JobSubcategoryTypeID != null)
-                    {
-                        registerUserViewModel.JobSubcategoryTypes = _context.JobSubcategoryTypes.Where(js => js.JobCategoryTypeID == registerUserViewModel.NewEmployee.JobSubcategoryType.JobCategoryTypeID).ToList();
-                    }
-                    else
-                    {
-                        registerUserViewModel.JobSubcategoryTypes = new List<JobSubcategoryType>();
-                    }
-                    registerUserViewModel.MaritalStatuses = _context.MaritalStatuses.Select(ms => ms).ToList();
-                    registerUserViewModel.Degrees = _context.Degrees.Select(d => d).ToList();
-                    registerUserViewModel.Citizenships = _context.Citizenships.Select(c => c).ToList();
+                FillViewDropdowns(registerUserViewModel);
+                   
                     if (registerUserViewModel.NewEmployee == null)
                     {
                         registerUserViewModel.NewEmployee = new Employee();

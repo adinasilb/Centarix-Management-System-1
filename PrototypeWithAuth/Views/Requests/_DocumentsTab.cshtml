@@ -10,6 +10,14 @@
 @{
     var urlAction = Url.Action("DocumentsModal", "Requests");
     var fontSize = "2rem";
+
+    var color = "order-inv-filter";
+
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    {
+
+        color = "oper-filter";
+    }
 }
 
 <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />

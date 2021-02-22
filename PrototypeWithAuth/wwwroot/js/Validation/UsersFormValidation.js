@@ -18,12 +18,12 @@ $('.usersForm').validate({
 	rules: {
 		"FirstName": "required",
 		"LastName": "required",
-		"CentarixID": {
-			required: true,
-			//number: true,
-			minlength: 1,
-			//integer: true
-		},
+		//"CentarixID": {
+		//	required: true,
+		//	//number: true,
+		//	minlength: 1,
+		//	//integer: true
+		//},
 		"Email": {
 			email: true,
 			required: true,

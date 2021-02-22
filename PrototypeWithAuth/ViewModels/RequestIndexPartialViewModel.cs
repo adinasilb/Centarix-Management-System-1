@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using X.PagedList;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class RequestIndexPartialViewModel
+    public class RequestIndexPartialViewModel : ViewModelBase
     {
         public IPagedList<RequestIndexPartialRowViewModel> PagedList { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }

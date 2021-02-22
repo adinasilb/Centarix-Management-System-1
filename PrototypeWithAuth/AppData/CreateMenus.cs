@@ -994,7 +994,7 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
 
-        public static List<MenuItems> CreateOperationsRequestsSidebar(AppUtility.PageTypeEnum PageType, AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        public static List<MenuItems> CreateOperationsRequestsSidebar(AppUtility.PageTypeEnum PageType, AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses, AppUtility.PageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
         {
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
             string CurrentClasses = OrigClasses;
@@ -1014,19 +1014,22 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-format_list_bulleted-24px-01"
             });
+
             if (SidebarTitle == AppUtility.SidebarEnum.Add) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Add Item",
-                Controller = "Operations",
-                Action = "CreateModalView",
+                Controller = "Requests",
+                Action = "AddItemView",
                 RouteValues = new RouteValueDictionary()
                 {
-                    {"PageType", PageType },
-                    {"categoryType", 2 }
+                    { "PageType", pageType },
+                    { "CategoryType", categoryType },
+                    { "SectionType", AppUtility.MenuItems.Operations }
                 },
                 Classes = CurrentClasses,
-                IconName = "icon-add_circle_outline-24px1"
+                IconName = "icon-add_circle_outline-24px1",
+                AjaxLink = "add-item"               
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()

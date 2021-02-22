@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class VendorSearchViewModel
+    public class VendorSearchViewModel : ViewModelBase
     {
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public int SelectedParentCategoryID { get; set; }

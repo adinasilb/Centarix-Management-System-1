@@ -504,7 +504,7 @@
 
                     switch ($type) {
                         case "details":
-                            //$.fn.OnOpenModalView();
+                               //$.fn.OnOpenModalView();
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
                             break;
@@ -656,14 +656,6 @@
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
             $('.mdb-select li:first-child').hide();
             $('.mdb-select li:nth-child(2)').hide();
-        };
-
-
-        $.fn.DeleteUserModal = function (userid) {
-            console.log("in delete user modal function");
-            $itemurl = '/Admin/DeleteUserModal?id=' + userid;
-            $.fn.CallPageUser($itemurl, '');
-            return false;
         };
 
       
@@ -1056,6 +1048,23 @@
         $.fn.formatDateForSubmit = function(val)
         {
             return new Date(val.split("/").reverse().join("-")).toISOString();
+        }
+
+        $.fn.AppendModalToBody = function(data)
+        {
+            $(".modal").modal('hide');
+            $(".modal").replaceWith('');
+            var modal = $(data);
+            $('body').append(modal);
+            $(".modal").modal({
+                backdrop: true,
+                keyboard: false,
+            });
+            //shows the modal
+            $(".modal").modal('show');
+            $('.modal-content a:first').tab('show');
+            $(".mdb-select").materialSelect();
+
         }
     </script>
 
