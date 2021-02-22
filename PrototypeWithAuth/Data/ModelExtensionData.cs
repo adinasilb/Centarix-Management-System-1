@@ -1542,6 +1542,12 @@ namespace PrototypeWithAuth.Data
                         LabPartID = 5,
                         LabPartNameAbbrev = "S",
                         LabPartName = "Shelf"
+                    },
+                    new LabPart
+                    {
+                        LabPartID = 6,
+                        LabPartNameAbbrev = "B",
+                        LabPartName = "Bench"
                     }
                );
             modelBuilder.Entity<OffDayType>().HasData(
