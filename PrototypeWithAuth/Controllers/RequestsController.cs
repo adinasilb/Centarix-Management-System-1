@@ -1123,6 +1123,7 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
             requestItemViewModel.UnitTypes = unittypeslookup;
+            requestItemViewModel.CommentTypes = commentTypes;
             //requestItemViewModel.PaymentTypes = paymenttypes;
             //requestItemViewModel.CompanyAccounts = companyaccounts;
             return requestItemViewModel;
