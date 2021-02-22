@@ -13,25 +13,26 @@
         bcColor = "oper-background-color";
     }
 }
-    <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style=" ">
+<form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style=" ">
 
-        @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
-        @Html.HiddenFor(model => model.RequestStatusID)
-        @Html.HiddenFor(model => model.PageType)
-        @Html.HiddenFor(model => model.SectionType)
+    @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
+    @Html.HiddenFor(model => model.RequestStatusID)
+    @Html.HiddenFor(model => model.PageType)
+    @Html.HiddenFor(model => model.SectionType)
+    @Html.HiddenFor(model => model.IsProprietary)
 
-        <input type="hidden" asp-for="@Model.Request.RequestID" />
-        @{
-            if (Model.Request.Product.ProductSubcategory.ParentCategory?.ParentCategoryDescriptionEnum != null)
-            {
-                <input type="hidden" value="@(Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum)" id="categoryDescription" />
-            }
+    <input type="hidden" asp-for="@Model.Request.RequestID" />
+    @{
+        if (Model.Request.Product.ProductSubcategory.ParentCategory?.ParentCategoryDescriptionEnum != null)
+        {
+            <input type="hidden" value="@(Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum)" id="categoryDescription" />
         }
-        @*<input type="hidden" value="@Model.ParentCategory.ParentCategoryID" id="categoryId" />*@
+    }
+    @*<input type="hidden" value="@Model.ParentCategory.ParentCategoryID" id="categoryId" />*@
 
-        <!-- Modal Header -->
-        <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
-            @*class needed here to override bootstraps modal limitations*@
+    <!-- Modal Header -->
+    <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
+        @*class needed here to override bootstraps modal limitations*@
 
 
             <div class="form-group modal-line-1-header modal-sides row">
@@ -126,9 +127,9 @@
                     @{await Html.RenderPartialAsync("ItemData", Model); }
                 </div>
 
-            </div>
         </div>
-    </form>
+    </div>
+</form>
     <script>
         $(".ordersItemForm").ready(function (e) {
             console.log("form ready")
