@@ -83,5 +83,6 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.RequestModalType ModalType { get; set; }
         public bool IsProprietary { get; set; }
+        public bool IsReceived { get; set; }
     }
 }
