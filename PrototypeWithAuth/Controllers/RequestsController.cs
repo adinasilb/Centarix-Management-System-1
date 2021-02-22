@@ -1085,9 +1085,8 @@ namespace PrototypeWithAuth.Controllers
 
             return PartialView(requestItemViewModel);
         }
-        private async Task<RequestItemViewModel> FillRequestDropdowns()
+        private async Task<RequestItemViewModel> FillRequestDropdowns(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, int categoryTypeId, bool isProprietary = false)
         {
-            var productSubcategory = await _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == productSubcategoryId).FirstOrDefaultAsync();
             var parentcategories = new List<ParentCategory>();
             var productsubcategories = new List<ProductSubcategory>();
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
@@ -1099,11 +1098,14 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1 && pc.isProprietary).ToListAsync();
-                productSubcategory = new ProductSubcategory()
+                if (isProprietary)
                 {
-                    ParentCategory = new ParentCategory()
-                };
+                    parentcategories = await _context.ParentCategories.Where(pc => pc.isProprietary).ToListAsync();
+                }
+                else
+                {
+                    parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.isProprietary).ToListAsync();
+                }
             }
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
@@ -1113,65 +1115,35 @@ namespace PrototypeWithAuth.Controllers
             var companyaccounts = await _context.CompanyAccounts.ToListAsync();
             List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
 
-            RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
-            {
-                ParentCategories = parentcategories,
-                ProductSubcategories = productsubcategories,
-                Vendors = vendors,
-                Projects = projects,
-                SubProjects = subprojects,
+            requestItemViewModel.ParentCategories = parentcategories;
+            requestItemViewModel.ProductSubcategories = productsubcategories;
+            requestItemViewModel.Vendors = vendors;
+            requestItemViewModel.Projects = projects;
+            requestItemViewModel.SubProjects = subprojects;
 
-                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
-                UnitTypes = unittypeslookup,
-                PaymentTypes = paymenttypes,
-                CompanyAccounts = companyaccounts
-            };
+            requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
+            requestItemViewModel.UnitTypes = unittypeslookup;
+            //requestItemViewModel.PaymentTypes = paymenttypes;
+            //requestItemViewModel.CompanyAccounts = companyaccounts;
+            return requestItemViewModel;
         }
         private async Task<RequestItemViewModel> FillRequestItemViewModel(int categoryTypeId, int productSubcategoryId = 0, bool isProprietary = false)
         {
             var productSubcategory = await _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == productSubcategoryId).FirstOrDefaultAsync();
-            var parentcategories = new List<ParentCategory>();
-            var productsubcategories = new List<ProductSubcategory>();
-            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            if (productSubcategory != null)
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
+            requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId, isProprietary);
+            
+            if (productSubcategory == null)
             {
-                parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
-                productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
-                unittypes = _context.UnitTypes.Where(ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == productSubcategory.ParentCategoryID).Count() > 0).Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            }
-            else
-            {
-                parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 1 && pc.isProprietary).ToListAsync();
                 productSubcategory = new ProductSubcategory()
                 {
                     ParentCategory = new ParentCategory()
                 };
             }
-            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0).ToListAsync();
-            var projects = await _context.Projects.ToListAsync();
-            var subprojects = await _context.SubProjects.ToListAsync();
-            var unittypeslookup = unittypes.ToLookup(u => u.UnitParentType);
-            var paymenttypes = await _context.PaymentTypes.ToListAsync();
-            var companyaccounts = await _context.CompanyAccounts.ToListAsync();
-            List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
 
-            RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
-            {
-                ParentCategories = parentcategories,
-                ProductSubcategories = productsubcategories,
-                Vendors = vendors,
-                Projects = projects,
-                SubProjects = subprojects,
-
-                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
-                UnitTypes = unittypeslookup,
-                PaymentTypes = paymenttypes,
-                CompanyAccounts = companyaccounts,
-                CommentTypes = commentTypes,
-                Comments = new List<Comment>(),
-                EmailAddresses = new List<string>() { "", "", "", "", "" },
-                ModalType = AppUtility.RequestModalType.Create
-            };
+            requestItemViewModel.Comments = new List<Comment>();
+            requestItemViewModel.EmailAddresses = new List<string>() { "", "", "", "", "" };
+            requestItemViewModel.ModalType = AppUtility.RequestModalType.Create;
             
             requestItemViewModel.Request = new Request();
             requestItemViewModel.Request.ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
@@ -1212,7 +1184,7 @@ namespace PrototypeWithAuth.Controllers
 
                 }
             }
-            else if(parentcategories.FirstOrDefault().CategoryTypeID==2)
+            else if(requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID==2)
             {
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, "");
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, "");
