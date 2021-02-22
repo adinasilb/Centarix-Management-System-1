@@ -52,7 +52,7 @@
                 dataTextField: "VendorEnName"),
                 //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
                 "Select a Vendor",
-                htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext heading-1 " + " " , @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
+                htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext  " + " " , @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
                 )
                             <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
                         </div>
@@ -60,7 +60,7 @@
                     <input class="" type="hidden" value="" id="vendor-primary-email" />
                     <div class="col-md-4">
                         <div class="form-group">                           
-                            <input asp-for="Request.Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom heading-1" readonly />
+                            <input asp-for="Request.Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
                         </div>
                     </div>
                 }
