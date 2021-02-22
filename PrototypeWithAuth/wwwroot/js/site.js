@@ -1715,6 +1715,8 @@ $(function () {
 		});
 	}
 
+
+
 	$("#saveOffDay").off('click').click(function (e) {
 		e.preventDefault();
 

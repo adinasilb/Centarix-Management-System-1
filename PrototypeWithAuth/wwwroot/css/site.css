@@ -1013,7 +1013,7 @@ a.nav-link {
     color: inherit
 }
 
-.container-fluid ul li a.nav-link.active {
+.order-inv-form .container-fluid ul li a.nav-link.active {
     color: var(--order-inv-color);
 }
 
@@ -1022,8 +1022,8 @@ a.nav-link {
     color: inherit;
 }
 
-.container-fluid ul li a.nav-link.active,
-.container-fluid ul li a.nav-link:hover {
+.order-inv-form .container-fluid ul li a.nav-link.active,
+.order-inv-form .container-fluid ul li a.nav-link:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--order-inv-color);
@@ -1045,7 +1045,7 @@ a.nav-link {
     border-bottom: 4px solid var(--order-inv-color);
 }*/
 
-.container-fluid ul li a.oper-link.active, .container-fluid ul li a.oper-link:hover {
+ .oper-form .container-fluid ul li a.active, .oper-form .container-fluid ul li a:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--operations-color);

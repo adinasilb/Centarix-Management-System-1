@@ -64,13 +64,13 @@
             <div id="item" class="tab-pane fade in @showItem" value="1">
                 @{await Html.RenderPartialAsync("_ItemTab", Model); }
             </div>
-            @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Request.RequestStatusID == 3 || Model.RequestStatusID == 7)
+            @if ((Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Request.RequestStatusID == 3 || Model.RequestStatusID == 7)&&Model.SectionType != AppUtility.MenuItems.Operations)
             {
                 <div id="location" class="tab-pane fade @showLocation" value="2">
                     @{await Html.RenderPartialAsync("_LocationTab", Model); }
                 </div>
             }
-            @if (!Model.Request.Product.ProductSubcategory.ParentCategory.isProprietary)
+            @if (!Model.Request.Product.ProductSubcategory.ParentCategory.isProprietary &&  Model.SectionType != AppUtility.MenuItems.Operations)
             {
                 <div id="price" class="tab-pane fade @showPrice" value="3">
                     @{await Html.RenderPartialAsync("_PriceTab", Model); }
@@ -87,7 +87,7 @@
                     @{await Html.RenderPartialAsync("_HistoryTab", Model); }
                 </div>
             }
-            @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create))
+            @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create) && Model.SectionType != AppUtility.MenuItems.Operations)
             {
                 <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
                     @{await Html.RenderPartialAsync("_OrderTab", Model); }

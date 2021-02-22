@@ -894,15 +894,15 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddItemView(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest)
+        public async Task<IActionResult> AddItemView(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
             var categoryType = 1;
-            if (PageType.ToString().StartsWith("Operation"))
+            if (SectionType == AppUtility.MenuItems.Operations)
             {
                 categoryType = 2;
             }
@@ -915,7 +915,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
             requestItemViewModel.PageType = PageType;
-
+            requestItemViewModel.SectionType = SectionType;
             return View(requestItemViewModel);
         }
 
@@ -1065,12 +1065,17 @@ namespace PrototypeWithAuth.Controllers
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var categoryType = 1;
+            var sectionType = AppUtility.MenuItems.Requests;
             if (PageType.ToString().StartsWith("Operations"))
             {
+                sectionType = AppUtility.MenuItems.Operations;
                 categoryType = 2;
+              
             }
             
             RequestItemViewModel requestItemViewModel = await FillRequestItemViewModel(categoryType, productSubCategoryId);
+            requestItemViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync(); 
+            requestItemViewModel.SectionType = sectionType;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.Request.Product.ProductName = itemName;
             
@@ -1206,6 +1211,13 @@ namespace PrototypeWithAuth.Controllers
                     GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Map, "");
 
                 }
+            }
+            else if(parentcategories.FirstOrDefault().CategoryTypeID==2)
+            {
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Details, "");
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, "");
             }
             else
             {
