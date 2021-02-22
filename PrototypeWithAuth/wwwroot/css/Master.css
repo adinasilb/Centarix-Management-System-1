@@ -644,19 +644,19 @@ table td, table td .btn, .text, table th {
             border-bottom: 0 !important;
         }
 
-.order-inv-form .document-border:hover {
+.order-inv-form .document-border:hover, .order-inv-form .document-border.hasFile {
     border: 1px solid var(--order-inv-color) !important;
 }
 
-.oper-form .document-border:hover {
+.oper-form .document-border:hover, .oper-form .document-border.hasFile {
     border: 1px solid var(--operations-color) !important;
 }
 
-.supplier-form .document-border:hover {
+.supplier-form .document-border:hover, .supplier-form .document-border.hasFile {
     border: 1px solid var(--lab-man-color) !important;
 }
 
-.accounting-form .document-border:hover {
+.accounting-form .document-border:hover, .accounting-form .document-border.hasFile {
     border: 1px solid var(--acc-color) !important;
 }
 .accounting-form .document-border:hover i{

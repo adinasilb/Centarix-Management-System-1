@@ -15,15 +15,15 @@ namespace PrototypeWithAuth.Data
         public static void Seed(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PaymentStatus>().HasData(
-                new PaymentStatus
-                {
-                    PaymentStatusID = 1,
-                    PaymentStatusDescription = "No Invoice" //TODO: should this be renamed ordered or will none cover all bases?
-                },
+                //new PaymentStatus
+                //{
+                //    PaymentStatusID = 1,
+                //    PaymentStatusDescription = "No Invoice" //TODO: should this be renamed ordered or will none cover all bases?
+                //},
                 new PaymentStatus
                 {
                     PaymentStatusID = 2,
-                    PaymentStatusDescription = "Not Paid"
+                    PaymentStatusDescription = "+ 30"
                 },
                 new PaymentStatus
                 {
@@ -33,7 +33,7 @@ namespace PrototypeWithAuth.Data
                 new PaymentStatus
                 {
                     PaymentStatusID = 4,
-                    PaymentStatusDescription = "Pay Later"
+                    PaymentStatusDescription = "Pay Upon Arrival"
                 },
                 new PaymentStatus
                 {
@@ -44,7 +44,18 @@ namespace PrototypeWithAuth.Data
                 {
                     PaymentStatusID = 6,
                     PaymentStatusDescription = "Paid"
+                },
+                 new PaymentStatus
+                 {
+                     PaymentStatusID = 7,
+                     PaymentStatusDescription = "Standing Order"
+                 },
+                new PaymentStatus
+                {
+                    PaymentStatusID = 8,
+                    PaymentStatusDescription = "Specify Payment Later"
                 }
+
             );
 
             modelBuilder.Entity<CategoryType>().HasData(
@@ -895,16 +906,16 @@ namespace PrototypeWithAuth.Data
                   RequestStatusID = 3,
                   RequestStatusDescription = "RecievedAndIsInventory"  // request page, under recieved (only pass in the first 50) and under Inventory
               },
-               new RequestStatus
-               {
-                   RequestStatusID = 4,
-                   RequestStatusDescription = "Partial" // request page, under order
-               },
-                new RequestStatus
-                {
-                    RequestStatusID = 5,
-                    RequestStatusDescription = "Clarify" // request page, under order
-                },
+              // new RequestStatus
+              // {
+              //     RequestStatusID = 4,
+              //     RequestStatusDescription = "Partial" // request page, under order
+              // },
+              //  new RequestStatus
+              //  {
+              //      RequestStatusID = 5,
+              //      RequestStatusDescription = "Clarify" // request page, under order
+              //  },
                 new RequestStatus
                 {
                     RequestStatusID = 6,

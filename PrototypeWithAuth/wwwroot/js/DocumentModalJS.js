@@ -106,6 +106,7 @@
 			console.log("has class already");
 		} else {
 			console.log("does not class already");
+			$("#" + $foldername + " div.card.document-border").addClass("hasFile");
 			if (section=="Operations") {
 				div.addClass("oper-filter");
 			} else if ((section == "LabManagement")) {

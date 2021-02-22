@@ -303,8 +303,12 @@ Model.UnitTypeList,
     <div class="col-md-2">
         <div class="form-group">
             <label class="control-label">Discount</label>
-            <input asp-for="Request.Discount" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
-            <span asp-validation-for="Request.Discount"/>
+         
+            <div class="input-group">
+                <input asp-for="Request.Discount" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+                <div class="input-group-text">%</div>
+            </div>
+            <span asp-validation-for="Request.Discount" />
         </div>
     </div>
 </div>

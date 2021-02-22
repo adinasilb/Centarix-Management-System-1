@@ -3169,7 +3169,7 @@ namespace PrototypeWithAuth.Controllers
                     editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(new FileStream(filePath, FileMode.Create));
 
                 }
-                return RedirectToAction("LabManageOrders");
+                return RedirectToAction("LabManageQuotes");
             }
             catch (Exception ex)
             {
