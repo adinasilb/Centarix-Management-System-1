@@ -908,11 +908,10 @@ namespace PrototypeWithAuth.Controllers
             }
             
             if (PageType == AppUtility.PageTypeEnum.RequestSummary)
-            {
-                requestItemViewModel = await FillRequestItemViewModel(categoryType, isProprietary:true);
-                
-                requestItemViewModel.RequestStatusID = 7;
+            {                
+                requestItemViewModel.IsProprietary = true;
             }
+            requestItemViewModel = await FillRequestItemViewModel(requestItemViewModel, categoryType);
 
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.SectionType = SectionType;
@@ -1070,11 +1069,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 sectionType = AppUtility.MenuItems.Operations;
                 categoryType = 2;
-              
             }
+
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
+
+            requestItemViewModel= await FillRequestItemViewModel(requestItemViewModel, categoryType, productSubCategoryId);
             
-            RequestItemViewModel requestItemViewModel = await FillRequestItemViewModel(categoryType, productSubCategoryId);
-            requestItemViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync(); 
             requestItemViewModel.SectionType = sectionType;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.Request.Product.ProductName = itemName;
@@ -1085,7 +1085,7 @@ namespace PrototypeWithAuth.Controllers
 
             return PartialView(requestItemViewModel);
         }
-        private async Task<RequestItemViewModel> FillRequestDropdowns(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, int categoryTypeId, bool isProprietary = false)
+        private async Task<RequestItemViewModel> FillRequestDropdowns(RequestItemViewModel requestItemViewModel, ProductSubcategory productSubcategory, int categoryTypeId)
         {
             var parentcategories = new List<ParentCategory>();
             var productsubcategories = new List<ProductSubcategory>();
@@ -1098,7 +1098,7 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                if (isProprietary)
+                if (requestItemViewModel.IsProprietary)
                 {
                     parentcategories = await _context.ParentCategories.Where(pc => pc.isProprietary).ToListAsync();
                 }
@@ -1127,11 +1127,10 @@ namespace PrototypeWithAuth.Controllers
             //requestItemViewModel.CompanyAccounts = companyaccounts;
             return requestItemViewModel;
         }
-        private async Task<RequestItemViewModel> FillRequestItemViewModel(int categoryTypeId, int productSubcategoryId = 0, bool isProprietary = false)
+        private async Task<RequestItemViewModel> FillRequestItemViewModel(RequestItemViewModel requestItemViewModel, int categoryTypeId, int productSubcategoryId = 0)
         {
             var productSubcategory = await _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == productSubcategoryId).FirstOrDefaultAsync();
-            RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
-            requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId, isProprietary);
+            requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId);
             
             if (productSubcategory == null)
             {
