@@ -268,11 +268,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     <input asp-for="Request.Passage" class="form-control-plaintext border-bottom expected-supply-days @passageCategories @markReadOnlyClass" type="text" />
                     <span asp-validation-for="Request.Passage" class="text-danger-centarix"></span>
                 </div>
-                <div class="col-md-4 @amountCategories @hiddenSummaryClass">
-                    <label asp-for="Request.Amount" class="control-label"></label>
-                    <input asp-for="Request.Amount" class="form-control-plaintext border-bottom expected-supply-days @amountCategories @markReadOnlyClass" type="text" />
-                    <span asp-validation-for="Request.Amount" class="text-danger-centarix"></span>
-                </div>
+            
             </div>
         }
     }

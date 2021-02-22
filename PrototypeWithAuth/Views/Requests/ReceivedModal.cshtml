@@ -91,13 +91,8 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label class="control-label">Application User Receiver</label>
-                                        <select asp-for="Request.ApplicationUserReceiverID" class="mdb-select custom select-dropdown form-control-plaintext">
-                                            @foreach (var user in Model.ApplicationUsers)
-                                            {
-                                                <option value="@user.Id">@user.UserName</option>
-                                            }
-                                        </select>
-                                        <span asp-validation-for="Request.ApplicationUserReceiverID" class="text-danger-centarix"></span>
+                                       <input asp-for="Request.ApplicationUserReceiver" class="form-control-plaintext border-bottom " readonly/>
+                                 
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">
