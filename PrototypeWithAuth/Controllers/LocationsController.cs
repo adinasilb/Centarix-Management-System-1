@@ -70,7 +70,10 @@ namespace PrototypeWithAuth.Controllers
                 LocationTypes = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 SectionType = SectionType
             };
-
+            if(AppUtility.IsAjaxRequest(Request))
+            {
+                return PartialView(locationTypeViewModel);
+            }
             return View(locationTypeViewModel);
         }
 
