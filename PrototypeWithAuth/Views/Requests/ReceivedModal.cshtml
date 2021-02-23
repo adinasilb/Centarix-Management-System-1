@@ -91,34 +91,57 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label class="control-label">Application User Receiver</label>
-                                       <input asp-for="Request.ApplicationUserReceiver" class="form-control-plaintext border-bottom " readonly/>
-                                 
+                                        <input asp-for="Request.ApplicationUserReceiver" class="form-control-plaintext border-bottom " readonly />
+                                        <input type="hidden" asp-for="Request.ApplicationUserReceiverID"/>
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">
-                            <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                            <label asp-for="Arrival">Arrival</label>
-                        </div>*@
+                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                <label asp-for="Arrival">Arrival</label>
+            </div>*@
                                 <div class="col-2 text-center">
                                     <br />
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input filled-in" asp-for="Clarify" />
-                                        <label class="form-check-label " asp-for="Clarify"></label>
+                                        <input type="checkbox" class="form-check-input filled-in clarify-checkbox" asp-for="Request.IsClarify" />
+                                        <label class="form-check-label " asp-for="Request.IsClarify">Clarify</label>
                                     </div>
                                 </div>
                                 <div class="col-2 text-center">
                                     <br />
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input filled-in" asp-for="PartialDelivery" />
-                                        <label class="form-check-label " asp-for="PartialDelivery"></label>
+                                        <input type="checkbox" class="form-check-input filled-in partial-checkbox" asp-for="Request.IsPartial" />
+                                        <label class="form-check-label " asp-for="Request.IsPartial">Partial</label>
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">
-                            <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                            <label for="test-chkbx">Trial</label>
-                        </div>*@
+                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                <label for="test-chkbx">Trial</label>
+            </div>*@
                             </div>
-
+                            <div class="row">
+                                <div class="col-4">
+                                   
+                                </div>
+                                <div class="col-4">
+                                  
+                                </div>
+                                @*<div class="col-1 text-center">
+                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                <label asp-for="Arrival">Arrival</label>
+            </div>*@
+                            <div class="col-2 text-center ">
+                                <label asp-for="Request.NoteForClarifyDelivery" class="control-label clarify-note d-none">Clarify Note</label>
+                                <textarea asp-for="Request.NoteForClarifyDelivery" class="form-control-plaintext border-bottom clarify-note d-none" ></textarea>
+                            </div>
+                            <div class="col-2 text-center ">
+                                <label asp-for="Request.NoteForPartialDelivery" class="control-label partial-note d-none">Partial Note</label>
+                                <textarea asp-for="Request.NoteForPartialDelivery" class="form-control-plaintext border-bottom partial-note d-none"></textarea>
+                            </div>
+                                @*<div class="col-1 text-center">
+                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                <label for="test-chkbx">Trial</label>
+            </div>*@
+                            </div>
                             <br />
                             @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                             {
@@ -160,13 +183,13 @@
                                 </div>
 
                                 @*<div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label class="control-label">Location Details</label>
-                                    <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
-                                </div>
-                            </div>
-                        </div>*@}
+                <div class="col-12">
+                    <div class="form-group">
+                        <label class="control-label">Location Details</label>
+                        <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
+                    </div>
+                </div>
+            </div>*@}
                         </div>
                         @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
@@ -212,6 +235,28 @@
 </div>
 <script src="~/js/InitializeDatePicker.js"></script>
 <script>
+    $(".clarify-checkbox").click(function(){
+        if($(this).is(":checked"))
+        {
+            $(".clarify-note").removeClass("d-none");
+            $(".clarify-note ").attr("disabled", false)
+        }
+        else 
+        {
+            $(".clarify-note").addClass("d-none");
+            $(".clarify-note").attr("disabled", true)
+        }
+    });
+    $(".partial-checkbox").click(function () {
+        if ($(this).is(":checked")) {
+            $(".partial-note").removeClass("d-none");
+            $(".partial-note ").attr("disabled", false)
+        }
+        else {
+            $(".partial-note").addClass("d-none");
+            $(".partial-note ").attr("disabled", true)
+        }
+    });
     $(".submit-received").click( function (e) {
         //alert("validate form");
         e.preventDefault();

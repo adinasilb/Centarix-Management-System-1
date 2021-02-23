@@ -2751,6 +2751,10 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
                         requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
                         requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
+                        requestReceived.NoteForPartialDelivery = receivedLocationViewModel.Request.NoteForPartialDelivery;
+                        requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
+                        requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
+                        requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
                         _context.Update(requestReceived);
                         await _context.SaveChangesAsync();
 
@@ -2791,7 +2795,9 @@ namespace PrototypeWithAuth.Controllers
                     ViewBag.ErrorMessage = ex.Message?.ToString();
                     Response.StatusCode = 500;
                     receivedLocationViewModel.locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0);
-                    receivedLocationViewModel.ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync();
+                    var userid = _userManager.GetUserId(User);
+                    receivedLocationViewModel.Request.ApplicationUserReceiver = _context.Users.Where(u=>u.Id == userid ).FirstOrDefault();
+                    receivedLocationViewModel.Request.ApplicationUserReceiverID = userid;
                     receivedLocationViewModel.Request = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                     .FirstOrDefault();
                     return PartialView("ReceivedModal", receivedLocationViewModel);
