@@ -193,6 +193,7 @@
 				var locationInstanceId = $(this).children('div').first().children("input").first().attr("liid");
 				var lip = $(".liid." + locationInstanceId);
 				console.log("lip val: " + lip.val());
+				$(".complete-order").removeClass("disabled-submit")
 				if (lip.val() == "true") {
 					console.log("TRUE!");
 					lip.val("false"); //IMPT: sending back the true value to controller to place it here

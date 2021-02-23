@@ -85,14 +85,20 @@
     <div class="col-md-6">
         <div class="form-group">
             <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-
+            @if (Model.IsProprietary)
+            {
+        <input asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="form-control-plaintext border-bottom" type="text" readonly/>
+            }
+            else
+            {
             @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID,
-new SelectList(
-Model.ParentCategories,
-"ParentCategoryID",
-"ParentCategoryDescription"
-), "Select Category",
-new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category" })
+         new SelectList(
+         Model.ParentCategories,
+         "ParentCategoryID",
+         "ParentCategoryDescription"
+         ), "Select Category",
+         new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category" })
+            }
             <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
         </div>
     </div>

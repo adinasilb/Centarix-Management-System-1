@@ -126,4 +126,10 @@
     $.fn.AddToHiddenIds = function (emailValue) {
         $(".emailaddresses[value='']:first").val(emailValue);
     }
+
+    $('.complete-order').click(function (e) {
+        if (!$(this).hasClass('disabled-submit')) {
+            $(".save-item").removeClass("save-item")
+        }
+    })
 })
