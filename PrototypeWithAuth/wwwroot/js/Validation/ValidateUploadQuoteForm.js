@@ -11,7 +11,7 @@
 		QuotesInput :{
 			fileRequired : true			
 		},
-		"ParentRequest.OrderNumber": {
+		"ParentRequest.SupplierOrderNumber": {
 			required: true
 		},
 		"ParentRequest.OrderDate": {

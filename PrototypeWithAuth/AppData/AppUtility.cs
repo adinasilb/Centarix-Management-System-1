@@ -67,7 +67,7 @@ namespace PrototypeWithAuth.AppData
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map } //Listed in the site.js (if you change here must change there)
+        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum {  NIS, USD }
@@ -90,6 +90,7 @@ namespace PrototypeWithAuth.AppData
         public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
         public enum RequestModalType { Create, Edit, Summary}
         public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save}
+        public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave}
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -136,14 +137,14 @@ namespace PrototypeWithAuth.AppData
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
         public static double GetExchangeRateFromApi()  
         {
-            var client = new RestClient("https://v6.exchangerate-api.com/v6/65c36323b979e8f4b1b1b0e3/latest/USD");
+            var client = new RestClient("http://api.currencylayer.com/live?access_key=8a8f7defe393388b7249ffcdb09d6a34");
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             double rate=0.0;
             try
             {
                 dynamic tmp = JsonConvert.DeserializeObject(response.Content);
-                String stringRate = (string)tmp.conversion_rates.ILS;
+                String stringRate = (string)tmp.quotes.USDILS;
                 stringRate = stringRate.Replace("{", "");
                 stringRate = stringRate.Replace("}", "");
                 Double.TryParse(stringRate, out rate);

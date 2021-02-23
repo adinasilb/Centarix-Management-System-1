@@ -107,7 +107,11 @@ namespace PrototypeWithAuth.Models
         public int? PaymentStatusID { get; set; }
         [ForeignKey("PaymentStatusID")]
         public PaymentStatus PaymentStatus { get; set; }
-
+        public bool HasInvoice { get; set; }
+        public bool IsPartial { get; set; }
+        public string NoteForPartialDelivery { get; set; }
+        public bool IsClarify { get; set; }
+        public string NoteForClarifyDelivery { get; set; }
         public int? InvoiceID { get; set; }
         [ForeignKey("InvoiceID")]
         public Invoice Invoice { get; set; }

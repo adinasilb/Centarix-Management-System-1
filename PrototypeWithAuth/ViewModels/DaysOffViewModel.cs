@@ -1,11 +1,12 @@
-﻿using System;
+﻿using PrototypeWithAuth.AppData.UtilityModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class DaysOffViewModel
+    public class DaysOffViewModel : ViewModelBase
     {
         public int Year { get; set; }
         public double TotalVacationDays { get; set; }

@@ -268,9 +268,7 @@ namespace PrototypeWithAuth.Controllers
             var userid = _userManager.GetUserId(User);
             var user = _context.Employees.Where(u => u.Id == userid).Include(e => e.SalariedEmployee).FirstOrDefault();
             return PartialView(base.SummaryHoursFunction(DateTime.Now.Month, DateTime.Now.Year, user));
-        }
-
-     
+        }     
 
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
@@ -523,31 +521,44 @@ namespace PrototypeWithAuth.Controllers
 
             return RedirectToAction(updateHoursViewModel.PageType ?? "ReportHours", new { Month = Month });
         }
-
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> Vacation(String PageType)
+        public async Task<IActionResult> OffDayModal(AppUtility.PageTypeEnum PageType, AppUtility.OffDayTypeEnum OffDayType)
         {
-            return PartialView("Vacation", PageType);
+            OffDayViewModel offDayViewModel = new OffDayViewModel()
+            {
+                OffDayType = OffDayType,
+                PageType = PageType
+            };
+            return PartialView(offDayViewModel);
+        }
+        [HttpPost]
+        [Authorize(Roles = "TimeKeeper")]
+        public async Task<IActionResult> OffDayModal(OffDayViewModel offDayViewModel)
+        {
+            SaveOffDay(offDayViewModel.FromDate, offDayViewModel.ToDate, offDayViewModel.OffDayType);
+            var view = "";
+            if (offDayViewModel.PageType.Equals(AppUtility.PageTypeEnum.TimeKeeperReport))
+            {
+                view = "_ReportDaysOff";
+            }
+            else if (offDayViewModel.PageType.Equals(AppUtility.PageTypeEnum.TimekeeperSummary))
+            {
+                view = "SummaryHours";
+            }
+            return RedirectToAction(view);
         }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> SickDay(String PageType, DateTime? date)
+        public async Task<IActionResult> OffDayConfirmModal(AppUtility.PageTypeEnum PageType, DateTime date, AppUtility.OffDayTypeEnum OffDayType)
         {
-            return PartialView("SickDay", new SickDayViewModel { PageType = PageType, SelectedDate = date ?? DateTime.Now });
-        }
-        [HttpGet]
-        [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> SickDayConfirmModal(String PageType, DateTime? date)
-        {            
-            return PartialView("SickDayConfirmModal", new SickDayViewModel { PageType = PageType, SelectedDate = date ?? DateTime.Now });
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> VacationDayConfirmModal(String PageType, DateTime? date)
-        {
-            return PartialView("VacationDayConfirmModal", new SickDayViewModel { PageType = PageType, SelectedDate = date ?? DateTime.Now });
+            OffDayViewModel offDayViewModel = new OffDayViewModel()
+            {
+                PageType = PageType,
+                OffDayType = OffDayType,
+                FromDate = date
+            };
+            return PartialView(offDayViewModel);
         }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
@@ -572,46 +583,27 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "TimeKeeper")]
-        public IActionResult SaveVacation(DateTime dateFrom, DateTime dateTo, String PageType)
+        public IActionResult OffDayConfirmModal(OffDayViewModel offDayViewModel)
         {
-            SaveOffDay(dateFrom, dateTo, 2);
-            if (PageType.Equals("ReportDaysOff"))
+            SaveOffDay(offDayViewModel.FromDate, new DateTime(), offDayViewModel.OffDayType);
+            var view = "";
+            if (offDayViewModel.PageType.Equals(AppUtility.PageTypeEnum.TimeKeeperReport))
             {
-                PageType = "_" + PageType;
+                view = "_ReportDaysOff";
             }
-            return RedirectToAction(PageType);
-        }
+            else if (offDayViewModel.PageType.Equals(AppUtility.PageTypeEnum.TimekeeperSummary))
+            {
+                view = "SummaryHours";
+            }
 
-        [HttpPost]
-        [Authorize(Roles = "TimeKeeper")]
-        public IActionResult SaveSick(DateTime dateFrom, DateTime dateTo, int? month, String PageType = "")
-        {
-            SaveOffDay(dateFrom, dateTo, 1);
-            if (PageType.Equals("ReportDaysOff"))
-            {
-                PageType = "_" + PageType;
-            }
-            return RedirectToAction(PageType, new { Month = new DateTime(DateTime.Now.Year, month ?? DateTime.Now.Month, 1) });
+            return RedirectToAction(view, new { Month = new DateTime(DateTime.Now.Year, offDayViewModel.Month ?? DateTime.Now.Month, 1) });
         }
-        [HttpPost]
-        [Authorize(Roles = "TimeKeeper")]
-        public IActionResult SickDayConfirmModal(DateTime dateFrom, String PageType, int? month)
-        {
-            SaveOffDay(dateFrom, new DateTime(), 1);
-            return RedirectToAction(PageType, new { Month = new DateTime(DateTime.Now.Year, month ?? DateTime.Now.Month, 1) });
-        }
-        [HttpPost]
-        [Authorize(Roles = "TimeKeeper")]
-        public IActionResult VacationDayConfirmModal(DateTime dateFrom, String PageType, int? month)
-        {
-            SaveOffDay(dateFrom, new DateTime(), 2);
-            return RedirectToAction(PageType, new { Month = new DateTime(DateTime.Now.Year, month ?? DateTime.Now.Month, 1) });
-        }
-        private bool SaveOffDay(DateTime dateFrom, DateTime dateTo, int offDayTypeID)
+        private bool SaveOffDay(DateTime dateFrom, DateTime dateTo, AppUtility.OffDayTypeEnum offDayType)
         {
             var userID = _userManager.GetUserId(User);
             var companyDaysOff = new List<DateTime>();
             bool alreadyOffDay = false;
+            var offDayTypeID = _context.OffDayTypes.Where(odt => odt.Description == AppUtility.GetDisplayNameOfEnumValue(offDayType.ToString())).Select(odt => odt.OffDayTypeID).FirstOrDefault();
             EmployeeHours employeeHour = null;
             var user = _context.Employees.Include(eh => eh.SalariedEmployee).Where(e => e.Id == userID).FirstOrDefault();
             if (dateTo == new DateTime())

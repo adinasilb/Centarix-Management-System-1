@@ -2,7 +2,14 @@
 @*@inject UserManager<ApplicationUser> UserManager*@
 @{
     ViewData["Title"] = "Add Item";
+
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+
+    string form = "order-inv-form";
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    {
+        form = "oper-form";
+    }
 }
 
 @using Microsoft.AspNetCore.Identity
@@ -10,7 +17,7 @@
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> _userManager
 
-<div class="col-12 create-user mx-auto on-form-modal order-inv-form" style="width: 60%">
+<div class="col-12 create-user mx-auto @form on-form-modal " style="width: 60%">
     <div class="on-form-modal-border">
         <div class="outer-partial">
             @{await Html.RenderPartialAsync("CreateItemTabs", Model); }

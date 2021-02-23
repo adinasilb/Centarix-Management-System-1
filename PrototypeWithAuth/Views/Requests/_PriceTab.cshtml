@@ -124,7 +124,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                     <div class="row">
                         <div class="col-md-4 pl-0 form-group">
                             <label asp-for="Request.SubUnit" class="control-label"></label>
-                            <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " id="subUnit" disabled />
+                            <input asp-for="Request.SubUnit" class="form-control-plaintext border-bottom @subMarkReadOnly " min="1" id="subUnit" disabled />
                             <span asp-validation-for="Request.SubUnit" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-md-8 form-group">
@@ -199,7 +199,7 @@ Model.UnitTypeList,
                     <div class="row">
                         <div class="col-md-4 form-group">
                             <label asp-for="Request.SubSubUnit" class="control-label"></label>
-                            <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @subsubMarkReadOnly " disabled id="subSubUnit" />
+                            <input asp-for="Request.SubSubUnit" class="form-control-plaintext border-bottom @subsubMarkReadOnly " min="1" disabled id="subSubUnit" />
                             <span asp-validation-for="Request.SubSubUnit" class="text-danger-centarix"></span>
                         </div>
                         <div class="col-md-8 form-group">
@@ -303,8 +303,12 @@ Model.UnitTypeList,
     <div class="col-md-2">
         <div class="form-group">
             <label class="control-label">Discount</label>
-            <input asp-for="Request.Discount" class="form-control-plaintext border-bottom @markReadOnlyClass"/>
-            <span asp-validation-for="Request.Discount"/>
+         
+            <div class="input-group">
+                <input asp-for="Request.Discount" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+                <div class="input-group-text">%</div>
+            </div>
+            <span asp-validation-for="Request.Discount" />
         </div>
     </div>
 </div>

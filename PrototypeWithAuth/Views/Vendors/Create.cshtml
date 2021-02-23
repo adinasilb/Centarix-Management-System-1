@@ -30,6 +30,7 @@
             <form action="" id="myForm" class="createVendorForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
                 @Html.HiddenFor(c => c.SectionType)
                 <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
+                    <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
                     <div class="row">
                         <div class="col-7 form-group modal-line-1-header modal-sides">
                             <div class="mt-1 heading-1">New Supplier</div>

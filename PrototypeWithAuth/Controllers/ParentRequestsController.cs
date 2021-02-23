@@ -98,36 +98,5 @@ namespace PrototypeWithAuth.Controllers
             return View(expensesListViewModel);
         }
 
-        // POST: ParentRequests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var parentRequest = await _context.ParentRequests.FindAsync(id);
-            _context.ParentRequests.Remove(parentRequest);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ParentRequestExists(int id)
-        {
-            return _context.ParentRequests.Any(e => e.ParentRequestID == id);
-        }
-        [HttpGet]
-        [Authorize(Roles = "Accounting")]
-       
-       
-
-
-  
-        //this is here b/c the ajax call on the payment view is not working and I didn't have time to debug it
-        [HttpGet]
-        [Authorize(Roles = "Accounting")]
-        public IActionResult DetailsModalView(int id)
-        {
-            return RedirectToAction("DetailsModalView", "Requests", new { id = id });
-        }
-
     }
 }

@@ -488,7 +488,7 @@
                     //replaces the modal-view class with the ModalView view
                     //$(".modal-view").html(data);
                     //turn off data dismiss by clicking out of the box and by pressing esc
-                    $(".modal-view").modal({
+                    $(".modal").modal({
                         backdrop: true,
                         keyboard: true,
                     });
@@ -504,7 +504,7 @@
 
                     switch ($type) {
                         case "details":
-                            //$.fn.OnOpenModalView();
+                               //$.fn.OnOpenModalView();
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
                             break;
@@ -656,14 +656,6 @@
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
             $('.mdb-select li:first-child').hide();
             $('.mdb-select li:nth-child(2)').hide();
-        };
-
-
-        $.fn.DeleteUserModal = function (userid) {
-            console.log("in delete user modal function");
-            $itemurl = '/Admin/DeleteUserModal?id=' + userid;
-            $.fn.CallPageUser($itemurl, '');
-            return false;
         };
 
       
@@ -863,6 +855,7 @@
             e.stopPropagation();
             var $itemurl = "/Locations/AddLocation";
             var $modal = $(".location-modal-view");
+            $('.modal').replaceWith('');
             $.fn.CallPageRequest($itemurl, "locations");
             return false;
         });
@@ -1056,6 +1049,23 @@
         $.fn.formatDateForSubmit = function(val)
         {
             return new Date(val.split("/").reverse().join("-")).toISOString();
+        }
+
+        $.fn.AppendModalToBody = function(data)
+        {
+            $(".modal").modal('hide');
+            $(".modal").replaceWith('');
+            var modal = $(data);
+            $('body').append(modal);
+            $(".modal").modal({
+                backdrop: true,
+                keyboard: false,
+            });
+            //shows the modal
+            $(".modal").modal('show');
+            $('.modal-content a:first').tab('show');
+            $(".mdb-select").materialSelect();
+
         }
     </script>
 

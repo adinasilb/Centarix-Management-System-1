@@ -10,8 +10,15 @@
 @{
     var urlAction = Url.Action("DocumentsModal", "Requests");
     var fontSize = "2rem";
-}
 
+    var color = "order-inv-filter";
+
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    {
+
+        color = "oper-filter";
+    }
+}
 <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
 <div class="row document-margin-bottom">
     @for(int i =0; i<4; i++)
@@ -22,13 +29,15 @@
         <div class=" @(i == 3 ? "" : "document-margin")">
             @{
                 var filterClass = "opac87";
+                var hasFileClass = "";
                 if (folder.FileStrings != null && folder.FileStrings.Count > 0)
                 {
                     filterClass = "order-inv-filter";
+                    hasFileClass = "hasFile";
                 }
             }
             <a href="" class="open-document-modal" data-string="@folder.FolderName.ToString()" data-id="@Model.Request.RequestID" id="@folder.FolderName.ToString()" data-val="@true">
-                <div class="card document-border ">
+                <div class="card document-border @hasFileClass ">
                     <div class="document-card text-center">
                         <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                     </div>

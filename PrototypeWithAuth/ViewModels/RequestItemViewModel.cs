@@ -16,7 +16,7 @@ using PrototypeWithAuth.AppData.UtilityModels;
 namespace PrototypeWithAuth.ViewModels
 {
     //this is the model for the modal view - this views a specific request and details - CRU (D)
-    public class RequestItemViewModel
+    public class RequestItemViewModel : ViewModelBase
     {
         //public ApplicationUser CurrentUser { get; set; }
         public Request Request { get; set; } // requests already include the product, we do not need to include a separate product
@@ -82,5 +82,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<Comment> Comments { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.RequestModalType ModalType { get; set; }
+        public bool IsProprietary { get; set; }
+        public bool IsReceived { get; set; }
     }
 }

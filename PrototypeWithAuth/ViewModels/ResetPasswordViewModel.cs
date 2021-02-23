@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Data;
+﻿using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class ResetPasswordViewModel
+    public class ResetPasswordViewModel : ViewModelBase
     {
         public ApplicationUser User { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using PrototypeWithAuth.AppData.UtilityModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class EditUserViewModel
+    public class EditUserViewModel : ViewModelBase
     {
         public string ApplicationUserID { get; set; } //this is used for the Edit form
 

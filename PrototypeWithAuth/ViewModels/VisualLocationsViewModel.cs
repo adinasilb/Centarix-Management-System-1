@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class VisualLocationsViewModel
+    public class VisualLocationsViewModel : ViewModelBase
     {
         public string Error { get; set; }
         public LocationInstance ParentLocationInstance { get; set; }

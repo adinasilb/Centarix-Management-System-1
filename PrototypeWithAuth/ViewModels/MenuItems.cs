@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class MenuItems
+    public class MenuItems : ViewModelBase
     {
         public int MenuItemsID { get; set; }
         public string Description { get; set; }

@@ -39,52 +39,59 @@
     }
 }
 
-<div class="container-fluid div-tabs no-box-shadow p-0">
-    <input type="hidden" value="@Model.ModalType" id="modalType" />
-    @if (Model.ModalType == AppUtility.RequestModalType.Edit)
-    {
-        <div class=" row text-right mb- ">
-            <div class="switch col-12 switch-margin">
-                <label>
-                    <label class="edit-mode-switch-description">Edit Mode Off</label>
-                    <input type="checkbox" class="turn-edit-on-off  orders " value="@Model.Request.RequestID" productID="@Model.Request.ProductID" name="details">
-                    <span class="lever"></span>
-                </label>
+    <div class="container-fluid div-tabs no-box-shadow p-0">
+        <input type="hidden" value="@Model.ModalType" id="modalType" />
+        <div class="row">
+            @if (Model.ErrorMessage != null)
+            {
+                <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+
+            }
+        </div>
+        @if (Model.ModalType == AppUtility.RequestModalType.Edit)
+        {
+            <div class=" row text-right mb- ">
+                <div class="switch col-12 switch-margin">
+                    <label>
+                        <label class="edit-mode-switch-description">Edit Mode Off</label>
+                        <input type="checkbox" class="turn-edit-on-off  orders " value="@Model.Request.RequestID" productID="@Model.Request.ProductID" name="details">
+                        <span class="lever"></span>
+                    </label>
+                </div>
             </div>
+        }
+        <div class="tab-content">
+            <div id="item" class="tab-pane fade in @showItem" value="1">
+                @{await Html.RenderPartialAsync("_ItemTab", Model); }
+            </div>
+            @if ((Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Request.RequestStatusID == 3 || Model.RequestStatusID == 7)&&Model.SectionType != AppUtility.MenuItems.Operations)
+            {
+                <div id="location" class="tab-pane fade @showLocation" value="2">
+                    @{await Html.RenderPartialAsync("_LocationTab", Model); }
+                </div>
+            }
+            @if (!Model.Request.Product.ProductSubcategory.ParentCategory.isProprietary &&  Model.SectionType != AppUtility.MenuItems.Operations)
+            {
+                <div id="price" class="tab-pane fade @showPrice" value="3">
+                    @{await Html.RenderPartialAsync("_PriceTab", Model); }
+                </div>
+            }
+            <div id="documents" class="tab-pane fade @showDocuments" value="4">
+                @{await Html.RenderPartialAsync("_DocumentsTab", Model); }
+            </div>
+            <div id="comments" class="tab-pane fade @showComments" value="5">
+                @{await Html.RenderPartialAsync("_CommentsTab", Model); }
+            </div>
+            @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) && Model.RequestStatusID != 7)
+            {<div id="history" class="tab-pane fade @showHistory" value="6">
+                    @{await Html.RenderPartialAsync("_HistoryTab", Model); }
+                </div>
+            }
+            @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create) && Model.SectionType != AppUtility.MenuItems.Operations)
+            {
+                <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
+                    @{await Html.RenderPartialAsync("_OrderTab", Model); }
+                </div>
+            }
         </div>
-    }
-<div class="tab-content">
-    <div id="item" class="tab-pane fade in @showItem" value="1">
-        @{await Html.RenderPartialAsync("_ItemTab", Model); }
     </div>
-    @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Request.RequestStatusID == 3 || Model.RequestStatusID == 7)
-    {
-        <div id="location" class="tab-pane fade @showLocation" value="2">
-            @{await Html.RenderPartialAsync("_LocationTab", Model); }
-        </div>
-    }
-    @if (!Model.Request.Product.ProductSubcategory.ParentCategory.isProprietary)
-    {
-        <div id="price" class="tab-pane fade @showPrice" value="3">
-            @{await Html.RenderPartialAsync("_PriceTab", Model); }
-        </div>
-    }
-    <div id="documents" class="tab-pane fade @showDocuments" value="4">
-        @{await Html.RenderPartialAsync("_DocumentsTab", Model); }
-    </div>
-    <div id="comments" class="tab-pane fade @showComments" value="5">
-        @{await Html.RenderPartialAsync("_CommentsTab", Model); }
-    </div>
-    @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) && Model.RequestStatusID != 7)
-    {<div id="history" class="tab-pane fade @showHistory" value="6">
-            @{await Html.RenderPartialAsync("_HistoryTab", Model); }
-        </div>
-    }
-    @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create))
-    {
-        <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
-            @{await Html.RenderPartialAsync("_OrderTab", Model); }
-        </div>
-    }
-</div>
-</div>

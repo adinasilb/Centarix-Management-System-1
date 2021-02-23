@@ -11,10 +11,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using PrototypeWithAuth.Models;
 using Microsoft.AspNetCore.Mvc;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class RegisterUserViewModel
+    public class RegisterUserViewModel : ViewModelBase
     {
         public string ApplicationUserID { get; set; } //this is used for the Edit form
         public int UserNum { get; set; }
@@ -139,6 +140,5 @@ namespace PrototypeWithAuth.ViewModels
         [TempData]
         public string StatusMessage { get; set; }
         public bool ConfirmedEmail { get; set; }
-        public List<string> Errors { get; set; }
     }
 }
