@@ -527,20 +527,20 @@ namespace PrototypeWithAuth.AppData
                 Classes = menuClass,
                 IconName = "icon-face-24px"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Location) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Location",
-                Controller = "Locations",
-                Action = "IndexForInventory",
-                RouteValues = new RouteValueDictionary()
-                {
-                    { "PageType", pageType },
-                    { "CategoryType", categoryType }
-                },
-                Classes = menuClass,
-                IconName = "icon-place-24px"
-            });
+            //if (SidebarTitle == AppUtility.SidebarEnum.Location) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Location",
+            //    Controller = "Locations",
+            //    Action = "IndexForInventory",
+            //    RouteValues = new RouteValueDictionary()
+            //    {
+            //        { "PageType", pageType },
+            //        { "CategoryType", categoryType }
+            //    },
+            //    Classes = menuClass,
+            //    IconName = "icon-place-24px"
+            //});
             return SidebarMenuItems;
         }
         public static List<MenuItems> GetOrdersAndInventorySearchSidebarMenuItems(string OrigClasses, string ActiveClasses, AppUtility.PageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
