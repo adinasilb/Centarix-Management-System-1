@@ -399,24 +399,21 @@ $(function () {
 		console.log("enumString: " + enumString);
 		var requestId = $(this).data("id");
 		console.log("requestId: " + requestId);
-		var isEdittable = $(this).data("val");
-		console.log("isEdittable: " + isEdittable);
+		var isEdittable = $(".turn-edit-on-off").attr("name") == "edit";
 		console.log($("#masterSidebarType").val())
-		var isSummary = false;
+		var modalType = $("#modalType").val();
 		console.log($("#modalType").val())
-		if (($("#modalType").val()=="Summary" || $("#masterPageType").val() == "RequestCart") && $(".modalStep1").length==0) {
-			isSummary = true;
-        }
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, isSummary);
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, modalType);
 		return true;
 	});
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, isSummary) {
+	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, modalType) {
 		$(".documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
 		console.log("urltogo: " + urltogo);
-		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&isSummary=" + isSummary;
+		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&ModalType=" + modalType;
+		console.log("urltogo: " + urltogo);
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,

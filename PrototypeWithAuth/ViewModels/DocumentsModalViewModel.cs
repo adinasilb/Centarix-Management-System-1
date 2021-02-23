@@ -18,9 +18,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<IFormFile> FilesToSave { get; set; }
         public bool IsEdittable { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
-        public bool IsNotifications { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
         public AppUtility.RequestModalType ModalType { get; set; }
-        public bool IsSummary { get; set; }
     }
 }

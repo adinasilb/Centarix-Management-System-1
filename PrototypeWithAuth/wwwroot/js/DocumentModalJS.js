@@ -27,7 +27,7 @@
 		//var url = $("#documentModalForm").data('string');
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
-		var $isEdittable = $('.isEdittable').val();
+		var $isEdittable = $('.active-document-modal').attr("data-val");
 		console.log("url : " + url);
 		var formData = new FormData($(".documentModalForm")[0]);
 		var data = $(".documentModalForm").serialize();
@@ -170,7 +170,7 @@
 	//	alert("djs modal turned on or off!");
 	//});
 	$(".modal .turn-edit-doc-on-off").off("click").on("click", function () {
-		alert('.turneditdoc on and off')
+		//alert('.turneditdoc on and off')
 		var detailsBool = $(".isEdittable").hasClass("details");
 		var editBool = $(".isEdittable").hasClass("edit");
 
@@ -184,9 +184,12 @@
 			$(".isEdittable").removeClass("details");
 			$(".isEdittable").addClass("edit");
 
-			$(".upload-file").removeClass("disabled-color");
-			$(".upload-file").addClass($bcColor);
+			$(".document-modal-buttons").removeClass("disabled-color");
+			$(".document-modal-buttons").addClass($bcColor);
 			$(".file-select").attr("disabled", false);
+			$(".isEdittable").val(true);
+			$(".document-modal-cancel").addClass("d-none");
+			$(".document-modal-save").removeClass("d-none");
 			$(".documents-delete-icon.icon-delete-24px").removeClass("disabled-filter");
 			$(".documents-delete-icon.icon-delete-24px").addClass($color);
 
@@ -194,12 +197,15 @@
 			$('.edit-mode-switch-description').text("Edit Mode On");
 		}
 		else if (editBool) {
+
 			$(".isEdittable").addClass("details");
 			$(".isEdittable").removeClass("edit");
-
-			$(".upload-file").addClass("disabled-color");
-			$(".upload-file").removeClass($bcColor);
+			$(".isEdittable").val(false);
+			$(".document-modal-buttons").addClass("disabled-color");
+			$(".document-modal-buttons").removeClass($bcColor);
 			$(".file-select").attr("disabled", true);
+			$(".document-modal-cancel").removeClass("d-none");
+			$(".document-modal-save").addClass("d-none");
 			$(".documents-delete-icon.icon-delete-24px").addClass("disabled-filter");
 			$(".documents-delete-icon.icon-delete-24px").removeClass($color);
 

@@ -52,7 +52,7 @@
         colorToUse = "disabled-filter";
     }
     var hiddenSummary = "";
-    if (Model.IsSummary)
+    if (Model.ModalType == AppUtility.RequestModalType.Summary)
     {
         hiddenSummary = "hidden";
     }
@@ -66,9 +66,7 @@
 <div class="modal modal-document fader documentsModal @form" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" >
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.documentsModal').modal('hide');">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding documentModalForm" id="myForm">
 
                 @for (int x = 0; x < Model.Requests.Count; x++)
@@ -91,23 +89,10 @@
 
                         <div class="row">
                             <div class="col-2">
-                                <input type="text" class="form-control-plaintext heading-1" asp-for="RequestFolderName" />
+                                <input type="text" class="form-control-plaintext heading-1" asp-for="RequestFolderName"  />
 
                             </div>
                             <div class="col-3 offset-7">
-                                <div class="upload-btn-wrapper float-right @hiddenSummary">
-                                    <button class="custom-button custom-button-font @bcColorToUse  float-right upload-file" data-string="@Model.RequestFolderName">Upload</button>
-                                    @if (disabled)
-                                    {
-                                        <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf .docx .doc" multiple disabled />
-                                    }
-                                    else
-                                    {
-                                        <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple />
-                                    }
-
-                                </div>
-                                <input type="submit" value="Save" id="save-documents" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
 
                             </div>
 
@@ -178,7 +163,7 @@
                                                                     @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
                                                                     @*<a href="@Model.FileStrings[i]" class="linkwrap" target="_blank">
-                                                                        <div class="blocker"></div>*@
+                                                        <div class="blocker"></div>*@
                                                                     <iframe src="\@Model.FileStrings[i]" title="View" class="responsive-iframe" scrolling="no"></iframe>
 
                                                                     @*</a>*@
@@ -191,10 +176,10 @@
 
                                                                     @*@{var link = "delete-file-document"; }*@
                                                                     @*@if (!Model.IsEdittable)
-                                                                        {
-                                                                            link = " ";
-                                                                        }*@
-                                                                    <a href="#" class="delete-document @hiddenSummary @deleteDocumentClass @Model.SectionType.ToString() mx-3" url="@Url.Action("DeleteDocumentModal","Requests", new { FileString = Model.FileStrings[i], id = requestid, RequestFolderNameEnum = Model.RequestFolderName, IsEdittable = true, SectionType = Model.SectionType } )">
+                                                        {
+                                                            link = " ";
+                                                        }*@
+                                                                    <a href="#" class="delete-document @hiddenSummary @deleteDocumentClass @Model.SectionType.ToString() mx-3" url="@Url.Action("DeleteDocumentModal", "Requests", new { FileString = Model.FileStrings[i], id = requestid, RequestFolderNameEnum = Model.RequestFolderName, IsEdittable = true, SectionType = Model.SectionType })">
                                                                         <i style="font-size:2rem;" class="icon-delete-24px documents-delete-icon hover-bold @colorToUse"></i>
                                                                     </a>
                                                                     @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@
@@ -223,19 +208,53 @@
 
 
                         </div>
-                    }
-                    else
-                    {
+                                            }
+                                            else
+                                            {
                         <div class="text-center text-lowercase">
                             <div class="mt-6">
                                 <img src="~/images/document_empty_image.png" />
                             </div>
                             <div class="mt-4" style="        font-size: 1.125rem;
         color: #646464; font-weight:400;"><span class="text-capitalize">No</span> @Model.RequestFolderName.ToString().ToLower() have been uploaded </div>
-        <div class="mt-2 @hiddenSummary" style="        font-size: 1rem;
-        color: #646464; font-weight:400;"><span class="text-capitalize">Press</span> upload to add @Model.RequestFolderName.ToString().Remove(Model.RequestFolderName.ToString().Length - 1).ToLower()</div>
-    </div>
-}
+                <div class="mt-2 pb-5 @hiddenSummary" style="        font-size: 1rem;
+        color: #646464; font-weight:400;"><span class="text-capitalize">Press</span> upload to add @Model.RequestFolderName.ToString().TrimEnd('s').ToLower()</div>
+                </div>
+                                            }
+                <div class="row justify-content-center">
+                    <div class="upload-btn-wrapper @hiddenSummary">
+                        <button class="custom-button custom-button-font @bcColorToUse  upload-file between-button-margin document-modal-buttons" data-string="@Model.RequestFolderName">Upload A File</button>
+                        @if (disabled)
+                        {
+                            <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf .docx .doc" multiple disabled />
+                        }
+                        else
+                        {
+                            <input type="file" asp-for="FilesToSave" class="file-select" accept=".png, .jpg, .jpeg, .pdf" multiple />
+                        }
+
+                    </div>
+
+                    <input type="submit" value="Save" id="save-documents" href="@Url.Action("DocumentsModal", "Requests")" class="btn btn-block inv-button save-document-files" style="display: none;" />
+                    @{
+                        var saveClass = "";
+                        var cancelClass = "d-none";
+                    }
+                   @if ( Model.ModalType != AppUtility.RequestModalType.Create)
+                   {
+                        if (Model.FileStrings?.Count == 0 || !Model.IsEdittable || Model.FileStrings == null)
+                        {
+                            saveClass = "d-none";
+                            cancelClass = "";
+                        }
+                   }
+                    <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.documentsModal').modal('hide');">
+                        Save
+                    </button>
+                    <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.documentsModal').modal('hide');">
+                        Cancel
+                    </button>
+                </div>
                 </div>
             </form>
         </div>
