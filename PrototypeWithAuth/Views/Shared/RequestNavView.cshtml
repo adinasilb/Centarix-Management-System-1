@@ -348,6 +348,7 @@
                 $('#loading').hide();
                 if (jqxhr.status == 401) {
                     alert("Cookie timed out. Please login again.");
+                    window.location ="/Identity/Account/Login"
                 }
                 if (jqxhr.status == 400) {
                     alert("Error 400: error making request");
