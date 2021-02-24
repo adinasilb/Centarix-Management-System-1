@@ -2876,8 +2876,8 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable,
-            AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool IsNotifications = false, bool isSummary = false)
+        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.RequestModalType ModalType,
+            AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -2887,9 +2887,7 @@ namespace PrototypeWithAuth.Controllers
                 IsEdittable = IsEdittable,
                 //Files = new List<FileInfo>(),
                 SectionType = SectionType,
-                IsNotifications = IsNotifications,
-                IsSummary = isSummary
-
+                ModalType = ModalType
             };
 
             if (id != null)
@@ -2904,8 +2902,6 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-            if (!IsNotifications) //Don't want to see old ones if it's notifications b/c has multiple requests
-            {
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                 string uploadFolder2 = Path.Combine(uploadFolder1, id.ToString());
                 string uploadFolder3 = Path.Combine(uploadFolder2, RequestFolderNameEnum.ToString());
@@ -2922,7 +2918,6 @@ namespace PrototypeWithAuth.Controllers
                         documentsModalViewModel.FileStrings.Add(newFileString);
                         //documentsModalViewModel.Files.Add(docfile);
                     }
-                }
             }
 
             return View(documentsModalViewModel);
