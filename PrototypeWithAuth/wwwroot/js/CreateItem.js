@@ -126,4 +126,17 @@
     $.fn.AddToHiddenIds = function (emailValue) {
         $(".emailaddresses[value='']:first").val(emailValue);
     }
+
+
+    $(".isRequest").click(function(){
+     if ($(this).is(":checked")) {
+            $(".requestPriceQuote").addClass("d-none");
+            $(".requestPriceQuote ").attr("disabled", true)
+        }
+        else {
+            $(".requestPriceQuote").removeClass("d-none");
+            $(".requestPriceQuote ").attr("disabled", false)
+        }
+    
+    })
 })

@@ -84,5 +84,6 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.RequestModalType ModalType { get; set; }
         public bool IsProprietary { get; set; }
         public bool IsReceived { get; set; }
+        public bool IsRequestQuote { get; set; }
     }
 }
