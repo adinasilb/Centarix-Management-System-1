@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -505,28 +506,46 @@ namespace PrototypeWithAuth.AppData
             return "#000000";
         }
 
-        public static string GetMyIPAddress()
+        public static string[] GetAllLocalIPv4(NetworkInterfaceType _type)
         {
-            var myIpAddress = "";
-            IPAddress ipAddress;
-            var ipAddressList = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
-            foreach (var address in ipAddressList)
+            List<string> ipAddrList = new List<string>();
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
             {
-                if (myIpAddress == "")
+                if (item.NetworkInterfaceType == _type && item.OperationalStatus == OperationalStatus.Up)
                 {
-                    if (IPAddress.TryParse(address.ToString(), out ipAddress))
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
                     {
-                        switch (ipAddress.AddressFamily)
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                         {
-                            case AddressFamily.InterNetwork:
-                                myIpAddress = address.ToString();
-                                break;
-                            default:
-                                break;
+                            ipAddrList.Add(ip.Address.ToString());
                         }
                     }
                 }
             }
+            return ipAddrList.ToArray();
+        }
+        public static string GetMyIPAddress()
+        {
+            var myIpAddress = "";
+            IPAddress ipAddress;
+            myIpAddress = GetAllLocalIPv4(NetworkInterfaceType.Ethernet).FirstOrDefault();
+            //foreach (var address in ipAddressList)
+            //{
+            //    if (myIpAddress == "")
+            //    {
+            //        if (IPAddress.TryParse(address.ToString(), out ipAddress))
+            //        {
+            //            switch (ipAddress.AddressFamily)
+            //            {
+            //                case AddressFamily.InterNetwork:
+            //                    myIpAddress = address.ToString();
+            //                    break;
+            //                default:
+            //                    break;
+            //            }
+            //        }
+            //    }
+            //}
 
             return myIpAddress;
         }
