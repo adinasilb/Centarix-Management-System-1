@@ -1808,6 +1808,7 @@ $(function () {
 						keyboard: false,
 					});
 					//shows the modal
+					$(".confirm-exit-modal").replaceWith('');
 					$(".confirm-exit-modal").modal('show');
 					$(".modal-open-state").attr("text", "open");
 				}
