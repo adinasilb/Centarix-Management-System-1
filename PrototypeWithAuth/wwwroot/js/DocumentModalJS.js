@@ -122,7 +122,7 @@
 		}
 	};
 
-	$(".delete-document").click( function (e) {
+	$(".modal").on("click",".delete-document", function (e) {
 		e.preventDefault();
 		var hasClass = $(this).hasClass("delete-file-document");
 		if (hasClass ==true) {
