@@ -60,6 +60,7 @@
                 success: function (data) {
                     $(".outer-partial").html(data);
                       $(".mdb-select").materialSelect();
+                   
                     $("#loading").hide();
                     var category = $("#categoryDescription").val();
                     console.log("category " + category)
@@ -68,7 +69,11 @@
                     $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
                     $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
                     $(".proprietryHidenCategory").attr("disabled", false);
-             
+              if ($("#IsRequestQuote").val()=="true") {
+                        
+                        $(".requestPriceQuote").addClass("d-none");
+                        $(".requestPriceQuote").attr("disabled", true)
+                        }
                 }
             })
         }

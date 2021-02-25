@@ -81,7 +81,7 @@
 
 
 <span class="heading-1 modal-tab-name">Item</span>
-@if (modalType == AppUtility.RequestModalType.Create)
+@if (modalType == AppUtility.RequestModalType.Create && !Model.IsProprietary)
 {
     <div class="row">
         <div class="col-2 offset-8">
