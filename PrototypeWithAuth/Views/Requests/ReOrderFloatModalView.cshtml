@@ -4,7 +4,7 @@
     var bcColor = "order-inv-background-color  ";
     var color = "order-inv-color";
     var form = "order-inv-form";
-    var dollarDisabled = "disabled";
+    var dollarDisabled = "disabled disabled-text";
     var shekelDisabled = "";
     if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.LabManagement.ToString()))
     {
@@ -16,7 +16,7 @@
     if(Model.RequestItemViewModel.Request.Currency == "USD")
     {
         dollarDisabled = "";
-        shekelDisabled = "disabled";
+        shekelDisabled = "disabled disabled-text";
     }
 
 }
@@ -118,14 +118,14 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
+                                                <span class="input-group-text @dollarDisabled">&#36;</span>
                                                 <input class="form-control-plaintext border-bottom @dollarDisabled" name="unit-price-dollars" id="unit-price-dollars"
                                                        value="@(Math.Round(Model.RequestItemViewModel.Request.PricePerUnit/Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
+                                                <span class="input-group-text @shekelDisabled">&#x20aa;</span>
                                                 <input class="form-control-plaintext border-bottom @shekelDisabled" name="unit-price-shekel" id="unit-price-shekel"
                                                        value="@Model.RequestItemViewModel.Request.PricePerUnit" />
                                             </div>
@@ -162,14 +162,14 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="input-group">
-                                                            <span class="input-group-text">&#36;</span>
+                                                            <span class="input-group-text @dollarDisabled">&#36;</span>
                                                             <input class="form-control-plaintext border-bottom @dollarDisabled" name="subunit-price-dollars" id="subunit-price-dollars"
                                                                    value="@(Math.Round(Model.RequestItemViewModel.Request.PricePerSubUnit??0/Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="input-group">
-                                                            <span class="input-group-text">&#x20aa;</span>
+                                                            <span class="input-group-text @shekelDisabled">&#x20aa;</span>
                                                             <input class="form-control-plaintext border-bottom @shekelDisabled" name="subunit-price-shekel" id="subunit-price-shekel"
                                                                    value="@Model.RequestItemViewModel.Request.PricePerSubUnit" />
                                                         </div>
@@ -215,14 +215,14 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#36;</span>
+                                                                <span class="input-group-text @dollarDisabled">&#36;</span>
                                                                 <input class="form-control-plaintext border-bottom @dollarDisabled" name="subsubunit-price-dollars" id="subsubunit-price-dollars"
                                                                        value="@(Math.Round(Model.RequestItemViewModel.Request.PricePerSubSubUnit??0/Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <span class="input-group-text">&#x20aa;</span>
+                                                                <span class="input-group-text @shekelDisabled">&#x20aa;</span>
                                                                 <input class="form-control-plaintext border-bottom @shekelDisabled" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled
                                                                        value="@Model.RequestItemViewModel.Request.PricePerSubSubUnit" />
                                                                 <span asp-validation-for="RequestItemViewModel.Request.SubSubUnit" class="text-danger-centarix"></span>
@@ -245,7 +245,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             <div class="form-group">
                                 <label class="control-label">Sum:</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">&#36;</span>
+                                    <span class="input-group-text @dollarDisabled">&#36;</span>
                                     <input class="form-control-plaintext border-bottom @dollarDisabled" name="sum-dollars" id="sum-dollars"
                                            value="@(String.Format("{0:n}", Math.Round(Model.RequestItemViewModel.Request.Cost??0/Model.RequestItemViewModel.Request.ExchangeRate,2)))" />
                                 </div>
@@ -255,7 +255,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             <div class="form-group">
                                 <label asp-for="RequestItemViewModel.Request.Cost" class="control-label"></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">&#x20aa;</span>
+                                    <span class="input-group-text @shekelDisabled">&#x20aa;</span>
                                     <input asp-for="RequestItemViewModel.Request.Cost" id="cost" class="form-control-plaintext border-bottom @shekelDisabled" min="1" />
                                     <span class="text-danger-centarix" asp-validation-for="RequestItemViewModel.Request.Cost"></span>
                                 </div>
@@ -284,8 +284,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             <div class="form-group">
                                 <label class="control-label">Total:</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom " id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
+                                    <span class="input-group-text disabled-text">&#36;</span>
+                                    <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled
                                            value="@(Math.Round(Model.RequestItemViewModel.Request.TotalWithVat/Model.RequestItemViewModel.Request.ExchangeRate,2))" />
                                 </div>
                             </div>
@@ -294,8 +294,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             <div class="form-group">
                                 <label class="control-label"></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom " id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled value="@Model.RequestItemViewModel.Request.TotalWithVat" />
+                                    <span class="input-group-text disabled-text">&#x20aa;</span>
+                                    <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Shekel" name="sumPlusVat-Shekel" disabled value="@Model.RequestItemViewModel.Request.TotalWithVat" />
                                 </div>
                             </div>
                         </div>
@@ -349,7 +349,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             </div>
 
                             <div class="col-4">
-                                <button type="button" class="custom-cancel custom-button create-modal-submit cancelOrder" data-dismiss="modal" @*onclick="$(this).closest('.reorderModal').modal('hide'); $('.reorderModal').replaceWith('');"*@>Cancel</button>
+                                <button type="button" class="custom-cancel custom-button create-modal-submit cancelOrder" @*data-dismiss="modal"*@ @*onclick="$(this).closest('.reorderModal').modal('hide'); $('.reorderModal').replaceWith('');"*@>Cancel</button>
 
                             </div>
                         </div>

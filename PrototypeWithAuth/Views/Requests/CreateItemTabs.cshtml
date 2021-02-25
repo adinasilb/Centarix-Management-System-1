@@ -68,7 +68,7 @@
                 @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary || Model.SectionType == AppUtility.MenuItems.Operations)
                 {
                     <div class="d-flex align-items-center col-4">
-                        <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto">Save</button>
+                        <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit">Save</button>
                     </div>
                 }
             </div>
@@ -136,7 +136,6 @@
             $(".top-menu").addClass("save-item");
             $(".side-menu").addClass("save-item");
             $("#vendorList").materialSelect();
-
         })
-       
     </script>
+    <script src="~/js/CreateItem.js"></script>

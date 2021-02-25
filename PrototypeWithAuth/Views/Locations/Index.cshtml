@@ -1,8 +1,11 @@
 ﻿@model PrototypeWithAuth.ViewModels.LocationTypeViewModel;
 @using PrototypeWithAuth.AppData;
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (!AppUtility.IsAjaxRequest(Context.Request))
+    {
+        ViewData["Title"] = "Index";
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
     var pagetype = "";
     switch (TempData[AppUtility.TempDataTypes.MenuType.ToString()])
     {

@@ -139,4 +139,9 @@
         }
     
     })
+    $('.complete-order').click(function (e) {
+        if (!$(this).hasClass('disabled-submit')) {
+            $(".save-item").removeClass("save-item")
+        }
+    })
 })

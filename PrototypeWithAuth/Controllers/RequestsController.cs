@@ -1100,7 +1100,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (requestItemViewModel.IsProprietary)
                 {
-                    parentcategories = await _context.ParentCategories.Where(pc => pc.isProprietary).ToListAsync();
+                    var proprietarycategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString()).FirstOrDefaultAsync();
+                    productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == proprietarycategory.ParentCategoryID).ToListAsync();
                 }
                 else
                 {
@@ -1135,9 +1136,15 @@ namespace PrototypeWithAuth.Controllers
             
             if (productSubcategory == null)
             {
+                ParentCategory parentCategory = new ParentCategory();
+                if (requestItemViewModel.IsProprietary)
+                {
+                    parentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString()).FirstOrDefaultAsync();
+                }
+                
                 productSubcategory = new ProductSubcategory()
                 {
-                    ParentCategory = new ParentCategory()
+                    ParentCategory = parentCategory
                 };
             }
 
@@ -3264,6 +3271,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmExit(ConfirmExitViewModel confirmExit)
         {
             DeleteTemporaryDocuments();
+            RemoveRequestSessions();
 
             if (confirmExit.URL.IsEmpty())
             {
@@ -3738,8 +3746,14 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel)
+        public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel, bool isCancel = false)
         {
+            if (isCancel)
+            {
+                RemoveRequestSessions();
+                DeleteTemporaryDocuments();
+                return PartialView("Default");
+            }
             try
             {
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
@@ -3844,8 +3858,14 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel)
+        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel, bool isCancel= false)
         {
+            if (isCancel)
+            {
+                RemoveRequestSessions();
+                DeleteTemporaryDocuments();
+                return PartialView("Default");
+            }
             try
             {
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;

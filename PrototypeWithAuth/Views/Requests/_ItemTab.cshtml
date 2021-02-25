@@ -90,49 +90,56 @@
         </div>
     </div>
 }
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+            @if (Model.IsProprietary)
+            {
+                <input asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="form-control-plaintext border-bottom" type="text" readonly />
+            }
+            else
+            {
                 @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID,
-    new SelectList(
-    Model.ParentCategories,
-    "ParentCategoryID",
-    "ParentCategoryDescription"
-    ), "Select Category",
-    new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category" })
-                <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
-            </div>
+             new SelectList(
+             Model.ParentCategories,
+             "ParentCategoryID",
+             "ParentCategoryDescription"
+             ), "Select Category",
+             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category" })
+            }
+            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
         </div>
-        <div class="col-md-6 px-4">
-            <div class="form-group sublist">
-                <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-                @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryID,
-    new SelectList(
-    Model.ProductSubcategories,
-    "ProductSubcategoryID",
-    "ProductSubcategoryDescription"
-    ), "Select Sub Category",
-    new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
-                <input type="hidden" asp-for="Request.Product.ProductSubcategory.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
-                <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
-            </div>
-        </div>
-        @*<div class="col-md-4 @projectCategories">
-                                <div class="form-group">
-                                    <label class="control-label">Project:</label>
-                                    @Html.DropDownListFor(m => m.Request.SubProject.ProjectID,
-            new SelectList(
-            Model.Projects,
-            "ProjectID",
-            "ProjectDescription"
-            ), "Select a Project",
-            new { @class = "mdb-select custom select-dropdown form-control-plaintext Project " + projectCategories + " " + markReadOnlyClass, @id = "subProject", @searchable = "Select a Project" })
-                                    <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
-                                </div>
-                            </div>*@
     </div>
+    <div class="col-md-6 px-4">
+        <div class="form-group sublist">
+            <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+            @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryID,
+new SelectList(
+Model.ProductSubcategories,
+"ProductSubcategoryID",
+"ProductSubcategoryDescription"
+), "Select Sub Category",
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
+            <input type="hidden" asp-for="Request.Product.ProductSubcategory.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
+            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
+        </div>
+    </div>
+
+    @*<div class="col-md-4 @projectCategories">
+                            <div class="form-group">
+                                <label class="control-label">Project:</label>
+                                @Html.DropDownListFor(m => m.Request.SubProject.ProjectID,
+        new SelectList(
+        Model.Projects,
+        "ProjectID",
+        "ProjectDescription"
+        ), "Select a Project",
+        new { @class = "mdb-select custom select-dropdown form-control-plaintext Project " + projectCategories + " " + markReadOnlyClass, @id = "subProject", @searchable = "Select a Project" })
+                                <span asp-validation-for="Request.SubProject.ProjectID" class="text-danger-centarix"></span>
+                            </div>
+                        </div>*@
+</div>
     @if (Model.SectionType != AppUtility.MenuItems.Operations)
     {
         if (!Model.Request.Product.ProductSubcategory.ParentCategory.isProprietary)
