@@ -9,7 +9,8 @@
 	var $SectionType = $("#SectionType").val();
 	alert($("#SectionType").val())
 	var $isEdittable = $('#IsEdittable').val();
-	console.log("foldername: " + $foldername);
+	var $documentModalType = $(".document-modal-type").val();
+	console.log("mosaltype in delete: " + $documentModalType);
 	console.log("$requestId: " + $requestId);
 	$.ajax({
 		url: link,
@@ -17,7 +18,7 @@
 		data: formData,
 		success: (partialResult) => {
 			$("#DeleteDocumentsModal").replaceWith('');
-			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType);
+			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType, $documentModalType);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,
@@ -36,12 +37,12 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 	$("#" + $foldername+"Input").valid();
 };
 
-$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionType)  {
+$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionType, modalType)  {
 	$(".documentsModal").replaceWith('');
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
-		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + sectionType,
+		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + sectionType+"&ModalType="+modalType,
 		type: 'GET',
 		cache: true,
 		success: function (data) {
