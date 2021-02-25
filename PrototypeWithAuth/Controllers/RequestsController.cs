@@ -2952,14 +2952,23 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public ActionResult DeleteDocumentModal(String FileString, int id, List<int> ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
+            var RequestIDs = new List<int>();
+            if (ids.Count()==0)
+            {
+                RequestIDs.Add(id);               
+            }
+            else
+            {
+                RequestIDs = ids;
+            }
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
                 FileName = FileString,
-                RequestID = id,
+                RequestIDs = RequestIDs,
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 SectionType = SectionType,
-               
+
             };
             return PartialView(deleteDocumentsViewModel);
         }

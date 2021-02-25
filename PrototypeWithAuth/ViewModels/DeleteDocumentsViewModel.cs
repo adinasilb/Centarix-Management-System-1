@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     public class DeleteDocumentsViewModel : ViewModelBase
     {
         public string FileName { get; set; }
-        public int RequestID { get; set; }
+        public List<int> RequestIDs { get; set; }
         public AppUtility.RequestFolderNamesEnum FolderName { get; set; }
         public bool IsEdittable { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
