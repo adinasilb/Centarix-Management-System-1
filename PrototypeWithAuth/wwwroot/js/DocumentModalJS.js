@@ -28,6 +28,7 @@
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
 		var $isEdittable = $('.active-document-modal').attr("data-val");
+		var $documentModalType = $(".document-modal-type").val();
 		console.log("url : " + url);
 		var formData = new FormData($(".documentModalForm")[0]);
 		var data = $(".documentModalForm").serialize();
@@ -56,7 +57,7 @@
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
-				$.fn.OpenDocumentsModal1($enumString, $requestId, $isEdittable, section);
+				$.fn.OpenDocumentsModal1($enumString, $requestId, $isEdittable, section, $documentModalType);
 				return true;
 			},
 			processData: false,
@@ -68,14 +69,14 @@
 
 
 
-	$.fn.OpenDocumentsModal1 = function (enumString, requestId, isEdittable, section) {
+	$.fn.OpenDocumentsModal1 = function (enumString, requestId, isEdittable, section, modalType) {
 		$('#loading').show();
 		$(".documentsModal").replaceWith('');
 		//alert("in documents modal in document modal js")
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
 			async: true,
-			url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section,
+			url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section+"&modalType="+modalType,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -195,7 +196,7 @@
 			$(".documents-delete-icon.icon-delete-24px").addClass($color);
 
 			$(".delete-document").addClass("delete-file-document");
-			$('.edit-mode-switch-description').text("Edit Mode On");
+			$(this).prev('.edit-mode-switch-description').text("Edit Mode On");
 		}
 		else if (editBool) {
 
@@ -211,7 +212,7 @@
 			$(".documents-delete-icon.icon-delete-24px").removeClass($color);
 
 			$(".delete-document").removeClass("delete-file-document");
-			$('.edit-mode-switch-description').text("Edit Mode Off");
+			$(this).prev('.edit-mode-switch-description').text("Edit Mode Off");
 		}
 	});
 	//$(".modal").on("change", ".turn-edit-doc-on-off", function () {
