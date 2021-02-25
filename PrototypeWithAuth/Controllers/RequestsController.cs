@@ -1060,7 +1060,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "")
+        public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "", bool isRequestQuote = false)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var categoryType = 1;
@@ -1078,6 +1078,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.SectionType = sectionType;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.Request.Product.ProductName = itemName;
+            requestItemViewModel.IsRequestQuote = isRequestQuote;
             
             //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;

@@ -45,13 +45,15 @@
         var subcategoryID = $("#sublist").val()
         var pageType = $("#masterPageType").val()
         var itemName = $("#Request_Product_ProductName").val()
+        var isRequestQuote = $(".isRequest").is(":checked")
+        console.log(isRequestQuote)
         console.log("subcategory "+subcategoryID)
         if (subcategoryID != "") {
             $.ajax({
                 //processData: true,
                 //contentType: true,
                 async: true,
-                url: "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName,
+                url: "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote,
                 type: 'GET',
                 cache: false,
                 //data: formData,
