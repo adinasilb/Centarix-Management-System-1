@@ -606,6 +606,17 @@
             return false;
         });
 
+        $(".load-upload-quote-modal").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+
+            var $itemurl = "UploadQuoteModal?" +$.fn.getRequestIndexString();
+            console.log("itemurl: " + $itemurl);
+            $.fn.CallPageRequest($itemurl, "uplaodQuote");
+            return false;
+        });
+
         $(".load-confirm-email").on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();

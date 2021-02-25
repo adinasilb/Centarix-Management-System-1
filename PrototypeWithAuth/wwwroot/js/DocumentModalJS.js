@@ -49,6 +49,12 @@
 
 				var $enumString = $(".open-document-modal.active-document-modal").data("string");
 				var $requestId = $(".open-document-modal.active-document-modal").data("id");
+				
+				var requestIDs =[];
+				$("request-array-id").each(function(index, value){
+					requestIDs.push(value);		
+				});
+
 				var section = "";
 				console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
@@ -57,7 +63,7 @@
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
-				$.fn.OpenDocumentsModal1($enumString, $requestId, $isEdittable, section, $documentModalType);
+				$.fn.OpenDocumentsModal1($enumString, $requestId, requestIDs,$isEdittable, section, $documentModalType);
 				return true;
 			},
 			processData: false,
@@ -69,14 +75,19 @@
 
 
 
-	$.fn.OpenDocumentsModal1 = function (enumString, requestId, isEdittable, section, modalType) {
+	$.fn.OpenDocumentsModal1 = function (enumString, requestID, requestIds, isEdittable, section, modalType) {
 		$('#loading').show();
 		$(".documentsModal").replaceWith('');
 		//alert("in documents modal in document modal js")
 		//$(".modal-backdrop").first().removeClass();
+		var requestIdsString ="";	
+		
+		$.each(requestIds, function( index, value ) {
+		  requestIdsString += "&ids="+value;
+		});
 		$.ajax({
 			async: true,
-			url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section+"&modalType="+modalType,
+			url: "/Requests/DocumentsModal?id="+requestID+requestIdsString + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section+"&modalType="+modalType,
 			type: 'GET',
 			cache: false,
 			success: function (data) {

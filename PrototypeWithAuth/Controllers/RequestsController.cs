@@ -1763,9 +1763,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(int id, RequestIndexObject requestIndexObject)
         {
-            var allRequests = new List<Request>();
+            var allRequests = GetRequestListFromSession();
             var isRequests = true;
             var RequestNum = 1;
+
             int lastParentRequestOrderNum = 0;
             var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
@@ -2949,7 +2950,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public ActionResult DeleteDocumentModal(String FileString, int id, List<int> ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
@@ -3674,9 +3675,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType)
         {
-          
-                var UploadQuoteViewModel = new UploadQuoteViewModel();
-
+            var requests = GetRequestListFromSession();
+            var UploadQuoteViewModel = new UploadQuoteViewModel();
+            if (requests.Count() > 0)
+            {
                 string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                 string uploadFolder2 = Path.Combine(uploadFolder1, "0");
                 string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
@@ -3693,9 +3695,12 @@ namespace PrototypeWithAuth.Controllers
                         UploadQuoteViewModel.FileStrings.Add(newFileString);
                     }
                 }
-                UploadQuoteViewModel.OrderTypeEnum = OrderType;
-                UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
-                return PartialView(UploadQuoteViewModel);
+            }
+            // have to reupload if not create
+              
+            UploadQuoteViewModel.OrderTypeEnum = OrderType;
+            UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
+            return PartialView(UploadQuoteViewModel);
   
             
         }
@@ -3743,64 +3748,69 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                var request = HttpContext.Session.GetObject<Request>(requestName);
+                var requests = GetRequestListFromSession();
                 uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
-                request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
-                if(request.RequestStatusID == 1)
+                int RequestNum = 1;
+                foreach(var request in requests)
                 {
-                    TempData["RequestStatus"] = 1;
-                }
-
-                if (request.RequestStatusID == 6 && request.OrderType != AppUtility.OrderTypeEnum.AddToCart)
-                {
-                    var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                    HttpContext.Session.SetObject(requestNum, request);
-                    return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.RequestIndexObject);
-                }
-                else
-                {
-                    using (var transaction = _context.Database.BeginTransaction())
+                    request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
+                    if (request.RequestStatusID == 1)
                     {
-                        try
-                        {
-                            _context.Update(request);
-                            await _context.SaveChangesAsync();
-                            await SaveCommentsFromSession(request);
-                            //rename temp folder to the request id
-                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                            string requestFolderFrom = Path.Combine(uploadFolder, "0");
-                            string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-                            if (Directory.Exists(requestFolderTo))
-                            {
-                                Directory.Delete(requestFolderTo);
-                            }
-                            Directory.Move(requestFolderFrom, requestFolderTo);
-
-                            await transaction.CommitAsync();
-                            base.RemoveRequestSessions();
-                            var action = "Index";
-                            if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
-                            {
-                                action = "_IndexTableWithCounts";
-                            }
-                            else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
-                            {
-                                action = "NotificationsView";
-                            }
-                            else
-                            {
-                                action = "_IndexTableData";
-                            }
-                            return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            throw ex;
-                        }
+                        TempData["RequestStatus"] = 1;
                     }
-                }   
+                    if (requests.FirstOrDefault().RequestStatusID == 6)
+                    {
+                        var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                        HttpContext.Session.SetObject(requestName, request);
+                        RequestNum++;
+                    }
+                    else
+                    {
+                        using (var transaction = _context.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                _context.Update(requests.FirstOrDefault()); ;
+                                await _context.SaveChangesAsync();
+                                await SaveCommentsFromSession(requests.FirstOrDefault());
+                                //rename temp folder to the request id
+                                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                                string requestFolderFrom = Path.Combine(uploadFolder, "0");
+                                string requestFolderTo = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
+                                if (Directory.Exists(requestFolderTo))
+                                {
+                                    Directory.Delete(requestFolderTo);
+                                }
+                                Directory.Move(requestFolderFrom, requestFolderTo);
+
+                                await transaction.CommitAsync();
+                                base.RemoveRequestSessions();
+                                var action = "Index";
+                                if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                                {
+                                    action = "_IndexTableWithCounts";
+                                }
+                                else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                                {
+                                    action = "NotificationsView";
+                                }
+                                else
+                                {
+                                    action = "_IndexTableData";
+                                }
+                                return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
+                            }
+                            catch (Exception ex)
+                            {
+                                transaction.Rollback();
+                                throw ex;
+                            }
+                        }
+
+                    }
+                }
+                            
+                return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.RequestIndexObject);
 
             }
             catch (Exception ex)
@@ -4045,14 +4055,19 @@ namespace PrototypeWithAuth.Controllers
                     request.RequestStatusID = 1;
                 }
                 request.OrderType = AppUtility.OrderTypeEnum.AddToCart;
-                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, request);
-                return true;
+                _context.Add(request);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+
+            return true;
         }
 
         private void AlreadyPurchased(Request request)
@@ -4181,23 +4196,8 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                var requests = new List<Request>();
-                var isRequests = true;
-                var RequestNum = 1;
-                while (isRequests)
-                {
-                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
-                    {
-                        requests.Add(HttpContext.Session.GetObject<Request>(requestName));
-                    }
-                    else
-                    {
-                        isRequests = false;
-                    }
-                    RequestNum++;
-                }
-
+                
+                var requests =GetRequestListFromSession();
 
                 var paymentStatusID = 0;
 
@@ -4216,6 +4216,7 @@ namespace PrototypeWithAuth.Controllers
                         paymentStatusID = 6;
                         break;
                 }
+                int RequestNum = 1;
                 foreach (var req in requests)
                 {
                     req.ParentRequest = termsViewModel.ParentRequest;
@@ -4240,6 +4241,28 @@ namespace PrototypeWithAuth.Controllers
                 };
                 return PartialView("TermsModal", termsViewModel);
             }
+        }
+
+        private List<Request> GetRequestListFromSession()
+        {
+            List<Request> requests = new List<Request>();
+            int RequestNum;
+            var isRequests = true;
+            RequestNum = 1;
+            while (isRequests)
+            {
+                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                if (HttpContext.Session.GetObject<Request>(requestName) != null)
+                {
+                    requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                }
+                else
+                {
+                    isRequests = false;
+                }
+                RequestNum++;
+            }
+            return requests;
         }
 
         [Authorize(Roles = "Reports")]

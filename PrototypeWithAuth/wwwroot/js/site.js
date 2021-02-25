@@ -403,16 +403,26 @@ $(function () {
 		console.log($("#masterSidebarType").val())
 		var modalType = $("#modalType").val();
 		console.log($("#modalType").val())
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, modalType);
+		var requestIDs =[];
+				$("request-array-id").each(function(index, value){
+					requestIDs.push(value);		
+				});
+		$.fn.OpenDocumentsModal(enumString, requestId, requestId, isEdittable, section, modalType);
 		return true;
 	});
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, modalType) {
+	$.fn.OpenDocumentsModal = function (enumString, requestId, requestIDs, isEdittable, section, modalType) {
 		$(".documentsModal").replaceWith('');
 		var urltogo = $("#documentSubmit").attr("url");
+
+		var requestIdsString ="";	
+		
+		$.each(requestIDs, function( index, value ) {
+		  requestIdsString += "&ids="+value+"";
+		});
 		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
 		console.log("urltogo: " + urltogo);
-		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&ModalType=" + modalType;
+		urltogo = urltogo + "?id=" + requestId +requestIdsString+ "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&ModalType=" + modalType;
 		console.log("urltogo: " + urltogo);
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({

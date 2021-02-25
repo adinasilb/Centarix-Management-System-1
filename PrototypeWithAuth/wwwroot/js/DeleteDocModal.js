@@ -18,7 +18,11 @@
 		data: formData,
 		success: (partialResult) => {
 			$("#DeleteDocumentsModal").replaceWith('');
-			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType, $documentModalType);
+			var requestIDs =[];
+				$("request-array-id").each(function(index, value){
+					requestIDs.push(value);		
+				});
+			$.fn.OpenDocumentsModal($foldername, $requestId, requestIDs, true, $SectionType, $documentModalType);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,
@@ -38,11 +42,17 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 };
 
 $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionType, modalType)  {
+
+	var requestIdsString ="";	
+		
+		$.each(requestIds, function( index, value ) {
+		  requestIdsString += "&ids="+value;
+		});
 	$(".documentsModal").replaceWith('');
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
-		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + sectionType+"&ModalType="+modalType,
+		url: "/Requests/DocumentsModal?id=" + requestId +requestIdsString+ "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + sectionType+"&ModalType="+modalType,
 		type: 'GET',
 		cache: true,
 		success: function (data) {
