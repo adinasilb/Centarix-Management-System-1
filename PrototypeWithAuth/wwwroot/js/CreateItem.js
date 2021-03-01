@@ -69,8 +69,9 @@
                     $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
                     $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
                     $(".proprietryHidenCategory").attr("disabled", false);
-              if ($("#IsRequestQuote").val()=="true") {
-                        
+                    console.log($("#requestQuoteValue").attr("value"))
+                if ($("#requestQuoteValue").val()=="true") {
+                        console.log("request")
                         $(".requestPriceQuote").addClass("d-none");
                         $(".requestPriceQuote").attr("disabled", true)
                         }
