@@ -1148,6 +1148,10 @@ namespace PrototypeWithAuth.Controllers
                     ParentCategory = parentCategory
                 };
             }
+            else if(productSubcategory.ParentCategory.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString())
+            {
+                requestItemViewModel.IsProprietary = true;
+            }
 
             requestItemViewModel.Comments = new List<Comment>();
             requestItemViewModel.EmailAddresses = new List<string>() { "", "", "", "", "" };
