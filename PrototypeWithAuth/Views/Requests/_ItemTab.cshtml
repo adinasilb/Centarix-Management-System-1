@@ -183,22 +183,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 </div>
             </div>
         </div>
-        @if (modalType != AppUtility.RequestModalType.Create && Model.Request.ParentQuoteID != null)
-        {
-            <div class="row @hiddenSummaryClass @quoteCategories">
-                <div class="col-md-6">
-                    <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
-                    <input asp-for="Request.ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom @quoteCategories @markReadOnlyClass" disabled />
-                    <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
-                </div>
-                <div class="col-md-6">
-                    <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
-                    <input asp-for="Request.ParentQuote.QuoteDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled />
-                    <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
 
-                </div>
-            </div>
-        }
         <div class="row">
             <div class="col-md-6 @catalogCategories">
                 <label asp-for="Request.Product.CatalogNumber" class="control-label"></label>
@@ -225,7 +210,21 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 <input type="text" asp-for="Request.BatchExpiration" class="form-control-plaintext border-bottom datepicker @batchCategories @markReadOnlyClass" disabled="disabled" />
             </div>
         </div>
-
+        @if (modalType != AppUtility.RequestModalType.Create && Model.Request.ParentQuoteID != null)
+        {
+            <div class="row @hiddenSummaryClass @quoteCategories">
+                <div class="col-md-6">
+                    <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
+                    <input asp-for="Request.ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom @quoteCategories @markReadOnlyClass" disabled />
+                    <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
+                </div>
+                @*<div class="col-md-6">
+                        <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
+                        <input asp-for="Request.ParentQuote.QuoteDate" type="text" readonly class="form-control-plaintext border-bottom datepicker @quoteCategories @markReadOnlyClass" disabled />
+                        <span asp-validation-for="Request.ParentQuote.QuoteDate" class="text-danger-centarix quote-date" />
+                    </div>*@
+            </div>
+        }
         <div class="row">
             <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass requestPriceQuote">
                 <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>

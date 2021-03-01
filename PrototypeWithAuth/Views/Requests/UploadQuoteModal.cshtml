@@ -88,7 +88,7 @@
                             </a>
                             <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
                         </div>
-                        <div class="col-3 offset-1">
+                        <div class="col-3 offset-1 align-items-center">
                             <div class="row">
                                 <div class="form-group ">
                                     <label asp-for="@Model.ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
@@ -96,13 +96,13 @@
                                     <span asp-validation-for="@Model.ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
                                 </div>
                             </div>
-                            <div class="row">
+                            @*<div class="row">
                                 <div class="form-group ">
                                     <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
                                     <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
                                     <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
                                 </div>
-                            </div>
+                            </div>*@
                         </div>
                     </div>
                 </div>
@@ -217,7 +217,7 @@
             type: "POST",
             cache: false,
             success: function (data) {
-                $('.modalStep1').remove();
+                $('.modalStep1').modal('hide');
                 return true;
             }
         })
