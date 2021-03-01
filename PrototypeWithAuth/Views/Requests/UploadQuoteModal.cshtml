@@ -153,6 +153,7 @@
                     console.log($("#OrderTypeEnum").val())
                     if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210")
                     {
+                        $(".save-item").removeClass("save-item")
                         console.log("Index");
                         if ($('#masterPageType').val() == "RequestRequest") {
                             $(".render-body").html(data)
