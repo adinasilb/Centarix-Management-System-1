@@ -586,6 +586,7 @@ namespace PrototypeWithAuth.Controllers
                                 var roomInstanceCount = _context.LocationRoomInstances.Count();
                                 addLocationViewModel.LocationInstance.Height = roomInstanceCount;
                                 addLocationViewModel.LocationInstance.Width = 1;
+                                addLocationViewModel.LocationInstance.LocationInstanceName = "25°C";
                                 _context.Add(addLocationViewModel.LocationInstance);
                                 await _context.SaveChangesAsync();
                             }                           
