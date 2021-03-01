@@ -6,7 +6,8 @@
 
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/Validation/EditQuoteDetailsFormValidation.js"></script>
-
+<script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/WarantySupplyDateCalc.js"></script>
 <div class="modal modal-view fader on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered  mx-auto  modal-xl " role="document">
@@ -122,13 +123,13 @@
                                         </td>
                                         <td width="15%">
                                             <div class="form-group">
-                                                <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days supply-days-validation" />
+                                                <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days" />
                                                 <span asp-validation-for="@Model.Requests[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
                                             </div>
                                         </td>
                                         <td width="15%" class="border-right">
                                             <div class="form-group">
-                                                <input value="00-00-0000" class="form-control-plaintext border-bottom" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                                <input value="" class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" />
                                             </div>
                                         </td>
                                     </tr>

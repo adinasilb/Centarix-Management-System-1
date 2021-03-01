@@ -34,7 +34,7 @@
 <div class="modal modal-document fader modalStep1 on-form-modal @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modalStep1').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style  " @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$(this).closest('.modalStep1').modal('hide');"*@>
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
@@ -110,7 +110,7 @@
                     <div class="mx-auto modal-footer-mt">     
                         <input type="hidden" asp-for="OrderTypeEnum"/>
                         <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />                       
-                        <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');">Cancel</button>
+                        <button type="button" class="custom-button custom-cancel cancel-quote" @*data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');"*@>Cancel</button>
                     </div>
                 </div>
             </form>
@@ -153,6 +153,7 @@
                     console.log($("#OrderTypeEnum").val())
                     if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210")
                     {
+                        $(".save-item").removeClass("save-item")
                         console.log("Index");
                         if ($('#masterPageType').val() == "RequestRequest") {
                             $(".render-body").html(data)
@@ -201,6 +202,25 @@
             });
         }
         $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+    });
+    $(".cancel-quote").click(function (e) {
+        console.log("cancel quote")
+        var formData = new FormData($(".uploadQuoteForm")[0]);
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: "/Requests/UploadQuoteModal?isCancel=true",
+            data: formData,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                $('.modalStep1').remove();
+                return true;
+            }
+        })
 
     });
 </script>

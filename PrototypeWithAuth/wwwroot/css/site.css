@@ -990,7 +990,7 @@ table.table.table-headerspaced tbody:before {
     text-indent: -99999px;
 }
 
-table.table tbody tr {
+table.table tbody tr:not(table.picker__table tr) {
     border: 2px solid #ebebeb;
 }
 

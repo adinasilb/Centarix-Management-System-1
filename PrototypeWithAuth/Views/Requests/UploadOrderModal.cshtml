@@ -33,7 +33,7 @@
 <div class="modal modal-document fader on-form-modal modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style  " data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modalStep1').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style  cancel-order" aria-label="Close" @*data-dismiss="modal"  onclick="$(this).closest('.modalStep1').modal('hide');"*@>
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
@@ -106,7 +106,7 @@
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
                         <input type="submit" class="custom-button submitOrder custom-button-font @bcColor between-button-margin" />
-                        <button type="button" class="custom-button custom-cancel" data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');">Cancel</button>
+                        <button type="button" class="custom-button custom-cancel cancel-order" @*data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');"*@>Cancel</button>
                     </div>
                 </div>
             </form>
@@ -132,6 +132,7 @@
         }
         else 
         {
+            $(".save-item").removeClass("save-item")
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
@@ -157,6 +158,7 @@
                     }
                     $('.modalStep1').modal('hide');
                     $('.modal').modal('hide');
+                    $(".save-item").removeClass("save-item")
                     $("#loading").hide();
                     return true;
                 },
@@ -178,5 +180,24 @@
             });
         }
         $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-    });</script>
+    });
+    $(".cancel-order").click(function (e) {
+        var formData = new FormData($(".uploadQuoteForm")[0]);
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: "/Requests/UploadOrderModal?isCancel=true",
+            data: formData,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                $('.modalStep1').remove();
+                return true;
+            }
+        })
+
+    });
+</script>
 

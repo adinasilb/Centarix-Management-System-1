@@ -71,7 +71,7 @@ else
                                 var AddedBGClass = " location-box-selected  text-light";
                                 @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                                 {
-                                    if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
+                                    if (Model.ChildrenLocationInstances[z].IsFull)
                                     {
                                         backgroundClass += AddedBGClass;
 

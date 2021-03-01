@@ -488,8 +488,8 @@
                     //replaces the modal-view class with the ModalView view
                     //$(".modal-view").html(data);
                     //turn off data dismiss by clicking out of the box and by pressing esc
-                    $(".modal").modal({
-                        backdrop: true,
+                    $(".modal-view").modal({
+                        backdrop: 'static',
                         keyboard: true,
                     });
                     //shows the modal
@@ -540,10 +540,10 @@
         $.fn.TurnToDetails = function () {
             $('.mark-readonly').prop("disabled", true);
             $('.mark-readonly input').prop("disabled", true);
-            $('.mark-edditable').data("val", false)
+            $('.mark-edditable').attr("data-val", false)
             $('.edit-mode-switch-description').text("Edit Mode Off");
             $('.turn-edit-on-off').attr('name', 'details')
-            $('.open-document-modal').data("val", false);
+            $('.open-document-modal').attr("data-val", false);
         };
         $.fn.LoadEditModalDetails = function () {
             $("#cost").trigger('change');

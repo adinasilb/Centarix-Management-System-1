@@ -399,7 +399,7 @@ $(function () {
 		console.log("enumString: " + enumString);
 		var requestId = $(this).data("id");
 		console.log("requestId: " + requestId);
-		var isEdittable = $(".turn-edit-on-off").attr("name") == "edit";
+		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var modalType = $("#modalType").val();
 		console.log($("#modalType").val())
@@ -1794,6 +1794,8 @@ $(function () {
 			$("#loading").show();
 			$itemurl = "/Requests/ConfirmExit/?MenuItem=" + section;
 			console.log($itemurl);
+			//shows the modal
+			$(".confirm-exit-modal").replaceWith('');
 			$.ajax({
 				async: true,
 				url: $itemurl,
@@ -1807,7 +1809,7 @@ $(function () {
 						backdrop: false,
 						keyboard: false,
 					});
-					//shows the modal
+					
 					$(".confirm-exit-modal").modal('show');
 					$(".modal-open-state").attr("text", "open");
 				}

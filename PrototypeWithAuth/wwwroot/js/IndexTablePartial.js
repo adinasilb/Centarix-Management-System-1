@@ -23,7 +23,7 @@ $.ajax({
                 var modal = $(data);
                 $('body').append(modal);
                 $(".reorderModal").modal({
-                    backdrop: true,
+                    backdrop: 'static',
                     keyboard: false,
                 });
                 $(".reorderModal").modal('show');

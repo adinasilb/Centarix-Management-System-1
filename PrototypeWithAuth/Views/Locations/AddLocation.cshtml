@@ -58,7 +58,7 @@
                         <br />
                         <div class="modal-footer-no">
                             <div class="text-center modal-footer-mt">
-                                <input id="submitAddLocation" type="submit" value="Save" asp-action="AddLocation" class="lab-man-background-color custom-button custom-button-font  between-button-margin" />@*style="margin-right:11rem;"*@
+                                <input id="submitAddLocation" type="button" value="Save" @*asp-action="AddLocation"*@ class="lab-man-background-color custom-button custom-button-font  between-button-margin" />@*style="margin-right:11rem;"*@
                                 @*@if (@User.IsInRole("Admin") || @User.IsInRole("Manager"))
                 {
                     <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
@@ -94,4 +94,25 @@
         }
         
     });
+    $("#submitAddLocation").click(function (e) {
+        $("#loading").show();
+        var formData = new FormData($("#myForm")[0]);
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: "/Locations/AddLocation",
+            data: formData,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                $("#loading").hide();
+                $('.modal').hide();
+                $(".modal-backdrop").remove();
+                $('.render-body').html(data);
+                return true;
+            }
+        })
+    })
 </script>

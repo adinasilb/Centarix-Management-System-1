@@ -1060,7 +1060,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "")
+        public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "", bool isRequestQuote = false)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var categoryType = 1;
@@ -1078,6 +1078,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.SectionType = sectionType;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.Request.Product.ProductName = itemName;
+            requestItemViewModel.IsRequestQuote = isRequestQuote;
             
             //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.RequestPageTypeEnum.Request;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
@@ -1100,7 +1101,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (requestItemViewModel.IsProprietary)
                 {
-                    parentcategories = await _context.ParentCategories.Where(pc => pc.isProprietary).ToListAsync();
+                    var proprietarycategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString()).FirstOrDefaultAsync();
+                    productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == proprietarycategory.ParentCategoryID).ToListAsync();
                 }
                 else
                 {
@@ -1135,10 +1137,20 @@ namespace PrototypeWithAuth.Controllers
             
             if (productSubcategory == null)
             {
+                ParentCategory parentCategory = new ParentCategory();
+                if (requestItemViewModel.IsProprietary)
+                {
+                    parentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString()).FirstOrDefaultAsync();
+                }
+                
                 productSubcategory = new ProductSubcategory()
                 {
-                    ParentCategory = new ParentCategory()
+                    ParentCategory = parentCategory
                 };
+            }
+            else if(productSubcategory.ParentCategory.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString())
+            {
+                requestItemViewModel.IsProprietary = true;
             }
 
             requestItemViewModel.Comments = new List<Comment>();
@@ -1244,6 +1256,7 @@ namespace PrototypeWithAuth.Controllers
             var requestsByProduct = _context.Requests.Where(r => r.ProductID == productId && (r.RequestStatusID == 3))
                  .Include(r => r.Product.ProductSubcategory).Include(r => r.Product.ProductSubcategory.ParentCategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
+                    .Include(r=> r.ParentRequest)
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     .ToList();
             var parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).ToListAsync();
@@ -2957,7 +2970,8 @@ namespace PrototypeWithAuth.Controllers
                 RequestID = id,
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
-                SectionType = SectionType
+                SectionType = SectionType,
+               
             };
             return PartialView(deleteDocumentsViewModel);
         }
@@ -3264,6 +3278,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmExit(ConfirmExitViewModel confirmExit)
         {
             DeleteTemporaryDocuments();
+            RemoveRequestSessions();
 
             if (confirmExit.URL.IsEmpty())
             {
@@ -3738,8 +3753,14 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel)
+        public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel, bool isCancel = false)
         {
+            if (isCancel)
+            {
+                RemoveRequestSessions();
+                DeleteTemporaryDocuments();
+                return PartialView("Default");
+            }
             try
             {
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
@@ -3844,8 +3865,14 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel)
+        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel, bool isCancel= false)
         {
+            if (isCancel)
+            {
+                RemoveRequestSessions();
+                DeleteTemporaryDocuments();
+                return PartialView("Default");
+            }
             try
             {
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
