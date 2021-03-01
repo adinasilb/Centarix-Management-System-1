@@ -485,7 +485,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index", new { errorMessage });
         }
 
-        public async void SendConfimationEmail(ApplicationUser user)
+        private async void SendConfimationEmail(ApplicationUser user)
         {
             string userId = await _userManager.GetUserIdAsync(user);
             string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -538,13 +538,6 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> EditUser(string id)
         {
             return await editUserFunction(id);
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Users")]
-        public async Task<IActionResult> EditUserPartial(string id, int? Tab)
-        {
-            return await editUserFunction(id, Tab);
         }
 
         [HttpPost]
@@ -871,6 +864,13 @@ namespace PrototypeWithAuth.Controllers
 
             //return RedirectToAction("Index");
             return new EmptyResult();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Users")]
+        public async Task<IActionResult> EditUserPartial(string id, int? Tab)
+        {
+            return await editUserFunction(id, Tab);
         }
         private void FillViewDropdowns(RegisterUserViewModel registerUserViewModel)
         {

@@ -164,7 +164,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                         <div class="input-group">
                                                             <span class="input-group-text">&#36;</span>
                                                             <input class="form-control-plaintext border-bottom @dollarDisabled" name="subunit-price-dollars" id="subunit-price-dollars"
-                                                                   value="@(Math.Round(Model.RequestItemViewModel.Request.PricePerSubUnit??0/Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
+                                                                   value="@(Math.Round((Model.RequestItemViewModel.Request.PricePerSubUnit??0)/Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
@@ -217,7 +217,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                             <div class="input-group">
                                                                 <span class="input-group-text">&#36;</span>
                                                                 <input class="form-control-plaintext border-bottom @dollarDisabled" name="subsubunit-price-dollars" id="subsubunit-price-dollars"
-                                                                       value="@(Math.Round(Model.RequestItemViewModel.Request.PricePerSubSubUnit??0/Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
+                                                                       value="@(Math.Round((Model.RequestItemViewModel.Request.PricePerSubSubUnit??0)/Model.RequestItemViewModel.Request.ExchangeRate, 2))" />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
@@ -247,7 +247,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <div class="input-group">
                                     <span class="input-group-text">&#36;</span>
                                     <input class="form-control-plaintext border-bottom @dollarDisabled" name="sum-dollars" id="sum-dollars"
-                                           value="@(String.Format("{0:n}", Math.Round(Model.RequestItemViewModel.Request.Cost??0/Model.RequestItemViewModel.Request.ExchangeRate,2)))" />
+                                           value="@(String.Format("{0:n}", Math.Round((Model.RequestItemViewModel.Request.Cost??0)/Model.RequestItemViewModel.Request.ExchangeRate,2)))" />
                                 </div>
                             </div>
                         </div>

@@ -20,6 +20,8 @@
                 }
                 <div class="modal-header border-0 border-bottom modal-header-padding">
                     <div class="container">
+                        <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
+
                         <div class="heading-1">
                             Update Hours
                         </div>
@@ -41,8 +43,8 @@
                             <label asp-for="EmployeeHour.Date" class="control-label"></label>
                             @if (disabled)
                             {
-                                <input asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" disabled /> 
-                                <input type="hidden" asp-for="EmployeeHour.Date"  asp-format="{0:dd/MM/yyyy}"/>
+                                <input asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" disabled />
+                                <input type="hidden" asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" />
                             }
                             else
                             {
@@ -60,13 +62,55 @@
 
                     <div class="modal-footer  border-0  modal-footer-mt">
                         <div class="mx-auto text-center">
-                            <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin " asp-action="UpdateHours" asp-route-PageType="@Model.PageType" value="Save" />
+                            <button @*type="submit"*@ class="custom-button custom-button-font timekeeper-color between-button-margin update-hours" @*asp-action="UpdateHours"*@ data-val="@Model.PageType" value="Save">Save</button>
                             <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                         </div>
                     </div>
+                </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    $(".update-hours").on("click", function (e) {
+        e.preventDefault();
+        //alert("in update hours click");
+        var pageType = $(this).attr("data-val");
+        var url = "/Timekeeper/UpdateHours/?PageType=" + pageType;
+        console.log("url: " + url);
+        var formData = new FormData($("#myForm")[0]);
+        console.log(formData);
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: url,
+            type: 'POST',
+            data: formData,
+            cache: true,
+            success: function (data) {
+                //alert(data);
+                $('.render-body').html(data);
+                $(".modal").modal('hide');
+                $(".modal").replaceWith('');
+            },
+            error: function (jqxhr) {
+                $('.modal').replaceWith('');
+                $(".modal-backdrop").remove();
+                var modal = $(jqxhr.responseText);
+                $('body').append(modal);
+                if ($(".modal").length > 0) {
+
+                    $(".modal").modal({
+                        backdrop: true,
+                        keyboard: false,
+                    });
+                    $(".modal").modal('show');
+                }
+
+            }
+        });
+    })
+</script>
 
 <script src="~/js/InitializeDatePicker.js"></script>

@@ -986,7 +986,7 @@ namespace PrototypeWithAuth.Controllers
                         if (!isSavedUsingSession)
                         {
                             await _context.SaveChangesAsync();
-                            if (receivedModalVisualViewModel != null)
+                            if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                             {
                                 SaveLocations(receivedModalVisualViewModel, requestItemViewModel.Request);
                             }

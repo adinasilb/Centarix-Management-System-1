@@ -139,7 +139,7 @@ namespace PrototypeWithAuth.Models
         {
             get
             {
-                return Cost / Unit == 0 ? 1 : Unit;
+                return (Cost ?? 0) / (Unit == 0 ? 1 : Unit);
             }
             private set { _PricePerUnit = value; }
 
