@@ -1794,6 +1794,8 @@ $(function () {
 			$("#loading").show();
 			$itemurl = "/Requests/ConfirmExit/?MenuItem=" + section;
 			console.log($itemurl);
+			//shows the modal
+			$(".confirm-exit-modal").replaceWith('');
 			$.ajax({
 				async: true,
 				url: $itemurl,
@@ -1807,8 +1809,7 @@ $(function () {
 						backdrop: false,
 						keyboard: false,
 					});
-					//shows the modal
-					$(".confirm-exit-modal").replaceWith('');
+					
 					$(".confirm-exit-modal").modal('show');
 					$(".modal-open-state").attr("text", "open");
 				}
