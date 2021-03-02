@@ -46,7 +46,7 @@
                     <div class="m-auto">
                         <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin complete-order" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
 
-                        <input type="button" class="custom-cancel custom-button cancel-email" onclick="$(this).closest('.emailModal').modal('hide');" asp-action="CancelEmailModal @bcColor" value="Cancel Email" />
+                        <input type="button" class="custom-cancel custom-button cancel-email" onclick="$('.confirm-email').html('');" asp-action="CancelEmailModal @bcColor" value="Cancel Email" />
                     </div>
                 </div>
                 <script>

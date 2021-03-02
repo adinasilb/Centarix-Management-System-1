@@ -484,16 +484,10 @@
                     $('#loading').hide();
                     console.log("success!");
                     var modal = $(data);
-                    $('body').append(modal);
                     //replaces the modal-view class with the ModalView view
                     //$(".modal-view").html(data);
                     //turn off data dismiss by clicking out of the box and by pressing esc
-                    $(".modal-view").modal({
-                        backdrop: 'static',
-                        keyboard: true,
-                    });
-                    //shows the modal
-                    $(".modal").modal('show');
+                    
                     //$(".modal").on('show.bs.modal', function (e) {
                     //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
                     //})
@@ -505,10 +499,12 @@
                     switch ($type) {
                         case "details":
                                //$.fn.OnOpenModalView();
+                            $('.edit-item').html(modal);
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
                             break;
                         case "reorder":
+                            $('.reorder-item').html(modal);
                             $.fn.OnOpenModalView();
                             $("#cost").trigger('change');
                             //$.fn.CheckCurrency();
@@ -517,12 +513,20 @@
                             //$.fn.OnOpenModalView();
                             break;
                         case "received":
+                            $('.received-item').html(modal);
                             $('.mdb-select').materialSelect();
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
                             break;                    
                         case "termsmodal":
+                            $('.terms').html(modal);
                             break;
                     }
+                    $(".modal-view").modal({
+                        backdrop: 'static',
+                        keyboard: true,
+                    });
+                    //shows the modal
+                    $(".modal").modal('show');
 
                 },
                 error: function (xhr, status, error) {

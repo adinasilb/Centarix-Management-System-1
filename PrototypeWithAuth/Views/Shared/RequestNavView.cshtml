@@ -313,13 +313,16 @@
                 </div>
                 @*</nav>*@
             </div>
-          
+
             <div style="flex-grow: 1" class="outer-page-margins nav-top-margin2 render-body ">
                 <!--class="col-md-10 border-left"-->
                 @RenderBody()
             </div>
         </div>
     </main>
+    <div class="modals">
+        @Html.RenderPartialAsync("ModalLoader")
+    </div>
 </div>
 
 

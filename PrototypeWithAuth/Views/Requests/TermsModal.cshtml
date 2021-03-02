@@ -115,10 +115,10 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $('.emailModal').replaceWith('');
+                    $('.confirm-email').html('');
                     $(".modal-backdrop").remove();
                     var modal = $(data);
-                    $('body').append(modal);
+                    $('.confirm-email').html(modal);
                     $(".emailModal").modal({
                         backdrop: true,
                         keyboard: false,
@@ -129,10 +129,10 @@
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                        $('.termsModal').replaceWith('');
+                        $('.terms').html('');
                         $(".modal-backdrop").remove();
                         var modal = $(jqxhr.responseText);
-                        $('body').append(modal);
+                        $('.terms').html(modal);
                         $(".termsModal").modal({
                             backdrop: true,
                             keyboard: false,

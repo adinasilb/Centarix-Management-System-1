@@ -1795,7 +1795,7 @@ $(function () {
 			$itemurl = "/Requests/ConfirmExit/?MenuItem=" + section;
 			console.log($itemurl);
 			//shows the modal
-			$(".confirm-exit-modal").replaceWith('');
+			//$(".confirm-exit-modal").replaceWith('');
 			$.ajax({
 				async: true,
 				url: $itemurl,
@@ -1804,7 +1804,7 @@ $(function () {
 				success: function (data) {
 					$("#loading").hide();
 					var modal = $(data);
-					$('body').append(modal);
+					$('.confirm-exit').html(modal);
 					$(".confirm-exit-modal").modal({
 						backdrop: false,
 						keyboard: false,
@@ -1817,17 +1817,8 @@ $(function () {
 			});
 		}
 		else {
-			if($('#masterPageType').val()=="RequestLocation")
-			{
-				$(this).closest('.editModal').remove();
-				$(this).closest('.editModal').replaceWith('');
-			}
-			else
-			{
-				$(this).closest('.modal').modal('hide');
-				$(this).closest('.modal').replaceWith('');
-			}
-			
+			$('.edit-item').html('')
+			$('.modal-backdrop').hide()
         }
 	})
 
@@ -1878,7 +1869,7 @@ $(function () {
 				success: function (data) {
 					$("#loading").hide();
 					var modal = $(data);
-					$('body').append(modal);
+					$('.confirm-edit').html(modal);
 					$(".confirm-edit-modal").modal({
 						backdrop: false,
 						keyboard: false,
@@ -2090,7 +2081,7 @@ $(function () {
 		}
 		$itemurl = "/Requests/ConfirmExit/?url=" + url;
 		console.log($itemurl);
-		$(".confirm-exit-modal").replaceWith('');
+		$(".confirm-exit").html('');
 		$.ajax({
 			async: true,
 			url: $itemurl,
@@ -2099,7 +2090,8 @@ $(function () {
 			success: function (data) {
 				$("#loading").hide();
 				var modal = $(data);
-				$('body').append(modal);
+				$(".confirm-exit").html(modal)
+				//$('body').append(modal);
 					
 				$(".confirm-exit-modal").modal({
 					backdrop: false,

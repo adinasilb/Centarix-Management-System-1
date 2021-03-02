@@ -1,6 +1,6 @@
 ﻿$(function () {
 	$(".save-request-edits").on("click", function (e) {
-		$(".confirm-edit-modal").remove();
+		$(".confirm-edit").html('');
 		console.log("save request edits");
 		var formData = new FormData($("#myForm")[0]);
 		$("#myForm").data("validator").settings.ignore = "";
@@ -100,9 +100,8 @@
 
 
 	$(".dont-save-request-edits").on("click", function (e) {
-		$(".confirm-edit-modal").remove();
+		$(".confirm-edit").html('');
 		console.log("don't save request edits");
-		$("body").remove(".confirm-edit-modal");
 		var selectedTab = $('.nav-tabs .active').parent().index() + 1;
 		var url = '';
 		var section = "";
@@ -153,7 +152,7 @@
 
 	
 	$(".cancel-request-edits").off("click").on("click", function (e) {
-		$(".confirm-edit-modal").remove();
+		$(".confirm-edit").html('');
 		console.log("cancel request edits");
 		$('.mark-readonly').attr("disabled", false);
 		$('.mark-edditable').data("val", true);
@@ -213,16 +212,17 @@
 					location.href = url;
 				}
 
-				$('.confirm-exit-modal').remove();
-				$(".modal").modal('hide');
-				$(".modal").replaceWith('');
+				$('.confirm-exit').html("")
+				//$('.confirm-exit-modal').remove();
+				//$(".modal").modal('hide');
+				//$(".modal").replaceWith('');
 				$(".save-item").removeClass("save-item");
 			}
 		});
 	})
 
 	$(".return-edit-modal").off("click").on("click", function (e) {
-		$('.confirm-exit-modal').remove();
+		$('.confirm-exit').html('');
 		//$(".modal").attr("data-backdrop", true);
 	})
 });

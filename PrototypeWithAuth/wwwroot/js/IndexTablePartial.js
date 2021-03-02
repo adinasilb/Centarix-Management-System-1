@@ -56,14 +56,7 @@ $(".load-product-details").off('click').on("click", function (e) {
     e.stopPropagation();
     $("#loading").show();
     var $itemurl = "";
-    if ($('#masterSectionType').val()=="Operations") {
-        $itemurl = "/Operations/EditModalView/?id=" + $(this).val();
-    }
-    else {
-        console.log("Requests/EditModalView/?id")
-        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        $itemurl = "/Requests/EditModalView/?id=" + $(this).val() + "&SectionType=" +  $("#masterSectionType").val();
-    }
+    $itemurl = "/Requests/EditModalView/?id=" + $(this).val() + "&SectionType=" + $("#masterSectionType").val();
     $.fn.CallPageRequest($itemurl, "details");
     return false;
 });
