@@ -2079,7 +2079,7 @@ $(function () {
 		});
 	})
 
-	$(".save-item").off("click").on("click", function (e) {
+	$(".save-item").off('click').on("click", function (e) {
 		e.preventDefault();
 		var url = "";
 		if ($(this).hasClass("side-menu")) {
