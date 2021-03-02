@@ -71,6 +71,7 @@ namespace PrototypeWithAuth.Controllers
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
             }
 
+
             return View(await _context.Vendors.ToListAsync());
 
         }
