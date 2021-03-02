@@ -88,7 +88,7 @@
                             </a>
                             <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
                         </div>
-                        <div class="col-3 offset-1 align-items-center">
+                        <div class="col-3 offset-1 d-flex align-items-center">
                             <div class="row">
                                 <div class="form-group ">
                                     <label asp-for="@Model.ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
@@ -153,7 +153,8 @@
                     console.log($("#OrderTypeEnum").val())
                     if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210")
                     {
-                        $(".save-item").removeClass("save-item")
+                        console.log('remove save item')
+                        $(".save-item").removeClass("save-item").off('click')
                         console.log("Index");
                         if ($('#masterPageType').val() == "RequestRequest") {
                             $(".render-body").html(data)

@@ -39,7 +39,7 @@
                             </div>
                             <input type="hidden" asp-for="@Model.Vendor.VendorID" />
                             <input type="hidden" asp-for="@Model.ParentQuoteID" />
-                            <div class="col-4">
+                            <div class="col-4 offset-3">
                                 <div class="form-group d-inline-flex">
                                     <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
                                     <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
@@ -47,13 +47,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-3">
+                            @*<div class="col-3">
                                 <div class="form-group d-inline-flex">
                                     <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
                                     <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
                                     <span asp-validation-for="@Model.QuoteDate" class="text-danger-centarix"></span>
                                 </div>
-                            </div>
+                            </div>*@
 
                         </div>
                         <div class="container p-0">

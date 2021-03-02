@@ -37,7 +37,9 @@
             <div class="form-group modal-line-1-header modal-sides row">
                 @if (Model.SectionType != AppUtility.MenuItems.Operations)
                 {
-                    <div class="heading-1 modal-title col-8"><input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom heading-1" placeholder="(item name)" /></div>
+                    <div class="heading-1 modal-title col-8">
+                <textarea asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
+                    </div>
                     <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
                 }
                 else
@@ -136,5 +138,10 @@
             $(".side-menu").addClass("save-item");
             $("#vendorList").materialSelect();
         })
+        $('.item-name').keyup(function (e) {
+            var rows = Math.ceil($('.item-name').val().length / 50);
+            console.log(rows)
+            $(this).attr('rows', rows);
+        });
     </script>
     <script src="~/js/CreateItem.js"></script>
