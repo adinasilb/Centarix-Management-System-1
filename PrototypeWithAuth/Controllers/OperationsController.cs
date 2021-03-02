@@ -27,6 +27,7 @@ using System.Diagnostics;
 using Abp.Extensions;
 using SQLitePCL;
 using Microsoft.AspNetCore.Localization;
+using PrototypeWithAuth.AppData.UtilityModels;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;
 //using System.Data.Entity.Infrastructure;
@@ -360,6 +361,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUserCreator)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(r => r.RequestID == id);
+            requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
             //may be able to do this together - combining the path for the orders folders
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");

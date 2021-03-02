@@ -1,0 +1,48 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+
+@{ 
+    var modalType = Model.ModalType;
+    var markReadOnlyClass = "";
+    if (modalType == AppUtility.RequestModalType.Edit)
+    {
+        markReadOnlyClass = "mark-readonly";
+    }
+}
+<div class="row">
+    <div class="col-12">
+        <label asp-for="Request.Product.ProductName" class="control-label"></label>
+        <input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom  @markReadOnlyClass" />
+        <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <label asp-for="Request.Product.ProductHebrewName" class="control-label"></label>
+        <input asp-for="Request.Product.ProductHebrewName" class="form-control-plaintext border-bottom  @markReadOnlyClass" />
+        <span asp-validation-for="Request.Product.ProductHebrewName" class="text-danger-centarix"></span>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <label asp-for="Request.Product.CatalogNumber" class="control-label"></label>
+        <input asp-for="Request.Product.CatalogNumber" class="form-control-plaintext border-bottom  @markReadOnlyClass" />
+        <span asp-validation-for="Request.Product.CatalogNumber" class="text-danger-centarix"></span>
+    </div>
+    <div class="col-md-4 reusables equipment">
+        <label asp-for="Request.BatchExpiration" class="control-label"></label>
+        <input type="text" asp-for="Request.BatchExpiration" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" />
+    </div>
+    <div class="col-md-2">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input filled-in" asp-for="IsReceived" />
+            <label class="form-check-label" asp-for="IsReceived">Received</label>
+        </div>
+    </div>
+</div>

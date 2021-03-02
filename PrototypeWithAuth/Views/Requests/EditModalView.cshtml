@@ -21,6 +21,13 @@
     {
         disabled = "disabled";
     }
+    var color = "order-inv-background-color";
+
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    {
+
+        color = "oper-background-color";
+    }
 }
 <div class="modal modal-view right fader on-form-modal @form editModal" aria-labelledby="Request" id="myModal" data-backdrop="false">
 
@@ -78,7 +85,7 @@
                         @if (Model.Request.RequestStatusID != 7)
                         {
                             <div class="d-flex align-items-center">
-                                <button type="button" value="@Model.Request.RequestID" class="load-reorder-details custom-button custom-button-font order-inv-background-color m-auto">Request</button>
+                                <button type="button" value="@Model.Request.RequestID" class="load-reorder-details custom-button custom-button-font @color m-auto">Request</button>
                             </div>
                         }
 
