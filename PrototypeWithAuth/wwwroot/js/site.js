@@ -1689,24 +1689,16 @@ $(function () {
 	//	$('.msg').html(msg + input + '</span>');
 	//}); 
 	$.fn.SaveOffDays = function (url, month) {
-		alert("in save off days, url: " + url);
-		
-		var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
-		var dateRangeFromDay = rangeFrom.attr('data-date');
-		var dateRangeFromMonth = rangeFrom.attr('data-month');
-		var dateRangeFromYear = rangeFrom.attr('data-year');
 		var dateRangeToDay = rangeTo.attr('data-date');
-		var dateRangeToMonth = rangeTo.attr('data-month');
-		var dateRangeToYear = rangeTo.attr('data-year');
-		
-		var dateFrom = new Date(dateRangeFromYear, dateRangeFromMonth, dateRangeFromDay, 0, 0, 0).toUTCString();
+
+		var dateFrom = $('#vacation-dates').datepicker().data('datepicker').minRange.toISOString()
 		var dateTo = '';
 		if (dateRangeToDay == undefined) {
 			dateTo = null;
 		}
 		else {
-			dateTo = new Date(dateRangeToYear, dateRangeToMonth, dateRangeToDay, 0, 0, 0).toISOString();
+			dateTo = $('#vacation-dates').datepicker().data('datepicker').maxRange.toISOString()
 		}
 
 		$("#Month").val(month);
@@ -1714,7 +1706,7 @@ $(function () {
 		$("#ToDate").val(dateTo);
 
 		var formData = new FormData($("#myForm")[0]);
-		console.log(...formData)
+		//console.log(...formData)
 		console.log(dateFrom + "-" + dateTo);
 		alert("about to go into ajax, url: " + url);
 		$.ajax({
