@@ -21,6 +21,13 @@
   
 
 }
+<div class="row">
+    @if (Model.ErrorMessage != null && Model.ErrorMessage != "")
+    {
+        <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+
+    }
+</div>
 <div class=" container-fluid" id="hoursTable">
     @{await Html.RenderPartialAsync("HoursPage", Model); }  
 </div>

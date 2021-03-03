@@ -10,6 +10,13 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
 }
+<div class="row">
+    @if (Model.ErrorMessage != null && Model.ErrorMessage != "")
+    {
+        <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+
+    }
+</div>
 <div class="row   mb-5 text-center ">
     <div class="col-8">
         <div class="row  entry-exit-background p-5 ">
