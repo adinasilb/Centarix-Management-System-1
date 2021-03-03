@@ -44,7 +44,7 @@
                         }
                         @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
                         {
-                        <tr class="thick-border">
+                           <tr class="thick-border">
                             @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                             {
                                 z++;
@@ -66,6 +66,7 @@
                                             <button class="btn btn-block no-hover vlz-filled no-box-shadow load-product-details-summary" value="@requestID" style="font-size:1.0625rem;">@innerHtml</button>
 
                                             <span style="color:white;"> @Model.ChildrenLocationInstances[z].Place</span>
+
                                         </td>
                                     }
                                     else

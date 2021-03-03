@@ -27,17 +27,11 @@
 		//var url = $("#documentModalForm").data('string');
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
-		var $isEdittable = $('.active-document-modal').attr("data-val");
+		var $isEdittable = $('.active-document-modal').data("val");
+		alert($isEdittable)
 		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
 		console.log("url : " + url);
 		var formData = new FormData($(".documentModalForm")[0]);
-		var data = $(".documentModalForm").serialize();
-		//var formData = new FormData($(this));
-		//console.log("data : " + data);
-		console.log("formData : " + formData);
-		//console.log("data : " + model);
-
-
 		$.ajax({
 			url: url,
 			method: 'POST',
@@ -50,7 +44,7 @@
 				var $enumString = $(".open-document-modal.active-document-modal").data("string");
 				var $requestId = $(".open-document-modal.active-document-modal").data("id");
 				var section = "";
-				console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
+				
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
 					section = "Operations"
 				} else if ($(".open-document-modal.active-document-modal").hasClass('labManagement')|| $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {

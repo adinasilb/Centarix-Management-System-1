@@ -82,8 +82,9 @@
                 @*edittable options*@
                 <input type="hidden" id="bcColor" class="@bcColor" />
                 <input type="hidden" id="color" class="@color" />
+                <input type="hidden" asp-for="ShowSwitch" />
                 <input type="hidden" asp-for="IsEdittable" class="@markDisabled isEdittable" />
-                <a href="" class="open-document-modal active-document-modal  @sectionType " data-string="@Model.RequestFolderName" data-id="@requestid" style="display: none;"></a>
+                <a href="" class="open-document-modal active-document-modal  @sectionType " data-string="@Model.RequestFolderName" data-id="@requestid" style="display: none;" data-val="@Model.IsEdittable" showSwitch="@Model.ShowSwitch"></a>
                 <div class="modal-header modal-header-padding">
                     <div class="container">
 
@@ -179,9 +180,9 @@
 
                                                                     @*@{var link = "delete-file-document"; }*@
                                                                     @*@if (!Model.IsEdittable)
-        {
-            link = " ";
-        }*@
+                                                            {
+                                                                link = " ";
+                                                            }*@
                                                                     @if (Model.ShowSwitch || Model.IsEdittable)
                                                                     {
                                                                         <a href="" class="delete-document @deleteDocumentClass @Model.SectionType.ToString() mx-3" url="@Url.Action("DeleteDocumentModal", "Requests", new { FileString = Model.FileStrings[i], id = requestid, RequestFolderNameEnum = Model.RequestFolderName, IsEdittable = true, SectionType = Model.SectionType })">
@@ -227,7 +228,7 @@
             </div>
         }
                     <div class="row justify-content-center">
-                        @if (Model.ShowSwitch || Model.IsEdittable )
+                        @if (Model.ShowSwitch || Model.IsEdittable)
                         {
                             <div class="upload-btn-wrapper ">
                                 <button class="custom-button custom-button-font @bcColorToUse  upload-file between-button-margin document-modal-buttons" data-string="@Model.RequestFolderName">Upload A File</button>
