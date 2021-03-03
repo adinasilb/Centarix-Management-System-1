@@ -152,8 +152,7 @@
                     else {
                         $("._IndexTableData").html(data);
                     }
-                    $('.step-1').html('');
-                    $('.reorder-item').html('');
+                    $.fn.CloseModal("step-1");
                     $("#loading").hide();
                     return true;
                 },
@@ -180,7 +179,7 @@
             type: "POST",
             cache: false,
             success: function (data) {
-                $('.step-1').html('');
+                $.fn.CloseModal("step-1");
                 return true;
             }
         })

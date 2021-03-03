@@ -82,8 +82,7 @@
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    $('.cart-total').html('');
-                    $(".modal-backdrop").remove();
+                    $.fn.CloseModal("cart-total");
                     $("._IndexTableWithCounts").html(data);
                     $("#loading").hide();
                     return true;

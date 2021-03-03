@@ -1080,6 +1080,12 @@
             $("." + modalClass).modal('show');
 
         }
+        $.fn.CloseModal = function (modalDivClass) {
+            $('.' + modalDivClass).html('');
+            if ($('.modal').length == 0) {
+                $('.modal-backdrop').remove();
+            }
+        }
     </script>
 
     @if (IsSectionDefined("requestNavScript"))

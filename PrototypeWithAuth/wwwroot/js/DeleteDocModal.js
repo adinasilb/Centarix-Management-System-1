@@ -17,7 +17,7 @@
 		method: 'POST',
 		data: formData,
 		success: (partialResult) => {
-			$(".documents-delete").html('');
+			$.fn.CloseModal("documents-delete");
 			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType, $documentModalType);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},

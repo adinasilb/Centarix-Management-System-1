@@ -1,6 +1,6 @@
 ﻿$(function () {
 	$(".save-request-edits").on("click", function (e) {
-		$(".confirm-edit").html('');
+		$.fn.CloseModal("confirm-edit");
 		console.log("save request edits");
 		var formData = new FormData($("#myForm")[0]);
 		$("#myForm").data("validator").settings.ignore = "";
@@ -100,7 +100,7 @@
 
 
 	$(".dont-save-request-edits").on("click", function (e) {
-		$(".confirm-edit").html('');
+		$.fn.CloseModal("confirm-edit");
 		console.log("don't save request edits");
 		var selectedTab = $('.nav-tabs .active').parent().index() + 1;
 		var url = '';
@@ -152,7 +152,7 @@
 
 	
 	$(".cancel-request-edits").off("click").on("click", function (e) {
-		$(".confirm-edit").html('');
+		$.fn.CloseModal("confirm-edit");
 		console.log("cancel request edits");
 		$('.mark-readonly').attr("disabled", false);
 		$('.mark-edditable').data("val", true);
@@ -222,7 +222,7 @@
 	})
 
 	$(".return-edit-modal").off("click").on("click", function (e) {
-		$('.confirm-exit').html('');
+		$.fn.CloseModal("confirm-exit");
 		//$(".modal").attr("data-backdrop", true);
 	})
 });
