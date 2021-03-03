@@ -115,29 +115,13 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $('.confirm-email').html('');
-                    $(".modal-backdrop").remove();
-                    var modal = $(data);
-                    $('.confirm-email').html(modal);
-                    $(".emailModal").modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    $(".emailModal").modal('show');
+                    $.fn.OpenModal('emailModal', 'confirm-email', data);
                     $("#loading").hide();
                     return true;
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                        $('.terms').html('');
-                        $(".modal-backdrop").remove();
-                        var modal = $(jqxhr.responseText);
-                        $('.terms').html(modal);
-                        $(".termsModal").modal({
-                            backdrop: true,
-                            keyboard: false,
-                        });
-                        $(".termsModal").modal('show');
+                        $.fn.OpenModal('termsModal', 'terms', jqxhr.responseText);
                     }
 
                     $("#loading").hide();

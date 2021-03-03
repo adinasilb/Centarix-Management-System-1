@@ -17,7 +17,7 @@
 		method: 'POST',
 		data: formData,
 		success: (partialResult) => {
-			$("#DeleteDocumentsModal").replaceWith('');
+			$(".documents-delete").html('');
 			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType, $documentModalType);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
@@ -38,7 +38,6 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 };
 
 $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionType, modalType)  {
-	$(".documentsModal").replaceWith('');
 	//$(".modal-backdrop").first().removeClass();
 	$.ajax({
 		async: true,
@@ -46,13 +45,7 @@ $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionT
 		type: 'GET',
 		cache: true,
 		success: function (data) {
-			var modal = $(data);
-			$('body').append(modal);
-			$(".documentsModal").modal({
-				backdrop: false,
-				keyboard: true,
-			});
-			$(".documentsModal").modal('show');
+			$.fn.OpenModal('documentsModal', 'documents', data)
 			console.log("Here");
 			var length = $('.iframe-container').length;
 			if (length < 1) {
