@@ -550,6 +550,7 @@
             $("." + category).removeClass("d-none");
             console.log("in detilas of case")
             $.fn.TurnToDetails();
+            $('.open-document-modal').attr("showSwitch", true);
             $('.mdb-select').materialSelect();
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
@@ -1048,6 +1049,40 @@
         {
             return new Date(val.split("/").reverse().join("-")).toISOString();
         }
+
+
+        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch) {
+            $('#loading').show();
+            //alert("in documents modal in document modal js")
+            //$(".modal-backdrop").first().removeClass();
+            var urltogo = $("#documentSubmit").attr("url");
+            if (urltogo == "") {
+                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch;
+	        }
+            else {
+                //var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
+                console.log("urltogo: " + urltogo);
+                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch;
+            }
+
+            $.ajax({
+                async: true,
+                url: urltogo,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $('#loading').hide();
+                    $.fn.OpenModal('documentsModal', 'documents', data)
+                    var length = $('.iframe-container').length;
+			        if (length < 1) {
+				        $.fn.RemoveColorsOfDocs($foldername);
+			        }
+                    return true;
+                }
+            });
+            return true;
+        };
+
 
         $.fn.AppendModalToBody = function(data)
         {
