@@ -2899,7 +2899,8 @@ namespace PrototypeWithAuth.Controllers
                 RequestFolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 //Files = new List<FileInfo>(),
-                SectionType = SectionType
+                SectionType = SectionType,
+                ShowSwitch = showSwitch
             };
 
             if (id != null)
