@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210303090329_TookAwayLocationRoomInstances")]
+    partial class TookAwayLocationRoomInstances
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1595,6 +1597,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             IsFull = false,
                             LocationInstanceName = "25°C",
                             LocationNumber = 0,
+                            LocationRoomTypeID = 1,
                             LocationTypeID = 500,
                             Width = 1
                         },
@@ -1606,13 +1609,12 @@ namespace PrototypeWithAuth.Data.Migrations
                             Height = 0,
                             IsEmptyShelf = false,
                             IsFull = false,
-                            LocationInstanceAbbrev = "L1",
                             LocationInstanceName = "Laboratory 1",
                             LocationInstanceParentID = 1,
                             LocationNumber = 0,
                             LocationRoomTypeID = 1,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1622,13 +1624,12 @@ namespace PrototypeWithAuth.Data.Migrations
                             Height = 0,
                             IsEmptyShelf = false,
                             IsFull = false,
-                            LocationInstanceAbbrev = "L2",
                             LocationInstanceName = "Laboratory 2",
                             LocationInstanceParentID = 1,
                             LocationNumber = 0,
                             LocationRoomTypeID = 1,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1638,13 +1639,12 @@ namespace PrototypeWithAuth.Data.Migrations
                             Height = 0,
                             IsEmptyShelf = false,
                             IsFull = false,
-                            LocationInstanceAbbrev = "TC1",
                             LocationInstanceName = "Tissue Culture 1",
                             LocationInstanceParentID = 1,
                             LocationNumber = 0,
                             LocationRoomTypeID = 2,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1654,13 +1654,12 @@ namespace PrototypeWithAuth.Data.Migrations
                             Height = 0,
                             IsEmptyShelf = false,
                             IsFull = false,
-                            LocationInstanceAbbrev = "E1",
                             LocationInstanceName = "Equipment Room 1",
                             LocationInstanceParentID = 1,
                             LocationNumber = 0,
                             LocationRoomTypeID = 3,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1670,13 +1669,12 @@ namespace PrototypeWithAuth.Data.Migrations
                             Height = 0,
                             IsEmptyShelf = false,
                             IsFull = false,
-                            LocationInstanceAbbrev = "R1",
                             LocationInstanceName = "Refrigerator Room 1",
                             LocationInstanceParentID = 1,
                             LocationNumber = 0,
                             LocationRoomTypeID = 4,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1686,13 +1684,12 @@ namespace PrototypeWithAuth.Data.Migrations
                             Height = 0,
                             IsEmptyShelf = false,
                             IsFull = false,
-                            LocationInstanceAbbrev = "W1",
                             LocationInstanceName = "Washing Room 1",
                             LocationInstanceParentID = 1,
                             LocationNumber = 0,
                             LocationRoomTypeID = 5,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1702,13 +1699,12 @@ namespace PrototypeWithAuth.Data.Migrations
                             Height = 0,
                             IsEmptyShelf = false,
                             IsFull = false,
-                            LocationInstanceAbbrev = "S1",
                             LocationInstanceName = "Storage Room 1",
                             LocationInstanceParentID = 1,
                             LocationNumber = 0,
                             LocationRoomTypeID = 6,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         });
                 });
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210303093440_FilledInAbbrevForLocation25")]
+    partial class FilledInAbbrevForLocation25
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1612,7 +1614,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationNumber = 0,
                             LocationRoomTypeID = 1,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1628,7 +1630,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationNumber = 0,
                             LocationRoomTypeID = 1,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1644,7 +1646,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationNumber = 0,
                             LocationRoomTypeID = 2,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1660,7 +1662,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationNumber = 0,
                             LocationRoomTypeID = 3,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1676,7 +1678,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationNumber = 0,
                             LocationRoomTypeID = 4,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1692,7 +1694,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationNumber = 0,
                             LocationRoomTypeID = 5,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         },
                         new
                         {
@@ -1708,7 +1710,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationNumber = 0,
                             LocationRoomTypeID = 6,
                             LocationTypeID = 501,
-                            Width = 1
+                            Width = 0
                         });
                 });
 
