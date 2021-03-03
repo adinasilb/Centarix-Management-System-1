@@ -212,7 +212,8 @@
 					location.href = url;
 				}
 
-				$('.confirm-exit').html("")
+				$.fn.CloseModal("confirm-exit");
+				$.fn.CloseModal("edit-item");
 				//$('.confirm-exit-modal').remove();
 				//$(".modal").modal('hide');
 				//$(".modal").replaceWith('');

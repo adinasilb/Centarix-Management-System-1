@@ -2030,8 +2030,9 @@ $(function () {
 			url = $(this).parent("a").attr("href");
 		}
 		else {
-			var url = $(this).attr("href")
+			url = $(this).attr("href")
 		}
+		url = encodeURIComponent(url)
 		$itemurl = "/Requests/ConfirmExit/?url=" + url;
 		console.log($itemurl);
 		$.fn.CloseModal("confirm-exit");
