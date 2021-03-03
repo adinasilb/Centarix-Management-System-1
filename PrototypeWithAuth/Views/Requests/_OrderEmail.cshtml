@@ -66,6 +66,7 @@
                         <span class="text">
                           @request.NoteToSupplier
                         </span>
+                        <br/>
                     }
                 }
             </div>
@@ -99,20 +100,29 @@
 
                 @foreach (var request in Model.Requests)
                 {
+                    var cost = request.Cost;
+                    if(request.Currency == AppUtility.CurrencyEnum.USD.ToString())
+                    {
+                        cost = cost / request.ExchangeRate;
+                    }
                     <tr>
                         <td style="font-weight: 500;">@request.SubUnit @request.Product.ProductName</td>
                         <td>@request.Product.CatalogNumber</td>
                         @if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
                             <td>@request.Unit</td>
-                            double unitPrice = (request.Cost ?? 0) / request.Unit;
+                            double unitPrice = (cost ?? 0) / request.Unit;
                             <td>@currency @unitPrice.ToString("N2")</td>
                         }
                         <td>@request.Discount%</td>
-                        <td>@currency @request.Cost</td>
+                        <td>@currency @cost</td>
                     </tr>
                 }
                 @{ double total = Model.Requests.Sum(r => r.Cost ?? 0);
+                    if (currency == '$')
+                    {
+                        total = total / Model.Requests.FirstOrDefault().ExchangeRate;
+                    }
                     double vat = total * .17;
                     double totalWithVat = total + vat;}
                 <tr>

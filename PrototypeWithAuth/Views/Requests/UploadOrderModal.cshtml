@@ -132,7 +132,6 @@
         }
         else 
         {
-            $(".save-item").removeClass("save-item")
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
@@ -147,6 +146,7 @@
                 cache: false,
                 success: function (data) 
                 {
+                    $(".save-item").removeClass("save-item").off('click')
                     if ($('#masterPageType').val() == "RequestRequest") {
                         $(".render-body").html(data)
                     }
@@ -192,7 +192,7 @@
             type: "POST",
             cache: false,
             success: function (data) {
-                $('.modalStep1').remove();
+                $('.modalStep1').modal('hide');
                 return true;
             }
         })

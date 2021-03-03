@@ -986,7 +986,7 @@ namespace PrototypeWithAuth.Controllers
                         if (!isSavedUsingSession)
                         {
                             await _context.SaveChangesAsync();
-                            if (receivedModalVisualViewModel != null)
+                            if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                             {
                                 SaveLocations(receivedModalVisualViewModel, requestItemViewModel.Request);
                             }
@@ -1147,6 +1147,10 @@ namespace PrototypeWithAuth.Controllers
                 {
                     ParentCategory = parentCategory
                 };
+            }
+            else if(productSubcategory.ParentCategory.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString())
+            {
+                requestItemViewModel.IsProprietary = true;
             }
 
             requestItemViewModel.Comments = new List<Comment>();
@@ -3158,14 +3162,14 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Include(x => x.ParentQuote).Select(r => r);
-                var quoteDate = editQuoteDetailsViewModel.QuoteDate;
+                //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
                 var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
                 foreach (var quote in editQuoteDetailsViewModel.Requests)
                 {
                     var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
 
                     request.ParentQuote.QuoteStatusID = 4;
-                    request.ParentQuote.QuoteDate = quoteDate;
+                    //request.ParentQuote.QuoteDate = quoteDate;
                     request.ParentQuote.QuoteNumber = quoteNumber.ToString(); ;
                     request.Cost = quote.Cost;
                     request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
