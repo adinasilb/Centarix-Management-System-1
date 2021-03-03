@@ -17,7 +17,7 @@
 		data: formData,
 		success: (partialResult) => {
 			$.fn.CloseModal("documents-delete");
-			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType, $documentModalType);
+			$.fn.OpenDocumentsModal($foldername, $requestId, true, $isEdittable, $SectionType, $showSwitch);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,
