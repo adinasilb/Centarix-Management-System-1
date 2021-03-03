@@ -499,7 +499,7 @@
                     switch ($type) {
                         case "details":
                             //$.fn.OnOpenModalView();
-                            $.fn.OpenModal('modal', 'edit-item', modal, true)
+                            $.fn.OpenModal('modal', 'edit-item', modal)
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
                             break;
@@ -513,7 +513,7 @@
                             //$.fn.OnOpenModalView();
                             break;
                         case "received":
-                            $.fn.OpenModal('modal', 'received-item', modal, true)
+                            $.fn.OpenModal('modal', 'received-item', modal)
                             $('.mdb-select').materialSelect();
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
                             break;                    
@@ -1065,7 +1065,11 @@
             $(".mdb-select").materialSelect();
 
         }
-        $.fn.OpenModal = function (modalClass, modalDivClass, data, backdrop = false) {
+        $.fn.OpenModal = function (modalClass, modalDivClass, data) {
+            var backdrop = true;
+            if ($('.modal-backdrop').length > 0) {
+                backdrop = false;
+            }
             $('.' + modalDivClass).html('');
             $('.' + modalDivClass).html(data);
             $("." + modalClass).modal({
