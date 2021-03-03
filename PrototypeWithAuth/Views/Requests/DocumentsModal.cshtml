@@ -254,10 +254,10 @@
                             saveClass = "d-none";
                             cancelClass = "";
                         }
-                        <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons" @*data-dismiss="modal"*@ aria-label="Close" onclick="$('.documents').html('');">
+                        <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons close-document-modal" @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$('.documents').html('');*@">
                             Save
                         </button>
-                        <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel" @*data-dismiss="modal"*@ aria-label="Close" onclick="$('.documents').html('');">
+                        <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel close-document-modal" @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$('.documents').html('');*@">
                             Cancel
                         </button>
                     </div>
@@ -266,7 +266,11 @@
         </div>
     </div>
 </div>
-
+<script>
+    $('.close-document-modal').click(function (e) {
+        $.fn.CloseModal("documents");
+    })
+</script>
 
 <script src="~/js/DocumentModalJS.js"></script>
 <script src="~/js/site.js"></script>

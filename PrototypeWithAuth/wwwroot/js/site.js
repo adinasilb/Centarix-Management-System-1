@@ -293,13 +293,8 @@ $(function () {
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				var modal = $(data);
-				$('body').append(modal);
-				$("#visualZoomModal").modal({
-					backdrop: true,
-					keyboard: true,
-				});
-				$("#visualZoomModal").modal('show');
+				$.fn.OpenModal('visualZoomModal', 'visual-zoom', data)
+				
 				//$('.modal-backdrop').remove()
 				var firstTDFilled = $(".visualzoom td");
 				var height = firstTDFilled.height();
@@ -1783,8 +1778,7 @@ $(function () {
 			});
 		}
 		else {
-			$('.edit-item').html('')
-			$('.modal-backdrop').remove()
+			$.fn.CloseModal("edit-item");
         }
 	})
 
@@ -2040,7 +2034,7 @@ $(function () {
 		}
 		$itemurl = "/Requests/ConfirmExit/?url=" + url;
 		console.log($itemurl);
-		$(".confirm-exit").html('');
+		$.fn.CloseModal("confirm-exit");
 		$.ajax({
 			async: true,
 			url: $itemurl,

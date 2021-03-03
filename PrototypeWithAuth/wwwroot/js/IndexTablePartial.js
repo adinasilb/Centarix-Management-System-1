@@ -100,15 +100,7 @@ $(".approve-order").off('click').on("click", function (e) {
             type: "GET",
             cache: false,
             success: function (data) {
-                $('.termsModal').replaceWith('');
-                $(".modal-backdrop").remove();
-                var modal = $(data);
-                $('body').append(modal);
-                $(".termsModal").modal({
-                    backdrop: true,
-                    keyboard: false,
-                });
-                $(".termsModal").modal('show');
+                $.fn.OpenModal("termsModal", "terms", data)
                 $("#loading").hide();
             }
         })
@@ -183,8 +175,7 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
        console.log(formdata);
     }
     else {
-        $("." + modalClass).html('');
-        $('.modal-backdrop').remove();
+        $.fn.CloseModal(modalClass);
         contentType = false;
         processType = false;
    }
