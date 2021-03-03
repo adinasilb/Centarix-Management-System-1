@@ -2095,16 +2095,5 @@ $(function () {
 
 });
 
-$.fn.OpenModal = function (modalClass, modalDivClass, data, removeBackdrop = false) {
-	$('.' + modalDivClass).html(data);
-	$("."+ modalClass).modal({
-		backdrop: false,
-		keyboard: false,
-	});
-	//shows the modal
-	$("." + modalClass).modal('show');
-
-}
-
 
 

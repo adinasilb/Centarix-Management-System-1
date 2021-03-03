@@ -1071,6 +1071,20 @@
             $(".mdb-select").materialSelect();
 
         }
+        $.fn.OpenModal = function (modalClass, modalDivClass, data, removeBackdrop = false) {
+            $('.' + modalDivClass).html('');
+            $('.' + modalDivClass).html(data);
+            $("." + modalClass).modal({
+                backdrop: false,
+                keyboard: false,
+            });
+            //shows the modal
+            $("." + modalClass).modal('show');
+            if (removeBackdrop == "true") {
+                $('.modal-backdrop').remove();
+            }
+
+        }
     </script>
 
     @if (IsSectionDefined("requestNavScript"))

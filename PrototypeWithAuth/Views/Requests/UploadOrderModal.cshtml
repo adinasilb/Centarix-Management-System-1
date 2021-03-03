@@ -30,7 +30,7 @@
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 <script src="~/js/site.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
-<div class="modal modal-document fader on-form-modal modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<div class="modal modal-document fader on-form-modal modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index:9000">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style  cancel-order" aria-label="Close" @*data-dismiss="modal"  onclick="$(this).closest('.modalStep1').modal('hide');"*@>
@@ -89,7 +89,7 @@
                             <div class="row">
                                 <div class="form-group ">
                                     <label asp-for="@Model.ParentRequest.SupplierOrderNumber" class=" control-label m-0 mt-2" style="width:100%;">Order Number</label>
-                                    <input asp-for="@Model.ParentRequest.SupplierOrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0"   />
+                                    <input asp-for="@Model.ParentRequest.SupplierOrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
                                     <span asp-validation-for="@Model.ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button submitOrder custom-button-font @bcColor between-button-margin" />
+                        <input type="submit" class="custom-button submit-order custom-button-font @bcColor between-button-margin" />
                         <button type="button" class="custom-button custom-cancel cancel-order" @*data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');"*@>Cancel</button>
                     </div>
                 </div>
@@ -116,22 +116,19 @@
 <script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
 <script src="~/js/validate.js"></script>
 <script>
-    $(".submitOrder").off('click').on("click", function (e) {
+    $(".submit-order").off('click').on("click", function (e) {
         e.preventDefault();
         console.log("submit order doc");
         //alert("validate form");
         $(".uploadQuoteForm").data("validator").settings.ignore = "";
         var valid = $(".uploadQuoteForm").valid();
         console.log("valid form: " + valid)
-        if (!valid)
-        {
-            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) 
-            {
+        if (!valid) {
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
                 $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
             }
         }
-        else 
-        {
+        else {
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
@@ -144,8 +141,7 @@
                 traditional: true,
                 type: "POST",
                 cache: false,
-                success: function (data) 
-                {
+                success: function (data) {
                     $(".save-item").removeClass("save-item").off('click')
                     if ($('#masterPageType').val() == "RequestRequest") {
                         $(".render-body").html(data)

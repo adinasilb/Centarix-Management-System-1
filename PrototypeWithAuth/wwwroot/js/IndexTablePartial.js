@@ -18,15 +18,8 @@ $.ajax({
             cache: false,
             url: $itemurl,
             success: function (data) {
-                $(".reorderModal").replaceWith('');
+                $.fn.OpenModal('reorderModal', 'reorder-item', data)
                 $('#loading').hide();
-                var modal = $(data);
-                $('body').append(modal);
-                $(".reorderModal").modal({
-                    backdrop: 'static',
-                    keyboard: false,
-                });
-                $(".reorderModal").modal('show');
                 $(".reorder-unit").materialSelect();
             }
 

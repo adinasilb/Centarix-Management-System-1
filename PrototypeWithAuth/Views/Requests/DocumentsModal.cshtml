@@ -64,7 +64,7 @@
 
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
-<div class="modal modal-document fader documentsModal @form" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<div class="modal modal-document fader documentsModal @form" id="documentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9999">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
 
@@ -254,10 +254,10 @@
                             saveClass = "d-none";
                             cancelClass = "";
                         }
-                        <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.documentsModal').modal('hide');">
+                        <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons" @*data-dismiss="modal"*@ aria-label="Close" onclick="$('.documents').html('');">
                             Save
                         </button>
-                        <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.documentsModal').modal('hide');">
+                        <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel" @*data-dismiss="modal"*@ aria-label="Close" onclick="$('.documents').html('');">
                             Cancel
                         </button>
                     </div>

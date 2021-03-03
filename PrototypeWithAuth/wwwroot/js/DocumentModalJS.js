@@ -71,7 +71,6 @@
 
 	$.fn.OpenDocumentsModal1 = function (enumString, requestId, isEdittable, section, modalType) {
 		$('#loading').show();
-		$(".documentsModal").replaceWith('');
 		//alert("in documents modal in document modal js")
 		//$(".modal-backdrop").first().removeClass();
 		$.ajax({
@@ -81,13 +80,7 @@
 			cache: false,
 			success: function (data) {
 				$('#loading').hide();
-				var modal = $(data);
-				$('body').append(modal);
-				$(".documentsModal").modal({
-					backdrop: false,
-					keyboard: true,
-				});
-				$(".documentsModal").modal('show');
+				$.fn.OpenModal('documentsModal', 'documents', data)
 
 				return true;
 			}
