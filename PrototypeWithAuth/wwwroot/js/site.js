@@ -401,33 +401,12 @@ $(function () {
 		console.log("requestId: " + requestId);
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
-		var modalType = $("#modalType").val();
-		console.log($("#modalType").val())
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, modalType);
+		var showSwitch = $(".active-document-modal").attr("showSwitch");
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch);
 		return true;
 	});
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, modalType) {
-		$(".documentsModal").replaceWith('');
-		var urltogo = $("#documentSubmit").attr("url");
-		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
-		console.log("urltogo: " + urltogo);
-		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&ModalType=" + modalType;
-		console.log("urltogo: " + urltogo);
-		//$(".modal-backdrop").first().removeClass();
-		$.ajax({
-			async: true,
-			url: urltogo,
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				$.fn.OpenModal('documentsModal', 'documents', data)
-				return true;
-			}
 
-		});
-		return true;
-	};
 
 	$(".file-select").on("change", function (e) {
 		console.log("file was changed");

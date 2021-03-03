@@ -8,9 +8,8 @@
 	$requestId = $("#RequestID").val();
 	var $SectionType = $("#SectionType").val();
 	alert($("#SectionType").val())
-	var $isEdittable = $('#IsEdittable').val();
-	var $documentModalType = $(".document-modal-type").val();
-	console.log("mosaltype in delete: " + $documentModalType);
+		var $isEdittable = $('.active-document-modal').attr("data-val");
+		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
 	console.log("$requestId: " + $requestId);
 	$.ajax({
 		url: link,
@@ -18,7 +17,7 @@
 		data: formData,
 		success: (partialResult) => {
 			$("#DeleteDocumentsModal").replaceWith('');
-			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType, $documentModalType);
+			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType, $isEdittable, $showSwitch);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,
@@ -35,30 +34,4 @@ $.fn.RemoveColorsOfDocs = function ($foldername) {
 	$("#" + $foldername + " i").addClass('opac87');
 	$("#" + $foldername+"Input").removeClass("contains-file");
 	$("#" + $foldername+"Input").valid();
-};
-
-$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, sectionType, modalType)  {
-	$(".documentsModal").replaceWith('');
-	//$(".modal-backdrop").first().removeClass();
-	$.ajax({
-		async: true,
-		url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + sectionType+"&ModalType="+modalType,
-		type: 'GET',
-		cache: true,
-		success: function (data) {
-			var modal = $(data);
-			$('body').append(modal);
-			$(".documentsModal").modal({
-				backdrop: false,
-				keyboard: true,
-			});
-			$(".documentsModal").modal('show');
-			console.log("Here");
-			var length = $('.iframe-container').length;
-			if (length < 1) {
-				$.fn.RemoveColorsOfDocs($foldername);
-			}
-		
-		}
-	});
 };
