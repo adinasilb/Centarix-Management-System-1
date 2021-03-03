@@ -156,22 +156,14 @@
                     else {
                         $("._IndexTableData").html(data);
                     }
-                    $('.modalStep1').modal('hide');
-                    $('.modal').modal('hide');
+                    $('.step-1').html('');
+                    $('.reorder-item').html('');
                     $("#loading").hide();
                     return true;
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                        $('.modalStep1').replaceWith('');
-                        $(".modal-backdrop").remove();
-                        var modal = $(jqxhr.responseText);
-                        $('body').append(modal);
-                        $(".modalStep1").modal({
-                            backdrop: true,
-                            keyboard: false,
-                        });
-                        $(".modalStep1").modal('show');
+                        $.fn.OpenModal('modalStep1', 'step-1', jqxhr.responseText)
                     }
                     $("#loading").hide();
                     return true;
@@ -192,7 +184,7 @@
             type: "POST",
             cache: false,
             success: function (data) {
-                $('.modalStep1').modal('hide');
+                $('.step-1').html('');
                 return true;
             }
         })

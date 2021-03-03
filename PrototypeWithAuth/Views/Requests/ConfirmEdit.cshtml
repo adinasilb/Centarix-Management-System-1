@@ -59,7 +59,7 @@
 </div>
 <script>
     $(".close-confirm-edit").click(function () {
-        $(this).closest('.confirm-edit-modal').remove(); 
+        $('.confirm-edit').html(''); 
         $('.edit-mode-switch-description').text('Edit Mode On');
         $('.turn-edit-on-off').attr('name', 'edit'); 
         $('.turn-edit-on-off').prop('checked', true);

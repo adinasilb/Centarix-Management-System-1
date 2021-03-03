@@ -82,7 +82,7 @@
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    $('.cart-total-modal').hide();
+                    $('.cart-total').html('');
                     $(".modal-backdrop").remove();
                     $("._IndexTableWithCounts").html(data);
                     $("#loading").hide();
@@ -90,15 +90,7 @@
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                        $('.cart-total-modal').replaceWith('');
-                        $(".modal-backdrop").remove();
-                        var modal = $(jqxhr.responseText);
-                        $('body').append(modal);
-                        $(".cart-total-modal").modal({
-                            backdrop: true,
-                            keyboard: false,
-                        });
-                        $(".cart-total-modal").modal('show');
+                        $.fn.OpenModal('cart-total-modal', 'cart-total', jqxhr.responseText)
                     }
 
                     $("#loading").hide();

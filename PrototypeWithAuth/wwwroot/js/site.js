@@ -421,13 +421,7 @@ $(function () {
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				var modal = $(data);
-				$('body').append(modal);
-				$(".documentsModal").modal({
-					backdrop: false,
-					keyboard: true,
-				});
-				$(".documentsModal").modal('show');
+				$.fn.OpenModal('documentsModal', 'documents', data)
 				return true;
 			}
 
@@ -1803,14 +1797,7 @@ $(function () {
 				cache: true,
 				success: function (data) {
 					$("#loading").hide();
-					var modal = $(data);
-					$('.confirm-exit').html(modal);
-					$(".confirm-exit-modal").modal({
-						backdrop: false,
-						keyboard: false,
-					});
-					
-					$(".confirm-exit-modal").modal('show');
+					$.fn.OpenModal('confirm-exit-modal', 'confirm-exit', data)
 					$(".modal-open-state").attr("text", "open");
 				}
 
@@ -1868,14 +1855,7 @@ $(function () {
 				cache: true,
 				success: function (data) {
 					$("#loading").hide();
-					var modal = $(data);
-					$('.confirm-edit').html(modal);
-					$(".confirm-edit-modal").modal({
-						backdrop: false,
-						keyboard: false,
-					});
-					//shows the modal
-					$(".confirm-edit-modal").modal('show');
+					$.fn.OpenModal('confirm-edit-modal', 'confirm-edit', data)
 					$(".modal-open-state").attr("text", "open");
 
 				}
@@ -2089,16 +2069,7 @@ $(function () {
 			cache: true,
 			success: function (data) {
 				$("#loading").hide();
-				var modal = $(data);
-				$(".confirm-exit").html(modal)
-				//$('body').append(modal);
-					
-				$(".confirm-exit-modal").modal({
-					backdrop: false,
-					keyboard: false,
-				});
-				//shows the modal
-				$(".confirm-exit-modal").modal('show');
+				$.fn.OpenModal('confirm-exit-modal', 'confirm-exit', data)
 				$(".modal-open-state").attr("text", "open");
 			}
 
@@ -2123,6 +2094,17 @@ $(function () {
 
 
 });
+
+$.fn.OpenModal = function (modalClass, modalDivClass, data, removeBackdrop = false) {
+	$('.' + modalDivClass).html(data);
+	$("."+ modalClass).modal({
+		backdrop: false,
+		keyboard: false,
+	});
+	//shows the modal
+	$("." + modalClass).modal('show');
+
+}
 
 
 
