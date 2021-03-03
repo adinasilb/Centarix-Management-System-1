@@ -16,8 +16,8 @@
 		method: 'POST',
 		data: formData,
 		success: (partialResult) => {
-			$("#DeleteDocumentsModal").replaceWith('');
-			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType, $isEdittable, $showSwitch);
+			$(".documents-delete").html('');
+			$.fn.OpenDocumentsModal($foldername, $requestId, true, $SectionType, $documentModalType);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,

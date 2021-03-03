@@ -70,7 +70,7 @@
 
 <body style="display:none" class="body">
 
-    <div class="center" role="status" id="loading" style="        z-index: 5000;
+    <div class="center" role="status" id="loading" style="        z-index: 9999;
         left: calc(960px - 182.5px) !important;
         width: fit-content;
         display: none;">
@@ -472,7 +472,7 @@
             console.log("itemurl " + $itemurl);
             //delete existing modals
             $('.modal:not(#visualZoomModal)').replaceWith('');
-            $(".modal-backdrop").remove();
+            //$(".modal-backdrop").remove();
             $('#loading').show();
             $.ajax({
                 async: true,
@@ -498,13 +498,13 @@
                     //console.log($type);
                     switch ($type) {
                         case "details":
-                               //$.fn.OnOpenModalView();
-                            $('.edit-item').html(modal);
+                            //$.fn.OnOpenModalView();
+                            $.fn.OpenModal('modal', 'edit-item', modal)
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
                             break;
                         case "reorder":
-                            $('.reorder-item').html(modal);
+                            $.fn.OpenModal('modal', 'reorder-item', modal)
                             $.fn.OnOpenModalView();
                             $("#cost").trigger('change');
                             //$.fn.CheckCurrency();
@@ -513,20 +513,14 @@
                             //$.fn.OnOpenModalView();
                             break;
                         case "received":
-                            $('.received-item').html(modal);
+                            $.fn.OpenModal('modal', 'received-item', modal)
                             $('.mdb-select').materialSelect();
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
                             break;                    
                         case "termsmodal":
-                            $('.terms').html(modal);
+                            $.fn.OpenModal('modal', 'terms', modal)
                             break;
                     }
-                    $(".modal-view").modal({
-                        backdrop: 'static',
-                        keyboard: true,
-                    });
-                    //shows the modal
-                    $(".modal").modal('show');
 
                 },
                 error: function (xhr, status, error) {
@@ -1106,18 +1100,19 @@
             $(".mdb-select").materialSelect();
 
         }
-        $.fn.OpenModal = function (modalClass, modalDivClass, data, removeBackdrop = false) {
+        $.fn.OpenModal = function (modalClass, modalDivClass, data) {
+            var backdrop = true;
+            if ($('.modal-backdrop').length > 0) {
+                backdrop = false;
+            }
             $('.' + modalDivClass).html('');
             $('.' + modalDivClass).html(data);
             $("." + modalClass).modal({
-                backdrop: false,
+                backdrop: backdrop,
                 keyboard: false,
             });
             //shows the modal
             $("." + modalClass).modal('show');
-            if (removeBackdrop == "true") {
-                $('.modal-backdrop').remove();
-            }
 
         }
     </script>

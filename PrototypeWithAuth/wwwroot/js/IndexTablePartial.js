@@ -184,6 +184,7 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
     }
     else {
         $("." + modalClass).html('');
+        $('.modal-backdrop').remove();
         contentType = false;
         processType = false;
    }

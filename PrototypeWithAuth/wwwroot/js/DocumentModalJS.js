@@ -144,14 +144,8 @@
 				type: 'GET',
 				cache: false,
 				success: function (data) {
-					var modal = data;
-					$("#DeleteDocumentsModal").replaceWith('');
-					$('body').append(modal);
-					$("#DeleteDocumentsModal").modal({
-						backdrop: false,
-						keyboard: true,
-					});
-					$("#DeleteDocumentsModal").modal('show');
+					$.fn.OpenModal('modal-document-delete', "documents-delete", data)
+					
 				}
 			});
 		}

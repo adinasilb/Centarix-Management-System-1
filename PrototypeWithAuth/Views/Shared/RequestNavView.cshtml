@@ -6,7 +6,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    if(!AppUtility.IsAjaxRequest(Context.Request))
+    if (!AppUtility.IsAjaxRequest(Context.Request))
     {
         Layout = "~/Views/Shared/Master.cshtml";
     }
@@ -129,7 +129,7 @@
     }
     else if (pageType == AppUtility.PageTypeEnum.OperationsInventory || pageType == AppUtility.PageTypeEnum.OperationsRequest)
     {
-        SidebarMenuItems = CreateMenus.CreateOperationsRequestsSidebar(pageType, sidebarType, originalNavClasses, "operations-filter", pageType , AppUtility.CategoryTypeEnum.Operations);
+        SidebarMenuItems = CreateMenus.CreateOperationsRequestsSidebar(pageType, sidebarType, originalNavClasses, "operations-filter", pageType, AppUtility.CategoryTypeEnum.Operations);
     }
     else if (pageType == AppUtility.PageTypeEnum.OperationsSearch)
     {
@@ -297,7 +297,7 @@
                             }
                             @foreach (var sidebarNavItem in SidebarMenuItems)
                             {
-                                <a href="@Url.ActionLink( sidebarNavItem.Action , sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="text-black @sidebarNavItem.AjaxLink">
+                                <a href="@Url.ActionLink(sidebarNavItem.Action, sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="text-black @sidebarNavItem.AjaxLink">
                                     <li class="nav-item sidenav-button @sidebarNavItem.Classes side-menu px-2" style="@liMargins">
                                         <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
                                         <br /><span>@sidebarNavItem.Description</span><br />
@@ -321,14 +321,10 @@
         </div>
     </main>
     <div class="modals">
-        @Html.RenderPartialAsync("ModalLoader")
+        @{await Html.RenderPartialAsync("ModalLoader"); }
     </div>
 </div>
 
-
-<!-- Confirm Email Modal -->
-<div class="modal confirm-email-modal" id="myModal">
-</div>
 @section requestNavScript{
     <script src="~/js/InitializeDatePicker.js"></script>
     <script>

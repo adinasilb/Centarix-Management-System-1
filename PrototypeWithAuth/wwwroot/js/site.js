@@ -1784,7 +1784,7 @@ $(function () {
 		}
 		else {
 			$('.edit-item').html('')
-			$('.modal-backdrop').hide()
+			$('.modal-backdrop').remove()
         }
 	})
 
