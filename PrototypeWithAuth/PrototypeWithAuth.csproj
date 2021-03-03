@@ -177,6 +177,8 @@
     <Compile Remove="Data\Migrations\20210222080644_AddedProductHebrewName.Designer.cs" />
     <Compile Remove="Data\Migrations\20210222083146_AddedProductHebrewName.cs" />
     <Compile Remove="Data\Migrations\20210222083146_AddedProductHebrewName.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210303085917_TookAwayLocationRoomInstances.cs" />
+    <Compile Remove="Data\Migrations\20210303085917_TookAwayLocationRoomInstances.Designer.cs" />
   </ItemGroup>
 
 

@@ -170,7 +170,7 @@ $(function () {
 	});
 	$('#myForm input').focusout(function (e) {
 		console.log("validating input...");
-		$("#myForm").data("validator").settings.ignore = "";
+		//$("#myForm").data("validator").settings.ignore = "";
 		$('.error').addClass("beforeCallValid");
 		if ($('#myForm').valid()) {
 			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
