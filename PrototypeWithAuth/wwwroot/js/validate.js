@@ -197,6 +197,10 @@ $(function () {
 				$('#unitTypeID').rules("remove", "selectRequired");
 			}
 
+			if ($(this).hasClass('order-tab-link') ) {
+				$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+			}
+
 			//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
 
 			if (!$(this).hasClass("prev-tab")) {
