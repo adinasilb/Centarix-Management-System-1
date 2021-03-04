@@ -149,7 +149,7 @@ namespace PrototypeWithAuth.AppData
                 stringRate = stringRate.Replace("}", "");
                 Double.TryParse(stringRate, out rate);
 
-                return Math.Round(rate, 2);
+                return Math.Round(rate, 3);
             }
             catch (Exception ex)
             {
