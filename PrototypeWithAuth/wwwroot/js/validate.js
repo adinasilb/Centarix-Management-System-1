@@ -188,33 +188,74 @@ $(function () {
 		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
 	});
 
-	$('.next-tab').click(function () {
-		if ($(this).hasClass('request-price') ) {
-			$('#unitTypeID').rules("remove", "selectRequired");
-		}
-
-		//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
-		$(this).parent().prev().find(".next-tab").addClass("prev-tab");
-
-		if (!$(this).hasClass("prev-tab")) {
-			var valid = $("#myForm").valid();
-
-			console.log("valid tab" + valid)
-			if (!valid) {
-				$('.next-tab').prop("disabled", true);
+	$('.next-tab').off("click").click(function () {
+		var clickedElement= $(this);
+		
+		if(!$(this).hasClass("current-tab"))
+		{
+			if ($(this).hasClass('request-price') ) {
+				$('#unitTypeID').rules("remove", "selectRequired");
 			}
-			else {
-				$('.next-tab').prop("disabled", false);
+
+			//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
+
+			if (!$(this).hasClass("prev-tab")) {
+				var valid = $("#myForm").valid();
+
+				console.log("valid tab" + valid)
+				if (!valid) {
+					$(this).prop("disabled", true);
+				}
+				else {
+						var currentTab = $(".current-tab")
+						$(currentTab).removeClass("current-tab")
+						$(this).prop("disabled", false);
+						$(this).addClass("current-tab");
+						$(".next-tab").removeClass("prev-tab");
+						$('.next-tab').each(function(index, element){
+			
+
+							if($(clickedElement).parent("li").index() > $(element).parent("li").index())
+							{
+								alert("true")
+								$(element).addClass("prev-tab");
+							}
+
+						});
+					}
+			
+			}
+			else
+			{
+			    var currentTab = $(".current-tab")
+				$(currentTab).removeClass("current-tab")
+				$(this).prop("disabled", false);
+				$(this).addClass("current-tab");
+				$(".next-tab").removeClass("prev-tab");
+				$('.next-tab').each(function(index, element){
+	
+
+					if($(clickedElement).index() > $(element).parent("li").index())
+					{
+						alert("true")
+						$(element).addClass("prev-tab");
+					}
+
+				});
 
 			}
 			//work around for now - because select hidden are ignored
-			if ($(this).hasClass('request-price')) {
-				$('#unitTypeID').rules("add", "selectRequired");
-			}
+				if ($(this).hasClass('request-price')) {
+					$('#unitTypeID').rules("add", "selectRequired");
+				}
 		}
-
+		
 
 	});
+
+	$.fn.isBefore= function(sel){
+		 return 
+	};
 	$('#myForm').submit(function (e) {
 		//alert("validate form");
 		$(this).data("validator").settings.ignore = "";
