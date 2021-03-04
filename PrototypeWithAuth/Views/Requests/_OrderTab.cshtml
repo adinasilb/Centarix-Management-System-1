@@ -126,15 +126,7 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $('.modalStep1').replaceWith('');
-                    $(".modal-backdrop").remove();
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $('.modalStep1').modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    $('.modalStep1').modal('show');
+                    $.fn.OpenModal('modalStep1', 'step-1', data)
                     $("#loading").hide();
                     return true;
                 },

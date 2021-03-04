@@ -25,7 +25,7 @@
 }
 <script src="~/js/site.js"></script>
 <script src="~/js/confirmedit.js"></script>
-<div class="modal modal-view confirm-edit-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view confirm-edit-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index:9999">
 
     <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; width:32rem;" >
 
@@ -59,7 +59,7 @@
 </div>
 <script>
     $(".close-confirm-edit").click(function () {
-        $(this).closest('.confirm-edit-modal').remove(); 
+        $.fn.CloseModal("confirm-edit");
         $('.edit-mode-switch-description').text('Edit Mode On');
         $('.turn-edit-on-off').attr('name', 'edit'); 
         $('.turn-edit-on-off').prop('checked', true);

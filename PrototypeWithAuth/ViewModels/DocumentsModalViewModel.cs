@@ -20,6 +20,6 @@ namespace PrototypeWithAuth.ViewModels
         public bool IsEdittable { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
-        public AppUtility.RequestModalType ModalType { get; set; }
+        public bool ShowSwitch { get; set; }
     }
 }

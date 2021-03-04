@@ -26,7 +26,7 @@
 <script src="~/js/site.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/Validation/TermsModalFormValidation.js"></script>
-<div class="modal modal-view termsModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view termsModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
     <div class="modal-dialog-centered modal-xl mx-auto on-form-modal @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
             <button type="button" class="close modal-close-padding modal-close-style" onclick ="$(this).closest('.termsModal').modal('hide');" data-dismiss="modal" aria-label="Close">
@@ -115,29 +115,13 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $('.emailModal').replaceWith('');
-                    $(".modal-backdrop").remove();
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $(".emailModal").modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    $(".emailModal").modal('show');
+                    $.fn.OpenModal('emailModal', 'confirm-email', data);
                     $("#loading").hide();
                     return true;
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                        $('.termsModal').replaceWith('');
-                        $(".modal-backdrop").remove();
-                        var modal = $(jqxhr.responseText);
-                        $('body').append(modal);
-                        $(".termsModal").modal({
-                            backdrop: true,
-                            keyboard: false,
-                        });
-                        $(".termsModal").modal('show');
+                        $.fn.OpenModal('termsModal', 'terms', jqxhr.responseText);
                     }
 
                     $("#loading").hide();

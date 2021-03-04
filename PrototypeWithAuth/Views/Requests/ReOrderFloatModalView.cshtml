@@ -13,7 +13,7 @@
         color = "lab-man-color";
     }
     TempData.Keep();
-    if(Model.RequestItemViewModel.Request.Currency == "USD")
+    if (Model.RequestItemViewModel.Request.Currency == "USD")
     {
         dollarDisabled = "";
         shekelDisabled = "disabled disabled-text";
@@ -31,7 +31,7 @@
     <div class="modal-dialog-centered modal-xl mx-auto" role="document">
 
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius mx-auto">
-            <button type="button" class="close modal-close-padding modal-close-style cancelOrder" data-dismiss="modal" aria-label="Close" @*onclick=" $(this).closest('.reorderModal').modal('hide'); $('.reorderModal').replaceWith('');"*@>
+            <button type="button" class="close modal-close-padding modal-close-style cancelOrder" @*data-dismiss="modal"*@ aria-label="Close" @*onclick=" $('.reorder-item').html('');"*@>
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
@@ -368,7 +368,6 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
         </div>
     </div>
 </div>
-
 <script>
     $(".submitOrder").off('click').on("click", function (e) {
         e.preventDefault();
@@ -400,29 +399,13 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $('.modalStep1').replaceWith('');
-                    $(".modal-backdrop").remove();
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $(".modalStep1").modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    $(".modalStep1").modal('show');
+                    $.fn.OpenModal('modalStep1', 'step-1', data)
                     $("#loading").hide();
                     return true;
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                        $('.reorderModal').replaceWith('');
-                        $(".modal-backdrop").remove();
-                        var modal = $(jqxhr.responseText);
-                        $('body').append(modal);
-                        $(".reorderModal").modal({
-                            backdrop: true,
-                            keyboard: false,
-                        });
-                        $(".reorderModal").modal('show');
+                        $.fn.OpenModal('reorderModal', 'reorder-item', jqxhr.responseText)
                     }
 
                     $("#loading").hide();
@@ -447,9 +430,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
             type: "POST",
             cache: false,
             success: function (data) {
-                $('.reorderModal').remove();      
-                $('.modal-backdrop:first').remove();
-                $('.reorderModal').replaceWith('');        
+                $.fn.CloseModal("reorder-item");
             }
         });
     })

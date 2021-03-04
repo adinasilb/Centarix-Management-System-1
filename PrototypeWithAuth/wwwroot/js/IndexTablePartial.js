@@ -18,15 +18,8 @@ $.ajax({
             cache: false,
             url: $itemurl,
             success: function (data) {
-                $(".reorderModal").replaceWith('');
+                $.fn.OpenModal('reorderModal', 'reorder-item', data)
                 $('#loading').hide();
-                var modal = $(data);
-                $('body').append(modal);
-                $(".reorderModal").modal({
-                    backdrop: 'static',
-                    keyboard: false,
-                });
-                $(".reorderModal").modal('show');
                 $(".reorder-unit").materialSelect();
             }
 
@@ -56,14 +49,7 @@ $(".load-product-details").off('click').on("click", function (e) {
     e.stopPropagation();
     $("#loading").show();
     var $itemurl = "";
-    if ($('#masterSectionType').val()=="Operations") {
-        $itemurl = "/Operations/EditModalView/?id=" + $(this).val();
-    }
-    else {
-        console.log("Requests/EditModalView/?id")
-        //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-        $itemurl = "/Requests/EditModalView/?id=" + $(this).val() + "&SectionType=" +  $("#masterSectionType").val();
-    }
+    $itemurl = "/Requests/EditModalView/?id=" + $(this).val() + "&SectionType=" + $("#masterSectionType").val();
     $.fn.CallPageRequest($itemurl, "details");
     return false;
 });
@@ -114,15 +100,7 @@ $(".approve-order").off('click').on("click", function (e) {
             type: "GET",
             cache: false,
             success: function (data) {
-                $('.termsModal').replaceWith('');
-                $(".modal-backdrop").remove();
-                var modal = $(data);
-                $('body').append(modal);
-                $(".termsModal").modal({
-                    backdrop: true,
-                    keyboard: false,
-                });
-                $(".termsModal").modal('show');
+                $.fn.OpenModal("termsModal", "terms", data)
                 $("#loading").hide();
             }
         })
@@ -136,15 +114,7 @@ $(".approve-order").off('click').on("click", function (e) {
             type: "GET",
             cache: false,
             success: function (data) {
-                $('.cart-total-modal').replaceWith('');
-                $(".modal-backdrop").remove();
-                var modal = $(data);
-                $('body').append(modal);
-                $(".cart-total-modal").modal({
-                    backdrop: true,
-                    keyboard: false,
-                });
-                $(".cart-total-modal").modal('show');
+                $.fn.OpenModal('cart-total-modal', 'cart-total', data)
                 $("#loading").hide();
             }
         })
@@ -181,7 +151,7 @@ $(".page-item a").off('click').on("click", function (e) {
 });
 
 
-function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
+function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "") {
     console.log("in ajax partial index call"+url);
     var selectedPriceSort = [];
     $("#priceSortContent .priceSort:checked").each(function (e) {
@@ -204,8 +174,8 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
         };
        console.log(formdata);
     }
-    else{
-        $(".modal").modal('hide');
+    else {
+        $.fn.CloseModal(modalClass);
         contentType = false;
         processType = false;
    }
@@ -228,23 +198,8 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata) {
       
         $("#loading").hide();
 
-          if (jqxhr.status == 500) {
-                $('.modal').replaceWith('');
-                $(".modal-backdrop").remove();
-                var modal = $(jqxhr.responseText);
-               $('body').append(modal);
-              if($(".modal").length>0)
-                {
-                   
-                    $(".modal").modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    $(".modal").modal('show');
-             }
-              else{
-                    $(".error-msg").html(jqxhr.responseText)
-              }
+        if (jqxhr.status == 500) {
+            $.fn.OpenModal('modal', modalClass, jqxhr.responseText)
                
            }
 

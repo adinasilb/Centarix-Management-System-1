@@ -293,13 +293,8 @@ $(function () {
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				var modal = $(data);
-				$('body').append(modal);
-				$("#visualZoomModal").modal({
-					backdrop: true,
-					keyboard: true,
-				});
-				$("#visualZoomModal").modal('show');
+				$.fn.OpenModal('visualZoomModal', 'visual-zoom', data)
+				
 				//$('.modal-backdrop').remove()
 				var firstTDFilled = $(".visualzoom td");
 				var height = firstTDFilled.height();
@@ -401,39 +396,12 @@ $(function () {
 		console.log("requestId: " + requestId);
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
-		var modalType = $("#modalType").val();
-		console.log($("#modalType").val())
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, modalType);
+		var showSwitch = $(".active-document-modal").attr("showSwitch");
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch);
 		return true;
 	});
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, modalType) {
-		$(".documentsModal").replaceWith('');
-		var urltogo = $("#documentSubmit").attr("url");
-		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
-		console.log("urltogo: " + urltogo);
-		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&ModalType=" + modalType;
-		console.log("urltogo: " + urltogo);
-		//$(".modal-backdrop").first().removeClass();
-		$.ajax({
-			async: true,
-			url: urltogo,
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				var modal = $(data);
-				$('body').append(modal);
-				$(".documentsModal").modal({
-					backdrop: false,
-					keyboard: true,
-				});
-				$(".documentsModal").modal('show');
-				return true;
-			}
 
-		});
-		return true;
-	};
 
 	$(".file-select").on("change", function (e) {
 		console.log("file was changed");
@@ -860,8 +828,7 @@ $(function () {
 		$("#user-image").attr("src", "/" + imgPath);
 		$(".userImage i").hide();
 
-		$('.modal.userImageModal').remove();
-		$('.modal-backdrop').remove();
+		$.fn.CloseModal('user-image');
 	});
 
 	$("#InvoiceImage").on("change", function () {
@@ -1316,20 +1283,13 @@ $(function () {
 
 	$.fn.CallModal2 = function (url) {
 		console.log("in call modal2, url: " + url);
-		$(".userImageModal").replaceWith('');
 		$.ajax({
 			async: true,
 			url: url,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				var modal = $(data);
-				$('body').append(modal);
-				$(".userImageModal").modal({
-					backdrop: false,
-					keyboard: true,
-				});
-				$(".userImageModal").modal('show');
+				$.fn.OpenModal('userImageModal', 'user-image', data)
 			}
 		});
 	};
@@ -1795,7 +1755,7 @@ $(function () {
 			$itemurl = "/Requests/ConfirmExit/?MenuItem=" + section;
 			console.log($itemurl);
 			//shows the modal
-			$(".confirm-exit-modal").replaceWith('');
+			//$(".confirm-exit-modal").replaceWith('');
 			$.ajax({
 				async: true,
 				url: $itemurl,
@@ -1803,31 +1763,15 @@ $(function () {
 				cache: true,
 				success: function (data) {
 					$("#loading").hide();
-					var modal = $(data);
-					$('body').append(modal);
-					$(".confirm-exit-modal").modal({
-						backdrop: false,
-						keyboard: false,
-					});
-					
-					$(".confirm-exit-modal").modal('show');
-					$(".modal-open-state").attr("text", "open");
+					$.fn.OpenModal('confirm-exit-modal', 'confirm-exit', data)
+					//$(".modal-open-state").attr("text", "open");
 				}
 
 			});
 		}
 		else {
-			if($('#masterPageType').val()=="RequestLocation")
-			{
-				$(this).closest('.editModal').remove();
-				$(this).closest('.editModal').replaceWith('');
-			}
-			else
-			{
-				$(this).closest('.modal').modal('hide');
-				$(this).closest('.modal').replaceWith('');
-			}
-			
+			console.log('close edit')
+			$.fn.CloseModal("edit-item");
         }
 	})
 
@@ -1877,14 +1821,7 @@ $(function () {
 				cache: true,
 				success: function (data) {
 					$("#loading").hide();
-					var modal = $(data);
-					$('body').append(modal);
-					$(".confirm-edit-modal").modal({
-						backdrop: false,
-						keyboard: false,
-					});
-					//shows the modal
-					$(".confirm-edit-modal").modal('show');
+					$.fn.OpenModal('confirm-edit-modal', 'confirm-edit', data)
 					$(".modal-open-state").attr("text", "open");
 
 				}
@@ -1960,16 +1897,16 @@ $(function () {
 	});
 
 	$("#home-btn").click(function () {
-		$('[data-toggle="popover"]').popover('dispose');
-		$("#home-btn").popover({
-			sanitize: false,
-			placement: 'bottom',
-			html: true,
-			content: function () {
-				return $('#home-content').html();
-			}
-		});
-		$("#home-btn").popover('toggle');
+			$('[data-toggle="popover"]').popover('dispose');
+			$("#home-btn").popover({
+				sanitize: false,
+				placement: 'bottom',
+				html: true,
+				content: function () {
+					return $('#home-content').html();
+				}
+			});
+			$("#home-btn").popover('toggle');
 
 	});
 	$("#addRequestComment").click(function () {
@@ -2079,41 +2016,6 @@ $(function () {
 		});
 	})
 
-	$(".save-item").off('click').on("click", function (e) {
-		e.preventDefault();
-		var url = "";
-		if ($(this).hasClass("side-menu")) {
-			url = $(this).parent("a").attr("href");
-		}
-		else {
-			var url = $(this).attr("href")
-		}
-		$itemurl = "/Requests/ConfirmExit/?url=" + url;
-		console.log($itemurl);
-		$(".confirm-exit-modal").replaceWith('');
-		$.ajax({
-			async: true,
-			url: $itemurl,
-			type: 'GET',
-			cache: true,
-			success: function (data) {
-				$("#loading").hide();
-				var modal = $(data);
-				$('body').append(modal);
-					
-				$(".confirm-exit-modal").modal({
-					backdrop: false,
-					keyboard: false,
-				});
-				//shows the modal
-				$(".confirm-exit-modal").modal('show');
-				$(".modal-open-state").attr("text", "open");
-			}
-
-		});
-
-	})
-
 	//$('body').on('click', '.callIndexPartial', function () {
 	//	var url = $(this).attr('url');
 	//	$.ajax({
@@ -2126,7 +2028,34 @@ $(function () {
 	//		}
 	//	});
 	//});
+	$(".save-item").click(function (e) {
+		e.preventDefault();
+		console.log('save-item-click')
+		var url = "";
+		if ($(this).hasClass("side-menu")) {
+			url = $(this).parent("a").attr("href");
+		}
+		else {
+			url = $(this).attr("href")
+		}
+		url = encodeURIComponent(url)
+		$itemurl = "/Requests/ConfirmExit/?url=" + url;
+		console.log($itemurl);
+		$.fn.CloseModal("confirm-exit");
+		$.ajax({
+			async: true,
+			url: $itemurl,
+			type: 'GET',
+			cache: true,
+			success: function (data) {
+				$("#loading").hide();
+				$.fn.OpenModal('confirm-exit-modal', 'confirm-exit', data)
+				$(".modal-open-state").attr("text", "open");
+			}
 
+		});
+
+	})
 
 
 

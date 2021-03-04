@@ -22,7 +22,7 @@
         disabled = "disabled";
     }
 }
-<div class="modal modal-view right fader on-form-modal @form editModal" aria-labelledby="Request" id="myModal" data-backdrop="false">
+<div class="modal modal-view right fader on-form-modal @form editModal" aria-labelledby="Request" id="myModal" data-backdrop="false" style="z-index: 5000">
 
     <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
@@ -87,7 +87,7 @@
                         <div class="col-12 px-0">
                             <div class="container-fluid div-tabs text-center pl-0">
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
-                                    <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link @tabClass next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                                    <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link @tabClass current-tab next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
                                     @if (Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 7)
                                     {
                                         <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link @tabClass next-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
