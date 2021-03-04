@@ -2,14 +2,17 @@
 $(function () {
 
 
-	$("#NewEmployee_DOB").on("change", function () {
+	$("#NewEmployee_DOB").off("change").on("change", function () {
+		var val = $(this).val();
+		val = val.split("/").reverse().join("-");
+		var DOB = moment(val);
 		var age = 0;
-		var DOB = new Date($(this).val());
 		//var Today = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
 		console.log("dob: " + DOB);
-		//console.log("today: " + Today);
 		var today = new Date();
+		console.log("today: " + today);
 		age = Math.floor((today - DOB) / (365.25 * 24 * 60 * 60 * 1000));
+		alert(age);
 		if (isNaN(age)) {
 			age = '';
 		}
