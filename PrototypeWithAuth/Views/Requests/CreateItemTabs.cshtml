@@ -78,7 +78,7 @@
                     <div class="container-fluid div-tabs text-center modal-sides">
                         <ul id="create-modal-tabs" class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons" style="">
                             <li class="nav-item icon ">
-                                <a data-toggle="tab" href="#item" class="next-tab nav-link active request-item current-tab">
+                                <a data-toggle="tab" href="#item" class="next-tab nav-link active request-item">
                                     <i class="icon-centarix-icons-05" style="font-size: 2rem;"></i>
                                     <br />Item
                                 </a>
@@ -112,7 +112,7 @@
                             @if (Model.PageType != AppUtility.PageTypeEnum.RequestSummary && Model.SectionType != AppUtility.MenuItems.Operations)
                             {
                                 <li class="nav-item icon order-tab">
-                                    <a data-toggle="tab" href="#order" class="next-tab nav-link">
+                                    <a data-toggle="tab" href="#order" class="next-tab nav-link order-tab-link">
                                         <i class="icon-assignment-24px" style="font-size: 2rem;"></i> <br />Order
                                     </a>
                                 </li>
@@ -136,8 +136,6 @@
             console.log("form ready")
             $(".top-menu").addClass("save-item");
             $(".side-menu").addClass("save-item");
-            $(".module-button").addClass("save-item");
-            $(".notificationDiv").addClass("save-item");
             $("#vendorList").materialSelect();
         })
         $('.item-name').keyup(function (e) {
