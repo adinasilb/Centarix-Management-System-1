@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.Models
                 if (DOB != null)
                 {
                     _age = DateTime.Now.Year - DOB.Year;
-                    if (DateTime.Now.DayOfYear > DOB.DayOfYear)
+                    if (DateTime.Now.DayOfYear < DOB.DayOfYear)
                     {
                         _age--;
                     }
