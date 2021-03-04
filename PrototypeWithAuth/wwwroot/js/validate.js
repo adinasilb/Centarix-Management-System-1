@@ -168,7 +168,7 @@ $(function () {
 		}
 
 	});
-	$('#myForm input').focusout(function (e) {
+	$('#myForm input').change(function (e) {
 		console.log("validating input...");
 		$("#myForm").data("validator").settings.ignore = "";
 		$('.error').addClass("beforeCallValid");

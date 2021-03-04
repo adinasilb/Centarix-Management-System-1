@@ -1,18 +1,18 @@
 ﻿@model PrototypeWithAuth.ViewModels.ConfirmEmailViewModel
-@using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.AppData;
 
 @{
     char currency = '₪';
-    if (Model.Requests.Count() == 1 && Model.Requests.FirstOrDefault().Currency == AppUtility.CurrencyEnum.USD.ToString())
-    {
-        currency = '$';
-    }
-    var colspan = 1;
-    @if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-    {
+ if (Model.Requests.Count() == 1 && Model.Requests.FirstOrDefault().Currency == AppUtility.CurrencyEnum.USD.ToString())
+ {
+     currency = '$';
+ }
+ var colspan = 1;
+@if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+{
 
-        colspan = 4;
-    }
+    colspan = 4;
+}
 }
 <div style="padding:1rem 2rem">
     <header class="page-header">
@@ -32,8 +32,8 @@
     </header>
     <div class="row">
         <div class="col-6">
-            @if (Model.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes && 
-                Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
+            @if (Model.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes &&
+Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
             {
                 <span style="font-weight: 700; font-size:2rem;">Request Price Quote</span>
             }
@@ -58,16 +58,21 @@
         </div>
         <div class="col-6 offset-2">
             <div class="note-message p-4 pl-5">
-                <span class="heading-1">Please Note:</span><br>
-                @foreach (var request in Model.Requests)
-                {
-                    if (!string.IsNullOrEmpty(request.NoteToSupplier))
+
+
+                @{
+                    var notes = "";
+                    foreach (var request in Model.Requests)
                     {
-                        <span class="text">
-                          @request.NoteToSupplier
-                        </span>
-                        <br/>
+                        if (!string.IsNullOrEmpty(request.NoteToSupplier))
+                        {
+                            notes += "<span class='text'>" + @request.NoteToSupplier + "</span><br/>";
+                        }
                     }
+                    if (notes != "")
+                    { <span class="heading-1">Please Note:</span><br> }
+                    @Html.Raw(notes);
+                    
                 }
             </div>
         </div>
@@ -101,7 +106,7 @@
                 @foreach (var request in Model.Requests)
                 {
                     var cost = request.Cost;
-                    if(request.Currency == AppUtility.CurrencyEnum.USD.ToString())
+                    if (request.Currency == AppUtility.CurrencyEnum.USD.ToString())
                     {
                         cost = cost / request.ExchangeRate;
                     }
@@ -115,7 +120,7 @@
                             <td>@currency @unitPrice.ToString("N2")</td>
                         }
                         <td>@request.Discount%</td>
-                        <td>@currency @cost</td>
+                        <td>@currency @cost?.ToString("N2")</td>
                     </tr>
                 }
                 @{ double total = Model.Requests.Sum(r => r.Cost ?? 0);

@@ -14,6 +14,13 @@
         Layout = null;
     }
 }
+<div class="row p-4">
+    @if (Model.ErrorMessage != null)
+    {
+        <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+
+    }
+</div>
 <div class="_IndexTableWithCounts">
     @{ await Html.RenderPartialAsync("_IndexTableWithCounts", Model);}
 </div>

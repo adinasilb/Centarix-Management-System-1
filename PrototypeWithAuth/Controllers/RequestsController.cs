@@ -75,10 +75,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
             var viewmodel = await GetIndexViewModel(requestIndexObject);
-
+            
             SetViewModelCounts(requestIndexObject, viewmodel);
-
-            ViewBag.ErrorMessage = TempData["ErrorMessage"];
 
             return View(viewmodel);
         }
@@ -276,10 +274,9 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.RequestStatusID = requestIndexObject.RequestStatusID;
             requestIndexViewModel.PageType = requestIndexObject.PageType;
             requestIndexViewModel.SidebarFilterID = requestIndexObject.SidebarFilterID;
+            requestIndexViewModel.ErrorMessage = requestIndexObject.ErrorMessage;
             var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
 
-            try
-            {
                 var RequestPassedInWithInclude = RequestsPassedIn.Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ParentRequest).Include(r=>r.ApplicationUserCreator)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
@@ -287,19 +284,12 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
 
                 onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                // Redirect("~/Views/Shared/RequestError.cshtml");
-            }
+        
             requestIndexViewModel.PagedList = onePageOfProducts;
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
             requestIndexViewModel.PriceSortEnums = priceSorts;
             requestIndexViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
-            requestIndexViewModel.PageType = requestIndexObject.PageType;
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             return requestIndexViewModel;
         }
@@ -2078,7 +2068,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
+                confirmEmailViewModel.RequestIndexObject.ErrorMessage = ex.Message;
                 Response.StatusCode = 500;
                 if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -2125,6 +2115,36 @@ namespace PrototypeWithAuth.Controllers
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 2)
                          .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             }
+            //base url needs to be declared - perhaps should be getting from js?
+            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
+            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
+
+            confirmQuoteEmail.Requests = requests;
+            //render the purchase order view into a string using a the confirmEmailViewModel
+            string renderedView = await RenderPartialViewToString("OrderEmailView", confirmQuoteEmail);
+            //instantiate a html to pdf converter object
+            HtmlToPdf converter = new HtmlToPdf();
+
+            PdfDocument doc = new PdfDocument();
+            // create a new pdf document converting an url
+            doc = converter.ConvertHtmlString(renderedView, baseUrl);
+
+            foreach (var request in requests)
+            {
+                //creating the path for the file to be saved
+                string path1 = Path.Combine("wwwroot", "files");
+                string path2 = Path.Combine(path1, request.RequestID.ToString());
+                //create file
+                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                Directory.CreateDirectory(folderPath);
+                string uniqueFileName = "QuotePDF.pdf";
+                string filePath = Path.Combine(folderPath, uniqueFileName);
+                // save pdf document
+                doc.Save(filePath);
+            }
+            // close pdf document
+            doc.Close();
+
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
             string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
@@ -2240,35 +2260,7 @@ namespace PrototypeWithAuth.Controllers
                 RequestID = id,
                 RequestIndexObject = requestIndexObject
             };
-            //base url needs to be declared - perhaps should be getting from js?
-            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
-            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
-
-            //render the purchase order view into a string using a the confirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("OrderEmailView", confirmEmail);
-            //instantiate a html to pdf converter object
-            HtmlToPdf converter = new HtmlToPdf();
-
-            PdfDocument doc = new PdfDocument();
-            // create a new pdf document converting an url
-            doc = converter.ConvertHtmlString(renderedView, baseUrl);
-
-            foreach (var request in requests)
-            {
-                //creating the path for the file to be saved
-                string path1 = Path.Combine("wwwroot", "files");
-                string path2 = Path.Combine(path1, request.RequestID.ToString());
-                //create file
-                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-                Directory.CreateDirectory(folderPath);
-                string uniqueFileName = "QuotePDF.pdf";
-                string filePath = Path.Combine(folderPath, uniqueFileName);
-                // save pdf document
-                doc.Save(filePath);
-            }
-            // close pdf document
-            doc.Close();
-
+          
             return PartialView(confirmEmail);
         }
 
@@ -4193,7 +4185,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     new SelectListItem{ Text="Pay Now", Value=AppUtility.TermsModalEnum.PayNow.ToString()},
                     new SelectListItem{ Text="+30", Value=AppUtility.TermsModalEnum.PayWithInMonth.ToString()},
-                    new SelectListItem{ Text="Installements", Value=AppUtility.TermsModalEnum.Installments.ToString()},
+                    new SelectListItem{ Text="Installments", Value=AppUtility.TermsModalEnum.Installments.ToString()},
                     new SelectListItem{ Text="Paid", Value=AppUtility.TermsModalEnum.Paid.ToString()}
                 }
             };
@@ -4261,7 +4253,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     new SelectListItem{ Text="Pay Now", Value=AppUtility.TermsModalEnum.PayNow.ToString()},
                     new SelectListItem{ Text="+30", Value=AppUtility.TermsModalEnum.PayWithInMonth.ToString()},
-                    new SelectListItem{ Text="Installements", Value=AppUtility.TermsModalEnum.Installments.ToString()},
+                    new SelectListItem{ Text="Installments", Value=AppUtility.TermsModalEnum.Installments.ToString()},
                     new SelectListItem{ Text="Paid", Value=AppUtility.TermsModalEnum.Paid.ToString()}
                 };
                 return PartialView("TermsModal", termsViewModel);

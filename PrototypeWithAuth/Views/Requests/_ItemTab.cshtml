@@ -84,9 +84,9 @@
 @if (modalType == AppUtility.RequestModalType.Create && !Model.IsProprietary)
 {
     <div class="row">
-        <div class="col-2 offset-8">
+        <div class="col-4 offset-8">
             <input type="checkbox" class="form-check-input filled-in isRequest" asp-for="IsRequestQuote" />
-            <label class="form-check-label" asp-for="IsRequestQuote">Request</label>
+            <label class="form-check-label" asp-for="IsRequestQuote">Need To Request Price</label>
             <input type="hidden" value="@Model.IsRequestQuote" id="requestQuoteValue" />
         </div>
     </div>
