@@ -84,7 +84,7 @@
                 <input type="hidden" id="color" class="@color" />
                 <input type="hidden" asp-for="ShowSwitch" />
                 <input type="hidden" asp-for="IsEdittable" class="@markDisabled isEdittable" />
-                <a href="" class="open-document-modal active-document-modal  @sectionType " data-string="@Model.RequestFolderName" data-id="@requestid" style="display: none;" data-val="@Model.IsEdittable" showSwitch="@Model.ShowSwitch"></a>
+                <a href="" class="open-document-modal active-document-modal  @sectionType  withinDocModal" data-string="@Model.RequestFolderName" data-id="@requestid" style="display: none;" data-val="@Model.IsEdittable" showSwitch="@Model.ShowSwitch"></a>
                 <div class="modal-header modal-header-padding">
                     <div class="container">
 
@@ -174,8 +174,8 @@
                                                                 </div>
                                                                 <div class="card-body d-flex text-center align-items-center justify-content-center">
 
-                                                                    <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3 @colorToUse">
-                                                                        <img src="~/images/css/inventory/add-item/other icons/view_dis.png" />
+                                                                    <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3  view-img">
+                                                                        <i class="icon-centarix-icons-09 @colorToUse " style="font-size:2rem" ></i>
                                                                     </a>
 
                                                                     @*@{var link = "delete-file-document"; }*@

@@ -27,9 +27,9 @@
 		//var url = $("#documentModalForm").data('string');
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
-		var $isEdittable = $('.active-document-modal').data("val");
+		var $isEdittable = $('.active-document-modal.withinDocModal').data("val");
 		alert($isEdittable)
-		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
+		var $showSwitch =  $('.active-document-modal.withinDocModal').attr("showSwitch");
 		console.log("url : " + url);
 		var formData = new FormData($(".documentModalForm")[0]);
 		$.ajax({
@@ -190,7 +190,9 @@
 			$(".document-modal-save").removeClass("d-none");
 			$(".documents-delete-icon.icon-delete-24px").removeClass("disabled-filter");
 			$(".documents-delete-icon.icon-delete-24px").addClass($color);
-
+		    $(".view-img i").removeClass("disabled-filter");
+			$(".view-img i").addClass($color);
+			$(".active-document-modal.withinDocModal").attr("data-val", true);
 			$(".delete-document").addClass("delete-file-document");
 			$(this).prev('.edit-mode-switch-description').text("Edit Mode On");
 		}
@@ -204,9 +206,11 @@
 			$(".file-select").attr("disabled", true);
 			$(".document-modal-cancel").removeClass("d-none");
 			$(".document-modal-save").addClass("d-none");
+			$(".active-document-modal.withinDocModal").attr("data-val", false);
 			$(".documents-delete-icon.icon-delete-24px").addClass("disabled-filter");
 			$(".documents-delete-icon.icon-delete-24px").removeClass($color);
-
+			$("i.view-img").addClass("disabled-filter");
+			$("i.view-img").removeClass($color);
 			$(".delete-document").removeClass("delete-file-document");
 			$(this).prev('.edit-mode-switch-description').text("Edit Mode Off");
 		}
