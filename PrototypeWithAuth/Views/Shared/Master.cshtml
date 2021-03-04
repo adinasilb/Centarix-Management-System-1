@@ -373,8 +373,6 @@
 
     $.fn.CallOrderLateModal = function (id) {
         console.log("in call modal, id: " + id);
-        $('.modal').replaceWith('');
-        $(".modal-backdrop").remove();
         $('#loading').show();
         //var url = @Url.Action("Requests", "OrderLate");
         var url = "/Requests/OrderLateModal/?id=" + id;
@@ -387,13 +385,7 @@
             //dataType: "string",
             success: function (data) {
                 $('#loading').hide();
-                var modal = $(data);
-                $('body').append(modal);
-                $(".modal-view").modal({
-                    backdrop: true,
-                    keyboard: false,
-                });
-                $(".modal").modal('show');
+                $.fn.OpenModal('modal','order-late', data)
             }
 
         });
@@ -484,18 +476,6 @@
                     $('#loading').hide();
                     console.log("success!");
                     var modal = $(data);
-                    //replaces the modal-view class with the ModalView view
-                    //$(".modal-view").html(data);
-                    //turn off data dismiss by clicking out of the box and by pressing esc
-                    
-                    //$(".modal").on('show.bs.modal', function (e) {
-                    //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
-                    //})
-                    //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-                    //$(".modal-backdrop").remove();
-                    //$('.modal').find('input').first().focus();
-                    //$(".modal").popover('hide')
-                    //console.log($type);
                     switch ($type) {
                         case "details":
                             //$.fn.OnOpenModalView();
@@ -519,6 +499,15 @@
                             break;                    
                         case "termsmodal":
                             $.fn.OpenModal('modal', 'terms', modal)
+                            break;
+                        case "delete":
+                            $.fn.OpenModal('modal', 'delete-item', modal)
+                            break;
+                        case "confirmemail":
+                            $.fn.OpenModal('modal', 'confirm-email', modal)
+                            break;
+                        case "quote":
+                            $.fn.OpenModal('modal', 'edit-quote', modal)
                             break;
                     }
 
@@ -675,8 +664,6 @@
 
         $.fn.CallPageUser = function ($itemurl) {
             //delete existing modals
-            $('.modal').replaceWith('');
-            $(".modal-backdrop").remove();
             $.ajax({
                 async: true,
                 url: $itemurl,
@@ -684,15 +671,8 @@
                 cache: true,
                 success: function (data) {
                     $("#loading").hide();
-                    //console.log("success!");
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $(".modal-view").modal({
-                        backdrop: true,
-                        keyboard: true,
-                    });
+                    $.fn.OpenModal('users-form', 'edit-item', data)
                     $.fn.CalculateAge();
-                    $(".modal").modal('show');
                     $.fn.OnOpenModal();
                 }
             });
@@ -955,7 +935,7 @@
                         bold = "font-weight-bold";
                     }
 
-                    var newitem1 = '<a class="opac87  '+bold+' " href="'+ link+'"><div id="notification-info" class="px-3 pb-2 mb-3 ">' +
+                    var newitem1 = '<a class="opac87 notificationDiv '+bold+' " href="'+ link+'"><div id="notification-info" class="px-3 pb-2 mb-3 ">' +
                         '<div class="col-12 border-right-0 border-left-0 border-top-0 border-bottom  pb-2 mb-3 " >' +
                         '<div class="row ">' +
                         '<div class=" float-left " >' +
@@ -996,6 +976,7 @@
             $.fn.UpdateNotificationLastRead();
 
         });
+        
 
         $.fn.GetHoursString = function (date) {
             var date = new Date(date);
@@ -1101,7 +1082,7 @@
 
         }
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
-            var backdrop = true;
+            var backdrop = "static";
             if ($('.modal-backdrop').length > 0) {
                 backdrop = false;
             }

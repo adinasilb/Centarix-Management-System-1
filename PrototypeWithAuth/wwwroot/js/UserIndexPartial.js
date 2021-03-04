@@ -15,24 +15,14 @@
     });
     $.fn.SuspendUserModal = function (userid, suspend) {
         $itemurl = '/Admin/SuspendUserModal?id=' + userid;
-        $('.suspend-user-modal').replaceWith('');
-        $(".modal-backdrop").remove();
         $.ajax({
             async: true,
             url: $itemurl,
             type: 'GET',
             cache: true,
             success: function (data) {
-                //$('.suspend-user-modal').replaceWith('');
-                //$(".modal-backdrop").remove();
                 //console.log("success!");
-                var modal = $(data);
-                $('body').append(modal);
-                $(".modal-view").modal({
-                    backdrop: true,
-                    keyboard: true,
-                });
-                $(".suspend-user-modal").modal('show');
+                $.fn.OpenModal('suspend-user-modal', 'suspend-user', data)
             }
         });
         return false;

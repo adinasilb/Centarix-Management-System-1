@@ -207,9 +207,10 @@
 			cache: true,
 			success: function (data) {
 				$("#loading").hide();
+				$(".save-item").removeClass("save-item").off('click');
 				if(url != "")
 				{
-					location.href = url;
+						location.href = url;
 				}
 
 				$.fn.CloseModal("confirm-exit");
@@ -217,7 +218,7 @@
 				//$('.confirm-exit-modal').remove();
 				//$(".modal").modal('hide');
 				//$(".modal").replaceWith('');
-				$(".save-item").removeClass("save-item");
+				
 			}
 		});
 	})

@@ -2113,7 +2113,7 @@ namespace PrototypeWithAuth.Controllers
             if (confirmQuoteEmail.IsResend)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.RequestID == confirmQuoteEmail.RequestID)
-           .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+           .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.ParentQuote).ToList();
             }
             else
             {
@@ -2215,8 +2215,8 @@ namespace PrototypeWithAuth.Controllers
             if (isResend)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote).Where(r => r.RequestID == id)
-               .Include(r => r.Product).ThenInclude(r => r.Vendor)
-               .ToList();
+               .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
+               
             }
             else
             {
