@@ -1904,16 +1904,16 @@ $(function () {
 	});
 
 	$("#home-btn").click(function () {
-		$('[data-toggle="popover"]').popover('dispose');
-		$("#home-btn").popover({
-			sanitize: false,
-			placement: 'bottom',
-			html: true,
-			content: function () {
-				return $('#home-content').html();
-			}
-		});
-		$("#home-btn").popover('toggle');
+			$('[data-toggle="popover"]').popover('dispose');
+			$("#home-btn").popover({
+				sanitize: false,
+				placement: 'bottom',
+				html: true,
+				content: function () {
+					return $('#home-content').html();
+				}
+			});
+			$("#home-btn").popover('toggle');
 
 	});
 	$("#addRequestComment").click(function () {
@@ -2023,8 +2023,21 @@ $(function () {
 		});
 	})
 
-	$(".save-item").off('click').on("click", function (e) {
+	//$('body').on('click', '.callIndexPartial', function () {
+	//	var url = $(this).attr('url');
+	//	$.ajax({
+	//		async: true,
+	//		url: url,
+	//		type: 'GET',
+	//		cache: true,
+	//		success: function (data) {
+	//			$('.index-partial').html(data);
+	//		}
+	//	});
+	//});
+	$(".save-item").click(function (e) {
 		e.preventDefault();
+		console.log('save-item-click')
 		var url = "";
 		if ($(this).hasClass("side-menu")) {
 			url = $(this).parent("a").attr("href");
@@ -2050,20 +2063,6 @@ $(function () {
 		});
 
 	})
-
-	//$('body').on('click', '.callIndexPartial', function () {
-	//	var url = $(this).attr('url');
-	//	$.ajax({
-	//		async: true,
-	//		url: url,
-	//		type: 'GET',
-	//		cache: true,
-	//		success: function (data) {
-	//			$('.index-partial').html(data);
-	//		}
-	//	});
-	//});
-
 
 
 
