@@ -828,8 +828,7 @@ $(function () {
 		$("#user-image").attr("src", "/" + imgPath);
 		$(".userImage i").hide();
 
-		$('.modal.userImageModal').remove();
-		$('.modal-backdrop').remove();
+		$.fn.CloseModal('user-image');
 	});
 
 	$("#InvoiceImage").on("change", function () {
@@ -1284,20 +1283,13 @@ $(function () {
 
 	$.fn.CallModal2 = function (url) {
 		console.log("in call modal2, url: " + url);
-		$(".userImageModal").replaceWith('');
 		$.ajax({
 			async: true,
 			url: url,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				var modal = $(data);
-				$('body').append(modal);
-				$(".userImageModal").modal({
-					backdrop: false,
-					keyboard: true,
-				});
-				$(".userImageModal").modal('show');
+				$.fn.OpenModal('userImageModal', 'user-image', data)
 			}
 		});
 	};
@@ -1772,12 +1764,13 @@ $(function () {
 				success: function (data) {
 					$("#loading").hide();
 					$.fn.OpenModal('confirm-exit-modal', 'confirm-exit', data)
-					$(".modal-open-state").attr("text", "open");
+					//$(".modal-open-state").attr("text", "open");
 				}
 
 			});
 		}
 		else {
+			console.log('close edit')
 			$.fn.CloseModal("edit-item");
         }
 	})
