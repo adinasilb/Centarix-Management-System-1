@@ -28,7 +28,7 @@
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
 		var $isEdittable = $('.active-document-modal.withinDocModal').data("val");
-		alert($isEdittable)
+		//alert($isEdittable)
 		var $showSwitch =  $('.active-document-modal.withinDocModal').attr("showSwitch");
 		console.log("url : " + url);
 		var formData = new FormData($(".documentModalForm")[0]);
