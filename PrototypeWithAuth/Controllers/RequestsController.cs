@@ -1931,7 +1931,7 @@ namespace PrototypeWithAuth.Controllers
                     message.Subject = "Order from Centarix to " + vendorName;
 
                     //body
-                    builder.TextBody = @"Please see attached order" + "\n" + "Thank you";
+                    builder.TextBody = @"Please see attached order." + "\n" + "Thank you.";
                     builder.Attachments.Add(uploadFile);
 
                     message.Body = builder.ToMessageBody();
@@ -2177,7 +2177,7 @@ namespace PrototypeWithAuth.Controllers
                 message.Subject = "Order from Centarix to " + vendorName;
 
                 //body
-                builder.TextBody = @"Please see attached order" + "\n" + "Thank you";
+                builder.TextBody = @"Please see attached order." + "\n" + "Thank you.";
                 builder.Attachments.Add(uploadFile);
 
                 message.Body = builder.ToMessageBody();
