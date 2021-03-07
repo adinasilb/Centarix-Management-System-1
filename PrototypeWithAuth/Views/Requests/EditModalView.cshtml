@@ -28,6 +28,7 @@
 
         color = "oper-background-color";
     }
+    var request = Model.Requests.FirstOrDefault();
 }
 <div class="modal modal-view right fader on-form-modal @form editModal" aria-labelledby="Request" id="myModal" data-backdrop="false">
 
@@ -38,7 +39,7 @@
 
             <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
-                @Html.HiddenFor(model => model.Request.ParentRequest.ApplicationUserID)
+                @Html.HiddenFor(model => model.Requests.FirstOrDefault().ParentRequest.ApplicationUserID)
                 <input type="hidden" text="close" class="modal-open-state" />
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
@@ -46,12 +47,12 @@
                 @Html.HiddenFor(model => model.RequestStatusID)
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
                 @*Requests search view model*@
-                @Html.HiddenFor(model => model.Request.ApplicationUserCreatorID)
-                @Html.HiddenFor(model => model.Request.ApplicationUserReceiverID)
-                @Html.HiddenFor(model => model.Request.CreationDate)
-                <input type="hidden" asp-for="@Model.Request.RequestID" />
-                <input type="hidden" asp-for="@Model.Request.ProductID" />
-                <input type="hidden" value="@Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
+                @Html.HiddenFor(model => model.Requests.FirstOrDefault().ApplicationUserCreatorID)
+                @Html.HiddenFor(model => model.Requests.FirstOrDefault().ApplicationUserReceiverID)
+                @Html.HiddenFor(model => model.Requests.FirstOrDefault().CreationDate)
+                <input type="hidden" asp-for="@request.RequestID" />
+                <input type="hidden" asp-for="@request.ProductID" />
+                <input type="hidden" value="@request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
 
                 <!-- Modal Header -->
                 <div class="new-modal-header modal-line-1-header-with-back modal-sides">
@@ -68,9 +69,9 @@
                     </div>
                     <div class="row modal-title-line justify-content-between">
                         @*<div class="col-md-2 px-0">*@
-                        @if (Model.Request.Product.ProductSubcategory.ImageURL != null)
+                        @if (request.Product.ProductSubcategory.ImageURL != null)
                         {
-                            <img src="@Model.Request.Product.ProductSubcategory.ImageURL" class="top-modal-image" alt="Alternate Text" width="75" />
+                            <img src="@request.Product.ProductSubcategory.ImageURL" class="top-modal-image" alt="Alternate Text" width="75" />
                         }
                         else
                         {
@@ -78,14 +79,14 @@
                         }
                         @*</div>*@
                         <div class="modal-product-title" @*style="width: 80%;"*@>
-                            <input asp-for="Request.Product.ProductName" class="form-control-plaintext heading-1 border-bottom mark-readonly name" disabled />
-                            <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
+                            <input asp-for="@request.Product.ProductName" class="form-control-plaintext heading-1 border-bottom mark-readonly name" disabled />
+                            <span asp-validation-for="@request.Product.ProductName" class="text-danger-centarix"></span>
 
                         </div>
-                        @if (Model.Request.RequestStatusID != 7)
+                        @if (Model.Requests.FirstOrDefault().RequestStatusID != 7)
                         {
                             <div class="d-flex align-items-center">
-                                <button type="button" value="@Model.Request.RequestID" class="load-reorder-details custom-button custom-button-font @color m-auto">Request</button>
+                                <button type="button" value="@Model.Requests.FirstOrDefault().RequestID" class="load-reorder-details custom-button custom-button-font @color m-auto">Request</button>
                             </div>
                         }
 
@@ -95,17 +96,17 @@
                             <div class="container-fluid div-tabs text-center pl-0">
                                 <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
                                     <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link @tabClass next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                                    @if (Model.Request.RequestStatusID == 3 || Model.Request.RequestStatusID == 7)
+                                    @if (@request.RequestStatusID == 3 || @request.RequestStatusID == 7)
                                     {
                                         <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link @tabClass next-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
                                     }
-                                    @if (Model.Request.RequestStatusID != 7)
+                                    @if (@request.RequestStatusID != 7)
                                     {
                                         <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link @tabClass next-tab"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
                                     }
                                     <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link @tabClass documents-tab next-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
                                     <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link @tabClass next-tab"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>
-                                    @if (Model.Request.RequestStatusID != 7)
+                                    @if (@request.RequestStatusID != 7)
                                     {
                                         <li class="nav-item icon @summary"><a data-toggle="tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
                                     }
@@ -118,21 +119,21 @@
 
                 <!-- Modal body -->
                 <div class="new-modal-body edit-modal-outer-body ">
-                    <input type="hidden" class="old-name" value="@Model.Request.Product.ProductName" />
+                    <input type="hidden" class="old-name" value="@request.Product.ProductName" />
                     <div class="container-fluid edit-modal-body box-shadow orders partial-div" style="background: #FFF; border: 2px solid #EAEAEB;">
                         @{await Html.RenderPartialAsync("ItemData", Model); }
                     </div>
                 </div>
                 @*Begin Hidden Inputs:*@
                 @*@Html.HiddenFor(vm => vm.Request.ProductID)*@
-                @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID)
-                @Html.HiddenFor(vm => vm.Request.RequestStatusID)
-                @Html.HiddenFor(vm => vm.Request.ParentRequestID)
-                @Html.HiddenFor(vm => vm.Request.ParentQuoteID)
+                @Html.HiddenFor(vm => vm.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategoryID)
+                @Html.HiddenFor(vm => vm.Requests.FirstOrDefault().RequestStatusID)
+                @Html.HiddenFor(vm => vm.Requests.FirstOrDefault().ParentRequestID)
+                @Html.HiddenFor(vm => vm.Requests.FirstOrDefault().ParentQuoteID)
                 @*End Hidden Inputs*@
 
                 @*Hidden Input for Product Subcategory*@
-                @Html.HiddenFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+                @Html.HiddenFor(vm => vm.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
             </form>
 
         </div>

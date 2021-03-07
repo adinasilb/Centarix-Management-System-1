@@ -36,7 +36,7 @@
                     hasFileClass = "hasFile";
                 }
             }
-            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Request.RequestID" id="@folder.FolderName.ToString()" data-val="@true">
+            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Requests.FirstOrDefault().RequestID" id="@folder.FolderName.ToString()" data-val="@true">
                 <div class="card document-border @hasFileClass ">
                     <div class="document-card text-center">
                         <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
@@ -66,7 +66,7 @@
                     filterClass = "order-inv-filter";
                 }
             }
-            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Request.RequestID" id="@folder.FolderName.ToString()" data-val="@true">
+            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Requests.FirstOrDefault().RequestID" id="@folder.FolderName.ToString()" data-val="@true">
                 <div class="card document-border ">
                     <div class="document-card text-center">
                         <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>

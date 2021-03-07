@@ -20,11 +20,11 @@
         @Html.HiddenFor(model => model.PageType)
         @Html.HiddenFor(model => model.SectionType)
         @Html.HiddenFor(model => model.IsProprietary)
-        <input type="hidden" asp-for="@Model.Request.RequestID" />
+        <input type="hidden" asp-for="@Model.Requests.FirstOrDefault().RequestID" />
         @{
-            if (Model.Request.Product.ProductSubcategory.ParentCategory?.ParentCategoryDescriptionEnum != null)
+            if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory?.ParentCategoryDescriptionEnum != null)
             {
-                <input type="hidden" value="@(Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum)" id="categoryDescription" />
+                <input type="hidden" value="@(Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum)" id="categoryDescription" />
             }
         }
         @*<input type="hidden" value="@Model.ParentCategory.ParentCategoryID" id="categoryId" />*@
@@ -38,16 +38,16 @@
                 @if (Model.SectionType != AppUtility.MenuItems.Operations)
                 {
                     <div class="heading-1 modal-title col-8">
-                <textarea asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
+                        <textarea asp-for="Requests.FirstOrDefault().Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
                     </div>
-                    <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
+                    <span asp-validation-for="Requests.FirstOrDefault().Product.ProductName" class="text-danger-centarix"></span>
                 }
                 else
                 {
                     <div class="col-md-4 ">
                         <div class="form-group">
                             @Html.DropDownListFor(
-                vm => vm.Request.Product.VendorID,
+                vm => vm.Requests.FirstOrDefault().Product.VendorID,
                 new SelectList(
                 Model.Vendors,
                 dataValueField: "VendorID",
@@ -56,20 +56,26 @@
                 "Select a Vendor",
                 htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext  " + " ", @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
                 )
-                            <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
+                            <span asp-validation-for="Requests.FirstOrDefault().Product.VendorID" class="text-danger-centarix"></span>
                         </div>
                     </div>
                     <input class="" type="hidden" value="" id="vendor-primary-email" />
                     <div class="col-md-4">
                         <div class="form-group">
-                            <input asp-for="Request.Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
+                            <input asp-for="Requests.FirstOrDefault().Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
                         </div>
                     </div>
                 }
-                @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary || Model.SectionType == AppUtility.MenuItems.Operations)
+                @if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
                 {
                     <div class="d-flex align-items-center col-4">
                         <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.Save" name="OrderType" asp-route-RequestStatusID="7" asp-route-PageType="RequestSummary" asp-route-SectionType="Requests" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit">Save</button>
+                    </div>
+                }
+                @if (Model.SectionType == AppUtility.MenuItems.Operations)
+                {
+                    <div class="d-flex align-items-center col-4">
+                        <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.SaveOperations" name="OrderType" asp-route-RequestStatusID="2" asp-route-PageType="OperationsRequest" asp-route-SectionType="Operations" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit">Save</button>
                     </div>
                 }
             </div>
@@ -136,7 +142,6 @@
             console.log("form ready")
             $(".top-menu").addClass("save-item");
             $(".side-menu").addClass("save-item");
-            $("#vendorList").materialSelect();
         })
         $('.item-name').keyup(function (e) {
             var rows = Math.ceil($('.item-name').val().length / 50);

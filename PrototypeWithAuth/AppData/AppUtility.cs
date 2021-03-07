@@ -89,7 +89,7 @@ namespace PrototypeWithAuth.AppData
         public enum CategoryTypeEnum { Operations, Lab }
         public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
         public enum RequestModalType { Create, Edit, Summary}
-        public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save}
+        public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations}
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave}
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {

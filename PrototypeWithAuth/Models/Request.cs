@@ -94,7 +94,7 @@ namespace PrototypeWithAuth.Models
 
         public string? NoteToSupplier { get; set; }
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
-        public AppUtility.OrderTypeEnum OrderType {get; set;}
+        public string OrderType {get; set;}
 
 
 

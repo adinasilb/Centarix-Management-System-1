@@ -39,8 +39,9 @@ $(function () {
 	});
 
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
-	$("#parentlist").off("change").on("change", function () {
-		$.fn.parentListChange();
+	$("#parentlist, .parentlist").off("change").on("change", function () {
+		
+		$.fn.parentListChange($(this).val());
 	});
 
 	//$('.modal').off("change").on('change', '#parentlist', function () {
@@ -48,24 +49,36 @@ $(function () {
 	//});
 
 
-	$.fn.parentListChange = function () {
+	$.fn.parentListChange = function (value) {
 		console.log("in parent list");
-		var parentCategoryId = $("#parentlist").val();
+		var parentCategoryId = value;
+		var sublistSelector = "#sublist";
+		var requestIndex = "";
+		if ($("#masterSectionType").val() == "Operations") {
+			console.log("operations")
+			//parentCategoryId = $(".parentlist").val();
+			requestIndex = $("#requestIndex").val();
+			sublistSelector = "select.mdb-select" + requestIndex
+		}
+		else {
+			//parentCategoryId = $("#parentlist").val();
+        }
 		console.log("parentcategoryid: " + parentCategoryId);
 		var url = "/Requests/GetSubCategoryList";
 		console.log("url: " + url);
 
 		$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
 			console.log(" in json")
+			console.log($(sublistSelector).data())
 			var firstitem1 = '<option value=""> Select Subcategory</option>';
-			$("#sublist").empty();
-			$("#sublist").append(firstitem1);
+			$(sublistSelector).empty();
+			$(sublistSelector).append(firstitem1);
 
 			$.each(data, function (i, subCategory) {
 				var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
-				$("#sublist").append(newitem1);
+				$(sublistSelector).append(newitem1);
 			});
-			$("#sublist").materialSelect();
+			$(sublistSelector).materialSelect();
 			return false;
 		});
 	};
