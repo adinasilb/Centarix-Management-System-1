@@ -61,6 +61,8 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "For Clarification")]
             ForClarification,
             Add,  AwaitingApproval,
+            [Display(Name = "Specify Payment")]
+            SpecifyPayment
         }
         public enum FilterEnum {None, Price, Category, Amount}
         public enum YearlyMonthlyEnum { Yearly, Monthly }
@@ -76,7 +78,7 @@ namespace PrototypeWithAuth.AppData
             //Share,
             // Order,
             [Display(Name = "Monthly Payment")]
-            MonthlyPayment = 1,
+            MonthlyPayment = 2,
             [Display(Name = "Pay Now")]
             PayNow = 3,
             [Display(Name = "Pay Later")]
