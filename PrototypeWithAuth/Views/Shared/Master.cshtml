@@ -509,6 +509,9 @@
                         case "quote":
                             $.fn.OpenModal('modal', 'edit-quote', modal)
                             break;
+                        case "locations": case "addlocation":
+                            $.fn.OpenModal('modal', 'add-location', modal)
+                            break;
                     }
 
                 },
@@ -834,7 +837,6 @@
             e.stopPropagation();
             var $itemurl = "/Locations/AddLocation";
             var $modal = $(".location-modal-view");
-            $('.modal').replaceWith('');
             $.fn.CallPageRequest($itemurl, "locations");
             return false;
         });
