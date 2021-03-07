@@ -208,7 +208,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             requestItemViewModel.Request.ParentRequest.OrderNumber = lastParentRequestOrderNum + 1;
                             requestItemViewModel.Request.ParentRequest.OrderDate = DateTime.Now;
-                            requestItemViewModel.Request.ParentRequest.WithoutOrder = true;
+                           // requestItemViewModel.Request.ParentRequest.WithoutOrder = true;
                             requestItemViewModel.Request.RequestStatusID = 2;
                             requestItemViewModel.RequestStatusID = 2;
                             requestItemViewModel.Request.ParentQuote = null;

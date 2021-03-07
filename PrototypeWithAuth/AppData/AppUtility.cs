@@ -242,19 +242,6 @@ namespace PrototypeWithAuth.AppData
             return false;
         }
 
-        public static List<SelectListItem> TermsSelectList()
-        {
-            List<SelectListItem> termsSelectList = new List<SelectListItem>()
-            {
-                new SelectListItem() { Value="-1", Text="Paid" },
-                new SelectListItem() { Value="30", Text="30" },
-                new SelectListItem() { Value="45", Text="45" },
-                new SelectListItem() { Value="60", Text="60" }
-            };
-            //SelectList termsSelectList = new SelectList(dictSelectList);
-            return termsSelectList;
-        }
-
         public static string GetLastFiles(string longFileName, int amountOfFiles)
         {
             bool lastfound = false;

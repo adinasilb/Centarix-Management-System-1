@@ -3447,7 +3447,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
                 .Where(r => r.InvoiceID != null)
-                .Where(r => r.ParentRequest.WithoutOrder == false)
+                //.Where(r => r.ParentRequest.WithoutOrder == false)
                 .Where(r => r.IsDeleted == false);
 
             var payNowList = requestsList
@@ -3526,7 +3526,6 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
-                .Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
                 .Where(r => r.IsDeleted == false).AsQueryable();
             switch (accountingNotificationsEnum)
             {
@@ -3608,7 +3607,7 @@ namespace PrototypeWithAuth.Controllers
             if (vendorid != null)
             {
                 Requests = queryableRequests //NOTE THIS QUERY MUST MATCH ABOVE QUERY
-                    .Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
+                    //.Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
                     .Where(r => r.InvoiceID == null)
                     .Where(r => r.Product.VendorID == vendorid).ToList();
             }
@@ -4177,17 +4176,12 @@ namespace PrototypeWithAuth.Controllers
                 HttpContext.Session.SetObject(requestName, req);
                 requestNum++;
             }
-
+            var termsList = new List<SelectListItem>() { };
+            await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID+"", Text = ps.PaymentStatusDescription }));
             TermsViewModel termsViewModel = new TermsViewModel()
             {
                 ParentRequest = new ParentRequest(),
-                TermsList = new List<SelectListItem>()
-                {
-                    new SelectListItem{ Text="Pay Now", Value=AppUtility.TermsModalEnum.PayNow.ToString()},
-                    new SelectListItem{ Text="+30", Value=AppUtility.TermsModalEnum.PayWithInMonth.ToString()},
-                    new SelectListItem{ Text="Installments", Value=AppUtility.TermsModalEnum.Installments.ToString()},
-                    new SelectListItem{ Text="Paid", Value=AppUtility.TermsModalEnum.Paid.ToString()}
-                }
+                TermsList = termsList
             };
             termsViewModel.RequestIndexObject = requestIndexObject;
             return PartialView(termsViewModel);
@@ -4217,27 +4211,10 @@ namespace PrototypeWithAuth.Controllers
                 }
 
 
-                var paymentStatusID = 0;
-
-                switch (termsViewModel.Terms)
-                {
-                    case AppUtility.TermsModalEnum.PayNow:
-                        paymentStatusID = 3;
-                        break;
-                    case AppUtility.TermsModalEnum.PayWithInMonth:
-                        paymentStatusID = 1;
-                        break;
-                    case AppUtility.TermsModalEnum.Installments:
-                        paymentStatusID = 5;
-                        break;
-                    case AppUtility.TermsModalEnum.Paid:
-                        paymentStatusID = 6;
-                        break;
-                }
                 foreach (var req in requests)
                 {
                     req.ParentRequest = termsViewModel.ParentRequest;
-                    req.PaymentStatusID = paymentStatusID;
+                    req.PaymentStatusID = termsViewModel.SelectedTerm;
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
                     HttpContext.Session.SetObject(requestName, req);
                     RequestNum++;

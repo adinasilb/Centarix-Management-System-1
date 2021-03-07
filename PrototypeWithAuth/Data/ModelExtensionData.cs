@@ -15,11 +15,6 @@ namespace PrototypeWithAuth.Data
         public static void Seed(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PaymentStatus>().HasData(
-                //new PaymentStatus
-                //{
-                //    PaymentStatusID = 1,
-                //    PaymentStatusDescription = "No Invoice" //TODO: should this be renamed ordered or will none cover all bases?
-                //},
                 new PaymentStatus
                 {
                     PaymentStatusID = 2,
@@ -40,11 +35,6 @@ namespace PrototypeWithAuth.Data
                     PaymentStatusID = 5,
                     PaymentStatusDescription = "Installments"
                 },
-                new PaymentStatus
-                {
-                    PaymentStatusID = 6,
-                    PaymentStatusDescription = "Paid"
-                },
                  new PaymentStatus
                  {
                      PaymentStatusID = 7,
@@ -55,7 +45,6 @@ namespace PrototypeWithAuth.Data
                     PaymentStatusID = 8,
                     PaymentStatusDescription = "Specify Payment Later"
                 }
-
             );
 
             modelBuilder.Entity<CategoryType>().HasData(
