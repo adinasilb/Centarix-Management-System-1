@@ -1860,7 +1860,14 @@ namespace PrototypeWithAuth.Controllers
                                 payments.Add(payment);
                             }
                         }
-                     
+
+                        if (request.PaymentStatusID == 7)
+                        {
+                            var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + 1;
+                            var payment = HttpContext.Session.GetObject<Payment>(paymentName);
+                            payment.Request = request;
+                            payments.Add(payment);
+                        }
                     }
                     else
                     {
@@ -2062,7 +2069,6 @@ namespace PrototypeWithAuth.Controllers
                                         _context.Update(requestNotification);
                                     }
                                     await _context.SaveChangesAsync();
-
                                 }
                                 await transaction.CommitAsync();
 
@@ -3491,7 +3497,7 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.SidebarEnum.StandingOrders:
                     requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0); ;
+                .Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
                     break;
                 case AppUtility.SidebarEnum.SpecifyPayment:
                     requestsList = requestsList
