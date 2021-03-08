@@ -20,11 +20,11 @@
         @Html.HiddenFor(model => model.PageType)
         @Html.HiddenFor(model => model.SectionType)
         @Html.HiddenFor(model => model.IsProprietary)
-        <input type="hidden" asp-for="@Model.Requests.FirstOrDefault().RequestID" />
+        <input type="hidden" asp-for="@Model.Requests[0].RequestID" />
         @{
-            if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory?.ParentCategoryDescriptionEnum != null)
+            if (Model.Requests[0].Product.ProductSubcategory.ParentCategory?.ParentCategoryDescriptionEnum != null)
             {
-                <input type="hidden" value="@(Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum)" id="categoryDescription" />
+                <input type="hidden" value="@(Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum)" id="categoryDescription" />
             }
         }
         @*<input type="hidden" value="@Model.ParentCategory.ParentCategoryID" id="categoryId" />*@
@@ -38,16 +38,16 @@
                 @if (Model.SectionType != AppUtility.MenuItems.Operations)
                 {
                     <div class="heading-1 modal-title col-8">
-                        <textarea asp-for="Requests.FirstOrDefault().Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
+                        <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
                     </div>
-                    <span asp-validation-for="Requests.FirstOrDefault().Product.ProductName" class="text-danger-centarix"></span>
+                    <span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
                 }
                 else
                 {
                     <div class="col-md-4 ">
                         <div class="form-group">
                             @Html.DropDownListFor(
-                vm => vm.Requests.FirstOrDefault().Product.VendorID,
+                vm => vm.Requests[0].Product.VendorID,
                 new SelectList(
                 Model.Vendors,
                 dataValueField: "VendorID",
@@ -56,13 +56,13 @@
                 "Select a Vendor",
                 htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext  " + " ", @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
                 )
-                            <span asp-validation-for="Requests.FirstOrDefault().Product.VendorID" class="text-danger-centarix"></span>
+                            <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
                         </div>
                     </div>
                     <input class="" type="hidden" value="" id="vendor-primary-email" />
                     <div class="col-md-4">
                         <div class="form-group">
-                            <input asp-for="Requests.FirstOrDefault().Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
+                            <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
                         </div>
                     </div>
                 }
@@ -75,7 +75,7 @@
                 @if (Model.SectionType == AppUtility.MenuItems.Operations)
                 {
                     <div class="d-flex align-items-center col-4">
-                        <button type="submit" asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.SaveOperations" name="OrderType" asp-route-RequestStatusID="2" asp-route-PageType="OperationsRequest" asp-route-SectionType="Operations" asp-route-SidebarType="List" class=" custom-button custom-button-font @bcColor m-auto complete-order disabled-submit">Save</button>
+                        <button type="submit" @*asp-action="AddItemView" value="@AppUtility.OrderTypeEnum.SaveOperations" name="OrderType" asp-route-RequestStatusID="2" asp-route-PageType="OperationsRequest" asp-route-SectionType="Operations" asp-route-SidebarType="List"*@ class=" custom-button custom-button-font @bcColor m-auto complete-order save-operations-item disabled-submit">Save</button>
                     </div>
                 }
             </div>
@@ -149,4 +149,3 @@
             $(this).attr('rows', rows);
         });
     </script>
-    <script src="~/js/CreateItem.js"></script>

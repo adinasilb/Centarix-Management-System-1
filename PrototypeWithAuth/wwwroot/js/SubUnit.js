@@ -525,7 +525,7 @@ $(function () {
 	});
 
 	$("#sum-dollars").change(function (e) {
-		alert("in change sum")
+		//alert("in change sum")
 		$.fn.CalculateSumPlusVat();
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();

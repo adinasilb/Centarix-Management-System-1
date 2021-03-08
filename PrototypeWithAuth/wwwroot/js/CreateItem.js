@@ -19,9 +19,9 @@
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
             console.log(...formData)
-			$.ajax({
-				processData: false,
+			$.ajax({processData: false,
 				contentType: false,
+				
                 async: true,
                 url: "/Requests/CreateItemTabs",
                 type: 'GET',
@@ -41,45 +41,47 @@
         return false;
     });
     $("#sublist").off("change").on("change", function (e) {
-        console.log("subcategory change")
-        var subcategoryID = $("#sublist").val()
-        var pageType = $("#masterPageType").val()
-        var itemName = $("#Request_Product_ProductName").val()
-        var isRequestQuote = $(".isRequest").is(":checked")
-        console.log(isRequestQuote)
-        console.log("subcategory "+subcategoryID)
-        if (subcategoryID != "") {
-            $.ajax({
-                //processData: true,
-                //contentType: true,
-                async: true,
-                url: "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote,
-                type: 'GET',
-                cache: false,
-                //data: formData,
-                success: function (data) {
-                    $(".outer-partial").html(data);
-                      $(".mdb-select").materialSelect();
-                   
-                    $("#loading").hide();
-                    var category = $("#categoryDescription").val();
-                    console.log("category " + category)
-                    $("." + category).removeClass("d-none");
-                    $("." + category).prop("disabled", false);
-                    $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
-                    $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
-                    $(".proprietryHidenCategory").attr("disabled", false);
-                    console.log($("#requestQuoteValue").attr("value"))
-                if ($("#requestQuoteValue").val()=="true") {
-                        console.log("request")
-                        $(".requestPriceQuote").addClass("d-none");
-                        $(".requestPriceQuote").attr("disabled", true)
+        if ($('#masterSectionType').val() != "Operations") {
+            console.log("subcategory change")
+            var subcategoryID = $("#sublist").val()
+            var pageType = $("#masterPageType").val()
+            var itemName = $("#Requests_0__Product_ProductName").val()
+            var isRequestQuote = $(".isRequest").is(":checked")
+            console.log(isRequestQuote)
+            console.log("subcategory " + subcategoryID)
+            if (subcategoryID != "") {
+                $.ajax({
+                    //processData: true,
+                    //contentType: true,
+                    async: true,
+                    url: "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote,
+                    type: 'GET',
+                    cache: false,
+                    //data: formData,
+                    success: function (data) {
+                        $(".outer-partial").html(data);
+                        $(".mdb-select").materialSelect();
+
+                        $("#loading").hide();
+                        var category = $("#categoryDescription").val();
+                        console.log("category " + category)
+                        $("." + category).removeClass("d-none");
+                        $("." + category).prop("disabled", false);
+                        $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
+                        $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
+                        $(".proprietryHidenCategory").attr("disabled", false);
+                        console.log($("#requestQuoteValue").attr("value"))
+                        if ($("#requestQuoteValue").val() == "true") {
+                            console.log("request")
+                            $(".requestPriceQuote").addClass("d-none");
+                            $(".requestPriceQuote").attr("disabled", true)
                         }
-                }
-                else {
-                    $('.requestQuoteHide').addClass("d-none");
-                }
-            })
+                        else {
+                            $('.requestQuoteHide').addClass("d-none");
+                        }
+                    }
+                })
+            }
         }
     })
    
@@ -176,5 +178,22 @@
             }
         });
 
+    })
+    $(".save-operations-item").off('click').on('click', function (e) {
+        e.preventDefault();
+        console.log("saveOperations")
+        var formData = new FormData($("#myForm")[0]);
+        $.ajax({
+            processData: false,
+            contentType: false,
+            async: true,
+            url: "/Requests/AddItemView?OrderType=SaveOperations",
+            type: 'POST',
+            data: formData,
+            cache: false,
+            success: function (data) {
+                $.fn.OpenModal('termsModal', 'terms', data)
+            }
+        });
     })
 })

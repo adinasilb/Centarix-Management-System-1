@@ -13,7 +13,7 @@
         color = "lab-man-color";
     }
     TempData.Keep();
-    if (Model.RequestItemViewModel.Request.Currency == "USD")
+    if (Model.RequestItemViewModel.Requests[0].Currency == "USD")
     {
         dollarDisabled = "";
         shekelDisabled = "disabled disabled-text";

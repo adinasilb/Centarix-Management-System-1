@@ -3,12 +3,12 @@
 
 @{
     char currency = '₪';
- if (Model.Requests.Count() == 1 && Model.Requests.FirstOrDefault().Currency == AppUtility.CurrencyEnum.USD.ToString())
+ if (Model.Requests.Count() == 1 && Model.Requests[0].Currency == AppUtility.CurrencyEnum.USD.ToString())
  {
      currency = '$';
  }
  var colspan = 1;
-@if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+@if (Model.Requests[0].Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
 {
 
     colspan = 4;
@@ -50,10 +50,10 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
     <div class="row">
         <div class="col-4">
             <div class="vendor-info">
-                <span class="heading-1">@Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</span><br>
-                <span>ID: @Model.Requests.FirstOrDefault().Product.Vendor.VendorBuisnessID</span><br>
-                <span>@Model.Requests.FirstOrDefault().Product.Vendor.VendorCity</span><br>
-                <span>Tel: @Model.Requests.FirstOrDefault().Product.Vendor.VendorTelephone</span>
+                <span class="heading-1">@Model.Requests[0].Product.Vendor.VendorEnName</span><br>
+                <span>ID: @Model.Requests[0].Product.Vendor.VendorBuisnessID</span><br>
+                <span>@Model.Requests[0].Product.Vendor.VendorCity</span><br>
+                <span>Tel: @Model.Requests[0].Product.Vendor.VendorTelephone</span>
             </div>
         </div>
         <div class="col-6 offset-2">
@@ -82,7 +82,7 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
         <table class="table confirm-table">
             <thead style="background-color: #D0001C; color: #ffffff;">
                 <tr>
-                    @if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                    @if (Model.Requests[0].Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     {
                         <th style="width:30%;">Items</th>
                         <th style="width:15%;">SKU</th>
@@ -126,7 +126,7 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                 @{ double total = Model.Requests.Sum(r => r.Cost ?? 0);
                     if (currency == '$')
                     {
-                        total = total / Model.Requests.FirstOrDefault().ExchangeRate;
+                        total = total / Model.Requests[0].ExchangeRate;
                     }
                     double vat = total * .17;
                     double totalWithVat = total + vat;}

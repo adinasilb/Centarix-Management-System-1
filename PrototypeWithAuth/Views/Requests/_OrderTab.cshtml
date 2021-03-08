@@ -115,6 +115,7 @@
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
+            console.log(...formData);
             var orderType = $(this).val();
             $.ajax({
                 contentType: false,

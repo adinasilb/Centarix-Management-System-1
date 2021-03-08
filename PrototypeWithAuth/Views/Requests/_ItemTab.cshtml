@@ -109,6 +109,7 @@
              ), "Select Category",
              new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category" })
             }
+            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
         </div>
     </div>
@@ -177,7 +178,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 <div class="form-group">
                     @* IN MIDDLE *@
                     <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                    <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom @companyIDCategories" readonly />
+                    <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom @companyIDCategories" disabled/>
                     @*don't need a validation here because you it's not saving*@
                 </div>
             </div>

@@ -916,35 +916,40 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 RemoveRequestSessions();
-                //why do we need this here?
-                //requestItemViewModel.Request.Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Request.Product.VendorID);
-                //requestItemViewModel.Request.Product.ProductSubcategory = _context.ProductSubcategories.Include(ps => ps.ParentCategory).FirstOrDefault(ps => ps.ProductSubcategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ProductSubcategoryID);
 
+                requestItemViewModel.Requests.FirstOrDefault().Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
+                var categoryType = 1;
+                if(OrderType == AppUtility.OrderTypeEnum.SaveOperations)
+                {
+                    categoryType = 2;
+                }
+                var productSubcategories = _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ParentCategory.CategoryTypeID == categoryType).ToList();
                 //in case we need to return to the modal view
                 //requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
 
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                for (int i = 0; i < requestItemViewModel.Requests.Count; i++)
+                foreach (var request in requestItemViewModel.Requests)
                 {
-                    requestItemViewModel.Requests[i].ApplicationUserCreatorID = currentUser.Id;
-                    requestItemViewModel.Requests[i].CreationDate = DateTime.Now;
+                    request.ApplicationUserCreatorID = currentUser.Id;
+
+                    request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
+                    request.CreationDate = DateTime.Now;
                     var isInBudget = false;
-                    if (!requestItemViewModel.Requests[i].Product.ProductSubcategory.ParentCategory.isProprietary)//is proprietry
+                    if (!request.Product.ProductSubcategory.ParentCategory.isProprietary)//is proprietry
                     {
-                        if (requestItemViewModel.Requests[i].Currency == null)
+                        if (request.Currency == null)
                         {
-                            requestItemViewModel.Requests[i].Currency = AppUtility.CurrencyEnum.NIS.ToString();
+                            request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
                         }
-                        isInBudget = checkIfInBudget(requestItemViewModel.Requests[i]);
+                        isInBudget = checkIfInBudget(request);
                     }
 
                     using (var transaction = _context.Database.BeginTransaction())
                     {
                         try
                         {
-
-                            await AddItemAccordingToOrderType(requestItemViewModel.Requests[i], OrderType, isInBudget);
+                            await AddItemAccordingToOrderType(request, OrderType, isInBudget);
                             var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                             var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
 
@@ -958,7 +963,7 @@ namespace PrototypeWithAuth.Controllers
                                         //save the new comment
                                         comment.ApplicationUserID = currentUser.Id;
 
-                                        comment.RequestID = requestItemViewModel.Requests[i].RequestID;
+                                        comment.RequestID = request.RequestID;
 
                                         if (!isSavedUsingSession)
                                         {
@@ -979,13 +984,13 @@ namespace PrototypeWithAuth.Controllers
                                 await _context.SaveChangesAsync();
                                 if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                                 {
-                                    await SaveLocations(receivedModalVisualViewModel, requestItemViewModel.Requests[i]);
+                                    await SaveLocations(receivedModalVisualViewModel, request);
                                 }
-                                MoveDocumentsOutOfTempFolder(requestItemViewModel.Requests[i]);
+                                MoveDocumentsOutOfTempFolder(request);
                                 await transaction.CommitAsync();
                                 base.RemoveRequestSessions();
                             }
-                            else
+                            else if (OrderType!= AppUtility.OrderTypeEnum.SaveOperations)
                             {
                                 var emailNum = 1;
                                 foreach (var e in requestItemViewModel.EmailAddresses)
@@ -1292,7 +1297,8 @@ namespace PrototypeWithAuth.Controllers
                 .Where(r => r.Request.RequestID == id).ToListAsync(),
                 CommentTypes = commentTypes,
                 SectionType = SectionType,
-                RequestsByProduct = requestsByProduct
+                RequestsByProduct = requestsByProduct,
+                Requests = new List<Request>()
             };
             if (isEditable)
             {
@@ -1304,7 +1310,6 @@ namespace PrototypeWithAuth.Controllers
             }
 
             ModalViewType = "Edit";
-
             requestItemViewModel.Requests.Add(request);
 
             //load the correct list of subprojects
@@ -4332,7 +4337,6 @@ namespace PrototypeWithAuth.Controllers
                     HttpContext.Session.SetObject(requestName, req);
                     RequestNum++;
                 }
-
                 return RedirectToAction("ConfirmEmailModal", termsViewModel.RequestIndexObject);
             }
             catch (Exception ex)
