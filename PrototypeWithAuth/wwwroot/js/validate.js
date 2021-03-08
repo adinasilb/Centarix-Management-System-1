@@ -241,7 +241,7 @@ $(function () {
 
 					if($(clickedElement).index() > $(element).parent("li").index())
 					{
-						alert("true")
+						//alert("true")
 						$(element).addClass("prev-tab");
 					}
 
