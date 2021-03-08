@@ -940,7 +940,7 @@ namespace PrototypeWithAuth.Controllers
                     requestItemViewModel.Requests[i].ApplicationUserCreatorID = currentUser.Id;
                     requestItemViewModel.Requests[i].CreationDate = DateTime.Now;
                     var isInBudget = false;
-                    if (requestItemViewModel.Requests[i].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum != AppUtility.ParentCategoryEnum.Proprietary.ToString())//is proprietry
+                    if (!requestItemViewModel.Requests[i].Product.ProductSubcategory.ParentCategory.isProprietary)//is proprietry
                     {
                         if (requestItemViewModel.Requests[i].Currency == null)
                         {
@@ -3452,11 +3452,11 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 var pricePerUnit = request.Cost;
-                if (pricePerUnit > request.ApplicationUserCreator.OperationUnitLimit)
+                if (pricePerUnit > user.OperationUnitLimit)
                 {
                     return false;
                 }
-                if (request.Cost > request.ApplicationUserCreator.OperationOrderLimit)
+                if (request.Cost > user.OperationOrderLimit)
                 {
                     return false;
                 }
@@ -3466,7 +3466,7 @@ namespace PrototypeWithAuth.Controllers
                     .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID)
                     .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
                     .Sum(r => r.Cost);
-                if (monthsSpending + request.Cost > request.ApplicationUserCreator.OperationMonthlyLimit)
+                if (monthsSpending + request.Cost > user.OperationMonthlyLimit)
                 {
                     return false;
                 }

@@ -15,13 +15,14 @@
     var dynamicID = "Requests_" + Model.RequestIndex + "__Product_";
     var dynamicName = "Requests[" + Model.RequestIndex + "].Product.";
     var mdbSelect = "mdb-select" + Model.RequestIndex;
+    var parentSelect = "parent-select" + Model.RequestIndex;
 }
-<input type="hidden" id="requestIndex" value="@Model.RequestIndex" />
+
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
             <label class="control-label">Category</label>
-            <select name="@(dynamicName)ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist">
+            <select name="@(dynamicName)ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect" data-val="@Model.RequestIndex">
                 <option selected class="d-none" value="">Select Category</option>
                 @foreach (var category in Model.ParentCategories)
                 {
@@ -90,10 +91,7 @@
     <input type="hidden" id="Requests_@(Model.RequestIndex)__UnitType" name="Requests.@(Model.RequestIndex).UnitType" value="5" />
 
 </div>
-@if (Model.RequestIndex > 0)
-{
-    <div class="row text-center justify-content-center">
+    <div class="row text-center justify-content-center remove-item-btn d-none">
         <input type="button" value="+ Remove Item" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize remove-item" style="font-size:1rem;" data-val="@Model.RequestIndex" />
     </div>
-}
 

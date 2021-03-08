@@ -167,7 +167,9 @@
                 var newitem = $(data);
                 $('.operations-item-div').append(newitem);
                 $("#addOperationItem").attr('data-val', parseInt(newIndex) + 1);
-                $(".mdb-select"+newIndex).materialSelect();
+                $(".mdb-select" + newIndex).materialSelect();
+                $(".parent-select" + newIndex).materialSelect();
+                $(".remove-item-btn").removeClass("d-none")
             }
         });
 
