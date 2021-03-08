@@ -25,7 +25,7 @@ namespace PrototypeWithAuth.Models
         //public Request Request { get; set; }
         public int RequestID { get; set; }
         public Request Request { get; set; }
-        public int CompanyAccountID { get; set; }
+        public int? CompanyAccountID { get; set; }
         public CompanyAccount CompanyAccount{ get; set; }
         public bool IsDeleted { get; set; }
         public bool IsPaid { get; set; }

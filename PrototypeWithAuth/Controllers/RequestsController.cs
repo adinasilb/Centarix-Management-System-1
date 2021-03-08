@@ -3586,7 +3586,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
               //  .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .Where(r => r.Product.VendorID == vendorid)
-                .Where(r => r.PaymentStatusID == paymentstatusid).ToList();
+                .Where(r => r.PaymentStatusID == paymentstatusid).Where(r=>r.Paid==false).ToList();
             }
 
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
@@ -3605,18 +3605,19 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsPayModal(PaymentsPayModalViewModel paymentsPayModalViewModel)
         {
+            var paymentsList = _context.Payments.Where(p => p.IsPaid == false);
             foreach (Request request in paymentsPayModalViewModel.Requests)
             {
                 Payment payment = new Payment();
                 var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
                 if (request.PaymentStatusID == 7)
                 {
-                    payment = _context.Payments.Where(p => p.IsPaid == false && p.RequestID == request.RequestID).FirstOrDefault();
+                    payment = paymentsList.Where(p => p.RequestID == request.RequestID).FirstOrDefault();
                     _context.Add(new Payment() { PaymentDate = payment.PaymentDate , RequestID = request.RequestID});
                 }
                 else if (request.PaymentStatusID == 5)
                 {
-                    var payments = _context.Payments.Where(p => p.IsPaid == false && p.RequestID == request.RequestID);
+                    var payments = paymentsList.Where(p=> p.RequestID == request.RequestID);
                     var count = payments.Count();
                     payment= payments.OrderBy(p=>p.PaymentDate).FirstOrDefault();
                     if(count<=1)
