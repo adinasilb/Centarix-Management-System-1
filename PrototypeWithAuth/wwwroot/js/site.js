@@ -143,23 +143,6 @@ $(function () {
 	});
 
 
-	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
-	$(".payments-table").on("change", ".paymentType", function (e) {
-		var paymentTypeID = $(this).val();
-		var url = "/CompanyAccounts/GetAccountsByPaymentType";
-		var id = "" + $(this).attr('id');
-		var number = id.substr(12, 1);
-		var newid = "NewPayments_" + number + "__CompanyAccountID";
-		$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
-			var item = "";
-			$("#" + newid).empty();
-			$.each(data, function (i, companyAccount) {
-				item += '<option value="' + companyAccount.companyAccountID + '">' + companyAccount.companyAccountNum + '</option>'
-			});
-			$("#" + newid).html(item);
-		});
-	});
-
 
 	//$('input[type=text]').on('blur', function () {
 	//		$(this).prev().prev().css('border-bottom', '1px solid black');
@@ -187,29 +170,7 @@ $(function () {
 	//	});
 	//});
 
-	//payments on the price modal -cascading dropdown choice with json
 
-	$(".paymentType").change(function () {
-		var paymentTypeId = $(this).val();
-		var url = "/Requests/GetCompanyAccountList";
-		var paymentTypeId = $(this).attr("id");
-		var firstNum = paymentTypeId.charAt(12);
-		var secondNum = paymentTypeId.charAt(13);
-		var numId = firstNum;
-		if (secondNum != "_") {
-			numId = firstNum + secondNum;
-		}
-		var companyAccountId = "NewPayments_" + numId + "__CompanyAccount";
-
-		$.getJSON(url, { paymentTypeId: paymentTypeId }, function (data) {
-			var item = "";
-			$("#" + companyAccountId).empty();
-			$.each(data, function (i, companyAccount) {
-				item += '<option value="' + companyAccount.companyAccountId + '">' + companyAccount.companyAccountNum + ' - hello</option>'
-			});
-			$("#" + companyAccountId).html(item);
-		});
-	});
 
 	$('.modal').on('change', '#vendorList', function () {
 		console.log('in on change vendor')

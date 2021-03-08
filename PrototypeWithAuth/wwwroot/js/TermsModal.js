@@ -103,25 +103,36 @@ $(function () {
 
 
 
-	////since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
-	//$(".modal").on("change", ".paymentType", function (e) {
-	//	console.log("changepayment type")
-	//	var paymentTypeID = $(this).val();
-	//	var url = "/CompanyAccounts/GetAccountsByPaymentType";
-	//	var id = "" + $(this).attr('id');
-	//	var number = id.substr(12, 1);
-	//	var newid = "NewPayments_" + number + "__CompanyAccountID";
-	//	$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
-	//		var item = '<option value="">Select</option>';
-	//		$("#" + newid).empty();
+	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
+	$( ".paymentType").off("change").change( function (e) {
+		console.log("changepayment type")
+		var paymentTypeID = $(this).val();
+		var url = "/CompanyAccounts/GetAccountsByPaymentType";
+		var newid = "Payment_CompanyAccountID";
+		$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
+			var firstitem1 = '<option value="">Select</option>';
+			$("#" + newid).empty();
+			$("#" + newid).append(firstitem1);
 
-	//		$.each(data, function (i, companyAccount) {
-	//			item += '<option value="' + companyAccount.companyAccountID + '">' + companyAccount.companyAccountNum + '</option>'
-	//		});
-	//		$("#" + newid).html(item);
-	//		$("#" + newid).rules("add",{selectRequired : true})
-	//	});
-	//});
+			$.each(data, function (i, companyAccount) {
+				var newitem1 = '<option value="' + companyAccount.companyAccountID + '">' + companyAccount.companyAccountNum + '</option>';
+				$("#" + newid).append(newitem1);
+			});
+			$("#" + newid).materialSelect();
+
+			if(paymentTypeID=="2")
+			{
+				$(".payment-reference").removeClass("d-none");
+			}
+			else
+			{
+				$(".payment-reference").addClass("d-none");
+			}
+			//$("#" + newid).rules("add",{selectRequired : true})
+			return false;
+		});
+		return false;
+	});
 
 	//$(".modal").on('change', "#Paid", function () {
 	//	var val = $(this).val();
