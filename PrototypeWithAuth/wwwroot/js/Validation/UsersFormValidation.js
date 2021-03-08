@@ -7,7 +7,9 @@ var isEmployeeOnly = function () {
 var isUserAndIsNotEdit = function () {
 	return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
 }
-
+var isEdit = function () {
+	return $('#myForm').hasClass('editUser');
+}
 var isUser = function () {
 	return $("#NewEmployee_EmployeeStatusID").val() == "4";
 }
@@ -16,28 +18,32 @@ $('.usersForm').validate({
 	rules: {
 		"FirstName": "required",
 		"LastName": "required",
-		"CentarixID": {
-			required: true,
-			//number: true,
-			minlength: 1,
-			//integer: true
-		},
+		//"CentarixID": {
+		//	required: true,
+		//	//number: true,
+		//	minlength: 1,
+		//	//integer: true
+		//},
 		"Email": {
 			email: true,
-			required: true
+			required: true,
+			remote:{
+				url: '/Admin/CheckUserEmailExist?isEdit='+isEdit()+"&currentEmail="+$(".turn-edit-on-off").attr("currentEmail"),
+				type: 'POST',
+				data: { "email":function(){ return $("#Email").val()}},
+			}
 		},
 		"PhoneNumber": {
 			required: true,
 			minlength: 9
 		},
-		"NewEmployee.JobTitle": {
-			required: isEmployee,
-		},
 		"NewEmployee.DOB": {
-			required: isEmployee,
-			date: true
+			required: isEmployee
 		},
-		"NewEmployee.JobCategoryTypeID": {
+		"NewEmployee.JobSubcategoryType.JobCategoryTypeID":{
+			selectRequired: isEmployee,
+		},
+		"NewEmployee.JobSubcategoryTypeID": {
 			selectRequired: isEmployee,
 		},
 		"NewEmployee.DegreeID": {
@@ -122,5 +128,8 @@ $('.usersForm').validate({
 			required: "",
 			min: "",
 		},
+		Email:{
+			remote:"email already exists"
+		}
 	}
 });

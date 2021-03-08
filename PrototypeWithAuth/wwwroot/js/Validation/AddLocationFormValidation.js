@@ -30,6 +30,21 @@ $('.addLocationForm').validate({
 			min: 1,
 			integer: true
 		},
+			"LocationInstances[3].Height": {
+			required: true,
+			number: true,
+			min: 1,
+			integer: true
+		},
+		"LocationInstances[4].Height": {
+			selectRequired : true
+		},
+		"LocationInstances[1].LabPartID" :{
+		    selectRequired : true
+		},
+		"LocationInstances[0].LocationRoomInstanceID" :{
+			   selectRequired : true
+		},
 		"LocationInstances[2].LocationTypeID": "selectRequired"
 	}
 });

@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> UserManager
+@model PrototypeWithAuth.ViewModels.SummaryHoursViewModel
+@{
+    ViewData["Title"] = "User Hours";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/workerHours.js"></script>
+
+@{ var years = Enumerable.Range(AppUtility.YearStartedTimeKeeper, DateTime.Today.Year - AppUtility.YearStartedTimeKeeper + 1);}
+<div class="row mb-3">
+    <div class="col-10">
+        <div class="row mb-2">
+            <div>
+                <a href="@Url.Action("Hours")" id="back-user-hours">
+                    <i class="fas fa-long-arrow-alt-left"></i>
+                </a>
+                <label class="text pl-1">All User Hours</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 heading-1 ml-3 p-0"><label class="m-0 p-0">@Model.User.FirstName @Model.User.LastName</label></div>
+        </div>
+    </div>
+</div>
+<div class=" container-fluid" id="hoursTable">
+    @{await Html.RenderPartialAsync("~/Views/Timekeeper/HoursPage.cshtml", Model); }
+</div>

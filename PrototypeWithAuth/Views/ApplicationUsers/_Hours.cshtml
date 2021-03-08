@@ -59,7 +59,7 @@
                             Value = x + "",
                             Selected = (x == Model.Month)
                         }
-                    ), htmlAttributes: new { @class = "mdb-select mdb-select-workers custom users select-dropdown workersHoursMonths", @name = "DOBMonth", @year = Model.Year, @month = Model.Month, @yearlyMonthlySwitch = AppUtility.YearlyMonthlyEnum.Monthly })
+                    ), htmlAttributes: new { @class = "mdb-select mdb-select-workers custom users select-dropdown not-form-ddl workersHoursMonths", @name = "DOBMonth", @year = Model.Year, @month = Model.Month, @yearlyMonthlySwitch = AppUtility.YearlyMonthlyEnum.Monthly })
                 </div>
             </div>
             yearDropDown = "";
@@ -74,7 +74,7 @@
                         Value = x.ToString(),
                         Selected = (x == Model.Year)
                     }
-                ), htmlAttributes: new { @class = "mdb-select mdb-select-workers custom users select-dropdown workersHoursYears why-dropdown", @name = "DOBYear", @year = Model.Year, @month = Model.Month, @yearlyMonthlySwitch = Model.YearlyMonthlyEnum })
+                ), htmlAttributes: new { @class = "mdb-select mdb-select-workers custom users select-dropdown not-form-ddl workersHoursYears why-dropdown", @name = "DOBYear", @year = Model.Year, @month = Model.Month, @yearlyMonthlySwitch = Model.YearlyMonthlyEnum })
                 <input type="hidden" class="workerHoursAttr" yearlyMonthlyEnum="@Model.YearlyMonthlyEnum" month="@Model.Month" year="@Model.Year" />
             </div>
         </div>
@@ -87,10 +87,10 @@
                     <td width="11%"></td>
                     <td width="11%">Name</td>
                     <td width="11%">
-                        Job Title
+                        Job Category
                     </td>
                     <td width="11%">
-                        Job Category
+                        Job Title
                     </td>
                     <td width="11%">
                         Job Type
@@ -111,69 +111,72 @@
 
                 @foreach (var employee in Model.Employees)
                 {
-                    <tr class="text-center users-tr ">
-                        <td width="11%" class="py-2">
-                            @{
-                                var src = "/UserImages/user-image-placeholder.png";
-                                if (employee.Employee.UserImage != null)
-                                {
-                                    src = "\\" + AppUtility.GetLastFiles(UserManager.GetUserAsync(User).Result.UserImage, 2);
-                                }
-                            }
-                            <img id="user-image" class="circular-profile-img circular-profile-img-65" src="@src" />
-                        </td>
-                        <td width="11%">
+            <tr class="text-center users-tr ">
+                <td width="11%" class="py-2">
+                    @{
+                        var src = "/UserImages/user-image-placeholder.png";
+                        if (employee.Employee.UserImage != null)
+                        {
+                            src = "\\" + AppUtility.GetLastFiles(employee.Employee.UserImage, 2);
+                        }
+                    }
+                    <img class="circular-profile-img circular-profile-img-65" src="@src" />
+                </td>
+                <td width="11%">
+                    <div>
+                        <a href="@Url.Action("UserHours", "ApplicationUsers", new {userId = @employee.Employee.Id})">
                             @employee.Employee.FirstName  @employee.Employee.LastName
-                        </td>
-                        <td width="11%">
-                            @employee.Employee.JobTitle
-                        </td>
-                        <td width="11%">
-                            @employee.Employee.JobCategoryType?.Description
-                        </td>
-                        <td width="11%">
-                            @employee.Employee.EmployeeStatus.Description
-                        </td>
-                        <td width="10%">
-                            @{var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
-                                var totalHoursString = "";
-                            }
-                            @if (employee.Employee.EmployeeStatusID == 1)
-                            {
-                                var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
-                                var totalInMonth = TimeSpan.FromHours(totalHoursInRange);
-                                totalHoursString = totalHours + ":" + employee.Hours.ToString("mm") + "/" + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
-                            }
-                            else
-                            {
+                        </a>
+                    </div>
+                </td>
+                <td width="11%">
+                    @employee.Employee.JobSubcategoryType?.Description
+                </td>
+                <td width="11%">
+                    @employee.Employee.JobSubcategoryType?.JobCategoryType?.Description
+                </td>
+                <td width="11%">
+                    @employee.Employee.EmployeeStatus.Description
+                </td>
+                <td width="10%">
+                    @{var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
+                        var totalHoursString = "";
+                    }
+                    @if (employee.Employee.EmployeeStatusID == 1)
+                    {
+                        var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
+                        var totalInMonth = TimeSpan.FromHours(totalHoursInRange);
+                        totalHoursString = totalHours + ":" + employee.Hours.ToString("mm") + "/" + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
+                    }
+                    else
+                    {
+                        totalHoursString = totalHours + ":" + employee.Hours.ToString("mm");
+                    }
+                    @totalHoursString
+                </td>
+                <td width="8%">
+                    @{
+                        var totalDaysString = "";
+                    }
+                    @if (employee.Employee.EmployeeStatusID == 1)
+                    {
+                        var totalDaysInRange = (totalHoursYearOrMonth - employee.VacationSickCount);
+                        totalDaysString = employee.WorkingDays + "/" + totalDaysInRange;
+                    }
+                    else
+                    {
 
-                                totalHoursString = totalHours + ":" + employee.Hours.ToString("mm");
-                            }
-                            @totalHoursString
-                        </td>
-                        <td width="8%">
-                            @{
-                                var totalDaysString = "";
-                            }
-                            @if (employee.Employee.EmployeeStatusID == 1)
-                            {
-                                var totalDaysInRange = (totalHoursYearOrMonth - employee.VacationSickCount);
-                                totalDaysString = employee.WorkingDays + "/" + totalDaysInRange;
-                            }
-                            else
-                            {
-
-                                totalDaysString = employee.WorkingDays + "";
-                            }
-                            @totalDaysString
-                        </td>
-                        <td width="8%">
-                            @employee.VacationDays
-                        </td>
-                        <td width="8%">
-                            @employee.SickDays
-                        </td>
-                    </tr>
+                        totalDaysString = employee.WorkingDays + "";
+                    }
+                    @totalDaysString
+                </td>
+                <td width="8%">
+                    @employee.VacationDays
+                </td>
+                <td width="8%">
+                    @employee.SickDays
+                </td>
+            </tr>
                 }
             </tbody>
         </table>

@@ -26,7 +26,6 @@ namespace PrototypeWithAuth.Data
 
         //[Display(Name = "ID")]
         //public string CentarixID { get; set; }
-        public List<CentarixID> CentarixIDs { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
@@ -48,6 +47,7 @@ namespace PrototypeWithAuth.Data
         [Display(Name = "Phone Number 2")]
         public string PhoneNumber2 { get; set; }
         public bool NeedsToResetPassword { get; set; }
+        public bool RememberTwoFactor { get; set; }
         public DateTime DateLastReadNotifications { get; set; }
         public DateTime LastLogin { get; set; }
         public IEnumerable<Request> RequestsReceived { get; set; }

@@ -19,6 +19,8 @@ namespace PrototypeWithAuth.Data
 
         }
         //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+        public DbSet<LocationRoomType> LocationRoomTypes { get; set; }
+        public DbSet<LabPart> LabParts { get; set; }
         public DbSet<CentarixID> CentarixIDs { get; set; }
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
         public DbSet<CompanyDayOff> CompanyDayOffs { get; set; }
@@ -31,6 +33,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<Degree> Degrees { get; set; }
         public DbSet<Citizenship> Citizenships { get; set; }
         public DbSet<MaritalStatus> MaritalStatuses { get; set; }
+        public DbSet<JobSubcategoryType> JobSubcategoryTypes { get; set; }
         public DbSet<JobCategoryType> JobCategoryTypes { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Freelancer> Freelancers { get; set; }
@@ -49,13 +52,11 @@ namespace PrototypeWithAuth.Data
         public DbSet<TimekeeperNotification> TimekeeperNotifications { get; set; }
         //public DbSet<Notification<NotificationStatus>> Notifications { get; set; }
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
-        public DbSet<Reorder> Reorder { get; set; }
         public DbSet<ParentQuote> ParentQuotes { get; set; }
         public DbSet<QuoteStatus> QuoteStatuses { get; set; }
         public DbSet<CategoryType> CategoryTypes { get; set; }
         public DbSet<VendorComment> VendorComments { get; set; }
         public DbSet<VendorContact> VendorContacts { get; set; }
-        public DbSet<Menu> Menus { get; set; }
         public DbSet<SubProject> SubProjects { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<LocationInstance> LocationInstances { get; set; }
@@ -73,6 +74,8 @@ namespace PrototypeWithAuth.Data
         public DbSet<ParentCategory> ParentCategories { get; set; }
         public DbSet<UnitType> UnitTypes { get; set; }
         public DbSet<UnitParentType> UnitParentTypes { get; set; }
+        public DbSet<IpRange> IpRanges { get; set; }
+        public DbSet<PhysicalAddress> PhysicalAddresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -80,6 +83,9 @@ namespace PrototypeWithAuth.Data
 
             modelBuilder.Entity<VendorCategoryType>()
                 .HasKey(v => new { v.VendorID, v.CategoryTypeID });
+
+            modelBuilder.Entity<UnitTypeParentCategory>()
+                .HasKey(u => new { u.UnitTypeID, u.ParentCategoryID });
 
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasQueryFilter(item => !item.IsDeleted)
@@ -126,6 +132,7 @@ namespace PrototypeWithAuth.Data
                 .HasOne(r => r.ApplicationUserCreator)
                 .WithMany(au => au.RequestsCreated)
                 .HasForeignKey(r => r.ApplicationUserCreatorID);
+
             modelBuilder.Entity<Request>()
                 .HasOne(r => r.ApplicationUserReceiver)
                 .WithMany(au => au.RequestsReceived)
@@ -167,6 +174,7 @@ namespace PrototypeWithAuth.Data
             .WithMany(rs => rs.Requests)
             .HasForeignKey(r => r.RequestStatusID);
 
+
             modelBuilder.Entity<EmployeeHours>()
              .HasOne<EmployeeHoursStatus>(eh => eh.EmployeeHoursStatusEntry2)
              .WithMany(ehs => ehs.EmployeeHours)
@@ -177,7 +185,25 @@ namespace PrototypeWithAuth.Data
               .WithMany(ehs => ehs.EmployeeHoursAwaitingApprovals)
               .HasForeignKey(eh => eh.EmployeeHoursStatusEntry2ID);
 
+            modelBuilder.Entity<EmployeeHours>()
+             .HasOne<OffDayType>(eh => eh.PartialOffDayType)
+             .WithMany(odt => odt.EmployeeHoursPartial)
+             .HasForeignKey(eh => eh.PartialOffDayTypeID);
 
+            modelBuilder.Entity<EmployeeHours>()
+              .HasOne<OffDayType>(eh => eh.OffDayType)
+              .WithMany(odt => odt.EmployeeHours)
+              .HasForeignKey(eh => eh.OffDayTypeID);
+
+            modelBuilder.Entity<EmployeeHoursAwaitingApproval>()
+              .HasOne<OffDayType>(eh => eh.PartialOffDayType)
+              .WithMany(odt => odt.EmployeeHoursAwaitingApprovalsPartial)
+              .HasForeignKey(eh => eh.PartialOffDayTypeID);
+
+            modelBuilder.Entity<EmployeeHoursAwaitingApproval>()
+              .HasOne<OffDayType>(eh => eh.OffDayType)
+              .WithMany(odt => odt.EmployeeHoursAwaitingApprovals)
+              .HasForeignKey(eh => eh.OffDayTypeID);
 
             //modelBuilder.Entity<Vendor>()
             //.HasOne<ParentCategory>(v => v.ParentCategory)
@@ -186,17 +212,37 @@ namespace PrototypeWithAuth.Data
             //.OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ParentQuote>()
-           .HasQueryFilter(item => !item.IsDeleted);
+                .HasQueryFilter(item => !item.IsDeleted);
 
             modelBuilder.Entity<Calibration>()
+                .HasQueryFilter(item => !item.IsDeleted);
+
+            modelBuilder.Entity<Payment>()
+                .HasQueryFilter(item => !item.IsDeleted);
+
+            modelBuilder.Entity<Comment>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
             modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);
+            modelBuilder.Entity<Employee>().Ignore(e => e.SickDays);
+            modelBuilder.Entity<Employee>().Ignore(e => e.SickDaysPerMonth);
+            modelBuilder.Entity<Employee>().Ignore(e => e.VacationDaysPerMonth);
             modelBuilder.Entity<Request>().Ignore(e => e.VAT);
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerUnit);
+            modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubUnit);
+            modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubSubUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
+            modelBuilder.Entity<ParentQuote>().Ignore(e => e.QuoteDate_submit);
+            modelBuilder.Entity<ParentRequest>().Ignore(e => e.OrderDate_submit);
+            modelBuilder.Entity<ParentRequest>().Ignore(e => e.InvoiceDate_submit);
+            modelBuilder.Entity<Request>().Ignore(e => e.ArrivalDate_submit);
+            modelBuilder.Entity<EmployeeHours>().Ignore(e => e.Date_submit);
+            modelBuilder.Entity<Employee>().Ignore(e => e.StartedWorking_submit);
+            modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
+            modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
+            modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
 
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Seed();

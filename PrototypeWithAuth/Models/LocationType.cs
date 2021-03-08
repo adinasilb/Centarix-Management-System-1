@@ -22,5 +22,6 @@ namespace PrototypeWithAuth.Models
         public LocationType LocationTypeChild { get; set; }
         public int Depth { get; set; }
         public int Limit { get; set; }
+        public string LocationTypeNameAbbre { get; set; }
     }
 }

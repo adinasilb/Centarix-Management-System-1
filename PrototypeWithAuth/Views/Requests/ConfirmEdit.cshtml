@@ -25,12 +25,12 @@
 }
 <script src="~/js/site.js"></script>
 <script src="~/js/confirmedit.js"></script>
-<div class="modal modal-view confirm-edit-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view confirm-edit-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index:9999">
 
     <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; width:32rem;" >
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').hide()">
+            <button type="button" class="close modal-close-padding modal-close-style close-confirm-edit"  aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="modal-padding">
@@ -43,7 +43,7 @@
 
                 <div class="modal-body">
                     <div class="row">
-                        Are you sure you would like to exit the edit modal and save all changes?
+                        Would you like to save your changes?
                     </div>
                     <div class="row text-center">
 
@@ -57,3 +57,13 @@
         </div>
     </div>
 </div>
+<script>
+    $(".close-confirm-edit").click(function () {
+        $.fn.CloseModal("confirm-edit");
+        $('.edit-mode-switch-description').text('Edit Mode On');
+        $('.turn-edit-on-off').attr('name', 'edit'); 
+        $('.turn-edit-on-off').prop('checked', true);
+        $('.turn-edit-on-off').attr('checked', true);
+        $('.open-document-modal').attr('data-val', true);
+    });
+</script>

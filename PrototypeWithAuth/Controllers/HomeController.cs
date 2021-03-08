@@ -18,7 +18,7 @@ using PrototypeWithAuth.ViewModels;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : SharedController
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.Controllers
         private readonly UrlEncoder _urlEncoder;
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, UrlEncoder urlEncoder)
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, UrlEncoder urlEncoder):base(context)
         {
             _context = context;
             _logger = logger;
@@ -41,10 +41,10 @@ namespace PrototypeWithAuth.Controllers
             if (user.LastLogin.Date < DateTime.Today)
             {
                 fillInOrderLate(user);
-                if (User.IsInRole("Timekeeper") && user.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
+                if (User.IsInRole("TimeKeeper") && user.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
                 {
                     fillInTimekeeperMissingDays(user);
-                    fillInTimekeeperNotifications(user);
+                    fillInTimekeeperNotifications(user);                  
                 }
                 user.LastLogin = DateTime.Now;
                 _context.Update(user);
@@ -58,7 +58,7 @@ namespace PrototypeWithAuth.Controllers
             //}
             //else
             //{
-                menu = _context.Menus.Where(m => rolesList.Contains(m.MenuDescription));
+                menu =CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
             //}
 
             //update latest exchange rate if need be
@@ -89,7 +89,7 @@ namespace PrototypeWithAuth.Controllers
             //}
             //else
             //{
-                menu = _context.Menus.Where(m=> rolesList.Contains(m.MenuDescription));
+                menu = CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
             //}
 
             return PartialView(menu);
@@ -172,31 +172,9 @@ namespace PrototypeWithAuth.Controllers
             TwoFactorAuthenticationViewModel twoFactorAuthenticationViewModel = new TwoFactorAuthenticationViewModel { };
             return View(twoFactorAuthenticationViewModel);
         }
-        [HttpPost]
-        public async Task<IActionResult> Login2FA(TwoFactorAuthenticationViewModel twoFactorAuthenticationViewModel)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            // Strip spaces and hypens
-            var verificationCode = twoFactorAuthenticationViewModel.TwoFACode.Replace(" ", string.Empty).Replace("-", string.Empty);
-
-            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
-
-            if (!is2faTokenValid)
-            {
-                ModelState.AddModelError(string.Empty, "Invalid authentication code.");
-                return View(twoFactorAuthenticationViewModel);
-            }
-
-            //await _userManager.SetTwoFactorEnabledAsync(user, true);
-            return RedirectToAction("Index");
-        }
-        private void fillInTimekeeperMissingDays(ApplicationUser user)
-        {
-            if (user.LastLogin == new DateTime())
-            {
-                return;
-            }
+       
+        private void fillInTimekeeperMissingDays(Employee user)
+        {           
             DateTime nextDay = user.LastLogin.AddDays(1);
             var year = nextDay.Year;
             var companyDaysOff = _context.CompanyDayOffs.Where(d => d.Date.Year == year).ToList();
@@ -246,11 +224,8 @@ namespace PrototypeWithAuth.Controllers
         }
 
         private void fillInOrderLate(ApplicationUser user)
+        
         {
-            if (user.LastLogin == new DateTime())
-            {
-                return;
-            }
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
 
@@ -279,13 +254,10 @@ namespace PrototypeWithAuth.Controllers
         }
         private void fillInTimekeeperNotifications(ApplicationUser user)
         {
-            if (user.LastLogin == new DateTime())
-            {
-                return;
-            }
+
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
-                var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null) || (r.Entry2 != null && r.Exit2 == null))
+                var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
                     .Where(r => r.Date.Date >= user.LastLogin.Date && r.Date.Date < DateTime.Today);
                 foreach (var e in eh)
                 {

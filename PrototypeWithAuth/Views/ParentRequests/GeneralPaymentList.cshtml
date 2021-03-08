@@ -79,7 +79,7 @@
                                 else
                                 {
 
-                                    <img class=" type-img" src="~/images/css/inventory/Type/bottleBig.png" alt="Type Bottle" />
+                                    <img class=" type-img" src="~/images/css/CategoryImages/placeholder.png" alt="Placeholder" />
                                 }
                             </td>
                             <td>
@@ -107,7 +107,7 @@
                             </td>
 
                             <td>
-                                @Html.DisplayFor(modeltem => item.OrderDate)
+                                @item.OrderDate.ToString("dd'/'MM'/'yyyy")
                             </td>
                         </tr>
 

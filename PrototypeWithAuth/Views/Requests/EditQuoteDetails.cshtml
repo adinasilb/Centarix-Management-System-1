@@ -6,13 +6,14 @@
 
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/Validation/EditQuoteDetailsFormValidation.js"></script>
-
+<script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/WarantySupplyDateCalc.js"></script>
 <div class="modal modal-view fader on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered  mx-auto  modal-xl " role="document">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow supplier-form ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('edit-quote');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" id="myForm" enctype="multipart/form-data" style="height: 100%;" class="modal-padding editQuoteDetails">
@@ -38,7 +39,7 @@
                             </div>
                             <input type="hidden" asp-for="@Model.Vendor.VendorID" />
                             <input type="hidden" asp-for="@Model.ParentQuoteID" />
-                            <div class="col-4">
+                            <div class="col-4 offset-3">
                                 <div class="form-group d-inline-flex">
                                     <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
                                     <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
@@ -46,13 +47,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-3">
+                            @*<div class="col-3">
                                 <div class="form-group d-inline-flex">
                                     <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
                                     <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
                                     <span asp-validation-for="@Model.QuoteDate" class="text-danger-centarix"></span>
                                 </div>
-                            </div>
+                            </div>*@
 
                         </div>
                         <div class="container p-0">
@@ -83,15 +84,15 @@
                             </thead>
                             <tbody>
 
-                                @for (int i = 0; i < Model.Reorders.Count(); i++)
+                                @for (int i = 0; i < Model.Requests.Count(); i++)
                                 {
-                                    @Html.HiddenFor(model => Model.Reorders[i].RequestID)
+                                    @Html.HiddenFor(model => Model.Requests[i].RequestID)
                                     <tr class="">
                                         <td class="" width="15%">
-                                            <input type="hidden" asp-for="@Model.Reorders[i].RequestID" />
-                                            @if (Model.Reorders[i].Product.ProductSubcategory.ImageURL != null)
+                                            <input type="hidden" asp-for="@Model.Requests[i].RequestID" />
+                                            @if (Model.Requests[i].Product.ProductSubcategory.ImageURL != null)
                                             {
-                                                var imageurl = Model.Reorders[i].Product.ProductSubcategory.ImageURL;
+                                                var imageurl = Model.Requests[i].Product.ProductSubcategory.ImageURL;
                                                 <img src="@imageurl" alt="Image" width="75" class="category-image" />
                                             }
                                             else
@@ -100,35 +101,35 @@
                                             }
                                         </td>
                                         <td width="15%">
-                                            @Model.Reorders[i].Product.Vendor.VendorEnName
+                                            @Model.Requests[i].Product.Vendor.VendorEnName
                                         </td>
                                         <td width="15%">
-                                            @Model.Reorders[i].Unit &nbsp;@Model.Reorders[i].UnitType.UnitTypeDescription
-                                            @if (Model.Reorders[i].SubUnitType != null)
+                                            @Model.Requests[i].Unit &nbsp;@Model.Requests[i].UnitType.UnitTypeDescription
+                                            @if (Model.Requests[i].SubUnitType != null)
                                             {
                                                 <br />
-                                                @Model.Reorders[i].SubUnit @Model.Reorders[i].SubUnitType.UnitTypeDescription
-                                                @if (Model.Reorders[i].SubSubUnitType != null)
+                                                @Model.Requests[i].SubUnit @Model.Requests[i].SubUnitType.UnitTypeDescription
+                                                @if (Model.Requests[i].SubSubUnitType != null)
                                                 {
-                                                    <br />@Model.Reorders[i].SubSubUnit @Model.Reorders[i].SubSubUnitType.UnitTypeDescription
+                                                    <br />@Model.Requests[i].SubSubUnit @Model.Requests[i].SubSubUnitType.UnitTypeDescription
                                                 }
                                             }
                                         </td>
                                         <td width="15%">
                                             <div class="form-group">
-                                                <input asp-for="@Model.Reorders[i].Cost" class="form-control-plaintext border-bottom cost-validation" min="1" />
-                                                <span asp-validation-for="@Model.Reorders[i].Cost" class="text-danger-centarix"></span>
+                                                <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom cost-validation" min="1" />
+                                                <span asp-validation-for="@Model.Requests[i].Cost" class="text-danger-centarix"></span>
                                             </div>
                                         </td>
                                         <td width="15%">
                                             <div class="form-group">
-                                                <input asp-for="@Model.Reorders[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days supply-days-validation" />
-                                                <span asp-validation-for="@Model.Reorders[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                                <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days" />
+                                                <span asp-validation-for="@Model.Requests[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
                                             </div>
                                         </td>
                                         <td width="15%" class="border-right">
                                             <div class="form-group">
-                                                <input value="00-00-0000" class="form-control-plaintext border-bottom" type="date" name="expected-supply-days" id="expected-supply-date" min="@DateTime.Now.Date.ToString("yyyy-MM-dd")" />
+                                                <input value="" class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" />
                                             </div>
                                         </td>
                                     </tr>
@@ -140,7 +141,7 @@
                                     <td colspan="4"  class="p-0 ">
                                         <div class="form-group text-center modal-footer-mt">
                                             <input type="submit" asp-action="EditQuoteDetails" name="OrderType" value="Save" class="custom-button between-button-margin custom-button-font lab-man-background-color" />
-                                            <button type="button" class="custom-cancel custom-button px-5" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                                            <button type="button" class="custom-cancel custom-button px-5" data-dismiss="modal" onclick="$.fn.CloseModal('edit-quote');">Cancel</button>
                                         </div>
                                     </td>
 

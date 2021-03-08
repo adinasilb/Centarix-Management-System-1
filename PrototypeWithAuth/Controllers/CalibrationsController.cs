@@ -18,11 +18,11 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class CalibrationsController : Controller
+    public class CalibrationsController : SharedController
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public CalibrationsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment )
+        public CalibrationsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment ) : base(context)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
@@ -147,6 +147,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Calibrate;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementEquipment;
+            if(AppUtility.IsAjaxRequest(this.Request))
+            {
+                return PartialView(createCalibrationViewModel);
+            }
             return View(createCalibrationViewModel);
         }
 

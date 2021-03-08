@@ -7,19 +7,54 @@ $(function () {
 			return false;
 		}
 	});
-	$.each($("#myForm").validate().settings.rules, function (name, value) {
-		
-		if (value["required"] ) {
-			$('input[name ="' + name + '"]').prev('label').first().append('*');
-			
-		}	
-		if (value["selectRequired"]) {
-			var id = $('[name = "' + name + '"]').attr('id')
-			$('input[data-activates ="select-options-' + id + '"] ').parent('div').prev().first().append('*');
-		}
-	}
-	);
 
+	$.fn.AppendAsteriskToRequired = function() {
+		 $('input').each(function () {
+			var str = $(this).prev('label').first().text();
+			var char = str.slice(-1);
+			if (char == "*") {
+				$(this).prev('label').first().html(str.slice(0, -1));
+			}
+			var str2= $(this).parent('div').prev('label').first().text();
+			var char2 = str2.slice(-1);
+			if (char2 == "*") {
+				$(this).parent('div').prev('label').first().html(str2.slice(0, -1));
+			}
+		 });
+		$.each($("#myForm").validate().settings.rules, function (name, value) {
+			var rule = value["required"];
+			if($.isFunction(rule))
+			{
+				rule=rule();
+			}
+			if (rule) {
+				var str = $('input[name ="' + name + '"]').prev('label').first().text();
+				var char = str.slice(-1);
+				if (char == "*") {
+					$('input[name ="' + name + '"]').prev('label').first().html(str.slice(0,-1));
+                }
+				$('input[name ="' + name + '"]').prev('label').first().append('*');
+
+			}
+			var rule2 = value["selectRequired"];
+			if($.isFunction(rule2))
+			{
+				rule2=rule2();
+			}
+			if (rule2 == true) {
+				var id = $('[name = "' + name + '"]').attr('id')
+				var str = $('input[data-activates ="select-options-' + id + '"]').parent('div').prev('label').first().text();
+				var char = str.slice(-1);
+				if (char == "*") {
+					$('input[data-activates ="select-options-' + id + '"]').parent('div').prev('label').first().html(str.slice(0, -1));
+				}
+				$('input[data-activates ="select-options-' + id + '"]').parent('div').prev('label').first().append('*');
+			}
+		}
+		);
+    }
+	
+	$.fn.AppendAsteriskToRequired();
 
 	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
 	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {
@@ -55,6 +90,38 @@ $(function () {
 		}
 		return /[A-Z]/.test(value);
 	}, "Must contain uppercase");
+
+	$.validator.addMethod('mindate', function (v, el, minDate) {
+	if (this.optional(el)) {
+		return true;
+	}
+	var selectedDate = new Date($(el).attr("data-val"));
+	console.log("selected date"+selectedDate)
+	minDate = new Date(minDate.setHours(0));
+	minDate = new Date(minDate.setMinutes(0));
+	minDate = new Date(minDate.setSeconds(0));
+	minDate = new Date(minDate.setMilliseconds(0));
+	return selectedDate >= minDate;
+}, 'Please select a valid date');
+
+		$.validator.addMethod('maxDate', function (v, el, minDate) {
+	if (this.optional(el)) {
+		return true;
+	}
+	var selectedDate = new Date($(el).attr("data-val"));
+	console.log("selected date"+selectedDate)
+		selectedDate = new Date(selectedDate.setHours(0));
+	selectedDate = new Date(selectedDate.setMinutes(0));
+	selectedDate = new Date(selectedDate.setSeconds(0));
+	selectedDate = new Date(selectedDate.setMilliseconds(0));
+	minDate = new Date(minDate.setHours(0));
+	minDate = new Date(minDate.setMinutes(0));
+	minDate = new Date(minDate.setSeconds(0));
+	minDate = new Date(minDate.setMilliseconds(0));
+				console.log("min date"+minDate)
+	return selectedDate <= minDate;
+}, 'Please select a valid date');
+
 	$.validator.addMethod("lowercase", function (value, element) {
 		if (this.optional(element)) {
 			return true;
@@ -101,9 +168,9 @@ $(function () {
 		}
 
 	});
-	$('#myForm input').focusout(function (e) {
+	$('#myForm input').change(function (e) {
 		console.log("validating input...");
-		$("#myForm").data("validator").settings.ignore = "";
+		//$("#myForm").data("validator").settings.ignore = "";
 		$('.error').addClass("beforeCallValid");
 		if ($('#myForm').valid()) {
 			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
@@ -121,33 +188,78 @@ $(function () {
 		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
 	});
 
-	$('.next-tab').click(function () {
-		if ($(this).hasClass('request-price')) {
-			$('#Request_UnitTypeID').rules("remove", "selectRequired");
-		}
-
-		//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
-		$(this).parent().prev().find(".next-tab").addClass("prev-tab");
-
-		if (!$(this).hasClass("prev-tab")) {
-			var valid = $("#myForm").valid();
-
-			console.log("valid tab" + valid)
-			if (!valid) {
-				$('.next-tab').prop("disabled", true);
+	$('.next-tab').off("click").click(function () {
+		var clickedElement= $(this);
+		
+		if(!$(this).hasClass("current-tab"))
+		{
+			if ($(this).hasClass('request-price') ) {
+				$('#unitTypeID').rules("remove", "selectRequired");
 			}
-			else {
-				$('.next-tab').prop("disabled", false);
+
+			if ($(this).hasClass('order-tab-link') ) {
+				$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+			}
+
+			//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
+
+			if (!$(this).hasClass("prev-tab")) {
+				var valid = $("#myForm").valid();
+
+				console.log("valid tab" + valid)
+				if (!valid) {
+					$(this).prop("disabled", true);
+				}
+				else {
+						var currentTab = $(".current-tab")
+						$(currentTab).removeClass("current-tab")
+						$(this).prop("disabled", false);
+						$(this).addClass("current-tab");
+						$(".next-tab").removeClass("prev-tab");
+						$('.next-tab').each(function(index, element){
+			
+
+							if($(clickedElement).parent("li").index() > $(element).parent("li").index())
+							{
+								//alert("true")
+								$(element).addClass("prev-tab");
+							}
+
+						});
+					}
+			
+			}
+			else
+			{
+			    var currentTab = $(".current-tab")
+				$(currentTab).removeClass("current-tab")
+				$(this).prop("disabled", false);
+				$(this).addClass("current-tab");
+				$(".next-tab").removeClass("prev-tab");
+				$('.next-tab').each(function(index, element){
+	
+
+					if($(clickedElement).index() > $(element).parent("li").index())
+					{
+						//alert("true")
+						$(element).addClass("prev-tab");
+					}
+
+				});
 
 			}
 			//work around for now - because select hidden are ignored
-			if ($(this).hasClass('request-price')) {
-				$('#Request_UnitTypeID').rules("add", "selectRequired");
-			}
+				if ($(this).hasClass('request-price')) {
+					$('#unitTypeID').rules("add", "selectRequired");
+				}
 		}
-
+		
 
 	});
+
+	$.fn.isBefore= function(sel){
+		 return 
+	};
 	$('#myForm').submit(function (e) {
 		//alert("validate form");
 		$(this).data("validator").settings.ignore = "";

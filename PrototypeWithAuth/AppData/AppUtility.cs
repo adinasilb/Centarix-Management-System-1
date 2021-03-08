@@ -10,7 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.AppData
@@ -23,6 +28,7 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Total + VAT")]
             TotalVat=4
         }
+        public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum PageTypeEnum {None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, 
             AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments, 
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,
@@ -33,8 +39,8 @@ namespace PrototypeWithAuth.AppData
 
         }
         public enum SidebarEnum {
-            None, LastItem, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List,  Calibrate, Categories,  Location, Cart, Notifications,
+            None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
+            Quotes, List,  Calibrate,  Location, Cart, Notifications,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker, 
             Category,  Details, Hours, Salary, 
@@ -55,21 +61,24 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "For Clarification")]
             ForClarification,
             Add,  AwaitingApproval,
+            [Display(Name = "Specify Payment")]
+            SpecifyPayment
         }
+        public enum FilterEnum {None, Price, Category, Amount}
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual } //Listed in the site.js (if you change here must change there)
+        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
-        public enum CurrencyEnum { USD, NIS }
+        public enum CurrencyEnum {  NIS, USD }
         public enum PaymentsPopoverEnum
         {
             //Share,
             // Order,
             [Display(Name = "Monthly Payment")]
-            MonthlyPayment = 1,
+            MonthlyPayment = 2,
             [Display(Name = "Pay Now")]
             PayNow = 3,
             [Display(Name = "Pay Later")]
@@ -80,51 +89,75 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
-        public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, int VendorID = 0, int? SubcategoryID = 0, string ApplicationUserID = null)
+        public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
+        public enum RequestModalType { Create, Edit, Summary}
+        public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations}
+        public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave}
+        public static string GetDisplayNameOfEnumValue(string EnumValueName)
+        {
+            string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
+            return String.Join(' ', splitEnumValue);
+        }
+         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, SidebarEnum sidebarType, String filterID)
         {
             int ReturnList = 0;
-            if (VendorID > 0)
+            int id = 0;
+            if (sidebarType != SidebarEnum.Owner)
             {
-                ReturnList = RequestsList
+                int.TryParse(filterID, out id);
+            }
+            switch(sidebarType)
+            {
+                case SidebarEnum.Vendors:
+                    ReturnList = RequestsList
+                   .Where(r => r.RequestStatusID == RequestStatusID)
+                   .Where(r => r.Product.VendorID == id)
+                   .Count();
+                    break;
+                case SidebarEnum.Type:
+                    ReturnList = RequestsList
                     .Where(r => r.RequestStatusID == RequestStatusID)
-                    .Where(r => r.Product.VendorID == VendorID)
+                    .Where(r => r.Product.ProductSubcategoryID == id)
                     .Count();
-            }
-            else if (SubcategoryID > 0)
-            {
-                ReturnList = RequestsList
+                    break;
+                case SidebarEnum.Owner:
+                    ReturnList = RequestsList
                     .Where(r => r.RequestStatusID == RequestStatusID)
-                    .Where(r => r.Product.ProductSubcategoryID == SubcategoryID)
+                    .Where(r => r.ApplicationUserCreatorID == filterID)
                     .Count();
+                    break;
+                default:
+                    ReturnList = RequestsList.Where(r => r.RequestStatusID == RequestStatusID).Count();
+                    break;
             }
-            else if (ApplicationUserID != null)
-            {
-                ReturnList = RequestsList
-                    .Where(r => r.RequestStatusID == RequestStatusID)
-                    .Where(r => r.ParentRequest.ApplicationUserID == ApplicationUserID)
-                    .Count();
-            }
-            else
-            {
-                ReturnList = RequestsList.Where(r => r.RequestStatusID == RequestStatusID).Count();
-            }
+
             return ReturnList;
         }
 
         public static double ExchangeRateIfNull = 3.5;
-        public static double _GetExchangeRateFromApi = GetExchangeRateFromApi();
-        public static double GetExchangeRateFromApi()
+        public static int YearStartedTimeKeeper = 2021;
+        public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
+        public static double GetExchangeRateFromApi()  
         {
-            var client = new RestClient("https://v6.exchangerate-api.com/v6/96ffcdbcf4b24b1bdf2dc9be/latest/USD");
+            var client = new RestClient("http://api.currencylayer.com/live?access_key=8a8f7defe393388b7249ffcdb09d6a34");
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             double rate=0.0;
-            dynamic tmp = JsonConvert.DeserializeObject(response.Content);
-            String stringRate = (string)tmp.conversion_rates.ILS;
-            stringRate = stringRate.Replace("{", "");
-            stringRate = stringRate.Replace("}", "");
-            Double.TryParse(stringRate, out rate);
-            return Math.Round(rate, 2);
+            try
+            {
+                dynamic tmp = JsonConvert.DeserializeObject(response.Content);
+                String stringRate = (string)tmp.quotes.USDILS;
+                stringRate = stringRate.Replace("{", "");
+                stringRate = stringRate.Replace("}", "");
+                Double.TryParse(stringRate, out rate);
+
+                return Math.Round(rate, 3);
+            }
+            catch (Exception ex)
+            {
+                return 0.0;
+            }
+           
         }
 
         public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)
@@ -209,19 +242,6 @@ namespace PrototypeWithAuth.AppData
             if (request.Headers != null)
                 return request.Headers["X-Requested-With"] == "XMLHttpRequest";
             return false;
-        }
-
-        public static List<SelectListItem> TermsSelectList()
-        {
-            List<SelectListItem> termsSelectList = new List<SelectListItem>()
-            {
-                new SelectListItem() { Value="-1", Text="Paid" },
-                new SelectListItem() { Value="30", Text="30" },
-                new SelectListItem() { Value="45", Text="45" },
-                new SelectListItem() { Value="60", Text="60" }
-            };
-            //SelectList termsSelectList = new SelectList(dictSelectList);
-            return termsSelectList;
         }
 
         public static string GetLastFiles(string longFileName, int amountOfFiles)
@@ -321,7 +341,113 @@ namespace PrototypeWithAuth.AppData
 
             return list;
         }
-        public static int GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs, int vacationSickCount)
+
+        public static List<String> GetPriceColumn(List<String>priceFilterEnums, Request request, CurrencyEnum currency)
+        {
+            List<String> priceColumn = new List<String>();
+            var currencyFormat = "he-IL";
+            var pricePerUnit = request.PricePerUnit;
+            var cost = request.Cost;
+            var total = request.TotalWithVat;
+            var vat = request.VAT;
+            var exchangeRate = request.ExchangeRate;
+            if (currency == AppUtility.CurrencyEnum.USD)
+            {
+                currencyFormat = "en-US";
+                pricePerUnit = request.PricePerUnit / exchangeRate;
+                cost = request.Cost / exchangeRate;
+                total = request.TotalWithVat / exchangeRate;
+                vat = request.VAT / exchangeRate;
+            }
+            foreach (var p in priceFilterEnums)
+            {
+                switch (Enum.Parse(typeof(PriceSortEnum), p))
+                {
+                    case PriceSortEnum.Unit:
+                        priceColumn.Add("U: "+string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit));
+                        break;
+                    case PriceSortEnum.Total:
+                        priceColumn.Add("T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost));
+                        break;
+                    case PriceSortEnum.Vat:
+                        priceColumn.Add("V: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", vat));
+                        break;
+                    case PriceSortEnum.TotalVat:
+                        priceColumn.Add("P: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", total));
+                        break;
+                }
+            }
+            return priceColumn;
+        }
+
+        public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)
+        {
+            List<String> amountColumn = new List<String>();
+            if(request.Unit != null)
+            {
+                amountColumn.Add(request.Unit + " " + unitType.UnitTypeDescription);
+                if(request.SubUnit != null)
+                {
+                    amountColumn.Add(request.SubUnit + " " + subUnitType.UnitTypeDescription);                 
+                    if(request.SubSubUnit != null)
+                    {
+                        amountColumn.Add(request.SubSubUnit + " " + subSubUnitType.UnitTypeDescription);
+                    }
+                    
+                }
+
+            }
+            return amountColumn;
+        }
+
+        public static string GetDocumentIcon(RequestFolderNamesEnum folderName)
+        {
+            var iconClass = "";
+            switch (folderName)
+            {
+                case RequestFolderNamesEnum.Quotes:
+                    iconClass = "icon-centarix-icons-03";
+                    break;
+                case RequestFolderNamesEnum.Orders:
+                    iconClass = "icon-chrome_reader_mode-24px";
+                    break;
+                case RequestFolderNamesEnum.Invoices:
+                    iconClass = "icon-book-24px";
+                    break;
+                case RequestFolderNamesEnum.Shipments:
+                    iconClass = "icon-local_shipping-24px";
+                    break;
+                case RequestFolderNamesEnum.Info:
+                    iconClass = "icon-info-24px-2";
+                    break;
+                case RequestFolderNamesEnum.Pictures:
+                    iconClass = "icon-camera_alt-24px";
+                    break;
+                case RequestFolderNamesEnum.Returns:
+                    iconClass = "icon-remove_shopping_cart-24px";
+                    break;
+                case RequestFolderNamesEnum.Credits:
+                    iconClass = "icon-insert_drive_file-24px-1";
+                    break;
+                case RequestFolderNamesEnum.S:
+                    iconClass = "icon-chrome_reader_mode-24px";
+                    break;
+                case RequestFolderNamesEnum.Map:
+                    iconClass = "icon-chrome_reader_mode-24px";
+                    break;
+            }
+            return iconClass;
+        }
+        public static string GetEmployeeCentarixID(IEnumerable<CentarixID> centarixIDs)
+        {
+            string centarixID = "";
+            foreach (var c in centarixIDs)
+            {
+                centarixID += c.CentarixIDNumber;
+            }
+            return centarixID;
+        }
+        public static double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs, double vacationSickCount)
         {
             DateTime nextDay = firstOfTheMonth;
             DateTime endOfTheMonth = firstOfTheMonth.AddMonths(1);
@@ -368,6 +494,38 @@ namespace PrototypeWithAuth.AppData
         {
             return "#000000";
         }
+
+        public static string GetMyIPAddress()
+        {
+            var myIpAddress = "";
+            IPAddress ipAddress;
+            var ipAddressList = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
+            foreach (var address in ipAddressList)
+            {
+                if (myIpAddress == "")
+                {
+                    if (IPAddress.TryParse(address.ToString(), out ipAddress))
+                    {
+                        switch (ipAddress.AddressFamily)
+                        {
+                            case AddressFamily.InterNetwork:
+                                myIpAddress = address.ToString();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+
+            return myIpAddress;
+        }
+
+        public static string PhysicalAddress = NetworkInterface
+                           .GetAllNetworkInterfaces()
+                           .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                           .Select(nic => nic.GetPhysicalAddress().ToString())
+                           .FirstOrDefault();
     }
 
 }

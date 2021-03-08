@@ -13,23 +13,23 @@ using Abp.Extensions;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ProductSubcategoriesController : Controller
+    public class ProductSubcategoriesController : SharedController
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductSubcategoriesController(ApplicationDbContext context)
+        public ProductSubcategoriesController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
 
         // GET: ProductSubcategories
-        [Authorize(Roles = "Requests, Operations")]
+        [Authorize(Roles = "Requests, Operations, LabManagement")]
         public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, int categoryType=1)
         {
-            if(PageType.Equals( AppUtility.PageTypeEnum.LabManagementEquipment.ToString()))
+            if(PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Categories;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementEquipment;
                 var equipmentCategories = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
               .Where(ps => ps.ParentCategoryID ==5);
@@ -38,23 +38,13 @@ namespace PrototypeWithAuth.Controllers
             else if (categoryType == 1)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             }
             else if (categoryType == 2)
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
-                if (PageType.ToString() == AppUtility.PageTypeEnum.RequestInventory.ToString())
-                {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory;
-                }
-                else if (PageType.ToString() == AppUtility.PageTypeEnum.RequestRequest.ToString())
-                {
-                    TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsRequest;
-
-                }
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;      
             }
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Type;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
                 .Where(ps => ps.ParentCategory.CategoryTypeID == categoryType);
             return View(await applicationDbContext.ToListAsync());

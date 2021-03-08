@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class SummaryChartsViewModel
+    public class SummaryChartsViewModel : ViewModelBase
     {
         public DateTime Year { get; set; }
         public List<int> Years { get; set; }

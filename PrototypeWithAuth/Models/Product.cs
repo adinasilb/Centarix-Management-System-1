@@ -17,8 +17,7 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Item")]
         public string ProductName { get; set; }
 
-        [Required (ErrorMessage = "The Vendor field is required.")] //vendor, or vendor id?
-        public int VendorID { get; set; }
+        public int? VendorID { get; set; }
     
         public Vendor Vendor { get; set; }
 
@@ -43,6 +42,10 @@ namespace PrototypeWithAuth.Models
         
         [Display(Name = "Image")]
         public string ProductMedia { get; set; }
+
+        [Display(Name = "Catalog Number")]
+        public string CatalogNumber { get; set; }
+        public string ProductHebrewName { get; set; }
 
     }
 }

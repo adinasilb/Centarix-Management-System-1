@@ -61,6 +61,4 @@
 		$.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
 		return false;
 	});
-
-
 })

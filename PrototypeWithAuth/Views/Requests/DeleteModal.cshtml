@@ -3,15 +3,15 @@
 @{
     Layout = null;
     var bcColor = "order-inv-background-color";
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         bcColor = "oper-background-color";
     }
-    else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
     {
         bcColor = "lab-man-background-color";
     }
-    else if (Model.SectionType == AppUtility.MenuItems.Requests)
+    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
     {
         bcColor = "order-inv-background-color";
     }
@@ -23,21 +23,19 @@
     <div class="modal-dialog-centered modal-lg mx-auto " role="document" style="max-height:100%;  overflow-y:auto;">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('delete-item');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
                 @Html.HiddenFor(model => model.Request.RequestID)
-                @Html.HiddenFor(model => model.IsReorder)
 
-                @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
-                @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
-                @Html.HiddenFor(model => model.Page)
-                @Html.HiddenFor(model => model.RequestStatusID)
-                @Html.HiddenFor(model => model.SubCategoryID)
-                @Html.HiddenFor(model => model.VendorID)
-                @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
-                @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
+                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
 
                 <div class="modal-header border-bottom modal-header-padding">
                     <span class="heading-1">Are you sure you would like to delete @Model.Request.Product.ProductName ?</span>
@@ -70,40 +68,39 @@
                         </div>
 
                         @*<div class="row">
-                                <div class="col-4 font-weight-bold">
-                                    @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)&nbsp;:
-                                    <br />
-                                    @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)&nbsp;:
-                                    <br />
-                                    @Html.DisplayNameFor(model => model.Request.Product.Vendor.VendorEnName)&nbsp;:
-                                </div>
-                                <div class="col-4">
-                                    @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
-                                    <br />
-                                    @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
-                                    <br />
-                                    @Html.DisplayFor(model => model.Request.Product.Vendor.VendorEnName)
-                                </div>
-                            </div>*@
+                    <div class="col-4 font-weight-bold">
+                        @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)&nbsp;:
+                        <br />
+                        @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)&nbsp;:
+                        <br />
+                        @Html.DisplayNameFor(model => model.Request.Product.Vendor.VendorEnName)&nbsp;:
+                    </div>
+                    <div class="col-4">
+                        @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+                        <br />
+                        @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+                        <br />
+                        @Html.DisplayFor(model => model.Request.Product.Vendor.VendorEnName)
+                    </div>
+                </div>*@
 
                     </div>
 
                     @*@Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription) &nbsp;: &ensp;
-                        @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
-                        <br />
-                        @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription) &nbsp;: &ensp;
-                        @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
-                        <br />
-                        @Html.DisplayNameFor(model => model.Request.Product.Vendor.VendorEnName) &nbsp;: &ensp;
-                        @Html.DisplayFor(model => model.Request.Product.Vendor.VendorEnName)*@
+            @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription)
+            <br />
+            @Html.DisplayNameFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription) &nbsp;: &ensp;
+            @Html.DisplayFor(model => model.Request.Product.ProductSubcategory.ProductSubcategoryDescription)
+            <br />
+            @Html.DisplayNameFor(model => model.Request.Product.Vendor.VendorEnName) &nbsp;: &ensp;
+            @Html.DisplayFor(model => model.Request.Product.Vendor.VendorEnName)*@
 
 
                 </div>
                 <div class="modal-footer">
                     <div class="text-center mx-auto modal-footer-mt">
-
-                        <input type="submit" asp-action="DeleteModal" value="Confirm" class="custom-button custom-button-font @bcColor between-button-margin" />
-                        <button class="custom-cancel custom-button " data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                        <button type="submit" asp-action="DeleteModal" class="custom-button custom-button-font @bcColor between-button-margin" value="@Model.Request.RequestID">Confirm</button>
+                        <button type="button" class="custom-cancel custom-button " @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('delete-item');">Cancel</button>
                     </div>
                 </div>
 
@@ -111,3 +108,34 @@
         </div>
     </div>
 </div>
+<script>
+    $(".submit-delete").off('click').on("click", function (e) {
+        console.log("submit delete");
+        e.preventDefault();
+        $("#loading").show();
+        var PageType = $('#masterPageType').val();
+        var SidebarType = $('#masterSidebarType').val();
+        var viewClass=""
+        if (PageType =="LabManagementQuotes")
+        {
+            if (SidebarType =="Quotes")
+            {
+
+            }
+            else {
+
+            }
+        }
+        else if (PageType == "RequestInventory" || PageType == "OperationsInventory") 
+        {
+
+            viewClass ="_IndexTableData";
+        }
+        else
+        {
+            viewClass ="_IndexTableWithCounts";
+        }
+        ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal?id=" + $(this).attr("value"), "."+viewClass, "POST");
+        return false;
+    });
+</script>

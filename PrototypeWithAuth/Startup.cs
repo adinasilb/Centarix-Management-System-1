@@ -19,15 +19,17 @@ using Microsoft.AspNetCore.Diagnostics;
 using PrototypeWithAuth.AppData;
 using Microsoft.Extensions.Logging;
 using PrototypeWithAuth.Models;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using Microsoft.AspNetCore.Http;
 
 namespace PrototypeWithAuth
 {
     public class Startup
     {
-        private  const String ConfirmEmailProvider = "CustomEmailConfirmation";
+        private const String ConfirmEmailProvider = "CustomEmailConfirmation";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -73,7 +75,6 @@ namespace PrototypeWithAuth
                 options.EnableSensitiveDataLogging(true);
             });
 
-
             services.AddControllersWithViews();
 
 
@@ -94,6 +95,7 @@ namespace PrototypeWithAuth
                 config.Filters.Add(new AuthorizeFilter(policy));
                 // config.AllowValidatingTopLevelNodes = true;
             });
+            services.AddSession();
 
             ////allow for data anotations validations
             //services.AddMvcCore()
@@ -101,7 +103,7 @@ namespace PrototypeWithAuth
             // //.AddMvcOptions(opt =>
             // //       opt.Filters.Add<RequestFilterAttribute>());
 
-         
+
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -111,10 +113,10 @@ namespace PrototypeWithAuth
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
-
+                options.Cookie.Name = "LoginCookie";
             });
 
-         
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
 
@@ -141,7 +143,7 @@ namespace PrototypeWithAuth
 
             app.UseAuthentication();
             app.UseAuthorization();
-            // app.UseSession();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
@@ -157,8 +159,6 @@ namespace PrototypeWithAuth
 
             //app.UseApplicationInsightsRequestTelemetry();
             //app.UseApplicationInsightsExceptionTelemetry();
-
-
         }
 
         //private async Task ChangePassword(IServiceProvider serviceProvider)
@@ -173,15 +173,15 @@ namespace PrototypeWithAuth
 
         //Seed database with new roles
 
-        //private async Task AddRoles(IServiceProvider serviceProvider)
-        //{
-        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    var user = await UserManager.FindByEmailAsync("adina@centarix.com");
-        //    //await UserManager.AddToRoleAsync(user, "Admin");
-        //    //await UserManager.AddToRoleAsync(user, "CEO");
-        //    var code = await UserManager.GeneratePasswordResetTokenAsync(user);
-        //    var result = await UserManager.ResetPasswordAsync(user, code, "adinabCE2063*");
-        //}
+        private async Task AddRoles(IServiceProvider serviceProvider)
+        {
+            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var user = await UserManager.FindByEmailAsync("adina@centarix.com");
+            await UserManager.AddToRoleAsync(user, "LabManagement");
+            ////await UserManager.AddToRoleAsync(user, "CEO");
+            //var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+            //var result = await UserManager.ResetPasswordAsync(user, code, "adinabCE2063*");
+        }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
@@ -224,16 +224,15 @@ namespace PrototypeWithAuth
                 LockoutEnabled = true,
                 LockoutEnd = new DateTime(2999, 01, 01),
                 NeedsToResetPassword = true,
-                UserNum = 2,
-                IsUser = true
+                UserNum = 0,
+                IsUser = true,
             };
             var createAdminUser = await UserManager.CreateAsync(adminuser, "ElixirSA29873$*");
             adminuser.EmailConfirmed = true;
             var result = await UserManager.UpdateAsync(adminuser);
             if (createAdminUser.Succeeded)
             {
-                await UserManager.AddToRoleAsync(adminuser, "Admin");
-                await UserManager.AddToRoleAsync(adminuser, "CEO");
+                await UserManager.AddToRoleAsync(adminuser, "Users");
             }
 
             //var poweruser = await UserManager.FindByEmailAsync("adinasilberberg@gmail.com");

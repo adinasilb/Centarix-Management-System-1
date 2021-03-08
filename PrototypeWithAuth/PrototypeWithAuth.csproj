@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,24 +9,12 @@
 
   <ItemGroup>
     <Compile Remove="Models\LocationModels\**" />
-    <Compile Remove="wwwroot\files\65\**" />
-    <Compile Remove="wwwroot\files\66\**" />
-    <Compile Remove="wwwroot\files\68\**" />
     <Compile Remove="wwwroot\images\NewFolder\**" />
     <Content Remove="Models\LocationModels\**" />
-    <Content Remove="wwwroot\files\65\**" />
-    <Content Remove="wwwroot\files\66\**" />
-    <Content Remove="wwwroot\files\68\**" />
     <Content Remove="wwwroot\images\NewFolder\**" />
     <EmbeddedResource Remove="Models\LocationModels\**" />
-    <EmbeddedResource Remove="wwwroot\files\65\**" />
-    <EmbeddedResource Remove="wwwroot\files\66\**" />
-    <EmbeddedResource Remove="wwwroot\files\68\**" />
     <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
     <None Remove="Models\LocationModels\**" />
-    <None Remove="wwwroot\files\65\**" />
-    <None Remove="wwwroot\files\66\**" />
-    <None Remove="wwwroot\files\68\**" />
     <None Remove="wwwroot\images\NewFolder\**" />
   </ItemGroup>
 
@@ -167,6 +155,34 @@
     <Compile Remove="Data\Migrations\20201223092048_addedTestToInvoice.Designer.cs" />
     <Compile Remove="Data\Migrations\20201224070239_addedLastCentarixIDTable.cs" />
     <Compile Remove="Data\Migrations\20201224070239_addedLastCentarixIDTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201227075710_movedCentarixIdsFromApplicationUserToEmployee.cs" />
+    <Compile Remove="Data\Migrations\20201227075710_movedCentarixIdsFromApplicationUserToEmployee.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210105093516_TookAwayNewNullables.cs" />
+    <Compile Remove="Data\Migrations\20210105093516_TookAwayNewNullables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210105094203_DefalutNullableValue.cs" />
+    <Compile Remove="Data\Migrations\20210105094203_DefalutNullableValue.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210110091042_MadeIsDeniedNotNullable.cs" />
+    <Compile Remove="Data\Migrations\20210110091042_MadeIsDeniedNotNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210208125511_AddedLabPartData.cs" />
+    <Compile Remove="Data\Migrations\20210208125511_AddedLabPartData.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210208125656_AddedLabPartData.cs" />
+    <Compile Remove="Data\Migrations\20210208125656_AddedLabPartData.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210208130022_AddedLabPartData2.cs" />
+    <Compile Remove="Data\Migrations\20210208130022_AddedLabPartData2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210209072438_AddFKToLocationInstance.cs" />
+    <Compile Remove="Data\Migrations\20210209072438_AddFKToLocationInstance.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210209073115_AddFKToLocationInstance.cs" />
+    <Compile Remove="Data\Migrations\20210209073115_AddFKToLocationInstance.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210222080644_AddedProductHebrewName.cs" />
+    <Compile Remove="Data\Migrations\20210222080644_AddedProductHebrewName.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210222083146_AddedProductHebrewName.cs" />
+    <Compile Remove="Data\Migrations\20210222083146_AddedProductHebrewName.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210301105934_AddDisplayNameSupplierOrderNumber.cs" />
+    <Compile Remove="Data\Migrations\20210301105934_AddDisplayNameSupplierOrderNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210303085917_TookAwayLocationRoomInstances.cs" />
+    <Compile Remove="Data\Migrations\20210303085917_TookAwayLocationRoomInstances.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210307125519_RedidSomeFieldsForAccounting.cs" />
+    <Compile Remove="Data\Migrations\20210307125519_RedidSomeFieldsForAccounting.Designer.cs" />
   </ItemGroup>
 
 
@@ -184,6 +200,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
@@ -211,7 +228,7 @@
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\files\287\" />
+    <Folder Include="Views\Operations\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
   </ItemGroup>

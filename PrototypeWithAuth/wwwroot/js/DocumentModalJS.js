@@ -27,16 +27,11 @@
 		//var url = $("#documentModalForm").data('string');
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
-		var $isEdittable = $('.isEdittable').val();
+		var $isEdittable = $('.active-document-modal.withinDocModal').data("val");
+		alert($isEdittable)
+		var $showSwitch =  $('.active-document-modal.withinDocModal').attr("showSwitch");
 		console.log("url : " + url);
 		var formData = new FormData($(".documentModalForm")[0]);
-		var data = $(".documentModalForm").serialize();
-		//var formData = new FormData($(this));
-		//console.log("data : " + data);
-		console.log("formData : " + formData);
-		//console.log("data : " + model);
-
-
 		$.ajax({
 			url: url,
 			method: 'POST',
@@ -49,14 +44,14 @@
 				var $enumString = $(".open-document-modal.active-document-modal").data("string");
 				var $requestId = $(".open-document-modal.active-document-modal").data("id");
 				var section = "";
-				console.log("enumstring: " + $enumString + "    : requestid: " + $requestId + "isedditable" + $isEdittable);
+				
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
 					section = "Operations"
 				} else if ($(".open-document-modal.active-document-modal").hasClass('labManagement')|| $(".open-document-modal.active-document-modal").hasClass('LabManagement')) {
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
-				$.fn.OpenDocumentsModal1($enumString, $requestId, $isEdittable, section);
+				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch);
 				return true;
 			},
 			processData: false,
@@ -66,33 +61,41 @@
 
 	});
 
+	
 
+	$(".open-document-modal").off('click').on("click", function (e) {
 
-	$.fn.OpenDocumentsModal1 = function (enumString, requestId, isEdittable, section) {
-		$('#loading').show();
-		$(".documentsModal").replaceWith('');
-		//alert("in documents modal in document modal js")
-		//$(".modal-backdrop").first().removeClass();
-		$.ajax({
-			async: true,
-			url: "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section,
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				$('#loading').hide();
-				var modal = $(data);
-				$('body').append(modal);
-				$(".documentsModal").modal({
-					backdrop: false,
-					keyboard: true,
-				});
-				$(".documentsModal").modal('show');
-
-				return true;
-			}
-		});
+		e.preventDefault();
+		e.stopPropagation();
+		console.log("clicked open doc modal");
+		$(".open-document-modal").removeClass("active-document-modal");
+		var section = "";
+		if ($(".open-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
+			section = "Operations";
+		} else if ($(".open-document-modal").hasClass('labManagement') || $(".open-document-modal").hasClass('LabManagement')) {
+			section = "LabManagement";
+		}
+		$(this).addClass("active-document-modal");
+		var enumString = $(this).data("string");
+		console.log("enumString: " + enumString);
+		var requestId = $(this).data("id");
+		console.log("requestId: " + requestId);
+		var isEdittable = $(".active-document-modal").attr("data-val");
+		console.log($("#masterSidebarType").val())
+		var showSwitch = $(".active-document-modal").attr("showSwitch");
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch);
 		return true;
-	};
+	});
+
+
+	$(".file-select").on("change", function (e) {
+		console.log("file was changed");
+		$cardDiv = $(this).closest("div.card");
+		console.log("cardDiv: " + JSON.stringify($cardDiv));
+		$cardDiv.addClass("document-border");
+		return true;
+	});
+
 
 	$.fn.ChangeColorsOfModal = function ($foldername, section) {
 		//alert("section: " + section)
@@ -102,10 +105,11 @@
 
 		var div = $("#" + $foldername + " i");
 		
-		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter")) {
+		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file")) {
 			console.log("has class already");
 		} else {
 			console.log("does not class already");
+			$("#" + $foldername + " div.card.document-border").addClass("hasFile");
 			if (section=="Operations") {
 				div.addClass("oper-filter");
 			} else if ((section == "LabManagement")) {
@@ -114,11 +118,14 @@
 			else {
 				div.addClass("order-inv-filter");
 			}
-
+			$("#" + $foldername+"Input").addClass("contains-file");
+			if ($("#" + $foldername+"Input").rules()) {
+					$("#" + $foldername+"Input").valid();
+			}
 		}
 	};
 
-	$(".delete-document").click( function (e) {
+	$(".modal").on("click",".delete-document", function (e) {
 		e.preventDefault();
 		var hasClass = $(this).hasClass("delete-file-document");
 		if (hasClass ==true) {
@@ -131,14 +138,8 @@
 				type: 'GET',
 				cache: false,
 				success: function (data) {
-					var modal = data;
-					$("#DeleteDocumentsModal").replaceWith('');
-					$('body').append(modal);
-					$("#DeleteDocumentsModal").modal({
-						backdrop: false,
-						keyboard: true,
-					});
-					$("#DeleteDocumentsModal").modal('show');
+					$.fn.OpenModal('modal-document-delete', "documents-delete", data)
+					
 				}
 			});
 		}
@@ -167,7 +168,7 @@
 	//	alert("djs modal turned on or off!");
 	//});
 	$(".modal .turn-edit-doc-on-off").off("click").on("click", function () {
-		alert('.turneditdoc on and off')
+		//alert('.turneditdoc on and off')
 		var detailsBool = $(".isEdittable").hasClass("details");
 		var editBool = $(".isEdittable").hasClass("edit");
 
@@ -181,25 +182,37 @@
 			$(".isEdittable").removeClass("details");
 			$(".isEdittable").addClass("edit");
 
-			$(".upload-file").removeClass("disabled-color");
-			$(".upload-file").addClass($bcColor);
+			$(".document-modal-buttons").removeClass("disabled-color");
+			$(".document-modal-buttons").addClass($bcColor);
 			$(".file-select").attr("disabled", false);
+			$(".isEdittable").val(true);
+			$(".document-modal-cancel").addClass("d-none");
+			$(".document-modal-save").removeClass("d-none");
 			$(".documents-delete-icon.icon-delete-24px").removeClass("disabled-filter");
 			$(".documents-delete-icon.icon-delete-24px").addClass($color);
-
+		    $(".view-img i").removeClass("disabled-filter");
+			$(".view-img i").addClass($color);
+			$(".active-document-modal.withinDocModal").attr("data-val", true);
 			$(".delete-document").addClass("delete-file-document");
+			$(this).prev('.edit-mode-switch-description').text("Edit Mode On");
 		}
 		else if (editBool) {
+
 			$(".isEdittable").addClass("details");
 			$(".isEdittable").removeClass("edit");
-
-			$(".upload-file").addClass("disabled-color");
-			$(".upload-file").removeClass($bcColor);
+			$(".isEdittable").val(false);
+			$(".document-modal-buttons").addClass("disabled-color");
+			$(".document-modal-buttons").removeClass($bcColor);
 			$(".file-select").attr("disabled", true);
+			$(".document-modal-cancel").removeClass("d-none");
+			$(".document-modal-save").addClass("d-none");
+			$(".active-document-modal.withinDocModal").attr("data-val", false);
 			$(".documents-delete-icon.icon-delete-24px").addClass("disabled-filter");
 			$(".documents-delete-icon.icon-delete-24px").removeClass($color);
-
+			$("i.view-img").addClass("disabled-filter");
+			$("i.view-img").removeClass($color);
 			$(".delete-document").removeClass("delete-file-document");
+			$(this).prev('.edit-mode-switch-description').text("Edit Mode Off");
 		}
 	});
 	//$(".modal").on("change", ".turn-edit-doc-on-off", function () {

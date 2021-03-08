@@ -44,11 +44,46 @@ $(".empty-shelf-check").on("change", function () {
 	alert("empty shelf changed!");
 });
 
+$(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function () {
+	if($(this).val()!="")
+	{
+	$.ajax({
+            async: true,
+            type: 'GET',
+            cache: false,
+            url: "/Locations/HasShelfBlock?id="+$(this).val()+"&roomID="+$("select.locationRoom").val(),
+            success: function (data) {
+                $(".hasShelfBlock").html(data);
+				$(".labPartNameLabel").html($(".labPartName").val())
+            }
+    });
+		}
+	
+});
 
-//DROPDOWN MENU
 
+$(".locationRoom").off("change").on("change", function () {
+	if($(this).val()!="")
+	{
+	   $("#select-options-labPartDDL").find(".active").removeClass("active");
+	   $.fn.EnableMaterialSelect('#labPartDDL', 'select-options-labPartDDL');
+	  	$.ajax({
+            async: true,
+            type: 'GET',
+            cache: false,
+            url: "/Locations/GetLocationRoomName?id="+$(this).val(),
+            success: function (data) {
+				$(".roomName").html(data)
+				$(".labPartNameLabel").html('');
+            }
+    }); 
+		}
+	else{
+		$.fn.DisableMaterialSelect('#labPartDDL', 'select-options-labPartDDL'); 
+		}
+});
 
-$('.modal').on('change', '.emptyShelf', function () {
+$('.modal').off('change', '.emptyShelf').on('change', '.emptyShelf', function () {
 	console.log('emptyShelf change')
 	var val = $(this).prop('checked');
 	var id = $(this).attr('id');
@@ -58,10 +93,8 @@ $('.modal').on('change', '.emptyShelf', function () {
 		$('.' + id).remove()
 	} else {
 		//add to label
-		var span = "<span class='addLocationFont " + id + "'>" + num +", &nbsp</span>"
+		var span = "<span class=' " + id + "'>" + num +", &nbsp</span>"
 		$('.custom-multipleSpan').show();
 		$('.select').append(span)
 	}
-
-
 });

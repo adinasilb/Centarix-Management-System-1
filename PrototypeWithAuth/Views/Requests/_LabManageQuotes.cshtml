@@ -1,0 +1,114 @@
+﻿@model PrototypeWithAuth.ViewModels.OrdersByVendorViewModel
+@using PrototypeWithAuth.AppData
+
+
+@foreach (var vendor in Model.RequestsByVendor)
+{
+    <tr class="text-dark border-0 no-hover h-50" style="line-height:50%;">
+        <td width="10%" class="p-0" rowspan="2"><div class="heading-1">@vendor.Key.VendorEnName.ToLower()</div></td>
+        <td colspan="7" class="border-bottom">
+            <input type="hidden" asp-for="@vendor.Key.VendorID" class="key-vendor-id" />
+        </td>
+    </tr>
+    <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
+
+    var requests = vendor.Select(r => r).ToList();
+    @for (int i = 0; i < requests.Count; i++)
+    {
+        <tr class="text-center">
+            <td class="text-center" width="15%">
+                <input type="hidden" asp-for="@requests[i].RequestID" />
+                @if (requests[i].Product.ProductSubcategory.ImageURL != null)
+                {
+                    var imageurl = requests[i].Product.ProductSubcategory.ImageURL;
+                    <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                }
+                else
+                {
+                    <img src="/images/css/CategoryImages/placeholder.png" alt="Image" width="75" class="category-image" />
+                }
+            </td>
+            <td width="10%">
+                @requests[i].Product.ProductName
+            </td>
+            <td width="10%">
+                @requests[i].Product.Vendor.VendorEnName.ToLower()
+            </td>
+            <td>
+                @requests[i].Product.ProductSubcategory.ProductSubcategoryDescription
+            </td>
+            <td width="10%">
+                @requests[i].Unit @requests[i].UnitType.UnitTypeDescription
+                @if (requests[i].SubUnitType != null)
+                {
+                    @requests[i].SubUnit @requests[i].SubUnitType.UnitTypeDescription
+                }
+                @if (requests[i].SubSubUnitType != null)
+                {
+                    @requests[i].SubSubUnit @requests[i].SubSubUnitType.UnitTypeDescription
+                }
+            </td>
+            <td width="10%">
+                @{
+                    var priceString = "";
+                    var requestPriceList = AppUtility.GetPriceColumn(Model.SelectedPriceSort, requests[i], Model.SelectedCurrency);
+                    foreach (var price in requestPriceList)
+                    {
+                        if (price == requestPriceList.First())
+                        {
+                            priceString = price;
+                        }
+                        else
+                        {
+                            priceString = priceString + "<br/>" + price;
+                        }
+                    }
+                }
+
+                @Html.Raw(priceString)
+            </td>
+            <td width="15%">
+                @requests[i].ApplicationUserCreator.FirstName @requests[i].ApplicationUserCreator.LastName
+            </td>
+            <td width="7%">
+                @if (requests[i].ParentQuote.QuoteStatusID == 2)
+                {
+                    <button class="table-button custom-button-table-font lab-man-background-color float-right text-center confirm-quote-resend " value="@requests[i].RequestID">Resend</button>
+                }
+            </td>
+            <td width="12%">
+                <div class="d-inline-flex">
+                    <div class="table-icon-div"><button class="btn no-box-shadow p-0 load-quote-details m-0" data-title="edit" value="@requests[i].RequestID"> <img src="~/images/css/accounting/icons/payment.png" /></button></div>
+                    <div class="table-icon-div"><button class="btn no-box-shadow p-0 m-0 load-confirm-delete" data-title="delete" value="@requests[i].RequestID" name="@AppUtility.MenuItems.LabManagement"><i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i></button></div>
+                </div>
+            </td>
+        </tr>
+    }
+    <tr class="border-0 mb-5 no-hover">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+        </td>
+        <td> <span class="text font-weight-bold">Items: @vendor.Count()</span> </td>
+        <td colspan="1">
+            @{
+                var totalCost = vendor.Sum(r => r.Cost);
+                var decTotalCost = (decimal)totalCost;
+                var stringTotalCost = decTotalCost.ToString("C02");
+            }
+            <span class="text font-weight-bold">Total: @stringTotalCost</span>
+        </td>
+        <td colspan="2">
+            @*@if (vendor.Where(r => r.ParentQuote.QuoteStatusID == 1).Count() != 0)
+                {*@
+            <button class="custom-button custom-button-font lab-man-background-color float-right text-center confirm-quote" value="@vendor.Key.VendorID">Ask For Quote</button>
+            @*}*@
+
+        </td>
+    </tr>
+}
+
+<script src="~/js/PricePopoverScript.js"></script>
+<script src="~/js/ConfirmDeleteScript.js"></script>

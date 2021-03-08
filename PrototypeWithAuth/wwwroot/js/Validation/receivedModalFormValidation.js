@@ -1,4 +1,8 @@
 ﻿
+var isRequests = function () {
+	return $("#masterSectionType").val() == "Requests";
+}
+
 $('.receivedModalForm').validate({
 	rules: {
 		"Request.ArrivalDate": {
@@ -8,7 +12,7 @@ $('.receivedModalForm').validate({
 			required: true,
 		},
 		"locationSelected": {
-			required: true
+			required: isRequests
 		}
 
 	},

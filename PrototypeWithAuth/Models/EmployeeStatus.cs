@@ -7,14 +7,16 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class EmployeeStatus 
+    public class EmployeeStatus
     {
+        private string _Abbreviation { get; set; }
+
         [Key]
         public int EmployeeStatusID { get; set; }
         public string Description { get; set; }
-        public IEnumerable<Employee> Employees {get; set;}
+        public IEnumerable<Employee> Employees { get; set; }
 
-        [Column(TypeName ="char(2)")]
+        [Column(TypeName = "char(2)")]
         public string Abbreviation { get; set; }
         public int LastCentarixID { get; set; }
         public DateTime LastCentarixIDTimeStamp { get; set; }

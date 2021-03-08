@@ -3,7 +3,7 @@
     e.preventDefault();
     e.stopPropagation();
     $("#loading").show();
-    var $itemurl = "/Requests/DeleteModal/?id=" + $(this).val() + "&SectionType=" + $(this).attr('name');;
+    var $itemurl = "/Requests/DeleteModal/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString();
     $.fn.CallPageRequest($itemurl, "delete");
     return false;
 });

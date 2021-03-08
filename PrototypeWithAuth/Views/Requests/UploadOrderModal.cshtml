@@ -1,0 +1,189 @@
+﻿@model PrototypeWithAuth.ViewModels.UploadOrderViewModel;
+@using PrototypeWithAuth.AppData
+@{
+    Layout = null;
+    var markDisabled = "details";
+    int requestid;
+
+    var bcColor = "order-inv-background-color";
+    var color = "order-inv-color";
+    var form = "order-inv-form";
+    var deleteDocumentClass = "";
+    var sectionType = AppUtility.MenuItems.Requests.ToString();
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+    {
+        form = "oper-form";
+        bcColor = "oper-background-color";
+        color = "operations-filter";
+        sectionType = AppUtility.MenuItems.Operations.ToString();
+    }
+    //else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    //{
+
+    //    form = "supplier-form";
+    //    bcColor = "lab-man-background-color";
+    //    color = "lab-man-filter";
+    //    sectionType = AppUtility.MenuItems.LabManagement.ToString();
+    //}
+}
+
+@*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
+<script src="~/js/site.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>
+<div class="modal modal-document fader on-form-modal modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index:9000">
+    <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style  cancel-order" aria-label="Close" @*data-dismiss="modal"  onclick="$(this).closest('.modalStep1').modal('hide');"*@>
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
+                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+                <div>
+                    <div class="modal-header modal-header-padding">
+                        <div class="container-fluid">
+                            <div class="row text-danger-centarix"> @ViewBag.ErrorMessage </div>
+                            <div class="row ">
+                                <div class="col-4">
+                                    <div class="heading-1">Upload Order</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body mt-5 ">
+                    @{
+                        var urlAction = Url.Action("DocumentsModal", "Requests");
+                        var fontSize = "2rem";
+                    }
+                    <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+                    <div class="row">
+                        <div class=" offset-4 text-center">
+                            @{
+                                var filterClass = "opac87";
+                                var containsFile = "";
+                                if (Model.FileStrings != null && Model.FileStrings.Count > 0)
+                                {
+                                    filterClass = color;
+                                    containsFile = "contains-file";
+                                }
+                            }
+                            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()Input" name="@AppUtility.RequestFolderNamesEnum.Orders.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
+                            <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true" showSwitch="@false">
+                                <div class="card document-border">
+                                    <div class="document-card text-center">
+                                        <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                    </div>
+                                </div>
+                            </a>
+                            <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
+                        </div>
+                        <div class="col-3 offset-1">
+                            <div class="row">
+                                <div class="form-group ">
+                                    <label asp-for="@Model.ParentRequest.SupplierOrderNumber" class=" control-label m-0 mt-2" style="width:100%;">Order Number</label>
+                                    <input asp-for="@Model.ParentRequest.SupplierOrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
+                                    <span asp-validation-for="@Model.ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group ">
+                                    <label asp-for="@Model.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.ParentRequest.OrderDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" data-val="@Model.ParentRequest.OrderDate.ToString("yyyy-MM-dd")" />
+                                    <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-0">
+                    <div class="mx-auto modal-footer-mt">
+                        <input type="submit" class="custom-button submit-order custom-button-font @bcColor between-button-margin" />
+                        <button type="button" class="custom-button custom-cancel cancel-order" @*data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');"*@>Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
+<script src="~/js/validate.js"></script>
+<script>
+    $(".submit-order").off('click').on("click", function (e) {
+        e.preventDefault();
+        console.log("submit order doc");
+        //alert("validate form");
+        $(".uploadQuoteForm").data("validator").settings.ignore = "";
+        var valid = $(".uploadQuoteForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            }
+        }
+        else {
+            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $("#loading").show();
+            var formData = new FormData($(".uploadQuoteForm")[0]);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/UploadOrderModal",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $(".save-item").removeClass("save-item").off('click')
+                    if ($('#masterPageType').val() == "RequestRequest") {
+                        $(".render-body").html(data)
+                    }
+                    else if ($('#masterPageType').val() == "RequestCart") {
+                        $(".render-body").html(data)
+                    }
+                    else {
+                        $("._IndexTableData").html(data);
+                    }
+                    $.fn.CloseModal("step-1");
+                    $("#loading").hide();
+                    return true;
+                },
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $.fn.OpenModal('modalStep1', 'step-1', jqxhr.responseText)
+                    }
+                    $("#loading").hide();
+                    return true;
+                }
+            });
+        }
+        $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+    });
+    $(".cancel-order").click(function (e) {
+        var formData = new FormData($(".uploadQuoteForm")[0]);
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: "/Requests/UploadOrderModal?isCancel=true",
+            data: formData,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                $.fn.CloseModal("step-1");
+                return true;
+            }
+        })
+
+    });
+</script>
+

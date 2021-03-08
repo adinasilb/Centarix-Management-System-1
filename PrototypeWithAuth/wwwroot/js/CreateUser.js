@@ -2,15 +2,17 @@
 $(function () {
 
 
-	$("#NewEmployee_DOB").on("change", function () {
+	$("#NewEmployee_DOB").off("change").on("change", function () {
+		var val = $(this).val();
+		val = val.split("/").reverse().join("-");
+		var DOB = moment(val);
 		var age = 0;
-		console.log("age: " + age);
-		var DOB = new Date($(this).val());
 		//var Today = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
-		//console.log("dob: " + DOB);
-		//console.log("today: " + Today);
+		console.log("dob: " + DOB);
 		var today = new Date();
+		console.log("today: " + today);
 		age = Math.floor((today - DOB) / (365.25 * 24 * 60 * 60 * 1000));
+		alert(age);
 		if (isNaN(age)) {
 			age = '';
 		}
@@ -88,4 +90,74 @@ $(function () {
 		$("#NewEmployee_SalariedEmployee_HoursPerDay").val(hoursPercentage);
 	};
 
+	$('.employee-status-radio').off("click").on("click", function () {
+
+		var val = $(this).val();
+		$('#NewEmployee_EmployeeStatusID').val(val)
+		$("#validation-EmployeeStatus").addClass("hidden");
+		if (val == "4") {
+			$('.only-employee').removeClass("error");
+			$('.only-employee').addClass("hidden");
+			$('.only-employee').addClass("m-0");
+		}
+		else {
+			$('.only-employee').removeClass("hidden");
+			$('.only-employee').removeClass("m-0");
+        }
+
+		$.fn.AppendAsteriskToRequired();
+
+		var centarixIDInput = $('#CentarixID');
+		if (val == $("#OriginalStatusID").val()) {
+			centarixIDInput.val($("#OriginalStatusID").attr("centarixID"));
+		}
+		else {
+			$.ajax({
+				async: true,
+				url: "/Admin/GetProbableNextCentarixID?StatusID=" + val,
+				type: 'GET',
+				cache: true,
+				success: function (data) {
+					console.log("original status id: " + $("#OriginalStatusID").attr("CentarixID"));
+					console.log("data " + data);
+					var orginalID =$("#OriginalStatusID").attr("CentarixID")
+					if(orginalID==undefined)
+					{
+						orginalID='';
+					}
+					var showCentarixID = orginalID + data;
+					console.log("showCentarixID: " + showCentarixID);
+					centarixIDInput.val(showCentarixID);
+				}
+			});
+		}
+
+
+	});
+	$("body, .modal").off("change", ".job-category").on("change", ".job-category", function () {
+		console.log("in on change before fx");
+		//$.fn.changeProject($(this).val());
+		console.log("job-category was changed");
+		var categoryID = $(this).val();
+		var url = "/Admin/GetJobSubcategoryTypeList";
+
+		var jobSubcategory = $("#job-subcategory");
+
+		$.getJSON(url, { JobCategoryTypeID: categoryID }, function (data) {
+			var item1 = "<option value=''>Select Sub Category Type</option>";
+			jobSubcategory.empty();
+			jobSubcategory.append(item1);
+			$.each(data, function (i, subCategory) {
+				item = '<option value="' + subCategory.jobSubcategoryTypeID + '">' + subCategory.description + '</option>'
+				jobSubcategory.append(item);
+			});
+			//jobSubcategory.destroyMaterialSelect();
+			//jobSubcategory.prop("disabled", false);
+			//jobSubcategory.removeAttr("disabled");
+			//$('[data-activates="select-options-job-subcategory"]').prop('disabled', false);
+			jobSubcategory.materialSelect();
+			return false;
+		});
+		return false;
+	});
 });

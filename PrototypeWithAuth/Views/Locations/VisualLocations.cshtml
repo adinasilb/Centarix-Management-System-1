@@ -23,71 +23,89 @@ else
 
     @if (Model.IsSmallestChild || Model.CurrentEmptyChild.LocationInstanceID > 0)
     {
-
-        <div class="container pr-0 float-right hasVisual
+       
+<div class="container pr-0 float-right hasVisual
           ">
-            <div class="row">
-                <div class="col-12">
-                    <button class="btn visual-locations-zoom
+    @if((Model.ParentLocationInstance.Width==9 && Model.ParentLocationInstance.Height == 9) || (Model.ParentLocationInstance.Width==12&& Model.ParentLocationInstance.Height == 12))
+    {
+    <div class="row">
+        <div class="col-12">
+            <button class="btn visual-locations-zoom
                     float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ParentLocationInstance.LocationInstanceID">
-                        <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
-                    </button>
-                </div>
-            </div>
-            <br />
-            <div class="row mt-0">
-                <div class="col-md-12 pr-0">
-                    <div class="container text-center ">
-                        <table class="table visual-locations-table  border mt-0">
-                            @{
-                                int z = -1;
-                            }
-                            @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
-                            {
-                                <tr>
-                                    @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-                                    {
-                                        z++;
-                                        var backgroundClass = "";
-                                        var innerHtml = Model.ParentLocationInstance.Place;
-                                        var AddedBGClass = " location-box-selected  text-light";
-                                        @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
-                                        {
-                                            if (Model.ChildrenLocationInstances[z].RequestLocationInstances.Any())
-                                            {
-                                                backgroundClass += AddedBGClass;
-
-                                                innerHtml = Model.ChildrenLocationInstances[z].Place;
-                                            }
-                                            else
-                                            {
-                                                backgroundClass = "";
-                                                innerHtml = Model.ChildrenLocationInstances[z].Place;
-                                            }
-                                        }
-                                          var is25Class = "";
-                                             if (Model.ParentLocationInstance.Width > 3)
-                                             {
-                                                 is25Class = "is25";
-                                             }
-                                         
-                                        <td class="@backgroundClass p-0 @is25Class" ><div class="visual-locations-div location-visual-font">@innerHtml</div></td>
-                                        @*<td class="border">
-                                                @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
-                                                {
-                                                    <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
-                                                    z++;
-                                                }
-                                            </td>*@
-                                    }
-                                </tr>
-                            }
-                        </table>
-                    </div>
-
-                </div>
-            </div>
+                <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
+            </button>
         </div>
+    </div>
+    }
+
+    <br />
+    <div class="row mt-0">
+        <div class="col-md-12 pr-0">
+            <div class="container text-center ">
+                @{ var is20Class = "";
+                    if (Model.ParentLocationInstance.Width == 1)
+                    {
+                        is20Class = "is20";
+                    }
+                }
+
+                <table class="table visual-locations-table @is20Class float-right border mt-0">
+                    @{
+                        int z = -1;
+                        var is25 = false;
+                        if (Model.ChildrenLocationInstances[0].LocationTypeID >= 500)
+                        {
+                            is25 = true;
+                        }
+
+                    }
+
+                    @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
+                    {
+                        <tr>
+                            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
+                            {
+                                z++;
+                                var backgroundClass = "";
+                                var innerHtml = Model.ParentLocationInstance.Place;
+                                var AddedBGClass = " location-box-selected  text-light";
+                                @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                                {
+                                    if (Model.ChildrenLocationInstances[z].IsFull)
+                                    {
+                                        backgroundClass += AddedBGClass;
+
+                                        innerHtml = Model.ChildrenLocationInstances[z].Place;
+                                    }
+                                    else
+                                    {
+                                        backgroundClass = "";
+                                        innerHtml = Model.ChildrenLocationInstances[z].Place;
+                                    }
+                                }
+
+                                if (is25)
+                                {
+                                    innerHtml = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
+                                }
+
+                                <td class="@backgroundClass p-0"><div class="visual-locations-div location-visual-font">@innerHtml</div></td>
+                                @*<td class="border">
+                                        @if (Model.ChildrenLocationInstances.ToList().Count() >= z)
+                                        {
+                                            <span>@Model.ChildrenLocationInstances[z].LocationInstanceName</span>
+                                            z++;
+                                        }
+                                    </td>*@
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
     }
 
 @*}*@

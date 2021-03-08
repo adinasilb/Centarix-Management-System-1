@@ -1,8 +1,13 @@
 ﻿@model List<PrototypeWithAuth.Models.RequestNotification>
+@using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if(AppUtility.IsAjaxRequest(this.Context.Request))
+    {
+        Layout = null;
+    }
 }
 <div class="">
     <table class="table table-headerspaced table-noheaderlines table-hover" style="width:95%;">
@@ -36,9 +41,9 @@
                         <i style='font-size:1.4rem; @iconStyle' class='@icon '></i>
 
                     </td>
-                    <td style="width:20%;"><a href="@Url.Action("NotificationsView", new { requestID =item.NotificationID} )">@Html.DisplayFor(modelItem => item.RequestName)</a></td>
+                    <td style="width:20%;"><a href="" class="load-product-details-summary" value=@item.RequestID>@Html.DisplayFor(modelItem => item.RequestName)</a></td>
                     <td style="color: @color; width:20%;">@description</td>
-                    <td> @Html.DisplayFor(modelItem => item.TimeStamp) </td>
+                    <td> @item.TimeStamp.ToString("dd'/'MM'/'yyyy") </td>
                     <td>@Html.DisplayFor(modelItem => item.Vendor) </td>
 
                     @*tried to put both buttons in one cell but for some reason it removes the right tr border (?!)*@
@@ -63,3 +68,4 @@
         </tbody>
     </table>
 </div>
+<script src="~/js/IndexTablePartial.js"></script>

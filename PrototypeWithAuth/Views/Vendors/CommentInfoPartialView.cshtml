@@ -13,15 +13,19 @@
 }
 
 
-<div class="table comment-info border p-2 mb-3">
-    @{
-                var commentTypeID = "VendorComments_" + Model.Index + "__CommentType";
-        var commentTypeName = "VendorComments[" + Model.Index + "].CommentType";
+    <div class="table comment-info border p-2 mb-3">
+        @{
+            var commentTypeID = "VendorComments_" + Model.Index + "__CommentType";
+            var commentTypeName = "VendorComments[" + Model.Index + "].CommentType";
 
-    }
-    <input type="hidden" id="@commentTypeID" name="@commentTypeName"  value="@Model.VendorComment.CommentType" class="comment-type" />
-    <div class="row ml-2  border-bottom-0 mb-0">
-        <div class="col-1 mt-auto mb-auto ">
+            var commentIDID = "VendorComments_" + Model.Index + "__VendorCommentID";
+            var commentIDName = "VendorComments[" + Model.Index + "].VendorCommentID";
+        }
+
+        <input type="hidden" id="@commentIDID" name="@commentIDName" value="@Model.VendorComment.VendorCommentID" class="comment-type" />
+        <input type="hidden" id="@commentTypeID" name="@commentTypeName" value="@Model.VendorComment.CommentType" class="comment-type" />
+        <div class="row ml-2  border-bottom-0 mb-0">
+            <div class="col-1 mt-auto mb-auto ">
                 @{
                     var src = "/UserImages/user-image-placeholder.png";
                     if (_userManager.GetUserAsync(User).Result.UserImage != null)
@@ -30,32 +34,32 @@
                     }
                 }
                 <img src="@src" class=" ml-0 circular-profile-img circular-profile-img-50" alt="default User image" />
-        </div>
-        <div class="col-9 ">
-            <div class=" p-3 ">
-                <label class="m-0"> @_userManager.GetUserAsync(User).Result.FirstName</label>
-                <label class="m-0">@_userManager.GetUserAsync(User).Result.LastName</label>
-                <label class="m-0">@DateTime.Now.ToString("MMMM") @DateTime.Now.Day, @DateTime.Now.Year @DateTime.Now.ToString("hh:mm tt") </label>
-                @{
-                    var commentTextID = "VendorComments_" + Model.Index + "__CommentText";
-                    var commentTextName = "VendorComments[" + Model.Index + "].CommentText";
-                    var commentTextValue = Model.VendorComment.CommentText;
+            </div>
+            <div class="col-9 ">
+                <div class=" p-3 ">
+                    <label class="m-0"> @_userManager.GetUserAsync(User).Result.FirstName</label>
+                    <label class="m-0">@_userManager.GetUserAsync(User).Result.LastName</label>
+                    <label class="m-0">@Model.VendorComment.CommentTimeStamp.ToString("MMMM") @Model.VendorComment.CommentTimeStamp.Day, @Model.VendorComment.CommentTimeStamp.Year @Model.VendorComment.CommentTimeStamp.ToString("hh:mm tt") </label>
+                    @{
+                        var commentTextID = "VendorComments_" + Model.Index + "__CommentText";
+                        var commentTextName = "VendorComments[" + Model.Index + "].CommentText";
+                        var commentTextValue = Model.VendorComment.CommentText;
+                    }
+                    <input name="@commentTextName" id="@commentTextID" value="@commentTextValue" class="form-control-plaintext border-bottom m-0 p-0 comment-text mark-readonly" @disabled />
+
+                </div>
+
+            </div>
+            <div class=" col-2 ">
+                @if (Model.VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
+                {
+                    <i class="icon-comment-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: #30BCC9;"></i>
                 }
-                <input name="@commentTextName" id="@commentTextID" value="@commentTextValue" class="form-control-plaintext border-bottom m-0 p-0 comment-text mark-readonly" @disabled />
-               
+                else if (Model.VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Warning.ToString()))
+                {
+                    <i class="icon-report_problem-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: var(--danger-color);"></i>
+                }
             </div>
 
         </div>
-        <div class=" col-2 ">
-            @if (Model.VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Comment.ToString()))
-            {
-                <i class="icon-comment-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: #30BCC9;"></i>
-            }
-            else if (Model.VendorComment.CommentType.Equals(AppUtility.CommentTypeEnum.Warning.ToString()))
-            {
-                <i class="icon-report_problem-24px float-right m-4" style="padding-top: .55rem; font-size: 1.25rem; color: var(--danger-color);"></i>
-            }
-        </div>
-
     </div>
-</div>

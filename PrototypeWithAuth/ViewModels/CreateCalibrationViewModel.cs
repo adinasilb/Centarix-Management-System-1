@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class CreateCalibrationViewModel
+    public class CreateCalibrationViewModel : ViewModelBase
     {
         public String ProductDescription { get; set; }
         public List<Repair> Repairs { get; set; }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class MenuItems
+    public class MenuItems : ViewModelBase
     {
         public int MenuItemsID { get; set; }
         public string Description { get; set; }
@@ -18,5 +19,6 @@ namespace PrototypeWithAuth.ViewModels
         public string ID { get; set; }
         public string IconName { get; set; }
         public string SidebarCountReference { get; set; }
+        public string AjaxLink { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿html {
+﻿u;nithtml {
     overflow: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
@@ -104,6 +104,9 @@
     background-color: var(--timekeeper-alt-color);
 }
 
+.timekeeper-font-alt-color {
+    color: var(--timekeeper-alt-color);
+}
 
 .timekeeper-font-color {
     color: var(--timekeeper-color);
@@ -117,11 +120,18 @@
     background-color: var(--user-color);
 }
 
+.users-alt-color {
+    background-color: var(--user-color);
+}
+
 .users-filter {
     filter: var(--users-filter);
 }
 
 .users-font-color {
+    color: var(--user-color);
+}
+.users-font-alt-color {
     color: var(--user-color);
 }
 
@@ -315,7 +325,7 @@ body {
     font-weight: var(--bold-light)
 }
 
-input:not(input[type=button]) {
+input:not(input[type=button], input[type=submit], .heading-1) {
     font-size: 1rem !important;
     font-weight: var(--bold-regular) !important;
 }
@@ -324,6 +334,12 @@ input:not(input[type=button]) {
     font-size: .75rem;
     font-weight: var(--bold-regular);
     margin-bottom: 0px;
+}
+
+.title-label {
+    font-size: 1.75rem;
+    color: var(--black-87);
+    font-weight: var(--bold-medium);
 }
 
 .form-group {
@@ -628,19 +644,19 @@ table td, table td .btn, .text, table th {
             border-bottom: 0 !important;
         }
 
-.order-inv-form .document-border:hover {
+.order-inv-form .document-border:hover, .order-inv-form .document-border.hasFile {
     border: 1px solid var(--order-inv-color) !important;
 }
 
-.oper-form .document-border:hover {
+.oper-form .document-border:hover, .oper-form .document-border.hasFile {
     border: 1px solid var(--operations-color) !important;
 }
 
-.supplier-form .document-border:hover {
+.supplier-form .document-border:hover, .supplier-form .document-border.hasFile {
     border: 1px solid var(--lab-man-color) !important;
 }
 
-.accounting-form .document-border:hover {
+.accounting-form .document-border:hover, .accounting-form .document-border.hasFile {
     border: 1px solid var(--acc-color) !important;
 }
 .accounting-form .document-border:hover i{

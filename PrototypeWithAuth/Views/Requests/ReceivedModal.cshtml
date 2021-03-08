@@ -6,7 +6,7 @@
 @{
     var bcColor = "order-inv-background-color";
     var form = "order-inv-form";
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         bcColor = "oper-background-color";
         form = "oper-form";
@@ -16,18 +16,26 @@
 <script src="~/js/Validation/receivedModalFormValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/receivedmodal.js"></script>
-<div class="modal modal-view" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
-    <div class="modal-dialog-centered mx-auto  modal-lg on-form-modal" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
+    <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$('.received-item').html(''); $('.modal-backdrop').remove();">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding @form receivedModalForm">
                 @*the following hidden fors are here so i can do a request.save in for the info that is being given here.
         in the future might want to change it to loading the request from this request id and then adding in the values
         given here (done in the controller)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
                 @Html.HiddenFor(vm => vm.Request.RequestID)
 
                 @Html.HiddenFor(vm => vm.CategoryType)
@@ -35,7 +43,8 @@
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
                 @Html.HiddenFor(model => model.Page)
-                @Html.HiddenFor(model => model.RequestStatusID)
+                @*@Html.HiddenFor(model => model.RequestStatusID)*@
+                <input type="hidden" asp-for="PageRequestStatusID" value="@Model.PageRequestStatusID" />
                 @Html.HiddenFor(model => model.SubCategoryID)
                 @Html.HiddenFor(model => model.VendorID)
                 @Html.HiddenFor(model => model.ApplicationUserID) @*MAKE SURE THIS IS DOING IT CORRECTLY --> make sure js is parsing it as a string*@
@@ -76,45 +85,63 @@
                             <div class="row">
                                 <div class="col-4">
                                     <label asp-for="Request.ArrivalDate" class="control-label"></label>
-                                    <input asp-for="Request.ArrivalDate" class="form-control-plaintext border-bottom" />
+                                    <input asp-for="Request.ArrivalDate" type="text" class="form-control-plaintext border-bottom datepicker" />
                                     <span asp-validation-for="Request.ArrivalDate" class="text-danger-centarix"></span>
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label class="control-label">Application User Receiver</label>
-                                        <select asp-for="Request.ApplicationUserReceiverID" class="mdb-select custom select-dropdown form-control-plaintext">
-                                            @foreach (var user in Model.ApplicationUsers)
-                                            {
-                                                <option value="@user.Id">@user.UserName</option>
-                                            }
-                                        </select>
-                                        <span asp-validation-for="Request.ApplicationUserReceiverID" class="text-danger-centarix"></span>
+                                        <input asp-for="Request.ApplicationUserReceiver" class="form-control-plaintext border-bottom " readonly />
+                                        <input type="hidden" asp-for="Request.ApplicationUserReceiverID"/>
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">
-                            <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                            <label asp-for="Arrival">Arrival</label>
-                        </div>*@
+                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                <label asp-for="Arrival">Arrival</label>
+            </div>*@
                                 <div class="col-2 text-center">
                                     <br />
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input filled-in" asp-for="Clarify" />
-                                        <label class="form-check-label " asp-for="Clarify"></label>
+                                        <input type="checkbox" class="form-check-input filled-in clarify-checkbox" asp-for="Request.IsClarify" />
+                                        <label class="form-check-label " asp-for="Request.IsClarify">Clarify</label>
                                     </div>
                                 </div>
                                 <div class="col-2 text-center">
                                     <br />
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input filled-in" asp-for="PartialDelivery" />
-                                        <label class="form-check-label " asp-for="PartialDelivery"></label>
+                                        <input type="checkbox" class="form-check-input filled-in partial-checkbox" asp-for="Request.IsPartial" />
+                                        <label class="form-check-label " asp-for="Request.IsPartial">Partial</label>
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">
-                            <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                            <label for="test-chkbx">Trial</label>
-                        </div>*@
+                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                <label for="test-chkbx">Trial</label>
+            </div>*@
                             </div>
-
+                            <div class="row">
+                                <div class="col-4">
+                                   
+                                </div>
+                                <div class="col-4">
+                                  
+                                </div>
+                                @*<div class="col-1 text-center">
+                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                <label asp-for="Arrival">Arrival</label>
+            </div>*@
+                            <div class="col-2 text-center ">
+                                <label asp-for="Request.NoteForClarifyDelivery" class="control-label clarify-note d-none">Clarify Note</label>
+                                <textarea asp-for="Request.NoteForClarifyDelivery" class="form-control-plaintext border-bottom clarify-note d-none" ></textarea>
+                            </div>
+                            <div class="col-2 text-center ">
+                                <label asp-for="Request.NoteForPartialDelivery" class="control-label partial-note d-none">Partial Note</label>
+                                <textarea asp-for="Request.NoteForPartialDelivery" class="form-control-plaintext border-bottom partial-note d-none"></textarea>
+                            </div>
+                                @*<div class="col-1 text-center">
+                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                <label for="test-chkbx">Trial</label>
+            </div>*@
+                            </div>
                             <br />
                             @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                             {
@@ -156,18 +183,18 @@
                                 </div>
 
                                 @*<div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label class="control-label">Location Details</label>
-                                    <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
-                                </div>
-                            </div>
-                        </div>*@}
+                <div class="col-12">
+                    <div class="form-group">
+                        <label class="control-label">Location Details</label>
+                        <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
+                    </div>
+                </div>
+            </div>*@}
                         </div>
                         @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
                             <div class="col-4">
-                                <div class="visualView col-12 p-0 m-0 text-center">
+                                <div class="visualView col-10 offset-2 p-0  text-center">
 
                                 </div>
                             </div>
@@ -195,8 +222,8 @@
                 <input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" />
                 <div class="modal-footer border-0 modal-footer-mt">
                     <div class="m-auto">
-                        <input type="submit" asp-action="ReceivedModal" class="custom-button custom-button-font @bcColor between-button-margin" />
-                        <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button"  onclick="$(this).closest('.modal').modal('hide');" />
+                        <input type="submit" class="submit-received custom-button custom-button-font @bcColor between-button-margin" />
+                        <input type="button" value="Cancel" @*data-dismiss="modal"*@ class="custom-cancel custom-button" onclick="$('.received-item').html(''); $('.modal-backdrop').remove();" />
                     </div>
 
                 </div>
@@ -206,11 +233,54 @@
         </div>
     </div>
 </div>
-
+<script src="~/js/InitializeDatePicker.js"></script>
 <script>
+    $(".clarify-checkbox").click(function(){
+        if($(this).is(":checked"))
+        {
+            $(".clarify-note").removeClass("d-none");
+            $(".clarify-note ").attr("disabled", false)
+        }
+        else 
+        {
+            $(".clarify-note").addClass("d-none");
+            $(".clarify-note").attr("disabled", true)
+        }
+    });
+    $(".partial-checkbox").click(function () {
+        if ($(this).is(":checked")) {
+            $(".partial-note").removeClass("d-none");
+            $(".partial-note ").attr("disabled", false)
+        }
+        else {
+            $(".partial-note").addClass("d-none");
+            $(".partial-note ").attr("disabled", true)
+        }
+    });
+    $(".submit-received").click( function (e) {
+        //alert("validate form");
+        e.preventDefault();
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+      
+            e.stopPropagation();
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            }          
 
-            //function loadReceivedModalSubLocations(id) {
-            //    alert("id: " + id);
-            //};
+        }
+        else {
+            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $("#loading").show();
+            var formData = new FormData($("#myForm")[0]);
+            console.log(...formData)
+            ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/", "._IndexTableWithCounts", "POST", formData, "received-item");
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+    
+        return false;
+    });
 
 </script>

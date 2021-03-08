@@ -178,12 +178,16 @@ span.choose {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
-.RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
+.order-inv-form .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--order-inv-color) !important;
+}
+.supplier-form .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
+    border-radius: 18px;
+    border-color: var(--lab-man-color) !important;
 }
 
 i.fas {
@@ -620,13 +624,17 @@ input.select-dropdown {
     width: 30%;
 }
 
-    .login-button:hover {
-        color: white !important;
-    }
+.login-button:hover {
+    color: white !important;
+}
+
+.validation-summary-errors ul {
+    list-style-type: none;
+    padding: 0;
+}
 
 
 /*general buttons*/
-
 .cancel-button {
     background-color: transparent;
     border: 1px solid rgba(0,0,0,0.32);
@@ -982,7 +990,7 @@ table.table.table-headerspaced tbody:before {
     text-indent: -99999px;
 }
 
-table.table tbody tr {
+table.table tbody tr:not(table.picker__table tr) {
     border: 2px solid #ebebeb;
 }
 
@@ -1005,7 +1013,7 @@ a.nav-link {
     color: inherit
 }
 
-.container-fluid ul li a.nav-link.active {
+.order-inv-form .container-fluid ul li a.nav-link.active {
     color: var(--order-inv-color);
 }
 
@@ -1014,8 +1022,8 @@ a.nav-link {
     color: inherit;
 }
 
-.container-fluid ul li a.nav-link.active,
-.container-fluid ul li a.nav-link:hover {
+.order-inv-form .container-fluid ul li a.nav-link.active,
+.order-inv-form .container-fluid ul li a.nav-link:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--order-inv-color);
@@ -1037,7 +1045,7 @@ a.nav-link {
     border-bottom: 4px solid var(--order-inv-color);
 }*/
 
-.container-fluid ul li a.oper-link.active, .container-fluid ul li a.oper-link:hover {
+ .oper-form .container-fluid ul li a.active, .oper-form .container-fluid ul li a:hover {
     background-color: transparent;
     border-width: 0px;
     border-bottom: 4px solid var(--operations-color);
@@ -1122,7 +1130,7 @@ a.nav-link {
     }
 
     .new-button.active {
-        color: var(--order-inv-color);
+        color: var(--order-inv-color) !important;
         font-weight: var(--bold-regular);
         border-bottom: .188rem solid var(--order-inv-color);
     }
@@ -1158,7 +1166,7 @@ a.nav-link {
 }
 
 .new-oper-button.active {
-    color: var(--operations-color);
+    color: var(--operations-color) !important;
     border-bottom: 4px solid var(--operations-color);
 }
 
@@ -1289,10 +1297,15 @@ table.table tr td button:focus { /*in order to remove button outine on focus. bu
     border-bottom: 1px solid var(--lab-man-color) !important;
 }
 
-    .labmanage .sublocation-index td.filled-location-class:hover, .orders-and-inv .sublocation-index tr:not(:first-child) td:hover {
+    .labmanage .sublocation-index td.filled-location-class:hover{
         color: var(--lab-man-color);
         border-bottom: 1px solid var(--lab-man-color) !important;
     }
+
+.orders-and-inv .sublocation-index tr:not(:first-child) td:hover {
+    color: var(--order-inv-color);
+    border-bottom: 1px solid var(--order-inv-color) !important;
+}
 
 .labmanage .sublocation-index td .btn:hover {
     color: var(--lab-man-color) !important;
@@ -2006,14 +2019,15 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     box-shadow: 6px 0px 10px #0000008C;
 } .add-invoice-modal {
     width: 93.31rem;
-} .select-wrapper.mdb-select-sublist.mdb-select.custom.select-dropdown.form-control-plaintext, .select-wrapper.mdb-select-subProject.mdb-select.custom.select-dropdown.form-control-plaintext {
+}
+.select-wrapper.mdb-select-sublist.mdb-select.custom.select-dropdown.form-control-plaintext, .select-wrapper.mdb-select-subProject.mdb-select.custom.select-dropdown.form-control-plaintext, .remove-extra-border {
     border: none !important;
 } .document-card {
     height: 154px;
     width: 154px;
     display: inline-flex;
 } .document-margin {
-    margin-right: 3.4rem;
+    margin-right: 3rem;
 } .document-margin-bottom {
     margin-bottom: 3.25rem;
 } .document-icon {
@@ -2090,6 +2104,11 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
 .form-check {
     padding-left: 0 !important; /*Overridding bootstrap*/
 }
+/*Login*/
+.login .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .order-inv-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .order-inv-form label.btn input[type="checkbox"].filled-in:checked + label:after {
+    border: 2px solid black;
+    background-color: black;
+}
 /*Orders & Inventory*/
 .orders-and-inv .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .order-inv-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .order-inv-form label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid var(--order-inv-color);
@@ -2156,6 +2175,9 @@ td.visual-shelf {
         display: grid;
         margin-left: .2rem !important;
     }
+.table.is20{
+    width:50% !important;
+}
 table.visual-locations-table td .visual-locations-div {
     padding-top: 1.75rem;
     display: grid;
@@ -2198,21 +2220,50 @@ table.visual-locations-table td .visual-locations-div {
 /*
     MULTIPLE EMAIL CSS
 */
-}
-.no-hours-reported.select-wrapper input.select-dropdown {
-    max-height: 30px;
-    border-bottom: 0 !important;
-    border-bottom: none !important;
-    border: 2px solid var(--timekeeper-color) !important;
-    color: var(--timekeeper-color);
-    border-radius: .25rem !important;
-    font-size: 14px
-   
-}
-.no-hours-reported.select-wrapper span.caret {
-    color: var(--timekeeper-color);
-    top: .3rem !important;
-}
-.no-hours-reported.select-wrapper {
 
+.no-hours-reported.select-wrapper input.select-dropdown {
+    border: none !important;   
+}
+.timekeeper.no-hours-reported.select-wrapper span.caret {
+    padding-left: 0 !important;
+    padding-right: .4rem !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: var(--timekeeper-color)
+}
+.timekeeper.no-hours-reported.select-wrapper {
+    border : solid 1px var(--timekeeper-color);
+    border-radius: .25rem;
+}
+
+.users.no-hours-reported.select-wrapper span.caret {
+    padding-left: 0 !important;
+    padding-right: .4rem !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: var(--user-color)
+}
+
+.users.no-hours-reported.select-wrapper {
+    border: solid 1px var(--user-color); 
+    border-radius: .25rem;
+}
+
+.not-form-ddl.select-wrapper input.select-dropdown {
+    border: solid 0.094rem var(--black-87);
+    border-radius: .25rem !important
+}
+
+.not-form-ddl.select-wrapper {
+
+}
+
+/*
+    EMPTY PAGE
+*/
+.empty-page-text {
+    color: var(--black-50);
+    font-size: 2.25rem;
+    font-weight: 600;
+    margin-top: 60px;
 }

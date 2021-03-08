@@ -24,13 +24,16 @@
 	});
 
 	$(".open-sublocations-types").on("click", function () {
+		console.log("select location")
 		var id = $(this).attr("id");
+		console.log(id)
 		loadReceivedModalSubLocations(id);
 	});
 
 	//AJAX load full partial view for modalview manage locations
 	function loadReceivedModalSubLocations(val) {
 		var myDiv = $(".divSublocations");
+		console.log(myDiv)
 		$.ajax({
 			//IMPORTANT: ADD IN THE ID
 			url: "/Requests/ReceivedModalSublocations/?LocationTypeID=" + val,
@@ -53,8 +56,9 @@
 	//    alert("sli clicked!");
 	//    SLI($(this));
 	//});
-	$(".modal").off("click", ".SLI-click").on("click", ".SLI-click", function () {
+	$(".SLI-click").off("click").on("click", function (e) {
 		//alert("clicked SLI");
+		console.log("clicked SLI")
 		SLI($(this));
 	});
 
@@ -64,6 +68,7 @@
 		var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
 		$(nextSelect).html('');
 		console.log(nextSelect)
+		console.log("selected")
 		var locationInstanceParentId = $(el).val();
 		var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
 
@@ -156,8 +161,8 @@
 			var item = "<li>Select Location Instance</li>";
 			$.each(result, function (i, field) {
 				var emptyText = "";
-				if (field.isEmptyShelf) {
-					emptyText = " (Empty)";
+				if (field.isEmptyShelf && field.labPartID<=0) {
+					emptyText = " (nr)";
 				}
 				item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" >' + field.locationInstanceName + emptyText + '</li>'
 			});
@@ -188,6 +193,7 @@
 				var locationInstanceId = $(this).children('div').first().children("input").first().attr("liid");
 				var lip = $(".liid." + locationInstanceId);
 				console.log("lip val: " + lip.val());
+				$(".complete-order").removeClass("disabled-submit")
 				if (lip.val() == "true") {
 					console.log("TRUE!");
 					lip.val("false"); //IMPT: sending back the true value to controller to place it here
@@ -209,6 +215,8 @@
 					$(this).children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
 					$(this).addClass('location-selected')
 					$('#locationSelected').val(true);
+					$('#locationSelected').removeClass("error")
+					$("#locationSelected-error").replaceWith('');
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -53,6 +54,12 @@ namespace PrototypeWithAuth.Models
         public int? EmployeeHoursStatusEntry2ID { get; set; }
         [ForeignKey("EmployeeHoursStatusEntry2ID")]
         public EmployeeHoursStatus EmployeeHoursStatusEntry2 { get; set; }
-
+        [DefaultValue (false)]
+        public bool IsDenied { get; set; }
+        public int? PartialOffDayTypeID { get; set; }
+        public OffDayType PartialOffDayType { get; set; }
+        [DataType(DataType.Time)]
+        public TimeSpan? PartialOffDayHours { get; set; }
+        public bool IsBonus { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Org.BouncyCastle.Asn1.Mozilla;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ using X.PagedList;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class RequestIndexViewModel
+    public class RequestIndexViewModel : ViewModelBase
     {
-       public IPagedList<PrototypeWithAuth.Models.Request> PagedList { get; set; }
-       public List<PriceSortViewModel> PriceSortEnums { get; set; }
+        public IPagedList<PrototypeWithAuth.Models.Request> PagedList { get; set; }
+        public List<PriceSortViewModel> PriceSortEnums { get; set; }
         public List<String> PriceSortEnumsList { get; set; }
         public AppUtility.CurrencyEnum currency { get; set; }
         public int? Page { get; set; }
@@ -22,7 +23,7 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.PageTypeEnum PageType { get; set; }
         public AppUtility.MenuItems MenuType { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
-        public int RequestParentLocationInstanceID { get; set; }
+        //public int RequestParentLocationInstanceID { get; set; }
 
     }
 }

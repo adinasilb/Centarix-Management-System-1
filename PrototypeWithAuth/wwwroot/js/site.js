@@ -39,35 +39,40 @@ $(function () {
 	});
 
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
-	$("#parentlist").change(function () {
-		$.fn.parentListChange();
-	});
-
-	$('.modal').on('change', '#parentlist', function () {
-		$.fn.parentListChange();
-	});
-
-
-	$.fn.parentListChange = function () {
+	$("body").off("change", "#parentlist, .parentlist").on("change", "#parentlist, .parentlist", function () {
+		console.log("change parent")
 		console.log("in parent list");
-		var parentCategoryId = $("#parentlist").val();
+		var parentCategoryId = $(this).val();
+		var sublistSelector = "#sublist";
+		var requestIndex = "";
+		if ($("#masterSectionType").val() == "Operations") {
+			console.log("operations")
+			//parentCategoryId = $(".parentlist").val();
+			requestIndex = $(this).attr("data-val");
+			sublistSelector = "select.mdb-select" + requestIndex;
+			console.log("requestIndex " +requestIndex)
+		}
+		else {
+			//parentCategoryId = $("#parentlist").val();
+		}
 		console.log("parentcategoryid: " + parentCategoryId);
 		var url = "/Requests/GetSubCategoryList";
 		console.log("url: " + url);
 
 		$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
+			console.log(" in json")
 			var firstitem1 = '<option value=""> Select Subcategory</option>';
-			$("#sublist").empty();
-			$("#sublist").append(firstitem1);
+			$(sublistSelector).empty();
+			$(sublistSelector).append(firstitem1);
 
 			$.each(data, function (i, subCategory) {
 				var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
-				$("#sublist").append(newitem1);
+				$(sublistSelector).append(newitem1);
 			});
-			$("#sublist").materialSelect();
+			$(sublistSelector).materialSelect();
 			return false;
 		});
-	};
+	});
 
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 	//$(".Project").change(function () {
@@ -210,10 +215,12 @@ $(function () {
 		console.log('in on change vendor')
 		var vendorid = $(this).val();
 		$.fn.ChangeVendorBusinessId(vendorid);
+		//$.fn.CheckVendorAndCatalogNumbers();
 	});
 	$("#vendorList").change(function () {
 		var vendorid = $("#vendorList").val();
 		$.fn.ChangeVendorBusinessId(vendorid);
+		//CheckVendorAndCatalogNumbers();
 	});
 	$.fn.ChangeVendorBusinessId = function (vendorid) {
 		var newBusinessID = "";
@@ -229,13 +236,24 @@ $(function () {
 				$(".vendorBusinessId").val(newBusinessID);
 				$(".vendorBusinessId").text(newBusinessID);
 				$("#vendor-primary-email").val(data.ordersEmail);
-				$.fn.UpdatePrimaryOrderEmail();
+				if ($.isFunction($.fn.UpdatePrimaryOrderEmail)) {
+					$.fn.UpdatePrimaryOrderEmail();
+				}
 			})
 		}
 		//console.log("newBusinessID: " + newBusinessID);
 		//if nothing was selected want to load a blank
 		$(".vendorBusinessId").val(newBusinessID);
 		//put the business id into the form
+	}
+
+
+
+
+	$.fn.CheckVendorAndCatalogNumbers = function () {
+		//var vendorID = $("#vendorList").val();
+		//var catalogNumber = $("#Request_Catalog").val();
+		//alert("vendor id: " + vendorID + " && catalog number: " + catalogNumber);
 	}
 
 	//view documents on modal view
@@ -248,241 +266,8 @@ $(function () {
 	});
 
 
-	$(".expected-supply-days").change(function () {
-		//console.log("---------------------Request ExpectedSupplyDays: " + $(this).val() + " -------------------------------");
-		var date;
-		if ($(".for-supply-date-calc").length > 0) {
-			//console.log("in first of of check roder date")
-			var date = $(".for-supply-date-calc").val().split("-");
-			var dd = parseInt(date[2]);
-			var mm = parseInt(date[1]);
-			var yyyy = parseInt(date[0]);
-		} else {
-			date = new Date();
-			var dd = parseInt(date.getDate());
-			var mm = parseInt(date.getMonth() + 1);
-			var yyyy = parseInt(date.getFullYear());
-		}
-
-		for (i = 0; i < $(this).val(); i++) {
-			switch (mm) {
-				case 1:
-				case 3:
-				case 5:
-				case 7:
-				case 8:
-				case 10:
-				case 12:
-					if (dd == 31) {
-						dd = 1;
-						if (mm == 12) {
-							mm = 1;
-							yyyy = yyyy + 1;
-						}
-						else {
-							mm = mm + 1;
-						}
-					}
-					else {
-						dd = dd + 1;
-					}
-					break;
-				case 4:
-				case 6:
-				case 9:
-				case 11:
-					if (dd == 30) {
-						dd = 1;
-						if (mm == 12) {
-							mm = 1;
-							yyyy = yyyy + 1;
-						}
-						else {
-							mm = mm + 1;
-						}
-					}
-					else {
-						dd = dd + 1;
-					}
-					break;
-				case 2:
-					var endDayOfFeb = 28;
-					if (yyyy % 4 === 0) {
-						endDayOfFeb = 29;
-					}
-					console.log("dd: " + dd)
-					if (dd == endDayOfFeb) {
-						dd = 1;
-						if (mm == 12) {
-							mm = 1;
-							yyyy = yyyy + 1;
-						}
-						else {
-							mm = mm + 1;
-						}
-					}
-					else {
-						dd = dd + 1;
-					}
-					break;
-			}
-		}
-		if (dd < 10) { dd = '0' + dd }
-		if (mm < 10) { mm = '0' + mm }
-		var supplyDate = yyyy + '-' + mm + '-' + dd;
-		$("input[name='expected-supply-days']").val(supplyDate);
-
-	});
 
 
-	$("#expected-supply-date").change(function () {
-		var date = new Date($(this).val());
-		if (date < new Date()) {
-			return;
-		}
-		console.log("-------expected supply date: " + date)
-		var Sdd = parseInt(date.getDate());
-		var Smm = parseInt(date.getMonth() + 1);
-		var Syyyy = parseInt(date.getFullYear());
-		console.log("sdd + smm + syyyy: " + Sdd + " " + Smm + " " + Syyyy);
-		var OrderDate;
-		if ($('.for-supply-date-calc').length > 0) {
-			console.log("in first of of check roder date")
-			OrderDate = $(".for-supply-date-calc").val().split("-");
-			var Idd = parseInt(OrderDate[2]);
-			var Imm = parseInt(OrderDate[1]);
-			var Iyyyy = parseInt(OrderDate[0]);
-		} else {
-			OrderDate = new Date();
-			var Idd = parseInt(OrderDate.getDate());
-			var Imm = parseInt(OrderDate.getMonth() + 1);
-			var Iyyyy = parseInt(OrderDate.getFullYear());
-
-		}
-
-		console.log("idd + imm + iyyyy: " + Idd + " " + Imm + " " + Iyyyy);
-
-		var amountOfDays = 0;
-		var flag = false;
-		while (!flag) {
-			if (Sdd != Idd || Smm != Imm || Syyyy != Iyyyy) {
-				amountOfDays++;
-				switch (Imm) {
-					case 1:
-					case 3:
-					case 5:
-					case 7:
-					case 8:
-					case 10:
-					case 12:
-						if (Idd == 31) {
-							Idd = 1;
-							if (Imm == 12) {
-								Imm = 1;
-								Iyyyy = Iyyyy + 1;
-							}
-							else {
-								Imm = Imm + 1;
-							}
-						}
-						else {
-							Idd = Idd + 1;
-						}
-						break;
-					case 4:
-					case 6:
-					case 9:
-					case 11:
-						if (Idd == 30) {
-							Idd = 1;
-							if (Imm == 12) {
-								Imm = 1;
-								Iyyyy = Iyyyy + 1;
-							}
-							else {
-								Imm = Imm + 1;
-							}
-						}
-						else {
-							Idd = Idd + 1;
-						}
-						break;
-					case 2:
-						var endDayOfFeb = 28;
-						if (Iyyyy % 4 === 0) {
-							endDayOfFeb = 29;
-						}
-						if (Idd == endDayOfFeb) {
-							Idd = 1;
-							if (Imm == 12) {
-								Imm = 1;
-								Iyyyy = Iyyyy + 1;
-							}
-							else {
-								Imm = Imm + 1;
-							}
-						}
-						else {
-							Idd = Idd + 1;
-						}
-						break;
-				}
-				console.log("amount of days: " + amountOfDays);
-			}
-			else {
-				flag = true;
-			}
-		}
-		$(".expected-supply-days").val(amountOfDays);
-	});
-
-	$("#Request_Warranty").change(function () {
-		var date = null;
-		if ($("#Request_ParentRequest_OrderDate").length > 0) {
-			date = $("#Request_ParentRequest_OrderDate").val().split("-");
-			var dd = date[2];
-			var mm = parseInt(date[1]); //January is 0! ?? do we still need th get month???
-			var yyyy = date[0];
-		} else {
-			date = new Date();
-			var dd = date.getDate();
-			var mm = parseInt(date.getMonth() + 1); //January is 0! ?? do we still need th get month???
-			var yyyy = date.getFullYear();
-		}
-		console.log("Date: " + date);
-
-		var newmm = parseInt(mm) + parseInt($(this).val());
-		mm = newmm;
-
-		if (dd < 10) { dd = '0' + dd }
-
-		var flag = true;
-		while (flag) {
-			if (mm > 12) {
-				mm = parseInt(mm) - 12;
-				yyyy = parseInt(yyyy) + 1;
-			}
-			else {
-				flag = false;
-			}
-		}
-		if (mm < 10) { mm = '0' + mm }
-
-		var warrantyDate = yyyy + '-' + mm + '-' + dd;
-
-		$("input[name='WarrantyDate']").val(warrantyDate);
-	});
-
-
-	$("#Request_ExpectedSupplyDays").change(function () {
-		//var date = $("#Request_ParentRequest_InvoiceDate").val();
-		//console.log("Order date: " + date);
-		//console.log("this.val: " + $(this).val());
-		//var supplyDate = Date.addDays($("#Request_ExpectedSupplyDays").val())
-		//console.log("supplyDate: " + supplyDate);
-		//$("input[name='expected-supply-days']").val(supplyDate);
-
-	});
 
 	$.fn.leapYear = function (year) {
 		return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
@@ -490,25 +275,6 @@ $(function () {
 
 
 
-	//LOCATIONS:
-
-
-
-	//Received Modal => fill up the next selectLocationInstance with the right selections
-
-	//$.fn.CallAjax() = function ($url, $div) {
-
-	//	$.ajax({
-	//		//IMPORTANT: ADD IN THE ID
-	//		url: $url,
-	//		type: 'GET',
-	//		cache: false,
-	//		context: $div,
-	//		success: function (result) {
-	//			this.html(result); //do we need to change this to $div?
-	//		}
-	//	});
-	//};
 
 	$(".modal").on('hide.bs.modal', function () {
 		$('.modal-backdrop').remove()
@@ -523,7 +289,7 @@ $(function () {
 		console.log("myDiv: " + myDiv);
 		var parentId = $(this).val();
 		$("#visualZoomModal").replaceWith('');
-		$(".modal").replaceWith('');
+		$("#visualZoomModal").replaceWith('');
 		//console.log("about to call ajax with a parentid of: " + parentId);
 		$.ajax({
 			async: true,
@@ -531,21 +297,16 @@ $(function () {
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				var modal = $(data);
-				$('body').append(modal);
-				$("#visualZoomModal").modal({
-					backdrop: true,
-					keyboard: true,
-				});
-				$(".modal").modal('show');
+				$.fn.OpenModal('visualZoomModal', 'visual-zoom', data)
+				
 				//$('.modal-backdrop').remove()
-				var firstTDFilled = $("td.filled-location-class");
+				var firstTDFilled = $(".visualzoom td");
 				var height = firstTDFilled.height();
 				var width = firstTDFilled.width();
 				console.log("h: " + height + "------ w: " + width);
 				//$("td").height(height);
 				//$("td").width(width);
-				$(".visualzoom td").css('height', height);
+				$(".visualzoom td").css('height', width);
 				$(".visualzoom td").css('width', width);
 				//$("td").addClass("danger-color");
 			}
@@ -637,38 +398,14 @@ $(function () {
 		console.log("enumString: " + enumString);
 		var requestId = $(this).data("id");
 		console.log("requestId: " + requestId);
-		var isEdittable = $(this).data("val");
-		console.log("isEdittable: " + isEdittable);
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section);
+		var isEdittable = $(".active-document-modal").attr("data-val");
+		console.log($("#masterSidebarType").val())
+		var showSwitch = $(".active-document-modal").attr("showSwitch");
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch);
 		return true;
 	});
 
-	$.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section) {
-		$(".documentsModal").replaceWith('');
-		var urltogo = $("#documentSubmit").attr("url");
-		//var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
-		console.log("urltogo: " + urltogo);
-		urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section
-		//$(".modal-backdrop").first().removeClass();
-		$.ajax({
-			async: true,
-			url: urltogo,
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				var modal = $(data);
-				$('body').append(modal);
-				$(".documentsModal").modal({
-					backdrop: false,
-					keyboard: true,
-				});
-				$(".documentsModal").modal('show');
-				return true;
-			}
 
-		});
-		return true;
-	};
 
 	$(".file-select").on("change", function (e) {
 		console.log("file was changed");
@@ -764,17 +501,12 @@ $(function () {
 	//});
 
 
-	$(".open-loading").on("click", function (e) {
-		$("#loading").show();
-	});
-
-
 	$(".load-location-index-view").off("click").on("click", function (e) {
 		//clear the div to restart filling with new children
 		$(".load-location-index-view").removeClass("location-type-selected");
 		$(this).addClass("location-type-selected");
 		$.fn.setUpLocationIndexList($(this).attr("value"))
-		$(".second-col").addClass("d-none");
+	$(".second-col").removeClass("filled-location-class");
 	});
 
 	$.fn.setUpLocationIndexList = function (val) {
@@ -801,6 +533,7 @@ $(function () {
 				$('button[value="' + typeId + '"]').addClass("location-type-selected");
 				myDiv.show();
 				this.html(result);
+				
 
 			}
 		});
@@ -914,8 +647,7 @@ $(function () {
 			//console.log("is parent location!");
 			console.log("this has been clicked by a parent location");
 			//add heading name
-			$(".li-name").html($(this).attr("name"));
-			$(".li-name-container").removeClass("d-none");
+			var name =$(this).attr("name");
 			//remove prev sidebars
 			$("body td").removeClass(parentStylingClass);
 			//add new sidebars
@@ -934,14 +666,14 @@ $(function () {
 
 			console.log("is not parent location");
 			//remove all columns to the right
-			var thisLocationInstanceID = $(this).val();
-			console.log("thisLocationInstanceID: " + thisLocationInstanceID);
+			var thisLocationInstanceTypeID = $(this).attr("typeid");
+			console.log("thisLocationInstanceID: " + thisLocationInstanceTypeID);
 			$(".sublocation-index").each(function () {
-				var sublocationIndexParsed = $(this).children("table").children("tbody").children("tr:first-child").children("td").children("button").val();
+				var sublocationIndexParsed = $(this).children("table").children("tbody").children("tr:first-child").children("td").children("button").attr("typeid");
 				console.log("sublocationIndexParsed: " + sublocationIndexParsed);
-				if (parseInt(sublocationIndexParsed) > parseInt(thisLocationInstanceID)) {
+				if (parseInt(sublocationIndexParsed) > parseInt(thisLocationInstanceTypeID)) {
 					console.log("hiding " + sublocationIndexParsed + "...");
-					$(this).hide();
+					$(this).replaceWith('');
 				}
 			});
 		}
@@ -978,21 +710,22 @@ $(function () {
 					//$(".second-col .li-name").html($(".col.sublocation-index").attr("parentName"));
 					//$("table td.li-name").html($(parentLocation).attr("name"));
 					//$("table td.li-name").removeClass("filled-location-class-color")
-					$(".second-col").removeClass("d-none");
+					$(".second-col").addClass("filled-location-class");
 				}
 				//this.html(result);
 				//add heading name
+				
 
 
 			}
 		});
 
-		$.fn.setUpVisual($(this).val(), isParent);
+		$.fn.setUpVisual($(this).val(), isParent, name);
 
 
 	});
 
-	$.fn.setUpVisual = function (val, isParent) {
+	$.fn.setUpVisual = function (val, isParent, name) {
 		$("#loading2")/*.delay(1000)*/.show(0);
 		console.log("in set up visual");
 		//fill up col three with the visual
@@ -1011,12 +744,19 @@ $(function () {
 				if ($('.visual-locations-table td').hasClass("is25")) {
 					$('.visual-locations-table td').css("height", width);
 				}
-
+				if(isParent)
+				{
+					$(".li-name").html(name);
+					$(".li-name-container").removeClass("d-none");
+				}
 				if ($(".hasVisual").length > 0 && isParent == true) {
 					$(".li-name").html("");
+
 					$(".li-name-container").addClass("d-none");
-					$(".second-col").addClass("d-none");
+					$(".second-col").removeClass("filled-location-class");
+								
 				}
+				
 				$("#loading2").hide();
 				$("#loading2")/*.delay(1000)*/.hide(0);
 			}
@@ -1092,8 +832,7 @@ $(function () {
 		$("#user-image").attr("src", "/" + imgPath);
 		$(".userImage i").hide();
 
-		$('.modal.userImageModal').remove();
-		$('.modal-backdrop').remove();
+		$.fn.CloseModal('user-image');
 	});
 
 	$("#InvoiceImage").on("change", function () {
@@ -1535,7 +1274,7 @@ $(function () {
 				//replaces the modal-view class with the ModalView view
 				//$(".modal-view").html(data);
 				//turn off data dismiss by clicking out of the box and by pressing esc
-				$(".modal-view").modal({
+				$(".modal").modal({
 					backdrop: true,
 					keyboard: false,
 				});
@@ -1545,22 +1284,16 @@ $(function () {
 			}
 		});
 	};
+
 	$.fn.CallModal2 = function (url) {
 		console.log("in call modal2, url: " + url);
-		$(".userImageModal").replaceWith('');
 		$.ajax({
 			async: true,
 			url: url,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				var modal = $(data);
-				$('body').append(modal);
-				$(".userImageModal").modal({
-					backdrop: false,
-					keyboard: true,
-				});
-				$(".userImageModal").modal('show');
+				$.fn.OpenModal('userImageModal', 'user-image', data)
 			}
 		});
 	};
@@ -1621,7 +1354,7 @@ $(function () {
 	$.fn.SortByMonth = function (month, year) {
 		$.ajax({
 			async: false,
-			url: 'HoursPage?month=' + month + "&year=" + year,
+			url: '/Timekeeper/HoursPage?month=' + month + "&year=" + year + "&pageType=" + $('#masterPageType').val(),
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -1631,6 +1364,7 @@ $(function () {
 	};
 
 	$(".open-work-from-home-modal").off('click').click(function (e) {
+		e.preventDefault()
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
 		}
@@ -1641,9 +1375,10 @@ $(function () {
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
+
 	$(".open-update-hours-modal").off('click').click(function (e) {
 		e.preventDefault();
-		var val = $(this).val();
+		var val = $(this).attr("value");
 		if (val != '') {
 			var date = new Date(val).toISOString();
 			console.log(date)
@@ -1659,34 +1394,14 @@ $(function () {
 		$.fn.CallModal(itemurl);
 	});
 
-	$(".report-vacation-days").off('click').click(function (e) {
-		var pageType = "";
-		if ($(this).hasClass("SummaryHours")) {
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
-		var itemurl = "Vacation?PageType=" + pageType;
+	$(".report-off-day").off('click').click(function (e) {
+		var offDayType = $(this).attr("value");
+		var pageType = $("#masterPageType").val();
+		var itemurl = "OffDayModal?PageType=" + pageType + "&OffDayType=" + offDayType;
 		$("#loading").show();
 		$.fn.CallModal(itemurl);
 	});
 
-	$(".report-sick-days").off('click').click(function (e) {
-		$("#loading").show();
-		var pageType = "";
-		var selectedDate = null;
-		if ($(this).hasClass("SummaryHours")) {
-			selectedDate = $(this).val();
-			console.log("selecteddate: " + selectedDate)
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
-		var itemurl = "SickDay?PageType=" + pageType + "&date=" + selectedDate;
-		$.fn.CallModal(itemurl);
-	});
 	$('.no-hours-reported').off('change').change(function (e) {
 		var selectedDate = $(this).attr("date");
 		var pageType = "SummaryHours";
@@ -1702,53 +1417,59 @@ $(function () {
 				$.fn.CallModal(itemurl);
 				break;
 			case "3":
-				var itemurl = "SickDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
+				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SickDay";
 				$.fn.CallModal(itemurl);
 				break;
 			case "4":
-				var itemurl = "VacationDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
+				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=VacationDay";
 				$.fn.CallModal(itemurl);
 				break;
 		}
 	});
-	$(".confirm-report-sick").off('click').click(function (e) {
+	//$(".confirm-report-offDay").off('click').click(function (e) {
 
-		$("#loading").show();
-		var pageType = "";
-		var selectedDate = null;
-		if ($(this).hasClass("SummaryHours")) {
-			selectedDate = $(this).val();
-			console.log("selecteddate: " + selectedDate)
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
-		var itemurl = "SickDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
-		$.fn.CallModal(itemurl);
-	});
+	//	$("#loading").show();
+	//	var pageType = $("#masterPageType").val();
+	//	var	selectedDate = $(this).val();
+	//	console.log("selecteddate: " + selectedDate);
+	//	var itemurl = "OffDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
+	//	$.fn.CallModal(itemurl);
+	//});
 	$("body").on("change", "#EmployeeHour_Date", function (e) {
-		$('.day-of-week').val($.fn.GetDayOfWeek($(this).val()));
+		$('.day-of-week').val($.fn.GetDayOfWeek($.fn.formatDateForSubmit($(this).val())));
 	});
 
 	$.fn.GetDayOfWeek = function (date) {
-		var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-		var dayNum = new Date(date).getDay();
-		console.log("daynum" + dayNum)
-		var dayOfWeek = days[dayNum];
+		var dayOfWeek = moment(date).format("dddd");
+		console.log("dayOfWeek" + dayOfWeek)
 		return dayOfWeek
 	}
 
 	$("body").on("change", "#EmployeeHour_Date.update-hour-date", function (e) {
-		$.fn.GetEmployeeHour($(this).val());
+		e.preventDefault();
+		$.fn.GetEmployeeHour($.fn.formatDateForSubmit($(this).val()), $(this).attr("data-workday"));
 	});
-	$("body").on("change", "#EmployeeHour_Date.update-work-from-home", function (e) {
-		$.fn.GetEmployeeHourFromHome($(this).val());
-	});
+	//$("body").on("change", "#EmployeeHour_Date.update-work-from-home", function (e) {
+	//	$.fn.GetEmployeeHourFromHome($.fn.formatDateForSubmit($(this).val()));
+	//});
 
-	$.fn.GetEmployeeHour = function (date) {
+	$.fn.GetEmployeeHour = function (date, workDay) {
 		console.log(date);
-		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString())
+		var workFromHome = false;
+		if (workDay == "1") {
+			workFromHome = true;
+		}
+		$.ajax({
+			async: false,
+			url: '_UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + workFromHome,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$("#loading").hide();
+		        $(".update-hours-partial").html(data);
+				return false;
+			}
+		});
 	};
 
 
@@ -1761,10 +1482,10 @@ $(function () {
 		console.log("in clarify, checkbox val: " + $(this).val());
 	};
 
-	$.fn.GetEmployeeHourFromHome = function (date) {
-		console.log(date);
-		$.fn.CallModal('UpdateHours?chosenDate=' + new Date(date).toISOString() + "&isWorkFromHome=" + true)
-	};
+	//$.fn.GetEmployeeHourFromHome = function (date) {
+	//	console.log(date);
+	//	$.fn.CallModal('UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + true)
+	//};
 	$.fn.GetEmployeeHourFromToday = function () {
 		$.fn.CallModal('ExitModal');
 	};
@@ -1858,23 +1579,32 @@ $(function () {
 		var entry1 = $('#EmployeeHour_Entry1').val();
 		var entry2 = $('#EmployeeHour_Entry2').val();
 		if (entry1 != '' && exit1 != '') {
-			var exit1fullhours = parseFloat(exit1.substr(0, 2)) + parseFloat(exit1.substr(3, 2)) / 60;
-			var entry1fullhours = parseFloat(entry1.substr(0, 2)) + parseFloat(entry1.substr(3, 2)) / 60;
+			exit1split = exit1.split(":");
+			var exit1fullhours = parseFloat(exit1split[0]) + parseFloat(exit1split[1]) / 60;
+			entry1split = entry1.split(":");
+			var entry1fullhours = parseFloat(entry1split[0]) + parseFloat(entry1split[1]) / 60;
 			totalentryhours = exit1fullhours - entry1fullhours;
 		}
 		if (entry2 != '' && exit2 != '') {
-			var exit2fullhours = parseFloat(exit2.substr(0, 2)) + parseFloat(exit2.substr(3, 2)) / 60;
-			var entry2fullhours = parseFloat(entry2.substr(0, 2)) + parseFloat(entry2.substr(3, 2)) / 60;
+			exit2split = exit2.split(":");
+			var exit2fullhours = parseFloat(exit2split[0]) + parseFloat(exit2split[1]) / 60;
+			entry2split = entry2.split(":");
+			var entry2fullhours = parseFloat(entry2split[0]) + parseFloat(entry2split[1]) / 60;
 			var totalentry2hours = exit2fullhours - entry2fullhours;
 			totalentryhours += totalentry2hours;
 		}
 
 		if (totalentryhours != '') {
 			var hours = Math.floor(totalentryhours);
-			if (hours < 10) { hours = '0' + hours }
-			var mins = Math.floor(60 * (totalentryhours - hours));
+			//if (hours < 10) { hours = '0' + hours }
+			var mins = Math.round(60 * (totalentryhours - hours));
 			if (mins < 10) { mins = '0' + mins }
+			
 			var totalHours = hours + ":" + mins;
+			console.log(hours+":"+ mins)
+			if (hours < 0 || isNaN(hours) || isNaN(mins)) {
+				totalHours = "";
+            }
 		}
 
 		$('#EmployeeHour_TotalHours').val(totalHours);
@@ -1893,31 +1623,34 @@ $(function () {
 	//		msg = '<span class="msg">Hidden input value: ';
 	//	$('.msg').html(msg + input + '</span>');
 	//}); 
-	$.fn.SaveOffDays = function (url, pageType, month) {
-		alert("in save off days, url: " + url);
-		var rangeFrom = $('.datepicker--cell.-selected-.-range-from-');
+	$.fn.SaveOffDays = function (url, month) {
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
-		var dateRangeFromDay = rangeFrom.attr('data-date');
-		var dateRangeFromMonth = rangeFrom.attr('data-month');
-		var dateRangeFromYear = rangeFrom.attr('data-year');
 		var dateRangeToDay = rangeTo.attr('data-date');
-		var dateRangeToMonth = rangeTo.attr('data-month');
-		var dateRangeToYear = rangeTo.attr('data-year');
-		var dateFrom = new Date(dateRangeFromYear, dateRangeFromMonth, dateRangeFromDay, 0, 0, 0).toISOString();
+
+		var dateFrom = $('#vacation-dates').datepicker().data('datepicker').minRange.toISOString()
 		var dateTo = '';
 		if (dateRangeToDay == undefined) {
 			dateTo = null;
 		}
 		else {
-			dateTo = new Date(dateRangeToYear, dateRangeToMonth, dateRangeToDay, 0, 0, 0).toISOString();
+			dateTo = $('#vacation-dates').datepicker().data('datepicker').maxRange.toISOString()
 		}
 
+		$("#Month").val(month);
+		$("#FromDate").val(dateFrom);
+		$("#ToDate").val(dateTo);
+
+		var formData = new FormData($("#myForm")[0]);
+		//console.log(...formData)
 		console.log(dateFrom + "-" + dateTo);
 		alert("about to go into ajax, url: " + url);
 		$.ajax({
+			processData: false,
+			contentType: false,
 			async: true,
-			url: "/Timekeeper/" + url + '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType + "&month=" + month,
+			url: "/Timekeeper/" + url , //+ '?dateFrom=' + dateFrom + "&dateTo=" + dateTo + "&PageType=" + pageType +  "&month=" + month,
 			type: 'POST',
+			data: formData,
 			cache: true,
 			success: function (data) {
 				console.log(data)
@@ -1930,117 +1663,61 @@ $(function () {
 					alert("else")
 					$(".render-body").html(data);
 				}
-
-
 			}
 
 		});
 	}
 
-	$("#saveVacation").off('click').click(function (e) {
+
+
+	$("#saveOffDay").off('click').click(function (e) {
 		e.preventDefault();
 
-		var pageType = "";
-		if ($(this).hasClass("SummaryHours")) {
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
+		var pageType = $('#masterPageType').val()
 
-		$.fn.SaveOffDays("SaveVacation", pageType, "");
+		$.fn.SaveOffDays("OffDayModal", pageType, "");
 	});
 
-	$.fn.SaveSick = function () {
-		var pageType = "";
-		if ($("#saveSick").hasClass("SummaryHours")) {
-			var month = $('#months').val();
-			console.log("month: " + month);
-			pageType = "SummaryHours";
-		}
-		if ($("#saveSick").hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
-		$.fn.SaveOffDays("SaveSick", pageType, month);
-	}
 
-	$(".modal").off('click').on("click", "#saveSick", function (e) {
-		e.preventDefault();
-		$.fn.SaveSick();
-	});
-
-	$(".modal").on("click", "#saveSickConfirmation", function (e) {
+	$(".modal").on("click", "#saveOffDayConfirmation", function (e) {
 		e.preventDefault();
 		alert("save sick confirmation");
-		var pageType = "";
-		if ($(this).hasClass("SummaryHours")) {
-			var month = $('#months').val();
-			console.log("month: " + month);
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
 		//alert($('#SelectedDate').val())
-		var date = $('#SelectedDate').val();
-		var dd = parseInt(date[2]);
-		var mm = parseInt(date[1]);
-		var yyyy = parseInt(date[0]);
-		var dateFrom = new Date(yyyy, mm, dd);
+		$("#FromDate").val($('#SelectedDate').val());
+		$("#Month").val($("#months").val());
+		//var dd = parseInt(date[2]);
+		//var mm = parseInt(date[1]);
+		//var yyyy = parseInt(date[0]);
+		//var dateFrom = new Date(yyyy, mm, dd);;
+		var formData = new FormData($("#myForm")[0])
 		$.ajax({
+			processData: false,
+			contentType: false,
 			async: true,
-			url: "/Timekeeper/SickDayConfirmModal" + '?dateFrom=' + new Date(date).toISOString() + "&PageType=" + pageType + "&month=" + month,
+			url: "/Timekeeper/OffDayConfirmModal",
 			type: 'POST',
+			data: formData,
 			cache: false,
 			success: function (data) {
 				$(".modal").modal('hide');
 				$("#hoursTable").html(data);
-
 			}
 		});
 	});
 
-	$("body").off('click').on("click", "#saveVacationConfirmation", function (e) {
-		e.preventDefault();
-		var pageType = "";
-		if ($(this).hasClass("SummaryHours")) {
-			var month = $('#months').val();
-			console.log("month: " + month);
-			pageType = "SummaryHours";
-		}
-		if ($(this).hasClass("ReportDaysOff")) {
-			pageType = "ReportDaysOff";
-		}
-		//alert($('#SelectedDate').val())
-		var date = $('#SelectedDate').val();
-		var dd = parseInt(date[2]);
-		var mm = parseInt(date[1]);
-		var yyyy = parseInt(date[0]);
-		var dateFrom = new Date(yyyy, mm, dd);
-		$.ajax({
-			async: true,
-			url: "/Timekeeper/VacationDayConfirmModal" + '?dateFrom=' + new Date(date).toISOString() + "&PageType=" + pageType + "&month=" + month,
-			type: 'POST',
-			cache: false,
-			success: function (data) {
-				$(".modal").modal('hide');
-				$("#hoursTable").html(data);
-
-			}
-		});
-	});
+	
 	//function ChangeEdits() {
 	//	alert("sitejs change edits");
 	//};
 
-	$(".open-ehaa-modal").off("click").on("click", function () {
-		//e.preventDefault();
+	$(".open-ehaa-modal").off("click").on("click", function (e) {
+		e.preventDefault();
 		$("#loading").show();
 		$("#ehaaModal").replaceWith('');
-		//alert("in ehaa modal: " + $(this).val());
+		console.log("in ehaa modal: " + $(this).val());
 		$.ajax({
 			async: false,
-			url: '/Timekeeper/_EmployeeHoursAwaitingApproval?ehaaID=' + $(this).val(),
+			url: '/Timekeeper/_EmployeeHoursAwaitingApproval?ehaaID=' + $(this).attr("value"),
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -2056,6 +1733,51 @@ $(function () {
 			}
 		});
 	});
+	$(".back-button").off("click").on("click", function () {
+		console.log('back button');
+		var type = $(".turn-edit-on-off").attr('name');
+		console.log('type' + type);
+		if (type == 'edit') {
+			var section = "";
+			console.log($('#masterSectionType').val());
+			if ($('#masterSectionType').val() == "Operations") {
+				section = "Operations";
+			}
+			else if ($('#masterSectionType').val() == "LabManagement") {
+				section = "LabManagement";
+			}
+			else if ($('#masterSectionType').val() == "Accounting") {
+				section = "Accounting";
+			}
+			else if ($('#masterSectionType').val() == "Users") {
+				section = "Users";
+			}
+			else if ($('#masterSectionType').val() == "Requests") {
+				section = "Requests";
+			}
+			$("#loading").show();
+			$itemurl = "/Requests/ConfirmExit/?MenuItem=" + section;
+			console.log($itemurl);
+			//shows the modal
+			//$(".confirm-exit-modal").replaceWith('');
+			$.ajax({
+				async: true,
+				url: $itemurl,
+				type: 'GET',
+				cache: true,
+				success: function (data) {
+					$("#loading").hide();
+					$.fn.OpenModal('confirm-exit-modal', 'confirm-exit', data)
+					//$(".modal-open-state").attr("text", "open");
+				}
+
+			});
+		}
+		else {
+			console.log('close edit')
+			$.fn.CloseModal("edit-item");
+        }
+	})
 
 	$('.turn-edit-on-off').off("click").on("click", function () {
 		//if ($('.modal-open-state').attr("text") == "open") {
@@ -2068,7 +1790,7 @@ $(function () {
 		var type = $(this).attr('name');
 		console.log(type);
 		var url = '';
-		var section = ""
+		var section = "";
 		if ($(this).hasClass('operations')) {
 			url = "/Operations/EditModalView";
 			section = "Operations";
@@ -2103,16 +1825,8 @@ $(function () {
 				cache: true,
 				success: function (data) {
 					$("#loading").hide();
-					var modal = $(data);
-					$('body').append(modal);
-					$(".confirm-edit-modal").modal({
-						backdrop: false,
-						keyboard: false,
-					});
-					//shows the modal
-					$(".confirm-edit-modal").modal('show');
+					$.fn.OpenModal('confirm-edit-modal', 'confirm-edit', data)
 					$(".modal-open-state").attr("text", "open");
-
 
 				}
 
@@ -2121,54 +1835,21 @@ $(function () {
 
 		}
 		else if (type == 'details') {
-			console.log("in if details");
-			$('.mark-readonly').attr("disabled", false);
-			//TODO: add in mark-readonly fields for subunits
-			//$.fn.CheckUnitsFilled();
-			//$.fn.CheckSubUnitsFilled();
-
-			$('.mark-edditable').data("val", true);
-			$('.edit-mode-switch-description').text("Edit Mode On");
-			$('.turn-edit-on-off').attr('name', 'edit')
-
-			//turn off document modals
-
-
-
-			if ($(this).hasClass('operations') || $(this).hasClass('orders')) {
-				console.log("orders operations")
-				$.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist')
-				$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist')
-				$.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList')
-				$.fn.EnableMaterialSelect('#currency', 'select-options-currency')
-			}
-			if ($(this).hasClass('orders')) {
-				console.log("orders")
-				$.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
-				$.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
-				$.fn.EnableMaterialSelect('#Request_UnitTypeID', 'select-options-Request_UnitTypeID');
-				if (($("#Request_SubSubUnit").hasClass('.mark-readonly'))) {
-					$.fn.EnableSubSubUnits();
-					$.fn.ChangeSubSubUnitDropdown();
-				}
-				if (($("#Request_SubUnit").hasClass('.mark-readonly'))) {
-					$.fn.EnableSubUnits();
-					$.fn.ChangeSubUnitDropdown();
-				}
-			}
-			if ($(this).hasClass('suppliers') || $(this).hasClass('accounting')) {
-				$.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
-			}
-			if ($(this).hasClass('users')) {
-				$.fn.EnableMaterialSelect('#NewEmployee_JobCategoryTypeID', 'select-options-NewEmployee_JobCategoryTypeID');
-				$.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
-				$.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
-				$.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
-			}
-
+			enableMarkReadonly($(this));
+			$(".proprietryHidenCategory").attr("disabled", false);
 		}
 		//}
 	});
+	$.fn.DisableMaterialSelect = function (selectID, dataActivates) {
+		var selectedIndex = $('#' + dataActivates).find(".active").index();
+		selectedIndex = selectedIndex - 1;
+		$(selectID).destroyMaterialSelect();
+		$(selectID).prop("disabled", true);
+		$(selectID).prop('selectedIndex', selectedIndex);
+		$(selectID).attr("disabled", true)
+		$('[data-activates="' + dataActivates + '"]').prop('disabled', true);
+		$(selectID).materialSelect();
+    }
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
@@ -2218,30 +1899,18 @@ $(function () {
 		$('#addSupplierComment').popover('toggle');
 
 	});
-	$("#pricePopover").click(function () {
-		$('[data-toggle="popover"]').popover('dispose');
-		$('#pricePopover').popover({
-			sanitize: false,
-			placement: 'bottom',
-			html: true,
-			content: function () {
-				return $('#priceSortContent').html();
-			}
-		});
-		$('#pricePopover').popover('toggle');
 
-	});
 	$("#home-btn").click(function () {
-		$('[data-toggle="popover"]').popover('dispose');
-		$("#home-btn").popover({
-			sanitize: false,
-			placement: 'bottom',
-			html: true,
-			content: function () {
-				return $('#home-content').html();
-			}
-		});
-		$("#home-btn").popover('toggle');
+			$('[data-toggle="popover"]').popover('dispose');
+			$("#home-btn").popover({
+				sanitize: false,
+				placement: 'bottom',
+				html: true,
+				content: function () {
+					return $('#home-content').html();
+				}
+			});
+			$("#home-btn").popover('toggle');
 
 	});
 	$("#addRequestComment").click(function () {
@@ -2271,17 +1940,7 @@ $(function () {
 		$(this).popover('toggle');
 
 	});
-	$('.employee-status-radio').off("click").on("click", function () {
 
-		var val = $(this).val();
-		alert("employee status" + val);
-		$('#NewEmployee_EmployeeStatusID').val(val)
-		$("#validation-EmployeeStatus").addClass("hidden");
-		if (val == "4") {
-			$('.only-employee').removeClass("error");
-		}
-
-	});
 
 	$('.isRepeat').off("click").on("click", function () {
 		//console.log('employee status')
@@ -2361,7 +2020,6 @@ $(function () {
 		});
 	})
 
-
 	//$('body').on('click', '.callIndexPartial', function () {
 	//	var url = $(this).attr('url');
 	//	$.ajax({
@@ -2374,10 +2032,38 @@ $(function () {
 	//		}
 	//	});
 	//});
+	$(".save-item").click(function (e) {
+		e.preventDefault();
+		console.log('save-item-click')
+		var url = "";
+		if ($(this).hasClass("side-menu")) {
+			url = $(this).parent("a").attr("href");
+		}
+		else {
+			url = $(this).attr("href")
+		}
+		url = encodeURIComponent(url)
+		$itemurl = "/Requests/ConfirmExit/?url=" + url;
+		console.log($itemurl);
+		$.fn.CloseModal("confirm-exit");
+		$.ajax({
+			async: true,
+			url: $itemurl,
+			type: 'GET',
+			cache: true,
+			success: function (data) {
+				$("#loading").hide();
+				$.fn.OpenModal('confirm-exit-modal', 'confirm-exit', data)
+				$(".modal-open-state").attr("text", "open");
+			}
 
+		});
+
+	})
 
 
 
 });
+
 
 

@@ -11,7 +11,7 @@
 				alert("sort by frequently bought");
 				break;
 			case "hp":
-				alert("sorty by highest price");
+				alert("sort by highest price");
 				break;
 		}
 
@@ -21,8 +21,12 @@
 		$(".months-selected").each(function () {
 			months.push($(this).val());
 		});
+		var years = [];
+		$(".years-selected").each(function () {
+			years.push($(this).val());
+		});
 
-		var url = "/Requests/_IndexTable";
+		var url = "/Expenses/_StatisticsItem";
 
 		$.ajax({
 			async: true,
@@ -30,7 +34,7 @@
 			type: 'GET',
 			traditional: true,
 			cache: false,
-			data: { ExpensesFilter: filter },
+			data: { ExpensesFilter: filter, CategoryTypeIDs: catTypes, Months: months, Years: years, SortType: filter },
 			success: function (data) {
 				$(".index-table").empty();
 				$(".index-table").html(data);

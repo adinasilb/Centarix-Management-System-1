@@ -8,9 +8,9 @@
     Layout = "~/Views/Shared/Master.cshtml";
 }
 @*@if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
-{*@
-    @*<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("GetHomeView", "Admin", new { })"> </form>*@
-    @*<header class="sticky-top">
+    {*@
+@*<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("GetHomeView", "Admin", new { })"> </form>*@
+@*<header class="sticky-top">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
 
 
@@ -68,12 +68,14 @@
 
 
 @*}
-else*@ @if (SignInManager.IsSignedIn(User))
+    else*@ @if (SignInManager.IsSignedIn(User))
 {
     <header class="sticky-top">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ourNavBar p-0">
 
-
+            <div class="col-2">
+                <img style="width:70%;" class="mx-2" src="~/images/centarix_logo-02.png" alt="Centarix Logo" />
+            </div>
 
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav dropdown-menu-md-left" style="font-size:1.25rem; font-weight:500; ">
@@ -127,25 +129,27 @@ else*@ @if (SignInManager.IsSignedIn(User))
     </header>
 }
 
-<div class="text-center container col-md-7 center-horizontally" style="min-width:560px">
-    <div class="row h-100">
-        <div class="col-12 my-auto">
+    <div class="text-center container col-md-7 center-horizontally" style="min-width:560px">
+        <div class="row h-100">
+            <div class="col-12 my-auto">
+                <br /><br /><br /><br />
+                <img style="width:30em; max-width: 100%; min-width:500px" class="my-3" src="~/images/css/Centarix_Logo.png" alt="Centarix Logo" />
+                <br /><br />
 
-            <img style="width:30em; max-width: 100%; min-width:500px" class="my-3" src="~/images/css/Centarix_Logo.png" alt="Centarix Logo" />
-            <br /><br />
-            <h2 style="color:#DB2127; font-weight:600" class="mb-5">Maximizing Health</h2>
-
-
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
         </div>
     </div>
-</div>
 
-@*<footer class="border-top footer text-muted text-center">
-        <div class="container">
-            &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>*@
+    @*<footer class="border-top footer text-muted text-center">
+            <div class="container">
+                &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>*@
 
+    @if (IsSectionDefined("Scripts"))
+    {
+        @RenderSection("Scripts", required: true)
+    }

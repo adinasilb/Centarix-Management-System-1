@@ -19,11 +19,11 @@ using X.PagedList;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ParentRequestsController : Controller
+    public class ParentRequestsController : SharedController
     {
         private readonly ApplicationDbContext _context;
 
-        public ParentRequestsController(ApplicationDbContext context)
+        public ParentRequestsController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
@@ -77,13 +77,13 @@ namespace PrototypeWithAuth.Controllers
                 MonthlyTotalsViewModel monthlyTotalsViewModel = new MonthlyTotalsViewModel();
                 monthlyTotalsViewModel.Month = req.Month;
                 monthlyTotalsViewModel.Year = req.Year;
-                monthlyTotalsViewModel.GrandTotal = requestsinMonthAndYear.Sum(r => r.Cost);
-                monthlyTotalsViewModel.PlasticsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 1).AsEnumerable().Sum(m => m.Cost);
-                monthlyTotalsViewModel.ReagentsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 2).AsEnumerable().Sum(m => m.Cost);
-                monthlyTotalsViewModel.ProprietyTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 3).AsEnumerable().Sum(m => m.Cost);
-                monthlyTotalsViewModel.ReusableTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 4).AsEnumerable().Sum(m => m.Cost);
-                monthlyTotalsViewModel.EquipmentTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).AsEnumerable().Sum(m => m.Cost);
-                monthlyTotalsViewModel.OperationsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 6).AsEnumerable().Sum(m => m.Cost);
+                monthlyTotalsViewModel.GrandTotal = requestsinMonthAndYear.Sum(r => r.Cost ?? 0);
+                monthlyTotalsViewModel.PlasticsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 1).AsEnumerable().Sum(m => m.Cost ?? 0);
+                monthlyTotalsViewModel.ReagentsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 2).AsEnumerable().Sum(m => m.Cost ?? 0);
+                monthlyTotalsViewModel.ProprietyTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 3).AsEnumerable().Sum(m => m.Cost ?? 0);
+                monthlyTotalsViewModel.ReusableTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 4).AsEnumerable().Sum(m => m.Cost ?? 0);
+                monthlyTotalsViewModel.EquipmentTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).AsEnumerable().Sum(m => m.Cost ?? 0);
+                monthlyTotalsViewModel.OperationsTotal = requestsinMonthAndYear.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 6).AsEnumerable().Sum(m => m.Cost ?? 0);
                 monthlyTotals.Add(monthlyTotalsViewModel);
             }
 
@@ -96,37 +96,6 @@ namespace PrototypeWithAuth.Controllers
 
 
             return View(expensesListViewModel);
-        }
-
-        // POST: ParentRequests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var parentRequest = await _context.ParentRequests.FindAsync(id);
-            _context.ParentRequests.Remove(parentRequest);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ParentRequestExists(int id)
-        {
-            return _context.ParentRequests.Any(e => e.ParentRequestID == id);
-        }
-        [HttpGet]
-        [Authorize(Roles = "Accounting")]
-       
-       
-
-
-  
-        //this is here b/c the ajax call on the payment view is not working and I didn't have time to debug it
-        [HttpGet]
-        [Authorize(Roles = "Accounting")]
-        public IActionResult DetailsModalView(int id)
-        {
-            return RedirectToAction("DetailsModalView", "Requests", new { id = id });
         }
 
     }
