@@ -16,6 +16,10 @@ namespace PrototypeWithAuth.Models
         
         [DataType(DataType.Date)]
         public DateTime PaymentDate { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime PaymentReferenceDate { get; set; }
+        public DateTime PaymentReferenceDate_submit { get { return PaymentReferenceDate; } set { PaymentReferenceDate = value; } }
         public string Reference { get; set; }
         //public int RequestID { get; set; }
         //public Request Request { get; set; }

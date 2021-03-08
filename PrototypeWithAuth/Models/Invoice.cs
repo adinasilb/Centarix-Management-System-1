@@ -18,6 +18,7 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         [Display(Name = "Invoice Date")]
         public DateTime InvoiceDate { get; set; }
+        public DateTime InvoiceDate_submit { get { return InvoiceDate; } set { InvoiceDate = value; } }
         public List<Request> Requests { get; set; }
     }
 }

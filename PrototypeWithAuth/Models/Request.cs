@@ -102,7 +102,7 @@ namespace PrototypeWithAuth.Models
         //payment info
         public bool Paid { get; set; }
         public uint? Installments { get; set; } //number of installments
-        //public IEnumerable<Payment> Payments { get; set; }
+        public IEnumerable<Payment> Payments { get; set; }
 
         public int? PaymentStatusID { get; set; }
         [ForeignKey("PaymentStatusID")]

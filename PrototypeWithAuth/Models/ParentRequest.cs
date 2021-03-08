@@ -27,14 +27,14 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Order Number")]
         public int? OrderNumber { get; set; }
 
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
-        [Display(Name = "Invoice Number")]
-        public string InvoiceNumber { get; set; }
+        //[RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
+        //[Display(Name = "Invoice Number")]
+        //public string InvoiceNumber { get; set; }
 
-        [DataType(DataType.Date)]
-        [Display(Name = "Invoice Date")]
-        public DateTime InvoiceDate { get; set; }
-        public DateTime InvoiceDate_submit { get { return InvoiceDate; } set { InvoiceDate = value; } }
+        //[DataType(DataType.Date)]
+        //[Display(Name = "Invoice Date")]
+        //public DateTime InvoiceDate { get; set; }
+        //public DateTime InvoiceDate_submit { get { return InvoiceDate; } set { InvoiceDate = value; } }
         [Display(Name = "Supplier Order Number")]
         public string SupplierOrderNumber { get; set; }
         public IEnumerable<Payment> Payments { get; set; }
