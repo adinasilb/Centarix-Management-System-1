@@ -15,11 +15,6 @@ namespace PrototypeWithAuth.Data
         public static void Seed(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PaymentStatus>().HasData(
-                //new PaymentStatus
-                //{
-                //    PaymentStatusID = 1,
-                //    PaymentStatusDescription = "No Invoice" //TODO: should this be renamed ordered or will none cover all bases?
-                //},
                 new PaymentStatus
                 {
                     PaymentStatusID = 2,
@@ -40,11 +35,6 @@ namespace PrototypeWithAuth.Data
                     PaymentStatusID = 5,
                     PaymentStatusDescription = "Installments"
                 },
-                new PaymentStatus
-                {
-                    PaymentStatusID = 6,
-                    PaymentStatusDescription = "Paid"
-                },
                  new PaymentStatus
                  {
                      PaymentStatusID = 7,
@@ -55,7 +45,6 @@ namespace PrototypeWithAuth.Data
                     PaymentStatusID = 8,
                     PaymentStatusDescription = "Specify Payment Later"
                 }
-
             );
 
             modelBuilder.Entity<CategoryType>().HasData(
@@ -1459,54 +1448,88 @@ namespace PrototypeWithAuth.Data
                         LocationAbbreviation = "S"
                     }
                 );
-            modelBuilder.Entity<LocationRoomInstance>().HasData(
-                       new LocationRoomInstance
+            modelBuilder.Entity<LocationInstance>().HasData(
+                       new LocationInstance
                        {
-                           LocationRoomInstanceID = 1,
-                           LocationRoomTypeID = 1,
-                           LocationRoomInstanceName = "Laboratory 1"
+                           LocationInstanceID = 1,
+                           LocationInstanceName = "25°C",
+                           Height = 7,
+                           Width =1,
+                           LocationTypeID = 500
 
                        },
-                       new LocationRoomInstance
+                       new LocationInstance
                        {
-                           LocationRoomInstanceID = 2,
+                           LocationInstanceID = 2,
+                           LocationInstanceParentID =1,
                            LocationRoomTypeID = 1,
-                           LocationRoomInstanceName = "Laboratory 2"
-
+                            LocationInstanceName = "Laboratory 1",
+                           LocationInstanceAbbrev = "L1",
+                           LocationTypeID = 501,
+                            Width = 1,
                        },
-                       new LocationRoomInstance
+                       new LocationInstance
                        {
-                           LocationRoomInstanceID = 3,
+                           LocationInstanceID = 3,
+                           LocationInstanceParentID = 1,
+                           LocationRoomTypeID = 1,
+                           LocationInstanceName = "Laboratory 2",
+                           LocationInstanceAbbrev ="L2",
+                           LocationTypeID = 501,
+                            Width = 1,
+                       },
+                       new LocationInstance
+                       {
+                           LocationInstanceID = 4,
+                           LocationInstanceParentID = 1,
+                           LocationInstanceName = "Tissue Culture 1",
+                           LocationInstanceAbbrev = "TC1",
+                           LocationTypeID = 501,
                            LocationRoomTypeID = 2,
-                           LocationRoomInstanceName = "Tissue Culture 1"
-
+                           Width = 1,
                        },
-                        new LocationRoomInstance
+                        new LocationInstance
                         {
-                            LocationRoomInstanceID = 4,
+                            LocationInstanceID = 5,
+                            LocationInstanceParentID = 1,
+                            LocationTypeID = 501,
                             LocationRoomTypeID = 3,
-                            LocationRoomInstanceName = "Equipment Room 1"
+                            LocationInstanceName = "Equipment Room 1",
+                            LocationInstanceAbbrev = "E1",
+                             Width = 1,
 
                         },
-                        new LocationRoomInstance
+                        new LocationInstance
                         {
-                            LocationRoomInstanceID = 5,
+                            LocationInstanceID = 6,
+                            LocationInstanceParentID = 1,
+                            LocationTypeID = 501,
                             LocationRoomTypeID = 4,
-                            LocationRoomInstanceName = "Refrigerator Room 1"
+                            LocationInstanceName = "Refrigerator Room 1",
+                            LocationInstanceAbbrev = "R1",
+                             Width = 1,
 
                         },
-                        new LocationRoomInstance
+                        new LocationInstance
                         {
-                            LocationRoomInstanceID = 6,
+                            LocationInstanceID = 7,
+                            LocationInstanceParentID = 1,
+                            LocationTypeID = 501,
                             LocationRoomTypeID = 5,
-                            LocationRoomInstanceName = "Washing Room 1"
+                            LocationInstanceName = "Washing Room 1",
+                            LocationInstanceAbbrev = "W1",
+                             Width = 1,
 
                         },
-                        new LocationRoomInstance
+                        new LocationInstance
                         {
-                            LocationRoomInstanceID = 7,
+                            LocationInstanceID= 8,
+                            LocationInstanceParentID = 1,
+                            LocationTypeID = 501,
                             LocationRoomTypeID = 6,
-                            LocationRoomInstanceName = "Storage Room 1"
+                            LocationInstanceName = "Storage Room 1",
+                            LocationInstanceAbbrev = "S1",
+                            Width = 1,
 
                         }
                  );

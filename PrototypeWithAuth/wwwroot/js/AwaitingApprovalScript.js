@@ -14,8 +14,6 @@ $('body').on('click', '.deny-approval-modal-icon', function (e) { e.preventDefau
 function OpenDenyApprovalModal (id) {
     //e.preventDefault();
     $itemurl = '/ApplicationUsers/DenyApprovalRequestModal?ehaaId=' + id;
-    $('.modal').replaceWith('');
-    $(".modal-backdrop").remove();
     console.log($itemurl);
     $.ajax({
         async: true,
@@ -23,12 +21,7 @@ function OpenDenyApprovalModal (id) {
         type: 'GET',
         cache: true,
         success: function (data) {
-            $('body').append(data);
-            $(".modal").modal({
-                backdrop: true,
-                keyboard: true,
-            });
-            $(".modal").modal('show');
+            $.fn.OpenModal('deny-approval-modal', 'deny-approval', data)
         }
     });
     return false;
@@ -47,7 +40,7 @@ $("#submit-deny-approval-request").click(function (e) {
         type: 'POST',
         cache: true,
         success: function (data) {
-            $(".deny-approval-modal").modal('hide');
+            $.fn.CloseModal('deny-approval');
             $(".render-partial").html(data);
         }
     });

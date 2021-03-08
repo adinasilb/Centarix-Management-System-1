@@ -70,7 +70,7 @@
 
 <body style="display:none" class="body">
 
-    <div class="center" role="status" id="loading" style="        z-index: 5000;
+    <div class="center" role="status" id="loading" style="        z-index: 9999;
         left: calc(960px - 182.5px) !important;
         width: fit-content;
         display: none;">
@@ -373,8 +373,6 @@
 
     $.fn.CallOrderLateModal = function (id) {
         console.log("in call modal, id: " + id);
-        $('.modal').replaceWith('');
-        $(".modal-backdrop").remove();
         $('#loading').show();
         //var url = @Url.Action("Requests", "OrderLate");
         var url = "/Requests/OrderLateModal/?id=" + id;
@@ -387,13 +385,7 @@
             //dataType: "string",
             success: function (data) {
                 $('#loading').hide();
-                var modal = $(data);
-                $('body').append(modal);
-                $(".modal-view").modal({
-                    backdrop: true,
-                    keyboard: false,
-                });
-                $(".modal").modal('show');
+                $.fn.OpenModal('modal','order-late', data)
             }
 
         });
@@ -472,7 +464,7 @@
             console.log("itemurl " + $itemurl);
             //delete existing modals
             $('.modal:not(#visualZoomModal)').replaceWith('');
-            $(".modal-backdrop").remove();
+            //$(".modal-backdrop").remove();
             $('#loading').show();
             $.ajax({
                 async: true,
@@ -484,31 +476,15 @@
                     $('#loading').hide();
                     console.log("success!");
                     var modal = $(data);
-                    $('body').append(modal);
-                    //replaces the modal-view class with the ModalView view
-                    //$(".modal-view").html(data);
-                    //turn off data dismiss by clicking out of the box and by pressing esc
-                    $(".modal-view").modal({
-                        backdrop: 'static',
-                        keyboard: true,
-                    });
-                    //shows the modal
-                    $(".modal").modal('show');
-                    //$(".modal").on('show.bs.modal', function (e) {
-                    //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
-                    //})
-                    //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-                    //$(".modal-backdrop").remove();
-                    //$('.modal').find('input').first().focus();
-                    //$(".modal").popover('hide')
-                    //console.log($type);
                     switch ($type) {
                         case "details":
-                               //$.fn.OnOpenModalView();
+                            //$.fn.OnOpenModalView();
+                            $.fn.OpenModal('modal', 'edit-item', modal)
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
                             break;
                         case "reorder":
+                            $.fn.OpenModal('modal', 'reorder-item', modal)
                             $.fn.OnOpenModalView();
                             $("#cost").trigger('change');
                             //$.fn.CheckCurrency();
@@ -517,10 +493,24 @@
                             //$.fn.OnOpenModalView();
                             break;
                         case "received":
+                            $.fn.OpenModal('modal', 'received-item', modal)
                             $('.mdb-select').materialSelect();
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
                             break;                    
                         case "termsmodal":
+                            $.fn.OpenModal('modal', 'terms', modal)
+                            break;
+                        case "delete":
+                            $.fn.OpenModal('modal', 'delete-item', modal)
+                            break;
+                        case "confirmemail":
+                            $.fn.OpenModal('modal', 'confirm-email', modal)
+                            break;
+                        case "quote":
+                            $.fn.OpenModal('modal', 'edit-quote', modal)
+                            break;
+                        case "locations": case "addlocation":
+                            $.fn.OpenModal('modal', 'add-location', modal)
                             break;
                     }
 
@@ -552,6 +542,7 @@
             $("." + category).removeClass("d-none");
             console.log("in detilas of case")
             $.fn.TurnToDetails();
+            $('.open-document-modal').attr("showSwitch", true);
             $('.mdb-select').materialSelect();
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
@@ -676,8 +667,6 @@
 
         $.fn.CallPageUser = function ($itemurl) {
             //delete existing modals
-            $('.modal').replaceWith('');
-            $(".modal-backdrop").remove();
             $.ajax({
                 async: true,
                 url: $itemurl,
@@ -685,15 +674,8 @@
                 cache: true,
                 success: function (data) {
                     $("#loading").hide();
-                    //console.log("success!");
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $(".modal-view").modal({
-                        backdrop: true,
-                        keyboard: true,
-                    });
+                    $.fn.OpenModal('users-form', 'edit-item', data)
                     $.fn.CalculateAge();
-                    $(".modal").modal('show');
                     $.fn.OnOpenModal();
                 }
             });
@@ -855,7 +837,6 @@
             e.stopPropagation();
             var $itemurl = "/Locations/AddLocation";
             var $modal = $(".location-modal-view");
-            $('.modal').replaceWith('');
             $.fn.CallPageRequest($itemurl, "locations");
             return false;
         });
@@ -956,7 +937,7 @@
                         bold = "font-weight-bold";
                     }
 
-                    var newitem1 = '<a class="opac87  '+bold+' " href="'+ link+'"><div id="notification-info" class="px-3 pb-2 mb-3 ">' +
+                    var newitem1 = '<a class="opac87 notificationDiv '+bold+' " href="'+ link+'"><div id="notification-info" class="px-3 pb-2 mb-3 ">' +
                         '<div class="col-12 border-right-0 border-left-0 border-top-0 border-bottom  pb-2 mb-3 " >' +
                         '<div class="row ">' +
                         '<div class=" float-left " >' +
@@ -997,6 +978,7 @@
             $.fn.UpdateNotificationLastRead();
 
         });
+        
 
         $.fn.GetHoursString = function (date) {
             var date = new Date(date);
@@ -1051,6 +1033,40 @@
             return new Date(val.split("/").reverse().join("-")).toISOString();
         }
 
+
+        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch) {
+            $('#loading').show();
+            //alert("in documents modal in document modal js")
+            //$(".modal-backdrop").first().removeClass();
+            var urltogo = $("#documentSubmit").attr("url");
+            if (urltogo == "") {
+                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch;
+	        }
+            else {
+                //var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
+                console.log("urltogo: " + urltogo);
+                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch;
+            }
+
+            $.ajax({
+                async: true,
+                url: urltogo,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $('#loading').hide();
+                    $.fn.OpenModal('documentsModal', 'documents', data)
+                    var length = $('.iframe-container').length;
+			        if (length < 1) {
+				        $.fn.RemoveColorsOfDocs($foldername);
+			        }
+                    return true;
+                }
+            });
+            return true;
+        };
+
+
         $.fn.AppendModalToBody = function(data)
         {
             $(".modal").modal('hide');
@@ -1066,6 +1082,27 @@
             $('.modal-content a:first').tab('show');
             $(".mdb-select").materialSelect();
 
+        }
+        $.fn.OpenModal = function (modalClass, modalDivClass, data) {
+            var backdrop = "static";
+            if ($('.modal-backdrop').length > 0) {
+                backdrop = false;
+            }
+            $('.' + modalDivClass).html('');
+            $('.' + modalDivClass).html(data);
+            $("." + modalClass).modal({
+                backdrop: backdrop,
+                keyboard: false,
+            });
+            //shows the modal
+            $("." + modalClass).modal('show');
+
+        }
+        $.fn.CloseModal = function (modalDivClass) {
+            $('.' + modalDivClass).html('');
+            if ($('.modal').length == 0) {
+                $('.modal-backdrop').remove();
+            }
         }
     </script>
 

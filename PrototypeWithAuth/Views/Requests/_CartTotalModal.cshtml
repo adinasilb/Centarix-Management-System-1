@@ -29,7 +29,7 @@
     <div class="modal-dialog-centered modal-lg mx-auto " role="document" style="max-height:100%;  overflow-y:auto;">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$('.cart-total').html(''); $('.modal-backdrop').remove();">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
@@ -59,7 +59,7 @@
                     <div class="modal-footer">
                         <div class="text-center mx-auto modal-footer-mt">
                             <button type="button" class="custom-button custom-button-font @bcColor between-button-margin approve-cart" value="@Model.Request.RequestID">Approve</button>
-                            <button type="button" class="custom-cancel custom-button " data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                            <button type="button" class="custom-cancel custom-button " data-dismiss="modal" onclick="$('.cart-total').html(''); $('.modal-backdrop').remove();">Cancel</button>
                         </div>
                     </div>
 
@@ -82,23 +82,14 @@
                 type: "GET",
                 cache: false,
                 success: function (data) {
-                    $('.cart-total-modal').hide();
-                    $(".modal-backdrop").remove();
+                    $.fn.CloseModal("cart-total");
                     $("._IndexTableWithCounts").html(data);
                     $("#loading").hide();
                     return true;
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                        $('.cart-total-modal').replaceWith('');
-                        $(".modal-backdrop").remove();
-                        var modal = $(jqxhr.responseText);
-                        $('body').append(modal);
-                        $(".cart-total-modal").modal({
-                            backdrop: true,
-                            keyboard: false,
-                        });
-                        $(".cart-total-modal").modal('show');
+                        $.fn.OpenModal('cart-total-modal', 'cart-total', jqxhr.responseText)
                     }
 
                     $("#loading").hide();

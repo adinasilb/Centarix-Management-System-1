@@ -19,7 +19,7 @@
                 <img src="~/images/css/Loading/centarix_loading3.gif" />
             </div>
 
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('add-location');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <!--HERE!-->
@@ -63,7 +63,7 @@
                 {
                     <button class="btn btn-link load-add-location-type float-none" style="color: #2196F3;">[Add Location Type]</button>
                 }*@
-                                <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button " onclick="$(this).closest('.modal').modal('hide');" />
+                                <input type="button" value="Cancel" data-dismiss="modal" class="custom-cancel custom-button " onclick="$.fn.CloseModal('add-location');" />
                             </div>
                             <br />
                         </div>
@@ -108,8 +108,7 @@
             cache: false,
             success: function (data) {
                 $("#loading").hide();
-                $('.modal').hide();
-                $(".modal-backdrop").remove();
+                $.fn.CloseModal('add-location');
                 $('.render-body').html(data);
                 return true;
             }

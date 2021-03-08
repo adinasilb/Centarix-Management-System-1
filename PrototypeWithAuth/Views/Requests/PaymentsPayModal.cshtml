@@ -1,5 +1,4 @@
 ﻿@model PrototypeWithAuth.ViewModels.PaymentsPayModalViewModel
-
 <link href="~/css/site.css" rel="stylesheet" />
 <div class="modal modal-view fader" id="myModal" data-backdrop="false">
     <div class="modal-dialog-centered mx-auto modal-xl" style="min-width:1000PX !important; top: 20%;">
@@ -9,7 +8,7 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" class="modal-padding">
                 <input type="hidden" asp-for="AccountingEnum" />
-                @for(int i=0; i<Model.Requests.Count; i++)
+                @for (int i = 0; i < Model.Requests.Count; i++)
                 {
                     <input type="hidden" asp-for="Requests[i].RequestID" />
                 }
@@ -27,57 +26,7 @@
                             var VAT = Model.Requests.Sum(r => r.VAT);
                             var TotalShekel = CostShekel + VAT;
                         }
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="row">
-                                    Sum
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 pl-0">
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
-                                            <input value="@CostShekel" class="form-control-plaintext border-bottom" disabled />
-                                        </div>
-                                    </div>
-                                    <div class="col-6 pl-0">
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#36;</span>
-                                            <input value="" class="form-control-plaintext border-bottom" disabled />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4 px-3">
-                                <div class="row">
-                                    VAT
-                                </div>
-                                <div class="row">
-                                    <div class="input-group">
-                                        <span class="input-group-text">&#x20aa;</span>
-                                        <input value="@VAT" class="form-control-plaintext border-bottom" disabled />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="row">
-                                    Sum
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 pl-0">
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#x20aa;</span>
-                                            <input value="@TotalShekel" class="form-control-plaintext border-bottom" disabled />
-                                        </div>
-                                    </div>
-                                    <div class="col-6 pl-0">
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#36;</span>
-                                            <input value="" class="form-control-plaintext border-bottom" disabled />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                      
                     </div>
                     <hr />
                     <div class="row">

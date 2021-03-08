@@ -75,10 +75,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
             var viewmodel = await GetIndexViewModel(requestIndexObject);
-
+            
             SetViewModelCounts(requestIndexObject, viewmodel);
-
-            ViewBag.ErrorMessage = TempData["ErrorMessage"];
 
             return View(viewmodel);
         }
@@ -276,10 +274,9 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.RequestStatusID = requestIndexObject.RequestStatusID;
             requestIndexViewModel.PageType = requestIndexObject.PageType;
             requestIndexViewModel.SidebarFilterID = requestIndexObject.SidebarFilterID;
+            requestIndexViewModel.ErrorMessage = requestIndexObject.ErrorMessage;
             var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
 
-            try
-            {
                 var RequestPassedInWithInclude = RequestsPassedIn.Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ParentRequest).Include(r=>r.ApplicationUserCreator)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
@@ -287,19 +284,12 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
 
                 onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                // Redirect("~/Views/Shared/RequestError.cshtml");
-            }
+        
             requestIndexViewModel.PagedList = onePageOfProducts;
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
             requestIndexViewModel.PriceSortEnums = priceSorts;
             requestIndexViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
-            requestIndexViewModel.PageType = requestIndexObject.PageType;
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             return requestIndexViewModel;
         }
@@ -783,7 +773,7 @@ namespace PrototypeWithAuth.Controllers
                             if (parentRequest.Requests.Count() == 0)
                             {
                                 parentRequest.IsDeleted = true;
-                                var payments = _context.Payments.Where(p => p.ParentRequestID == parentRequest.ParentRequestID).ToList();
+                                var payments = _context.Payments.Where(p => p.RequestID == request.RequestID).ToList();
                                 foreach (var payment in payments)
                                 {
                                     payment.IsDeleted = true;
@@ -1650,6 +1640,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, bool NewRequestFromProduct = false, String SectionType = "")
         {
+            DeleteTemporaryDocuments();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             Request request = _context.Requests
@@ -1869,12 +1860,26 @@ namespace PrototypeWithAuth.Controllers
                 var isRequests = true;
                 var RequestNum = 1;
                 var requests = new List<Request>();
+                var payments = new List<Payment>();
                 while (isRequests)
                 {
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                   
                     if (HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
-                        requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                        var request = HttpContext.Session.GetObject<Request>(requestName);
+                        requests.Add(request);
+                        if(request.PaymentStatusID == 5)
+                        {
+                            for (int i = 0; i < request.Installments; i++)
+                            {
+                                var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (i + 1);
+                                var payment = HttpContext.Session.GetObject<Payment>(paymentName);
+                                payment.Request = request;
+                                payments.Add(payment);
+                            }
+                        }
+                     
                     }
                     else
                     {
@@ -2011,6 +2016,11 @@ namespace PrototypeWithAuth.Controllers
                                         await _context.SaveChangesAsync();
                                     }
 
+                                    foreach(var p in payments)
+                                    {
+                                        _context.Add(p);
+                                        await _context.SaveChangesAsync();
+                                    }
 
                                     var commentExists = true;
                                     var n = 1;
@@ -2097,7 +2107,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
+                confirmEmailViewModel.RequestIndexObject.ErrorMessage = ex.Message;
                 Response.StatusCode = 500;
                 if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -2144,6 +2154,36 @@ namespace PrototypeWithAuth.Controllers
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 2)
                          .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
             }
+            //base url needs to be declared - perhaps should be getting from js?
+            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
+            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
+
+            confirmQuoteEmail.Requests = requests;
+            //render the purchase order view into a string using a the confirmEmailViewModel
+            string renderedView = await RenderPartialViewToString("OrderEmailView", confirmQuoteEmail);
+            //instantiate a html to pdf converter object
+            HtmlToPdf converter = new HtmlToPdf();
+
+            PdfDocument doc = new PdfDocument();
+            // create a new pdf document converting an url
+            doc = converter.ConvertHtmlString(renderedView, baseUrl);
+
+            foreach (var request in requests)
+            {
+                //creating the path for the file to be saved
+                string path1 = Path.Combine("wwwroot", "files");
+                string path2 = Path.Combine(path1, request.RequestID.ToString());
+                //create file
+                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                Directory.CreateDirectory(folderPath);
+                string uniqueFileName = "QuotePDF.pdf";
+                string filePath = Path.Combine(folderPath, uniqueFileName);
+                // save pdf document
+                doc.Save(filePath);
+            }
+            // close pdf document
+            doc.Close();
+
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
             string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
@@ -2259,35 +2299,7 @@ namespace PrototypeWithAuth.Controllers
                 RequestID = id,
                 RequestIndexObject = requestIndexObject
             };
-            //base url needs to be declared - perhaps should be getting from js?
-            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
-            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
-
-            //render the purchase order view into a string using a the confirmEmailViewModel
-            string renderedView = await RenderPartialViewToString("OrderEmailView", confirmEmail);
-            //instantiate a html to pdf converter object
-            HtmlToPdf converter = new HtmlToPdf();
-
-            PdfDocument doc = new PdfDocument();
-            // create a new pdf document converting an url
-            doc = converter.ConvertHtmlString(renderedView, baseUrl);
-
-            foreach (var request in requests)
-            {
-                //creating the path for the file to be saved
-                string path1 = Path.Combine("wwwroot", "files");
-                string path2 = Path.Combine(path1, request.RequestID.ToString());
-                //create file
-                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-                Directory.CreateDirectory(folderPath);
-                string uniqueFileName = "QuotePDF.pdf";
-                string filePath = Path.Combine(folderPath, uniqueFileName);
-                // save pdf document
-                doc.Save(filePath);
-            }
-            // close pdf document
-            doc.Close();
-
+          
             return PartialView(confirmEmail);
         }
 
@@ -2824,7 +2836,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    ViewBag.ErrorMessage = ex.Message?.ToString();
+                    receivedLocationViewModel.ErrorMessage = ex.Message?.ToString();
                     Response.StatusCode = 500;
                     receivedLocationViewModel.locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0);
                     var userid = _userManager.GetUserId(User);
@@ -2908,7 +2920,7 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.RequestModalType ModalType,
+        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -2919,7 +2931,7 @@ namespace PrototypeWithAuth.Controllers
                 IsEdittable = IsEdittable,
                 //Files = new List<FileInfo>(),
                 SectionType = SectionType,
-                ModalType = ModalType
+                ShowSwitch = showSwitch
             };
 
             if (id != null)
@@ -3095,7 +3107,7 @@ namespace PrototypeWithAuth.Controllers
                         break;
                     case AppUtility.OrderTypeEnum.RequestPriceQuote:
                     case AppUtility.OrderTypeEnum.AddToCart:
-                        using (var transaction = _context.Database.BeginTransaction())
+                        using (var transaction = await _context.Database.BeginTransactionAsync())
                         {
                             try
                             {
@@ -3490,9 +3502,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
-                .Where(r => r.InvoiceID != null)
-                .Where(r => r.ParentRequest.WithoutOrder == false)
-                .Where(r => r.IsDeleted == false);
+                .Where(r=>r.RequestStatusID !=7);
 
             var payNowList = requestsList
                 .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
@@ -3506,25 +3516,26 @@ namespace PrototypeWithAuth.Controllers
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
                     requestsList = requestsList
-                        .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                        .Where(r => r.PaymentStatusID == 1);
+                        .Where(r => r.PaymentStatusID == 2);
                     break;
                 case AppUtility.SidebarEnum.PayNow:
                     requestsList = payNowList;
                     break;
                 case AppUtility.SidebarEnum.PayLater:
                     requestsList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .Where(r => r.PaymentStatusID == 4);
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     requestsList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                 .Where(r => r.PaymentStatusID == 5);
                     break;
                 case AppUtility.SidebarEnum.StandingOrders:
                     requestsList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2);
+                .Where(r => r.PaymentStatusID == 7);
+                    break;
+                case AppUtility.SidebarEnum.SpecifyPayment:
+                    requestsList = requestsList
+                .Where(r => r.PaymentStatusID == 8);
                     break;
             }
             AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
@@ -3541,7 +3552,7 @@ namespace PrototypeWithAuth.Controllers
             return View(accountingPaymentsViewModel);
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, Accounting")]
+        [Authorize(Roles = " Accounting")]
         public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
         {
 
@@ -3570,21 +3581,20 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
-                .Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
-                .Where(r => r.IsDeleted == false).AsQueryable();
+                .Where(r=>r.RequestStatusID!=7).AsQueryable();
             switch (accountingNotificationsEnum)
             {
                 case AppUtility.SidebarEnum.NoInvoice: //NOTE EXACT SAME QUERY IN ADDINVOICE MODAL
-                    requestsList = requestsList.Where(r => r.InvoiceID == null);
+                    requestsList = requestsList.Where(r => r.HasInvoice == false);
                     break;
                 case AppUtility.SidebarEnum.DidntArrive:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
                     break;
                 case AppUtility.SidebarEnum.PartialDelivery:
-                    requestsList = requestsList.Where(r => r.RequestStatusID == 4);
+                    requestsList = requestsList.Where(r => r.IsPartial);
                     break;
                 case AppUtility.SidebarEnum.ForClarification:
-                    requestsList = requestsList.Where(r => r.RequestStatusID == 5);
+                    requestsList = requestsList.Where(r => r.IsClarify);
                     break;
             }
             AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
@@ -3648,12 +3658,11 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Where(r => r.IsDeleted == false);
+                    .Where(r => r.IsDeleted == false && r.HasInvoice==false);
             if (vendorid != null)
             {
-                Requests = queryableRequests //NOTE THIS QUERY MUST MATCH ABOVE QUERY
-                    .Where(r => r.ParentRequest.WithoutOrder == false) //TODO: check if this is here
-                    .Where(r => r.InvoiceID == null)
+                Requests = queryableRequests 
+                    .Where(r => r.HasInvoice == false)
                     .Where(r => r.Product.VendorID == vendorid).ToList();
             }
             else if (requestid != null)
@@ -3682,41 +3691,57 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AddInvoiceModal(AddInvoiceViewModel addInvoiceViewModel)
         {
-            _context.Add(addInvoiceViewModel.Invoice); //TODO Return To Modal if Not filled in
-            await _context.SaveChangesAsync();
-
-            foreach (var request in addInvoiceViewModel.Requests)
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
-                RequestToSave.Cost = request.Cost;
-                RequestToSave.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
-                _context.Update(RequestToSave);
-            }
-            await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Add(addInvoiceViewModel.Invoice);
+                    await _context.SaveChangesAsync();
 
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string requestFolder = Path.Combine(uploadFolder, addInvoiceViewModel.Requests[0].RequestID.ToString());
-            Directory.CreateDirectory(requestFolder);
-            if (addInvoiceViewModel.InvoiceImage != null)
-            {
-                int x = 1;
-                //create file
-                string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
-                if (Directory.Exists(folderPath))
-                {
-                    var filesInDirectory = Directory.GetFiles(folderPath);
-                    x = filesInDirectory.Length + 1;
+
+                    foreach (var request in addInvoiceViewModel.Requests)
+                    {
+                        var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
+                        RequestToSave.Cost = request.Cost;
+                        RequestToSave.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
+                        RequestToSave.HasInvoice = true;
+                        _context.Update(RequestToSave);
+                    }
+                    await _context.SaveChangesAsync();
+
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    string requestFolder = Path.Combine(uploadFolder, addInvoiceViewModel.Requests[0].RequestID.ToString());
+                    Directory.CreateDirectory(requestFolder);
+                    if (addInvoiceViewModel.InvoiceImage != null)
+                    {
+                        int x = 1;
+                        //create file
+                        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+                        if (Directory.Exists(folderPath))
+                        {
+                            var filesInDirectory = Directory.GetFiles(folderPath);
+                            x = filesInDirectory.Length + 1;
+                        }
+                        else
+                        {
+                            Directory.CreateDirectory(folderPath);
+                        }
+                        string uniqueFileName = x + addInvoiceViewModel.InvoiceImage.FileName;
+                        string filePath = Path.Combine(folderPath, uniqueFileName);
+                        FileStream filestream = new FileStream(filePath, FileMode.Create);
+                        addInvoiceViewModel.InvoiceImage.CopyTo(filestream);
+                        filestream.Close();
+                        await transaction.CommitAsync();
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    Directory.CreateDirectory(folderPath);
+                    await transaction.RollbackAsync();
+                    addInvoiceViewModel.ErrorMessage = ex.Message?.ToString();
+                    Response.StatusCode = 500;               
+                    return PartialView("InvoiceModal", addInvoiceViewModel);
                 }
-                string uniqueFileName = x + addInvoiceViewModel.InvoiceImage.FileName;
-                string filePath = Path.Combine(folderPath, uniqueFileName);
-                FileStream filestream = new FileStream(filePath, FileMode.Create);
-                addInvoiceViewModel.InvoiceImage.CopyTo(filestream);
-                filestream.Close();
-            }
+            }          
 
             return RedirectToAction("AccountingNotifications");
         }
@@ -4251,17 +4276,12 @@ namespace PrototypeWithAuth.Controllers
                 HttpContext.Session.SetObject(requestName, req);
                 requestNum++;
             }
-
+            var termsList = new List<SelectListItem>() { };
+            await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID+"", Text = ps.PaymentStatusDescription }));
             TermsViewModel termsViewModel = new TermsViewModel()
             {
                 ParentRequest = new ParentRequest(),
-                TermsList = new List<SelectListItem>()
-                {
-                    new SelectListItem{ Text="Pay Now", Value=AppUtility.TermsModalEnum.PayNow.ToString()},
-                    new SelectListItem{ Text="+30", Value=AppUtility.TermsModalEnum.PayWithInMonth.ToString()},
-                    new SelectListItem{ Text="Installements", Value=AppUtility.TermsModalEnum.Installments.ToString()},
-                    new SelectListItem{ Text="Paid", Value=AppUtility.TermsModalEnum.Paid.ToString()}
-                }
+                TermsList = termsList
             };
             termsViewModel.RequestIndexObject = requestIndexObject;
             return PartialView(termsViewModel);
@@ -4290,28 +4310,24 @@ namespace PrototypeWithAuth.Controllers
                     RequestNum++;
                 }
 
-
-                var paymentStatusID = 0;
-
-                switch (termsViewModel.Terms)
-                {
-                    case AppUtility.TermsModalEnum.PayNow:
-                        paymentStatusID = 3;
-                        break;
-                    case AppUtility.TermsModalEnum.PayWithInMonth:
-                        paymentStatusID = 1;
-                        break;
-                    case AppUtility.TermsModalEnum.Installments:
-                        paymentStatusID = 5;
-                        break;
-                    case AppUtility.TermsModalEnum.Paid:
-                        paymentStatusID = 6;
-                        break;
-                }
+                RequestNum = 1;
                 foreach (var req in requests)
                 {
                     req.ParentRequest = termsViewModel.ParentRequest;
-                    req.PaymentStatusID = paymentStatusID;
+                    req.PaymentStatusID = termsViewModel.SelectedTerm;
+                    req.Installments = (uint)termsViewModel.Installments;
+                    if(termsViewModel.Installments ==0)
+                    {
+                        req.Installments = 1;
+                    }
+                    if(req.PaymentStatusID == 5)
+                    {
+                        for(int i=0; i<req.Installments; i++)
+                        {
+                            var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (i+1);
+                            HttpContext.Session.SetObject(paymentName, new Payment() {Sum = (req.Cost??0/req.Installments??0) });
+                        }
+                    }
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
                     HttpContext.Session.SetObject(requestName, req);
                     RequestNum++;
@@ -4327,7 +4343,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     new SelectListItem{ Text="Pay Now", Value=AppUtility.TermsModalEnum.PayNow.ToString()},
                     new SelectListItem{ Text="+30", Value=AppUtility.TermsModalEnum.PayWithInMonth.ToString()},
-                    new SelectListItem{ Text="Installements", Value=AppUtility.TermsModalEnum.Installments.ToString()},
+                    new SelectListItem{ Text="Installments", Value=AppUtility.TermsModalEnum.Installments.ToString()},
                     new SelectListItem{ Text="Paid", Value=AppUtility.TermsModalEnum.Paid.ToString()}
                 };
                 return PartialView("TermsModal", termsViewModel);

@@ -28,11 +28,11 @@ namespace PrototypeWithAuth.Models
         public bool IsFull { get; set; }
         [Display(Name = "No")]
         public int CompanyLocationNo { get; set; }
-        public int? LocationRoomInstanceID { get; set; }
-        public LocationRoomInstance LocationRoomInstance { get; set; }
         public int? LabPartID { get; set; }
         public LabPart LabPart { get; set; }
         public int LocationNumber { get; set; }
+        public int? LocationRoomTypeID { get; set; }
+        public LocationRoomType LocationRoomType { get; set; }
 
     }
 }

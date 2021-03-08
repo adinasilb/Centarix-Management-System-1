@@ -19,7 +19,7 @@
 @*<script src="~/js/VisualLocationsZoom.js"></script>*@
 @*<script src="~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/IndexTablePartial.js"></script>
-<div class="modal modal-view " id="visualZoomModal" role="dialog" aria-labelledby="User" data-backdrop="false">
+<div class="modal modal-view visualZoomModal" id="visualZoomModal" role="dialog" aria-labelledby="User" data-backdrop="false" style="z-index: 4000">
     <div class="modal-dialog modal-lg no-box-shadow" role="document" style="max-height:100%; width: 90%; max-width: 100%">
         <div class="modal-content d-inline-block no-box-shadow  bg-transparent" >
 
@@ -44,7 +44,7 @@
                         }
                         @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
                         {
-                        <tr class="thick-border">
+                           <tr class="thick-border">
                             @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                             {
                                 z++;
@@ -66,6 +66,7 @@
                                             <button class="btn btn-block no-hover vlz-filled no-box-shadow load-product-details-summary" value="@requestID" style="font-size:1.0625rem;">@innerHtml</button>
 
                                             <span style="color:white;"> @Model.ChildrenLocationInstances[z].Place</span>
+
                                         </td>
                                     }
                                     else

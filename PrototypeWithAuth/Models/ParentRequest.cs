@@ -39,7 +39,6 @@ namespace PrototypeWithAuth.Models
         public string SupplierOrderNumber { get; set; }
         public IEnumerable<Payment> Payments { get; set; }
         public bool IsDeleted { get; set; } //this is set to true if all the requests under this parentrequest are deleted
-        public bool WithoutOrder { get; set; }
         public double Discount { get; set; }
         public double Taxes { get; set; }
         public double Credit { get; set; }

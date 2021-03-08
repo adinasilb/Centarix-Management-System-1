@@ -41,44 +41,45 @@
         return false;
     });
     $("#sublist").off("change").on("change", function (e) {
-        if ($('#masterSectionType').val() != "Operations") {
-            console.log("subcategory change")
-            var subcategoryID = $("#sublist").val()
-            var pageType = $("#masterPageType").val()
-            var itemName = $("#Request_Product_ProductName").val()
-            var isRequestQuote = $(".isRequest").is(":checked")
-            console.log(isRequestQuote)
-            console.log("subcategory " + subcategoryID)
-            if (subcategoryID != "") {
-                $.ajax({
-                    //processData: true,
-                    //contentType: true,
-                    async: true,
-                    url: "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote,
-                    type: 'GET',
-                    cache: false,
-                    //data: formData,
-                    success: function (data) {
-                        $(".outer-partial").html(data);
-                        $(".mdb-select").materialSelect();
-
-                        $("#loading").hide();
-                        var category = $("#categoryDescription").val();
-                        console.log("category " + category)
-                        $("." + category).removeClass("d-none");
-                        $("." + category).prop("disabled", false);
-                        $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
-                        $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
-                        $(".proprietryHidenCategory").attr("disabled", false);
-                        console.log($("#requestQuoteValue").attr("value"))
-                        if ($("#requestQuoteValue").val() == "true") {
-                            console.log("request")
-                            $(".requestPriceQuote").addClass("d-none");
-                            $(".requestPriceQuote").attr("disabled", true)
+        console.log("subcategory change")
+        var subcategoryID = $("#sublist").val()
+        var pageType = $("#masterPageType").val()
+        var itemName = $("#Request_Product_ProductName").val()
+        var isRequestQuote = $(".isRequest").is(":checked")
+        console.log(isRequestQuote)
+        console.log("subcategory "+subcategoryID)
+        if (subcategoryID != "") {
+            $.ajax({
+                //processData: true,
+                //contentType: true,
+                async: true,
+                url: "/Requests/CreateItemTabs/?productSubCategoryId=" + subcategoryID + "&PageType=" + pageType + "&itemName=" + itemName + "&isRequestQuote=" + isRequestQuote,
+                type: 'GET',
+                cache: false,
+                //data: formData,
+                success: function (data) {
+                    $(".outer-partial").html(data);
+                      $(".mdb-select").materialSelect();
+                   
+                    $("#loading").hide();
+                    var category = $("#categoryDescription").val();
+                    console.log("category " + category)
+                    $("." + category).removeClass("d-none");
+                    $("." + category).prop("disabled", false);
+                    $.fn.DisableMaterialSelect("#parentlist", 'select-options-parentlist');
+                    $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
+                    $(".proprietryHidenCategory").attr("disabled", false);
+                    console.log($("#requestQuoteValue").attr("value"))
+                if ($("#requestQuoteValue").val()=="true") {
+                        console.log("request")
+                        $(".requestPriceQuote").addClass("d-none");
+                        $(".requestPriceQuote").attr("disabled", true)
                         }
-                    }
-                })
-            }
+                }
+                else {
+                    $('.requestQuoteHide').addClass("d-none");
+                }
+            })
         }
     })
    
@@ -141,11 +142,13 @@
     $(".isRequest").click(function(){
      if ($(this).is(":checked")) {
             $(".requestPriceQuote").addClass("d-none");
-            $(".requestPriceQuote ").attr("disabled", true)
+         $(".requestPriceQuote ").attr("disabled", true)
+         $(".requestQuoteHide").removeClass("d-none");
         }
         else {
             $(".requestPriceQuote").removeClass("d-none");
-            $(".requestPriceQuote ").attr("disabled", false)
+         $(".requestPriceQuote ").attr("disabled", false)
+         $(".requestQuoteHide").addClass("d-none");
         }
     
     })

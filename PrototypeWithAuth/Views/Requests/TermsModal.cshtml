@@ -26,7 +26,7 @@
 <script src="~/js/site.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/Validation/TermsModalFormValidation.js"></script>
-<div class="modal modal-view termsModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+<div class="modal modal-view termsModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
     <div class="modal-dialog-centered modal-xl mx-auto on-form-modal @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
             <button type="button" class="close modal-close-padding modal-close-style" onclick ="$.fn.CloseModal('terms');" @*data-dismiss="modal"*@ aria-label="Close">
@@ -54,20 +54,26 @@
 
                             <div class="col-3">
                                 <label class="control-label">Terms</label>
-                                @Html.DropDownListFor(m => m.Terms,
+                                @Html.DropDownListFor(m => m.SelectedTerm,
                                     Model.TermsList,
                                     "Select",
                                     new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @id = "Terms", @searchable = "default value" }
                                 )
-                                <span asp-validation-for="Terms" class="text-danger-centarix"></span>
+                                <span asp-validation-for="SelectedTerm" class="text-danger-centarix"></span>
                             </div>
-                            
+
                             <div class="col-3">
                                 <label asp-for="ParentRequest.Shipping" class="control-label"></label>
                                 <input type="text" asp-for="ParentRequest.Shipping" class="form-control-plaintext border-bottom" />
                                 <span asp-validation-for="ParentRequest.Shipping" class="text-danger-centarix"></span>
                             </div>
-                           
+
+                            <div class="col-3 d-none installments-amount-block">
+                                <label asp-for="Installments" class="control-label"></label>
+                                <input type="text" asp-for="Installments" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="Installments" class="text-danger-centarix"></span>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -115,29 +121,13 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $('.emailModal').replaceWith('');
-                    $(".modal-backdrop").remove();
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $(".emailModal").modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    $(".emailModal").modal('show');
+                    $.fn.OpenModal('emailModal', 'confirm-email', data);
                     $("#loading").hide();
                     return true;
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                        $('.termsModal').replaceWith('');
-                        $(".modal-backdrop").remove();
-                        var modal = $(jqxhr.responseText);
-                        $('body').append(modal);
-                        $(".termsModal").modal({
-                            backdrop: true,
-                            keyboard: false,
-                        });
-                        $(".termsModal").modal('show');
+                        $.fn.OpenModal('termsModal', 'terms', jqxhr.responseText);
                     }
 
                     $("#loading").hide();

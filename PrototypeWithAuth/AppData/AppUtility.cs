@@ -61,6 +61,8 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "For Clarification")]
             ForClarification,
             Add,  AwaitingApproval,
+            [Display(Name = "Specify Payment")]
+            SpecifyPayment
         }
         public enum FilterEnum {None, Price, Category, Amount}
         public enum YearlyMonthlyEnum { Yearly, Monthly }
@@ -76,7 +78,7 @@ namespace PrototypeWithAuth.AppData
             //Share,
             // Order,
             [Display(Name = "Monthly Payment")]
-            MonthlyPayment = 1,
+            MonthlyPayment = 2,
             [Display(Name = "Pay Now")]
             PayNow = 3,
             [Display(Name = "Pay Later")]
@@ -149,7 +151,7 @@ namespace PrototypeWithAuth.AppData
                 stringRate = stringRate.Replace("}", "");
                 Double.TryParse(stringRate, out rate);
 
-                return Math.Round(rate, 2);
+                return Math.Round(rate, 3);
             }
             catch (Exception ex)
             {
@@ -240,19 +242,6 @@ namespace PrototypeWithAuth.AppData
             if (request.Headers != null)
                 return request.Headers["X-Requested-With"] == "XMLHttpRequest";
             return false;
-        }
-
-        public static List<SelectListItem> TermsSelectList()
-        {
-            List<SelectListItem> termsSelectList = new List<SelectListItem>()
-            {
-                new SelectListItem() { Value="-1", Text="Paid" },
-                new SelectListItem() { Value="30", Text="30" },
-                new SelectListItem() { Value="45", Text="45" },
-                new SelectListItem() { Value="60", Text="60" }
-            };
-            //SelectList termsSelectList = new SelectList(dictSelectList);
-            return termsSelectList;
         }
 
         public static string GetLastFiles(string longFileName, int amountOfFiles)

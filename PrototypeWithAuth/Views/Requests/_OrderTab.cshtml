@@ -43,7 +43,7 @@
 </div>
 <div class="form-group">
     @*you can only add to cart if you are creating a new one*@
-    <div class="row">
+    <div class="row requestPriceQuote">
         <div class="col-7 align-vertical-middle-col">
             <span class="small-text">If you want to process a single order immediately</span>
         </div>
@@ -54,31 +54,31 @@
             </button>
         </div>
     </div>
-    <div class="row">
+    <div class="row requestPriceQuote">
         <div class="col-7 align-vertical-middle-col">
             <span class="small-text">If you want to order multiple items</span>
         </div>
         <div class="col-5">
             <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
-                    class="text w-100 custom-order-inv custom-button float-right submitOrder">
+                    class="text w-100 custom-order-inv custom-button float-right submitOrder ">
                 @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
             </button>
 
         </div>
     </div>
-    <div class="row">
+    <div class="row requestQuoteHide">
         <div class="col-7 align-vertical-middle-col">
             <span class="small-text">Ask the secretary to get a price quote</span>
         </div>
         <div class="col-5">
             <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
-                    class="text p-0 w-100 custom-order-inv custom-button create-modal-submit ">
+                    class="text p-0 w-100 custom-order-inv custom-button create-modal-submit">
                 @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
             </button>
 
         </div>
     </div>
-    <div class="row">
+    <div class="row requestPriceQuote">
         <div class="col-7 align-vertical-middle-col">
             <span class="small-text">Update the purchase of an item</span>
         </div>
@@ -126,15 +126,7 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $('.modalStep1').replaceWith('');
-                    $(".modal-backdrop").remove();
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $('.modalStep1').modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    $('.modalStep1').modal('show');
+                    $.fn.OpenModal('modalStep1', 'step-1', data)
                     $("#loading").hide();
                     return true;
                 },

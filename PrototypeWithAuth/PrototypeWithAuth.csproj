@@ -179,6 +179,10 @@
     <Compile Remove="Data\Migrations\20210222083146_AddedProductHebrewName.Designer.cs" />
     <Compile Remove="Data\Migrations\20210301105934_AddDisplayNameSupplierOrderNumber.cs" />
     <Compile Remove="Data\Migrations\20210301105934_AddDisplayNameSupplierOrderNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210303085917_TookAwayLocationRoomInstances.cs" />
+    <Compile Remove="Data\Migrations\20210303085917_TookAwayLocationRoomInstances.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210307125519_RedidSomeFieldsForAccounting.cs" />
+    <Compile Remove="Data\Migrations\20210307125519_RedidSomeFieldsForAccounting.Designer.cs" />
   </ItemGroup>
 
 

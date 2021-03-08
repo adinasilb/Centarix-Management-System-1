@@ -31,10 +31,10 @@
 
 <script src="~/js/site.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
-<div class="modal modal-document fader modalStep1 on-form-modal @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+<div class="modal modal-document fader modalStep1 on-form-modal @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9000">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style  " @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$(this).closest('.modalStep1').modal('hide');"*@>
+            <button type="button" class="close modal-close-padding modal-close-style  cancel-quote" @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$('.step-1').html('');"*@>
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
@@ -78,7 +78,7 @@
                     <div class="row">
                         <div class=" offset-4 text-center">
                             <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
-                            <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" name="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true">
+                            <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" name="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false">
 
                                 <div class="card document-border">
                                     <div class="document-card text-center">
@@ -153,6 +153,9 @@
                     console.log($("#OrderTypeEnum").val())
                     if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210")
                     {
+                        $.fn.CloseModal("step-1");
+                        $.fn.CloseModal("edit-item");
+                        $.fn.CloseModal("reorder-item");
                         console.log('remove save item')
                         $(".save-item").removeClass("save-item").off('click')
                         console.log("Index");
@@ -165,20 +168,11 @@
                         else {
                             $("._IndexTableData").html(data);
                         }
-                        $('.modalStep1').modal('hide');
-                        $('.modal').modal('hide');
+                        //$('.modal').modal('hide');
                     }
                     else 
                     {
-                        $('.termsModal').replaceWith('');
-                        $(".modal-backdrop").remove();
-                        var modal = $(data);
-                        $('body').append(modal);
-                        $(".termsModal").modal({
-                            backdrop: true,
-                            keyboard: false,
-                        });
-                        $(".termsModal").modal('show');
+                        $.fn.OpenModal('termsModal', 'terms', data)
                     }
              
                     $("#loading").hide();
@@ -186,15 +180,7 @@
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                        $('.modalStep1').replaceWith('');
-                        $(".modal-backdrop").remove();
-                        var modal = $(jqxhr.responseText);
-                        $('body').append(modal);
-                        $(".modalStep1").modal({
-                            backdrop: true,
-                            keyboard: false,
-                        });
-                        $(".modalStep1").modal('show');
+                        $.fn.OpenModal('modalStep1', 'step-1', jqxhr.responseText)
                     }
 
                     $("#loading").hide();
@@ -218,7 +204,7 @@
             type: "POST",
             cache: false,
             success: function (data) {
-                $('.modalStep1').modal('hide');
+                $.fn.CloseModal("step-1");
                 return true;
             }
         })

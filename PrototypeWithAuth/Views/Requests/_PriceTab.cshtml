@@ -26,7 +26,7 @@
             <div class="col-6">
                 <div class="form-group">
                     <label class="control-label">Currency</label>
-                    <select id="currency" asp-for="@request.Currency" class="mdb-select custom select-dropdown form-control-plaintext">
+                    <select id="currency" asp-for="Request.Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
                         <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                         <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
                     </select>
