@@ -1065,22 +1065,22 @@
         };
 
 
-        $.fn.AppendModalToBody = function(data)
-        {
-            $(".modal").modal('hide');
-            $(".modal").replaceWith('');
-            var modal = $(data);
-            $('body').append(modal);
-            $(".modal").modal({
-                backdrop: true,
-                keyboard: false,
-            });
-            //shows the modal
-            $(".modal").modal('show');
-            $('.modal-content a:first').tab('show');
-            $(".mdb-select").materialSelect();
+        //$.fn.AppendModalToBody = function(data)
+        //{
+        //    $(".modal").modal('hide');
+        //    $(".modal").replaceWith('');
+        //    var modal = $(data);
+        //    $('body').append(modal);
+        //    $(".modal").modal({
+        //        backdrop: true,
+        //        keyboard: false,
+        //    });
+        //    //shows the modal
+        //    $(".modal").modal('show');
+        //    $('.modal-content a:first').tab('show');
+        //    $(".mdb-select").materialSelect();
 
-        }
+        //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
             var backdrop = "static";
             if ($('.modal-backdrop').length > 0) {

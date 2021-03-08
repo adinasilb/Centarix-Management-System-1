@@ -56,7 +56,7 @@
 						cache: true,
 						success: function (data) {
 							$('.indexTable').html(data);
-
+							
 						}
 					});
 
@@ -92,7 +92,7 @@
 				//}
 			},
 			error: function (xhr) {
-				$.fn.AppendModalToBody(xhr.responseText);
+				
 			}
 		});
 		$.fn.TurnToDetails();
