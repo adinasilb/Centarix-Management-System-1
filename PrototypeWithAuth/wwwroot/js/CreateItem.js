@@ -70,11 +70,14 @@
                     $.fn.DisableMaterialSelect("#sublist", 'select-options-sublist');
                     $(".proprietryHidenCategory").attr("disabled", false);
                     console.log($("#requestQuoteValue").attr("value"))
-                if ($("#requestQuoteValue").val()=="true") {
+                    if ($("#requestQuoteValue").val() == "true") {
                         console.log("request")
                         $(".requestPriceQuote").addClass("d-none");
                         $(".requestPriceQuote").attr("disabled", true)
-                        }
+                    }
+                    else {
+                        $('.requestQuoteHide').addClass("d-none");
+                    }
                 }
             })
         }
@@ -139,11 +142,13 @@
     $(".isRequest").click(function(){
      if ($(this).is(":checked")) {
             $(".requestPriceQuote").addClass("d-none");
-            $(".requestPriceQuote ").attr("disabled", true)
+         $(".requestPriceQuote ").attr("disabled", true)
+         $(".requestQuoteHide").removeClass("d-none");
         }
         else {
             $(".requestPriceQuote").removeClass("d-none");
-            $(".requestPriceQuote ").attr("disabled", false)
+         $(".requestPriceQuote ").attr("disabled", false)
+         $(".requestQuoteHide").addClass("d-none");
         }
     
     })
