@@ -3056,12 +3056,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return boolCheck;
         }
-        //[HttpGet]
-        //public JsonResult GetCompanyAccountList(int PaymentTypeID)
-        //{
-        //    var companyAccountList = _context.CompanyAccounts.Where(c => c.PaymentTypeID == PaymentTypeID).ToList();
-        //    return Json(companyAccountList);
-        //}
+
 
         [HttpGet]
         public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
@@ -3590,7 +3585,8 @@ namespace PrototypeWithAuth.Controllers
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
             {
                 Requests = requestsToPay,
-                AccountingEnum = accountingPaymentsEnum
+                AccountingEnum = accountingPaymentsEnum, 
+                Payment = new Payment()                
             };
 
             //check if payment status type is installments to show the installments in the view model
