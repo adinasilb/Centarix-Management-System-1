@@ -1539,82 +1539,81 @@ namespace PrototypeWithAuth.Controllers
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
+                TempData.Keep();
+                //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
+                requestItemViewModel.Requests.FirstOrDefault().ParentRequest = null;
+                //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
+                var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Requests.FirstOrDefault().ParentQuoteID).FirstOrDefault();
+                if (parentQuote != null)
+                {
+
+                    parentQuote.QuoteNumber = requestItemViewModel.Requests.FirstOrDefault().ParentQuote.QuoteNumber;
+                    parentQuote.QuoteDate = requestItemViewModel.Requests.FirstOrDefault().ParentQuote.QuoteDate;
+                    requestItemViewModel.Requests.FirstOrDefault().ParentQuote = parentQuote;
+                }
+                //else
+                //{
+                //    parentQuote = new ParentQuote();
+                //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
+                //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
+                //    requestItemViewModel.Request.ParentQuote = parentQuote;
+                //}
+                //else if(requestItemViewModel.Request.ParentQuote?.QuoteNumber !=null || requestItemViewModel.Request.ParentQuote?.QuoteDate != null)
+                //{ 
+                //    parentQuote= new ParentQuote();
+                //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
+                //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
+                //    requestItemViewModel.Request.ParentQuote = parentQuote;
+
+                //}
+
+                var product = _context.Products.Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == requestItemViewModel.Requests.FirstOrDefault().ProductID);
+                // product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
+                product.VendorID = requestItemViewModel.Requests.FirstOrDefault().Product.VendorID;
+                product.CatalogNumber = requestItemViewModel.Requests.FirstOrDefault().Product.CatalogNumber;
+                //in case we need to return to the modal view
+                product.ProductName = requestItemViewModel.Requests.FirstOrDefault().Product.ProductName;
+                var parentCategoryId = requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategoryID;
+                requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).Where(ps => ps.ParentCategoryID == parentCategoryId).ToListAsync();
+                requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
+                //redo the unit types when seeded
+                var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
+                requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
+
+                //declared outside the if b/c it's used farther down to (for parent request the new comment too)
+                var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+
+                //todo figure out payments
+                //if (requestItemViewModel.Request.Terms == -1)
+                //{
+                //    requestItemViewModel.Request.Payed = true;
+                //}
+
+
+                var context = new ValidationContext(requestItemViewModel.Requests.FirstOrDefault(), null, null);
+                var results = new List<ValidationResult>();
                 try
                 {
-                    TempData.Keep();
-                    //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
-                    requestItemViewModel.Request.ParentRequest = null;
-                    //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
-                    var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requestItemViewModel.Request.ParentQuoteID).FirstOrDefault();
-                    if (parentQuote != null)
+                    if (Validator.TryValidateObject(requestItemViewModel.Requests.FirstOrDefault(), context, results, true))
                     {
+                        /*
+                         * the viewmodel loads the request.product with a primary key of 0
+                         * so if you don't insert the request.productid into the request.product.productid
+                         * it will create a new one instead of updating the existing one
+                         * only need this if using an existing product
+                         */
+                        requestItemViewModel.Requests.FirstOrDefault().Product = product;
+                        requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategoryID = requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryID;
+                        // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
+                        requestItemViewModel.Requests.FirstOrDefault().SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Requests.FirstOrDefault().SubProjectID).FirstOrDefault();
 
-                parentQuote.QuoteNumber = requestItemViewModel.Requests.FirstOrDefault().ParentQuote.QuoteNumber;
-                parentQuote.QuoteDate = requestItemViewModel.Requests.FirstOrDefault().ParentQuote.QuoteDate;
-                requestItemViewModel.Requests.FirstOrDefault().ParentQuote = parentQuote;
-            }
-            //else
-            //{
-            //    parentQuote = new ParentQuote();
-            //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
-            //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
-            //    requestItemViewModel.Request.ParentQuote = parentQuote;
-            //}
-            //else if(requestItemViewModel.Request.ParentQuote?.QuoteNumber !=null || requestItemViewModel.Request.ParentQuote?.QuoteDate != null)
-            //{ 
-            //    parentQuote= new ParentQuote();
-            //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
-            //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
-            //    requestItemViewModel.Request.ParentQuote = parentQuote;
-
-                    //}
-
-            var product = _context.Products.Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == requestItemViewModel.Requests.FirstOrDefault().ProductID);
-           // product.ProductSubcategoryID = requestItemViewModel.Request.Product.ProductSubcategoryID;
-            product.VendorID = requestItemViewModel.Requests.FirstOrDefault().Product.VendorID;
-            product.CatalogNumber = requestItemViewModel.Requests.FirstOrDefault().Product.CatalogNumber;
-            //in case we need to return to the modal view
-            product.ProductName = requestItemViewModel.Requests.FirstOrDefault().Product.ProductName;
-            var parentCategoryId = requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategoryID;
-            requestItemViewModel.ProductSubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategory.CategoryTypeID == 1).Where(ps => ps.ParentCategoryID == parentCategoryId).ToListAsync();
-            requestItemViewModel.Vendors = await _context.Vendors.ToListAsync();
-            //redo the unit types when seeded
-            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
-
-                    //declared outside the if b/c it's used farther down to (for parent request the new comment too)
-                    var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-
-                    //todo figure out payments
-                    //if (requestItemViewModel.Request.Terms == -1)
-                    //{
-                    //    requestItemViewModel.Request.Payed = true;
-                    //}
-
-
-            var context = new ValidationContext(requestItemViewModel.Requests.FirstOrDefault(), null, null);
-            var results = new List<ValidationResult>();
-            if (Validator.TryValidateObject(requestItemViewModel.Requests.FirstOrDefault(), context, results, true))
-            {
-                /*
-                 * the viewmodel loads the request.product with a primary key of 0
-                 * so if you don't insert the request.productid into the request.product.productid
-                 * it will create a new one instead of updating the existing one
-                 * only need this if using an existing product
-                 */
-                requestItemViewModel.Requests.FirstOrDefault().Product = product;
-                requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategoryID = requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryID;
-                // requestItemViewModel.Request.Product.ProductID = requestItemViewModel.Request.ProductID;
-                requestItemViewModel.Requests.FirstOrDefault().SubProject = _context.SubProjects.Where(sp => sp.SubProjectID == requestItemViewModel.Requests.FirstOrDefault().SubProjectID).FirstOrDefault();
-                try
-                {
-                    //_context.Update(requestItemViewModel.Request.Product.SubProject);
-                    //_context.Update(requestItemViewModel.Request.Product);
-                    _context.Update(requestItemViewModel.Requests.FirstOrDefault().ParentQuote);
-                    await _context.SaveChangesAsync();
-                    requestItemViewModel.Requests.FirstOrDefault().ParentQuoteID = requestItemViewModel.Requests.FirstOrDefault().ParentQuote.ParentQuoteID;
-                    _context.Update(requestItemViewModel.Requests.FirstOrDefault());
-                    await _context.SaveChangesAsync();
+                        //_context.Update(requestItemViewModel.Request.Product.SubProject);
+                        //_context.Update(requestItemViewModel.Request.Product);
+                        _context.Update(requestItemViewModel.Requests.FirstOrDefault().ParentQuote);
+                        await _context.SaveChangesAsync();
+                        requestItemViewModel.Requests.FirstOrDefault().ParentQuoteID = requestItemViewModel.Requests.FirstOrDefault().ParentQuote.ParentQuoteID;
+                        _context.Update(requestItemViewModel.Requests.FirstOrDefault());
+                        await _context.SaveChangesAsync();
 
 
 
@@ -1660,7 +1659,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else
                     {
-                       
+
                         foreach (var result in results)
                         {
                             requestItemViewModel.ErrorMessage += result.ErrorMessage;
