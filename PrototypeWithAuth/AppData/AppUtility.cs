@@ -84,7 +84,7 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Pay Later")]
             PayLater = 4,
             Installments = 5,
-            // Clarification
+            SpecifyPayment
         }
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }

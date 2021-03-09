@@ -4,16 +4,25 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 @inject UserManager<ApplicationUser> _userManager
-@{ 
+@{
     var bcColor = "order-inv-background-color";
 
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
-       
+
         bcColor = "oper-background-color";
     }
 }
-    <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style=" ">
+
+@if (Model.ErrorMessage != null)
+{
+    <div class="row">
+        <label class="text-danger-centarix p-2" style="width:100%; text-align: center">Error: @Model.ErrorMessage</label>
+
+    </div>
+}
+
+<form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style=" ">
 
         @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
         @Html.HiddenFor(model => model.RequestStatusID)
@@ -29,9 +38,9 @@
         }
         @*<input type="hidden" value="@Model.ParentCategory.ParentCategoryID" id="categoryId" />*@
 
-        <!-- Modal Header -->
-        <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
-            @*class needed here to override bootstraps modal limitations*@
+    <!-- Modal Header -->
+    <div class="new-modal-header border-bottom container-fluid" style="padding: 0">
+        @*class needed here to override bootstraps modal limitations*@
 
 
             <div class="form-group modal-line-1-header modal-sides row">

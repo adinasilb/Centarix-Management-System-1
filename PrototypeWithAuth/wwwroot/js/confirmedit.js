@@ -56,7 +56,7 @@
 						cache: true,
 						success: function (data) {
 							$('.indexTable').html(data);
-
+							
 						}
 					});
 
@@ -92,7 +92,13 @@
 				//}
 			},
 			error: function (xhr) {
-				$.fn.AppendModalToBody(xhr.responseText);
+				$.fn.OpenModal("modal", "edits", xhr.responseText)				
+				if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
+					$.fn.LoadEditModalDetails();
+				}
+				else {
+					$.fn.OnOpenModal();
+                }
 			}
 		});
 		$.fn.TurnToDetails();
@@ -214,7 +220,7 @@
 				}
 
 				$.fn.CloseModal("confirm-exit");
-				$.fn.CloseModal("edit-item");
+				$.fn.CloseModal("edits");
 				//$('.confirm-exit-modal').remove();
 				//$(".modal").modal('hide');
 				//$(".modal").replaceWith('');

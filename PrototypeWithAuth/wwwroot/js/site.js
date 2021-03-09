@@ -1736,7 +1736,7 @@ $(function () {
 		}
 		else {
 			console.log('close edit')
-			$.fn.CloseModal("edit-item");
+			$.fn.CloseModal("edits");
         }
 	})
 
@@ -1887,7 +1887,7 @@ $(function () {
 		$('#addRequestComment').popover('toggle');
 
 	});
-	$(".more").off('click').click(function () {
+	$(".more, .accNotification").off('click').click(function () {
 		var val = $(this).val();
 		$('[data-toggle="popover"]').popover('dispose');
 		$(this).popover({

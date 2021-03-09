@@ -12,7 +12,7 @@ $(function () {
 		var today = new Date();
 		console.log("today: " + today);
 		age = Math.floor((today - DOB) / (365.25 * 24 * 60 * 60 * 1000));
-		alert(age);
+		//alert(age);
 		if (isNaN(age)) {
 			age = '';
 		}
