@@ -479,7 +479,7 @@
                     switch ($type) {
                         case "details":
                             //$.fn.OnOpenModalView();
-                            $.fn.OpenModal('modal', 'edit-item', modal)
+                            $.fn.OpenModal('modal', 'edits', modal)
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
                             break;
@@ -644,9 +644,9 @@
         $.fn.OnOpenModal = function () {
             $('.modal-content a:first').tab('show');
             $('.mdb-select').materialSelect();
-            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
-            $('.mdb-select li:first-child').hide();
-            $('.mdb-select li:nth-child(2)').hide();
+            //$('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            //$('.mdb-select li:first-child').hide();
+            //$('.mdb-select li:nth-child(2)').hide();
         };
 
       
@@ -674,7 +674,7 @@
                 cache: true,
                 success: function (data) {
                     $("#loading").hide();
-                    $.fn.OpenModal('users-form', 'edit-item', data)
+                    $.fn.OpenModal('users-form', 'edits', data)
                     $.fn.CalculateAge();
                     $.fn.OnOpenModal();
                 }
@@ -1067,22 +1067,22 @@
         };
 
 
-        $.fn.AppendModalToBody = function(data)
-        {
-            $(".modal").modal('hide');
-            $(".modal").replaceWith('');
-            var modal = $(data);
-            $('body').append(modal);
-            $(".modal").modal({
-                backdrop: true,
-                keyboard: false,
-            });
-            //shows the modal
-            $(".modal").modal('show');
-            $('.modal-content a:first').tab('show');
-            $(".mdb-select").materialSelect();
+        //$.fn.AppendModalToBody = function(data)
+        //{
+        //    $(".modal").modal('hide');
+        //    $(".modal").replaceWith('');
+        //    var modal = $(data);
+        //    $('body').append(modal);
+        //    $(".modal").modal({
+        //        backdrop: true,
+        //        keyboard: false,
+        //    });
+        //    //shows the modal
+        //    $(".modal").modal('show');
+        //    $('.modal-content a:first').tab('show');
+        //    $(".mdb-select").materialSelect();
 
-        }
+        //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
             var backdrop = "static";
             if ($('.modal-backdrop').length > 0) {

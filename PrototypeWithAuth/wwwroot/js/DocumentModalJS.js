@@ -28,7 +28,7 @@
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
 		var $isEdittable = $('.active-document-modal.withinDocModal').data("val");
-		alert($isEdittable)
+		//alert($isEdittable)
 		var $showSwitch =  $('.active-document-modal.withinDocModal').attr("showSwitch");
 		console.log("url : " + url);
 		var formData = new FormData($(".documentModalForm")[0]);
@@ -102,14 +102,14 @@
 		console.log("foldername: " + $foldername);
 		var numCards = $(".card.document-border").length;
 		console.log("numcards: " + numCards);
-
-		var div = $("#" + $foldername + " i");
+		var folder = "#" + $foldername + ".active-document-modal";
+		var div = $(folder + " i");
 		
 		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file")) {
 			console.log("has class already");
 		} else {
 			console.log("does not class already");
-			$("#" + $foldername + " div.card.document-border").addClass("hasFile");
+			$(folder +".active-document-modal" + " div.card.document-border").addClass("hasFile");
 			if (section=="Operations") {
 				div.addClass("oper-filter");
 			} else if ((section == "LabManagement")) {
@@ -118,9 +118,10 @@
 			else {
 				div.addClass("order-inv-filter");
 			}
-			$("#" + $foldername+"Input").addClass("contains-file");
-			if ($("#" + $foldername+"Input").rules()) {
-					$("#" + $foldername+"Input").valid();
+			var folderInput = "#" + $foldername + "Input";
+			$(folderInput).addClass("contains-file");
+			if ($(folderInput).rules()) {
+					$(folderInput).valid();
 			}
 		}
 	};

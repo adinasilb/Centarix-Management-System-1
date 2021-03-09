@@ -1736,7 +1736,7 @@ $(function () {
 		}
 		else {
 			console.log('close edit')
-			$.fn.CloseModal("edit-item");
+			$.fn.CloseModal("edits");
         }
 	})
 

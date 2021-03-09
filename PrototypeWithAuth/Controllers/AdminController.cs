@@ -841,7 +841,7 @@ namespace PrototypeWithAuth.Controllers
                         //should we move the delete here and test for the extension just in case it breaks over there
 
                     }
-        
+                    //throw new Exception();
                     await transaction.CommitAsync();
                 }
                 catch (DbUpdateException ex)

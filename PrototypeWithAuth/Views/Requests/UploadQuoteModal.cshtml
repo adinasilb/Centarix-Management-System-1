@@ -154,7 +154,7 @@
                     if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210")
                     {
                         $.fn.CloseModal("step-1");
-                        $.fn.CloseModal("edit-item");
+                        $.fn.CloseModal("edits");
                         $.fn.CloseModal("reorder-item");
                         console.log('remove save item')
                         $(".save-item").removeClass("save-item").off('click')
