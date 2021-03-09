@@ -1679,7 +1679,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 catch (Exception ex)
                 {
-                    requestItemViewModel.Request = _context.Requests.Include(r => r.Product)
+                    requestItemViewModel.Requests[0] = _context.Requests.Include(r => r.Product)
                     .Include(r => r.ParentQuote)
                     .Include(r => r.ParentRequest)
                     .Include(r => r.Product.ProductSubcategory)
@@ -1688,16 +1688,16 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.RequestStatus)
                     .Include(r => r.ApplicationUserCreator)
                     //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
-                    .SingleOrDefault(x => x.RequestID == requestItemViewModel.Request.RequestID);
+                    .SingleOrDefault(x => x.RequestID == requestItemViewModel.Requests[0].RequestID);
                     requestItemViewModel.ErrorMessage += ex.Message;
                     await transaction.RollbackAsync();
                     var categoryTypeId = requestItemViewModel.SectionType == AppUtility.MenuItems.Requests ? 1 : 2;
-                    var productSubcategory = requestItemViewModel.Request.Product.ProductSubcategory;
+                    var productSubcategory = requestItemViewModel.Requests[0].Product.ProductSubcategory;
                     requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId);
                     string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Request.RequestID.ToString());
+                    string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Requests[0].RequestID.ToString());
                     FillDocumentsInfo(requestItemViewModel, uploadFolder2, productSubcategory);
-                    requestItemViewModel.Comments = await _context.Comments.Include(r => r.ApplicationUser).Where(r => r.Request.RequestID == requestItemViewModel.Request.RequestID).ToListAsync();
+                    requestItemViewModel.Comments = await _context.Comments.Include(r => r.ApplicationUser).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
                     requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
                     Response.StatusCode = 550;
                     return PartialView(requestItemViewModel);
