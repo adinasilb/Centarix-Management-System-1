@@ -34,7 +34,7 @@
                                 <span class="float-right">Invoice Date: </span>
                             </div>
                             <div class="col-2">
-                                <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker" />
+                                <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker" asp-format="{0:dd/MM/yyyy}"/>
                                 <span asp-validation-for="Invoice.InvoiceDate" class="text-danger-centarix"></span>
                             </div>
                         </div>

@@ -219,28 +219,21 @@ namespace PrototypeWithAuth.Controllers
                 {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                }
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 4)
-                {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                }
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 5)
-                {
                     TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
                     RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
                 }
 
-
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
             {
-                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == requestIndexObject.RequestStatusID).Include(r => r.Product.ProductSubcategory)
+                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5).Include(r => r.Product.ProductSubcategory)
                      .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
             }
             else //we just want what is in inventory
             {
-                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == requestIndexObject.RequestStatusID);
+                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID ==4 || r.RequestStatus.RequestStatusID==5);
             }
             AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
             //now that the lists are created sort by vendor or subcategory
@@ -1659,7 +1652,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
             };
-            requestItemViewModel.Requests.Add(request);
+            requestItemViewModel.Requests= new List<Request>() { request };
             var reorderViewModel = new ReorderViewModel() { RequestIndexObject = requestIndexObject, RequestItemViewModel = requestItemViewModel };
             return PartialView(reorderViewModel);
         }
@@ -2153,17 +2146,17 @@ namespace PrototypeWithAuth.Controllers
             if (confirmQuoteEmail.IsResend)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == confirmQuoteEmail.RequestID)
-           .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+           .Include(r => r.Product).ThenInclude(p=>p.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
             }
             else
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 1)
-                         .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
             }
             if (requests.Count() == 0)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 2)
-                         .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).ToList();
+                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
             }
             //base url needs to be declared - perhaps should be getting from js?
             //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -2183,12 +2176,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 //creating the path for the file to be saved
                 string path1 = Path.Combine("wwwroot", "files");
-                string path2 = Path.Combine(path1, request.RequestID.ToString());
-                //create file
-                string folderPath = Path.Combine(path2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-                Directory.CreateDirectory(folderPath);
                 string uniqueFileName = "QuotePDF.pdf";
-                string filePath = Path.Combine(folderPath, uniqueFileName);
+                string filePath = Path.Combine(path1, uniqueFileName);
                 // save pdf document
                 doc.Save(filePath);
             }
@@ -2197,9 +2186,7 @@ namespace PrototypeWithAuth.Controllers
 
             string uploadFolder1 = Path.Combine("~", "files");
             string uploadFolder = Path.Combine("wwwroot", "files");
-            string uploadFolder2 = Path.Combine(uploadFolder, requests.FirstOrDefault().RequestID.ToString());
-            string uploadFolder3 = Path.Combine(uploadFolder2, "Quotes");
-            string uploadFile = Path.Combine(uploadFolder3, "QuotePDF.pdf");
+            string uploadFile = Path.Combine(uploadFolder, "QuotePDF.pdf");
 
             if (System.IO.File.Exists(uploadFile))
             {
@@ -3581,6 +3568,30 @@ namespace PrototypeWithAuth.Controllers
             var accountingPaymentsEnum = (AppUtility.SidebarEnum)Enum.Parse(typeof(AppUtility.SidebarEnum), currentStatus.ToString());
 
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = accountingPaymentsEnum });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = " Accounting")]
+        public async Task<IActionResult> HandleNotifications(AppUtility.SidebarEnum type, int requestID)
+        {
+
+            var request = _context.Requests.Where(r => r.RequestID == requestID).FirstOrDefault();
+            switch (type)
+            {
+       
+                case AppUtility.SidebarEnum.DidntArrive:
+                   
+                    break;
+                case AppUtility.SidebarEnum.PartialDelivery:
+                    request.IsPartial = false;
+                    break;
+                case AppUtility.SidebarEnum.ForClarification:
+                    request.IsClarify = false;
+                    break;
+            }
+            _context.Update(request);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("AccountingNotifications", new { accountingNotificationsEnum = type });
         }
         [HttpGet]
         [Authorize(Roles = "Accounting")]
