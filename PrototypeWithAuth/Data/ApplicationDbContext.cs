@@ -234,6 +234,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubSubUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
+            modelBuilder.Entity<Request>().Ignore(e => e.Ignore);
             modelBuilder.Entity<ParentQuote>().Ignore(e => e.QuoteDate_submit);
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.OrderDate_submit);
             modelBuilder.Entity<Invoice>().Ignore(e => e.InvoiceDate_submit);

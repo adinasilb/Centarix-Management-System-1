@@ -922,85 +922,90 @@ namespace PrototypeWithAuth.Controllers
 
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                var RequestNum = 1;
                 foreach (var request in requestItemViewModel.Requests)
                 {
-                    request.ApplicationUserCreatorID = currentUser.Id;
-
-                    request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
-                    request.CreationDate = DateTime.Now;
-                    var isInBudget = false;
-                    if (!request.Product.ProductSubcategory.ParentCategory.isProprietary)//is proprietry
+                    if (!request.Ignore)
                     {
-                        if (request.Currency == null)
-                        {
-                            request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
-                        }
-                        isInBudget = checkIfInBudget(request);
-                    }
+                        request.ApplicationUserCreatorID = currentUser.Id;
 
-                    using (var transaction = _context.Database.BeginTransaction())
-                    {
-                        try
+                        request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
+                        request.CreationDate = DateTime.Now;
+                        var isInBudget = false;
+                        if (!request.Product.ProductSubcategory.ParentCategory.isProprietary)//is proprietry
                         {
-                            await AddItemAccordingToOrderType(request, OrderType, isInBudget);
-                            var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                            var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
-
-                            if (requestItemViewModel.Comments != null)
+                            if (request.Currency == null)
                             {
-                                var x = 1; //to name the comments in session
-                                foreach (var comment in requestItemViewModel.Comments)
+                                request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
+                            }
+                            isInBudget = checkIfInBudget(request);
+                        }
+
+                        using (var transaction = _context.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestNum: RequestNum);
+                                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                                var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
+
+                                if (requestItemViewModel.Comments != null)
                                 {
-                                    if (comment.CommentText.Length != 0)
+                                    var x = 1; //to name the comments in session
+                                    foreach (var comment in requestItemViewModel.Comments)
                                     {
-                                        //save the new comment
-                                        comment.ApplicationUserID = currentUser.Id;
-
-                                        comment.RequestID = request.RequestID;
-
-                                        if (!isSavedUsingSession)
+                                        if (comment.CommentText.Length != 0)
                                         {
-                                            _context.Add(comment);
+                                            //save the new comment
+                                            comment.ApplicationUserID = currentUser.Id;
+
+                                            comment.RequestID = request.RequestID;
+
+                                            if (!isSavedUsingSession)
+                                            {
+                                                _context.Add(comment);
+                                            }
+                                            else
+                                            {
+                                                var SessionCommentName = AppData.SessionExtensions.SessionNames.Comment.ToString() + x;
+                                                HttpContext.Session.SetObject(SessionCommentName, comment);
+                                            }
                                         }
-                                        else
-                                        {
-                                            var SessionCommentName = AppData.SessionExtensions.SessionNames.Comment.ToString() + x;
-                                            HttpContext.Session.SetObject(SessionCommentName, comment);
-                                        }
+
+                                        x++; //to name the comments in session
+                                    }
+                                }
+                                if (!isSavedUsingSession)
+                                {
+                                    await _context.SaveChangesAsync();
+                                    if (receivedModalVisualViewModel.LocationInstancePlaces != null)
+                                    {
+                                        await SaveLocations(receivedModalVisualViewModel, request);
+                                    }
+                                    MoveDocumentsOutOfTempFolder(request);
+                                    await transaction.CommitAsync();
+                                    base.RemoveRequestSessions();
+                                }
+                                else if (OrderType != AppUtility.OrderTypeEnum.SaveOperations)
+                                {
+                                    var emailNum = 1;
+                                    foreach (var e in requestItemViewModel.EmailAddresses)
+                                    {
+                                        var SessionEmailName = AppData.SessionExtensions.SessionNames.Email.ToString() + emailNum;
+                                        HttpContext.Session.SetObject(SessionEmailName, e);
+                                        emailNum++;
                                     }
 
-                                    x++; //to name the comments in session
                                 }
                             }
-                            if (!isSavedUsingSession)
+                            catch (Exception ex)
                             {
-                                await _context.SaveChangesAsync();
-                                if (receivedModalVisualViewModel.LocationInstancePlaces != null)
-                                {
-                                    await SaveLocations(receivedModalVisualViewModel, request);
-                                }
-                                MoveDocumentsOutOfTempFolder(request);
-                                await transaction.CommitAsync();
+                                await transaction.RollbackAsync();
                                 base.RemoveRequestSessions();
-                            }
-                            else if (OrderType!= AppUtility.OrderTypeEnum.SaveOperations)
-                            {
-                                var emailNum = 1;
-                                foreach (var e in requestItemViewModel.EmailAddresses)
-                                {
-                                    var SessionEmailName = AppData.SessionExtensions.SessionNames.Email.ToString() + emailNum;
-                                    HttpContext.Session.SetObject(SessionEmailName, e);
-                                    emailNum++;
-                                }
-
+                                throw ex;
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            await transaction.RollbackAsync();
-                            base.RemoveRequestSessions();
-                            throw ex;
-                        }
+                        RequestNum++;
                     }
                 }
             }
@@ -4039,7 +4044,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        private async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, bool isReceived = false)
+        private async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, bool isReceived = false, int requestNum =1)
         {
    
             var context = new ValidationContext(newRequest, null, null);
@@ -4067,7 +4072,7 @@ namespace PrototypeWithAuth.Controllers
                             await SaveItem(newRequest);
                             break;
                         case AppUtility.OrderTypeEnum.SaveOperations:
-                            await SaveOperationsItem(newRequest, isReceived);
+                            await SaveOperationsItem(newRequest, isReceived, requestNum);
                             break;
                     }
 
@@ -4170,7 +4175,7 @@ namespace PrototypeWithAuth.Controllers
 
             return true;
         }
-        private async Task<bool> SaveOperationsItem(Request request, bool isReceived)
+        private async Task<bool> SaveOperationsItem(Request request, bool isReceived, int requestNum)
         {
 
             try
@@ -4184,8 +4189,8 @@ namespace PrototypeWithAuth.Controllers
                     request.RequestStatusID = 2;
                 }
                 request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
-                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, request);
+                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
+                HttpContext.Session.SetObject(requestName, request);
             }
             catch (DbUpdateException ex)
             {
@@ -4339,6 +4344,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
         {
+            string uploadFolder = Path.Combine("wwwroot", "files");
             try
             {
                 var requests = new List<Request>();
@@ -4359,32 +4365,127 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 RequestNum = 1;
-                foreach (var req in requests)
+                var PaymentNum = 1;
+                var SaveUsingSessions = true;
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    req.ParentRequest = termsViewModel.ParentRequest;
-                    req.PaymentStatusID = termsViewModel.SelectedTerm;
-                    req.Installments = (uint)termsViewModel.Installments;
-                    if(termsViewModel.Installments ==0)
+                    try
                     {
-                        req.Installments = 1;
-                    }
-                    if(req.PaymentStatusID == 5)
-                    {
-                        for(int i=0; i<req.Installments; i++)
+                        foreach (var req in requests)
                         {
-                            var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (i+1);
-                            HttpContext.Session.SetObject(paymentName, new Payment() {PaymentDate=DateTime.Now.AddMonths(i) ,Sum = (req.Cost??0/req.Installments??0) });
+                            if (req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
+                            {
+                                SaveUsingSessions = false;
+                            }
+                            req.ParentRequest = termsViewModel.ParentRequest;
+                            req.PaymentStatusID = termsViewModel.SelectedTerm;
+                            req.Installments = (uint)termsViewModel.Installments;
+                            if (termsViewModel.Installments == 0)
+                            {
+                                req.Installments = 1;
+                            }
+                            if (req.PaymentStatusID == 5)
+                            {
+                                for (int i = 0; i < req.Installments; i++)
+                                {
+
+                                    var payment = new Payment() { PaymentDate = DateTime.Now.AddMonths(i), Sum = (req.Cost ?? 0 / req.Installments ?? 0) };
+                                    if (SaveUsingSessions)
+                                    {
+                                        var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
+                                        HttpContext.Session.SetObject(paymentName, payment);
+                                    }
+                                    else
+                                    {
+                                        _context.Add(payment);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                    PaymentNum++;
+                                }
+                            }
+                            if (req.PaymentStatusID == 7)
+                            {
+                                var payment = new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) };
+                                if (SaveUsingSessions)
+                                {
+                                    var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + PaymentNum;
+                                    HttpContext.Session.SetObject(paymentName, new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) });
+                                }
+                                else
+                                {
+                                    _context.Add(payment);
+                                    await _context.SaveChangesAsync();
+                                }
+                                PaymentNum++;
+                            }
+                            if (SaveUsingSessions)
+                            {
+                                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                                HttpContext.Session.SetObject(requestName, req);
+                            }
+                            else
+                            {
+                                req.RequestStatusID = 2;
+                                _context.Add(req);
+                                await _context.SaveChangesAsync();
+                            }
+                            RequestNum++;
+                        }
+                        if (!SaveUsingSessions)
+                        {
+
+                            var commentExists = true;
+                            var n = 1;
+                            do
+                            {
+                                var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
+                                var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                                if (comment != null)
+                                //will only go in here if there are comments so will only work if it's there
+                                //IMPT look how to clear the session information if it fails somewhere...
+                                {
+                                    comment.RequestID = requests.FirstOrDefault().RequestID;
+                                    _context.Add(comment);
+                                }
+                                else
+                                {
+                                    commentExists = false;
+                                }
+                                n++;
+                            } while (commentExists);
+                            await _context.SaveChangesAsync();
+
+                            foreach (var request in requests)
+                            {
+                                MoveDocumentsOutOfTempFolder(request);
+
+                                request.Product = await _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
+                                RequestNotification requestNotification = new RequestNotification();
+                                requestNotification.RequestID = request.RequestID;
+                                requestNotification.IsRead = false;
+                                requestNotification.RequestName = request.Product.ProductName;
+                                requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
+                                requestNotification.Description = "item ordered";
+                                requestNotification.NotificationStatusID = 2;
+                                requestNotification.TimeStamp = DateTime.Now;
+                                requestNotification.Controller = "Requests";
+                                requestNotification.Action = "NotificationsView";
+                                requestNotification.OrderDate = DateTime.Now;
+                                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
+                                _context.Update(requestNotification);
+                            }
+                            await _context.SaveChangesAsync();
+                            await transaction.CommitAsync();
+                            return RedirectToAction("Index", termsViewModel.RequestIndexObject);
                         }
                     }
-                    if(req.PaymentStatusID == 7)
+                    catch (Exception ex)
                     {
-                        var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + 1;
-                        HttpContext.Session.SetObject(paymentName, new Payment() { PaymentDate =new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) });
+                        transaction.Rollback();
+                        throw ex;
                     }
-                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    HttpContext.Session.SetObject(requestName, req);
-                    RequestNum++;
-                }
+
+                    }
                 return RedirectToAction("ConfirmEmailModal", termsViewModel.RequestIndexObject);
             }
             catch (Exception ex)

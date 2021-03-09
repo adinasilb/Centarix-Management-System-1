@@ -18,6 +18,16 @@
     var parentSelect = "parent-select" + Model.RequestIndex;
 }
 
+<div class="partial-item-tab @Model.RequestIndex">
+    <input type="hidden" id="Requests_@(Model.RequestIndex)__Ignore" name="Requests[@(Model.RequestIndex)].Ignore" value="false" />
+    <div class="row mb-0">
+        <div class="col-10 mr-4">@*empty div b/c need same margins as below*@</div>
+        <div class="col-1">
+            <button type="button" class="close modal-close-padding modal-close-style remove-item" data-val="@Model.RequestIndex" aria-label="Close" >
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
@@ -73,7 +83,7 @@
     </div>
     <div class="col-md-4 reusables equipment">
         <label class="control-label">Batch Expiration</label>
-        <input type="text" id="Requests_@(Model.RequestIndex)__BatchExpiration" name="Requests.@(Model.RequestIndex).BatchExpiration" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" />
+        <input type="text" id="Requests_@(Model.RequestIndex)__BatchExpiration" name="Requests[@(Model.RequestIndex)].BatchExpiration" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" />
     </div>
     <div class="col-md-2">
         <div class="form-check">
@@ -85,13 +95,11 @@
 <div class="row">
     <div class="col-md-4 form-group">
         <label class="control-label">Amount</label>
-        <input type="number" id="Requests_@(Model.RequestIndex)__Unit" name="Requests.@(Model.RequestIndex).Unit" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+        <input type="number" id="Requests_@(Model.RequestIndex)__Unit" name="Requests[@(Model.RequestIndex)].Unit" class="form-control-plaintext border-bottom @markReadOnlyClass" />
         <span for="Requests_@(Model.RequestIndex)__Unit" class="text-danger-centarix"></span>
     </div>
-    <input type="hidden" id="Requests_@(Model.RequestIndex)__UnitType" name="Requests.@(Model.RequestIndex).UnitType" value="5" />
+    <input type="hidden" id="Requests_@(Model.RequestIndex)__UnitType" name="Requests[@(Model.RequestIndex)].UnitType" value="5" />
 
-</div>
-    <div class="row text-center justify-content-center remove-item-btn d-none">
-        <input type="button" value="+ Remove Item" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize remove-item" style="font-size:1rem;" data-val="@Model.RequestIndex" />
+ </div>
     </div>
 
