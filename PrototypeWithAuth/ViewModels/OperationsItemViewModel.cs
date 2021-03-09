@@ -9,6 +9,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class OperationsItemViewModel
     {
+        public Request Request { get; set; }
         public IEnumerable<ParentCategory> ParentCategories { get; set; }
         public IEnumerable<ProductSubcategory> ProductSubcategories { get; set; }
         public int RequestIndex { get; set; }
