@@ -79,7 +79,7 @@
                         }
                         @*</div>*@
                         <div class="modal-product-title" @*style="width: 80%;"*@>
-                            <input asp-for="@request.Product.ProductName" class="form-control-plaintext heading-1 border-bottom mark-readonly name" disabled />
+                            <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name mark-readonly" disabled placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
                             <span asp-validation-for="@request.Product.ProductName" class="text-danger-centarix"></span>
 
                         </div>

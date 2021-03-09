@@ -3503,15 +3503,10 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AccountingPayments(AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
             
-            int payNowListCount;
             IQueryable<Request> requestsList = GetPaymentRequests(accountingPaymentsEnum);
-                var payNowList = requestsList
-           //   .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-              .Where(r => r.PaymentStatusID == 3);
-
-            payNowListCount = payNowList.ToList().Count;
+            var payNowListCount  = _context.Requests               
+               .Where(r => r.RequestStatusID != 7 && r.Paid == false && r.PaymentStatusID==3).Count();
             TempData["PayNowCount"] = payNowListCount;
-
             AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
             {
                 AccountingEnum = accountingPaymentsEnum,
@@ -3656,28 +3651,28 @@ namespace PrototypeWithAuth.Controllers
             {
                 Payment payment = new Payment();
                 var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
-                if (request.PaymentStatusID == 7)
+                if (requestToUpdate.PaymentStatusID == 7)
                 {
-                    payment = paymentsList.Where(p => p.RequestID == request.RequestID).FirstOrDefault();
-                    _context.Add(new Payment() { PaymentDate = payment.PaymentDate , RequestID = request.RequestID});
+                    payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
+                    _context.Add(new Payment() { PaymentDate = payment.PaymentDate.AddMonths(1) , RequestID = requestToUpdate.RequestID});
                 }
-                else if (request.PaymentStatusID == 5)
+                else if (requestToUpdate.PaymentStatusID == 5)
                 {
-                    var payments = paymentsList.Where(p=> p.RequestID == request.RequestID);
+                    var payments = paymentsList.Where(p=> p.RequestID == requestToUpdate.RequestID);
                     var count = payments.Count();
                     payment= payments.OrderBy(p=>p.PaymentDate).FirstOrDefault();
                     if(count<=1)
                     {
-                        request.Paid = true;
-                        payment.Sum = request.Cost ?? 0;
+                        requestToUpdate.Paid = true;
+                        payment.Sum = requestToUpdate.Cost ?? 0;
                     }
                 }
                 else
                 {
                     payment.Sum = request.Cost ?? 0;
-                    request.Paid = true;
+                    requestToUpdate.Paid = true;
                     payment.PaymentDate = DateTime.Now.Date;
-                    payment.RequestID = request.RequestID;
+                    payment.RequestID = requestToUpdate.RequestID;
                 }
                 payment.Reference = paymentsPayModalViewModel.Payment.Reference;
                 payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;
