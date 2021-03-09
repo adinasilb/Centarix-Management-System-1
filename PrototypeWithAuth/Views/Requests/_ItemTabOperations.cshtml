@@ -31,12 +31,12 @@
             @for (int i = 0; i < Model.Requests.Count(); i++)
             {
                 <div>
-                @{await Html.RenderPartialAsync("_PartialItemOperationsTab", new OperationsItemViewModel(){ RequestIndex = i, ModalType = modalType, ParentCategories = Model.ParentCategories, ProductSubcategories = Model.ProductSubcategories });
+                @{await Html.RenderPartialAsync("_PartialItemOperationsTab", new OperationsItemViewModel(){ Request = Model.Requests[i], RequestIndex = i, ModalType = modalType, ParentCategories = Model.ParentCategories, ProductSubcategories = Model.ProductSubcategories });
                 }
                 </div>
             }
         </div>
-        <div class="row text-center justify-content-center">
+        <div class="row text-center justify-content-center @hiddenSummaryClass">
             <input type="button" id="addOperationItem" value="+ Add Item" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize add-item" style="font-size:1rem;" data-val="1" />
         </div>
-<script>$(".mdb-select").materialSelect()</script>
+@*<script>$(".mdb-select").materialSelect()</script>*@
