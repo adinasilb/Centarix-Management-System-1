@@ -1325,9 +1325,35 @@ $(function () {
 		$('#entryForm').trigger('submit');
 	});
 	$("#exit").dblclick(function () {
-		console.log("in exit")
-		$.fn.GetEmployeeHourFromToday();
-		return false;
+		console.log("in exit");
+			$('.modal').replaceWith('');
+			$(".modal-backdrop").remove();
+			$.ajax({
+				async: false,
+				url: 'ExitModal',
+				type: 'GET',
+				cache: false,
+				success: function (data) {
+					$("#loading").hide();
+					var modal = $(data);
+					$('body').append(modal);
+					//replaces the modal-view class with the ModalView view
+					//$(".modal-view").html(data);
+					//turn off data dismiss by clicking out of the box and by pressing esc
+					$(".modal").modal({
+						backdrop: true,
+						keyboard: false,
+					});
+					//shows the modal
+					$(".modal").modal('show');
+					//console.log("in success");
+					return false;
+				},
+				error: function (xhr) {
+					//console.log("in error");
+					$(".render-body").html(xhr.responseText);
+                }
+			});
 	});
 	$("#entry").off('click').click(function (e) {
 		e.preventDefault();
@@ -1482,9 +1508,9 @@ $(function () {
 	//	console.log(date);
 	//	$.fn.CallModal('UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + true)
 	//};
-	$.fn.GetEmployeeHourFromToday = function () {
-		$.fn.CallModal('ExitModal');
-	};
+	//$.fn.GetEmployeeHourFromToday = function () {
+	//	$.fn.CallModal('ExitModal');
+	//};
 
 
 
