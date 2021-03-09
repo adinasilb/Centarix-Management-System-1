@@ -44,7 +44,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return hoursList;
         }
-        public SummaryHoursViewModel SummaryHoursFunction(int month, int year, Employee user)
+        public SummaryHoursViewModel SummaryHoursFunction(int month, int year, Employee user, string errorMessage = null)
         {
             var hours = GetHours(new DateTime(year, month, DateTime.Now.Day), user);
             var CurMonth = new DateTime(year, month, DateTime.Now.Day);
@@ -73,6 +73,10 @@ namespace PrototypeWithAuth.Controllers
                 VacationDayInThisMonth = vacationDaysTaken,
                 User = user
             };
+            if(errorMessage != null)
+            {
+                summaryHoursViewModel.ErrorMessage += errorMessage;
+            }
             return summaryHoursViewModel;
         }
 
