@@ -3507,48 +3507,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AccountingPayments(AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
-
-            var requestsList = _context.Requests
-                .Include(r => r.ParentRequest)
-                .Include(r => r.Product).ThenInclude(p => p.Vendor)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
-                .Where(r => r.RequestStatusID != 7 && r.Paid == false);
-
-            var payNowList = requestsList
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                .Where(r => r.PaymentStatusID == 3);
-
-            var payNowListCount = payNowList.ToList().Count;
-
+            
+            IQueryable<Request> requestsList = GetPaymentRequests(accountingPaymentsEnum);
+            var payNowListCount  = _context.Requests               
+               .Where(r => r.RequestStatusID != 7 && r.Paid == false && r.PaymentStatusID==3).Count();
             TempData["PayNowCount"] = payNowListCount;
-
-            switch (accountingPaymentsEnum)
-            {
-                case AppUtility.SidebarEnum.MonthlyPayment:
-                    requestsList = requestsList
-                        .Where(r => r.PaymentStatusID == 2);
-                    break;
-                case AppUtility.SidebarEnum.PayNow:
-                    requestsList = payNowList;
-                    break;
-                case AppUtility.SidebarEnum.PayLater:
-                    requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 4);
-                    break;
-                case AppUtility.SidebarEnum.Installments:
-                    requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 5).Where(r=>r.Payments.Where(p=>p.IsPaid==false && p.PaymentDate< DateTime.Now.AddDays(5)).Count()>0);
-                    break;
-                case AppUtility.SidebarEnum.StandingOrders:
-                    requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
-                    break;
-                case AppUtility.SidebarEnum.SpecifyPayment:
-                    requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 8);
-                    break;
-            }
             AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
             {
                 AccountingEnum = accountingPaymentsEnum,
@@ -3562,6 +3525,47 @@ namespace PrototypeWithAuth.Controllers
 
             return View(accountingPaymentsViewModel);
         }
+
+        private IQueryable<Request> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum)
+        {
+            var requestsList = _context.Requests
+                .Include(r => r.ParentRequest)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
+                .Where(r => r.RequestStatusID != 7 && r.Paid == false);
+      
+            switch (accountingPaymentsEnum)
+            {
+                case AppUtility.SidebarEnum.MonthlyPayment:
+                    requestsList = requestsList
+                        .Where(r => r.PaymentStatusID == 2);
+                    break;
+                case AppUtility.SidebarEnum.PayNow:
+                    requestsList =  requestsList
+                    //.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                    .Where(r => r.PaymentStatusID == 3); 
+                    break;
+                case AppUtility.SidebarEnum.PayLater:
+                    requestsList = requestsList
+                .Where(r => r.PaymentStatusID == 4);
+                    break;
+                case AppUtility.SidebarEnum.Installments:
+                    requestsList = requestsList
+                .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                    break;
+                case AppUtility.SidebarEnum.StandingOrders:
+                    requestsList = requestsList
+                .Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                    break;
+                case AppUtility.SidebarEnum.SpecifyPayment:
+                    requestsList = requestsList
+                .Where(r => r.PaymentStatusID == 8);
+                    break;
+            }
+            return requestsList;
+        }
+
         [HttpGet]
         [Authorize(Roles = " Accounting")]
         public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
@@ -3627,11 +3631,8 @@ namespace PrototypeWithAuth.Controllers
 
             if (vendorid != null && paymentstatusid != null)
             {
-                requestsToPay = _context.Requests
-                .Include(r => r.Product).ThenInclude(p => p.Vendor)
-              //  .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                .Where(r => r.Product.VendorID == vendorid)
-                .Where(r => r.PaymentStatusID == paymentstatusid).Where(r=>r.Paid==false).ToList();
+                var reqestsList = GetPaymentRequests(accountingPaymentsEnum);
+                requestsToPay = await reqestsList.Where(r=>r.Product.VendorID == vendorid).ToListAsync();
             }
 
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
@@ -3655,28 +3656,28 @@ namespace PrototypeWithAuth.Controllers
             {
                 Payment payment = new Payment();
                 var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
-                if (request.PaymentStatusID == 7)
+                if (requestToUpdate.PaymentStatusID == 7)
                 {
-                    payment = paymentsList.Where(p => p.RequestID == request.RequestID).FirstOrDefault();
-                    _context.Add(new Payment() { PaymentDate = payment.PaymentDate , RequestID = request.RequestID});
+                    payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
+                    _context.Add(new Payment() { PaymentDate = payment.PaymentDate.AddMonths(1) , RequestID = requestToUpdate.RequestID});
                 }
-                else if (request.PaymentStatusID == 5)
+                else if (requestToUpdate.PaymentStatusID == 5)
                 {
-                    var payments = paymentsList.Where(p=> p.RequestID == request.RequestID);
+                    var payments = paymentsList.Where(p=> p.RequestID == requestToUpdate.RequestID);
                     var count = payments.Count();
                     payment= payments.OrderBy(p=>p.PaymentDate).FirstOrDefault();
                     if(count<=1)
                     {
-                        request.Paid = true;
-                        payment.Sum = request.Cost ?? 0;
+                        requestToUpdate.Paid = true;
+                        payment.Sum = requestToUpdate.Cost ?? 0;
                     }
                 }
                 else
                 {
                     payment.Sum = request.Cost ?? 0;
-                    request.Paid = true;
+                    requestToUpdate.Paid = true;
                     payment.PaymentDate = DateTime.Now.Date;
-                    payment.RequestID = request.RequestID;
+                    payment.RequestID = requestToUpdate.RequestID;
                 }
                 payment.Reference = paymentsPayModalViewModel.Payment.Reference;
                 payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;

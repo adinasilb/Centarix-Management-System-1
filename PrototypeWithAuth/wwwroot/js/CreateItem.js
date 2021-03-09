@@ -178,6 +178,26 @@
         });
 
     })
+
+        $('.item-name').keyup(function (e) {   
+            var val = $(this).val();
+            var spaces =  val.split(" ");
+            var spaceCount = spaces.length;
+             console.log(spaceCount)
+            var rows = Math.ceil((val.length+spaceCount) / 50);
+            var lines =   val.split("\n");
+            var lineCount = lines.length;
+           // console.log(lineCount)
+            if(lineCount>0){
+                rows+=lineCount-1;
+            }
+            if(rows>3)
+            {
+               $(this).val(val.slice(0,-1))
+            }
+            $(this).attr('rows', rows);
+        });
+
     $(".save-operations-item").off('click').on('click', function (e) {
         e.preventDefault();
         console.log("saveOperations")
