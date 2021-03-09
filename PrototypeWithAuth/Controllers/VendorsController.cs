@@ -490,6 +490,7 @@ namespace PrototypeWithAuth.Controllers
                     createSupplierViewModel.ErrorMessage += ex.Message;
                     createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
                     createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+                    createSupplierViewModel.VendorComments = await _context.VendorComments.Where(c => c.VendorID == createSupplierViewModel.Vendor.VendorID).ToListAsync();
                     Response.StatusCode = 550;
                     return PartialView("Edit", createSupplierViewModel);
 

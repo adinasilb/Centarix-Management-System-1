@@ -50,12 +50,14 @@
                 <div class="new-modal-header modal-line-1-header-with-back modal-sides">
                     @*class needed here to override bootstraps modal limitations*@
 
-                    @if (TempData["ErrorMessage"] != null)
+                    @if (Model.ErrorMessage != null)
                     {
-                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
+                        <div class="row">
+                            <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+                        </div>
                     }
                     <div>
-                        <button class="back-button" type="button"  style="border-width: 0; background: transparent">
+                        <button class="back-button" type="button" style="border-width: 0; background: transparent">
                             <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
                         </button>
                     </div>

@@ -41,13 +41,7 @@
 
     <div class="container-fluid div-tabs no-box-shadow p-0">
         <input type="hidden" value="@Model.ModalType" id="modalType" />
-        <div class="row">
-            @if (Model.ErrorMessage != null)
-            {
-                <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
-
-            }
-        </div>
+        
         @if (Model.ModalType == AppUtility.RequestModalType.Edit)
         {
             <div class=" row text-right mb- ">
