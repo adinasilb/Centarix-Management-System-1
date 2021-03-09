@@ -31,8 +31,8 @@
             @for (int i = 0; i < Model.Requests.Count(); i++)
             {
                 <div>
-                    @{await Html.RenderPartialAsync("_PartialItemOperationsTab", new OperationsItemViewModel(){ RequestIndex = i, ModalType = modalType, ParentCategories = Model.ParentCategories, ProductSubcategories = Model.ProductSubcategories });
-                    }
+                @{await Html.RenderPartialAsync("_PartialItemOperationsTab", new OperationsItemViewModel(){ RequestIndex = i, ModalType = modalType, ParentCategories = Model.ParentCategories, ProductSubcategories = Model.ProductSubcategories });
+                }
                 </div>
             }
         </div>

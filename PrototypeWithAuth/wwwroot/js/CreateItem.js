@@ -174,7 +174,6 @@
                 $("#addOperationItem").attr('data-val', parseInt(newIndex) + 1);
                 $(".mdb-select" + newIndex).materialSelect();
                 $(".parent-select" + newIndex).materialSelect();
-                $(".remove-item-btn").removeClass("d-none")
             }
         });
 
@@ -195,5 +194,23 @@
                 $.fn.OpenModal('termsModal', 'terms', data)
             }
         });
+    })
+    $('body').off('click', 'remove-item').on('click','.remove-item', function (e) {
+        var index = $(this).attr('data-val');
+        var items = $('.partial-item-tab').length
+        if (items > 1) {
+            console.log("index " + index)
+            var itemClass = '.partial-item-tab.' + index;
+            $(itemClass).hide();
+            $(itemClass + " input").each(function () {
+                if (!$(this).attr('type') == "hidden") {
+                    $(this).attr("disabled", "true");
+                }
+            })
+
+            var deletedid = "Requests_" + index + "__Ignore";
+            console.log("deleted hidden id: " + deletedid);
+            $("#" + deletedid).val("true");
+        }
     })
 })

@@ -195,5 +195,6 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("ApplicationUserReceiverID")]
         public ApplicationUser ApplicationUserReceiver { get; set; }
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
+        public bool Ignore { get; set; }
     }
 }
