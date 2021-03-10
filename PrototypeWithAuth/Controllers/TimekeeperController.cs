@@ -282,15 +282,17 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> SummaryHours(DateTime? Month, string errorMessage = null)
+        public async Task<IActionResult> SummaryHours(int? Month, int? Year, string errorMessage = null)
         {
+            var year = Year ?? DateTime.Now.Year;
+            var month = Month ?? DateTime.Now.Month;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryHours;
             var userid = _userManager.GetUserId(User);
             var user = _context.Employees.Where(u => u.Id == userid).Include(e => e.SalariedEmployee).FirstOrDefault();
-            int month = Month?.Month ?? DateTime.Now.Month;
-            return PartialView(base.SummaryHoursFunction(month, DateTime.Now.Year, user, errorMessage));
+            //int month = Month?.Month ?? DateTime.Now.Month;
+            return PartialView(base.SummaryHoursFunction(month, year, user, errorMessage));
         }     
 
         [HttpGet]
