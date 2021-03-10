@@ -73,43 +73,57 @@
 </div>
 <script>
     $(".update-hours").on("click", function (e) {
-        e.preventDefault();
-        //alert("in update hours click");
-        var pageType = $(this).attr("data-val");
-        var url = "/Timekeeper/UpdateHours/?PageType=" + pageType;
-        console.log("url: " + url);
-        var formData = new FormData($("#myForm")[0]);
-        console.log(formData);
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: url,
-            type: 'POST',
-            data: formData,
-            cache: true,
-            success: function (data) {
-                //alert(data);
-                $('.render-body').html(data);
-                $(".modal").modal('hide');
-                $(".modal").replaceWith('');
-            },
-            error: function (jqxhr) {
-                $('.modal').replaceWith('');
-                $(".modal-backdrop").remove();
-                var modal = $(jqxhr.responseText);
-                $('body').append(modal);
-                if ($(".modal").length > 0) {
-
-                    $(".modal").modal({
-                        backdrop: true,
-                        keyboard: false,
-                    });
-                    $(".modal").modal('show');
-                }
-
+        $('#myForm').data("validator").settings.ignore = "";
+        var valid = $('#myForm').valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+            e.preventDefault();
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
             }
-        });
+
+        }
+        else {
+            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            var pageType = $('#myForm').attr("data-val");
+            var url = "/Timekeeper/UpdateHours/?PageType=" + pageType;
+            console.log("url: " + url);
+            var formData = new FormData($("#myForm")[0]);
+            console.log(formData);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: url,
+                type: 'POST',
+                data: formData,
+                cache: true,
+                success: function (data) {
+                    //alert(data);
+                    $('.render-body').html(data);
+                    $(".modal").modal('hide');
+                    $(".modal").replaceWith('');
+                },
+                error: function (jqxhr) {
+                    $('.modal').replaceWith('');
+                    $(".modal-backdrop").remove();
+                    var modal = $(jqxhr.responseText);
+                    $('body').append(modal);
+                    if ($(".modal").length > 0) {
+
+                        $(".modal").modal({
+                            backdrop: true,
+                            keyboard: false,
+                        });
+                        $(".modal").modal('show');
+                    }
+
+                }
+            });
+        }
+        $('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+    
     })
 </script>
 

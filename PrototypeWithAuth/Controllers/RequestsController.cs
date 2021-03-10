@@ -2868,8 +2868,7 @@ namespace PrototypeWithAuth.Controllers
                             requestReceived.RequestStatusID = 3;
                         }
                     }
-                    try
-                    {
+                   
                         requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
                         requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
                         requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
@@ -2895,21 +2894,7 @@ namespace PrototypeWithAuth.Controllers
                         _context.Update(requestNotification);
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
-                    }
-                    catch (DbUpdateException ex)
-                    {
-                        TempData["ErrorMessage"] = ex.Message;
-                        TempData["InnerMessage"] = ex.InnerException;
-                      
-                        throw ex;
-                    }
-                    catch (Exception ex)
-                    {
-                        TempData["ErrorMessage"] = ex.Message;
-                        TempData["InnerMessage"] = ex.InnerException;
-                    
-                        throw ex;
-                    }
+                                 
                 }
                 catch (Exception ex)
                 {
