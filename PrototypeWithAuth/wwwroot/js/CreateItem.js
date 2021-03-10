@@ -1,45 +1,5 @@
 ﻿$(function () {
-    $("#submitCategory").on("click", function (e) {
-        console.log("submit category")
-        e.preventDefault();
-        $("#myForm").data("validator").settings.ignore = "";
-        var valid = $("#myForm").valid();
-		console.log("valid form: " + valid)
-        if (!valid) {
 
-            e.stopPropagation();
-            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
-            }
-
-        }
-		else {
-            //var categoryId = $("#categorylist").val();
-            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
-            $("#loading").show();
-            var formData = new FormData($("#myForm")[0]);
-            console.log(...formData)
-			$.ajax({processData: false,
-				contentType: false,
-				
-                async: true,
-                url: "/Requests/CreateItemTabs",
-                type: 'GET',
-                data: formData,
-				cache: false,
-				success: function (data) {
-                    $(".outer-partial").html(data);
-                    $("#loading").hide();
-                    var category = $("#categoryDescription").val();
-                    $("." + category).removeClass("d-none");
-				}
-             
-			})
-        }
-        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-
-        return false;
-    });
     $("#sublist").off("change").on("change", function (e) {
         if ($('#masterSectionType').val() != "Operations") {
             console.log("subcategory change")
@@ -85,11 +45,7 @@
         }
     })
    
-	$(".categoryForm").validate({
-		rules: {
-			"SelectedCategory": "required"
-        }
-    })
+
      $(".order-tab").on("click", function (e) {
         if ($(".all-mail").length == 0) {
             let data = [
@@ -201,19 +157,34 @@
     $(".save-operations-item").off('click').on('click', function (e) {
         e.preventDefault();
         console.log("saveOperations")
-        var formData = new FormData($("#myForm")[0]);
-        $.ajax({
-            processData: false,
-            contentType: false,
-            async: true,
-            url: "/Requests/AddItemView?OrderType=SaveOperations",
-            type: 'POST',
-            data: formData,
-            cache: false,
-            success: function (data) {
-                $.fn.OpenModal('termsModal', 'terms', data)
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
             }
-        });
+
+        }
+        else {
+            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+           var formData = new FormData($("#myForm")[0]);
+            $.ajax({
+                processData: false,
+                contentType: false,
+                async: true,
+                url: "/Requests/AddItemView?OrderType=SaveOperations",
+                type: 'POST',
+                data: formData,
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal('termsModal', 'terms', data)
+                }
+            });
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+       
     })
     $('body').off('click', 'remove-item').on('click','.remove-item', function (e) {
         var index = $(this).attr('data-val');

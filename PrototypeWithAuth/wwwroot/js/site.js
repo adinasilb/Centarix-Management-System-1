@@ -1859,7 +1859,7 @@ $(function () {
 					console.log("Test")
 					selectedIndex = selectedIndex - 3;
 					break;
-			}
+			} 
 
 		} else {
 			selectedIndex = selectedIndex - 1;
