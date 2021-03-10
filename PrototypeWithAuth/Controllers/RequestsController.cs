@@ -1030,7 +1030,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.OrderTypeEnum.AddToCart:
                     return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.SaveOperations:
-                    return RedirectToAction("TermsModal", new { OrderType = OrderType });
+                    return RedirectToAction("TermsModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
                 default:
                     if(requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
                     {

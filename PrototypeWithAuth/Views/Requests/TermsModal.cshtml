@@ -79,7 +79,10 @@
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-
+                        @if (Model.SectionType == AppUtility.MenuItems.Operations)
+                        {
+                            <input type="submit" asp-action="TermsModal" class="custom-button custom-button-font @bcColor between-button-margin " />
+                        }
                         <input type="submit" asp value="Save" class="custom-button custom-button-font @bcColor between-button-margin submitTerms" />
                         <button type="button" class="custom-button custom-cancel" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('terms');">Cancel</button>
                     </div>
