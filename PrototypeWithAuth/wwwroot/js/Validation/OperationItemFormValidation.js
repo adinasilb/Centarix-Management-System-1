@@ -7,7 +7,7 @@
 				required: true,
 	});
 
-	$(".catalog-number").rules("add", {rules:{
+	$(".catalog-number").rules("add", {
 			required: true,
 				remote:{
 		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
@@ -15,11 +15,12 @@
 		data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Request_Product_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
 		return $(".turn-edit-on-off").attr("productID");
 	}else{return null}}},
-			}
-	},
-		  messages: {
-       remote: "this product has already been created"
-   }});
+			},
+					  messages: {
+     remote: "this product has already been created"
+			  }
+	}
+   );
 	
 
 	$(".parent-category").rules("add", {
@@ -62,7 +63,7 @@
 		min: 1,
 		number: true,
 	});
-	$(".units").rules("add",  {
+	$(".unit").rules("add",  {
 			required: true,
 			number: true,
 			min: 1,
