@@ -452,7 +452,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                return RedirectToAction("_AwaitingApproval", new { ErrorMessage= ex.Message});
+                return RedirectToAction("_AwaitingApproval", new { ErrorMessage= AppUtility.GetExceptionMessage(ex) });
             }
 
             return RedirectToAction("_AwaitingApproval");
