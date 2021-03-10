@@ -368,12 +368,13 @@ namespace PrototypeWithAuth.Controllers
                     {
                         throw ex;
                     }
+                    //throw new Exception();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return RedirectToAction("_AwaitingApproval", new { ErrorMessage = ex.Message});
+                    return RedirectToAction("_AwaitingApproval", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
 
                 }
             }

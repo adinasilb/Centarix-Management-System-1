@@ -22,28 +22,33 @@ namespace PrototypeWithAuth.AppData
 {
     public static class AppUtility
     {
-        public enum PriceSortEnum {Unit=1, Total=2,
-            [Display(Name = "VAT")] 
-            Vat=3,
+        public enum PriceSortEnum
+        {
+            Unit = 1, Total = 2,
+            [Display(Name = "VAT")]
+            Vat = 3,
             [Display(Name = "Total + VAT")]
-            TotalVat=4
+            TotalVat = 4
         }
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
-        public enum PageTypeEnum {None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, 
-            AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments, 
+        public enum PageTypeEnum
+        {
+            None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary,
+            AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments,
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,
-            TimeKeeperReport, TimekeeperSummary, 
+            TimeKeeperReport, TimekeeperSummary,
             UsersUser, UsersWorkers,
             OperationsRequest, OperationsInventory, OperationsSearch,
             ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
 
         }
-        public enum SidebarEnum {
+        public enum SidebarEnum
+        {
             None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List,  Calibrate,  Location, Cart, Notifications,
+            Quotes, List, Calibrate, Location, Cart, Notifications,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
-            PieCharts, Tables, Graphs, Project, Item, Worker, 
-            Category,  Details, Hours, Salary, 
+            PieCharts, Tables, Graphs, Project, Item, Worker,
+            Category, Details, Hours, Salary,
             [Display(Name = "Monthly Payment")]
             MonthlyPayment,
             [Display(Name = "Pay Now")]
@@ -51,7 +56,7 @@ namespace PrototypeWithAuth.AppData
             [Display(Name = "Pay Later")]
             PayLater, Installments,
             [Display(Name = "Standing Orders")]
-            StandingOrders, 
+            StandingOrders,
             [Display(Name = "No Invoice")]
             NoInvoice,
             [Display(Name = "Didnt Arrive")]
@@ -60,11 +65,11 @@ namespace PrototypeWithAuth.AppData
             PartialDelivery,
             [Display(Name = "For Clarification")]
             ForClarification,
-            Add,  AwaitingApproval,
+            Add, AwaitingApproval,
             [Display(Name = "Specify Payment")]
             SpecifyPayment
         }
-        public enum FilterEnum {None, Price, Category, Amount}
+        public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
@@ -72,7 +77,7 @@ namespace PrototypeWithAuth.AppData
         public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
-        public enum CurrencyEnum {  NIS, USD }
+        public enum CurrencyEnum { NIS, USD }
         public enum PaymentsPopoverEnum
         {
             //Share,
@@ -89,16 +94,16 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
-        public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells}
-        public enum RequestModalType { Create, Edit, Summary}
-        public enum OrderTypeEnum {RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations}
-        public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave}
+        public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells }
+        public enum RequestModalType { Create, Edit, Summary }
+        public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
+        public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
             return String.Join(' ', splitEnumValue);
         }
-         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, SidebarEnum sidebarType, String filterID)
+        public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, SidebarEnum sidebarType, String filterID)
         {
             int ReturnList = 0;
             int id = 0;
@@ -106,7 +111,7 @@ namespace PrototypeWithAuth.AppData
             {
                 int.TryParse(filterID, out id);
             }
-            switch(sidebarType)
+            switch (sidebarType)
             {
                 case SidebarEnum.Vendors:
                     ReturnList = RequestsList
@@ -137,12 +142,12 @@ namespace PrototypeWithAuth.AppData
         public static double ExchangeRateIfNull = 3.5;
         public static int YearStartedTimeKeeper = 2021;
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
-        public static double GetExchangeRateFromApi()  
+        public static double GetExchangeRateFromApi()
         {
             var client = new RestClient("http://api.currencylayer.com/live?access_key=8a8f7defe393388b7249ffcdb09d6a34");
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
-            double rate=0.0;
+            double rate = 0.0;
             try
             {
                 dynamic tmp = JsonConvert.DeserializeObject(response.Content);
@@ -157,7 +162,7 @@ namespace PrototypeWithAuth.AppData
             {
                 return 0.0;
             }
-           
+
         }
 
         public static IQueryable<Request> GetRequestsListFromRequestStatusID(IQueryable<Request> FullRequestList, int RequestStatusID, int AmountToTake = 0)
@@ -337,12 +342,12 @@ namespace PrototypeWithAuth.AppData
                 }
 
             }
-        
+
 
             return list;
         }
 
-        public static List<String> GetPriceColumn(List<String>priceFilterEnums, Request request, CurrencyEnum currency)
+        public static List<String> GetPriceColumn(List<String> priceFilterEnums, Request request, CurrencyEnum currency)
         {
             List<String> priceColumn = new List<String>();
             var currencyFormat = "he-IL";
@@ -364,7 +369,7 @@ namespace PrototypeWithAuth.AppData
                 switch (Enum.Parse(typeof(PriceSortEnum), p))
                 {
                     case PriceSortEnum.Unit:
-                        priceColumn.Add("U: "+string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit));
+                        priceColumn.Add("U: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", pricePerUnit));
                         break;
                     case PriceSortEnum.Total:
                         priceColumn.Add("T: " + string.Format(new CultureInfo(currencyFormat), "{0:c}", cost));
@@ -383,17 +388,17 @@ namespace PrototypeWithAuth.AppData
         public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)
         {
             List<String> amountColumn = new List<String>();
-            if(request.Unit != null)
+            if (request.Unit != null)
             {
                 amountColumn.Add(request.Unit + " " + unitType.UnitTypeDescription);
-                if(request.SubUnit != null)
+                if (request.SubUnit != null)
                 {
-                    amountColumn.Add(request.SubUnit + " " + subUnitType.UnitTypeDescription);                 
-                    if(request.SubSubUnit != null)
+                    amountColumn.Add(request.SubUnit + " " + subUnitType.UnitTypeDescription);
+                    if (request.SubSubUnit != null)
                     {
                         amountColumn.Add(request.SubSubUnit + " " + subSubUnitType.UnitTypeDescription);
                     }
-                    
+
                 }
 
             }
@@ -526,6 +531,17 @@ namespace PrototypeWithAuth.AppData
                            .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
                            .Select(nic => nic.GetPhysicalAddress().ToString())
                            .FirstOrDefault();
-    }
 
+        public static string GetExceptionMessage(Exception ex)
+        {
+            if (ex.InnerException != null)
+            {
+                return ex.InnerException.Message;
+            }
+            else
+            {
+                return ex.Message;
+            }
+        }
+    }
 }
