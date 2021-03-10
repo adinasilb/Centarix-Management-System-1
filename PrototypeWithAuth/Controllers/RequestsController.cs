@@ -4460,7 +4460,7 @@ namespace PrototypeWithAuth.Controllers
                             else
                             {
                                 req.RequestStatusID = 2;
-                                req.Product.Vendor = null;
+                                req.Product = await _context.Products.Where(p => p.ProductID == req.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }
@@ -4531,7 +4531,7 @@ namespace PrototypeWithAuth.Controllers
                             await _context.SaveChangesAsync();
                               MoveDocumentsOutOfTempFolder(request);
 
-                                request.Product = await _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
+                             
                                 RequestNotification requestNotification = new RequestNotification();
                                 requestNotification.RequestID = request.RequestID;
                                 requestNotification.IsRead = false;

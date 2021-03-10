@@ -157,19 +157,34 @@
     $(".save-operations-item").off('click').on('click', function (e) {
         e.preventDefault();
         console.log("saveOperations")
-        var formData = new FormData($("#myForm")[0]);
-        $.ajax({
-            processData: false,
-            contentType: false,
-            async: true,
-            url: "/Requests/AddItemView?OrderType=SaveOperations",
-            type: 'POST',
-            data: formData,
-            cache: false,
-            success: function (data) {
-                $.fn.OpenModal('termsModal', 'terms', data)
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+
+            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
+                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
             }
-        });
+
+        }
+        else {
+            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+           var formData = new FormData($("#myForm")[0]);
+            $.ajax({
+                processData: false,
+                contentType: false,
+                async: true,
+                url: "/Requests/AddItemView?OrderType=SaveOperations",
+                type: 'POST',
+                data: formData,
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal('termsModal', 'terms', data)
+                }
+            });
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+       
     })
     $('body').off('click', 'remove-item').on('click','.remove-item', function (e) {
         var index = $(this).attr('data-val');
