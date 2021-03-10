@@ -469,7 +469,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    registerUserViewModel.ErrorMessage += ex.Message;
+                    registerUserViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
                     TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
                     TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
@@ -848,7 +848,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     Response.StatusCode = 500;
-                    registerUserViewModel.ErrorMessage = ex.Message;
+                    registerUserViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     FillViewDropdowns(registerUserViewModel);
                     return PartialView("EditUser", registerUserViewModel);
                 }
@@ -856,7 +856,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     Response.StatusCode = 500;
-                    registerUserViewModel.ErrorMessage = ex.Message;
+                    registerUserViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     FillViewDropdowns(registerUserViewModel);
                     return PartialView("EditUser", registerUserViewModel);
                 }
@@ -994,7 +994,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Index",new { ErrorMessage= ex.Message });
+                return RedirectToAction("Index",new { ErrorMessage= AppUtility.GetExceptionMessage(ex) });
             }
 
             return RedirectToAction("Index");

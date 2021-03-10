@@ -2159,6 +2159,7 @@ namespace PrototypeWithAuth.Controllers
                                     }
                                     await _context.SaveChangesAsync();
                                 }
+                                //throw new Exception();
                                 await transaction.CommitAsync();
 
                             }
@@ -4562,7 +4563,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message?.ToString();
+                termsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 termsViewModel.TermsList = new List<SelectListItem>()
                 {
