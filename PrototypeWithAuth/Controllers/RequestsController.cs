@@ -1223,10 +1223,13 @@ namespace PrototypeWithAuth.Controllers
             var operationsItemViewModel = new OperationsItemViewModel()
             {
                 RequestIndex = index,
+                //Request = new Request(),
                 ModalType = AppUtility.RequestModalType.Create,
                 ParentCategories = _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToList(),
                 ProductSubcategories = new List<ProductSubcategory>()
             };
+            //operationsItemViewModel.Request.Product = new Product();
+            //operationsItemViewModel.Request.Product.ProductSubcategory = new ProductSubcategory();
             return PartialView(operationsItemViewModel);
         }
 
@@ -1539,7 +1542,9 @@ namespace PrototypeWithAuth.Controllers
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
-                TempData.Keep();
+                try
+                {
+                    TempData.Keep();
                 //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
                 requestItemViewModel.Requests.FirstOrDefault().ParentRequest = null;
                 //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
@@ -1592,8 +1597,7 @@ namespace PrototypeWithAuth.Controllers
 
                 var context = new ValidationContext(requestItemViewModel.Requests.FirstOrDefault(), null, null);
                 var results = new List<ValidationResult>();
-                try
-                {
+                
                     if (Validator.TryValidateObject(requestItemViewModel.Requests.FirstOrDefault(), context, results, true))
                     {
                         /*

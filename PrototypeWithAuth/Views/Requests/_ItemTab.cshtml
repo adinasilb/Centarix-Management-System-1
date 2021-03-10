@@ -187,7 +187,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
         <div class="row">
             <div class="col-md-6 @catalogCategories">
                 <label asp-for="Requests[0].Product.CatalogNumber" class="control-label"></label>
-                <input asp-for="Requests[0].Product.CatalogNumber" class="form-control-plaintext border-bottom @catalogCategories @markReadOnlyClass" />
+                <input asp-for="Requests[0].Product.CatalogNumber" class="form-control-plaintext border-bottom catalog-number @catalogCategories @markReadOnlyClass" />
                 <span asp-validation-for="Requests[0].Product.CatalogNumber" class="text-danger-centarix"></span>
             </div>
             <div class="col-md-3 @warrantyCategories ">

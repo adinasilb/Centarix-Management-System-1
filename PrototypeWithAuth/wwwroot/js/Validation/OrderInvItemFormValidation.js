@@ -15,8 +15,6 @@ $('.ordersItemForm').validate({
 		},
 		"Requests[0].Product.ProductSubcategory.ParentCategoryID": "selectRequired",
 		"Requests[0].Product.ProductSubcategoryID": "selectRequired",
-		"Requests[0].SubProject.ProjectID": "selectRequired",
-		"Requests[0].SubProjectID": "selectRequired",
 		"Requests[0].Product.VendorID": {
 			"selectRequired" : true,				
 		},
@@ -94,8 +92,10 @@ $('.ordersItemForm').validate({
 
 $("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , function(){
 	//alert("in change vendor")
-	$('#Request_0__Product_CatalogNumber').valid();
+	//$('#Request_0__Product_CatalogNumber').valid();
+	$('.catalog-number').valid();
 });
 	
 });
+
 
