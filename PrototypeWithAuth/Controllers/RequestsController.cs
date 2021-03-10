@@ -931,6 +931,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         request.ApplicationUserCreatorID = currentUser.Id;
                         request.Product.VendorID = vendor.VendorID;
+                        request.Product.Vendor = vendor;
                         request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
                         request.CreationDate = DateTime.Now;
                         var isInBudget = false;
@@ -3503,7 +3504,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     return false;
                 }
-                if (request.Cost > user.LabOrderLimit)
+                if (request.TotalWithVat > user.LabOrderLimit)
                 {
                     return false;
                 }
@@ -3511,8 +3512,8 @@ namespace PrototypeWithAuth.Controllers
                       .Where(r => request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                       .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && r.Product.VendorID == request.Product.VendorID)
                       .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
-                      .Sum(r => r.Cost);
-                if (monthsSpending + request.Cost > user.LabMonthlyLimit)
+                      .Sum(r => r.TotalWithVat);
+                if (monthsSpending + request.TotalWithVat > user.LabMonthlyLimit)
                 {
                     return false;
                 }
@@ -4452,7 +4453,6 @@ namespace PrototypeWithAuth.Controllers
                             else
                             {
                                 req.RequestStatusID = 2;
-                                req.Product = await _context.Products.Where(p => p.ProductID == req.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }
@@ -4523,7 +4523,7 @@ namespace PrototypeWithAuth.Controllers
                             await _context.SaveChangesAsync();
                               MoveDocumentsOutOfTempFolder(request);
 
-                             
+                                request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                                 RequestNotification requestNotification = new RequestNotification();
                                 requestNotification.RequestID = request.RequestID;
                                 requestNotification.IsRead = false;
