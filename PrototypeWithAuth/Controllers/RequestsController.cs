@@ -1223,10 +1223,13 @@ namespace PrototypeWithAuth.Controllers
             var operationsItemViewModel = new OperationsItemViewModel()
             {
                 RequestIndex = index,
+                Request = new Request(),
                 ModalType = AppUtility.RequestModalType.Create,
                 ParentCategories = _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToList(),
                 ProductSubcategories = new List<ProductSubcategory>()
             };
+            operationsItemViewModel.Request.Product = new Product();
+            operationsItemViewModel.Request.Product.ProductSubcategory = new ProductSubcategory();
             return PartialView(operationsItemViewModel);
         }
 

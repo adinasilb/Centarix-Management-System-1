@@ -7,7 +7,7 @@
 				required: true,
 	});
 
-	$(".catalog-number").rules("add", {
+	$(".catalog-number").rules("add", {rules:{
 			required: true,
 				remote:{
 		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
@@ -16,15 +16,11 @@
 		return $(".turn-edit-on-off").attr("productID");
 	}else{return null}}},
 			}
-	});
-
-	$(".catalog-number").messages("add",{
-        remote: "this product has already been created"
-    });
-
-	$(".location-selected").messages("add",
-       "Please choose a location before submitting"
-	);	
+	},
+		  messages: {
+       remote: "this product has already been created"
+   }});
+	
 
 	$(".parent-category").rules("add", {
 			selectRequired: true,

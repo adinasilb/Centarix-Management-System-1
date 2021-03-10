@@ -284,8 +284,6 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> SummaryHours(DateTime? Month, string errorMessage = null)
         {
-            var year = Year ?? DateTime.Now.Year;
-            var month = Month ?? DateTime.Now.Month;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryHours;
