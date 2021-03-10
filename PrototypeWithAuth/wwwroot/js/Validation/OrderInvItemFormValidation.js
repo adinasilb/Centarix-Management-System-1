@@ -93,7 +93,7 @@ $('.ordersItemForm').validate({
 $("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , function(){
 	//alert("in change vendor")
 	$('#Request_0__Product_CatalogNumber').valid();
-	$('.catlog-number').valid();
+	$('.catalog-number').valid();
 });
 	
 });
