@@ -343,7 +343,7 @@ namespace PrototypeWithAuth.Controllers
                         TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
                     }
                     TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.NewSupplier;
-                    createSupplierViewModel.ErrorMessage += ex.Message;
+                    createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
                     createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
                     return View("Create", createSupplierViewModel);
@@ -487,7 +487,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    createSupplierViewModel.ErrorMessage += ex.Message;
+                    createSupplierViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
                     createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
                     createSupplierViewModel.VendorComments = await _context.VendorComments.Where(c => c.VendorID == createSupplierViewModel.Vendor.VendorID).ToListAsync();

@@ -146,7 +146,7 @@
                         </td>
                         <td style="width:11.1%">
                             @{
-                                var requestCost = Request.Cost;
+                                var requestCost = Request.Cost??0;
                                 var decRequestCost = (decimal)requestCost;
                                 var formattedRequestCost = decRequestCost.ToString("C02");
                             }

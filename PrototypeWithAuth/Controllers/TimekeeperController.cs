@@ -144,7 +144,7 @@ namespace PrototypeWithAuth.Controllers
                 catch(Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    entryExitViewModel.ErrorMessage += ex;
+                    entryExitViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     entryExitViewModel.EntryExitEnum = currentClickButton;
                     return PartialView(entryExitViewModel);
 
@@ -554,7 +554,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    updateHoursViewModel.ErrorMessage += ex.Message;
+                    updateHoursViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes;
                     var userID = _userManager.GetUserId(User);
                     var user = await _context.Employees.Where(u => u.Id == userID).FirstOrDefaultAsync();
@@ -591,18 +591,9 @@ namespace PrototypeWithAuth.Controllers
             }
             catch(Exception ex)
             {
-                errorMessage = ex.Message;
-            }
-            var view = "";
-            //if (offDayViewModel.PageType.Equals(AppUtility.PageTypeEnum.TimeKeeperReport))
-            //{
-                view = "_ReportDaysOff";
-            //}
-            //else if (offDayViewModel.PageType.Equals(AppUtility.PageTypeEnum.TimekeeperSummary))
-            //{
-            //    view = "SummaryHours";
-            //}
-            return RedirectToAction(view, new { errorMessage });
+                errorMessage = AppUtility.GetExceptionMessage(ex);
+            }            
+            return RedirectToAction("_ReportDaysOff", new { errorMessage });
         }
         [HttpGet]
         [Authorize(Roles = "TimeKeeper")]
@@ -646,7 +637,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    string errorMessage = ex.Message;
+                    string errorMessage = AppUtility.GetExceptionMessage(ex);
                     return RedirectToAction("ReportHours", new { errorMessage });
                 }
             }
@@ -661,19 +652,10 @@ namespace PrototypeWithAuth.Controllers
             }
             catch(Exception ex)
             {
-                offDayViewModel.ErrorMessage += ex.Message;
+                offDayViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
             }
-            var view = "";
-            //if (offDayViewModel.PageType.Equals(AppUtility.PageTypeEnum.TimeKeeperReport))
-            //{
-            //    view = "_ReportDaysOff";
-            //}
-            //else if (offDayViewModel.PageType.Equals(AppUtility.PageTypeEnum.TimekeeperSummary))
-            //{
-                view = "SummaryHours";
-            //}
-
-            return RedirectToAction(view, new { Month = new DateTime(DateTime.Now.Year, offDayViewModel.Month ?? DateTime.Now.Month, 1), errorMessage = offDayViewModel.ErrorMessage});
+           
+            return RedirectToAction("SummaryHours", new { Month = new DateTime(DateTime.Now.Year, offDayViewModel.Month ?? DateTime.Now.Month, 1), errorMessage = offDayViewModel.ErrorMessage});
         }
 
         private async Task SaveOffDay(DateTime dateFrom, DateTime dateTo, AppUtility.OffDayTypeEnum offDayType)

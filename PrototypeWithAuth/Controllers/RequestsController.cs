@@ -816,6 +816,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(notification);
                             await _context.SaveChangesAsync();
                         }
+                        throw new Exception();
                         await transaction.CommitAsync();
                     }
                     catch (Exception e)
@@ -851,7 +852,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
+                deleteRequestViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -1013,7 +1014,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                requestItemViewModel.ErrorMessage = ex.Message?.ToString();
+                requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 //Response.WriteAsync(ex.Message?.ToString());
                 if (requestItemViewModel.RequestStatusID == 7)
@@ -1698,7 +1699,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ApplicationUserCreator)
                     //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                     .SingleOrDefault(x => x.RequestID == requestItemViewModel.Requests[0].RequestID);
-                    requestItemViewModel.ErrorMessage += ex.Message;
+                    requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     await transaction.RollbackAsync();
                     var categoryTypeId = requestItemViewModel.SectionType == AppUtility.MenuItems.Requests ? 1 : 2;
                     var productSubcategory = requestItemViewModel.Requests[0].Product.ProductSubcategory;
@@ -1822,7 +1823,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.ErrorMessage = ex.Message?.ToString();
+                    reorderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;
                     var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
                     reorderViewModel.RequestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
@@ -2191,7 +2192,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                confirmEmailViewModel.RequestIndexObject.ErrorMessage = ex.Message;
+                confirmEmailViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -2868,8 +2869,7 @@ namespace PrototypeWithAuth.Controllers
                             requestReceived.RequestStatusID = 3;
                         }
                     }
-                    try
-                    {
+                   
                         requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
                         requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
                         requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
@@ -2895,26 +2895,12 @@ namespace PrototypeWithAuth.Controllers
                         _context.Update(requestNotification);
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
-                    }
-                    catch (DbUpdateException ex)
-                    {
-                        TempData["ErrorMessage"] = ex.Message;
-                        TempData["InnerMessage"] = ex.InnerException;
-                      
-                        throw ex;
-                    }
-                    catch (Exception ex)
-                    {
-                        TempData["ErrorMessage"] = ex.Message;
-                        TempData["InnerMessage"] = ex.InnerException;
-                    
-                        throw ex;
-                    }
+                                 
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    receivedLocationViewModel.ErrorMessage = ex.Message?.ToString();
+                    receivedLocationViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;
                     receivedLocationViewModel.locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0);
                     var userid = _userManager.GetUserId(User);
@@ -3217,7 +3203,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
+                ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 await Response.WriteAsync(ex.Message);
             }
@@ -3865,7 +3851,7 @@ namespace PrototypeWithAuth.Controllers
                 catch(Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    addInvoiceViewModel.ErrorMessage = ex.Message?.ToString();
+                    addInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;               
                     return PartialView("InvoiceModal", addInvoiceViewModel);
                 }
@@ -3985,7 +3971,7 @@ namespace PrototypeWithAuth.Controllers
                                 Directory.Delete(requestFolderTo);
                             }
                             Directory.Move(requestFolderFrom, requestFolderTo);
-
+                            //throw new Exception();
                             await transaction.CommitAsync();
                             base.RemoveRequestSessions();
                             var action = "Index";
@@ -4014,7 +4000,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message?.ToString();
+                uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 return PartialView("UploadQuoteModal", uploadQuoteOrderViewModel);
             }
@@ -4113,7 +4099,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                uploadQuoteOrderViewModel.ErrorMessage = ex.Message?.ToString();
+                uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 return PartialView("UploadOrderModal", uploadQuoteOrderViewModel);
             }

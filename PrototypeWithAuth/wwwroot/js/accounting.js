@@ -27,7 +27,7 @@
 
 				if (selectedButton.hasClass("hidden")) {
 					selectedButton.removeClass("hidden");
-			}
+				}
 
 			var arrayOfOtherVendorsCheckboxes = [];
 			$(".form-check.accounting-select .form-check-input").map(function () {
