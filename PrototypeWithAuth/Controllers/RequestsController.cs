@@ -911,7 +911,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 RemoveRequestSessions();
 
-                requestItemViewModel.Requests.FirstOrDefault().Product.Vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
+                var vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
                 var categoryType = 1;
                 if(OrderType == AppUtility.OrderTypeEnum.SaveOperations)
                 {
@@ -929,7 +929,7 @@ namespace PrototypeWithAuth.Controllers
                     if (!request.Ignore)
                     {
                         request.ApplicationUserCreatorID = currentUser.Id;
-
+                        request.Product.VendorID = vendor.VendorID;
                         request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
                         request.CreationDate = DateTime.Now;
                         var isInBudget = false;
@@ -1539,7 +1539,9 @@ namespace PrototypeWithAuth.Controllers
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
-                TempData.Keep();
+                try
+                {
+                    TempData.Keep();
                 //fill the request.parentrequestid with the request.parentrequets.parentrequestid (otherwise it creates a new not used parent request)
                 requestItemViewModel.Requests.FirstOrDefault().ParentRequest = null;
                 //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
@@ -1592,8 +1594,7 @@ namespace PrototypeWithAuth.Controllers
 
                 var context = new ValidationContext(requestItemViewModel.Requests.FirstOrDefault(), null, null);
                 var results = new List<ValidationResult>();
-                try
-                {
+                
                     if (Validator.TryValidateObject(requestItemViewModel.Requests.FirstOrDefault(), context, results, true))
                     {
                         /*
@@ -4252,6 +4253,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     request.RequestStatusID = 2;
                 }
+                request.UnitTypeID = 5;
                 request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
                 HttpContext.Session.SetObject(requestName, request);
@@ -4408,7 +4410,6 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
         {
-            string uploadFolder = Path.Combine("wwwroot", "files");
             try
             {
                 var requests = new List<Request>();
@@ -4448,6 +4449,18 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 req.Installments = 1;
                             }
+                            if (SaveUsingSessions)
+                            {
+                                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                                HttpContext.Session.SetObject(requestName, req);
+                            }
+                            else
+                            {
+                                req.RequestStatusID = 2;
+                                req.Product.Vendor = null;
+                                _context.Update(req);
+                                await _context.SaveChangesAsync();
+                            }
                             if (req.PaymentStatusID == 5)
                             {
                                 for (int i = 0; i < req.Installments; i++)
@@ -4461,7 +4474,8 @@ namespace PrototypeWithAuth.Controllers
                                     }
                                     else
                                     {
-                                        _context.Add(payment);
+                                        payment.Request = req;
+                                        _context.Update(payment);
                                         await _context.SaveChangesAsync();
                                     }
                                     PaymentNum++;
@@ -4477,28 +4491,22 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 else
                                 {
+                                    payment.Request = req;
                                     _context.Add(payment);
                                     await _context.SaveChangesAsync();
                                 }
                                 PaymentNum++;
                             }
-                            if (SaveUsingSessions)
-                            {
-                                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                                HttpContext.Session.SetObject(requestName, req);
-                            }
-                            else
-                            {
-                                req.RequestStatusID = 2;
-                                _context.Add(req);
-                                await _context.SaveChangesAsync();
-                            }
+                            
                             RequestNum++;
                         }
                         if (!SaveUsingSessions)
                         {
 
-                            var commentExists = true;
+
+                            foreach (var request in requests)
+                            {
+                                var commentExists = true;
                             var n = 1;
                             do
                             {
@@ -4508,7 +4516,7 @@ namespace PrototypeWithAuth.Controllers
                                 //will only go in here if there are comments so will only work if it's there
                                 //IMPT look how to clear the session information if it fails somewhere...
                                 {
-                                    comment.RequestID = requests.FirstOrDefault().RequestID;
+                                    comment.RequestID = request.RequestID;
                                     _context.Add(comment);
                                 }
                                 else
@@ -4518,10 +4526,7 @@ namespace PrototypeWithAuth.Controllers
                                 n++;
                             } while (commentExists);
                             await _context.SaveChangesAsync();
-
-                            foreach (var request in requests)
-                            {
-                                MoveDocumentsOutOfTempFolder(request);
+                              MoveDocumentsOutOfTempFolder(request);
 
                                 request.Product = await _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
                                 RequestNotification requestNotification = new RequestNotification();
