@@ -28,7 +28,7 @@
 
         color = "oper-background-color";
     }
-    var request = Model.Requests.FirstOrDefault();
+    var request = Model.Requests[0];
 }
 <div class="modal modal-view right fader on-form-modal @form editModal" aria-labelledby="Request" id="myModal" data-backdrop="false" style="z-index: 5000">
 
@@ -39,7 +39,7 @@
 
             <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
 
-                @Html.HiddenFor(model => model.Requests.FirstOrDefault().ParentRequest.ApplicationUserID)
+                @Html.HiddenFor(model => model.Requests[0].ParentRequest.ApplicationUserID)
                 <input type="hidden" text="close" class="modal-open-state" />
 
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
@@ -47,9 +47,9 @@
                 @Html.HiddenFor(model => model.RequestStatusID)
                 @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
                 @*Requests search view model*@
-                @Html.HiddenFor(model => model.Requests.FirstOrDefault().ApplicationUserCreatorID)
-                @Html.HiddenFor(model => model.Requests.FirstOrDefault().ApplicationUserReceiverID)
-                @Html.HiddenFor(model => model.Requests.FirstOrDefault().CreationDate)
+                @Html.HiddenFor(model => model.Requests[0].ApplicationUserCreatorID)
+                @Html.HiddenFor(model => model.Requests[0].ApplicationUserReceiverID)
+                @Html.HiddenFor(model => model.Requests[0].CreationDate)
                 <input type="hidden" asp-for="@request.RequestID" />
                 <input type="hidden" asp-for="@request.ProductID" />
                 <input type="hidden" value="@request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
@@ -85,10 +85,10 @@
                             <span asp-validation-for="@request.Product.ProductName" class="text-danger-centarix"></span>
 
                         </div>
-                        @if (Model.Requests.FirstOrDefault().RequestStatusID != 7)
+                        @if (Model.Requests[0].RequestStatusID != 7)
                         {
                             <div class="d-flex align-items-center">
-                                <button type="button" value="@Model.Requests.FirstOrDefault().RequestID" class="load-reorder-details custom-button custom-button-font @color m-auto">Request</button>
+                                <button type="button" value="@Model.Requests[0].RequestID" class="load-reorder-details custom-button custom-button-font @color m-auto">Request</button>
                             </div>
                         }
 
@@ -127,15 +127,15 @@
                     </div>
                 </div>
                 @*Begin Hidden Inputs:*@
-                @*@Html.HiddenFor(vm => vm.Request.ProductID)*@
-                @Html.HiddenFor(vm => vm.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategoryID)
-                @Html.HiddenFor(vm => vm.Requests.FirstOrDefault().RequestStatusID)
-                @Html.HiddenFor(vm => vm.Requests.FirstOrDefault().ParentRequestID)
-                @Html.HiddenFor(vm => vm.Requests.FirstOrDefault().ParentQuoteID)
+                @Html.HiddenFor(vm => vm.Requests[0].ProductID)
+                @Html.HiddenFor(vm => vm.Requests[0].Product.ProductSubcategory.ParentCategoryID)
+                @Html.HiddenFor(vm => vm.Requests[0].RequestStatusID)
+                @Html.HiddenFor(vm => vm.Requests[0].ParentRequestID)
+                @Html.HiddenFor(vm => vm.Requests[0].ParentQuoteID)
                 @*End Hidden Inputs*@
 
                 @*Hidden Input for Product Subcategory*@
-                @Html.HiddenFor(vm => vm.Requests.FirstOrDefault().Product.ProductSubcategory.ProductSubcategoryDescription)
+                @Html.HiddenFor(vm => vm.Requests[0].Product.ProductSubcategory.ProductSubcategoryDescription)
             </form>
 
         </div>
