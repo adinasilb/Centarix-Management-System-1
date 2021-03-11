@@ -89,6 +89,26 @@
 		$.fn.CallModal(itemurl, "payments-pay");
 	});
 
+	$("#pay-selected").off("click").on("click", function (e) {
+		var typeEnum = $(this).attr("type");
+		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+			return $(this).attr("id")
+		}).get()
+		console.log("arrayOfSelected: " + arrayOfSelected);
+		$("#loading").show();
+		$.ajax({
+			type: "GET",
+			url: "/Requests/PaymentsPayModal/?"+"accountingPaymentsEnum=" + typeEnum,
+			traditional: true,
+			data: { 'requestIds': arrayOfSelected },
+			cache: true,
+			success: function (data) {
+				$.fn.OpenModal("modal", "payments-pay", data)
+				$("#loading").hide();
+			}
+		});
+	});
+
 	$(".invoice-add-all").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();

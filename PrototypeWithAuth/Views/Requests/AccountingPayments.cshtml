@@ -70,7 +70,7 @@
                 Date
             </td>
             <td style="width:17.1%">
-                <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" id="pay-selected">Pay Selected</button>
+                <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" type="@Model.AccountingEnum" id="pay-selected">Pay Selected</button>
             </td>
 
         </tr>
@@ -198,7 +198,7 @@
 
                     <button class="custom-button custom-button-font accounting-background-color ml-5 float-right payments-pay-now"
                             vendor="@Vendor.Key.VendorID" paymentstatus="@Vendor.FirstOrDefault().PaymentStatusID" type="@Model.AccountingEnum">
-                        Pay Now
+                        Pay All
                     </button>
                 </div>
             </div>
