@@ -198,7 +198,8 @@
                     $(this).attr("disabled", "true");
                 }
             })
-
+            $.fn.DisableMaterialSelect("Requests_" + index +"__Product_ProductSubcategory_ParentCategoryID","select-options-Requests_"+index+"__Product_ProductSubcategory_ParentCategoryID")
+            $.fn.DisableMaterialSelect("Requests_" + index + "__Product_ProductSubcategoryID", "select-options-Requests_" + index + "__Product_ProductSubcategoryID")
             var deletedid = "Requests_" + index + "__Ignore";
             console.log("deleted hidden id: " + deletedid);
             $("#" + deletedid).val("true");
@@ -215,5 +216,11 @@
             $(includeVatId).val("true");
             $(".vat-info"+index).removeClass("d-none");
         }
+    })
+    $('body').off('click', '.received-check').on('click', '.received-check', function (e) {
+        var index = $(this).attr("index");
+        var checked = $(this).is(":checked");
+        console.log(index)
+        $("#Requests_" + index + "__IsReceived").attr("value", checked)
     })
 })

@@ -100,7 +100,6 @@
         <div class="form-group sublist">
             <label class="control-label">Subcategory</label>
             @{ var subCategoryID = "";
-                var selectedSubcategoryID = "";
                 if (Model.ModalType == AppUtility.RequestModalType.Edit)
                 {
                     subCategoryID = "operationsSubcategory";
@@ -169,12 +168,16 @@
         <input id="@(dynamicID)Product_CatalogNumber" name="@(dynamicName)Product.CatalogNumber" class="form-control-plaintext border-bottom  @markReadOnlyClass catalog-number"  value="@Model.Request?.Product.CatalogNumber" />
         <span for="@(dynamicID)Product_CatalogNumber" class="text-danger-centarix"></span>
     </div>
-    <div class="col-md-2">
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input filled-in " id="@(dynamicID)IsReceived" name="@(dynamicName)IsReceived" />
-            <label class="form-check-label" for="@(dynamicID)IsReceived">Received</label>
-        </div>
+    @if (Model.ModalType != AppUtility.RequestModalType.Edit)
+    {<div class="col-md-2">
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input filled-in received-check" id="isReceived@(Model.RequestIndex)" name="IsReceivedCheck@(Model.RequestIndex)" index="@Model.RequestIndex"/>
+        <label class="form-check-label" for="isReceived@(Model.RequestIndex)">Received</label>
     </div>
+    <input type="hidden" id="@(dynamicID)IsReceived" name="@(dynamicName)IsReceived" />
+</div>
+    }
+
 </div>
 <div class="row">
 
@@ -183,7 +186,7 @@
         <input type="number" id="@(dynamicID)Unit" name="@(dynamicName)Unit" class="form-control-plaintext border-bottom @markReadOnlyClass unit" value="@Model.Request?.Unit" />
         <span for="@(dynamicID)Unit" class="text-danger-centarix"></span>
     </div>
-    <input type="hidden" id="@(dynamicID)UnitType" name="@(dynamicName)UnitType" value="5" />
+    <input type="hidden" id="@(dynamicID)UnitTypeID" name="@(dynamicName)UnitTypeID" value="5" />
     <div class="col-md-2">
         <div class="form-group">
             <label class="control-label">Total:</label>
@@ -198,7 +201,7 @@
             <label class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
-                <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="form-control-plaintext border-bottom disabled-text requestPriceQuote shekel-cost cost" min="1" readonly />
+                <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="form-control-plaintext border-bottom disabled-text requestPriceQuote shekel-cost cost" min="1" readonly value="@(Model.Request!= null ? Model.Request.Cost : 0)"/>
                 @*<span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>*@
             </div>
         </div>
@@ -213,16 +216,16 @@
         }
     }
     <div class="custom-control custom-radio mr-4 ml-4">
-        <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="IncludeVAT@(Model.RequestIndex)" name="@(dynamicName)IncludeVAT" type="radio" index="@Model.RequestIndex" @includeVatChecked value="@Model.Request?.IncludeVAT">
+        <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="IncludeVAT@(Model.RequestIndex)" name="IncludeVATRadio@(Model.RequestIndex)" type="radio" index="@Model.RequestIndex" @includeVatChecked value="@Model.Request?.IncludeVAT">
         <label class="radio-button custom-control-label pt-1 pl-2" for="IncludeVAT@(Model.RequestIndex)">Include VAT</label>
     </div>
     <div class="custom-control custom-radio mr-4 ml-4">
-        <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="NoVAT@(Model.RequestIndex)" name="@(dynamicName)IncludeVAT" type="radio" index="@Model.RequestIndex" @noVatChecked value="!@Model.Request?.IncludeVAT">
+        <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="NoVAT@(Model.RequestIndex)" name="IncludeVATRadio@(Model.RequestIndex)" type="radio" index="@Model.RequestIndex" @noVatChecked value="@(!Model.Request?.IncludeVAT)">
         <label class="radio-button custom-control-label pt-1 pl-2" for="NoVAT@(Model.RequestIndex)">No VAT</label>
     </div>
-    <input type="hidden" id="@(dynamicID)IncludeVAT" name="@(dynamicName)IncludeVAT" value="true" />
+    <input type="hidden" id="@(dynamicID)IncludeVAT" name="@(dynamicName)IncludeVAT" value="true"/>
 </div>
-    <div class="row vat-info@(Model.RequestIndex)">
+    <div class="row vat-info@(Model.RequestIndex) @(Model.Request?.IncludeVAT == true?"":"d-none")">
     <div class="col-md-2">
         <div class="form-group">
             <label class="control-label">VAT</label>
@@ -237,7 +240,7 @@
             <label class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#x20aa;</span>
-                <input id="@(dynamicID)VAT" name="@(dynamicName)VAT" class="form-control-plaintext border-bottom disabled-text requestPriceQuote" disabled />
+                <input id="@(dynamicID)VAT" name="@(dynamicName)VAT" class="form-control-plaintext border-bottom disabled-text requestPriceQuote" disabled value="@(Model.Request!= null ? Model.Request.VAT : 0)"/>
                @* <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>*@
             </div>
         </div>
@@ -256,7 +259,7 @@
             <label class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#x20aa;</span>
-                <input id="@(dynamicID)TotalWithVat" name="@(dynamicName)TotalWithVat"class="form-control-plaintext border-bottom disabled-text"  disabled />
+                <input id="@(dynamicID)TotalWithVat" name="@(dynamicName)TotalWithVat"class="form-control-plaintext border-bottom disabled-text"  disabled value="@(Model.Request!= null ? Model.Request.TotalWithVat : 0)" />
             </div>
         </div>
     </div>
