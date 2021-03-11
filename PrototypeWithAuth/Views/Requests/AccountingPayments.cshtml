@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 <script src="~/js/site.js"></script>
-@*<script src="~/js/accounting.js"></script>*@
+<script src="~/js/accounting.js"></script>
 <table class="table table-headerspaced table-borderless table-hover">
     <thead>
         <tr style="border-color:transparent;">
@@ -76,6 +76,7 @@
         </tr>
     </thead>
 </table>
+<input type="hidden" class="activeVendor" value="" />
 @foreach (var Vendor in Model.Requests)
 {
     <div class="mt-5 ">
@@ -90,7 +91,7 @@
                     <tr class="text-center">
                         <td class="text-center" style="width:5%;">
                             <div class="form-check accounting-select">
-                                <input type="checkbox" class="form-check-input fci-acc filled-in" id="@Request.RequestID">
+                                <input type="checkbox" class="form-check-input fci-acc filled-in" id="@Request.RequestID" vendorid="@Request.Product.VendorID">
                                 <label class="form-check-label" for="@Request.RequestID">@Request.RequestID</label>
                             </div>
                         </td>
