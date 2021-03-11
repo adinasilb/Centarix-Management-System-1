@@ -1,14 +1,15 @@
 ﻿$(function () {
-	$(".form-check.accounting-select").on("change", function (e) {
-			var activeVendor = $(".activeVendor").val();
-		alert(activeVendor)
-		if(activeVendor == ""  )
+	$(".form-check.accounting-select .form-check-input ").on("click", function (e) {
+		 if (!$(this).is(':checked')) 
+		 {
+                 $(this).closest("tr").removeClass("clicked-border-acc");			
+         }
+		var activeVendor = $(".activeVendor").val();
+		if(activeVendor == "" && $(this).is(":checked"))
 		{
-			alert("just set active vendor")
+		//	alert("reset vendor")
 			 $(".activeVendor").val($(this).attr("vendorid"))
 		}
-
-		console.log("checkbox checked");
 		var addToSelectedButton = $("#add-to-selected");
 		var paySelectedButton = $("#pay-selected");
 	
@@ -20,56 +21,41 @@
 		else if (paySelectedButton) {
 			selectedButton = paySelectedButton;
 		}
-
+	
 		if ($(".form-check.accounting-select .form-check-input:checked").length) {
 			if( $(".activeVendor").val() !=$(this).attr("vendorid"))
 			{
-				alert("active vendors are ot equal - not doing anything")
-				$(".activeVendor").val("")
+				//alert("active vendors are ot equal - not doing anything")
+				$(this).removeAttr("checked");
+				$(this).prop("checked", false);
+				//alert("count checked: "+$(".form-check.accounting-select .form-check-input:checked").length)
 				return false;
 			}
-
-			alert("after if -continuing with if ")
-			//var arrayOfSelected = [];
-			//$(".form-check.accounting-select .form-check-input:checked").not($(this).find(".form-check-input")).map(function () {
-			//	//return $(this).attr("vendorid")
-			//	arrayOfSelected.push($(this).attr("vendorid"));
-			//}).get()
-
-			//console.log("arrayofselected: " + arrayOfSelected);
-			//console.log("array of selected length: " + arrayOfSelected.length);
-			//console.log("vendor id of first selected checkbox: " + arrayOfSelected[0]);
-			//console.log("vendor id of this 1 try 1: " + $(this).attr("vendorid"));
-
-			//if (arrayOfSelected.length > 1 && arrayOfSelected[0] == $(this).attr("vendorid")) {
+	
+			//alert("after if -continuing with if ")
+			 $(this).closest("tr").addClass("clicked-border-acc");
 
 			if (selectedButton.hasClass("hidden")) {
 				selectedButton.removeClass("hidden");
 			}
-
-			var arrayOfOtherVendorsCheckboxes = [];
-			$(".form-check.accounting-select .form-check-input").map(function () {
-				arrayOfOtherVendorsCheckboxes.push($(this));
-			});
-			console.log("arrayOfOtherVendorsCheckboxes: " + arrayOfOtherVendorsCheckboxes);
-			//arrayOfOtherVendorsCheckboxes.ea
-			//}
-			//else {
-			//	$(this).find(".form-check-input").prop("checked", false);
-			//	alert("can only select requests from the same vendor");
-			//}
-
-			//arrayOfSelected.splice(arrayOfSelected, $(this).attr("vendorid"));
-			//console.log("arrayofselected: " + arrayOfSelected);
-
-			//if (arrayOfSelected[0])
 
 		}
 		else {
 			if (!selectedButton.hasClass("hidden")) {
 				selectedButton.addClass("hidden");
 			}
+			$(".activeVendor").val($(this).attr(""))
 		}
 	});
 
 });
+
+
+        $("table tr .form-check-input.fci-acc").click(function () {
+            if ($(this).is(':checked')) {
+               
+            }
+            else {
+              
+            }
+        });
