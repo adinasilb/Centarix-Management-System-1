@@ -48,7 +48,7 @@ $(function () {
 		if ($("#masterSectionType").val() == "Operations") {
 			console.log("operations")
 			parentCategoryId = $(this).val();
-			requestIndex = $(this).attr("data-val");
+			requestIndex = $(this).attr("request-index");
 			sublistSelector = "select.mdb-select" + requestIndex;
 			console.log("requestIndex " + requestIndex)
 		}
@@ -1840,6 +1840,10 @@ $(function () {
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
+		if($('#' + dataActivates+" .search-wrap").length>0)
+		{
+			selectedIndex = selectedIndex-1;
+		}
 		var isOptGroup = false;
 		if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
 		if (isOptGroup) {
@@ -1861,9 +1865,7 @@ $(function () {
 					break;
 			} 
 
-		} else {
-			selectedIndex = selectedIndex - 1;
-		}
+		} 
 		$(selectID).destroyMaterialSelect();
 		$(selectID).prop("disabled", false);
 		$(selectID).prop('selectedIndex', selectedIndex);

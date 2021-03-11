@@ -59,12 +59,27 @@
                 }
             }
             <label class="control-label">Category</label>
-            <select id="@parentCategoryID" name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" data-val="@Model.RequestIndex">
+            <select id="@parentCategoryID" name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" >
+                @if (Model.Request?.Product.ProductSubcategory.ParentCategoryID == 0 || Model.Request?.Product.ProductSubcategory.ParentCategoryID == null)
+                {
+                    <option class="disabled-color" disabled selected>Select a Category</option>
+                }
+                else
+                {
+                    <option class="disabled-color" disabled >Select a Category</option>
+                }
 
-                <option disabled selected class="disabled-color" value="@categoryID">@selectedCategory</option>
                 @foreach (var category in Model.ParentCategories)
                 {
-                    <option value="@category.ParentCategoryID">@category.ParentCategoryDescription</option>
+                    if (category.ParentCategoryID == Model.Request?.Product.ProductSubcategory.ParentCategoryID)
+                    {
+                        <option value="@category.ParentCategoryID" selected>@category.ParentCategoryDescription</option>
+                    }
+                    else
+                    {
+                        <option value="@category.ParentCategoryID">@category.ParentCategoryDescription</option>
+                    }
+
                 }
             </select>
 
@@ -95,32 +110,38 @@
                     subcategoryID = dynamicID + "Product_ProductSubcategory_ProductSubcategoryID";
                 }
             }
-            <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" value="@Model.Request?.Product.ProductSubcategoryID">
-                <option  disabled class="disabled-color">Select Subcategory</option>
-                @foreach (var category in Model.ProductSubcategories)
+        <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category">
+            @if (Model.Request?.Product.ProductSubcategoryID == 0 || Model.Request?.Product.ProductSubcategoryID == null)
+            {
+                <option class="disabled-color" disabled selected>Select a Subcategory</option>
+            }
+            else
+            {
+                <option class="disabled-color" disabled >Select a Subcategory</option>
+            }
+            @foreach (var category in Model.ProductSubcategories)
+            {
+                if (category.ProductSubcategoryID == Model.Request?.Product.ProductSubcategoryID)
                 {
-                    if(category.ProductSubcategoryID == Model.Request?.Product.ProductSubcategoryID)
-                    {
-                        selectedSubcategoryID = "selected";
-                    }
-                    else
-                    {
-                        
-                        selectedSubcategoryID = "";
-                    }
+                    <option value="@category.ProductSubcategoryID" selected>@category.ProductSubcategoryDescription</option>
+                }
+                else
+                {
                     <option value="@category.ProductSubcategoryID">@category.ProductSubcategoryDescription</option>
                 }
-            </select>
-            <input type="hidden" id="@(dynamicID)ProductSubcategory_ProductSubcategoryID" name="@(dynamicName)ProductSubcategory.ProductSubcategoryID " disabled class="proprietryHidenCategory" />
-            @*@Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
-             new SelectList(
-             Model.ProductSubcategories,
-             "ProductSubcategoryID",
-             "ProductSubcategoryDescription"
-             ), "Select Subcategory",
-             new { @id = subCategoryID, @name = dynamicName + "Product.ProductSubcategory.ProductSubcategoryID", @class = "mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist sub-category " + @mdbSelect + " " + @markReadOnlyClass, @dataVal = Model.RequestIndex, @searchable = "Select Subcategory" })
 
-            <input type="hidden" id="@(dynamicID)Product_ProductSubcategory_ProductSubcategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID " class="proprietryHidenCategory" />*@
+            }
+        </select>
+            @*    <input type="hidden" id="@(dynamicID)ProductSubcategory_ProductSubcategoryID" name="@(dynamicName)ProductSubcategory.ProductSubcategoryID " disabled class="proprietryHidenCategory" />*@
+            @*@Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
+        new SelectList(
+        Model.ProductSubcategories,
+        "ProductSubcategoryID",
+        "ProductSubcategoryDescription"
+        ), "Select Subcategory",
+        new { @id = subCategoryID, @name = dynamicName + "Product.ProductSubcategory.ProductSubcategoryID", @class = "mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist sub-category " + @mdbSelect + " " + @markReadOnlyClass, @dataVal = Model.RequestIndex, @searchable = "Select Subcategory" })
+
+        <input type="hidden" id="@(dynamicID)Product_ProductSubcategory_ProductSubcategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID " class="proprietryHidenCategory" />*@
             @*<span asp-validation-for="@request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>*@
         </div>
     </div>

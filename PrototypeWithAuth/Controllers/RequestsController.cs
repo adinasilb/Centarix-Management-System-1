@@ -1284,7 +1284,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ParentRequest)
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType)
                     .ToList();
-            var parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).ToListAsync();
+            var parentcategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID == categoryType).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync();
@@ -4429,6 +4429,7 @@ namespace PrototypeWithAuth.Controllers
                             else
                             {
                                 req.RequestStatusID = 2;
+                                req.Product.Vendor = null;
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }
@@ -4478,27 +4479,26 @@ namespace PrototypeWithAuth.Controllers
                             foreach (var request in requests)
                             {
                                 var commentExists = true;
-                            var n = 1;
-                            do
-                            {
-                                var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                                var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
-                                if (comment != null)
-                                //will only go in here if there are comments so will only work if it's there
-                                //IMPT look how to clear the session information if it fails somewhere...
+                                var n = 1;
+                                do
                                 {
-                                    comment.RequestID = request.RequestID;
-                                    _context.Add(comment);
-                                }
-                                else
-                                {
-                                    commentExists = false;
-                                }
-                                n++;
-                            } while (commentExists);
-                            await _context.SaveChangesAsync();
-                              MoveDocumentsOutOfTempFolder(request);
-
+                                    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
+                                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                                    if (comment != null)
+                                    //will only go in here if there are comments so will only work if it's there
+                                    //IMPT look how to clear the session information if it fails somewhere...
+                                    {
+                                        comment.RequestID = request.RequestID;
+                                        _context.Add(comment);
+                                    }
+                                    else
+                                    {
+                                        commentExists = false;
+                                    }
+                                    n++;
+                                } while (commentExists);
+                                await _context.SaveChangesAsync();
+                                MoveDocumentsOutOfTempFolder(request);
                                 request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                                 RequestNotification requestNotification = new RequestNotification();
                                 requestNotification.RequestID = request.RequestID;
@@ -4516,6 +4516,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
+                           
                             return RedirectToAction("Index", termsViewModel.RequestIndexObject);
                         }
                     }
