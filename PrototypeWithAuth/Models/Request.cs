@@ -182,7 +182,7 @@ namespace PrototypeWithAuth.Models
             {
                 return Math.Round(VAT + Cost ?? 0, 2);
             }
-            private set { _TotalWithVat = value; }
+            private set { ; }
 
         }
 
