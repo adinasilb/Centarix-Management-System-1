@@ -97,6 +97,7 @@
 @{
     double VendorTotal = 0;
 }
+<input type="hidden" class="activeVendor" value="" />
 @foreach (var Vendor in Model.Requests)
 {
     <div class="mb-5 ">
@@ -146,7 +147,7 @@
                         </td>
                         <td style="width:11.1%">
                             @{
-                                var requestCost = Request.Cost??0;
+                                var requestCost = Request.Cost ?? 0;
                                 var decRequestCost = (decimal)requestCost;
                                 var formattedRequestCost = decRequestCost.ToString("C02");
                             }
@@ -162,10 +163,10 @@
                             @String.Format("{0:d}", @Request.CreationDate.Date)
                         </td>
                         <td style="width:17.1%" class="text-right">
-                           
+
                             @{ String popoverID = Request.RequestID + "accNotification";
                                 var popoverText = "";
-                                }
+                            }
 
                             <div class="table-icon-div">
                                 <ul class="list-unstyled p-0 m-0">
@@ -178,7 +179,7 @@
                                                        title="Add Invoice">
                                                         <i class="icon-cancel_presentation-24px green-overlay px-1" style="font-size:1.6rem;"></i>
                                                     </a>
-                                                    
+
                                                     break;
                                                 case AppUtility.SidebarEnum.DidntArrive:
                                                     <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
@@ -195,7 +196,7 @@
                                                 case AppUtility.SidebarEnum.ForClarification:
                                                     <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
                                                         <i class="icon-notification_didnt_arrive-24px green-overlay px-1" style="font-size:1.6rem;"></i>
-                                                    </button>  
+                                                    </button>
                                                     popoverText = "Has the order been clarified?";
                                                     break;
 
@@ -212,13 +213,19 @@
 
                                             <div class="row mt-2 text-center">
 
-                                                <div class="col-6 p-1"><a  asp-action="HandleNotifications" asp-controller="Requests"  asp-route-requestID="@Request.RequestID" asp-route-type="@Model.AccountingEnum" class="rounded-pill small-text p-0 m-0 btn text-capitalize  handleNotification " style="        width: 100%;
+                                                <div class="col-6 p-1">
+                                                    <a asp-action="HandleNotifications" asp-controller="Requests" asp-route-requestID="@Request.RequestID" asp-route-type="@Model.AccountingEnum" class="rounded-pill small-text p-0 m-0 btn text-capitalize  handleNotification " style="        width: 100%;
         border: 1px solid var(--acc-color);
         background-color: transparent;
-        color: var(--acc-color);">Save</a></div>
-                                                <div class="col-6 p-1 "><button class="rounded-pill p-0 m-0 small-text" style="        background-color: transparent; border-width:1px !important;
-        width: 100%; 
-">Cancel</button></div>
+        color: var(--acc-color);">Save</a>
+                                                </div>
+                                                <div class="col-6 p-1 ">
+                                                    <button class="rounded-pill p-0 m-0 small-text" style="        background-color: transparent; border-width:1px !important;
+        width: 100%;
+">
+                                                        Cancel
+                                                    </button>
+                                                </div>
 
                                                 @*<button class="custom-button custom-cancel float-right text cancel-request-edits">Cancel</button>*@
                                             </div>
@@ -229,30 +236,30 @@
                             </div>
                         </td>
 
-        </tr>
+                    </tr>
 
-                    VendorTotal += Request.Cost??0;
-      
-            }
-                </tbody>
-                </table>
+                    VendorTotal += Request.Cost ?? 0;
 
-                <div style="border-color:transparent;" class=" no-hover row text-right">
-                    <div colspan="8" style="border-color:transparent;" class="col-12 ">
-                        <div class="font-weight-bold text mt-4">
-                            Items: @Vendor.Count()
+                }
+            </tbody>
+        </table>
 
-                            <label class="mt-3">&emsp; Total: </label>&nbsp;<span>@(((decimal)(VendorTotal)).ToString("C02"))</span>
+        <div style="border-color:transparent;" class=" no-hover row text-right">
+            <div colspan="8" style="border-color:transparent;" class="col-12 ">
+                <div class="font-weight-bold text mt-4">
+                    Items: @Vendor.Count()
 
-                            @if (isNoInvoice)
-                            {
-                                <button class=" ml-5 float-right accounting-background-color invoice-add-all custom-button-font custom-button " vendor="@Vendor.Key.VendorID">Add To All</button>
-                            }
-                        </div>
-                    </div>
+                    <label class="mt-3">&emsp; Total: </label>&nbsp;<span>@(((decimal)(VendorTotal)).ToString("C02"))</span>
+
+                    @if (isNoInvoice)
+                    {
+                        <button class=" ml-5 float-right accounting-background-color invoice-add-all custom-button-font custom-button " vendor="@Vendor.Key.VendorID">Add To All</button>
+                    }
                 </div>
-                </div>
-            }
+            </div>
+        </div>
+    </div>
+}
 
 
 <script>

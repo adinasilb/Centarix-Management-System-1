@@ -1,8 +1,18 @@
 ﻿$(function () {
 	$(".form-check.accounting-select").on("change", function (e) {
+			var activeVendor = $(".activeVendor").val();
+		alert(activeVendor)
+		if(activeVendor == ""  )
+		{
+			alert("just set active vendor")
+			 $(".activeVendor").val($(this).attr("vendorid"))
+		}
+
 		console.log("checkbox checked");
 		var addToSelectedButton = $("#add-to-selected");
 		var paySelectedButton = $("#pay-selected");
+	
+
 		var selectedButton;
 		if (addToSelectedButton) {
 			selectedButton = addToSelectedButton;
@@ -12,6 +22,14 @@
 		}
 
 		if ($(".form-check.accounting-select .form-check-input:checked").length) {
+			if( $(".activeVendor").val() !=$(this).attr("vendorid"))
+			{
+				alert("active vendors are ot equal - not doing anything")
+				$(".activeVendor").val("")
+				return false;
+			}
+
+			alert("after if -continuing with if ")
 			//var arrayOfSelected = [];
 			//$(".form-check.accounting-select .form-check-input:checked").not($(this).find(".form-check-input")).map(function () {
 			//	//return $(this).attr("vendorid")
@@ -25,9 +43,9 @@
 
 			//if (arrayOfSelected.length > 1 && arrayOfSelected[0] == $(this).attr("vendorid")) {
 
-				if (selectedButton.hasClass("hidden")) {
-					selectedButton.removeClass("hidden");
-				}
+			if (selectedButton.hasClass("hidden")) {
+				selectedButton.removeClass("hidden");
+			}
 
 			var arrayOfOtherVendorsCheckboxes = [];
 			$(".form-check.accounting-select .form-check-input").map(function () {
