@@ -36,6 +36,7 @@ using System.Text.Json;
 using Newtonsoft.Json;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.AppData.Exceptions;
+using Microsoft.VisualBasic.FileIO;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -927,6 +928,8 @@ namespace PrototypeWithAuth.Controllers
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
                 var RequestNum = 1;
+                var i = 1;
+                var additionalRequests = false;
                 foreach (var request in requestItemViewModel.Requests)
                 {
                     if (!request.Ignore)
@@ -988,7 +991,15 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         await SaveLocations(receivedModalVisualViewModel, request);
                                     }
-                                    MoveDocumentsOutOfTempFolder(request);
+                                    if(i < requestItemViewModel.Requests.Count)
+                                    {
+                                        additionalRequests = true;
+                                    }
+                                    else
+                                    {
+                                        additionalRequests = false;
+                                    }
+                                    MoveDocumentsOutOfTempFolder(request, additionalRequests);
                                     await transaction.CommitAsync();
                                     base.RemoveRequestSessions();
                                 }
@@ -1013,6 +1024,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         RequestNum++;
                     }
+                    i++;
                 }
             }
             catch (Exception ex)
@@ -4315,7 +4327,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
-        private void MoveDocumentsOutOfTempFolder(Request request)
+        private void MoveDocumentsOutOfTempFolder(Request request, bool additionalRequests = false)
         {
             //rename temp folder to the request id
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
@@ -4327,7 +4339,14 @@ namespace PrototypeWithAuth.Controllers
                 {
                     Directory.Delete(requestFolderTo);
                 }
-                Directory.Move(requestFolderFrom, requestFolderTo);
+                if (additionalRequests)
+                {
+                    FileSystem.CopyDirectory(requestFolderFrom, requestFolderTo);
+                }
+                else
+                {
+                    Directory.Move(requestFolderFrom, requestFolderTo);
+                }
             }
         }
 
@@ -4488,7 +4507,8 @@ namespace PrototypeWithAuth.Controllers
                         if (!SaveUsingSessions)
                         {
 
-
+                            int i = 1;
+                            var additionalRequests = false;
                             foreach (var request in requests)
                             {
                                 var commentExists = true;
@@ -4511,7 +4531,15 @@ namespace PrototypeWithAuth.Controllers
                                     n++;
                                 } while (commentExists);
                                 await _context.SaveChangesAsync();
-                                MoveDocumentsOutOfTempFolder(request);
+                                if(i < requests.Count)
+                                {
+                                    additionalRequests = true;
+                                }
+                                else
+                                {
+                                    additionalRequests = false;
+                                }
+                                MoveDocumentsOutOfTempFolder(request, additionalRequests);
                                 request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                                 RequestNotification requestNotification = new RequestNotification();
                                 requestNotification.RequestID = request.RequestID;
@@ -4526,6 +4554,7 @@ namespace PrototypeWithAuth.Controllers
                                 requestNotification.OrderDate = DateTime.Now;
                                 requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                                 _context.Update(requestNotification);
+                                i++;
                             }
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
