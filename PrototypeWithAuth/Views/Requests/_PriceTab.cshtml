@@ -265,7 +265,7 @@ Model.UnitTypeList,
             <label asp-for="Requests[0].VAT" class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text disabled-text">&#36;</span>
-                <input class="form-control-plaintext border-bottom vatInDollars disabled-text requestPriceQuote" disabled value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].VAT / Model.Requests[0].ExchangeRate, 2))" />
+                <input class="form-control-plaintext border-bottom vatInDollars disabled-text requestPriceQuote" id="vatInDollars" disabled value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].VAT / Model.Requests[0].ExchangeRate, 2))" />
             </div>
         </div>
     </div>

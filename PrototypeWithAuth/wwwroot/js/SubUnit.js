@@ -8,37 +8,54 @@ $(function () {
 		$inputBox.val(theResult);
 	}
 
-	$.fn.CalculateSumPlusVat = function () {
+	$.fn.CalculateSumPlusVat = function (index = "0") {
 		var $exchangeRate = $("#exchangeRate").val();
 		if ($exchangeRate == "0") {
 			$exchangeRate = "1";
-        }
+		}
+		var dollarId = "sum-dollars";
+		var shekelId = "cost"
+		var vatId = "vat";
+		var vatDollarId = "vatInDollars";
+		var totalVatId = "sumPlusVat-Shekel";
+		var totalVatDollarId = "sumPlusVat-Dollar";
+		if ($('#masterSectionType').val() == "Operations")
+		{
+			dollarId = dollarId + index;
+			shekelId = "Requests_" + index + "__Cost";
+			vatId = "Requests_" + index + "__VAT";
+			vatDollarId = vatDollarId + index;
+			totalVatId = "Requests_" + index + "__TotalWithVat";
+			totalVatDollarId = totalVatDollarId + index;
+		}
 		//console.log("sumShek: " + sumShek);
 
 		//console.log("VatPercentage: " + VatPercentage);
 		//console.log("vatCalc: " + vatCalc);
 		//$("#Request_VAT").val(vatCalc)
 		//var vatInShekel = $("#Request_VAT").val();
-		if ($("#sum-dollars").prop("disabled")) {
+		if ($("#" + dollarId).prop("disabled")) {
 			$sumDollars = parseFloat($("#cost").val()) / $exchangeRate;
-			$iptBox = $('input[name="sum-dollars"]');
+			$iptBox = $('#'+dollarId);
 			$.fn.ShowResults($iptBox, $sumDollars);
 		}
-		else if ($("#cost").prop("readonly")) {
-			$sumShekel = $("#sum-dollars").val() * $exchangeRate;
-			$iptBox = $("#cost");
+		else if ($("#" + shekelId).prop("readonly")) {
+			$sumShekel = $("#" + dollarId).val() * $exchangeRate;
+			console.log("shekel " + $sumShekel)
+			$iptBox = $("#" + shekelId);
 			$.fn.ShowResults($iptBox, $sumShekel);
 		}
-		$sumShekel = parseFloat($("#cost").val());
+		$sumShekel = parseFloat($("#" + shekelId).val());
 		var vatCalc = $sumShekel * .17;
 		//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
-		$('#vat').val(vatCalc.toFixed(2));
-		$('.vatInDollars').val((vatCalc / $exchangeRate).toFixed(2));
+		$('#' + vatId).val(vatCalc.toFixed(2));
+		console.log("vat calc " + vatCalc)
+		$('#' + vatDollarId).val((vatCalc / $exchangeRate).toFixed(2));
 		$sumTotalVatShekel = $sumShekel + vatCalc;
-		$iptBox = $("input[name='sumPlusVat-Shekel']");
+		$iptBox = $("#" + totalVatId);
 		$.fn.ShowResults($iptBox, $sumTotalVatShekel);
 		$sumTotalVatDollars = $sumTotalVatShekel / $exchangeRate;
-		$iptBox = $("input[name='sumPlusVat-Dollar']");
+		$iptBox = $("#" + totalVatDollarId);
 		$.fn.ShowResults($iptBox, $sumTotalVatDollars);
 	};
 	$.fn.CalculateUnitAmounts = function () {
@@ -357,12 +374,18 @@ $(function () {
 	$.fn.CheckCurrency = function () {
 		console.log('check currency')
 		var currencyType = $("#currency").val();
+		var shekelSelector = "#cost";
+		var dollarSelector = "#sum-dollars";
+		if ($('#masterSectionType').val() == "Operations") {
+			shekelSelector = ".shekel-cost";
+			dollarSelector = ".dollar-cost";
+        }
 		switch (currencyType) {
 			case "USD":
-				$("#cost").prop("readonly", true);
-				$("#cost").addClass('disabled-text');
-				$("#sum-dollars").prop("disabled", false);
-				$("#sum-dollars").removeClass('disabled-text');
+				$(shekelSelector).prop("readonly", true);
+				$(shekelSelector).addClass('disabled-text');
+				$(dollarSelector).prop("disabled", false);
+				$(dollarSelector).removeClass('disabled-text');
 
 
 				$("#unit-price-dollars").prop("disabled", false);
@@ -397,10 +420,10 @@ $(function () {
 				break;
 			case "NIS":
 			case undefined: //for the reorder modal
-				$("#cost").prop("readonly", false);
-				$("#cost").removeClass('disabled-text');
-				$("#sum-dollars").prop("disabled", true);
-				$("#sum-dollars").addClass('disabled-text');
+				$(shekelSelector).prop("readonly", false);
+				$(shekelSelector).removeClass('disabled-text');
+				$(dollarSelector).prop("disabled", true);
+				$(dollarSelector).addClass('disabled-text');
 
 
 				$("#unit-price-dollars").prop("disabled", true);
@@ -516,11 +539,18 @@ $(function () {
 		$.fn.CalculateSubSubUnitAmounts();
 	});
 
-	$("#cost").change(function (e) {
-		$.fn.CalculateSumPlusVat();
-		$.fn.CalculateUnitAmounts();
-		$.fn.CalculateSubUnitAmounts();
-		$.fn.CalculateSubSubUnitAmounts();
+	$("body").off("change", "#cost, .cost").on("change", "#cost, .cost",function (e) {
+		console.log("change cost")
+		var index = 0;
+		if ($('#masterSectionType').val() == "Operations") {
+			index = $(this).attr('data-val');
+		}
+		$.fn.CalculateSumPlusVat(index);
+		if ($('#masterSectionType').val() != "Operations") {
+			$.fn.CalculateUnitAmounts();
+			$.fn.CalculateSubUnitAmounts();
+			$.fn.CalculateSubSubUnitAmounts();
+		}
 		//$.fn.CheckCurrency(); //for the reorder modal
 	});
 

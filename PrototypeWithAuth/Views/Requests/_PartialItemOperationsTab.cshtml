@@ -10,8 +10,8 @@
         markReadOnlyClass = "mark-readonly";
     }
 
-    var dynamicID = "Requests_" + Model.RequestIndex + "__Product_";
-    var dynamicName = "Requests[" + Model.RequestIndex + "].Product.";
+    var dynamicID = "Requests_" + Model.RequestIndex + "__";
+    var dynamicName = "Requests[" + Model.RequestIndex + "].";
     var mdbSelect = "mdb-select" + Model.RequestIndex;
     var parentSelect = "parent-select" + Model.RequestIndex;
 
@@ -47,7 +47,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label class="control-label">Category</label>
+
             @{ var parentCategoryID = "";
                 if (Model.ModalType == AppUtility.RequestModalType.Edit)
                 {
@@ -55,10 +55,11 @@
                 }
                 else
                 {
-                    parentCategoryID = dynamicID + "ProductSubcategory_ParentCategoryID";
+                    parentCategoryID = dynamicID + "Product_ProductSubcategory_ParentCategoryID";
                 }
             }
-            <select id="@parentCategoryID" name="@(dynamicName)ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" data-val="@Model.RequestIndex">
+            <label class="control-label">Category</label>
+            <select id="@parentCategoryID" name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" data-val="@Model.RequestIndex">
 
                 <option disabled selected class="disabled-color" value="@categoryID">@selectedCategory</option>
                 @foreach (var category in Model.ParentCategories)
@@ -66,7 +67,17 @@
                     <option value="@category.ParentCategoryID">@category.ParentCategoryDescription</option>
                 }
             </select>
-            
+
+            @*@Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID,
+        new SelectList(
+        Model.ParentCategories,
+        "ParentCategoryID",
+        "ParentCategoryDescription"
+        ), "Select Category",
+        new { @id = parentCategoryID, @name = dynamicName + "Product.ProductSubcategory.ParentCategory.ParentCategoryID", @class = "mdb-select custom select-dropdown form-control-plaintext parentlist parent-category " + @parentSelect + " " + @markReadOnlyClass, @dataVal = Model.RequestIndex, @searchable = "Select Category" })*@
+
+            @*<input type="hidden" asp-for="Request.Product.ProductSubcategory.ParentCategoryID" />*@
+
             @*<span asp-validation-for="@request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>*@
         </div>
     </div>
@@ -74,23 +85,42 @@
         <div class="form-group sublist">
             <label class="control-label">Subcategory</label>
             @{ var subCategoryID = "";
-                if(Model.ModalType == AppUtility.RequestModalType.Edit)
+                var selectedSubcategoryID = "";
+                if (Model.ModalType == AppUtility.RequestModalType.Edit)
                 {
                     subCategoryID = "operationsSubcategory";
                 }
                 else
                 {
-                    subcategoryID = dynamicID+ "ProductSubcategory_ProductSubcategoryID";
+                    subcategoryID = dynamicID + "Product_ProductSubcategory_ProductSubcategoryID";
                 }
-             }
-            <select id="@subCategoryID" name="@(dynamicName)ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category">
-                <option selected disabled class="disabled-color" value="@subcategoryID">@selectedSubcategory</option>
+            }
+            <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" value="@Model.Request?.Product.ProductSubcategoryID">
+                <option  disabled class="disabled-color">Select Subcategory</option>
                 @foreach (var category in Model.ProductSubcategories)
                 {
+                    if(category.ProductSubcategoryID == Model.Request?.Product.ProductSubcategoryID)
+                    {
+                        selectedSubcategoryID = "selected";
+                    }
+                    else
+                    {
+                        
+                        selectedSubcategoryID = "";
+                    }
                     <option value="@category.ProductSubcategoryID">@category.ProductSubcategoryDescription</option>
                 }
             </select>
             <input type="hidden" id="@(dynamicID)ProductSubcategory_ProductSubcategoryID" name="@(dynamicName)ProductSubcategory.ProductSubcategoryID " disabled class="proprietryHidenCategory" />
+            @*@Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategoryID,
+             new SelectList(
+             Model.ProductSubcategories,
+             "ProductSubcategoryID",
+             "ProductSubcategoryDescription"
+             ), "Select Subcategory",
+             new { @id = subCategoryID, @name = dynamicName + "Product.ProductSubcategory.ProductSubcategoryID", @class = "mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist sub-category " + @mdbSelect + " " + @markReadOnlyClass, @dataVal = Model.RequestIndex, @searchable = "Select Subcategory" })
+
+            <input type="hidden" id="@(dynamicID)Product_ProductSubcategory_ProductSubcategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID " class="proprietryHidenCategory" />*@
             @*<span asp-validation-for="@request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>*@
         </div>
     </div>
@@ -98,16 +128,16 @@
 <div class="row">
     <div class="col-12">
         <label class="control-label">Item Name</label>
-        <input id="@(dynamicID)ProductName" name="@(dynamicName)ProductName" class="form-control-plaintext border-bottom product-name  @markReadOnlyClass" value="@Model.Request?.Product.ProductName"/>
-        <span for="@(dynamicID)ProductName" class="text-danger-centarix"></span>
+        <input id="@(dynamicID)Product_ProductName" name="@(dynamicName)Product.ProductName" class="form-control-plaintext border-bottom product-name  @markReadOnlyClass" value="@Model.Request?.Product.ProductName"/>
+        <span for="@(dynamicID)Product_ProductName" class="text-danger-centarix"></span>
     </div>
 </div>
 
 <div class="row">
     <div class="col-12">
         <label class="control-label">Item Hebrew Name</label>
-        <input id="@(dynamicID)ProductHebrewName" name="@(dynamicName)ProductHebrewName" class="form-control-plaintext border-bottom product-hebrew-name  @markReadOnlyClass" value="@Model.Request?.Product.ProductHebrewName"/>
-        <span for="@(dynamicID)ProductHebrewName" class="text-danger-centarix"></span>
+        <input id="@(dynamicID)Product_ProductHebrewName" name="@(dynamicName)Product.ProductHebrewName" class="form-control-plaintext border-bottom product-hebrew-name  @markReadOnlyClass" value="@Model.Request?.Product.ProductHebrewName"/>
+        <span for="@(dynamicID)Product_ProductHebrewName" class="text-danger-centarix"></span>
     </div>
 </div>
 
@@ -115,24 +145,82 @@
 <div class="row">
     <div class="col-md-6">
         <label class="control-label">Catalog Number</label>
-        <input id="@(dynamicID)CatalogNumber" name="@(dynamicName)CatalogNumber" class="form-control-plaintext border-bottom  @markReadOnlyClass catalog-number"  value="@Model.Request?.Product.CatalogNumber" />
-        <span for="@(dynamicID)CatalogNumber" class="text-danger-centarix"></span>
+        <input id="@(dynamicID)Product_CatalogNumber" name="@(dynamicName)Product.CatalogNumber" class="form-control-plaintext border-bottom  @markReadOnlyClass catalog-number"  value="@Model.Request?.Product.CatalogNumber" />
+        <span for="@(dynamicID)Product_CatalogNumber" class="text-danger-centarix"></span>
     </div>
     <div class="col-md-2">
         <div class="form-check">
-            <input type="checkbox" class="form-check-input filled-in " id="IsReceived" name="IsReceived" />
-            <label class="form-check-label" name="IsReceived">Received</label>
+            <input type="checkbox" class="form-check-input filled-in " id="@(dynamicID)IsReceived" name="@(dynamicName)IsReceived" />
+            <label class="form-check-label" for="@(dynamicID)IsReceived">Received</label>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4 form-group">
+    
+    <div class="col-md-2 form-group">
         <label class="control-label">Amount</label>
-        <input type="number" id="Requests_@(Model.RequestIndex)__Unit" name="Requests[@(Model.RequestIndex)].Unit" class="form-control-plaintext border-bottom @markReadOnlyClass unit" value="@Model.Request?.Unit" />
-        <span for="Requests_@(Model.RequestIndex)__Unit" class="text-danger-centarix"></span>
+        <input type="number" id="@(dynamicID)Unit" name="@(dynamicName)Unit" class="form-control-plaintext border-bottom @markReadOnlyClass unit" value="@Model.Request?.Unit" />
+        <span for="@(dynamicID)Unit" class="text-danger-centarix"></span>
     </div>
-    <input type="hidden" id="Requests_@(Model.RequestIndex)__UnitType" name="Requests[@(Model.RequestIndex)].UnitType" value="5" />
-
- </div>
+    <input type="hidden" id="@(dynamicID)UnitType" name="@(dynamicName)UnitType" value="5" />
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label">Total:</label>
+            <div class="input-group">
+                <span class="input-group-text request-cost-dollar-icon">&#36;</span>
+                <input class="form-control-plaintext border-bottom @markReadOnlyClass requestPriceQuote dollar-cost cost" data-val="@Model.RequestIndex" id="sum-dollars@(Model.RequestIndex)" name="sum-dollars" value="@(Model.Request!= null ? Model.Request.ExchangeRate == 0 ? 0 : Math.Round(Model.Request.Cost??0 / Model.Request.ExchangeRate,2) : 0)" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label"></label>
+            <div class="input-group">
+                <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
+                <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="form-control-plaintext border-bottom disabled-text requestPriceQuote shekel-cost cost" min="1" readonly />
+                @*<span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>*@
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label">VAT</label>
+            <div class="input-group">
+                <span class="input-group-text disabled-text">&#36;</span>
+                <input id ="vatInDollars@(Model.RequestIndex)" class="form-control-plaintext border-bottom vatInDollars disabled-text requestPriceQuote" disabled value="@(Model.Request!= null ? Model.Request.ExchangeRate == 0 ? 0 : Math.Round(Model.Request.VAT / Model.Request.ExchangeRate, 2) : 0)" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label"></label>
+            <div class="input-group">
+                <span class="input-group-text disabled-text">&#x20aa;</span>
+                <input id="@(dynamicID)VAT" name="@(dynamicName)VAT" class="form-control-plaintext border-bottom disabled-text requestPriceQuote" disabled />
+               @* <span class="text-danger-centarix" asp-validation-for="Request.VAT"></span>*@
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label">Total + VAT:</label>
+            <div class="input-group">
+                <span class="input-group-text disabled-text">&#36;</span>
+                <input class="form-control-plaintext border-bottom disabled-text requestPriceQuote" id="sumPlusVat-Dollar@(Model.RequestIndex)" name="sumPlusVat-Dollar" disabled value="@(Model.Request!= null ? Model.Request.ExchangeRate == 0 ? 0 : Math.Round(Model.Request.TotalWithVat/Model.Request.ExchangeRate,2) : 0)" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label"></label>
+            <div class="input-group">
+                <span class="input-group-text disabled-text">&#x20aa;</span>
+                <input id="@(dynamicID)TotalWithVat" name="@(dynamicName)TotalWithVat"class="form-control-plaintext border-bottom disabled-text"  disabled />
+            </div>
+        </div>
+    </div>
+</div>
     </div>
 

@@ -47,10 +47,10 @@ $(function () {
 		var requestIndex = "";
 		if ($("#masterSectionType").val() == "Operations") {
 			console.log("operations")
-			//parentCategoryId = $(".parentlist").val();
+			parentCategoryId = $(this).val();
 			requestIndex = $(this).attr("data-val");
 			sublistSelector = "select.mdb-select" + requestIndex;
-			console.log("requestIndex " +requestIndex)
+			console.log("requestIndex " + requestIndex)
 		}
 		else {
 			//parentCategoryId = $("#parentlist").val();

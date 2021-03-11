@@ -1252,6 +1252,11 @@ namespace PrototypeWithAuth.Controllers
         public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             bool isEditable = true)
         {
+            var categoryType = 1;
+            if(SectionType == AppUtility.MenuItems.Operations)
+            {
+                categoryType = 2;
+            }
 
             string ModalViewType = "";
             if (id == null)
@@ -1275,12 +1280,12 @@ namespace PrototypeWithAuth.Controllers
                  .Include(r => r.Product.ProductSubcategory).Include(r => r.Product.ProductSubcategory.ParentCategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Include(r => r.ParentRequest)
-                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType)
                     .ToList();
             var parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).ToListAsync();
             var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).ToListAsync();
             var projects = await _context.Projects.ToListAsync();
-            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == 1).Count() > 0).ToListAsync();
+            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync();
             //redo the unit types when seeded
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             var paymenttypes = await _context.PaymentTypes.ToListAsync();
@@ -1329,37 +1334,8 @@ namespace PrototypeWithAuth.Controllers
             //the partial file name that we will search for (1- because we want the first one)
             //creating the directory from the path made earlier
             var productSubcategory = requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory;
-            if (productSubcategory.ParentCategory.isProprietary)
-            {
-                if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
-                {
-                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.S, uploadFolder2);
-                    
-                }
-                if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
-                    && productSubcategory.ProductSubcategoryDescription != "Cells")
-                {
-                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, uploadFolder2);
-                    
-                }
-                if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
-                    && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
-                {
-                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Map, uploadFolder2);
-                    
-                }
-            }
-            else
-            {
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, uploadFolder2);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, uploadFolder2);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Shipments, uploadFolder2);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, uploadFolder2);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, uploadFolder2);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Pictures, uploadFolder2);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, uploadFolder2);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, uploadFolder2);
-            }
+
+            FillDocumentsInfo(requestItemViewModel, uploadFolder2, productSubcategory);
 
             //first get the list of payment types there are
             var paymentTypeIds = _context.CompanyAccounts.Select(ca => ca.PaymentTypeID).Distinct().ToList();
@@ -4117,7 +4093,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        private async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, bool isReceived = false, int requestNum =1)
+        private async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, int requestNum =1)
         {
    
             var context = new ValidationContext(newRequest, null, null);
@@ -4145,7 +4121,7 @@ namespace PrototypeWithAuth.Controllers
                             await SaveItem(newRequest);
                             break;
                         case AppUtility.OrderTypeEnum.SaveOperations:
-                            await SaveOperationsItem(newRequest, isReceived, requestNum);
+                            await SaveOperationsItem(newRequest, requestNum);
                             break;
                     }
 
@@ -4248,12 +4224,12 @@ namespace PrototypeWithAuth.Controllers
 
             return true;
         }
-        private async Task<bool> SaveOperationsItem(Request request, bool isReceived, int requestNum)
+        private async Task<bool> SaveOperationsItem(Request request, int requestNum)
         {
 
             try
             {
-                if (isReceived)
+                if (request.IsReceived)
                 {
                     request.RequestStatusID = 3;
                 }
