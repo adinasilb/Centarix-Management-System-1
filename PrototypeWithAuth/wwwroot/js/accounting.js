@@ -15,10 +15,10 @@
 	
 
 		var selectedButton;
-		if (addToSelectedButton) {
+		if (addToSelectedButton.length>0) {
 			selectedButton = addToSelectedButton;
 		}
-		else if (paySelectedButton) {
+		else if (paySelectedButton.length>0) {
 			selectedButton = paySelectedButton;
 		}
 	
