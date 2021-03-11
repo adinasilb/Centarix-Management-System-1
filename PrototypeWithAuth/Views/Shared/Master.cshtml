@@ -809,7 +809,6 @@
             });
             $('#profile-img').popover('toggle');
 
-
         });
 
         //$("#parentlist").change(function () {
@@ -975,6 +974,20 @@
 
         });
         
+        $.fn.CallModal = function (url, modalClass) {
+            $.ajax({
+                async: false,
+                url: url,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal("modal", modalClass, data)
+                    $("#loading").hide();
+                    return false;
+                }
+            });
+        };
+
 
         $.fn.GetHoursString = function (date) {
             var date = new Date(date);

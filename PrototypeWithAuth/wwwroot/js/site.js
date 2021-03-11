@@ -1151,22 +1151,6 @@ $(function () {
 		});
 	}
 
-
-
-	$.fn.CallModal = function (url, modalClass) {
-		$.ajax({
-			async: false,
-			url: url,
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				$.fn.OpenModal("modal", modalClass, data)
-				$("#loading").hide();
-				return false;
-			}
-		});
-	};
-
 	$.fn.OpenUserImageModal = function (url) {
 		console.log("in call modal2, url: " + url);
 		$.ajax({
