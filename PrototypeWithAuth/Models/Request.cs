@@ -27,7 +27,7 @@ namespace PrototypeWithAuth.Models
 
         public int? RequestStatusID { get; set; }
         public RequestStatus RequestStatus { get; set; }
-       
+
         public uint? AmountWithInLocation { get; set; } // in order to place different request objects into a location in a box, only dependent on the largest unit
         public uint? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
 
@@ -70,7 +70,7 @@ namespace PrototypeWithAuth.Models
         [Range(0, 255, ErrorMessage = "Field must be positive")]
         [Display(Name = "Warranty (Months)")]
         public byte? Warranty { get; set; } // this is the amount of months of the warranty. the datetime when it ends will be calculated on the frontend (now it's from the date ordered, but should it be from the date received instead?)
-       
+
         [Display(Name = "Batch/Lot")]
         public int? Batch { get; set; }
         [Display(Name = "Expiration Date")]
@@ -90,11 +90,11 @@ namespace PrototypeWithAuth.Models
         public DateTime CreationDate { get; set; }
         public int? ParentQuoteID { get; set; }
         public ParentQuote ParentQuote { get; set; }
-     
+
 
         public string? NoteToSupplier { get; set; }
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
-        public string OrderType {get; set;}
+        public string OrderType { get; set; }
 
 
 
@@ -196,5 +196,6 @@ namespace PrototypeWithAuth.Models
         public ApplicationUser ApplicationUserReceiver { get; set; }
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
+        public bool IsReceived { get; set; }
     }
 }
