@@ -4,9 +4,7 @@
 <div class="modal modal-document fader on-form-modal timekeeper-form" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered mx-auto work-from-home-modal" style="width:50% !important">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="e => {
-        e.preventDefault(); $(this).closest('.modal').modal('hide');
-    }">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('update-time-worked');">
                 <span aria-hidden="true">&times;</span>
             </button>
 
@@ -63,7 +61,7 @@
                     <div class="modal-footer  border-0  modal-footer-mt">
                         <div class="mx-auto text-center">
                             <button @*type="submit"*@ class="custom-button custom-button-font timekeeper-color between-button-margin update-hours" @*asp-action="UpdateHours"*@ data-val="@Model.PageType" value="Save">Save</button>
-                            <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                            <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$.fn.CloseModal('update-time-worked');">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -85,7 +83,7 @@
         }
         else {
             $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
-            var pageType = $('#myForm').attr("data-val");
+            var pageType = $(this).attr("data-val");
             var url = "/Timekeeper/UpdateHours/?PageType=" + pageType;
             console.log("url: " + url);
             var formData = new FormData($("#myForm")[0]);
@@ -99,25 +97,12 @@
                 data: formData,
                 cache: true,
                 success: function (data) {
-                    //alert(data);
-                    $('.render-body').html(data);
-                    $(".modal").modal('hide');
-                    $(".modal").replaceWith('');
+                        //alert(data);
+                        $('.render-body').html(data);
+                        $.fn.CloseModal("update-time-worked");
                 },
                 error: function (jqxhr) {
-                    $('.modal').replaceWith('');
-                    $(".modal-backdrop").remove();
-                    var modal = $(jqxhr.responseText);
-                    $('body').append(modal);
-                    if ($(".modal").length > 0) {
-
-                        $(".modal").modal({
-                            backdrop: true,
-                            keyboard: false,
-                        });
-                        $(".modal").modal('show');
-                    }
-
+                    $.fn.OpenModal("modal", "update-time-worked", jqxhr.responseText);
                 }
             });
         }
@@ -125,6 +110,7 @@
 
     
     })
+    $("#myForm").submit(function (e) { e.preventDefault(); })
 </script>
 
 <script src="~/js/InitializeDatePicker.js"></script>

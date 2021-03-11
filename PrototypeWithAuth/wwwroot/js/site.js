@@ -1324,7 +1324,8 @@ $(function () {
 	};
 
 	$(".open-work-from-home-modal").off('click').click(function (e) {
-		e.preventDefault()
+		e.preventDefault();
+		var pageType;
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
 		}
@@ -1333,11 +1334,12 @@ $(function () {
 		}
 		var itemurl = "UpdateHours?PageType=" + pageType + "&isWorkFromHome=" + true;
 		$("#loading").show();
-		$.fn.CallModal(itemurl);
+		$.fn.CallModal(itemurl, "update-time-worked");
 	});
 
 	$(".open-update-hours-modal").off('click').click(function (e) {
 		e.preventDefault();
+		var pageType;
 		var val = $(this).attr("value");
 		if (val != '') {
 			var date = new Date(val).toISOString();
@@ -1351,7 +1353,7 @@ $(function () {
 		}
 		var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + date;
 		$("#loading").show();
-		$.fn.CallModal(itemurl);
+		$.fn.CallModal(itemurl, "update-time-worked");
 	});
 
 	$(".report-off-day").off('click').click(function (e) {
@@ -1369,12 +1371,12 @@ $(function () {
 			case "1":
 				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate + "&isWorkFromHome=" + true;
 				$("#loading").show();
-				$.fn.CallModal(itemurl)
+				$.fn.CallModal(itemurl, "update-time-worked")
 				break;
 			case "2":
 				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate;
 				$("#loading").show();
-				$.fn.CallModal(itemurl);
+				$.fn.CallModal(itemurl, "update-time-worked");
 				break;
 			case "3":
 				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SickDay";
