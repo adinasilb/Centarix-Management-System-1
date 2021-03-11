@@ -8,10 +8,10 @@
             maxDate: new Date() //find out range
         },
         "Payment.CompanyAccountId": {
-            required: true
+            selectRequired: true
         },
         "Payment.Reference": {
-            required: true
+            selectRequired: true
         }
 	}
 });

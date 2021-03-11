@@ -1,10 +1,11 @@
 ﻿@model PrototypeWithAuth.ViewModels.PaymentsPayModalViewModel
 <script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/validate.js"></script>
 <script src="~/js/Validation/PayModalValidation.js"></script>
-<div class="modal modal-view fader" id="myModal" data-backdrop="false">
+<div class="modal modal-view fader on-form-modal" id="myModal" data-backdrop="false">
     <div class="modal-dialog-centered mx-auto modal-xl" style="min-width:1000PX !important; top: 20%;">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('payments-pay')">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm" id="myForm">
@@ -22,8 +23,8 @@
                             </div>
                             <hr />
                             @{
-                                var CostShekel =  Model.Requests.Sum(r => r.Cost); 
-                                var VAT = Model.Requests.Sum(r => r.VAT); 
+                                var CostShekel = Model.Requests.Sum(r => r.Cost);
+                                var VAT = Model.Requests.Sum(r => r.VAT);
                                 var TotalShekel = CostShekel + VAT;
                             }
 
@@ -82,7 +83,7 @@
                         <div class="row ">
                             <div class="col pl-0">
                                 <div class="form-group">
-                                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="Payment.PaymentReferenceDate" />
+                                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="" />
                                 </div>
                             </div>
                             <div class="col">
@@ -112,7 +113,7 @@
                         <div class="modal-footer-mt mx-auto">
                             @*<button class="btn inv-payments-button float-right">Paid</button>*@
                             <input type="submit" class="  custom-button custom-button-font accounting-background-color between-button-margin" asp-action="PaymentsPayModal" value="Paid" />
-                            <button class="custom-button custom-cancel ">Cancel</button>
+                            <button type ="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('payments-pay')">Cancel</button>
                         </div>
                     </div>
                 </div>

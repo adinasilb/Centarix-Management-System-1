@@ -1163,7 +1163,7 @@ $(function () {
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
 		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
-		$.fn.CallModal(itemurl);
+		$.fn.CallModal(itemurl, "payments-pay");
 	});
 
 	$(".invoice-add-all").off("click").on("click", function (e) {
@@ -1172,7 +1172,7 @@ $(function () {
 		var vendorid = $(this).attr("vendor");
 		var itemUrl = "/Requests/AddInvoiceModal/?vendorid=" + vendorid;
 		$("#loading").show();
-		$.fn.CallModal(itemUrl);
+		$.fn.CallModal(itemUrl, "add-invoice");
 	});
 
 	$("#add-to-selected").off("click").on("click", function (e) {
@@ -1182,8 +1182,6 @@ $(function () {
 		console.log("arrayOfSelected: " + arrayOfSelected);
 		//var itemUrl = "/Requests/AddInvoiceModal/?requestids=" + arrayOfSelected;
 		$("#loading").show();
-		$('.modal').replaceWith('');
-		$(".modal-backdrop").remove();
 		$.ajax({
 			type: "GET",
 			url: "/Requests/AddInvoiceModal/",
@@ -1191,23 +1189,10 @@ $(function () {
 			data: { 'requestIds': arrayOfSelected },
 			cache: true,
 			success: function (data) {
+				$.fn.OpenModal("modal", "add-invoice", data)
 				$("#loading").hide();
-				//console.log("data:");
-				//console.log(data);
-				var modal = $(data);
-				$('body').append(modal);
-				//replaces the modal-view class with the ModalView view
-				//$(".modal-view").html(data);
-				//turn off data dismiss by clicking out of the box and by pressing esc
-				$(".modal-view").modal({
-					backdrop: true,
-					keyboard: false,
-				});
-				//shows the modal
-				$(".modal").modal('show');
 			}
 		});
-		//$.fn.CallModal(itemUrl);
 	});
 
 	$(".invoice-add-one").off("click").on("click", function (e) {
@@ -1216,37 +1201,24 @@ $(function () {
 		var requestid = $(this).attr("request");
 		var itemUrl = "/Requests/AddInvoiceModal/?requestid=" + requestid;
 		$("#loading").show();
-		$.fn.CallModal(itemUrl);
+		$.fn.CallModal(itemUrl, "add-invoice");
 	});
 
-	$.fn.CallModal = function (url) {
-		console.log("in call modal, url: " + url);
-		$('.modal').replaceWith('');
-		$(".modal-backdrop").remove();
+	$.fn.CallModal = function (url, modalClass) {
 		$.ajax({
 			async: false,
 			url: url,
 			type: 'GET',
 			cache: false,
 			success: function (data) {
+				$.fn.OpenModal("modal", modalClass, data)
 				$("#loading").hide();
-				var modal = $(data);
-				$('body').append(modal);
-				//replaces the modal-view class with the ModalView view
-				//$(".modal-view").html(data);
-				//turn off data dismiss by clicking out of the box and by pressing esc
-				$(".modal").modal({
-					backdrop: true,
-					keyboard: false,
-				});
-				//shows the modal
-				$(".modal").modal('show');
 				return false;
 			}
 		});
 	};
 
-	$.fn.CallModal2 = function (url) {
+	$.fn.OpenUserImageModal = function (url) {
 		console.log("in call modal2, url: " + url);
 		$.ajax({
 			async: true,
@@ -1254,7 +1226,8 @@ $(function () {
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				$.fn.OpenModal('userImageModal', 'user-image', data)
+				$.fn.OpenModal('userImageModal', 'user-image', data);
+				$("#loading").hide();
 			}
 		});
 	};
@@ -1413,15 +1386,7 @@ $(function () {
 				break;
 		}
 	});
-	//$(".confirm-report-offDay").off('click').click(function (e) {
 
-	//	$("#loading").show();
-	//	var pageType = $("#masterPageType").val();
-	//	var	selectedDate = $(this).val();
-	//	console.log("selecteddate: " + selectedDate);
-	//	var itemurl = "OffDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
-	//	$.fn.CallModal(itemurl);
-	//});
 	$("body").on("change", "#EmployeeHour_Date", function (e) {
 		$('.day-of-week').val($.fn.GetDayOfWeek($.fn.formatDateForSubmit($(this).val())));
 	});
@@ -1469,18 +1434,7 @@ $(function () {
 		console.log("in clarify, checkbox val: " + $(this).val());
 	};
 
-	//$.fn.GetEmployeeHourFromHome = function (date) {
-	//	console.log(date);
-	//	$.fn.CallModal('UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + true)
-	//};
-	//$.fn.GetEmployeeHourFromToday = function () {
-	//	$.fn.CallModal('ExitModal');
-	//};
 
-
-
-	//DROPDOWN
-	/*Dropdown Menu*/
 	$('.dropdown-main').off("click").on("click", function () {
 		$(this).attr('tabindex', 1).focus();
 		//$(this).toggleClass('active');
@@ -1597,19 +1551,7 @@ $(function () {
 		$('#EmployeeHour_TotalHours').val(totalHours);
 	}
 
-	//});
-	/*End Dropdown Menu*/
-	//$("body").off('click').on("click", ".upload-image", function (e) {
-	//$("body").off('click').on("click", ".upload-image", function (e) {
-	//	console.log("in upload image");
-	//	$.fn.CallModal2("/Admin/UserImageModal");
-	//});
 
-	//$('.dropdown-menu li').click(function () {
-	//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-	//		msg = '<span class="msg">Hidden input value: ';
-	//	$('.msg').html(msg + input + '</span>');
-	//}); 
 	$.fn.SaveOffDays = function (url, month) {
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
 		var dateRangeToDay = rangeTo.attr('data-date');
