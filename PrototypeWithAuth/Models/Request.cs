@@ -7,6 +7,7 @@ using PrototypeWithAuth.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 using MimeKit.Cryptography;
 using PrototypeWithAuth.AppData;
+using System.ComponentModel;
 
 namespace PrototypeWithAuth.Models
 {
@@ -128,7 +129,14 @@ namespace PrototypeWithAuth.Models
         {
             get
             {
-                return Math.Round(.17 * Cost ?? 0, 2);
+                if (IncludeVAT)
+                {
+                    return Math.Round(.17 * Cost ?? 0, 2);
+                }
+                else
+                {
+                    return 0;
+                }
             }
             private set { _VAT = value; }
 
@@ -197,5 +205,6 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
         public bool IsReceived { get; set; }
+        public bool IncludeVAT { get; set; } = true;
     }
 }

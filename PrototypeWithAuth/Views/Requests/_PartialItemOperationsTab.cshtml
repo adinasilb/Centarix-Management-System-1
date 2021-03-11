@@ -156,7 +156,7 @@
     </div>
 </div>
 <div class="row">
-    
+
     <div class="col-md-2 form-group">
         <label class="control-label">Amount</label>
         <input type="number" id="@(dynamicID)Unit" name="@(dynamicName)Unit" class="form-control-plaintext border-bottom @markReadOnlyClass unit" value="@Model.Request?.Unit" />
@@ -182,8 +182,26 @@
             </div>
         </div>
     </div>
+    @{ 
+        var includeVatChecked = "checked";
+        var noVatChecked = "";
+        if (Model.Request != null && Model.Request.IncludeVAT != true)
+        {
+            includeVatChecked = "";
+            noVatChecked = "checked";
+        }
+    }
+    <div class="custom-control custom-radio mr-4 ml-4">
+        <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="IncludeVAT@(Model.RequestIndex)" name="@(dynamicName)IncludeVAT" type="radio" index="@Model.RequestIndex" @includeVatChecked value="@Model.Request?.IncludeVAT">
+        <label class="radio-button custom-control-label pt-1 pl-2" for="IncludeVAT@(Model.RequestIndex)">Include VAT</label>
     </div>
-    <div class="row">
+    <div class="custom-control custom-radio mr-4 ml-4">
+        <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="NoVAT@(Model.RequestIndex)" name="@(dynamicName)IncludeVAT" type="radio" index="@Model.RequestIndex" @noVatChecked value="!@Model.Request?.IncludeVAT">
+        <label class="radio-button custom-control-label pt-1 pl-2" for="NoVAT@(Model.RequestIndex)">No VAT</label>
+    </div>
+    <input type="hidden" id="@(dynamicID)IncludeVAT" name="@(dynamicName)IncludeVAT" value="true" />
+</div>
+    <div class="row vat-info@(Model.RequestIndex)">
     <div class="col-md-2">
         <div class="form-group">
             <label class="control-label">VAT</label>

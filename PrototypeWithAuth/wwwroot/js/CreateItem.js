@@ -204,4 +204,16 @@
             $("#" + deletedid).val("true");
         }
     })
+    $('body').off('click', '.include-vat-radio').on('click', '.include-vat-radio', function (e) {
+        var index = $(this).attr("index");
+        var includeVatId = "#Requests_" + index + "__IncludeVAT";
+        if ($(this).attr("id") == "NoVAT"+index) {
+            $(includeVatId).val("false");
+            $(".vat-info"+index).addClass("d-none");
+        }
+        else {
+            $(includeVatId).val("true");
+            $(".vat-info"+index).removeClass("d-none");
+        }
+    })
 })
