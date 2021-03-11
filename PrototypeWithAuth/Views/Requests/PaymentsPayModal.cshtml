@@ -1,123 +1,124 @@
 ﻿@model PrototypeWithAuth.ViewModels.PaymentsPayModalViewModel
-    <script src="~/js/InitializeDatePicker.js"></script>
-    <div class="modal modal-view fader" id="myModal" data-backdrop="false">
-        <div class="modal-dialog-centered mx-auto modal-xl" style="min-width:1000PX !important; top: 20%;">
-            <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
-                <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <form action="" method="post" enctype="multipart/form-data" class="modal-padding accounting-form">
-                    <input type="hidden" asp-for="AccountingEnum" />
-                    @for (int i = 0; i < Model.Requests.Count; i++)
-                    {
-                        <input type="hidden" asp-for="Requests[i].RequestID" />
-                    }
+<script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/Validation/PayModalValidation.js"></script>
+<div class="modal modal-view fader" id="myModal" data-backdrop="false">
+    <div class="modal-dialog-centered mx-auto modal-xl" style="min-width:1000PX !important; top: 20%;">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm" id="myForm">
+                <input type="hidden" asp-for="AccountingEnum" />
+                @for (int i = 0; i < Model.Requests.Count; i++)
+                {
+                    <input type="hidden" asp-for="Requests[i].RequestID" />
+                }
 
-                    <div class="modal-body">
-                        <div class="container ">
-                            <div class="row modal-header-padding">
-                                <div class="col-6">
-                                    <span class="heading-1">Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName.ToLower()</span>
-                                </div>
-                                <hr />
-                                @{
-                                    var CostShekel = Model.Requests.Sum(r => r.Cost);
-                                    var VAT = Model.Requests.Sum(r => r.VAT);
-                                    var TotalShekel = CostShekel + VAT;
-                                }
-
+                <div class="modal-body">
+                    <div class="container ">
+                        <div class="row modal-header-padding">
+                            <div class="col-6">
+                                <span class="heading-1">Pay @Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName.ToLower()</span>
                             </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="row">
-                                        Sum
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6 pl-0">
-                                            <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input value="@CostShekel" class="form-control-plaintext border-bottom" disabled />
-                                            </div>
-                                        </div>
-                                        <div class="col-6 pl-0">
-                                            <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
-                                                <input value="" class="form-control-plaintext border-bottom" disabled />
-                                            </div>
-                                        </div>
-                                    </div>
+                            <hr />
+                            @{
+                                var CostShekel =  Model.Requests.Sum(r => r.Cost); 
+                                var VAT = Model.Requests.Sum(r => r.VAT); 
+                                var TotalShekel = CostShekel + VAT;
+                            }
+
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="row">
+                                    Sum
                                 </div>
-                                <div class="col-4 px-3">
-                                    <div class="row">
-                                        VAT
-                                    </div>
-                                    <div class="row">
+                                <div class="row">
+                                    <div class="col-6 pl-0">
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
-                                            <input value="@VAT" class="form-control-plaintext border-bottom" disabled />
+                                            <input value="@String.Format("{0:0.00}",CostShekel)" class="form-control-plaintext border-bottom" disabled />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row">
-                                        Sum
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6 pl-0">
-                                            <div class="input-group">
-                                                <span class="input-group-text">&#x20aa;</span>
-                                                <input value="@TotalShekel" class="form-control-plaintext border-bottom" disabled />
-                                            </div>
-                                        </div>
-                                        <div class="col-6 pl-0">
-                                            <div class="input-group">
-                                                <span class="input-group-text">&#36;</span>
-                                                <input value="" class="form-control-plaintext border-bottom" disabled />
-                                            </div>
+                                    <div class="col-6 pl-0">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input value="" class="form-control-plaintext border-bottom" disabled />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row ">
-                                <div class="col pl-0">
-                                    <div class="form-group">
-                                        <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="Payment.PaymentReferenceDate" />
-                                    </div>
+                            <div class="col-4 px-3">
+                                <div class="row">
+                                    VAT
                                 </div>
-                                <div class="col">
-                                    <div class="payment-type">
-                                        <select class="mdb-select custom select-dropdown form-control-plaintext paymentType ">
-                                            <option value="">Select A Payment Type </option>
-                                            <option value="1">Credit Card</option>
-                                            <option value="2">Bank Account</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group payment-account">
-                                        <select class="mdb-select custom select-dropdown form-control-plaintext companyAccountNum mdb-select-sublist " asp-for="Payment.CompanyAccountID"></select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group payment-reference d-none">
-                                        <input class="form-control-plaintext border-bottom reference-1" type="text" data-val="true" data-val-required="The Reference Number is required." asp-for="Payment.Reference" />
+                                <div class="row">
+                                    <div class="input-group">
+                                        <span class="input-group-text">&#x20aa;</span>
+                                        <input value="@String.Format("{0:0.00}",VAT)" class="form-control-plaintext border-bottom" disabled />
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="col-4">
+                                <div class="row">
+                                    Total + VAT
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 pl-0">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input value="@String.Format("{0:0.00}",TotalShekel)" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-6 pl-0">
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input value="" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col pl-0">
+                                <div class="form-group">
+                                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="Payment.PaymentReferenceDate" />
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="payment-type">
+                                    <select class="mdb-select custom select-dropdown form-control-plaintext paymentType " name="paymentType">
+                                        <option value="">Select A Payment Type </option>
+                                        <option value="1">Credit Card</option>
+                                        <option value="2">Bank Account</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group payment-account">
+                                    <select class="mdb-select custom select-dropdown form-control-plaintext companyAccountNum mdb-select-sublist " asp-for="Payment.CompanyAccountID"></select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group payment-reference d-none">
+                                    <input class="form-control-plaintext border-bottom reference-1" type="text" data-val="true" data-val-required="The Reference Number is required." asp-for="Payment.Reference" />
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="row">
-                            <div class="modal-footer-mt mx-auto">
-                                @*<button class="btn inv-payments-button float-right">Paid</button>*@
-                                <input type="submit" class="  custom-button custom-button-font accounting-background-color between-button-margin" asp-action="PaymentsPayModal" value="Paid" />
-                                <button class="custom-button custom-cancel ">Cancel</button>
-                            </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="modal-footer-mt mx-auto">
+                            @*<button class="btn inv-payments-button float-right">Paid</button>*@
+                            <input type="submit" class="  custom-button custom-button-font accounting-background-color between-button-margin" asp-action="PaymentsPayModal" value="Paid" />
+                            <button class="custom-button custom-cancel ">Cancel</button>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
-    <script>$(".mdb-select").materialSelect()</script>
-    <script src="~/js/TermsModal.js"></script>
+</div>
+<script>$(".mdb-select").materialSelect()</script>
+<script src="~/js/TermsModal.js"></script>

@@ -3484,10 +3484,10 @@ namespace PrototypeWithAuth.Controllers
                 {
                     return false;
                 }
-                var monthsSpending = _context.Requests
+                var monthsSpending =   _context.Requests
                       .Where(r => request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                       .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && r.Product.VendorID == request.Product.VendorID)
-                      .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
+                      .Where(r => r.ParentRequest.OrderDate >= firstOfMonth).AsEnumerable()
                       .Sum(r => r.TotalWithVat);
                 if (monthsSpending + request.TotalWithVat > user.LabMonthlyLimit)
                 {
