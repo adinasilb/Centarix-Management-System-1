@@ -183,6 +183,8 @@
     <Compile Remove="Data\Migrations\20210303085917_TookAwayLocationRoomInstances.Designer.cs" />
     <Compile Remove="Data\Migrations\20210307125519_RedidSomeFieldsForAccounting.cs" />
     <Compile Remove="Data\Migrations\20210307125519_RedidSomeFieldsForAccounting.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311084725_IncludeVatRequest.cs" />
+    <Compile Remove="Data\Migrations\20210311084725_IncludeVatRequest.Designer.cs" />
   </ItemGroup>
 
 
