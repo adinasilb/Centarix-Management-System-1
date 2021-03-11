@@ -1151,73 +1151,6 @@ $(function () {
 		});
 	}
 
-	/*--------------------------------Accounting Payment Notifications--------------------------------*/
-	$(".payments-pay-now").off("click").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		var vendorid = $(this).attr("vendor");
-		var paymentstatusid = $(this).attr("paymentstatus");
-		var typeEnum = $(this).attr("type");
-		console.log("vendor: " + vendorid);
-		console.log("payment status: " + paymentstatusid);
-		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
-		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid + "&accountingPaymentsEnum=" + typeEnum;
-		$("#loading").show();
-		$.fn.CallModal(itemurl, "payments-pay");
-	});
-
-	$(".invoice-add-all").off("click").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		var vendorid = $(this).attr("vendor");
-		var itemUrl = "/Requests/AddInvoiceModal/?vendorid=" + vendorid;
-		$("#loading").show();
-		$.fn.CallModal(itemUrl, "add-invoice");
-	});
-
-	$("#add-to-selected").off("click").on("click", function (e) {
-		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
-			return $(this).attr("id")
-		}).get()
-		console.log("arrayOfSelected: " + arrayOfSelected);
-		//var itemUrl = "/Requests/AddInvoiceModal/?requestids=" + arrayOfSelected;
-		$("#loading").show();
-		$.ajax({
-			type: "GET",
-			url: "/Requests/AddInvoiceModal/",
-			traditional: true,
-			data: { 'requestIds': arrayOfSelected },
-			cache: true,
-			success: function (data) {
-				$.fn.OpenModal("modal", "add-invoice", data)
-				$("#loading").hide();
-			}
-		});
-	});
-
-	$(".invoice-add-one").off("click").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		var requestid = $(this).attr("request");
-		var itemUrl = "/Requests/AddInvoiceModal/?requestid=" + requestid;
-		$("#loading").show();
-		$.fn.CallModal(itemUrl, "add-invoice");
-	});
-
-	$.fn.CallModal = function (url, modalClass) {
-		$.ajax({
-			async: false,
-			url: url,
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				$.fn.OpenModal("modal", modalClass, data)
-				$("#loading").hide();
-				return false;
-			}
-		});
-	};
-
 	$.fn.OpenUserImageModal = function (url) {
 		console.log("in call modal2, url: " + url);
 		$.ajax({
@@ -1233,30 +1166,6 @@ $(function () {
 	};
 
 
-	$(".remove-invoice-item").off("click").on("click", function (e) {
-		e.stopPropagation();
-		e.preventDefault();
-	});
-
-
-
-	$("#share-payment").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("in share payments site.js");
-	});
-
-	function SharePayment(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("in share payments fx site.js");
-	};
-
-	$("body").on("click", "#share-payment", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("in share payments body fx site.js");
-	});
 
 	$("#entry").dblclick(function () {
 		console.log("in entry")
