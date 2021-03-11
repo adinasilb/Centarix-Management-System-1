@@ -205,6 +205,6 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
         public bool IsReceived { get; set; }
-        public bool IncludeVAT { get; set; } = true;
+        public bool IncludeVAT { get; set; }
     }
 }

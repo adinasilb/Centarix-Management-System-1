@@ -914,7 +914,9 @@ namespace PrototypeWithAuth.Controllers
 
                 var vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
                 var categoryType = 1;
-                if(OrderType == AppUtility.OrderTypeEnum.SaveOperations)
+                var exchangeRate = requestItemViewModel.Requests.FirstOrDefault().ExchangeRate;
+                var currency = requestItemViewModel.Requests.FirstOrDefault().Currency;
+                if (OrderType == AppUtility.OrderTypeEnum.SaveOperations)
                 {
                     categoryType = 2;
                 }
@@ -943,6 +945,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             isInBudget = checkIfInBudget(request);
                         }
+                        request.ExchangeRate = exchangeRate;
 
                         using (var transaction = _context.Database.BeginTransaction())
                         {
@@ -1165,6 +1168,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory = productSubcategory.ParentCategory;
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategoryID = productSubcategory.ParentCategoryID;
             requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
+            requestItemViewModel.Requests.FirstOrDefault().IncludeVAT = true;
 
 
             if (productSubcategory != null && productSubcategory.ParentCategory.isProprietary)
@@ -4428,7 +4432,6 @@ namespace PrototypeWithAuth.Controllers
                             }
                             else
                             {
-                                req.RequestStatusID = 2;
                                 req.Product.Vendor = null;
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
