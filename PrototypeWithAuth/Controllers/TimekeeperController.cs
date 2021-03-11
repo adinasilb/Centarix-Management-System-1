@@ -549,7 +549,11 @@ namespace PrototypeWithAuth.Controllers
                     await _context.SaveChangesAsync();
                     //throw new Exception();
                     await transaction.CommitAsync();
-                    return RedirectToAction(updateHoursViewModel.PageType ?? "ReportHours", new { Month = Month, Year = Year});
+                    if(updateHoursViewModel.PageType == null || updateHoursViewModel.PageType == "ReportHours")
+                    {
+                        return RedirectToAction("ReportHours");
+                    }
+                    return RedirectToAction("SummaryHours", new { Month = Month, Year = Year});
                 }
                 catch (Exception ex)
                 {
