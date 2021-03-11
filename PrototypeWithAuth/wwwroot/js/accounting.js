@@ -89,6 +89,16 @@
 		$.fn.CallModal(itemurl, "payments-pay");
 	});
 
+	$(".pay-one").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var typeEnum = $(this).attr("enumType");
+		var requestid=$(this).attr("id");
+		var itemUrl = "/Requests/PaymentsPayModal/?requestid=" + requestid + "&accountingPaymentsEnum=" + typeEnum;
+		$("#loading").show();
+		$.fn.CallModal(itemUrl, "payments-pay");
+	});
+
 	$("#pay-selected").off("click").on("click", function (e) {
 		var typeEnum = $(this).attr("type");
 		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
