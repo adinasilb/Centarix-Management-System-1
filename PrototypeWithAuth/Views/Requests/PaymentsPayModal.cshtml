@@ -8,7 +8,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('payments-pay')">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm" id="myForm">
+            <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm accounting-form" id="myForm">
                 <input type="hidden" asp-for="AccountingEnum" />
                 @for (int i = 0; i < Model.Requests.Count; i++)
                 {

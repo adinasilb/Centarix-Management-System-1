@@ -686,6 +686,19 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 
+.accounting-form .form-control-file::-webkit-file-upload-button:hover {
+    background-color: var(--acc-color);
+    border: 1px solid var(--acc-color);
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.16rem 0.5rem;
+    font-size: 1rem;
+    line-height: 1;
+    /*text-transform: uppercase;*/
+}
+
+
 .form-control-file-lab::-webkit-file-upload-button:hover {
     font-weight: 500;
     /*text-transform: uppercase;*/

@@ -68,11 +68,15 @@
                                     <tr class="">
                                         <td style="width:15%;">
                                             <input style="display: none;" asp-for="Requests[x].RequestID" />
-                                            @if (Request.Product.ProductSubcategory.ImageURL != null)
-                                            {
-                                                var imageurl = Request.Product.ProductSubcategory.ImageURL;
-                                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                            @{  
+                                                var imageurl = "/images/css/CategoryImages/placeholder.png";
+                                                if (Request.Product.ProductSubcategory.ImageURL != null)
+                                                {
+                                                    imageurl = Request.Product.ProductSubcategory.ImageURL;
+                                                }
                                             }
+
+                                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
                                         </td>
                                         <td style="width:25%;">
                                             @Request.Product.ProductName
