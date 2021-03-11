@@ -15,16 +15,16 @@
     var mdbSelect = "mdb-select" + Model.RequestIndex;
     var parentSelect = "parent-select" + Model.RequestIndex;
 
-    var selectedSubcategory = "Selected Subcategory";
-    var selectedCategory = "Selected Category";
-    var subcategoryID = "";
-    var categoryID = "";
-    if (Model.Request?.Product?.ProductSubcategoryID != 0 && Model.Request?.Product?.ProductSubcategoryID != null) {
-        selectedCategory = Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription;
-        selectedSubcategory = Model.Request.Product.ProductSubcategory.ProductSubcategoryDescription;
-        categoryID = Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID.ToString();
-        subcategoryID = Model.Request.Product.ProductSubcategoryID.ToString();
-    }
+    //var selectedSubcategory = "Selected Subcategory";
+    //var selectedCategory = "Selected Category";
+    //var subcategoryID = "";
+    //var categoryID = "";
+    //if (Model.Request?.Product?.ProductSubcategoryID != 0 && Model.Request?.Product?.ProductSubcategoryID != null) {
+    //    selectedCategory = Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription;
+    //    selectedSubcategory = Model.Request.Product.ProductSubcategory.ProductSubcategoryDescription;
+    //    categoryID = Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID.ToString();
+    //    subcategoryID = Model.Request.Product.ProductSubcategoryID.ToString();
+    //}
 
 
 }
@@ -106,7 +106,7 @@
                 }
                 else
                 {
-                    subcategoryID = dynamicID + "Product_ProductSubcategory_ProductSubcategoryID";
+                    subCategoryID = dynamicID + "Product_ProductSubcategory_ProductSubcategoryID";
                 }
             }
         <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category">

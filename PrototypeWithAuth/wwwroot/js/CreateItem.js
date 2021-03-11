@@ -199,7 +199,7 @@
                 }
             })
             $.fn.DisableMaterialSelect("Requests_" + index +"__Product_ProductSubcategory_ParentCategoryID","select-options-Requests_"+index+"__Product_ProductSubcategory_ParentCategoryID")
-            $.fn.DisableMaterialSelect("Requests_" + index + "__Product_ProductSubcategoryID", "select-options-Requests_" + index + "__Product_ProductSubcategoryID")
+            $.fn.DisableMaterialSelect("Requests_" + index + "__Product_ProductSubcategory_ProductSubcategoryID", "select-options-Requests_" + index + "__Product_ProductSubcategory_ProductSubcategoryID")
             var deletedid = "Requests_" + index + "__Ignore";
             console.log("deleted hidden id: " + deletedid);
             $("#" + deletedid).val("true");
