@@ -146,7 +146,7 @@
                         </td>
                         <td style="width:11.1%">
                             @{
-                                var requestCost = Request.Cost;
+                                var requestCost = Request.Cost??0;
                                 var decRequestCost = (decimal)requestCost;
                                 var formattedRequestCost = decRequestCost.ToString("C02");
                             }
@@ -261,7 +261,7 @@
         e.stopPropagation();
         console.log("in share payments accounting payments");
     });
-    $("body").on("click", ".share-payment"), function (e) {
+    $("body").on("click", ".share-payment", function (e) {
         e.preventDefault();
         e.stopPropagation();
         console.log("in share payments accounting payments - body click");

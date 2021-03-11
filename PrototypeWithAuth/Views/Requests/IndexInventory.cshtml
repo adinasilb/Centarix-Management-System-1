@@ -21,11 +21,18 @@
     }
 
 }
+@if (Model.PageType != AppUtility.PageTypeEnum.OperationsInventory)
+{
+    <div class="_IndexTableWithProprietaryTabs">
+        @{ await Html.RenderPartialAsync("_IndexTableWithProprietaryTabs", Model);}
+    </div>
+}
+else
+{
 
-
-<div class="_IndexTableWithProprietaryTabs">
-    @{ await Html.RenderPartialAsync("_IndexTableWithProprietaryTabs", Model);}
-</div>
-
+    <div class="_IndexTable">
+        @{ await Html.RenderPartialAsync("_IndexTable", Model);}
+    </div>
+}
 
 <script src="~/js/PricePopoverScript.js"></script>

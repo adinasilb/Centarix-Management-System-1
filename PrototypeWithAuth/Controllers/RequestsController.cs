@@ -816,6 +816,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(notification);
                             await _context.SaveChangesAsync();
                         }
+                        throw new Exception();
                         await transaction.CommitAsync();
                     }
                     catch (Exception e)
@@ -851,7 +852,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
+                deleteRequestViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -930,6 +931,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         request.ApplicationUserCreatorID = currentUser.Id;
                         request.Product.VendorID = vendor.VendorID;
+                        request.Product.Vendor = vendor;
                         request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
                         request.CreationDate = DateTime.Now;
                         var isInBudget = false;
@@ -1012,7 +1014,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                requestItemViewModel.ErrorMessage = ex.Message?.ToString();
+                requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 //Response.WriteAsync(ex.Message?.ToString());
                 if (requestItemViewModel.RequestStatusID == 7)
@@ -1030,7 +1032,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.OrderTypeEnum.AddToCart:
                     return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.SaveOperations:
-                    return RedirectToAction("TermsModal", new { OrderType = OrderType });
+                    return RedirectToAction("TermsModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
                 default:
                     if(requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
                     {
@@ -1673,7 +1675,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ApplicationUserCreator)
                     //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                     .SingleOrDefault(x => x.RequestID == requestItemViewModel.Requests[0].RequestID);
-                    requestItemViewModel.ErrorMessage += ex.Message;
+                    requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     await transaction.RollbackAsync();
                     var categoryTypeId = requestItemViewModel.SectionType == AppUtility.MenuItems.Requests ? 1 : 2;
                     var productSubcategory = requestItemViewModel.Requests[0].Product.ProductSubcategory;
@@ -1797,7 +1799,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.ErrorMessage = ex.Message?.ToString();
+                    reorderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;
                     var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
                     reorderViewModel.RequestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
@@ -2140,6 +2142,7 @@ namespace PrototypeWithAuth.Controllers
                                     }
                                     await _context.SaveChangesAsync();
                                 }
+                                //throw new Exception();
                                 await transaction.CommitAsync();
 
                             }
@@ -2165,7 +2168,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                confirmEmailViewModel.RequestIndexObject.ErrorMessage = ex.Message;
+                confirmEmailViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -2842,8 +2845,7 @@ namespace PrototypeWithAuth.Controllers
                             requestReceived.RequestStatusID = 3;
                         }
                     }
-                    try
-                    {
+                   
                         requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
                         requestReceived.ApplicationUserReceiverID = receivedLocationViewModel.Request.ApplicationUserReceiverID;
                         requestReceived.ApplicationUserReceiver = _context.Users.Where(u => u.Id == receivedLocationViewModel.Request.ApplicationUserReceiverID).FirstOrDefault();
@@ -2869,26 +2871,12 @@ namespace PrototypeWithAuth.Controllers
                         _context.Update(requestNotification);
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
-                    }
-                    catch (DbUpdateException ex)
-                    {
-                        TempData["ErrorMessage"] = ex.Message;
-                        TempData["InnerMessage"] = ex.InnerException;
-                      
-                        throw ex;
-                    }
-                    catch (Exception ex)
-                    {
-                        TempData["ErrorMessage"] = ex.Message;
-                        TempData["InnerMessage"] = ex.InnerException;
-                    
-                        throw ex;
-                    }
+                                 
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    receivedLocationViewModel.ErrorMessage = ex.Message?.ToString();
+                    receivedLocationViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;
                     receivedLocationViewModel.locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0);
                     var userid = _userManager.GetUserId(User);
@@ -3191,7 +3179,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
+                ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 await Response.WriteAsync(ex.Message);
             }
@@ -3492,7 +3480,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     return false;
                 }
-                if (request.Cost > user.LabOrderLimit)
+                if (request.TotalWithVat > user.LabOrderLimit)
                 {
                     return false;
                 }
@@ -3500,8 +3488,8 @@ namespace PrototypeWithAuth.Controllers
                       .Where(r => request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                       .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && r.Product.VendorID == request.Product.VendorID)
                       .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
-                      .Sum(r => r.Cost);
-                if (monthsSpending + request.Cost > user.LabMonthlyLimit)
+                      .Sum(r => r.TotalWithVat);
+                if (monthsSpending + request.TotalWithVat > user.LabMonthlyLimit)
                 {
                     return false;
                 }
@@ -3839,7 +3827,7 @@ namespace PrototypeWithAuth.Controllers
                 catch(Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    addInvoiceViewModel.ErrorMessage = ex.Message?.ToString();
+                    addInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;               
                     return PartialView("InvoiceModal", addInvoiceViewModel);
                 }
@@ -3959,7 +3947,7 @@ namespace PrototypeWithAuth.Controllers
                                 Directory.Delete(requestFolderTo);
                             }
                             Directory.Move(requestFolderFrom, requestFolderTo);
-
+                            //throw new Exception();
                             await transaction.CommitAsync();
                             base.RemoveRequestSessions();
                             var action = "Index";
@@ -3988,7 +3976,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message?.ToString();
+                uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 return PartialView("UploadQuoteModal", uploadQuoteOrderViewModel);
             }
@@ -4087,7 +4075,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                uploadQuoteOrderViewModel.ErrorMessage = ex.Message?.ToString();
+                uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 return PartialView("UploadOrderModal", uploadQuoteOrderViewModel);
             }
@@ -4441,7 +4429,6 @@ namespace PrototypeWithAuth.Controllers
                             else
                             {
                                 req.RequestStatusID = 2;
-                                req.Product = await _context.Products.Where(p => p.ProductID == req.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }
@@ -4512,7 +4499,7 @@ namespace PrototypeWithAuth.Controllers
                             await _context.SaveChangesAsync();
                               MoveDocumentsOutOfTempFolder(request);
 
-                             
+                                request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                                 RequestNotification requestNotification = new RequestNotification();
                                 requestNotification.RequestID = request.RequestID;
                                 requestNotification.IsRead = false;
@@ -4543,7 +4530,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message?.ToString();
+                termsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 termsViewModel.TermsList = new List<SelectListItem>()
                 {

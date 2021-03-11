@@ -159,10 +159,12 @@ $(function () {
 		if (val == "5") 
 		{
 			$(".installments-amount-block").removeClass("d-none");
+			$("#Installments").attr("disabled", false);
 		}
 		else
 		{
 			$(".installments-amount-block").addClass("d-none");
+			$("#Installments").attr("disabled", true);
 		}
 	});
 

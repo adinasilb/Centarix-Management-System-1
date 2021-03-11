@@ -67,6 +67,7 @@ $(function () {
 			$("#validation-EmployeeStatus").removeClass("hidden");
 		}
 	}
+
 	$(".cost-validation").each(function () {
 		$(this).rules("add", {
 			required: true,
@@ -74,6 +75,7 @@ $(function () {
 			min: 1
 		});
 	});
+
 	$(".supply-days-validation").each(function () {
 		$(this).rules("add", {
 			min: 0,
@@ -168,9 +170,11 @@ $(function () {
 		}
 
 	});
+
+
 	$('#myForm input').change(function (e) {
 		console.log("validating input...");
-		//$("#myForm").data("validator").settings.ignore = "";
+		$("#myForm").data("validator").settings.ignore = "";
 		$('.error').addClass("beforeCallValid");
 		if ($('#myForm').valid()) {
 			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
@@ -260,7 +264,7 @@ $(function () {
 	$.fn.isBefore= function(sel){
 		 return 
 	};
-	$('#myForm').submit(function (e) {
+	$('#myForm, .modal #myForm').submit(function (e) {
 		//alert("validate form");
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
@@ -277,25 +281,6 @@ $(function () {
 		}
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
-	$('.modal #myForm').submit(function (e) {
-		//alert("validate form");
-		$(this).data("validator").settings.ignore = "";
-		var valid = $(this).valid();
-		console.log("valid form: " + valid)
-		if (!valid) {
-			e.preventDefault();
-			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
-			}
-
-		}
-		else {
-			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
-		}
-		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-	});
-
-
 
 
 });
