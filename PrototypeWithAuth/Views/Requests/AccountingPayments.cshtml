@@ -121,7 +121,7 @@
                             @{
                                 var requestCost = Request.Cost??0;
                                 var decRequestCost = (decimal)requestCost;
-                                var formattedRequestCost = decRequestCost.ToString("C02");
+                                var formattedRequestCost = decRequestCost.ToString("C02"); //this is displaying it with a $ sign, when it is really the shekel cost
                             }
                             @formattedRequestCost
                         </td>
