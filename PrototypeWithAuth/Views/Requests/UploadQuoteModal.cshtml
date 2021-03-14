@@ -47,7 +47,7 @@
                 @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
                 @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
                 <div>
-                    <div class="modal-header modal-header-padding">                    
+                    <div class="modal-header modal-header-padding">
                         <div class="container-fluid">
                             <div class="row text-danger-centarix"> @ViewBag.ErrorMessage </div>
                             <div class="row ">
@@ -74,7 +74,7 @@
                             containsFile = "contains-file";
                         }
                     }
-              
+
                     <div class="row">
                         <div class=" offset-4 text-center">
                             <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
@@ -97,19 +97,19 @@
                                 </div>
                             </div>
                             @*<div class="row">
-                                <div class="form-group ">
-                                    <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                    <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
-                                    <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
-                                </div>
-                            </div>*@
+                                    <div class="form-group ">
+                                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
+                                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>*@
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0 p-0">
-                    <div class="mx-auto modal-footer-mt">     
-                        <input type="hidden" asp-for="OrderTypeEnum"/>
-                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />                       
+                    <div class="mx-auto modal-footer-mt">
+                        <input type="hidden" asp-for="OrderTypeEnum" />
+                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
                         <button type="button" class="custom-button custom-cancel cancel-quote" @*data-dismiss="modal" onclick="$(this).closest('.modalStep1').modal('hide');"*@>Cancel</button>
                     </div>
                 </div>
@@ -117,6 +117,7 @@
         </div>
     </div>
 </div>
+<script src="~/js/DeleteDocModal.js"></script>
 <script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
 <script src="~/js/validate.js"></script>
 <script>
@@ -151,8 +152,7 @@
                     //console.log(data)
                     console.log("status code" + jqxhr.status)
                     console.log($("#OrderTypeEnum").val())
-                    if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210")
-                    {
+                    if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210") {
                         $.fn.CloseModal("step-1");
                         $.fn.CloseModal("edits");
                         $.fn.CloseModal("reorder-item");
@@ -170,11 +170,10 @@
                         }
                         //$('.modal').modal('hide');
                     }
-                    else 
-                    {
+                    else {
                         $.fn.OpenModal('termsModal', 'terms', data)
                     }
-             
+
                     $("#loading").hide();
                     return true;
                 },
@@ -191,23 +190,24 @@
         $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 
     });
-    $(".cancel-quote").click(function (e) {
-        console.log("cancel quote")
-        var formData = new FormData($(".uploadQuoteForm")[0]);
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: "/Requests/UploadQuoteModal?isCancel=true",
-            data: formData,
-            traditional: true,
-            type: "POST",
-            cache: false,
-            success: function (data) {
-                $.fn.CloseModal("step-1");
-                return true;
-            }
-        })
+    //$(".cancel-quote").click(function (e) {
+    //    console.log("cancel quote")
+    //    var formData = new FormData($(".uploadQuoteForm")[0]);
+    //    $.ajax({
+    //        contentType: false,
+    //        processData: false,
+    //        async: true,
+    //        url: "/Requests/UploadQuoteModal?isCancel=true",
+    //        data: formData,
+    //        traditional: true,
+    //        type: "POST",
+    //        cache: false,
+    //        success: function (data) {
+    //            $.fn.CloseModal("step-1");
+    //            $.fn.RemoveColorsOfDocs("Quote");
+    //            return true;
+    //        }
+    //    })
 
-    });
+    //});
 </script>
