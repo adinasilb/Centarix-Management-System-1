@@ -206,15 +206,24 @@
         }
     })
     $('body').off('click', '.include-vat-radio').on('click', '.include-vat-radio', function (e) {
+        console.log("radio click")
         var index = $(this).attr("index");
-        var includeVatId = "#Requests_" + index + "__IncludeVAT";
-        if ($(this).attr("id") == "NoVAT"+index) {
+        var vatInfoClass = ".vat-info";
+        var noVatRadioId = "NoVAT";
+        var includeVatId = "#Requests_0__IncludeVAT";
+        if (index != null) {
+            vatInfoClass = vatInfoClass + index;
+            noVatRadioId = noVatRadioId + index;
+            includeVatId = "#Requests_" + index + "__IncludeVAT";
+        }
+        
+        if ($(this).attr("id") == noVatRadioId) {
             $(includeVatId).val("false");
-            $(".vat-info"+index).addClass("d-none");
+            $(vatInfoClass).addClass("d-none");
         }
         else {
             $(includeVatId).val("true");
-            $(".vat-info"+index).removeClass("d-none");
+            $(vatInfoClass).removeClass("d-none");
         }
     })
     $('body').off('click', '.received-check').on('click', '.received-check', function (e) {
