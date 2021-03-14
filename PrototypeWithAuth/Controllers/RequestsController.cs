@@ -900,6 +900,7 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.SectionType = SectionType;
+            RemoveRequestSessions();
             return View(requestItemViewModel);
         }
 
@@ -911,7 +912,6 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 RemoveRequestSessions();
-
                 var vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
                 var categoryType = 1;
                 var exchangeRate = requestItemViewModel.Requests.FirstOrDefault().ExchangeRate;

@@ -53,6 +53,10 @@
 	$(".remove-invoice-item").off("click").on("click", function (e) {
 		e.stopPropagation();
 		e.preventDefault();
+		$(this).closest("tr").replaceWith("");
+		if ($(".invoice-request").length == 1) {
+			$(".remove-invoice-item").replaceWith("");
+        }
 	});
 
 
