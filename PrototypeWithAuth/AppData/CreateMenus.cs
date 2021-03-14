@@ -184,12 +184,14 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "General",
-                        Controller = "ParentRequests",
-                        Action = "GeneralPaymentList",
+                        Controller = "Requests",
+                        Action = "AccountingGeneral",
                         RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.AccountingGeneral }
-                },
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.AccountingGeneral },
+                            { "SectionType", AppUtility.MenuItems.Accounting },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
                         Classes = AllClasses
                     });
                     if (pageType == AppUtility.PageTypeEnum.AccountingSuppliers) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
@@ -1006,6 +1008,32 @@ namespace PrototypeWithAuth.AppData
 
             return SidebarMenuItems;
         }
+
+        public static List<MenuItems> CreateAccountingGeneralSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.SidebarEnum.List) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "List",
+                Controller = "Requests",
+                Action = "AccountingGeneral",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType",  AppUtility.PageTypeEnum.AccountingGeneral },
+                    { "SectionType", AppUtility.MenuItems.Accounting },
+                    { "SidebarType", AppUtility.SidebarEnum.List }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-format_list_bulleted-24px-01"
+            });
+            
+
+            return SidebarMenuItems;
+        }
+
 
         public static List<MenuItems> CreateOperationsRequestsSidebar(AppUtility.PageTypeEnum PageType, AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses, AppUtility.PageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
         {

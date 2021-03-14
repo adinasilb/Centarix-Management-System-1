@@ -149,8 +149,17 @@ $(".page-item a").off('click').on("click", function (e) {
     return false;
 });
 
+$("#Months, #Years").off("change").on("change", function (e) {
+    var years = [];
+	years = $("#Years").val();
+	var months = [];
+	months = $("#Months").val();
+   ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/","._IndexTableData", "GET", undefined, "", months, years);
+    return false;
+});
 
-function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "") {
+
+function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years) {
     console.log("in ajax partial index call"+url);
     var selectedPriceSort = [];
     $("#priceSortContent .priceSort:checked").each(function (e) {
@@ -169,7 +178,9 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
             SidebarType: $('#masterSidebarType').val(),
             SelectedPriceSort: selectedPriceSort,
             SelectedCurrency: $('#tempCurrency').val(),
-            SidebarFilterID: $('.sideBarFilterID').val()
+            SidebarFilterID: $('.sideBarFilterID').val(), 
+            months : months,
+            years : years
         };
        console.log(formdata);
     }
