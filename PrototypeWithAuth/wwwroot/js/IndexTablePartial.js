@@ -43,8 +43,7 @@ $(".load-order-details").off('click').on("click", function (e) {
     return false;
 });
  
-$(".load-product-details").off('click').on("click", function (e) {
-    
+$(".load-product-details").off('click').on("click", function (e) {    
     e.preventDefault();
     e.stopPropagation();
     $("#loading").show();
@@ -62,7 +61,7 @@ $(".load-product-details-summary").off('click').on("click", function (e) {
     $("#loading").show();
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
     var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false";
-    $.fn.CallPageRequest($itemurl, "details");
+    $.fn.CallPageRequest($itemurl, "summary");
     return false;
 });
 

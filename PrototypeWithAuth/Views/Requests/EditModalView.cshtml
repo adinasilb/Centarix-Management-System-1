@@ -9,7 +9,7 @@
     var summary = "";
     var disabled = "";
     var markReadOnlyClass = "";
-    if (Model.ModalType == AppUtility.RequestModalType.Edit)
+    if (Model.ModalType == AppUtility.RequestModalType.Edit || Model.ModalType == AppUtility.RequestModalType.Summary)
     {
         markReadOnlyClass = "mark-readonly";
     }
