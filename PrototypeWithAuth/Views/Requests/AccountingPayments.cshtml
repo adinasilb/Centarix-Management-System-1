@@ -70,7 +70,7 @@
                 Date
             </td>
             <td style="width:17.1%">
-                <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" id="pay-selected">Pay Selected</button>
+                <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" type="@Model.AccountingEnum" id="pay-selected">Pay Selected</button>
             </td>
 
         </tr>
@@ -88,10 +88,10 @@
             <tbody>
                 @foreach (var Request in Vendor)
                 {
-                    <tr class="text-center">
+                    <tr class="text-center accounting-select-row">
                         <td class="text-center" style="width:5%;">
                             <div class="form-check accounting-select">
-                                <input type="checkbox" class="form-check-input fci-acc filled-in" id="@Request.RequestID" vendorid="@Request.Product.VendorID">
+                                <input type="checkbox" class="form-check-input fci-acc filled-in" id="@Request.RequestID"  vendorid="@Request.Product.VendorID">
                                 <label class="form-check-label" for="@Request.RequestID">@Request.RequestID</label>
                             </div>
                         </td>
@@ -119,7 +119,7 @@
                         </td>
                         <td style="width:11.1%">
                             @{
-                                var requestCost = Request.Cost;
+                                var requestCost = Request.Cost??0;
                                 var decRequestCost = (decimal)requestCost;
                                 var formattedRequestCost = decRequestCost.ToString("C02");
                             }
@@ -137,7 +137,7 @@
                         <td style="width:17.1%">
                             <div class="d-inline-flex">
                                 <div class="table-icon-div">
-                                    <a href="" class="p-0 m-0" data-toggle="tooltip" data-placement="top"
+                                    <a href="" class="p-0 m-0 pay-one" enumType="@Model.AccountingEnum" id="@Request.RequestID" data-toggle="tooltip" data-placement="top"
   title="Pay">
                                         <i class="icon-monetization_on-24px green-overlay px-1" style="font-size:1.6rem;"></i>
                                     </a>
@@ -198,7 +198,7 @@
 
                     <button class="custom-button custom-button-font accounting-background-color ml-5 float-right payments-pay-now"
                             vendor="@Vendor.Key.VendorID" paymentstatus="@Vendor.FirstOrDefault().PaymentStatusID" type="@Model.AccountingEnum">
-                        Pay Now
+                        Pay All
                     </button>
                 </div>
             </div>

@@ -3689,16 +3689,26 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? paymentstatusid, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment  /*, List<int>? requestIds*/)
+        public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? requestid, int[] requestIds, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
             List<Request> requestsToPay = new List<Request>();
-
-            if (vendorid != null && paymentstatusid != null)
-            {
-                var reqestsList = GetPaymentRequests(accountingPaymentsEnum);
-                requestsToPay = await reqestsList.Where(r=>r.Product.VendorID == vendorid).ToListAsync();
+            var requestsList = GetPaymentRequests(accountingPaymentsEnum);
+          
+            if (vendorid != null )
+            {                
+                requestsToPay = await requestsList.Where(r=>r.Product.VendorID == vendorid).ToListAsync();
             }
-
+            else if (requestid != null)
+            {
+                requestsToPay = await requestsList.Where(r => r.RequestID == requestid).ToListAsync();
+            }
+            else if (requestIds != null)
+            {
+                foreach (int rId in requestIds)
+                {
+                    requestsToPay.Add(requestsList.Where(r => r.RequestID == rId).FirstOrDefault());
+                }
+            }
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
             {
                 Requests = requestsToPay,

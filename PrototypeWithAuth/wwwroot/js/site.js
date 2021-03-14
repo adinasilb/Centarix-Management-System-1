@@ -793,7 +793,7 @@ $(function () {
 		$("#user-image").attr("src", "/" + imgPath);
 		$(".userImage i").hide();
 
-		$.fn.CloseModal('user-image');
+		$.fn.CloseModal('user-picture');
 	});
 
 	$("#InvoiceImage").on("change", function () {
@@ -1159,7 +1159,7 @@ $(function () {
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				$.fn.OpenModal('userImageModal', 'user-image', data);
+				$.fn.OpenModal('userImageModal', 'user-picture', data);
 				$("#loading").hide();
 			}
 		});
@@ -1270,7 +1270,7 @@ $(function () {
 		var pageType = $("#masterPageType").val();
 		var itemurl = "OffDayModal?PageType=" + pageType + "&OffDayType=" + offDayType;
 		$("#loading").show();
-		$.fn.CallModal(itemurl);
+		$.fn.CallModal(itemurl, "off-day");
 	});
 
 	$('.no-hours-reported').off('change').change(function (e) {
@@ -1289,11 +1289,11 @@ $(function () {
 				break;
 			case "3":
 				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SickDay";
-				$.fn.CallModal(itemurl);
+				$.fn.CallModal(itemurl, "off-day");
 				break;
 			case "4":
 				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=VacationDay";
-				$.fn.CallModal(itemurl);
+				$.fn.CallModal(itemurl,"off-day");
 				break;
 		}
 	});
@@ -1553,25 +1553,13 @@ $(function () {
 	$(".open-ehaa-modal").off("click").on("click", function (e) {
 		e.preventDefault();
 		$("#loading").show();
-		$("#ehaaModal").replaceWith('');
+		//$("#ehaaModal").replaceWith('');
 		console.log("in ehaa modal: " + $(this).val());
-		$.ajax({
-			async: false,
-			url: '/Timekeeper/_EmployeeHoursAwaitingApproval?ehaaID=' + $(this).attr("value"),
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				$("#loading").hide();
-				var modal = $(data);
-				$('body').append(modal);
-				$("#ehaaModal").modal({
-					backdrop: false,
-					keyboard: false,
-				});
-				//shows the modal
-				$("#ehaaModal").modal('show');
-			}
-		});
+			
+			var url = '/Timekeeper/_EmployeeHoursAwaitingApproval?ehaaID=' + $(this).attr("value");
+			
+			$.fn.CallModal(url, "hours-awaiting-approval");
+			
 	});
 	$(".back-button").off("click").on("click", function () {
 		console.log('back button');

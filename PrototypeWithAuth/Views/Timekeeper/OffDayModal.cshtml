@@ -7,7 +7,7 @@
 
     <div class="modal-dialog-centered mx-auto modal-sm  work-from-home-modal">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('off-day');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding sickModal">
@@ -32,7 +32,7 @@
                 <div class="modal-footer mt-4 border-0 ">
                     <div class="text-center m-auto">
                         <input type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin " id="saveOffDay" value="Save" />
-                        <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                        <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$.fn.CloseModal('off-day')">Cancel</button>
                     </div>
                 </div>
             </form>

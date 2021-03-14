@@ -2,8 +2,11 @@
 	$(".form-check.accounting-select .form-check-input ").on("click", function (e) {
 		 if (!$(this).is(':checked')) 
 		 {
-                 $(this).closest("tr").removeClass("clicked-border-acc");			
+			$(this).closest("tr").attr("class", "text-center");
          }
+		else{
+			 $(this).closest("tr").addClass("clicked-border-acc");
+		}
 		var activeVendor = $(".activeVendor").val();
 		if(activeVendor == "" && $(this).is(":checked"))
 		{
@@ -29,11 +32,9 @@
 				$(this).removeAttr("checked");
 				$(this).prop("checked", false);
 				//alert("count checked: "+$(".form-check.accounting-select .form-check-input:checked").length)
+					$(this).closest("tr").attr("class", "text-center");
 				return false;
 			}
-	
-			//alert("after if -continuing with if ")
-			 $(this).closest("tr").addClass("clicked-border-acc");
 
 			if (selectedButton.hasClass("hidden")) {
 				selectedButton.removeClass("hidden");
@@ -87,6 +88,36 @@
 		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemurl, "payments-pay");
+	});
+
+	$(".pay-one").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var typeEnum = $(this).attr("enumType");
+		var requestid=$(this).attr("id");
+		var itemUrl = "/Requests/PaymentsPayModal/?requestid=" + requestid + "&accountingPaymentsEnum=" + typeEnum;
+		$("#loading").show();
+		$.fn.CallModal(itemUrl, "payments-pay");
+	});
+
+	$("#pay-selected").off("click").on("click", function (e) {
+		var typeEnum = $(this).attr("type");
+		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+			return $(this).attr("id")
+		}).get()
+		console.log("arrayOfSelected: " + arrayOfSelected);
+		$("#loading").show();
+		$.ajax({
+			type: "GET",
+			url: "/Requests/PaymentsPayModal/?"+"accountingPaymentsEnum=" + typeEnum,
+			traditional: true,
+			data: { 'requestIds': arrayOfSelected },
+			cache: true,
+			success: function (data) {
+				$.fn.OpenModal("modal", "payments-pay", data)
+				$("#loading").hide();
+			}
+		});
 	});
 
 	$(".invoice-add-all").off("click").on("click", function (e) {
