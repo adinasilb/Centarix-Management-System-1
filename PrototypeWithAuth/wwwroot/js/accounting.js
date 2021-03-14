@@ -2,8 +2,11 @@
 	$(".form-check.accounting-select .form-check-input ").on("click", function (e) {
 		 if (!$(this).is(':checked')) 
 		 {
-                 $(this).closest("tr").removeClass("clicked-border-acc");			
+			$(this).closest("tr").attr("class", "text-center");
          }
+		else{
+			 $(this).closest("tr").addClass("clicked-border-acc");
+		}
 		var activeVendor = $(".activeVendor").val();
 		if(activeVendor == "" && $(this).is(":checked"))
 		{
@@ -29,11 +32,9 @@
 				$(this).removeAttr("checked");
 				$(this).prop("checked", false);
 				//alert("count checked: "+$(".form-check.accounting-select .form-check-input:checked").length)
+					$(this).closest("tr").attr("class", "text-center");
 				return false;
 			}
-	
-			//alert("after if -continuing with if ")
-			 $(this).closest("tr").addClass("clicked-border-acc");
 
 			if (selectedButton.hasClass("hidden")) {
 				selectedButton.removeClass("hidden");
