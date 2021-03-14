@@ -29,91 +29,100 @@
                             }
 
                         </div>
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="row">
-                                    Sum
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 pl-0">
+                        
+                            <div class="row">
+                                <div class="col-2 pl-0">
+                                    <div class="form-group">
+
+                                        <label class="control-label">Sum</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
                                             <input value="@String.Format("{0:0.00}",CostShekel)" class="form-control-plaintext border-bottom" disabled />
                                         </div>
                                     </div>
-                                    <div class="col-6 pl-0">
+                                </div>
+                                <div class="col-2 pl-0">
+                                    <div class="form-group">
+                                        <label class="control-label"></label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#36;</span>
                                             <input value="" class="form-control-plaintext border-bottom" disabled />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-4 px-3">
-                                <div class="row">
-                                    VAT
-                                </div>
-                                <div class="row">
-                                    <div class="input-group">
-                                        <span class="input-group-text">&#x20aa;</span>
-                                        <input value="@String.Format("{0:0.00}",VAT)" class="form-control-plaintext border-bottom" disabled />
+                                <div class="col-2 px-3">
+                                    <div class="form-group">
+                                        <label class="control-label">VAT</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#x20aa;</span>
+                                            <input value="@String.Format("{0:0.00}",VAT)" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="row">
-                                    Total + VAT
+                                <div class="col-2">
+                                    <div class="form-group">
+
+                                        <label class="control-label"></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">&#36;</span>
+                                            <input value="" class="form-control-plaintext border-bottom" disabled />
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6 pl-0">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label class=" control-label">Total + VAT</label>
                                         <div class="input-group">
                                             <span class="input-group-text">&#x20aa;</span>
                                             <input value="@String.Format("{0:0.00}",TotalShekel)" class="form-control-plaintext border-bottom" disabled />
                                         </div>
                                     </div>
-                                    <div class="col-6 pl-0">
-                                        <div class="input-group">
-                                            <span class="input-group-text">&#36;</span>
-                                            <input value="" class="form-control-plaintext border-bottom" disabled />
-                                        </div>
+                                </div>
+                                <div class="col-2">
+                                    <label class=" control-label"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">&#36;</span>
+                                        <input value="" class="form-control-plaintext border-bottom" disabled />
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row ">
-                            <div class="col pl-0">
-                                <div class="form-group">
-                                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="" />
-                                </div>
+                            <div class="row ">
+								<div class="col-3 pl-0">
+									<div class="form-group">
+										<label class="control-label">Reference Date</label>
+										<input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="" />
+									</div>
+								</div>
+								<div class="col-3">
+									<div class="payment-type form-group">
+										<label class="control-label">Payment Type</label>
+										<select class="mdb-select custom select-dropdown form-control-plaintext paymentType " name="paymentType">
+											<option value="">Select A Payment Type </option>
+											<option value="1">Credit Card</option>
+											<option value="2">Bank Account</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-3">
+									<div class="form-group payment-account">
+										<label class="control-label">Account ID</label>
+										<select class="mdb-select custom select-dropdown form-control-plaintext companyAccountNum mdb-select-sublist " asp-for="Payment.CompanyAccountID"></select>
+									</div>
+								</div>
+								<div class="col-3">
+									<div class="form-group payment-reference d-none">
+										<label class="control-label">Payment Reference</label>
+										<input class="form-control-plaintext border-bottom reference-1" type="text" disabled asp-for="Payment.Reference" />
+									</div>
+								</div>
                             </div>
-                            <div class="col">
-                                <div class="payment-type">
-                                    <select class="mdb-select custom select-dropdown form-control-plaintext paymentType " name="paymentType">
-                                        <option value="">Select A Payment Type </option>
-                                        <option value="1">Credit Card</option>
-                                        <option value="2">Bank Account</option>
-                                    </select>
-                                </div>
+                        
+                        <div class="row">
+                            <div class="modal-footer-mt mx-auto">
+                                @*<button class="btn inv-payments-button float-right">Paid</button>*@
+                                <input type="submit" class="  custom-button custom-button-font accounting-background-color between-button-margin" asp-action="PaymentsPayModal" value="Paid" />
+                                <button type ="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('payments-pay')">Cancel</button>
                             </div>
-                            <div class="col">
-                                <div class="form-group payment-account">
-                                    <select class="mdb-select custom select-dropdown form-control-plaintext companyAccountNum mdb-select-sublist " asp-for="Payment.CompanyAccountID"></select>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group payment-reference d-none">
-                                    <input class="form-control-plaintext border-bottom reference-1" type="text" disabled asp-for="Payment.Reference" />
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="modal-footer-mt mx-auto">
-                            @*<button class="btn inv-payments-button float-right">Paid</button>*@
-                            <input type="submit" class="  custom-button custom-button-font accounting-background-color between-button-margin" asp-action="PaymentsPayModal" value="Paid" />
-                            <button type ="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('payments-pay')">Cancel</button>
                         </div>
                     </div>
                 </div>
