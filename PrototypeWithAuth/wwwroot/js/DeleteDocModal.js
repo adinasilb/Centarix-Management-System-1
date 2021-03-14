@@ -28,10 +28,15 @@
 
 
 $.fn.RemoveColorsOfDocs = function ($foldername) {
+	console.log("in remove colors")
 	$("#" + $foldername + " i").removeClass('oper-filter');
 	$("#" + $foldername + " i").removeClass('order-inv-filter')
 	$("#" + $foldername + " i").removeClass('lab-man-filter')
 	$("#" + $foldername + " i").addClass('opac87');
 	$("#" + $foldername+"Input").removeClass("contains-file");
-	$("#" + $foldername+"Input").valid();
+	if ($("#" + $foldername+"Input").rules()) {
+				$("#" + $foldername+"Input").valid();
+		}
+
+	$("#" + $foldername +" .document-border").removeClass("hasFile")
 };

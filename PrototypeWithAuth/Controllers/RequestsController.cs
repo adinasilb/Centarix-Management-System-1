@@ -817,7 +817,6 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(notification);
                             await _context.SaveChangesAsync();
                         }
-                        throw new Exception();
                         await transaction.CommitAsync();
                     }
                     catch (Exception e)
@@ -1764,6 +1763,7 @@ namespace PrototypeWithAuth.Controllers
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Warranty = oldRequest.Warranty;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ExchangeRate = oldRequest.ExchangeRate;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Currency = oldRequest.Currency;
+                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().IncludeVAT = oldRequest.IncludeVAT;
                     var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault());
                     using (var transaction = _context.Database.BeginTransaction())
                     {
