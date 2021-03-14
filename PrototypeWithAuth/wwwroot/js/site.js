@@ -1862,34 +1862,6 @@ $(function () {
 	//		}
 	//	});
 	//});
-	$(".save-item").click(function (e) {
-		e.preventDefault();
-		console.log('save-item-click')
-		var url = "";
-		if ($(this).hasClass("side-menu")) {
-			url = $(this).parent("a").attr("href");
-		}
-		else {
-			url = $(this).attr("href")
-		}
-		url = encodeURIComponent(url)
-		$itemurl = "/Requests/ConfirmExit/?url=" + url;
-		console.log($itemurl);
-		$.fn.CloseModal("confirm-exit");
-		$.ajax({
-			async: true,
-			url: $itemurl,
-			type: 'GET',
-			cache: true,
-			success: function (data) {
-				$("#loading").hide();
-				$.fn.OpenModal('confirm-exit-modal', 'confirm-exit', data)
-				$(".modal-open-state").attr("text", "open");
-			}
-
-		});
-
-	})
 
 
 
