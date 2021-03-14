@@ -176,42 +176,36 @@
                             <div class="table-icon-div">
                                 <ul class="list-unstyled p-0 m-0">
                                     <li>
-                                        @{
-                                            switch (Model.AccountingEnum)
-                                            {
-                                                case AppUtility.SidebarEnum.NoInvoice:
-                                                    <a href="" class="invoice-add-one" request="@Request.RequestID" data-toggle="tooltip" data-placement="top"
-                                                       title="Add Invoice">
-                                                        <i class="icon-cancel_presentation-24px green-overlay px-1" style="font-size:1.6rem;"></i>
-                                                    </a>
+                                        @{ switch (Model.AccountingEnum)
+                                                                {
+                                                                    case AppUtility.SidebarEnum.NoInvoice:
+                                            <a href="" class="invoice-add-one" request="@Request.RequestID" data-toggle="tooltip" data-placement="top"
+                                               title="Add Invoice">
+                                                <i class="icon-cancel_presentation-24px green-overlay px-1" style="font-size:1.6rem;"></i>
+                                            </a> break;
+                                                                    case AppUtility.SidebarEnum.DidntArrive: @*<button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
+                        <i class="icon-local_shipping-24px green-overlay px-1" style="font-size:1.6rem;"></i>
+                    </button>*@ //popoverText = "Has the order arrived?";
+                                                                                                break;
+                                                                                            case AppUtility.SidebarEnum.PartialDelivery:
+                                                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
+                                                                        <i class="icon-remove_shopping_cart-24px green-overlay px-1" style="font-size:1.6rem;"></i>
+                                                                    </button> popoverText = "Was ther order fully delivered?";
+                                                                                                popoverNote = Request.NoteForPartialDelivery;
+                                                                                                break;
+                                                                                            case AppUtility.SidebarEnum.ForClarification:
+                                                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
+                                                                        <i class="icon-notification_didnt_arrive-24px green-overlay px-1" style="font-size:1.6rem;"></i>
+                                                                    </button> popoverText = "Has the order been clarified?";
+                                                                                                popoverNote = Request.NoteForClarifyDelivery;
+                                                                                                break;
 
-                                                    break;
-                                                case AppUtility.SidebarEnum.DidntArrive:
-                                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
-                                                        <i class="icon-local_shipping-24px green-overlay px-1" style="font-size:1.6rem;"></i>
-                                                    </button>
-                                                    popoverText = "Has the order arrived?";
-                                                    break;
-                                                case AppUtility.SidebarEnum.PartialDelivery:
-                                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
-                                                        <i class="icon-remove_shopping_cart-24px green-overlay px-1" style="font-size:1.6rem;"></i>
-                                                    </button>
-                                                    popoverText = "Was ther order fully delivered?";
-                                                    break;
-                                                case AppUtility.SidebarEnum.ForClarification:
-                                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
-                                                        <i class="icon-notification_didnt_arrive-24px green-overlay px-1" style="font-size:1.6rem;"></i>
-                                                    </button>
-                                                    popoverText = "Has the order been clarified?";
-                                                    break;
-
-                                            }
-
-                                        }
+                                                                                        } }
 
                                     </li>
                                     <div style="display:none;" id="@popoverID">
                                         <div class="container">
+                                            <div class="row border py-3 px-4 mb-3">@popoverNote</div>
                                             <div class="row small-text">
                                                 @popoverText
                                             </div>
@@ -232,7 +226,7 @@
                                                     </button>
                                                 </div>
 
-                                                @*<button class="custom-button custom-cancel float-right text cancel-request-edits">Cancel</button>*@
+                                                @<button class="custom-button custom-cancel float-right text cancel-request-edits">Cancel</button>@
                                             </div>
                                         </div>
                                     </div>
