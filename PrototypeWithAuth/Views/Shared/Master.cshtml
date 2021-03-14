@@ -245,7 +245,7 @@
     <script src="~/js/datepicker.en.js"></script>*@
 
     <script>
-      
+       
         $.fn.setUpChartDDlPlaceholders = function () {
             $("#select-options-SelectedCategoryTypes li:first").hide()
             $("#select-options-VendorCategoryTypes li:first").hide()
@@ -1097,6 +1097,7 @@
             if ($('.modal-backdrop').length > 0) {
                 backdrop = false;
             }
+            $('.' + modalClass).replaceWith('');
             $('.' + modalDivClass).html('');
             $('.' + modalDivClass).html(data);
             $("." + modalClass).modal({
