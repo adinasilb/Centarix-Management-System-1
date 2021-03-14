@@ -5,7 +5,7 @@
         },
         "Payment.PaymentReferenceDate": {
             required: true,
-            maxDate: new Date() //find out range
+            maxDate: new Date()
         },
         "Payment.CompanyAccountId": {
             selectRequired: true
