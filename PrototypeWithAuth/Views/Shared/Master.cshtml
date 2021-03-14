@@ -491,7 +491,15 @@
                             $.fn.OpenModal('modal', 'reorder-item', modal)
                             $.fn.OnOpenModalView();
                             $("#cost").trigger('change');
+
+
                             //$.fn.CheckCurrency();
+                            break;
+                        case "summary":
+                            //$.fn.OnOpenModalView();
+                            $.fn.OpenModal('modal', 'edits', modal)
+                            $.fn.LoadSummaryModal();
+                            $('.modal-content a:first').tab('show');
                             break;
                         case "create":
                             //$.fn.OnOpenModalView();
@@ -539,6 +547,7 @@
             $('.turn-edit-on-off').attr('name', 'details')
             $('.open-document-modal').attr("data-val", false);
         };
+
         $.fn.LoadEditModalDetails = function () {
             $("#cost").trigger('change');
             var category = $("#categoryDescription").val();
@@ -547,6 +556,17 @@
             console.log("in detilas of case")
             $.fn.TurnToDetails();
             $('.open-document-modal').attr("showSwitch", true);
+            $('.mdb-select').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+        }
+
+        $.fn.LoadSummaryModal = function () {
+            $("#cost").trigger('change');
+            var category = $("#categoryDescription").val();
+            console.log(category)
+            $("." + category).removeClass("d-none");
+            console.log("in detilas of case")
+            $.fn.TurnToDetails();
             $('.mdb-select').materialSelect();
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }

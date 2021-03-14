@@ -1,0 +1,58 @@
+﻿@model PrototypeWithAuth.ViewModels.AccountingGeneralViewModel
+@using PrototypeWithAuth.AppData;
+@using PrototypeWithAuth.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Index";
+
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+
+}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-8"></div>
+            <div class="col-2  accounting-form ">
+
+                @{
+                    var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
+                    int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
+                }
+
+                @Html.DropDownListFor(vm =>vm.Years, years.Select(x =>
+            new SelectListItem
+            {
+            Text = x.ToString(),
+            Value = x.ToString(),
+            Selected = (x == curYear)
+            }
+            ), htmlAttributes: new
+                 {
+                     @class = " mdb-select   custom select-dropdown form-control-plaintext reports-filters float-right ",
+                @multiple = "multiple",
+                     @name = "SelectedYear",
+                     @searchable = "Search here.."
+                 })
+            </div>
+            <div class="col-2 pr-0 accounting-form">
+                @{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
+                @Html.DropDownListFor(vm => vm.Months, months.Select(m =>
+                    new SelectListItem
+                    {
+                        Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
+                        Value = m.ToString(),
+                        //Selected = Model.Months
+                    }),
+                    htmlAttributes: new { @class = " mdb-select  custom select-dropdown form-control-plaintext float-right  ", @searchable = "Search here...", @multiple = "multiple" })
+                @*</div>
+                <div class="col-1 p-0 monthsHours">*@
+
+            </div>
+        </div>
+    </div>
+        <div class="_IndexTable">
+            @{ await Html.RenderPartialAsync("_IndexTable", Model.RequestIndexPartialViewModel);}
+        </div>
+
+        <script src="~/js/PricePopoverScript.js"></script>
