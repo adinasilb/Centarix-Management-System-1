@@ -9,10 +9,15 @@
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
     var disabledProperty = "";
+    var hideVat = "";
     if (modalType == AppUtility.RequestModalType.Edit)
     {
         markReadOnlyClass = "mark-readonly";
 
+    }
+    if(!Model.Requests[0].IncludeVAT)
+    {
+        hideVat = "d-none";
     }
 }
 
@@ -260,7 +265,7 @@ Model.UnitTypeList,
             </div>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 vat-info @hideVat">
         <div class="form-group">
             <label asp-for="Requests[0].VAT" class="control-label"></label>
             <div class="input-group">
@@ -269,7 +274,7 @@ Model.UnitTypeList,
             </div>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 vat-info @hideVat">
         <div class="form-group">
             <label class="control-label"></label>
             <div class="input-group">
@@ -279,7 +284,7 @@ Model.UnitTypeList,
             </div>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 vat-info @hideVat">
         <div class="form-group">
             <label class="control-label">Total + VAT:</label>
             <div class="input-group">
@@ -288,7 +293,7 @@ Model.UnitTypeList,
             </div>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 vat-info @hideVat">
         <div class="form-group">
             <label class="control-label"></label>
             <div class="input-group">
@@ -310,6 +315,24 @@ Model.UnitTypeList,
             <span asp-validation-for="Requests[0].Discount" />
         </div>
     </div>
+    @{
+        var includeVatChecked = "checked";
+        var noVatChecked = "";
+        if (Model.Requests[0].IncludeVAT != true)
+        {
+            includeVatChecked = "";
+            noVatChecked = "checked";
+        }
+    }
+    <div class="custom-control custom-radio mr-4 ml-4">
+        <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="IncludeVAT" name="_IncludeVAT" @includeVatChecked type="radio" value="@Model.Requests[0].IncludeVAT" />
+        <label class="radio-button custom-control-label pt-1 pl-2 include-vat-radio" for="IncludeVAT">Include VAT</label>
+    </div>
+    <div class="custom-control custom-radio mr-4 ml-4">
+        <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="NoVAT" name="_IncludeVAT" @noVatChecked type="radio" value="@(!Model.Requests[0].IncludeVAT)" />
+        <label class="radio-button custom-control-label pt-1 pl-2 include-vat-radio" for="NoVAT">No VAT</label>
+    </div>
+    <input type="hidden" asp-for="Requests[0].IncludeVAT" value="true" />
 </div>
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>

@@ -123,10 +123,12 @@ $(function () {
 			if(paymentTypeID=="2")
 			{
 				$(".payment-reference").removeClass("d-none");
+				$("#Payment_Reference").attr("disabled", false);
 			}
 			else
 			{
 				$(".payment-reference").addClass("d-none");
+				$("#Payment_Reference").attr("disabled", true);
 			}
 			//$("#" + newid).rules("add",{selectRequired : true})
 			return false;
