@@ -432,6 +432,11 @@ namespace PrototypeWithAuth.Controllers
                                     height = subLocationViewModel.LocationInstances[4].Height;
                                     width = subLocationViewModel.LocationInstances[4].Height;
                                 }
+                                else
+                                {
+                                    height = subLocationViewModel.LocationInstances[b-1].Height;
+                                    width = subLocationViewModel.LocationInstances[b-1].Height;
+                                }
                                 string attachedName = "";
                                 int amountOfParentLevels = 1;
                                 if (!first)

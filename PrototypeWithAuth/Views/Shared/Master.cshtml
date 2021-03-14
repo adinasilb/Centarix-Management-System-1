@@ -1097,6 +1097,7 @@
             if ($('.modal-backdrop').length > 0) {
                 backdrop = false;
             }
+            $('.' + modalClass).replaceWith('');
             $('.' + modalDivClass).html('');
             $('.' + modalDivClass).html(data);
             $("." + modalClass).modal({
