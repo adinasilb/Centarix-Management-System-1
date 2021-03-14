@@ -2642,7 +2642,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ProductSubcategoryID = 804,
                             ImageURL = "/images/css/CategoryImages/renovation.png",
                             ParentCategoryID = 8,
-                            ProductSubcategoryDescription = "Rennovation"
+                            ProductSubcategoryDescription = "Renovation"
                         },
                         new
                         {

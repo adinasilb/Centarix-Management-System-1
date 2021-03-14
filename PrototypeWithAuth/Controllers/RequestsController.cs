@@ -3588,7 +3588,14 @@ namespace PrototypeWithAuth.Controllers
                 return true;
             }
         }
+        [HttpGet]
+        [Authorize(Roles = "Accounting")]
+        public async Task<IActionResult> _AccountingPayments(AccountingPaymentsViewModel accountingPaymentsViewModel)
+        {
+            AccountingViewFunction(accountingPaymentsViewModel);
 
+            return PartialView(accountingPaymentsViewModel);
+        }
 
 
         /*
@@ -3599,18 +3606,14 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AccountingPayments(AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
-            
-            IQueryable<Request> requestsList = GetPaymentRequests(accountingPaymentsEnum);
-            var payNowListCount  = _context.Requests               
-               .Where(r => r.RequestStatusID != 7 && r.Paid == false && r.PaymentStatusID==3).Count();
-            TempData["PayNowCount"] = payNowListCount;
             AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
             {
                 AccountingEnum = accountingPaymentsEnum,
-                Requests = requestsList.ToLookup(r => r.Product.Vendor),
-                PayNowListNum = payNowListCount
+                PageType = AppUtility.PageTypeEnum.AccountingPayments
             };
+            AccountingViewFunction(accountingPaymentsViewModel);
 
+            TempData["PayNowCount"] = accountingPaymentsViewModel.PayNowListNum;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingPayments;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingPaymentsEnum;
@@ -3618,6 +3621,34 @@ namespace PrototypeWithAuth.Controllers
             return View(accountingPaymentsViewModel);
         }
 
+        private AccountingPaymentsViewModel AccountingViewFunction(AccountingPaymentsViewModel accountingPaymentsViewModel)
+        {
+            IQueryable<Request> requestsList = null;
+            if (accountingPaymentsViewModel.PageType == AppUtility.PageTypeEnum.AccountingPayments)
+            {
+                requestsList = GetPaymentRequests(accountingPaymentsViewModel.AccountingEnum);
+                var payNowListCount = _context.Requests
+                   .Where(r => r.RequestStatusID != 7 && r.Paid == false && r.PaymentStatusID == 3).Count();
+                accountingPaymentsViewModel.PayNowListNum = payNowListCount;
+            }
+            else
+            {
+                requestsList = GetPaymentNotificationRequests(accountingPaymentsViewModel.AccountingEnum);
+            }
+
+            accountingPaymentsViewModel.AccountingEnum = accountingPaymentsViewModel.AccountingEnum;
+            accountingPaymentsViewModel.Requests = requestsList.ToLookup(r => r.Product.Vendor);
+            
+            if (accountingPaymentsViewModel.SelectedPriceSort == null)
+            {
+                accountingPaymentsViewModel.SelectedPriceSort = new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
+            }
+            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = accountingPaymentsViewModel.SelectedPriceSort.Contains(p.ToString()) }));
+            accountingPaymentsViewModel.PriceSortEnums = priceSorts;
+
+            return accountingPaymentsViewModel;
+        }
         private IQueryable<Request> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum)
         {
             var requestsList = _context.Requests
@@ -3657,8 +3688,32 @@ namespace PrototypeWithAuth.Controllers
             }
             return requestsList;
         }
-
-        [HttpGet]
+        private IQueryable<Request> GetPaymentNotificationRequests(AppUtility.SidebarEnum accountingNotificationsEnum)
+        {
+            var requestsList = _context.Requests
+                .Include(r => r.ParentRequest)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
+                .Where(r => r.RequestStatusID != 7).AsQueryable();
+            switch (accountingNotificationsEnum)
+            {
+                case AppUtility.SidebarEnum.NoInvoice: //NOTE EXACT SAME QUERY IN ADDINVOICE MODAL
+                    requestsList = requestsList.Where(r => r.HasInvoice == false);
+                    break;
+                case AppUtility.SidebarEnum.DidntArrive:
+                    requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
+                    break;
+                case AppUtility.SidebarEnum.PartialDelivery:
+                    requestsList = requestsList.Where(r => r.IsPartial);
+                    break;
+                case AppUtility.SidebarEnum.ForClarification:
+                    requestsList = requestsList.Where(r => r.IsClarify);
+                    break;
+            }
+            return requestsList;
+        }
+            [HttpGet]
         [Authorize(Roles = " Accounting")]
         public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
         {
@@ -3705,34 +3760,25 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Accounting")]
+        public async Task<IActionResult> _AccountingNotifications(AccountingPaymentsViewModel accountingPaymentsViewModel)
+        {
+            AccountingViewFunction(accountingPaymentsViewModel);
+
+            return PartialView(accountingPaymentsViewModel);
+
+        }
+            [HttpGet]
+        [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AccountingNotifications(AppUtility.SidebarEnum accountingNotificationsEnum = AppUtility.SidebarEnum.NoInvoice)
         {
-            var requestsList = _context.Requests
-                .Include(r => r.ParentRequest)
-                .Include(r => r.Product).ThenInclude(p => p.Vendor)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
-                .Where(r=>r.RequestStatusID!=7).AsQueryable();
-            switch (accountingNotificationsEnum)
-            {
-                case AppUtility.SidebarEnum.NoInvoice: //NOTE EXACT SAME QUERY IN ADDINVOICE MODAL
-                    requestsList = requestsList.Where(r => r.HasInvoice == false);
-                    break;
-                case AppUtility.SidebarEnum.DidntArrive:
-                    requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
-                    break;
-                case AppUtility.SidebarEnum.PartialDelivery:
-                    requestsList = requestsList.Where(r => r.IsPartial);
-                    break;
-                case AppUtility.SidebarEnum.ForClarification:
-                    requestsList = requestsList.Where(r => r.IsClarify);
-                    break;
-            }
             AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
             {
                 AccountingEnum = accountingNotificationsEnum,
-                Requests = requestsList.ToList().ToLookup(r => r.Product.Vendor)
+                PageType = AppUtility.PageTypeEnum.AccountingNotifications
             };
+
+            AccountingViewFunction(accountingPaymentsViewModel);
+
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingNotifications;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingNotificationsEnum;
