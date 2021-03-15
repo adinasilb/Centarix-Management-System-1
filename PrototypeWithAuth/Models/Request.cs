@@ -26,12 +26,20 @@ namespace PrototypeWithAuth.Models
         public int? SubProjectID { get; set; }
         public SubProject SubProject { get; set; }
 
-        public int? RequestStatusID { 
+        private int _RequestStatusID { get; set; }
+        public int RequestStatusID { 
             get
             {
-                return 1;
+                if (_RequestStatusID == 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return _RequestStatusID;
+                }
             }
-            set {; } 
+            private set { _RequestStatusID = value; } 
         }
         public RequestStatus RequestStatus { get; set; }
 
