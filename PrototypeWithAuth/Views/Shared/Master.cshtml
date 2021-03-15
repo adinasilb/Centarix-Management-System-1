@@ -556,7 +556,7 @@
             console.log("in detilas of case")
             $.fn.TurnToDetails();
             $('.open-document-modal').attr("showSwitch", true);
-            $('.mdb-select').materialSelect();
+            $('.mdb-select:not(#Years, #Months)').materialSelect();
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
