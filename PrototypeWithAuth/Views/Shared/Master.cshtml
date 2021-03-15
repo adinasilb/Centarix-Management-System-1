@@ -556,7 +556,7 @@
             console.log("in detilas of case")
             $.fn.TurnToDetails();
             $('.open-document-modal').attr("showSwitch", true);
-            $('.mdb-select:not(#Years, #Months)').materialSelect();
+            $('.mdb-select').materialSelect();
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
@@ -567,7 +567,7 @@
             $("." + category).removeClass("d-none");
             console.log("in detilas of case")
             $.fn.TurnToDetails();
-            $('.mdb-select').materialSelect();
+            $('.mdb-select:not(.ignore-mdb)').materialSelect();
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
