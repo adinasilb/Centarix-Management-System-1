@@ -13,8 +13,10 @@
 
 	$(".catalog-number").each(function(){
 		var thisElement =  $(this);
+		var id = $(this).attr("id");
 			$(this).rules("add", {
 					required: true,
+					notEqualTo: [ ".catalog-number:not(#"+id+")"],
 					remote:{
 						url: '/Requests/CheckUniqueVendorAndCatalogNumber',
 						type: 'POST',
