@@ -139,6 +139,24 @@ $(function () {
 	$.validator.addMethod("selectRequired", function (value, element) {
 		return value != "" && value!=null;
 	}, 'Field is required');
+
+	$.validator.addMethod("notEqualTo",
+    function (value, element, param) {
+        var notEqual = true;
+        value = $.trim(value);
+        for (i = 0; i < param.length; i++) {
+
+            var checkElement = $(param[i]);
+            var success = !$.validator.methods.equalTo.call(this, value, element, checkElement);
+            // console.log('success', success);
+            if(!success)
+                notEqual = success;
+        }
+
+        return this.optional(element) || notEqual;
+    },
+    "Please enter a diferent value."
+);
 	//$.validator.addMethod("atleastOneHoursField", function (value, element) {
 	//	console.log($("#NewEmployeeWorkScope").val())
 	//	console.log($("#NewEmployee_SalariedEmployee_HoursPerDay").val())
