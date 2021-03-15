@@ -2829,8 +2829,11 @@ namespace PrototypeWithAuth.Controllers
                     hasEmptyShelves = true;
                 }
             }
-
-            if (parentLocationInstance.IsEmptyShelf == true || (secondChildLi != null && !Is80Freezer) || (Is80Freezer && !hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
+            if (parentLocationInstance.LocationTypeID == 500)
+            {
+                receivedModalVisualViewModel.DeleteTable = true;
+            }
+                if (parentLocationInstance.IsEmptyShelf == true || (secondChildLi != null && !Is80Freezer) || (Is80Freezer && !hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }

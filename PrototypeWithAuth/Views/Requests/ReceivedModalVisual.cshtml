@@ -1,7 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.ReceivedModalVisualViewModel
-<script src="~/js/receivedmodal.js"></script>
+
 @if (Model.DeleteTable == false)
 {
+    <script src="~/js/receivedmodal.js"></script>
     var edittable = "";
     if (!Model.IsEditModalTable)
     {
@@ -28,165 +29,165 @@
         @Html.HiddenFor(vm => vm.ParentLocationInstance.LocationInstanceID)
         @for (int X = 0; X < Model.ParentLocationInstance.Height; X++)
         {
-        <tr class="p-0 m-0">
-            @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
-            {
-                z++;
-                if (!Model.IsEditModalTable)
+            <tr class="p-0 m-0">
+                @for (int y = 0; y < Model.ParentLocationInstance.Width; y++)
                 {
-                    @if (Model.ChildrenLocationInstances.ToList().Count() > z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
+                    z++;
+                    if (!Model.IsEditModalTable)
                     {
-
-
-                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID)
-                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID)
-                        @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place)
-                        @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
-                        <input type="hidden" asp-for="ChildrenLocationInstances[z].LocationInstanceName" class="LocationInstanceName" />
-
-                        var link = "";
-                        var classes = "css-checkbox " + Model.ChildrenLocationInstances[z].LocationInstanceID;
-                        var outerClass = "visual-shelf";
-                        var iconClass = "icon-add_circle_outline-24px1 add-location";
-
-                        var liID = Model.ChildrenLocationInstances[z].LocationInstanceID;
-                        if (Model.ChildrenLocationInstances[z].LocationTypeID == 103 || Model.ChildrenLocationInstances[z].LocationTypeID == 204)
-                        {
-                            outerClass = "visual-box " + is12X12Class;
-                        }
-                        var labelClass = "tiny-label-font-size m-0";
-
-                        if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && Model.ChildrenLocationInstances[z].IsEmptyShelf)
-                        {
-                            classes += " open-new-visual";
-                            <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
-                                <div>
-                                    @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID })
-                                    <div class="row-1"><i class="@iconClass"></i></div>
-                                    <div class="row-2 text-left">
-                                        @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
-                                    </div>
-                                </div>
-                            </td>
-                        }
-                        else if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && !Model.ChildrenLocationInstances[z].IsEmptyShelf)
+                        @if (Model.ChildrenLocationInstances.ToList().Count() > z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                         {
 
-                            classes += " open-new-visual";
 
-                            <td class="@outerClass not-clickable" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
-                                <div>
-                                    @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID, @disabled = "disabled" })
-                                    <div class="row-1">
-                                        <i class=@*"@iconClass"*@></i>
-                                    </div>
-                                    <div class="row-2 text-left">
-                                        @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
-                                    </div>
-                                </div>
-                            </td>
-                        }
-                        else if (Model.ChildrenLocationInstances[z].IsFull)
-                        {
-                            var backgroundClass = " order-inv-filter ";
+                            @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID)
+                            @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID)
+                            @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place)
+                            @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
+                            <input type="hidden" asp-for="ChildrenLocationInstances[z].LocationInstanceName" class="LocationInstanceName" />
 
-                            <td class="@outerClass location-selected" style="padding:0px;  ">
-                                <div class="">
-                                    @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @liid = liID, @class = @classes })
+                            var link = "";
+                            var classes = "css-checkbox " + Model.ChildrenLocationInstances[z].LocationInstanceID;
+                            var outerClass = "visual-shelf";
+                            var iconClass = "icon-add_circle_outline-24px1 add-location";
 
-
-                                    <div class="row-1">
-                                        @*<i class="@iconClass"></i>*@
-                                    </div>
-
-                                    <div class="row-2 text-left">
-                                        @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
-                                    </div>
-                                </div>
-                            </td>
-                        }
-                        else
-                        {
-                            <td class="@outerClass" style="padding:0px;">
-                                <div>
-                                    @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @liid = liID, @class = @classes })
-                                    <div class="row-1">
-                                        <i class="@iconClass"></i>
-                                    </div>
-                                    <div class="row-2 text-left">
-                                        @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass })
-                                    </div>
-                                </div>
-                            </td>
-                        }
-
-                    }
-                }
-                else
-                {
-                    //this is for the edit modal view coloring:
-                    if (Model.RequestChildrenLocationInstances.ToList().Count > z)
-                    {
-                        @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceID)
-                        @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceParentID)
-                        @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.Place)
-                        @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
-                        <input type="hidden" asp-for="RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceName" class="LocationInstanceName" />
-
-                        var link = "";
-                        var classes = "css-checkbox " + Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceID;
-                        var outerClass = "visual-shelf";
-                        var iconClass = "icon-add_circle_outline-24px1 add-location";
-
-                        var liID = Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceID;
-                        if (Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 103 || Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 204)
-                        {
-                            outerClass = "visual-box " + is12X12Class;
-                        }
-                        var labelClass = "tiny-label-font-size m-0";
-
-                        if (Model.RequestChildrenLocationInstances[z].LocationInstance.IsFull || Model.RequestChildrenLocationInstances[z].LocationInstance.ContainsItems)
-                        {
-                            var backgroundColor = " order-inv-filter ";
-                            if (!Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            var liID = Model.ChildrenLocationInstances[z].LocationInstanceID;
+                            if (Model.ChildrenLocationInstances[z].LocationTypeID == 103 || Model.ChildrenLocationInstances[z].LocationTypeID == 204)
                             {
-                                backgroundColor = " graduated-table-filter ";
+                                outerClass = "visual-box " + is12X12Class;
                             }
-                            <td class="@outerClass  not-clickable location-selected @backgroundColor" style="padding:0px;  ">
-                                <div class="">
-                                    @Html.CheckBoxFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @liid = liID, @class = @classes })
+                            var labelClass = "tiny-label-font-size m-0";
 
-
-                                    <div class="row-1">
-                                        @*<i class="@iconClass"></i>*@
+                            if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && Model.ChildrenLocationInstances[z].IsEmptyShelf)
+                            {
+                                classes += " open-new-visual";
+                                <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
+                                    <div>
+                                        @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID })
+                                        <div class="row-1"><i class="@iconClass"></i></div>
+                                        <div class="row-2 text-left">
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                        </div>
                                     </div>
+                                </td>
+                            }
+                            else if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && !Model.ChildrenLocationInstances[z].IsEmptyShelf)
+                            {
 
-                                    <div class="row-2 text-left">
-                                        @Html.LabelFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, Model.RequestChildrenLocationInstances[z].LocationInstance.Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                classes += " open-new-visual";
+
+                                <td class="@outerClass not-clickable" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
+                                    <div>
+                                        @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID, @disabled = "disabled" })
+                                        <div class="row-1">
+                                            <i class=@*"@iconClass"*@></i>
+                                        </div>
+                                        <div class="row-2 text-left">
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
+                                </td>
+                            }
+                            else if (Model.ChildrenLocationInstances[z].IsFull)
+                            {
+                                var backgroundClass = " order-inv-filter ";
+
+                                <td class="@outerClass location-selected" style="padding:0px;  ">
+                                    <div class="">
+                                        @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @liid = liID, @class = @classes })
+
+
+                                        <div class="row-1">
+                                            @*<i class="@iconClass"></i>*@
+                                        </div>
+
+                                        <div class="row-2 text-left">
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                        </div>
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="@outerClass" style="padding:0px;">
+                                    <div>
+                                        @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @liid = liID, @class = @classes })
+                                        <div class="row-1">
+                                            <i class="@iconClass"></i>
+                                        </div>
+                                        <div class="row-2 text-left">
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass })
+                                        </div>
+                                    </div>
+                                </td>
+                            }
+
                         }
-                        else
-                        {
-                            <td class="@outerClass not-clickable" style="padding:0px;">
-                                <div>
-                                    @Html.CheckBoxFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, htmlAttributes: new { @checked = false, @liid = liID, @class = @classes })
-                                    <div class="row-1">
-                                        <i class="@iconClass"></i>
-                                    </div>
-                                    <div class="row-2 text-left">
-                                        @Html.LabelFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, Model.RequestChildrenLocationInstances[z].LocationInstance.Place + " ", htmlAttributes: new { @class = labelClass })
-                                    </div>
-                                </div>
-                            </td>
-                        }
-
                     }
-                }
+                    else
+                    {
+                        //this is for the edit modal view coloring:
+                        if (Model.RequestChildrenLocationInstances.ToList().Count > z)
+                        {
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceID)
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceParentID)
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.Place)
+                            @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
+                            <input type="hidden" asp-for="RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceName" class="LocationInstanceName" />
 
-            }
-        </tr>
+                            var link = "";
+                            var classes = "css-checkbox " + Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceID;
+                            var outerClass = "visual-shelf";
+                            var iconClass = "icon-add_circle_outline-24px1 add-location";
+
+                            var liID = Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceID;
+                            if (Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 103 || Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 204)
+                            {
+                                outerClass = "visual-box " + is12X12Class;
+                            }
+                            var labelClass = "tiny-label-font-size m-0";
+
+                            if (Model.RequestChildrenLocationInstances[z].LocationInstance.IsFull || Model.RequestChildrenLocationInstances[z].LocationInstance.ContainsItems)
+                            {
+                                var backgroundColor = " order-inv-filter ";
+                                if (!Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                                {
+                                    backgroundColor = " graduated-table-filter ";
+                                }
+                                <td class="@outerClass  not-clickable location-selected @backgroundColor" style="padding:0px;  ">
+                                    <div class="">
+                                        @Html.CheckBoxFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @liid = liID, @class = @classes })
+
+
+                                        <div class="row-1">
+                                            @*<i class="@iconClass"></i>*@
+                                        </div>
+
+                                        <div class="row-2 text-left">
+                                            @Html.LabelFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, Model.RequestChildrenLocationInstances[z].LocationInstance.Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                        </div>
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="@outerClass not-clickable" style="padding:0px;">
+                                    <div>
+                                        @Html.CheckBoxFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, htmlAttributes: new { @checked = false, @liid = liID, @class = @classes })
+                                        <div class="row-1">
+                                            <i class="@iconClass"></i>
+                                        </div>
+                                        <div class="row-2 text-left">
+                                            @Html.LabelFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, Model.RequestChildrenLocationInstances[z].LocationInstance.Place + " ", htmlAttributes: new { @class = labelClass })
+                                        </div>
+                                    </div>
+                                </td>
+                            }
+
+                        }
+                    }
+
+                }
+            </tr>
         }
     </table>
 }

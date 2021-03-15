@@ -119,7 +119,8 @@ namespace PrototypeWithAuth.AppData
                         {
                             {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
                             { "SectionType", AppUtility.MenuItems.Operations },
-                            { "SidebarType", AppUtility.SidebarEnum.List }
+                            { "SidebarType", AppUtility.SidebarEnum.List },
+                            { "RequestStatusID", 2 }
                         },
                         Classes = AllClasses,
                         ID = "request-link"
@@ -1050,7 +1051,8 @@ namespace PrototypeWithAuth.AppData
                         {
                             {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
                             { "SectionType", AppUtility.MenuItems.Operations },
-                            { "SidebarType", AppUtility.SidebarEnum.List }
+                            { "SidebarType", AppUtility.SidebarEnum.List },
+                            { "RequestStatusID", 2 }
                         },
                 Classes = CurrentClasses,
                 IconName = "icon-format_list_bulleted-24px-01"
