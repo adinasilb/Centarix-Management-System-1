@@ -354,7 +354,7 @@
                 }
                 if (jqxhr.status == 500) {
                     if ($(".error-msg").length > 0) {
-                        if (jqxhr.responseText.indexOf('<script') == -1)
+                        if (jqxhr.responseText.indexOf('<div') == -1)
                         {
                             $(".error-msg").html(jqxhr.responseText);
                         }

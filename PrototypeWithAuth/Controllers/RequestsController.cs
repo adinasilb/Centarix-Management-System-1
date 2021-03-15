@@ -4552,7 +4552,6 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                throw new Exception();
                 var requests = new List<Request>();
                 var isRequests = true;
                 var RequestNum = 1;
