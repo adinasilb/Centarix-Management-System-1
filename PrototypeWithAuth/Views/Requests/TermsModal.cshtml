@@ -29,7 +29,7 @@
 <div class="modal modal-view termsModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
     <div class="modal-dialog-centered modal-xl mx-auto on-form-modal @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
-            <button type="button" class="close modal-close-padding modal-close-style" onclick ="$.fn.CloseModal('terms');" @*data-dismiss="modal"*@ aria-label="Close">
+            <button type="button" class="close modal-close-padding modal-close-style" onclick="$.fn.CloseModal('terms');" @*data-dismiss="modal"*@ aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="modal-padding termsModalForm">
@@ -59,7 +59,7 @@
                                     "Select",
                                     new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @id = "Terms", @searchable = "default value" }
                                 )
-                                <span asp-validation-for="SelectedTerm" class="text-danger-centarix"></span>
+                  
                             </div>
 
                             <div class="col-3">
@@ -67,10 +67,24 @@
                                 <input type="text" asp-for="ParentRequest.Shipping" class="form-control-plaintext border-bottom" />
                                 <span asp-validation-for="ParentRequest.Shipping" class="text-danger-centarix"></span>
                             </div>
-
-                            <div class="col-3 d-none installments-amount-block">
+                            @{var dNone = "d-none";
+                                var disabled = true;}
+                            @if (Model.SelectedTerm == 5)
+                            {
+                                dNone = "";
+                                disabled = false;
+                            }
+                            <div class="col-3 @dNone installments-amount-block">
                                 <label asp-for="Installments" class="control-label"></label>
-                                <input type="text" asp-for="Installments" class="form-control-plaintext border-bottom" />
+                                @if (disabled)
+                                {
+                                    <input type="text" asp-for="Installments" disabled class="form-control-plaintext border-bottom" />
+                                }
+                                else
+                                {
+                                    <input type="text" asp-for="Installments" class="form-control-plaintext border-bottom" />
+                                }
+
                                 <span asp-validation-for="Installments" class="text-danger-centarix"></span>
                             </div>
 
@@ -90,7 +104,10 @@
         </div>
     </div>
 </div>
-<script>$(".terms .mdb-select").materialSelect()</script>
+
+<script>
+    $(".terms .mdb-select").materialSelect()</script>
+
 <script>
     $(".submitTerms").off('click').on("click", function (e) {
         e.preventDefault();
@@ -120,10 +137,9 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                  
-                    if ($("#SectionType").val()=="Operations")
-                    {
-                        window.location.href ="/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";
+
+                    if ($("#SectionType").val() == "Operations") {
+                        window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";
                     }
                     else if ($("#RequestIndexObject_OrderType").val() == "AlreadyPurchased")
                     {

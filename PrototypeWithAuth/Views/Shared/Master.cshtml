@@ -615,7 +615,7 @@
             e.stopPropagation();
             $("#loading").show();
 
-            var $itemurl = "TermsModal/?vendorID=" + $(this).val() + "&"+$.fn.getRequestIndexString();
+            var $itemurl = "/Requests/TermsModal/?vendorID=" + $(this).val() + "&"+$.fn.getRequestIndexString();
             console.log("itemurl: " + $itemurl);
             $.fn.CallPageRequest($itemurl, "termsmodal");
             return false;
