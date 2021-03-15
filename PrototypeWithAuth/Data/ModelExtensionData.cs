@@ -47,7 +47,22 @@ namespace PrototypeWithAuth.Data
                 }
             );
 
-            modelBuilder.Entity<CategoryType>().HasData(
+            modelBuilder.Entity<PaymentType>().HasData(
+               new PaymentType
+               {
+                   PaymentTypeID = 1,
+                   PaymentTypeDescription = "Credit Card"
+
+               },
+               new PaymentType
+               {
+                   PaymentTypeID = 2,
+                   PaymentTypeDescription = "Bank Transfer"
+               }
+           );
+
+
+           modelBuilder.Entity<CategoryType>().HasData(
                 new CategoryType
                 {
                     CategoryTypeID = 1,
