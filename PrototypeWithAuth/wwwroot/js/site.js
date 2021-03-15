@@ -348,12 +348,7 @@ $(function () {
 		e.stopPropagation();
 		console.log("clicked open doc modal");
 		$(".open-document-modal").removeClass("active-document-modal");
-		var section = "";
-		if ($(".open-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
-			section = "Operations";
-		} else if ($(".open-document-modal").hasClass('labManagement') || $(".open-document-modal").hasClass('LabManagement')) {
-			section = "LabManagement";
-		}
+		var section = $("#masterSectionType").val();
 		$(this).addClass("active-document-modal");
 		var enumString = $(this).data("string");
 		console.log("enumString: " + enumString);
