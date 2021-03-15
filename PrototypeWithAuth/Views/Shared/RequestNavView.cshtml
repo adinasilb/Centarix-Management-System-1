@@ -354,7 +354,10 @@
                 }
                 if (jqxhr.status == 500) {
                     if ($(".error-msg").length > 0) {
-                        $(".error-msg").html(jqxhr.responseText);
+                        if (jqxhr.responseText.indexOf('<script') == -1)
+                        {
+                            $(".error-msg").html(jqxhr.responseText);
+                        }
                     }
                     else if (jqxhr.responseText != null) {
                         alert("Error 500: " + jqxhr.responseText);
@@ -415,23 +418,7 @@
             $("#user-budget-tab").prop("disabled", true);
             $("#user-images-tab").prop("disabled", true);
             $("#user-more-tab").prop("disabled", true);
-            var $itemurl = "";
-            if ($("#tdprconfirmemail").val()) {
-                console.log("tdprconfirmemail");
-                $("#tdprconfirmemail").hide();
-                $itemurl = "/Requests/ConfirmEmailModal/?" + $.fn.getRequestIndexString();
-                $("#loading").show();
-                $.fn.CallPage($itemurl, "confirmemail");
-            }
 
-            if ($("#tdterms").val()) {
-                $("#tdterms").hide();
-                //alert("in tdterms.val()");
-                $itemurl = "/Requests/TermsModal/?" + $.fn.getRequestIndexString();
-                console.log("terms url " + $itemurl)
-                //$("#loading").show();
-                $.fn.CallPage($itemurl, "terms");
-            }
 
            
             $.fn.GetNotifcationCount();

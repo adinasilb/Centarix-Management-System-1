@@ -202,17 +202,6 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
     $(viewClass).html(data);
     $("#loading").hide();
     return true;
-},
-    error: function (jqxhr) {
-      
-        $("#loading").hide();
-
-        if (jqxhr.status == 500) {
-            $.fn.OpenModal('modal', modalClass, jqxhr.responseText)
-               
-           }
-
-        return true;
 }
     });
 
