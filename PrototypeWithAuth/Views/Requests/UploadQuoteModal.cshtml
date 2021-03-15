@@ -67,11 +67,13 @@
                     <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
                     @{
                         var filterClass = "opac87";
+                        var hasFileClass = "";
                         var containsFile = "";
                         if (Model.FileStrings != null && Model.FileStrings.Count > 0)
                         {
                             filterClass = "order-inv-filter";
                             containsFile = "contains-file";
+                            hasFileClass = "hasFile";
                         }
                     }
 
@@ -80,7 +82,7 @@
                             <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
                             <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" name="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false">
 
-                                <div class="card document-border">
+                                <div class="card document-border @hasFileClass">
                                     <div class="document-card text-center">
                                         <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                                     </div>
