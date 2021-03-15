@@ -4552,6 +4552,7 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
+                throw new Exception();
                 var requests = new List<Request>();
                 var isRequests = true;
                 var RequestNum = 1;
@@ -4714,13 +4715,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 termsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
-                termsViewModel.TermsList = new List<SelectListItem>()
-                {
-                    new SelectListItem{ Text="Pay Now", Value=AppUtility.TermsModalEnum.PayNow.ToString()},
-                    new SelectListItem{ Text="+30", Value=AppUtility.TermsModalEnum.PayWithInMonth.ToString()},
-                    new SelectListItem{ Text="Installments", Value=AppUtility.TermsModalEnum.Installments.ToString()},
-                    new SelectListItem{ Text="Paid", Value=AppUtility.TermsModalEnum.Paid.ToString()}
-                };
+                var termsList = new List<SelectListItem>() { };
+                await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }));
+                termsViewModel.TermsList = termsList;
                 return PartialView("TermsModal", termsViewModel);
             }
         }
