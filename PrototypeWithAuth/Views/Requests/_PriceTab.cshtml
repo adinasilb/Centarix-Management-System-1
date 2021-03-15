@@ -15,7 +15,7 @@
         markReadOnlyClass = "mark-readonly";
 
     }
-    if(!Model.Requests[0].IncludeVAT)
+    if (!Model.Requests[0].IncludeVAT)
     {
         hideVat = "d-none";
     }
@@ -324,24 +324,91 @@ Model.UnitTypeList,
             noVatChecked = "checked";
         }
     }
-    <div class="custom-control custom-radio mr-4 ml-4">
-        <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="IncludeVAT" name="_IncludeVAT" @includeVatChecked type="radio" value="@Model.Requests[0].IncludeVAT" />
-        <label class="radio-button custom-control-label pt-1 pl-2 include-vat-radio" for="IncludeVAT">Include VAT</label>
-    </div>
+<div class="custom-control custom-radio mr-4 ml-4">
+    <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="IncludeVAT" name="_IncludeVAT" @includeVatChecked type="radio" value="@Model.Requests[0].IncludeVAT" />
+    <label class="radio-button custom-control-label pt-1 pl-2 include-vat-radio @markReadOnlyClass" for="IncludeVAT">Include VAT</label>
+</div>
     <div class="custom-control custom-radio mr-4 ml-4">
         <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="NoVAT" name="_IncludeVAT" @noVatChecked type="radio" value="@(!Model.Requests[0].IncludeVAT)" />
-        <label class="radio-button custom-control-label pt-1 pl-2 include-vat-radio" for="NoVAT">No VAT</label>
+        <label class="radio-button custom-control-label pt-1 pl-2 include-vat-radio @markReadOnlyClass" for="NoVAT">No VAT</label>
     </div>
+
     <input type="hidden" asp-for="Requests[0].IncludeVAT" value="true" />
-</div>
-@if(Model.Requests[0].RequestStatusID!=1 && Model.Requests[0].RequestStatusID != 6)
-{
-    <div class="row">
-        <div class="col-4">
-            <input type="checkbox" asp-for="Requests[0].Paid" class="form-check-input filled-in " readonly />
-            <label class="form-check-label" asp-for="Requests[0].Paid"></label>
-        </div>
+    <div class="col-3">
+        <label class="control-label" asp-for="Requests[0].PaymentStatus.PaymentStatusDescription">Terms</label>
+        <input asp-for="Requests[0].PaymentStatus.PaymentStatusDescription" class="form-control-plaintext border-bottom" disabled />
     </div>
+</div>
+@if (Model.Requests[0].RequestStatusID != 1 && Model.Requests[0].RequestStatusID != 6)
+{
+<div class="row">
+
+    <div class="col-2">
+        <input type="checkbox" asp-for="Requests[0].Paid" class="form-check-input filled-in " disabled />
+        <label class="form-check-label" asp-for="Requests[0].Paid"></label>
+        <input type="hidden" asp-for="Requests[0].Paid" />
+    </div>
+    <div class="col-2">
+        <input type="checkbox" asp-for="Requests[0].IsPartial" class="form-check-input filled-in " disabled />
+        <label class="form-check-label" asp-for="Requests[0].IsPartial">Partial</label>
+        <input type="hidden" asp-for="Requests[0].IsPartial" />
+    </div>
+    <div class="col-2">
+        <input type="checkbox" asp-for="Requests[0].IsClarify" class="form-check-input filled-in " disabled />
+        <label class="form-check-label" asp-for="Requests[0].IsClarify">Clarify</label>
+        <input type="hidden" asp-for="Requests[0].IsClarify" />
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-2">
+        <label class="control-label" asp-for="Requests[0].Installments">Payments</label>
+        <input asp-for="Requests[0].Installments" class="form-control-plaintext border-bottom " readonly />
+    </div>
+    @{var payments = Model.Requests[0].Payments.Where(p => p.IsPaid).OrderBy(p => p.PaymentDate).ToList(); }
+    @if (payments.Count() > 0)
+    {
+<div class="container col-10">
+    @for (int i = 0; i < payments.Count(); i++)
+    {
+
+        <div class="row">
+            <div class="col-3 pl-0">
+                <div class="form-group">
+                    <label class="control-label">Date</label>
+                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="@payments[i].PaymentReferenceDate" disabled />
+                </div>
+            </div>
+
+            <div class="col-3">
+                <div class="payment-type form-group">
+                    <label class="control-label">Payment Type</label>
+                    <input class="form-control-plaintext border-bottom" value="@payments[i].CompanyAccount.PaymentType.PaymentTypeDescription" disabled />
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group payment-account">
+                    <label class="control-label">Account ID</label>
+                    <input class="form-control-plaintext border-bottom reference-1" disabled vaule="@payments[i].CompanyAccount.CompanyAccountID" />
+                </div>
+            </div>
+            @if (payments[i].CompanyAccount.PaymentTypeID == 2)
+            {
+                <div class="col-3">
+                    <div class="form-group payment-reference">
+                        <label class="control-label">Payment Reference</label>
+                        <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].Reference" />
+                    </div>
+                </div>
+            }
+        </div>
+
+    }
+</div>
+    }
+
+        </div>
+
 }
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
