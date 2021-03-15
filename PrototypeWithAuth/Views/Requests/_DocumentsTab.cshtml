@@ -11,12 +11,24 @@
     var urlAction = Url.Action("DocumentsModal", "Requests");
     var fontSize = "2rem";
 
-    var color = "order-inv-filter";
-
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    var color = "";
+    switch (Model.SectionType)
     {
-
-        color = "oper-filter";
+        case AppUtility.MenuItems.Operations:
+            color = "oper-filter";
+            break;
+        case AppUtility.MenuItems.LabManagement:
+            color = "lab-man-filter";
+            break;
+        case AppUtility.MenuItems.Accounting:
+            color = "accounting-filter";
+            break;
+        case AppUtility.MenuItems.Requests:
+            color = "order-inv-filter";
+            break;
+        case AppUtility.MenuItems.Users:
+            color = "users-filter";
+            break;
     }
 }
 <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
@@ -32,7 +44,7 @@
                 var hasFileClass = "";
                 if (folder.FileStrings != null && folder.FileStrings.Count > 0)
                 {
-                    filterClass = "order-inv-filter";
+                    filterClass = color;
                     hasFileClass = "hasFile";
                 }
             }
@@ -63,7 +75,7 @@
                 var filterClass = "opac87";
                 if (folder.FileStrings != null && folder.FileStrings.Count > 0)
                 {
-                    filterClass = "order-inv-filter";
+                    filterClass = color;
                 }
             }
             <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Requests[0].RequestID" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false">
