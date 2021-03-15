@@ -1,7 +1,7 @@
 ﻿
 $('.termsModalForm').validate({
 	rules: {
-		Terms: "selectRequired"
+		"SelectedTerm": "selectRequired"
 
 	}
 

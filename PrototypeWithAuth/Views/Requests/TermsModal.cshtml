@@ -141,6 +141,10 @@
                     if ($("#SectionType").val() == "Operations") {
                         window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";
                     }
+                    else if ($("#RequestIndexObject_OrderType").val() == "AlreadyPurchased")
+                    {
+                        window.location.href = "/Requests/Index?PageType=RequestRequest&SectionType=Requests&RequestStatusID=2&SidebarType=List";
+                    }
                     else {
                         $.fn.OpenModal('emailModal', 'confirm-email', data);
                     }
