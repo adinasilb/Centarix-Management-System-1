@@ -258,7 +258,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             </div>
         </div>
         <div class="row">
-            @if (request.HasInvoice != null)
+            @if (request.HasInvoice)
             {
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].Invoice.InvoiceNumber" class="control-label"></label>
