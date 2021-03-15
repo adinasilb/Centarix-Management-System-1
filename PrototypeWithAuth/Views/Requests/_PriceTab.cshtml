@@ -334,6 +334,15 @@ Model.UnitTypeList,
     </div>
     <input type="hidden" asp-for="Requests[0].IncludeVAT" value="true" />
 </div>
+@if(Model.Requests[0].RequestStatusID!=1 && Model.Requests[0].RequestStatusID != 6)
+{
+    <div class="row">
+        <div class="col-4">
+            <input type="checkbox" asp-for="Requests[0].Paid" class="form-check-input filled-in " readonly />
+            <label class="form-check-label" asp-for="Requests[0].Paid"></label>
+        </div>
+    </div>
+}
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/SubUnit.js"></script>

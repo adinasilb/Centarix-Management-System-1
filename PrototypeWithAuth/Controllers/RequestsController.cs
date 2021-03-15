@@ -986,8 +986,12 @@ namespace PrototypeWithAuth.Controllers
                     if (!request.Ignore)
                     {
                         request.ApplicationUserCreatorID = currentUser.Id;
-                        request.Product.VendorID = vendor.VendorID;
-                        request.Product.Vendor = vendor;
+                        if(!requestItemViewModel.IsProprietary)
+                        {
+                            request.Product.VendorID = vendor.VendorID;
+                            request.Product.Vendor = vendor;
+                        }
+               
                         request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
                         request.CreationDate = DateTime.Now;
                         var isInBudget = false;
