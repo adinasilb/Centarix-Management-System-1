@@ -45,6 +45,7 @@
                 @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
                 @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
                 @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+                @Html.HiddenFor(model => model.RequestIndexObject.OrderType)
                 <div>
                     <div class="modal-header modal-header-padding">
                         <div class="container-fluid">
@@ -142,17 +143,22 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-                    $(".save-item").removeClass("save-item").off('click')
-                    if ($('#masterPageType').val() == "RequestRequest") {
-                        $(".render-body").html(data)
-                    }
-                    else if ($('#masterPageType').val() == "RequestCart") {
-                        $(".render-body").html(data)
+                    if ($("#RequestIndexObject_OrderType").val() == "SaveOperations" || $("#RequestIndexObject_OrderType").val() == "AlreadyPurchased") {
+                        $.fn.OpenModal("termsModal", "terms", data);
                     }
                     else {
-                        $("._IndexTableData").html(data);
+                        $(".save-item").removeClass("save-item").off('click')
+                        if ($('#masterPageType').val() == "RequestRequest") {
+                            $(".render-body").html(data)
+                        }
+                        else if ($('#masterPageType').val() == "RequestCart") {
+                            $(".render-body").html(data)
+                        }
+                        else {
+                            $("._IndexTableData").html(data);
+                        }
+                        $.fn.CloseModal("step-1");
                     }
-                    $.fn.CloseModal("step-1");
                     $("#loading").hide();
                     return true;
                 },

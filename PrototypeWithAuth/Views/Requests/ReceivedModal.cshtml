@@ -26,7 +26,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$('.received-item').html(''); $('.modal-backdrop').remove();">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding @form receivedModalForm">
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%;" class="modal-padding @form receivedModalForm">
                 @*the following hidden fors are here so i can do a request.save in for the info that is being given here.
                     in the future might want to change it to loading the request from this request id and then adding in the values
                     given here (done in the controller)*@

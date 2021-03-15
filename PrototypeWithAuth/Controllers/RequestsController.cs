@@ -1102,7 +1102,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.OrderTypeEnum.AddToCart:
                     return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.SaveOperations:
-                    return RedirectToAction("TermsModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
+                    return RedirectToAction("UploadOrderModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
                 default:
                     if(requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
                     {
@@ -1111,7 +1111,7 @@ namespace PrototypeWithAuth.Controllers
                             PageType = requestItemViewModel.PageType,
                             SectionType = requestItemViewModel.SectionType,
                             SidebarType = AppUtility.SidebarEnum.List,
-                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID ?? 1,
+                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
                         });
                     }
                     return RedirectToAction("Index", "Requests", new
@@ -1119,7 +1119,7 @@ namespace PrototypeWithAuth.Controllers
                             PageType = requestItemViewModel.PageType,
                             SectionType = requestItemViewModel.SectionType,
                             SidebarType = AppUtility.SidebarEnum.List,
-                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID ?? 1,
+                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
                     });
 
             }
@@ -2736,7 +2736,7 @@ namespace PrototypeWithAuth.Controllers
                 locationInstancesSelected = new List<LocationInstance>(),
                 //ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync(),
                 RequestIndexObject = requestIndexObject,
-                PageRequestStatusID = request.RequestStatusID ?? 0
+                PageRequestStatusID = request.RequestStatusID
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
@@ -4161,35 +4161,42 @@ namespace PrototypeWithAuth.Controllers
                 var request = HttpContext.Session.GetObject<Request>(requestName);
                 request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
                 request.ParentQuote = null;
-                using (var transaction = _context.Database.BeginTransaction())
+                if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType != AppUtility.OrderTypeEnum.AlreadyPurchased && uploadQuoteOrderViewModel.RequestIndexObject.OrderType != AppUtility.OrderTypeEnum.SaveOperations)
                 {
-                    try
+                    using (var transaction = _context.Database.BeginTransaction())
                     {
-
-                        _context.Update(request);
-                        await _context.SaveChangesAsync();
-                        await SaveCommentsFromSession(request);
-                        //rename temp folder to the request id
-                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                        string requestFolderFrom = Path.Combine(uploadFolder, "0");
-                        string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-                        if (Directory.Exists(requestFolderTo))
+                        try
                         {
-                            Directory.Delete(requestFolderTo);
-                        }
-                        Directory.Move(requestFolderFrom, requestFolderTo);
+                            _context.Update(request);
+                            await _context.SaveChangesAsync();
+                            await SaveCommentsFromSession(request);
+                            //rename temp folder to the request id
+                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                            string requestFolderFrom = Path.Combine(uploadFolder, "0");
+                            string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
+                            if (Directory.Exists(requestFolderTo))
+                            {
+                                Directory.Delete(requestFolderTo);
+                            }
+                            Directory.Move(requestFolderFrom, requestFolderTo);
 
-                        await transaction.CommitAsync();
-                        base.RemoveRequestSessions();
-                    }
-                    catch (Exception ex)
-                    {
-                        await transaction.RollbackAsync();
-                        throw ex;
+                            await transaction.CommitAsync();
+                            base.RemoveRequestSessions();
+                        }
+                        catch (Exception ex)
+                        {
+                            await transaction.RollbackAsync();
+                            throw ex;
+                        }
                     }
                 }
+                
                 var action = "Index";
-                if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
+                {
+                    action = "TermsModal";
+                }
+                else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                 {
                     action = "_IndexTableWithCounts";
                 }
@@ -4548,7 +4555,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         foreach (var req in requests)
                         {
-                            if (req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
+                            if (req.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
                             {
                                 SaveUsingSessions = false;
                             }

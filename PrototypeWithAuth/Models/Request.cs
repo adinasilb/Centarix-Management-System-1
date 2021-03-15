@@ -26,7 +26,21 @@ namespace PrototypeWithAuth.Models
         public int? SubProjectID { get; set; }
         public SubProject SubProject { get; set; }
 
-        public int? RequestStatusID { get; set; }
+        private int _RequestStatusID { get; set; }
+        public int RequestStatusID { 
+            get
+            {
+                if (_RequestStatusID == 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return _RequestStatusID;
+                }
+            }
+            set { _RequestStatusID = value; } 
+        }
         public RequestStatus RequestStatus { get; set; }
 
         public uint? AmountWithInLocation { get; set; } // in order to place different request objects into a location in a box, only dependent on the largest unit

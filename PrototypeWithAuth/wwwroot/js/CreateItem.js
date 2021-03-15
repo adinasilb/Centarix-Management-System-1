@@ -179,7 +179,7 @@
                 data: formData,
                 cache: false,
                 success: function (data) {
-                    $.fn.OpenModal('termsModal', 'terms', data)
+                    $.fn.OpenModal('modal', 'step-1', data)
                 }
             });
         }
