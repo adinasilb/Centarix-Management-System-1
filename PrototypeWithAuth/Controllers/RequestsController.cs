@@ -1111,7 +1111,7 @@ namespace PrototypeWithAuth.Controllers
                             PageType = requestItemViewModel.PageType,
                             SectionType = requestItemViewModel.SectionType,
                             SidebarType = AppUtility.SidebarEnum.List,
-                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID ?? 1,
+                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
                         });
                     }
                     return RedirectToAction("Index", "Requests", new
@@ -1119,7 +1119,7 @@ namespace PrototypeWithAuth.Controllers
                             PageType = requestItemViewModel.PageType,
                             SectionType = requestItemViewModel.SectionType,
                             SidebarType = AppUtility.SidebarEnum.List,
-                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID ?? 1,
+                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
                     });
 
             }
@@ -2736,7 +2736,7 @@ namespace PrototypeWithAuth.Controllers
                 locationInstancesSelected = new List<LocationInstance>(),
                 //ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync(),
                 RequestIndexObject = requestIndexObject,
-                PageRequestStatusID = request.RequestStatusID ?? 0
+                PageRequestStatusID = request.RequestStatusID
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
