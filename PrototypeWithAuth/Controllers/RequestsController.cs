@@ -1111,7 +1111,7 @@ namespace PrototypeWithAuth.Controllers
                             PageType = requestItemViewModel.PageType,
                             SectionType = requestItemViewModel.SectionType,
                             SidebarType = AppUtility.SidebarEnum.List,
-                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID ?? 1,
+                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
                         });
                     }
                     return RedirectToAction("Index", "Requests", new
@@ -1119,7 +1119,7 @@ namespace PrototypeWithAuth.Controllers
                             PageType = requestItemViewModel.PageType,
                             SectionType = requestItemViewModel.SectionType,
                             SidebarType = AppUtility.SidebarEnum.List,
-                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID ?? 1,
+                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
                     });
 
             }
@@ -2736,7 +2736,7 @@ namespace PrototypeWithAuth.Controllers
                 locationInstancesSelected = new List<LocationInstance>(),
                 //ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync(),
                 RequestIndexObject = requestIndexObject,
-                PageRequestStatusID = request.RequestStatusID ?? 0
+                PageRequestStatusID = request.RequestStatusID
             };
             receivedLocationViewModel.locationInstancesSelected.Add(new LocationInstance());
             var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
@@ -4154,40 +4154,63 @@ namespace PrototypeWithAuth.Controllers
             }
             try
             {
-                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                var request = HttpContext.Session.GetObject<Request>(requestName);
-                request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
-                request.ParentQuote = null;
-                if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType != AppUtility.OrderTypeEnum.AlreadyPurchased && uploadQuoteOrderViewModel.RequestIndexObject.OrderType != AppUtility.OrderTypeEnum.SaveOperations)
+                var requests = new List<Request>();
+                var isRequests = true;
+                var RequestNum = 1;
+                while (isRequests)
                 {
-                    using (var transaction = _context.Database.BeginTransaction())
+                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
-                        try
+                        requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                    }
+                    else
+                    {
+                        isRequests = false;
+                    }
+                    RequestNum++;
+                }
+                RequestNum = 1;
+                foreach(var request in requests)
+                { 
+                    request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
+                    request.ParentQuote = null;
+                    if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType != AppUtility.OrderTypeEnum.AlreadyPurchased && uploadQuoteOrderViewModel.RequestIndexObject.OrderType != AppUtility.OrderTypeEnum.SaveOperations)
+                    {
+                        using (var transaction = _context.Database.BeginTransaction())
                         {
-                            _context.Update(request);
-                            await _context.SaveChangesAsync();
-                            await SaveCommentsFromSession(request);
-                            //rename temp folder to the request id
-                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                            string requestFolderFrom = Path.Combine(uploadFolder, "0");
-                            string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-                            if (Directory.Exists(requestFolderTo))
+                            try
                             {
-                                Directory.Delete(requestFolderTo);
-                            }
-                            Directory.Move(requestFolderFrom, requestFolderTo);
+                                _context.Update(request);
+                                await _context.SaveChangesAsync();
+                                await SaveCommentsFromSession(request);
+                                //rename temp folder to the request id
+                                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                                string requestFolderFrom = Path.Combine(uploadFolder, "0");
+                                string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
+                                if (Directory.Exists(requestFolderTo))
+                                {
+                                    Directory.Delete(requestFolderTo);
+                                }
+                                Directory.Move(requestFolderFrom, requestFolderTo);
 
-                            await transaction.CommitAsync();
-                            base.RemoveRequestSessions();
-                        }
-                        catch (Exception ex)
-                        {
-                            await transaction.RollbackAsync();
-                            throw ex;
+                                await transaction.CommitAsync();
+                                base.RemoveRequestSessions();
+                            }
+                            catch (Exception ex)
+                            {
+                                await transaction.RollbackAsync();
+                                throw ex;
+                            }
                         }
                     }
+                    else
+                    {
+                        var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                        HttpContext.Session.SetObject(requestName, request);
+                        RequestNum++;
+                    }
                 }
-                
                 var action = "Index";
                 if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
                 {
@@ -4556,7 +4579,11 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 SaveUsingSessions = false;
                             }
-                            req.ParentRequest = termsViewModel.ParentRequest;
+                            if (req.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
+                            {
+                                req.ParentRequest = termsViewModel.ParentRequest;
+                            }
+                            req.ParentRequest.Shipping = termsViewModel.ParentRequest.Shipping;
                             req.PaymentStatusID = termsViewModel.SelectedTerm;
                             req.Installments = (uint)termsViewModel.Installments;
                             if (termsViewModel.Installments == 0)
