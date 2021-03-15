@@ -51,7 +51,8 @@ namespace PrototypeWithAuth.AppData
                     {
                         {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
                         { "SectionType", AppUtility.MenuItems.Operations },
-                        { "SidebarType", AppUtility.SidebarEnum.List }
+                        { "SidebarType", AppUtility.SidebarEnum.List },
+                        { "RequestStatusID", 2 },
                     },
                     MenuImageURL = "/images/css/main_menu_icons/operation.png",
                     SmallMenuImageURL = "/images/css/main_menu_small_icons/operations_menu_button.png"
