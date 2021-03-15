@@ -39,7 +39,7 @@ namespace PrototypeWithAuth.Models
                     return _RequestStatusID;
                 }
             }
-            private set { _RequestStatusID = value; } 
+            set { _RequestStatusID = value; } 
         }
         public RequestStatus RequestStatus { get; set; }
 
