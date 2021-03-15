@@ -9,14 +9,10 @@
     var summary = "";
     var disabled = "";
     var markReadOnlyClass = "";
+    var color = "";
     if (Model.ModalType == AppUtility.RequestModalType.Edit || Model.ModalType == AppUtility.RequestModalType.Summary)
     {
         markReadOnlyClass = "mark-readonly";
-    }
-    if (Model.SectionType.Equals(AppUtility.MenuItems.LabManagement))
-    {
-        form = " supplier-form ";
-        tabClass = "lab-man-nav-link";
     }
     if (Model.ModalType != AppUtility.RequestModalType.Summary)
     {
@@ -26,12 +22,28 @@
     {
         disabled = "disabled";
     }
-    var color = "order-inv-background-color";
 
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    switch (Model.SectionType)
     {
-
-        color = "oper-background-color";
+        case AppUtility.MenuItems.Requests:
+            color = "order-inv-background-color";
+            form = "order-inv-form";
+            tabClass = "nav-link";
+            break;
+        case AppUtility.MenuItems.Operations:
+            color = "oper-background-color";
+            form = "oper-form";
+            break;
+        case AppUtility.MenuItems.Accounting:
+            color = "accounting-background-color";
+            form = "accounting-form";
+            tabClass = "supplier-nav-link";
+            break;
+        case AppUtility.MenuItems.LabManagement:
+            color = "lab-man-background-color";
+            form = " supplier-form ";
+            tabClass = "lab-man-nav-link";
+            break;
     }
 }
 <div class="modal modal-view right fader on-form-modal @form editModal" aria-labelledby="Request" id="myModal" data-backdrop="false" style="z-index: 5000">
