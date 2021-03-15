@@ -5,9 +5,15 @@
 @using PrototypeWithAuth.AppData
 @{
     var disabled = "disable-custom-mdbselect";
+    var disable = "";
     if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary && Model.RequestStatusID == 7)
     {
         disabled = "";
+
+    }
+    if(Model.Requests[0].RequestStatusID==3)
+    {
+        disable = "disabled";
     }
 }
 
@@ -141,7 +147,7 @@
         </div>
     </div>
 </div>
-<div class="row"><input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" /></div>
+<div class="row"><input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" @disable /></div>
 <div class="row">
     <div class="visualView col-6 m-auto text-center">
         @if (Model.ReceivedModalVisualViewModel != null)
