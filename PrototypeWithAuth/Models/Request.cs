@@ -129,7 +129,14 @@ namespace PrototypeWithAuth.Models
         {
             get
             {
-                return Math.Round(.17 * Cost ?? 0, 2);
+                if (IncludeVAT)
+                {
+                    return Math.Round(.17 * Cost ?? 0, 2);
+                }
+                else
+                {
+                    return 0;
+                }
             }
             private set { _VAT = value; }
 
