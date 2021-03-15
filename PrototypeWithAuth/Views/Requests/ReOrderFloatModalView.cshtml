@@ -36,7 +36,7 @@
     <div class="modal-dialog-centered modal-xl mx-auto" role="document">
 
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius mx-auto">
-            <button type="button" class="close modal-close-padding modal-close-style cancelOrder" @*data-dismiss="modal"*@ aria-label="Close" @*onclick=" $('.reorder-item').html('');"*@>
+            <button type="button" class="close modal-close-padding modal-close-style cancelOrder" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('reorder-item');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding reorderForm">
@@ -354,7 +354,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             </div>
 
                             <div class="col-4">
-                                <button type="button" class="custom-cancel custom-button create-modal-submit cancelOrder" @*data-dismiss="modal"*@ @*onclick="$(this).closest('.reorderModal').modal('hide'); $('.reorderModal').replaceWith('');"*@>Cancel</button>
+                                <button type="button" class="custom-cancel custom-button create-modal-submit cancelOrder" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('reorder-item');">Cancel</button>
 
                             </div>
                         </div>
