@@ -12,14 +12,15 @@
 	});
 
 	$(".catalog-number").each(function(){
+		var thisElement =  $(this);
 			$(this).rules("add", {
 					required: true,
-						remote:{
-					url: '/Requests/CheckUniqueVendorAndCatalogNumber',
-					type: 'POST',
-					data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Request_Product_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
-				return $(".turn-edit-on-off").attr("productID");
-			}else{return null}}},
+					remote:{
+						url: '/Requests/CheckUniqueVendorAndCatalogNumber',
+						type: 'POST',
+						data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $(thisElement).val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
+						return $(".turn-edit-on-off").attr("productID");
+						}else{return null}}},
 					},
 			       messages: {
 			 remote: "this product has already been created"
