@@ -451,7 +451,7 @@
                 url = $(this).attr("href")
             }
             url = encodeURIComponent(url)
-            $itemurl = "/Requests/ConfirmExit/?url=" + url;
+            $itemurl = "/Requests/ConfirmExit/?MenuItem=" + $("#masterSectionType").val() + "&url=" + url;
             console.log($itemurl);
             $.fn.CloseModal("confirm-exit");
             $.ajax({
