@@ -12,10 +12,12 @@
         form = "oper-form";
     }
 }
+
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/Validation/receivedModalFormValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/receivedmodal.js"></script>
+<script src="~/js/customDropdown.js"></script>
 <div class="modal modal-view on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; max-width:90rem; overflow-y:auto;">
@@ -26,8 +28,8 @@
             </button>
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%;" class="modal-padding @form receivedModalForm">
                 @*the following hidden fors are here so i can do a request.save in for the info that is being given here.
-        in the future might want to change it to loading the request from this request id and then adding in the values
-        given here (done in the controller)*@
+                    in the future might want to change it to loading the request from this request id and then adding in the values
+                    given here (done in the controller)*@
                 @Html.HiddenFor(model => model.RequestIndexObject.PageType)
                 @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
                 @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
@@ -92,13 +94,13 @@
                                     <div class="form-group">
                                         <label class="control-label">Application User Receiver</label>
                                         <input asp-for="Request.ApplicationUserReceiver" class="form-control-plaintext border-bottom " readonly />
-                                        <input type="hidden" asp-for="Request.ApplicationUserReceiverID"/>
+                                        <input type="hidden" asp-for="Request.ApplicationUserReceiverID" />
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">
-                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                <label asp-for="Arrival">Arrival</label>
-            </div>*@
+                                        <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                                        <label asp-for="Arrival">Arrival</label>
+                                    </div>*@
                                 <div class="col-2 text-center">
                                     <br />
                                     <div class="form-check">
@@ -114,33 +116,33 @@
                                     </div>
                                 </div>
                                 @*<div class="col-1 text-center">
-                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                <label for="test-chkbx">Trial</label>
-            </div>*@
+                                        <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                                        <label for="test-chkbx">Trial</label>
+                                    </div>*@
                             </div>
                             <div class="row">
                                 <div class="col-4">
-                                   
+
                                 </div>
                                 <div class="col-4">
-                                  
+
                                 </div>
                                 @*<div class="col-1 text-center">
-                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                <label asp-for="Arrival">Arrival</label>
-            </div>*@
-                            <div class="col-2 text-center ">
-                                <label asp-for="Request.NoteForClarifyDelivery" class="control-label clarify-note d-none">Clarify Note</label>
-                                <textarea asp-for="Request.NoteForClarifyDelivery" class="form-control-plaintext border-bottom clarify-note d-none" ></textarea>
-                            </div>
-                            <div class="col-2 text-center ">
-                                <label asp-for="Request.NoteForPartialDelivery" class="control-label partial-note d-none">Partial Note</label>
-                                <textarea asp-for="Request.NoteForPartialDelivery" class="form-control-plaintext border-bottom partial-note d-none"></textarea>
-                            </div>
+                                        <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                                        <label asp-for="Arrival">Arrival</label>
+                                    </div>*@
+                                <div class="col-2 text-center ">
+                                    <label asp-for="Request.NoteForClarifyDelivery" class="control-label clarify-note d-none">Clarify Note</label>
+                                    <textarea asp-for="Request.NoteForClarifyDelivery" class="form-control-plaintext border-bottom clarify-note d-none"></textarea>
+                                </div>
+                                <div class="col-2 text-center ">
+                                    <label asp-for="Request.NoteForPartialDelivery" class="control-label partial-note d-none">Partial Note</label>
+                                    <textarea asp-for="Request.NoteForPartialDelivery" class="form-control-plaintext border-bottom partial-note d-none"></textarea>
+                                </div>
                                 @*<div class="col-1 text-center">
-                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                <label for="test-chkbx">Trial</label>
-            </div>*@
+                                        <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                                        <label for="test-chkbx">Trial</label>
+                                    </div>*@
                             </div>
                             <br />
                             @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
@@ -183,13 +185,13 @@
                                 </div>
 
                                 @*<div class="row">
-                <div class="col-12">
-                    <div class="form-group">
-                        <label class="control-label">Location Details</label>
-                        <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
-                    </div>
-                </div>
-            </div>*@}
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="control-label">Location Details</label>
+                                                <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
+                                            </div>
+                                        </div>
+                                    </div>*@}
                         </div>
                         @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
@@ -205,20 +207,20 @@
 
                 @*Why are there 2 empty modal-body's here?*@
                 <!--<div class="modal-body">
-    <div class="row">-->
+                <div class="row">-->
                 @*<div class="divSublocations">
 
-        </div>*@
+                    </div>*@
                 <!--</div>
-    </div>
+                </div>
 
-    <div class="modal-body">
-        <div class="row">-->
+                <div class="modal-body">
+                    <div class="row">-->
                 @*<div class="visualView col-md-12 text-center">
 
-        </div>*@
+                    </div>*@
                 <!--</div>
-    </div>-->
+                </div>-->
                 <input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" />
                 <div class="modal-footer border-0 modal-footer-mt">
                     <div class="m-auto">
@@ -235,14 +237,12 @@
 </div>
 <script src="~/js/InitializeDatePicker.js"></script>
 <script>
-    $(".clarify-checkbox").click(function(){
-        if($(this).is(":checked"))
-        {
+    $(".clarify-checkbox").click(function () {
+        if ($(this).is(":checked")) {
             $(".clarify-note").removeClass("d-none");
             $(".clarify-note ").attr("disabled", false)
         }
-        else 
-        {
+        else {
             $(".clarify-note").addClass("d-none");
             $(".clarify-note").attr("disabled", true)
         }
@@ -257,18 +257,18 @@
             $(".partial-note ").attr("disabled", true)
         }
     });
-    $(".submit-received").click( function (e) {
+    $(".submit-received").click(function (e) {
         //alert("validate form");
         e.preventDefault();
         $("#myForm").data("validator").settings.ignore = "";
         var valid = $("#myForm").valid();
         console.log("valid form: " + valid)
         if (!valid) {
-      
+
             e.stopPropagation();
             if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
                 $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
-            }          
+            }
 
         }
         else {
@@ -279,7 +279,7 @@
             ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/", "._IndexTableWithCounts", "POST", formData, "received-item");
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-    
+
         return false;
     });
 

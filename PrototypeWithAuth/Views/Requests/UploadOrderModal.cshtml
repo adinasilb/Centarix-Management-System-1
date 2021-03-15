@@ -46,6 +46,8 @@
                 @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
                 @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
                 @Html.HiddenFor(model => model.RequestIndexObject.OrderType)
+                @Html.HiddenFor(model => model.ParentRequest.ApplicationUserID)
+                @Html.HiddenFor(model => model.ParentRequest.OrderNumber)
                 <div>
                     <div class="modal-header modal-header-padding">
                         <div class="container-fluid">
