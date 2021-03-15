@@ -201,7 +201,7 @@
             <label class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
-                <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="form-control-plaintext border-bottom disabled-text requestPriceQuote shekel-cost cost" min="1" readonly value="@(Model.Request!= null ? Model.Request.Cost : 0)"/>
+                <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="form-control-plaintext border-bottom disabled-text requestPriceQuote shekel-cost cost" min="1" readonly value="@(Model.Request!= null ? Model.Request.Cost ?? 0 : 0)"/>
                 @*<span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>*@
             </div>
         </div>

@@ -29,7 +29,7 @@
     <div class="modal-dialog-centered modal-lg mx-auto " role="document" style="max-height:100%;  overflow-y:auto;">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$('.cart-total').html(''); $('.modal-backdrop').remove();">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('cart-total')">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
@@ -59,7 +59,7 @@
                     <div class="modal-footer">
                         <div class="text-center mx-auto modal-footer-mt">
                             <button type="button" class="custom-button custom-button-font @bcColor between-button-margin approve-cart" value="@Model.Request.RequestID">Approve</button>
-                            <button type="button" class="custom-cancel custom-button " data-dismiss="modal" onclick="$('.cart-total').html(''); $('.modal-backdrop').remove();">Cancel</button>
+                            <button type="button" class="custom-cancel custom-button " data-dismiss="modal" onclick="$.fn.CloseModal('cart-total')">Cancel</button>
                         </div>
                     </div>
 
