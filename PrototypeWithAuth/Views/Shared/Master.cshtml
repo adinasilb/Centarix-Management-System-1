@@ -567,7 +567,7 @@
             $("." + category).removeClass("d-none");
             console.log("in detilas of case")
             $.fn.TurnToDetails();
-            $('.mdb-select').materialSelect();
+            $('.mdb-select:not(.ignore-mdb)').materialSelect();
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
