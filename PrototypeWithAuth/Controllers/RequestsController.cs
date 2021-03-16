@@ -1096,7 +1096,7 @@ namespace PrototypeWithAuth.Controllers
             switch (OrderType)
             {
                 case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                    return RedirectToAction("UploadOrderModal");
+                    return RedirectToAction("UploadOrderModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
                 case AppUtility.OrderTypeEnum.OrderNow:
                     return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.AddToCart:
@@ -1968,9 +1968,9 @@ namespace PrototypeWithAuth.Controllers
             // create a new pdf document converting an url
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
-            //save this as confirmemailtempdoc
+            //save this as orderform
             string path1 = Path.Combine("wwwroot", "files");
-            string fileName = Path.Combine(path1, "ConfirmEmailTempDoc.pdf");
+            string fileName = Path.Combine(path1, "OrderForm.pdf");
             doc.Save(fileName);
             doc.Close();
             confirm.RequestIndexObject = requestIndexObject;
@@ -1986,7 +1986,7 @@ namespace PrototypeWithAuth.Controllers
             {
 
                 string uploadFolder = Path.Combine("wwwroot", "files");
-                string uploadFile = Path.Combine(uploadFolder, "ConfirmEmailTempDoc.pdf");
+                string uploadFile = Path.Combine(uploadFolder, "OrderForm.pdf");
 
                 var isRequests = true;
                 var RequestNum = 1;
