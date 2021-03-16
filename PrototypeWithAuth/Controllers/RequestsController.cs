@@ -1096,7 +1096,7 @@ namespace PrototypeWithAuth.Controllers
             switch (OrderType)
             {
                 case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                    return RedirectToAction("UploadOrderModal");
+                    return RedirectToAction("UploadOrderModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
                 case AppUtility.OrderTypeEnum.OrderNow:
                     return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.AddToCart:
