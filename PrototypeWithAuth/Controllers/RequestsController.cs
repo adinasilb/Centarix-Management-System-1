@@ -1808,7 +1808,7 @@ namespace PrototypeWithAuth.Controllers
 
                     var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(User));
                     //need to include product to check if in budget
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
+                 //   reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
 
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID = 0;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ProductID = oldRequest.ProductID;
@@ -1821,7 +1821,7 @@ namespace PrototypeWithAuth.Controllers
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ExchangeRate = oldRequest.ExchangeRate;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Currency = oldRequest.Currency;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().IncludeVAT = oldRequest.IncludeVAT;
-                    var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault());
+                    var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
                     using (var transaction = _context.Database.BeginTransaction())
                     {
                         try
@@ -1934,6 +1934,10 @@ namespace PrototypeWithAuth.Controllers
                 if (HttpContext.Session.GetObject<Request>(requestName) != null)
                 {
                     var request = HttpContext.Session.GetObject<Request>(requestName);
+                    if(request.ParentRequest.Shipping != null)
+                    {
+                        pr.Shipping = request.ParentRequest.Shipping;
+                    }
                     request.ParentRequest = pr;
                     HttpContext.Session.SetObject(requestName, request);
                     allRequests.Add(request);
@@ -3545,11 +3549,15 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("NotificationsView");
         }
 
-        private bool checkIfInBudget(Request request)
+        private bool checkIfInBudget(Request request, Product oldProduct = null)
         {
+            if(oldProduct ==null)
+            {
+                oldProduct = request.Product;
+            }
             var user = _context.Users.Where(u => u.Id == request.ApplicationUserCreatorID).FirstOrDefault();
             DateTime firstOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+            if (oldProduct.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
             { //lab
                 var pricePerUnit = request.Cost / request.Unit;
                 if (pricePerUnit >user.LabUnitLimit)
@@ -3561,8 +3569,8 @@ namespace PrototypeWithAuth.Controllers
                     return false;
                 }
                 var monthsSpending =   _context.Requests
-                      .Where(r => request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                      .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && r.Product.VendorID == request.Product.VendorID)
+                      .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                      .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && r.Product.VendorID == oldProduct.VendorID)
                       .Where(r => r.ParentRequest.OrderDate >= firstOfMonth).AsEnumerable()
                       .Sum(r => r.TotalWithVat);
                 if (monthsSpending + request.TotalWithVat > user.LabMonthlyLimit)
@@ -3585,7 +3593,7 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 var monthsSpending = _context.Requests
-                    .Where(r => request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
+                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
                     .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID)
                     .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
                     .Sum(r => r.Cost);
@@ -4046,6 +4054,7 @@ namespace PrototypeWithAuth.Controllers
             }
             try
             {
+             
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
                 var request = HttpContext.Session.GetObject<Request>(requestName);
                 uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
@@ -4067,7 +4076,8 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
-                            _context.Update(request);
+
+                            _context.Update(request);                         
                             await _context.SaveChangesAsync();
                             await SaveCommentsFromSession(request);
                             //rename temp folder to the request id
@@ -4583,7 +4593,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 SaveUsingSessions = false;
                             }
-                            if (req.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
+                            if (req.ParentRequest == null)
                             {
                                 req.ParentRequest = termsViewModel.ParentRequest;
                             }
@@ -4601,7 +4611,11 @@ namespace PrototypeWithAuth.Controllers
                             }
                             else
                             {
-                                req.Product.Vendor = null;
+                                if(req.Product !=null)
+                                {
+                                    req.Product.Vendor = null;
+                                }
+                             
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }
