@@ -29,6 +29,8 @@ function callIndexWithNewFilter(val, id) {
         }
         if ($('#masterSectionType').val() == "Accounting") {
             formdata.AccountingEnum = $("#sidebarEnum").val();
+            formdata.PageType = $('#masterPageType').val();
+            console.log("page type" + $('#masterPageType').val())
             switch ($('#masterPageType').val()) {
                 case "AccountingPayments":
                     url = "/Requests/_AccountingPayments"
@@ -97,6 +99,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
         if ($('#masterSectionType').val() == "Accounting") {
             formdata.AccountingEnum = $("#sidebarEnum").val();
             formdata.PageType = $('#masterPageType').val();
+           
             switch ($('#masterPageType').val()) {
                 case "AccountingPayments":
                     url = "/Requests/_AccountingPayments"

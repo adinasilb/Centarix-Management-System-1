@@ -135,13 +135,13 @@
                                             optionLabel: "Select A Category",
                                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee job-category", @searchable = "default value", }
                                             )
-                                        <span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>
+                                        @*<span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>*@
                                     </div>
                                     <div class="col-6  only-employee">
                                         <label class="control-label only-employee">Job Subcategory</label>
                                         <select asp-for="NewEmployee.JobSubcategoryTypeID" class="mdb-select custom select-dropdown form-control-plaintext only-employee job-subcategory remove-extra-border" id="job-subcategory" searchable="default value">
                                         </select>
-                                        <span asp-validation-for="NewEmployee.JobSubcategoryTypeID" class="text-danger-centarix"></span>
+                                        @*<span asp-validation-for="NewEmployee.JobSubcategoryTypeID" class="text-danger-centarix"></span>*@
                                     </div>
                                 </div>
                                 <div class="row ">
@@ -173,7 +173,7 @@
                                             optionLabel: "Select A Degree",
                                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
                                             )
-                                        <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
+                                        @*<span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>*@
                                     </div>
                                     <div class="col-4 only-employee">
                                         <label asp-for="NewEmployee.StartedWorking" class="control-label only-employee"></label>
@@ -193,7 +193,7 @@
                                             optionLabel: "Select A Status",
                                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
                                             )
-                                        <span asp-validation-for="NewEmployee.MaritalStatusID" class="text-danger-centarix"></span>
+                                        @*<span asp-validation-for="NewEmployee.MaritalStatusID" class="text-danger-centarix"></span>*@
                                     </div>
                                     <div class="col-4 only-employee">
                                         <label class="control-label only-employee">Citizenship</label>
@@ -206,7 +206,7 @@
                                             optionLabel: "Select A Country",
                                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
                                             )
-                                        <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
+                                        @*<span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>*@
                                     </div>
                                     <div class="col-4 only-employee">
                                         <label asp-for="NewEmployee.TaxCredits" class="control-label only-employee"></label>
