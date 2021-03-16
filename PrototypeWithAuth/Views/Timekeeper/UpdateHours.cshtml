@@ -60,7 +60,7 @@
 
                     <div class="modal-footer  border-0  modal-footer-mt">
                         <div class="mx-auto text-center">
-                            <button @*type="submit"*@ class="custom-button custom-button-font timekeeper-color between-button-margin update-hours" @*asp-action="UpdateHours"*@ data-val="@Model.PageType" value="Save">Save</button>
+                            <button type="submit" class="custom-button custom-button-font timekeeper-color between-button-margin update-hours" @*asp-action="UpdateHours"*@ data-val="@Model.PageType" value="Save">Save</button>
                             <button type="button" class="custom-cancel custom-button cancel-email" data-dismiss="modal" onclick="$.fn.CloseModal('update-time-worked');">Cancel</button>
                         </div>
                     </div>
@@ -76,13 +76,13 @@
         console.log("valid form: " + valid)
         if (!valid) {
             e.preventDefault();
-            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
             }
 
         }
         else {
-            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $('.activeSubmit').removeClass('disabled-submit')
             var pageType = $(this).attr("data-val");
             var url = "/Timekeeper/UpdateHours/?PageType=" + pageType;
             console.log("url: " + url);

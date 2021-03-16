@@ -130,12 +130,12 @@
         var valid = $(".uploadQuoteForm").valid();
         console.log("valid form: " + valid)
         if (!valid) {
-            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
             }
         }
         else {
-            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
             $.ajax({
