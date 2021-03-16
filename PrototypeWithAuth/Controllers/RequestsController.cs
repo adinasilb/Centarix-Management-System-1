@@ -4088,9 +4088,17 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 Directory.Delete(requestFolderTo);
                             }
-                            Directory.Move(requestFolderFrom, requestFolderTo);
-                            //throw new Exception();
-                            await transaction.CommitAsync();
+                            Directory.Move(requestFolderFrom, requestFolderTo);                 
+                   
+                            try
+                            {
+                                await transaction.CommitAsync();
+                            }
+                            catch(Exception ex)
+                            {
+                                Directory.Move(requestFolderTo, requestFolderFrom);
+                                throw ex;
+                            }
                             base.RemoveRequestSessions();
                             var action = "Index";
                             if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
@@ -4189,41 +4197,11 @@ namespace PrototypeWithAuth.Controllers
                 { 
                     request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
                     request.ParentQuote = null;
-                    if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType != AppUtility.OrderTypeEnum.AlreadyPurchased && uploadQuoteOrderViewModel.RequestIndexObject.OrderType != AppUtility.OrderTypeEnum.SaveOperations)
-                    {
-                        using (var transaction = _context.Database.BeginTransaction())
-                        {
-                            try
-                            {
-                                _context.Update(request);
-                                await _context.SaveChangesAsync();
-                                await SaveCommentsFromSession(request);
-                                //rename temp folder to the request id
-                                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                                string requestFolderFrom = Path.Combine(uploadFolder, "0");
-                                string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-                                if (Directory.Exists(requestFolderTo))
-                                {
-                                    Directory.Delete(requestFolderTo);
-                                }
-                                Directory.Move(requestFolderFrom, requestFolderTo);
+           
+                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                    HttpContext.Session.SetObject(requestName, request);
+                    RequestNum++;
 
-                                await transaction.CommitAsync();
-                                base.RemoveRequestSessions();
-                            }
-                            catch (Exception ex)
-                            {
-                                await transaction.RollbackAsync();
-                                throw ex;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                        HttpContext.Session.SetObject(requestName, request);
-                        RequestNum++;
-                    }
                 }
                 var action = "Index";
                 if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)

@@ -51,7 +51,7 @@
                 <div>
                     <div class="modal-header modal-header-padding">
                         <div class="container-fluid">
-                            <div class="row text-danger-centarix"> @ViewBag.ErrorMessage </div>
+                            <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
                             <div class="row ">
                                 <div class="col-4">
                                     <div class="heading-1">Upload Order</div>
@@ -72,15 +72,18 @@
                             @{
                                 var filterClass = "opac87";
                                 var containsFile = "";
+                                var hasFileClass = "";
+                                <input type="hidden" asp-for="FileStrings" />@*This is for reloading hte modal on error*@
                                 if (Model.FileStrings != null && Model.FileStrings.Count > 0)
                                 {
                                     filterClass = color;
                                     containsFile = "contains-file";
+                                    hasFileClass = "hasFile";
                                 }
                             }
                             <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()Input" name="@AppUtility.RequestFolderNamesEnum.Orders.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
                             <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Orders.ToString()" data-val="@true" showSwitch="@false">
-                                <div class="card document-border">
+                                <div class="card document-border @hasFileClass">
                                     <div class="document-card text-center">
                                         <i class="icon-chrome_reader_mode-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
                                     </div>
