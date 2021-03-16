@@ -3278,14 +3278,17 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ParentQuote)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList();
-                var vendor = _context.Vendors.Where(v => v.VendorID == id).FirstOrDefault();
+                foreach(var request in requests)
+                {
+                    request.ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
+                }
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
                     Requests = requests,
-                    Vendor = vendor,
                     QuoteDate = DateTime.Now,
                     ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
                 };
+                
                 return PartialView(editQuoteDetailsViewModel);
             }
             //needs testing 

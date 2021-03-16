@@ -519,7 +519,8 @@
                             $.fn.OpenModal('modal', 'confirm-email', modal)
                             break;
                         case "quote":
-                            $.fn.OpenModal('modal', 'edit-quote', modal)
+                            $.fn.OpenModal('modal', 'edit-quote', modal);
+                            $('.mdb-select').materialSelect();
                             break;
                         case "locations": case "addlocation":
                             $.fn.OpenModal('modal', 'add-location', modal)
