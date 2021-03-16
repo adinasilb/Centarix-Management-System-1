@@ -380,13 +380,16 @@ $(function () {
 		if ($('#masterSectionType').val() == "Operations") {
 			shekelSelector = ".shekel-cost";
 			dollarSelector = ".dollar-cost";
-        }
+		}
+		var isRequestQuote = $(".isRequest").is(":checked")
 		switch (currencyType) {
 			case "USD":
 				$(shekelSelector).prop("readonly", true);
 				$(shekelSelector).addClass('disabled-text');
 				$(dollarSelector).prop("disabled", false);
 				$(dollarSelector).removeClass('disabled-text');
+				$(dollarSelector).addClass('requestPriceQuote');
+				$(shekelSelector).removeClass('requestPriceQuote');
 
 
 				$("#unit-price-dollars").prop("disabled", false);
@@ -425,6 +428,8 @@ $(function () {
 				$(shekelSelector).removeClass('disabled-text');
 				$(dollarSelector).prop("disabled", true);
 				$(dollarSelector).addClass('disabled-text');
+				$(shekelSelector).addClass('requestPriceQuote');
+				$(dollarSelector).removeClass('requestPriceQuote');
 
 
 				$("#unit-price-dollars").prop("disabled", true);
@@ -459,6 +464,9 @@ $(function () {
 
 				break;
 		}
+		if (isRequestQuote) {
+			$(".requestPriceQuote ").attr("disabled", true);
+        }
 	};
 
 
