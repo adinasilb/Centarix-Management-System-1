@@ -2406,7 +2406,7 @@ namespace PrototypeWithAuth.Controllers
             if (isResend)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == id)
-               .Include(r => r.Product).ThenInclude(r => r.Vendor)
+               .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                .ToList();
             }
             else
