@@ -1343,7 +1343,8 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ParentRequest)
                 .Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.Product.ProductSubcategory.ParentCategory)
-                     .Include(r => r.Product.Vendor)
+                .Include(r => r.Product.Vendor)
+                .Include(r=> r.Invoice)
                 .Include(r => r.RequestStatus)
                 .Include(r => r.ApplicationUserCreator).Include(r=>r.PaymentStatus).Include(r=>r.Payments).ThenInclude(p=>p.CompanyAccount)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
@@ -1967,9 +1968,9 @@ namespace PrototypeWithAuth.Controllers
             // create a new pdf document converting an url
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
-            //save this as confirmemailtempdoc
+            //save this as orderform
             string path1 = Path.Combine("wwwroot", "files");
-            string fileName = Path.Combine(path1, "ConfirmEmailTempDoc.pdf");
+            string fileName = Path.Combine(path1, "OrderForm.pdf");
             doc.Save(fileName);
             doc.Close();
             confirm.RequestIndexObject = requestIndexObject;
@@ -1985,7 +1986,7 @@ namespace PrototypeWithAuth.Controllers
             {
 
                 string uploadFolder = Path.Combine("wwwroot", "files");
-                string uploadFile = Path.Combine(uploadFolder, "ConfirmEmailTempDoc.pdf");
+                string uploadFile = Path.Combine(uploadFolder, "OrderForm.pdf");
 
                 var isRequests = true;
                 var RequestNum = 1;
