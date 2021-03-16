@@ -189,7 +189,7 @@ namespace PrototypeWithAuth.Controllers
                 if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
                 {
                     var existentHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Date == nextDay.Date).FirstOrDefault();
-                    var dayoff = companyDaysOff.Where(cdo => cdo.Date == nextDay.Date).FirstOrDefault();
+                    var dayoff = companyDaysOff.Where(cdo => cdo.Date.Date == nextDay.Date).FirstOrDefault();
                     if (dayoff !=null)
                     {
                         if (existentHours == null)
@@ -201,6 +201,9 @@ namespace PrototypeWithAuth.Controllers
                             };
                            
                         }
+                        existentHours.OffDayTypeID = null;
+                        existentHours.PartialOffDayTypeID = null;
+                        existentHours.PartialOffDayHours = null;
                         existentHours.CompanyDayOffID = dayoff.CompanyDayOffID;
                         _context.Update(existentHours);
                     }

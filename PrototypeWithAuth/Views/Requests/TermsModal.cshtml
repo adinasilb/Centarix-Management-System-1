@@ -24,8 +24,9 @@
 
 <script src="~/js/TermsModal.js"></script>
 <script src="~/js/site.js"></script>
-<script src="~/js/validate.js"></script>
 <script src="~/js/Validation/TermsModalFormValidation.js"></script>
+<script src="~/js/validate.js"></script>
+
 <div class="modal modal-view termsModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
     <div class="modal-dialog-centered modal-xl mx-auto on-form-modal @form" role="document" style="max-height:100%; max-width:60rem; ">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
@@ -118,13 +119,13 @@
         console.log("valid form: " + valid)
         if (!valid) {
 
-            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
             }
 
         }
         else {
-            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($(".termsModalForm")[0]);
             $.ajax({

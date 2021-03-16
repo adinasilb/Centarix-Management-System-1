@@ -72,7 +72,7 @@
         </div>
         <div class="col-5">
             <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
-                    class="text p-0 w-100 custom-order-inv custom-button create-modal-submit">
+                    class="text p-0 w-100 custom-order-inv custom-button create-modal-submit activeSubmit">
                 @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
             </button>
 
@@ -106,13 +106,13 @@
         console.log("valid form: " + valid)
         if (!valid) {
 
-            if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-                $('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
             }
 
         }
         else {
-            $('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+            $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
             console.log(...formData);

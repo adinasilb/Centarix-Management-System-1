@@ -119,7 +119,7 @@
 
                         }
                     }
-                    @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null)
+                    @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null && eh.EmployeeHours.CompanyDayOffID ==null)
                     {
                         <div class="py-2">
                             <select class="mdb-select @pageColor custom select-dropdown no-hours-reported mb-0 @disabled" date="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">

@@ -195,7 +195,7 @@ $(function () {
 		$("#myForm").data("validator").settings.ignore = "";
 		$('.error').addClass("beforeCallValid");
 		if ($('#myForm').valid()) {
-			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+			$('.activeSubmit').removeClass('disabled-submit')
 		} else {
 			$(".error:not(.beforeCallValid)").addClass("afterCallValid")
 			$(".error:not(.beforeCallValid)").removeClass("error")
@@ -203,8 +203,8 @@ $(function () {
 			$(".error").removeClass('beforeCallValid')
 			$(".afterCallValid").removeClass('error')
 			$(".afterCallValid").removeClass('afterCallValid')
-			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+			if (!$('.activeSubmit').hasClass('disabled-submit')) {
+				$('.activeSubmit').addClass('disabled-submit')
 			}
 		}
 		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
@@ -220,7 +220,7 @@ $(function () {
 			}
 
 			if ($(this).hasClass('order-tab-link') ) {
-				$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+				$('.activeSubmit').removeClass('disabled-submit')
 			}
 
 			//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
@@ -289,13 +289,13 @@ $(function () {
 		console.log("valid form: " + valid)
 		if (!valid) {
 			e.preventDefault();
-			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+			if (!$('.activeSubmit').hasClass('disabled-submit')) {
+				$('.activeSubmit').addClass('disabled-submit')
 			}
 
 		}
 		else {
-			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+			$('.activeSubmit ').removeClass('disabled-submit')
 		}
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
