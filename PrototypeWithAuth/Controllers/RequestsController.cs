@@ -2143,7 +2143,10 @@ namespace PrototypeWithAuth.Controllers
                                     foreach (var r in requests)
                                     {
                                         r.RequestStatusID = 2;
-                                 
+                                        if (r.PaymentStatusID == 7)
+                                        {
+                                            r.RequestStatusID = 3;
+                                        }
                                         if (r.OrderType != AppUtility.OrderTypeEnum.OrderNow.ToString())
                                         {
                                             r.Product = null;
@@ -4593,7 +4596,11 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     req.Product.Vendor = null;
                                 }
-                             
+                                if (req.PaymentStatusID == 7)
+                                {
+                                    req.RequestStatusID = 3;
+                                }
+
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }
