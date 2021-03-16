@@ -1126,6 +1126,8 @@
             });
             //shows the modal
             $("." + modalClass).modal('show');
+            $("input[type = submit]").removeClass("active");
+            $('.' + modalDivClass+" input[type=submit]").addClass("active");
 
         }
         $.fn.CloseModal = function (modalDivClass) {

@@ -69,6 +69,7 @@
                         var filterClass = "opac87";
                         var hasFileClass = "";
                         var containsFile = "";
+                        <input type="hidden" asp-for="FileStrings" />@*This is for reloading hte modal on error*@
                         if (Model.FileStrings != null && Model.FileStrings.Count > 0)
                         {
                             filterClass = "order-inv-filter";
@@ -99,12 +100,12 @@
                                 </div>
                             </div>
                             @*<div class="row">
-                                    <div class="form-group ">
-                                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
-                                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>*@
+                    <div class="form-group ">
+                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
+                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
+                    </div>
+                </div>*@
                         </div>
                     </div>
                 </div>
