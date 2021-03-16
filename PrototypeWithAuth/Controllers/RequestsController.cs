@@ -1933,6 +1933,10 @@ namespace PrototypeWithAuth.Controllers
                 if (HttpContext.Session.GetObject<Request>(requestName) != null)
                 {
                     var request = HttpContext.Session.GetObject<Request>(requestName);
+                    if(request.ParentRequest.Shipping != null)
+                    {
+                        pr.Shipping = request.ParentRequest.Shipping;
+                    }
                     request.ParentRequest = pr;
                     HttpContext.Session.SetObject(requestName, request);
                     allRequests.Add(request);
@@ -4582,7 +4586,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 SaveUsingSessions = false;
                             }
-                            if (req.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
+                            if (req.ParentRequest == null)
                             {
                                 req.ParentRequest = termsViewModel.ParentRequest;
                             }
