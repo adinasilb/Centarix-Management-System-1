@@ -162,14 +162,11 @@
                         console.log('remove save item')
                         $(".save-item").removeClass("save-item").off('click')
                         console.log("Index");
-                        if ($('#masterPageType').val() == "RequestRequest") {
+                        if ( $(".editModal").length >0) {
                             $(".render-body").html(data)
-                        }
-                        else if ($('#masterPageType').val() == "RequestCart") {
-                            $(".render-body").html(data)
-                        }
+                        }                      
                         else {
-                            $("._IndexTableData").html(data);
+                            window.location.href = "/Requests/Index"
                         }
                         //$('.modal').modal('hide');
                     }
