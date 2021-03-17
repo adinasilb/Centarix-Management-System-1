@@ -6,8 +6,8 @@
 	var formData = new FormData($(".DeleteDocumentModalForm")[0]);
 	$foldername = $("#FolderName").val();
 	$requestId = $("#RequestID").val();
-	var $SectionType = $("#SectionType").val();
-	alert($("#SectionType").val())
+	var $SectionType = $("#masterSectionType").val();
+	console.log($SectionType);
 		var $isEdittable = $('.active-document-modal').attr("data-val");
 		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
 	console.log("$requestId: " + $requestId);
@@ -17,7 +17,7 @@
 		data: formData,
 		success: (partialResult) => {
 			$.fn.CloseModal("documents-delete");
-			$.fn.OpenDocumentsModal($foldername, $requestId, true, $isEdittable, $SectionType, $showSwitch);
+			$.fn.OpenDocumentsModal($foldername, $requestId, $isEdittable, $SectionType, $showSwitch);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,

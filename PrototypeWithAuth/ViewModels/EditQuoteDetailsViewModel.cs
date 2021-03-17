@@ -13,9 +13,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public List<Request> Requests { get; set; }
         [DataType(DataType.Date)]
-        public Vendor Vendor { get; set; }
-
-        [DataType(DataType.Date)]
         [Display(Name = "Quote Date")]
         public DateTime QuoteDate { get; set; }
         [Display(Name = "Quote Number")]
