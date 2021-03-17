@@ -4537,6 +4537,7 @@ namespace PrototypeWithAuth.Controllers
                 ParentRequest = new ParentRequest(),
                 TermsList = termsList
             };
+            requestIndexObject.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), requests[0].Currency);
             termsViewModel.RequestIndexObject = requestIndexObject;
             return PartialView(termsViewModel);
         }

@@ -148,6 +148,7 @@
 				console.log("cancel edit successful!")
 				//open the confirm edit modal
 				$('.partial-div').html(data);
+				
 				$('.name').val($('.old-name').val())
 				if ($('.turn-edit-on-off').hasClass('orders')) {
 					$.fn.LoadEditModalDetails();

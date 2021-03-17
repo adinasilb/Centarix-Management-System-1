@@ -64,9 +64,15 @@
                             </div>
 
                             <div class="col-3">
+                                @{
+                                    var currency = Model.RequestIndexObject.SelectedCurrency == AppUtility.CurrencyEnum.NIS ? "&#x20aa;" : "&#36;";
+                                }
                                 <label asp-for="ParentRequest.Shipping" class="control-label"></label>
-                                <input type="text" asp-for="ParentRequest.Shipping" class="form-control-plaintext border-bottom" />
-                                <span asp-validation-for="ParentRequest.Shipping" class="text-danger-centarix"></span>
+                                <div class="input-group">
+                                    <span class="input-group-text pr-2">@Html.Raw(currency)</span>
+                                    <input type="text" asp-for="ParentRequest.Shipping" class="form-control-plaintext border-bottom" />
+                                    <span asp-validation-for="ParentRequest.Shipping" class="text-danger-centarix"></span>
+                                </div>
                             </div>
                             @{var dNone = "d-none";
                                 var disabled = true;}
