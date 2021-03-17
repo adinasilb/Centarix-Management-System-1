@@ -308,7 +308,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             return requestIndexViewModel;
         }
-        [Authorize(Roles = "Requests, LabManagement, Operations")]
+        /*[Authorize(Roles = "Requests, LabManagement, Operations")]
         private async Task<RequestIndexPartialViewModel> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject)
         {
             int categoryID = 1;
@@ -350,12 +350,12 @@ namespace PrototypeWithAuth.Controllers
             }
             else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
             {
-                /*
+                *//*
                  * In order to combine all the requests each one needs to be in a separate list
                  * Then you need to union them one at a time into separate variables
                  * you only need the separate union variable in order for the union to work
                  * and the original queries are on separate lists because each is querying the full database with a separate where
-                 */
+                 *//*
 
                 IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
                 if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 1)
@@ -466,7 +466,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             return requestIndexViewModel;
-        }
+        }*/
 
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude)
         {
