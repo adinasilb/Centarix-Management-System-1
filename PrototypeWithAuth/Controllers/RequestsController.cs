@@ -309,163 +309,139 @@ namespace PrototypeWithAuth.Controllers
             return requestIndexViewModel;
         }
         [Authorize(Roles = "Requests, LabManagement, Operations")]
-        private async Task<RequestIndexPartialViewModel> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject)
+        private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject)
         {
-            int categoryID = 1;
-            if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+            RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
+            List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
+            var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
+            var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
+            var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
+            var defaultImage = "/images/css/CategoryImages/placeholder.png";
+            switch (requestIndexObject.PageType)
             {
-                categoryID = 2;
-            }
-            IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
-         .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Include(x => x.ParentRequest);
-
-            int sideBarID = 0;
-            if (requestIndexObject.SidebarType != AppUtility.SidebarEnum.Owner)
-            {
-                int.TryParse(requestIndexObject.SidebarFilterID, out sideBarID);
-            }
-
-            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
-            {
-                if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Category)
-                {
-                    RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
-                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-                        .Include(r => r.ParentRequest).Where(r => r.Product.ProductSubcategoryID == sideBarID).Include(r => r.ParentRequest);
-
-                }
-                else
-                {
-                    RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
-                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-                        .Include(r => r.ParentRequest);
-                }
-                RequestsPassedIn.OrderByDescending(e => e.ParentRequest.OrderDate);
-            }
-            else if (ViewData["ReturnRequests"] != null)
-            {
-                RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
-            }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
-            {
-                /*
-                 * In order to combine all the requests each one needs to be in a separate list
-                 * Then you need to union them one at a time into separate variables
-                 * you only need the separate union variable in order for the union to work
-                 * and the original queries are on separate lists because each is querying the full database with a separate where
-                 */
-
-                IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 1)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 1);
-                    RequestsPassedIn = TempRequestList;
-                }
-
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 6)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 6);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                }
-
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 2)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                }
-
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 3)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                }
-
-            }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
-            {
-                if (requestIndexObject.RequestStatusID == 7)
-                {
-                    RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 7).Include(r => r.Product.ProductSubcategory)
-                 .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
-                }
-                else
-                {
-                    RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5).Include(r => r.Product.ProductSubcategory)
-                   .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
-                }
-
-            }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.AccountingGeneral)
-            {
-                //we need both categories
-                RequestsPassedIn = _context.Requests.Include(r => r.ApplicationUserCreator)
-                     .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                     .Include(r => r.ParentRequest).Where(r => Years.Contains(r.ParentRequest.OrderDate.Year)).Where(r => r.HasInvoice && r.Paid && !r.IsClarify && !r.IsPartial);
-                if (Months != null)
-                {
-                    RequestsPassedIn = RequestsPassedIn.Where(r => Months.Contains(r.ParentRequest.OrderDate.Month));
-                }
-            }
-            else //we just want what is in inventory
-            {
-                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5);
-            }
-            AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
-            //now that the lists are created sort by vendor or subcategory
-            var sidebarFilterDescription = "";
-            switch (requestIndexObject.SidebarType)
-            {
-                case AppUtility.SidebarEnum.Vendors:
-                    sidebarFilterDescription = _context.Vendors.Where(v => v.VendorID == sideBarID).Select(v => v.VendorEnName).FirstOrDefault();
-                    RequestsPassedIn = RequestsPassedIn
-                     .OrderByDescending(r => r.ProductID)
-                     .Where(r => r.Product.VendorID == sideBarID);
+                case AppUtility.PageTypeEnum.LabManagementQuotes:
+                    switch (requestIndexObject.SidebarType)
+                    {
+                        case AppUtility.SidebarEnum.Orders:
+                            var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
+                                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);            
+                            iconList.Add(editQuoteDetailsIcon);
+                            iconList.Add(deleteIcon);
+                            viewModelByVendor.RequestsByVendor = (ILookup<Vendor, IEnumerable<RequestIndexPartialRowViewModel>>)ordersRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            {
+                                Vendor = r.Product.Vendor,
+                                Columns = new List<RequestIndexPartialColumnViewModel>()
+                                {
+                                     new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
+                                     new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
+                                     new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
+                                     new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                                     new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},                              
+                                     new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
+                                     new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
+                                     new RequestIndexPartialColumnViewModel()
+                                     {
+                                         Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
+                                     }
+                                }
+                                }).ToLookup(c=>c.Vendor);
+                            break;
+                        case AppUtility.SidebarEnum.Quotes:
+                            var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
+            .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+            .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+            .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
+                            iconList.Add(deleteIcon);
+                            viewModelByVendor.RequestsByVendor = (ILookup<Vendor, IEnumerable<RequestIndexPartialRowViewModel>>)quoteRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            {
+                                Vendor = r.Product.Vendor,
+                                Columns = new List<RequestIndexPartialColumnViewModel>()
+                                {
+                                     new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
+                                     new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
+                                     new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
+                                     new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                                     new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
+                                     new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
+                                     new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
+                                     new RequestIndexPartialColumnViewModel()
+                                     {
+                                         Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
+                                     }
+                                }
+                            }).ToLookup(c => c.Vendor);
+                            break;
+                    }
                     break;
-                case AppUtility.SidebarEnum.Type:
-                    sidebarFilterDescription = _context.ProductSubcategories.Where(p => p.ProductSubcategoryID == sideBarID).Select(p => p.ProductSubcategoryDescription).FirstOrDefault();
-                    RequestsPassedIn = RequestsPassedIn
-                   .OrderByDescending(r => r.ProductID)
-                   .Where(r => r.Product.ProductSubcategoryID == sideBarID);
+                case AppUtility.PageTypeEnum.AccountingNotifications:
+                    switch (requestIndexObject.SidebarType)
+                    {
+                        case AppUtility.SidebarEnum.DidntArrive:
+                            break;
+                        case AppUtility.SidebarEnum.PartialDelivery:
+                            break;
+                        case AppUtility.SidebarEnum.ForClarification:
+                            break;
+                        case AppUtility.SidebarEnum.NoInvoice:
+                            break;
+                    }
                     break;
-                case AppUtility.SidebarEnum.Owner:
-                    var owner = _context.Employees.Where(e => e.Id.Equals(requestIndexObject.SidebarFilterID)).FirstOrDefault();
-                    sidebarFilterDescription = owner.FirstName + " " + owner.LastName;
-                    RequestsPassedIn = RequestsPassedIn
-                    .OrderByDescending(r => r.ProductID)
-                    .Where(r => r.ApplicationUserCreatorID == requestIndexObject.SidebarFilterID);
+                case AppUtility.PageTypeEnum.AccountingPayments:
+                    switch (requestIndexObject.SidebarType)
+                    {
+                        case AppUtility.SidebarEnum.MonthlyPayment:
+                            break;
+                        case AppUtility.SidebarEnum.PayNow:
+                            break;
+                        case AppUtility.SidebarEnum.PayLater:
+                            break;
+                        case AppUtility.SidebarEnum.SpecifyPayment:
+                            break;
+                        case AppUtility.SidebarEnum.Installments:
+                            break;
+                        case AppUtility.SidebarEnum.StandingOrders:
+                            break;
+                    }
                     break;
+                case AppUtility.PageTypeEnum.RequestCart:
+                    var cartRequests = _context.Requests
+              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+              .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+              .Include(r => r.ApplicationUserCreator)
+              .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+              .Where(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
+              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
+
+                    iconList.Add(deleteIcon);
+                    viewModelByVendor.RequestsByVendor = (ILookup<Vendor, IEnumerable<RequestIndexPartialRowViewModel>>)cartRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                {
+                    Vendor = r.Product.Vendor,
+                    Columns = new List<RequestIndexPartialColumnViewModel>()
+                        {
+                                new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
+                                new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
+                                new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
+                                new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                                new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
+                                new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
+                                new RequestIndexPartialColumnViewModel()
+                                {
+                                    Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
+                                }
+                        }
+                       }).ToLookup(c => c.Vendor);
+
+                    break;
+
             }
-
-
-            RequestIndexPartialViewModel requestIndexViewModel = new RequestIndexPartialViewModel();
-            requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
-            requestIndexViewModel.RequestStatusID = requestIndexObject.RequestStatusID;
-            requestIndexViewModel.PageType = requestIndexObject.PageType;
-            requestIndexViewModel.SidebarFilterID = requestIndexObject.SidebarFilterID;
-            requestIndexViewModel.ErrorMessage = requestIndexObject.ErrorMessage;
-            var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
-
-            var RequestPassedInWithInclude = RequestsPassedIn.Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.ParentRequest).Include(r => r.ApplicationUserCreator)
-                .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
-
-            onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
-
-            requestIndexViewModel.PagedList = onePageOfProducts;
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
-            requestIndexViewModel.PriceSortEnums = priceSorts;
-            requestIndexViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
-            requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
-            return requestIndexViewModel;
+            viewModelByVendor.PriceSortEnums = priceSorts;
+            viewModelByVendor.SelectedCurrency = requestIndexObject.SelectedCurrency;
+            viewModelByVendor.PageType = requestIndexObject.PageType;
+            viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
+            return viewModelByVendor;
         }
 
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude)
@@ -2603,68 +2579,25 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> LabManageQuotes()
         {
-            OrdersByVendorViewModel labManageQuotesViewModel = new OrdersByVendorViewModel();
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID==6)
-                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator)
-                .ToLookup(r => r.Product.Vendor);
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Quotes;
-            ViewBag.ErrorMessage = TempData["ErrorMessage"];
-            LabOrdersFunction(labManageQuotesViewModel);
-            return View(labManageQuotesViewModel);
+            return View(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Quotes }));
         }
 
         public async Task<IActionResult> _LabManageQuotes(OrdersByVendorViewModel labManageQuotesViewModel)
         {
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
-                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator)
-                .ToLookup(r => r.Product.Vendor);
-            LabOrdersFunction(labManageQuotesViewModel);
-            return PartialView(labManageQuotesViewModel);
+            return PartialView(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Quotes }));
         }
 
         [HttpGet]
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> LabManageOrders()
         {
-            OrdersByVendorViewModel labManageQuotesViewModel = new OrdersByVendorViewModel();
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID==6)
-                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator)
-                .ToLookup(r => r.Product.Vendor);
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Orders;
-            ViewBag.ErrorMessage = TempData["ErrorMessage"];
-            LabOrdersFunction(labManageQuotesViewModel);
-            return View(labManageQuotesViewModel);
+            return View(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType= AppUtility.SidebarEnum.Orders}));
         }
         public async Task<IActionResult> _LabManageOrders(OrdersByVendorViewModel labManageQuotesViewModel)
         {
-            labManageQuotesViewModel.RequestsByVendor = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
-                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator)
-                .ToLookup(r => r.Product.Vendor);
-            LabOrdersFunction(labManageQuotesViewModel);
-            return PartialView(labManageQuotesViewModel);
+            return PartialView(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Orders }));
         }
-        private OrdersByVendorViewModel LabOrdersFunction(OrdersByVendorViewModel ordersByVendorViewModel)
-        {
-            if (ordersByVendorViewModel.SelectedPriceSort == null)
-            {
-                ordersByVendorViewModel.SelectedPriceSort = new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
-            }
-            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = ordersByVendorViewModel.SelectedPriceSort.Contains(p.ToString()) }));
-            ordersByVendorViewModel.PriceSortEnums = priceSorts;
-
-            return ordersByVendorViewModel;
-        }
+       
 
         /*
          * BEGIN SEARCH
@@ -3530,40 +3463,14 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> Cart()
         {
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Cart;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            OrdersByVendorViewModel cartViewModel = new OrdersByVendorViewModel();
-            ViewBag.ErrorMessage = TempData["ErrorMessage"];
-            CartFunction(cartViewModel);
-            return View(cartViewModel);
+            return View(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart }));
         }
 
         public async Task<IActionResult> _Cart(OrdersByVendorViewModel cartViewModel)
         {
-            CartFunction(cartViewModel);
-            return PartialView(cartViewModel);
+            return PartialView(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart }));
         }
 
-        private OrdersByVendorViewModel CartFunction(OrdersByVendorViewModel cartViewModel)
-        {
-            cartViewModel.RequestsByVendor = _context.Requests.Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-                .Where(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
-                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.ApplicationUserCreator)
-                .ToLookup(r => r.Product.Vendor);
-            if (cartViewModel.SelectedPriceSort == null)
-            {
-                cartViewModel.SelectedPriceSort = new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
-            }
-            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = cartViewModel.SelectedPriceSort.Contains(p.ToString()) }));
-            cartViewModel.PriceSortEnums = priceSorts;
-
-            return cartViewModel;
-        }
 
 
         [HttpGet]

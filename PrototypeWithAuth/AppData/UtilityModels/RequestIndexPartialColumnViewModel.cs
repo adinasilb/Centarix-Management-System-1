@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace PrototypeWithAuth.ViewModels
         public string Image { get; set; }
         public string AjaxLink { get; set; }
         public AppUtility.FilterEnum FilterEnum {get ;set;}
+      
     }
 }
