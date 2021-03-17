@@ -285,6 +285,7 @@ namespace PrototypeWithAuth.Controllers
 
 
             RequestIndexPartialViewModel requestIndexViewModel = new RequestIndexPartialViewModel();
+            requestIndexViewModel.PricePopoverViewModel = new PricePopoverViewModel();
             requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
             requestIndexViewModel.RequestStatusID = requestIndexObject.RequestStatusID;
             requestIndexViewModel.PageType = requestIndexObject.PageType;
@@ -303,8 +304,8 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.PagedList = onePageOfProducts;
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
-            requestIndexViewModel.PriceSortEnums = priceSorts;
-            requestIndexViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
+            requestIndexViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
+            requestIndexViewModel.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             return requestIndexViewModel;
         }
@@ -328,9 +329,13 @@ namespace PrototypeWithAuth.Controllers
                                      .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);            
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = (ILookup<Vendor, IEnumerable<RequestIndexPartialRowViewModel>>)ordersRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
                             {
+                                TotalCost = r.Cost ?? 0+r.VAT,
+                                ExchangeRate = r.ExchangeRate,
                                 Vendor = r.Product.Vendor,
+                                ButtonClasses = " load-terms-modal lab-man-background-color ",
+                                ButtonText = "Order",
                                 Columns = new List<RequestIndexPartialColumnViewModel>()
                                 {
                                      new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
@@ -353,9 +358,13 @@ namespace PrototypeWithAuth.Controllers
             .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
             .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = (ILookup<Vendor, IEnumerable<RequestIndexPartialRowViewModel>>)quoteRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
                             {
+                                TotalCost = r.Cost ?? 0+r.VAT,
+                                ExchangeRate = r.ExchangeRate,
                                 Vendor = r.Product.Vendor,
+                                ButtonClasses = " confirm-quote lab-man-background-color ",
+                                ButtonText = "Ask For Quote",
                                 Columns = new List<RequestIndexPartialColumnViewModel>()
                                 {
                                      new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
@@ -414,10 +423,15 @@ namespace PrototypeWithAuth.Controllers
               .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
 
                     iconList.Add(deleteIcon);
-                    viewModelByVendor.RequestsByVendor = (ILookup<Vendor, IEnumerable<RequestIndexPartialRowViewModel>>)cartRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                    viewModelByVendor.RequestsByVendor = cartRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
                 {
+                  
                     Vendor = r.Product.Vendor,
-                    Columns = new List<RequestIndexPartialColumnViewModel>()
+                        TotalCost = r.Cost ?? 0+ r.VAT,
+                        ExchangeRate = r.ExchangeRate,
+                        ButtonClasses = " load-terms-modal order-inv-background-color ",
+                        ButtonText = "Order",
+                        Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
@@ -428,7 +442,8 @@ namespace PrototypeWithAuth.Controllers
                                 new RequestIndexPartialColumnViewModel()
                                 {
                                     Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                                }
+                                },
+
                         }
                        }).ToLookup(c => c.Vendor);
 
@@ -437,8 +452,9 @@ namespace PrototypeWithAuth.Controllers
             }
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
-            viewModelByVendor.PriceSortEnums = priceSorts;
-            viewModelByVendor.SelectedCurrency = requestIndexObject.SelectedCurrency;
+            viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
+            viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
+            viewModelByVendor.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
             viewModelByVendor.PageType = requestIndexObject.PageType;
             viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
             return viewModelByVendor;
@@ -2579,23 +2595,29 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> LabManageQuotes()
         {
-            return View(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Quotes }));
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Quotes;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Quotes }));
         }
 
-        public async Task<IActionResult> _LabManageQuotes(OrdersByVendorViewModel labManageQuotesViewModel)
+        public async Task<IActionResult> _LabManageQuotes(RequestIndexPartialViewModelByVendor labManageQuotesViewModel)
         {
-            return PartialView(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Quotes }));
+            return PartialView(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Quotes }));
         }
 
         [HttpGet]
         [Authorize(Roles = "LabManagement")]
         public async Task<IActionResult> LabManageOrders()
         {
-            return View(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType= AppUtility.SidebarEnum.Orders}));
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Orders;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] =AppUtility.MenuItems.LabManagement;
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType= AppUtility.SidebarEnum.Orders}));
         }
-        public async Task<IActionResult> _LabManageOrders(OrdersByVendorViewModel labManageQuotesViewModel)
+        public async Task<IActionResult> _LabManageOrders(RequestIndexPartialViewModelByVendor labManageQuotesViewModel)
         {
-            return PartialView(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Orders }));
+            return PartialView(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Orders }));
         }
        
 
@@ -3463,12 +3485,12 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> Cart()
         {
-            return View(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart }));
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart }));
         }
 
         public async Task<IActionResult> _Cart(OrdersByVendorViewModel cartViewModel)
         {
-            return PartialView(GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart }));
+            return PartialView(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart }));
         }
 
 

@@ -12,8 +12,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public IPagedList<RequestIndexPartialRowViewModel> PagedList { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
-        public List<PriceSortViewModel> PriceSortEnums { get; set; }
-        public List<String> PriceSortEnumsList { get; set; }
+        public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public int? PageNumber { get; set; }
         public int RequestStatusID { get; set; }
         public int NewCount { get; set; }
@@ -23,7 +22,6 @@ namespace PrototypeWithAuth.ViewModels
         public int NonProprietaryCount { get; set; }
         public int ProprietaryCount { get; set; }
         public string SidebarFilterID { get; set; }
-        public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
         public string? SidebarFilterName { get; set; }
 
     }

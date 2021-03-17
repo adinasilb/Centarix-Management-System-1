@@ -10,6 +10,10 @@ namespace PrototypeWithAuth.ViewModels
     {
         public IEnumerable<RequestIndexPartialColumnViewModel> Columns { get; set; }
         public Vendor Vendor { get; set; }
+        public double TotalCost { get; set; }
+        public double ExchangeRate { get; set; }
+        public string ButtonClasses {get ;set;}
+        public string ButtonText { get; set; }
 
     }
 }

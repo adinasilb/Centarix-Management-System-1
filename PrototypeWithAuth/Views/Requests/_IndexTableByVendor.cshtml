@@ -1,14 +1,12 @@
-﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
-<input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
-<input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
-@if (Model.PagedList.Count() > 0)
+@if (Model.RequestsByVendor.Count() > 0)
 {
 
 <table class="table table-headerspaced table-noheaderlines table-hover ">
     <thead>
         <tr class="text-center">
-            @foreach (var col in Model.PagedList[0].Columns)
+            @foreach (var col in Model.RequestsByVendor.First().First().Columns)
                 {
 
             <th width="@col.Width%">
@@ -33,9 +31,9 @@
         </tr>
     </thead>
 </table>
-<div class="_IndexTableData">
+<div class="_IndexTableDataByVendor">
     @{
-        await Html.RenderPartialAsync("_IndexTableData", Model);
+        await Html.RenderPartialAsync("_IndexTableDataByVendor", Model);
     }
 </div>
 }

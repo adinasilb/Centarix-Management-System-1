@@ -1,0 +1,104 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
+@using System.Text;
+@using System.Globalization;
+@using PrototypeWithAuth.AppData
+
+<form method="post" enctype="multipart/form-data" style="height: 100%;">
+    @foreach (var vendor in Model.RequestsByVendor)
+    {
+        <table class="table table-headerspaced table-borderless table-hover mb-5 item-table">
+
+            <tr class="text-dark border-0 no-hover h-50" style="line-height:50%;">
+                <td width="10%" class="p-0" rowspan="2"><span class="heading-1">@vendor.Key.VendorEnName.ToLower()</span></td>
+                <td colspan="7" class="border-bottom"></td>
+            </tr>
+            <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
+            <tbody>
+                @{ var requests = vendor.Select(r => r).ToList();}
+
+                @foreach (var row in requests)
+                {
+                    <tr class="text-center inv-list-item">
+                        @foreach (var col in row.Columns)
+                        {
+                            <td width="@col.Width%" class="@(col.Width == 0 ? "p-0" : "")">
+                                @if (col.Image != null)
+                                {
+                                    <img src="@col.Image" alt="Image" width="75" class="category-image" />
+                                }
+                                else if (col.Icons != null)
+                                {
+                                    <div class="d-inline-flex">
+
+                                        @foreach (var icon in col.Icons)
+                                        {
+                                            <div class="table-icon-div">
+
+                                                <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                                   title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                    <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                                </a>
+
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    for (int val = 0; val < col.Value.Count; val++)
+                                    {
+                                        if (val != 0)
+                                        {
+                                            <br />
+                                        }
+                                        if (col.AjaxLink != null)
+                                        {
+                                            <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID" data-target="item" href="item">
+                                                <p class="m-0">@col.Value[val]</p>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <label class="m-0 p-0">@col.Value[val]</label>
+                                        }
+                                    }
+
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+
+                <tr class="border-0 mb-5 no-hover">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                    <td>
+                        <span class="text font-weight-bold">Items: @vendor.Count()</span>
+                    </td>
+                    <td colspan="2">
+                        @{
+                            var currencyFormat = "he-IL";
+                            var sum = requests.Sum(r => r.TotalCost);
+                            if (Model.PricePopoverViewModel.SelectedCurrency == AppUtility.CurrencyEnum.USD)
+                            {
+                                currencyFormat = "en-US";
+                                sum = requests.Sum(r => r.TotalCost/r.ExchangeRate);
+                            }
+                        }
+                            <span class="text font-weight-bold">Total: @string.Format(new CultureInfo(currencyFormat), "{0:c}", sum )</span>
+                     </td>
+                        <td>
+                            <button class="custom-button-font custom-button @requests.FirstOrDefault().ButtonClasses float-right  cart" type="button" value="@vendor.Key.VendorID">@requests.FirstOrDefault().ButtonText</button>
+                        </td>
+                    </tr>
+
+
+            
+                    </table>
+                        }
+                    </form>
+
+                    <script src="~/js/PricePopoverScript.js"></script>
+                    <script src="~/js/ConfirmDeleteScript.js"></script>
