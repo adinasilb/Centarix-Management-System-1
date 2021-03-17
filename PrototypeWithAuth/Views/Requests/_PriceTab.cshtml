@@ -149,7 +149,7 @@ Model.UnitTypeList,
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom @subMarkReadOnly requestPriceQuote" name="subunit-price-dollars" id="subunit-price-dollars" @disabled value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].PricePerSubUnit??0 / Model.Requests[0].ExchangeRate,2))" />
+                                    <input class="form-control-plaintext border-bottom @subMarkReadOnly requestPriceQuote" name="subunit-price-dollars" id="subunit-price-dollars" @disabled value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].PricePerSubUnit??0) / Model.Requests[0].ExchangeRate,2))" />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -225,7 +225,7 @@ Model.UnitTypeList,
                                 <div class="input-group">
                                     <span class="input-group-text request-cost-dollar-icon">&#36;</span>
                                     <input class="form-control-plaintext border-bottom @subsubMarkReadOnly requestPriceQuote" name="subsubunit-price-dollars" id="subsubunit-price-dollars" @disabled
-                                           value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[0].PricePerSubSubUnit??0 / Model.Requests[0].ExchangeRate,2))" />
+                                           value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].PricePerSubSubUnit??0) / Model.Requests[0].ExchangeRate,2))" />
                                 </div>
                             </div>
                             <div class="col-md-6">

@@ -1320,7 +1320,13 @@ namespace PrototypeWithAuth.Controllers
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             if (productSubcategory != null)
             {
-                parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
+                if (categoryTypeId == 1)
+                {   
+                    parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
+                }
+                else {
+                    parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToListAsync();
+                }
                 productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
                 unittypes = _context.UnitTypes.Where(ut => ut.UnitTypeParentCategory.Where(up => up.ParentCategoryID == productSubcategory.ParentCategoryID).Count() > 0).Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             }
@@ -1353,8 +1359,8 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription");
             requestItemViewModel.UnitTypes = unittypeslookup;
             requestItemViewModel.CommentTypes = commentTypes;
-            //requestItemViewModel.PaymentTypes = paymenttypes;
-            //requestItemViewModel.CompanyAccounts = companyaccounts;
+            requestItemViewModel.PaymentTypes = paymenttypes;
+            requestItemViewModel.CompanyAccounts = companyaccounts;
             return requestItemViewModel;
         }
         private async Task<RequestItemViewModel> FillRequestItemViewModel(RequestItemViewModel requestItemViewModel, int categoryTypeId, int productSubcategoryId = 0)
@@ -1495,6 +1501,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return null;
             }
+            
             var productId = _context.Requests.Where(r => r.RequestID == id).Select(r => r.ProductID).FirstOrDefault();
 
             var request = _context.Requests.Include(r => r.Product)
@@ -1508,40 +1515,24 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUserCreator).Include(r=>r.PaymentStatus).Include(r=>r.Payments).ThenInclude(p=>p.CompanyAccount)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
-
+            
             var requestsByProduct = _context.Requests.Where(r => r.ProductID == productId && (r.RequestStatusID == 3))
                  .Include(r => r.Product.ProductSubcategory).Include(r => r.Product.ProductSubcategory.ParentCategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Include(r => r.ParentRequest)
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType)
                     .ToList();
-            var parentcategories = await _context.ParentCategories.Where(pc=>pc.CategoryTypeID == categoryType).ToListAsync();
-            var productsubactegories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).ToListAsync();
-            var projects = await _context.Projects.ToListAsync();
-            var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryType).Count() > 0).ToListAsync();
-            //redo the unit types when seeded
-            var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
-            var paymenttypes = await _context.PaymentTypes.ToListAsync();
-            var companyaccounts = await _context.CompanyAccounts.ToListAsync();
-            List<AppUtility.CommentTypeEnum> commentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-            RequestItemViewModel requestItemViewModel = new RequestItemViewModel()
-            {
-                ParentCategories = parentcategories,
-                ProductSubcategories = productsubactegories,
-                Vendors = vendors,
-                Projects = projects,
-                UnitTypeList = new SelectList(unittypes, "UnitTypeID", "UnitTypeDescription", null, "UnitParentType.UnitParentTypeDescription"),
-                PaymentTypes = paymenttypes,
-                CompanyAccounts = companyaccounts,
-                Tab = Tab ?? 0,
-                Comments = await _context.Comments
+
+            RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
+            await FillRequestDropdowns(requestItemViewModel, request.Product.ProductSubcategory, categoryType);
+
+            requestItemViewModel.Tab = Tab ?? 0;
+            requestItemViewModel.Comments = await _context.Comments
                 .Include(r => r.ApplicationUser)
-                .Where(r => r.Request.RequestID == id).ToListAsync(),
-                CommentTypes = commentTypes,
-                SectionType = SectionType,
-                RequestsByProduct = requestsByProduct,
-                Requests = new List<Request>()
-            };
+                .Where(r => r.Request.RequestID == id).ToListAsync();
+            requestItemViewModel.SectionType = SectionType;
+            requestItemViewModel.RequestsByProduct = requestsByProduct;
+            requestItemViewModel.Requests = new List<Request>();
             if (isEditable)
             {
                 requestItemViewModel.ModalType = AppUtility.RequestModalType.Edit;
