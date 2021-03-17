@@ -210,7 +210,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 <input type="text" asp-for="Requests[0].BatchExpiration" class="form-control-plaintext border-bottom datepicker @batchCategories @markReadOnlyClass" disabled="disabled" />
             </div>
         </div>
-        @if (modalType != AppUtility.RequestModalType.Create && Model.Requests[0].ParentQuote.QuoteNumber != null)
+        @if (modalType != AppUtility.RequestModalType.Create && Model.Requests[0].ParentQuote?.QuoteNumber != null)
         {
             <div class="row @hiddenSummaryClass @quoteCategories">
                 <div class="col-md-6">
