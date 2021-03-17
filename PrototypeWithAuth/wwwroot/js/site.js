@@ -341,7 +341,7 @@ $(function () {
 		//});
 	});
 
-
+	//it seems that this is the method that's being used
 	$(".open-document-modal").off('click').on("click", function (e) {
 
 		e.preventDefault();

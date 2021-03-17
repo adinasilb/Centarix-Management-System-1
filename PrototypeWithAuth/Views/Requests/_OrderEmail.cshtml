@@ -8,7 +8,7 @@
      currency = '$';
  }
  var colspan = 1;
-@if (Model.Requests[0].Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+@if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
 {
 
     colspan = 4;
