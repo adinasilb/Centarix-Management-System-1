@@ -2143,7 +2143,10 @@ namespace PrototypeWithAuth.Controllers
                                     foreach (var r in requests)
                                     {
                                         r.RequestStatusID = 2;
-                                 
+                                        if (r.PaymentStatusID == 7)
+                                        {
+                                            r.RequestStatusID = 3;
+                                        }
                                         if (r.OrderType != AppUtility.OrderTypeEnum.OrderNow.ToString())
                                         {
                                             r.Product = null;
@@ -3278,14 +3281,17 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ParentQuote)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList();
-                var vendor = _context.Vendors.Where(v => v.VendorID == id).FirstOrDefault();
+                foreach(var request in requests)
+                {
+                    request.ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
+                }
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
                     Requests = requests,
-                    Vendor = vendor,
                     QuoteDate = DateTime.Now,
                     ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
                 };
+                
                 return PartialView(editQuoteDetailsViewModel);
             }
             //needs testing 
@@ -4593,7 +4599,11 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     req.Product.Vendor = null;
                                 }
-                             
+                                if (req.PaymentStatusID == 7)
+                                {
+                                    req.RequestStatusID = 3;
+                                }
+
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }

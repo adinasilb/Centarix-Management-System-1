@@ -1,8 +1,8 @@
 ﻿
 $('.termsModalForm').validate({
 	rules: {
-		"SelectedTerm": "selectRequired"
-
+		"SelectedTerm": "selectRequired",
+		"Installments" :"required"
 	}
 
 });
