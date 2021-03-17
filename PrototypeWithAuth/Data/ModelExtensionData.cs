@@ -187,6 +187,11 @@ namespace PrototypeWithAuth.Data
                 },
                 new UnitTypeParentCategory
                 {
+                    UnitTypeID = 24,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
                     UnitTypeID = 17,
                     ParentCategoryID = 2
                 },
@@ -277,6 +282,11 @@ namespace PrototypeWithAuth.Data
                 },
                 new UnitTypeParentCategory
                 {
+                    UnitTypeID = 24,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
                     UnitTypeID = 5,
                     ParentCategoryID = 3
                 },
@@ -303,6 +313,11 @@ namespace PrototypeWithAuth.Data
                 new UnitTypeParentCategory
                 {
                     UnitTypeID = 5,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 24,
                     ParentCategoryID = 4
                 },
                 new UnitTypeParentCategory
@@ -993,6 +1008,12 @@ namespace PrototypeWithAuth.Data
                  UnitTypeID = 6,
                  UnitParentTypeID = 1,
                  UnitTypeDescription = "Vial"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 24,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Tube"
              },
              new UnitType
              {
