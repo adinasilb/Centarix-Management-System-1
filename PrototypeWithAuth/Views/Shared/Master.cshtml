@@ -1091,7 +1091,7 @@
                     $.fn.OpenModal('documentsModal', 'documents', data)
                     var length = $('.iframe-container').length;
 			        if (length < 1) {
-				        $.fn.RemoveColorsOfDocs($foldername);
+                        $.fn.RemoveColorsOfDocs(enumString);
 			        }
                     return true;
                 }

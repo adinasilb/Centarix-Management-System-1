@@ -62,12 +62,12 @@
 	});
 
 	
-
+	//seems to not be used. only diff is that other one has $(".open-document-modal").removeClass("active-document-modal");
 	$(".open-document-modal").off('click').on("click", function (e) {
 
 		e.preventDefault();
 		e.stopPropagation();
-		console.log("clicked open doc modal");
+		console.log("clicked open doc modal 1");
 		var section = $("#masterSectionType").val();
 		console.log("section"+section)
 		$(this).addClass("active-document-modal");
