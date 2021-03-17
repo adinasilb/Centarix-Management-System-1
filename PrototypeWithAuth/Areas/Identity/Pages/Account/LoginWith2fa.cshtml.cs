@@ -55,7 +55,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             public bool TwoFactorSessionExpired { get; set; }
         }
 
-        public async Task<IActionResult> OnGetAsync(bool rememberMe = false, string returnUrl = null, bool twoFactorSessionExpired = false, bool InputRememberTwoFactor = false)
+        public async Task<IActionResult> OnGetAsync(bool rememberMe = false, string returnUrl = null, bool twoFactorSessionExpired = false, bool InputRememberTwoFactor = false, string errorMessage = null)
         {
             // Ensure the user has gone through the username & password screen first
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
@@ -72,6 +72,10 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 TwoFactorSessionExpired = twoFactorSessionExpired,
                 InputRememberTwoFactor = InputRememberTwoFactor
             };
+            if(errorMessage != null)
+            {
+                ModelState.AddModelError(string.Empty, errorMessage);
+            }
             return Page();
         }
 

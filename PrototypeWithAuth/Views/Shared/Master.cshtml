@@ -78,12 +78,15 @@
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <div class="request_nav_body"> @RenderBody()</div>
-   
+    <div class="modals">
+        @{await Html.RenderPartialAsync("ModalLoader"); }
+    </div>
+
 
     <!--  SCRIPTS  -->
     <!-- JQuery -->
     @*load jquery ui*@
-    
+
     <script src="~/lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
     <!-- Bootstrap tooltips -->
@@ -105,7 +108,7 @@
         <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>*@
 
     <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script>
-    @*getting an 
+    @*getting an
         without type=module*@
     <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script>
     @*getting an error without type=module*@
@@ -177,8 +180,8 @@
     <script src="~/lib/bootstrap/dist/src/js/pro/file-input.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/mdb-autocomplete.js"></script>
     @*<script src="~/lib/bootstrap/dist/src/js/pro/picker-date.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker-time.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker.js"></script>*@
+        <script src="~/lib/bootstrap/dist/src/js/pro/picker-time.js"></script>
+        <script src="~/lib/bootstrap/dist/src/js/pro/picker.js"></script>*@
     <script src="~/lib/bootstrap/dist/src/js/pro/preloading.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/range-input.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/sidenav.js"></script>
@@ -241,11 +244,11 @@
     <script src="~/js/moment.min.js"></script>
     @*<script src="~/js/datepicker.min.js"></script>
 
-     Include English language 
-    <script src="~/js/datepicker.en.js"></script>*@
+         Include English language
+        <script src="~/js/datepicker.en.js"></script>*@
 
     <script>
-       
+
         $.fn.setUpChartDDlPlaceholders = function () {
             $("#select-options-SelectedCategoryTypes li:first").hide()
             $("#select-options-VendorCategoryTypes li:first").hide()
@@ -340,7 +343,7 @@
             return false;
         });
 
-      
+
 
         $(".load-quote-details").on("click", function (e) {
             console.log("in order details");
@@ -352,7 +355,7 @@
             return false;
         });
 
-       
+
         $(".js-go-to-controller").on("click", function (e) {
             console.log("inside of js-go-to-controller");
             e.preventDefault();
@@ -508,7 +511,7 @@
                             $.fn.OpenModal('modal', 'received-item', modal)
                             $('.mdb-select').materialSelect();
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
-                            break;                    
+                            break;
                         case "termsmodal":
                             $.fn.OpenModal('modal', 'terms', modal)
                             break;
@@ -674,7 +677,7 @@
             //$('.mdb-select li:nth-child(2)').hide();
         };
 
-      
+
 
         $.fn.getMenuItems = function () {
            // alert("get menu items")
@@ -994,7 +997,7 @@
             $.fn.UpdateNotificationLastRead();
 
         });
-        
+
         $.fn.CallModal = function (url, modalClass) {
             $.ajax({
                 async: false,
