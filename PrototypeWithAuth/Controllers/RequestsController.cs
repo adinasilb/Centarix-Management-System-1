@@ -327,11 +327,11 @@ namespace PrototypeWithAuth.Controllers
                             var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
                                      .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                                      .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);            
-                            iconList.Add(editQuoteDetailsIcon);
+                   
                             iconList.Add(deleteIcon);
                             viewModelByVendor.RequestsByVendor = ordersRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
                             {
-                                TotalCost = r.Cost ?? 0+r.VAT,
+                                TotalCost = (r.Cost ?? 0)+r.VAT,
                                 ExchangeRate = r.ExchangeRate,
                                 Vendor = r.Product.Vendor,
                                 ButtonClasses = " load-terms-modal lab-man-background-color ",
@@ -357,10 +357,11 @@ namespace PrototypeWithAuth.Controllers
             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
             .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
             .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
+                            iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
                             viewModelByVendor.RequestsByVendor = quoteRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
                             {
-                                TotalCost = r.Cost ?? 0+r.VAT,
+                                TotalCost = (r.Cost ?? 0)+r.VAT,
                                 ExchangeRate = r.ExchangeRate,
                                 Vendor = r.Product.Vendor,
                                 ButtonClasses = " confirm-quote lab-man-background-color ",
@@ -427,7 +428,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                   
                     Vendor = r.Product.Vendor,
-                        TotalCost = r.Cost ?? 0+ r.VAT,
+                        TotalCost = (r.Cost ?? 0)+ r.VAT,
                         ExchangeRate = r.ExchangeRate,
                         ButtonClasses = " load-terms-modal order-inv-background-color ",
                         ButtonText = "Order",
@@ -2375,6 +2376,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 //throw new Exception();
                                 await transaction.CommitAsync();
+                                base.RemoveRequestSessions();
 
                             }
                             catch (Exception ex)
@@ -2619,7 +2621,11 @@ namespace PrototypeWithAuth.Controllers
         {
             return PartialView(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Orders }));
         }
-       
+
+        public async Task<IActionResult> _IndexTableDataByVendor(RequestIndexObject requestIndexObject)
+        {
+            return PartialView(await GetIndexViewModelByVendor(requestIndexObject));
+        }
 
         /*
          * BEGIN SEARCH
@@ -3485,14 +3491,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> Cart()
         {
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Cart;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart }));
         }
-
-        public async Task<IActionResult> _Cart(OrdersByVendorViewModel cartViewModel)
-        {
-            return PartialView(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart }));
-        }
-
 
 
         [HttpGet]

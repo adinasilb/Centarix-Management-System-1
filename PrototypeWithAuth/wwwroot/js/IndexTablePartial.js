@@ -157,6 +157,16 @@ $("#Months, #Years").off("change").on("change", function (e) {
     return false;
 });
 
+  $(".load-terms-modal").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+
+            var $itemurl = "/Requests/TermsModal/?vendorID=" + $(this).val() + "&"+$.fn.getRequestIndexString();
+            console.log("itemurl: " + $itemurl);
+            $.fn.CallPageRequest($itemurl, "termsmodal");
+            return false;
+        });
 
 function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years) {
     console.log("in ajax partial index call"+url);
