@@ -101,7 +101,10 @@
                                     <div class=" row text-right mb-0">
                                         <div class="switch col-12 switch-margin">
                                             <label>
-                                                <label class="edit-mode-switch-description">Edit Mode Off</label>
+                                                @{
+                                                    var switchDescription = Model.IsEdittable ? "Edit Mode On" : "Edit Mode Off";
+                                                 }
+                                                <label class="edit-mode-switch-description"> @switchDescription</label>
                                                 <input type="checkbox" class="turn-edit-doc-on-off operations" @isChecked @*value="@Model.Request.RequestID"*@>
                                                 <span class="lever"></span>
                                             </label>
@@ -267,6 +270,6 @@
         $.fn.CloseModal("documents");
     })
 </script>
-
+<script src="~/js/DeleteDocModal.js"></script>
 <script src="~/js/DocumentModalJS.js"></script>
 <script src="~/js/site.js"></script>

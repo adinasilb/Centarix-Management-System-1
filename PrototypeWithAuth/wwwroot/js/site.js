@@ -346,7 +346,7 @@ $(function () {
 
 		e.preventDefault();
 		e.stopPropagation();
-		console.log("clicked open doc modal");
+		console.log("clicked open doc modal 2");
 		$(".open-document-modal").removeClass("active-document-modal");
 		var section = $("#masterSectionType").val();
 		$(this).addClass("active-document-modal");

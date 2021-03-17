@@ -70,7 +70,7 @@
                                 <label asp-for="ParentRequest.Shipping" class="control-label"></label>
                                 <div class="input-group">
                                     <span class="input-group-text pr-2">@Html.Raw(currency)</span>
-                                    <input type="text" asp-for="ParentRequest.Shipping" class="form-control-plaintext border-bottom" />
+                                    <input asp-for="ParentRequest.Shipping" class="form-control-plaintext border-bottom" />
                                     <span asp-validation-for="ParentRequest.Shipping" class="text-danger-centarix"></span>
                                 </div>
                             </div>
@@ -85,11 +85,11 @@
                                 <label asp-for="Installments" class="control-label"></label>
                                 @if (disabled)
                                 {
-                                    <input type="text" asp-for="Installments" disabled class="form-control-plaintext border-bottom" />
+                                    <input asp-for="Installments" disabled class="form-control-plaintext border-bottom" />
                                 }
                                 else
                                 {
-                                    <input type="text" asp-for="Installments" class="form-control-plaintext border-bottom" />
+                                    <input asp-for="Installments" class="form-control-plaintext border-bottom" />
                                 }
 
                                 <span asp-validation-for="Installments" class="text-danger-centarix"></span>
