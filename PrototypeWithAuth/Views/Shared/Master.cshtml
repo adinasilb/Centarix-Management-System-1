@@ -452,6 +452,10 @@
                     $.fn.EnableSubUnits();
                     $.fn.ChangeSubUnitDropdown();
                 }
+                if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
+                    console.log("no quote")
+                    $(".requestPriceQuote").prop("disabled", true);
+                }
             }
             if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
                 $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');

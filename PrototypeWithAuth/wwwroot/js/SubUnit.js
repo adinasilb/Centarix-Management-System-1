@@ -342,6 +342,10 @@ $(function () {
 			$("#subUnitTypeID").addClass('mark-readonly');
 			$.fn.ChangeSubUnitDropdown();
 			$.fn.CheckCurrency();
+			if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
+				console.log("no quote")
+				$(".requestPriceQuote").prop("disabled", true);
+			}
 		}
 		//else {
 		//	$.fn.DisableSubUnits();
@@ -364,6 +368,10 @@ $(function () {
 			$("#subSubUnitTypeID").addClass('mark-readonly');
 			$.fn.ChangeSubSubUnitDropdown();
 			$.fn.CheckCurrency();
+			if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
+				console.log("no quote")
+				$(".requestPriceQuote").prop("disabled", true);
+            }
 		}
 		//else {
 		//	$.fn.DisableSubSubUnits();
