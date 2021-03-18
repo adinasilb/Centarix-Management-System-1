@@ -4025,7 +4025,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    throw new Exception();
                     var paymentsList = _context.Payments.Where(p => p.IsPaid == false);
                     foreach (Request request in paymentsPayModalViewModel.Requests)
                     {
