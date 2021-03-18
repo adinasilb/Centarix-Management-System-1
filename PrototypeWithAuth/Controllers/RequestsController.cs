@@ -457,6 +457,7 @@ namespace PrototypeWithAuth.Controllers
             viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
             viewModelByVendor.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
             viewModelByVendor.PageType = requestIndexObject.PageType;
+            viewModelByVendor.SidebarType = requestIndexObject.SidebarType;
             viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
             return viewModelByVendor;
         }

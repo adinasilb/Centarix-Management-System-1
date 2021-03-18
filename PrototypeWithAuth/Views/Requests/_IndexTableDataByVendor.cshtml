@@ -28,20 +28,22 @@
                                 }
                                 else if (col.Icons != null)
                                 {
-                                    <div class="d-inline-flex">
+                            <div class="d-inline-flex">
+ 
+                                @foreach (var icon in col.Icons)
+                                {
 
-                                        @foreach (var icon in col.Icons)
-                                        {
-                                            <div class="table-icon-div">
+                                    <div class="table-icon-div">
 
-                                                <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
-                                                   title="@icon.TooltipTitle" value="@col.AjaxID">
-                                                    <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
-                                                </a>
+                                        <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                           title="@icon.TooltipTitle" value="@col.AjaxID">
+                                            <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                        </a>
 
-                                            </div>
-                                        }
                                     </div>
+
+                                }
+                            </div>
                                 }
                                 else
                                 {
