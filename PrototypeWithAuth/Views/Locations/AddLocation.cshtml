@@ -96,6 +96,7 @@
 
     });
     $("#submitAddLocation").click(function (e) {
+        e.preventDefault();
         $("#loading").show();
         var formData = new FormData($("#myForm")[0]);
         $.ajax({
