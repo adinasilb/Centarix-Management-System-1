@@ -1750,7 +1750,7 @@ namespace PrototypeWithAuth.Controllers
                 request.ParentRequest = null;
                 //requestItemViewModel.Request.ParentQuote.ParentQuoteID = (Int32)requestItemViewModel.Request.ParentQuoteID;
                 var parentQuote = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == request.ParentQuoteID).FirstOrDefault();
-                if (parentQuote != null)
+                if (parentQuote != null && request.ParentQuote != null)
                 {
 
                     parentQuote.QuoteNumber = request.ParentQuote.QuoteNumber;
@@ -3463,37 +3463,57 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Include(x => x.ParentQuote).Select(r => r);
-                //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
-                var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
-                foreach (var quote in editQuoteDetailsViewModel.Requests)
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
+                    try { 
+                    var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Include(x => x.ParentQuote).Select(r => r);
+                    //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
+                    var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
+                        foreach (var quote in editQuoteDetailsViewModel.Requests)
+                        {
+                            throw new Exception();
+                            var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
 
-                    request.ParentQuote.QuoteStatusID = 4;
-                    //request.ParentQuote.QuoteDate = quoteDate;
-                    request.ParentQuote.QuoteNumber = quoteNumber.ToString(); ;
-                    request.Cost = quote.Cost;
-                    request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
-                    _context.Update(request);
-                    _context.SaveChanges();
-                    //save file
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolder = Path.Combine(uploadFolder, quote.RequestID.ToString());
-                    string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
-                    Directory.CreateDirectory(folderPath);
-                    string uniqueFileName = 1 + editQuoteDetailsViewModel.QuoteFileUpload.FileName;
-                    string filePath = Path.Combine(folderPath, uniqueFileName);
-                    editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(new FileStream(filePath, FileMode.Create));
-
+                            request.ParentQuote.QuoteStatusID = 4;
+                            //request.ParentQuote.QuoteDate = quoteDate;
+                            request.ParentQuote.QuoteNumber = quoteNumber.ToString(); ;
+                            request.Cost = quote.Cost;
+                            request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
+                            _context.Update(request);
+                            _context.SaveChanges();
+                            //save file
+                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                            string requestFolder = Path.Combine(uploadFolder, quote.RequestID.ToString());
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                            Directory.CreateDirectory(folderPath);
+                            string uniqueFileName = 1 + editQuoteDetailsViewModel.QuoteFileUpload.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            editQuoteDetailsViewModel.QuoteFileUpload.CopyTo(new FileStream(filePath, FileMode.Create));
+                        }
+                        transaction.CommitAsync();
+                    }
+                    catch(Exception ex)
+                    {
+                        transaction.RollbackAsync();
+                        throw ex;
+                    }
                 }
+                
                 return RedirectToAction("LabManageQuotes");
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
+                var previousRequest = _context.Requests.Where(r => r.RequestID == editQuoteDetailsViewModel.Requests.FirstOrDefault().RequestID)
+              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product).ThenInclude(p => p.ProductSubcategory)
+              .Include(r => r.ParentQuote).Include(r => r.UnitType).Include(r => r.SubSubUnitType).Include(r => r.SubUnitType).FirstOrDefault();
+                var newRequest = editQuoteDetailsViewModel.Requests.FirstOrDefault();
+                previousRequest.Cost = newRequest.Cost;
+                previousRequest.Currency = newRequest.Currency;
+                previousRequest.ExpectedSupplyDays = newRequest.ExpectedSupplyDays;
+                editQuoteDetailsViewModel.Requests[0] = previousRequest;
+                editQuoteDetailsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                Response.StatusCode = 500;
+                return PartialView(editQuoteDetailsViewModel);
             }
 
         }
@@ -3995,42 +4015,62 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsPayModal(PaymentsPayModalViewModel paymentsPayModalViewModel)
         {
-            var paymentsList = _context.Payments.Where(p => p.IsPaid == false);
-            foreach (Request request in paymentsPayModalViewModel.Requests)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                Payment payment = new Payment();
-                var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
-                if (requestToUpdate.PaymentStatusID == 7)
+                try
                 {
-                    payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
-                    _context.Add(new Payment() { PaymentDate = payment.PaymentDate.AddMonths(1) , RequestID = requestToUpdate.RequestID});
-                }
-                else if (requestToUpdate.PaymentStatusID == 5)
-                {
-                    var payments = paymentsList.Where(p=> p.RequestID == requestToUpdate.RequestID);
-                    var count = payments.Count();
-                    payment= payments.OrderBy(p=>p.PaymentDate).FirstOrDefault();
-                    if(count<=1)
+                    throw new Exception();
+                    var paymentsList = _context.Payments.Where(p => p.IsPaid == false);
+                    foreach (Request request in paymentsPayModalViewModel.Requests)
                     {
-                        requestToUpdate.Paid = true;
-                        payment.Sum = requestToUpdate.Cost ?? 0;
+                        Payment payment = new Payment();
+                        var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
+                        if (requestToUpdate.PaymentStatusID == 7)
+                        {
+                            payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
+                            _context.Add(new Payment() { PaymentDate = payment.PaymentDate.AddMonths(1), RequestID = requestToUpdate.RequestID });
+                        }
+                        else if (requestToUpdate.PaymentStatusID == 5)
+                        {
+                            var payments = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID);
+                            var count = payments.Count();
+                            payment = payments.OrderBy(p => p.PaymentDate).FirstOrDefault();
+                            if (count <= 1)
+                            {
+                                requestToUpdate.Paid = true;
+                                payment.Sum = requestToUpdate.Cost ?? 0;
+                            }
+                        }
+                        else
+                        {
+                            payment.Sum = request.Cost ?? 0;
+                            requestToUpdate.Paid = true;
+                            payment.PaymentDate = DateTime.Now.Date;
+                            payment.RequestID = requestToUpdate.RequestID;
+                        }
+                        payment.Reference = paymentsPayModalViewModel.Payment.Reference;
+                        payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;
+                        payment.PaymentReferenceDate = paymentsPayModalViewModel.Payment.PaymentReferenceDate;
+                        payment.IsPaid = true;
+                        _context.Update(payment);
+                        _context.Update(requestToUpdate);
                     }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
                 }
-                else
+                catch (Exception ex)
                 {
-                    payment.Sum = request.Cost ?? 0;
-                    requestToUpdate.Paid = true;
-                    payment.PaymentDate = DateTime.Now.Date;
-                    payment.RequestID = requestToUpdate.RequestID;
+                    await transaction.RollbackAsync();
+                    Response.StatusCode = 500;
+                    for (int i = 0; i < paymentsPayModalViewModel.Requests.Count; i++)
+                    {
+                        paymentsPayModalViewModel.Requests[i] = _context.Requests.Where(r => r.RequestID == paymentsPayModalViewModel.Requests[i].RequestID).Include(r => r.Product)
+                            .ThenInclude(p => p.Vendor).FirstOrDefault();
+                    }
+                    paymentsPayModalViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    return PartialView(paymentsPayModalViewModel);
                 }
-                payment.Reference = paymentsPayModalViewModel.Payment.Reference;
-                payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;
-                payment.PaymentReferenceDate = paymentsPayModalViewModel.Payment.PaymentReferenceDate;               
-                payment.IsPaid = true;
-                _context.Update(payment);
-                _context.Update(requestToUpdate);
             }
-            await _context.SaveChangesAsync();
 
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingEnum });
         }

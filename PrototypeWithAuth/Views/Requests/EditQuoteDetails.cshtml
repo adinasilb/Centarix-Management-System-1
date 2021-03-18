@@ -27,7 +27,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 <!-- Modal Header -->
                 <div class="new-modal-header no-box-shadow">
-                     @if (TempData["ErrorMessage"] != null) {<h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
+                     @if (Model.ErrorMessage != null) {<h6 class="text-danger-centarix">@Model.ErrorMessage</h6>
                         <br />
                     }
 
@@ -40,7 +40,10 @@
                         <div class="col-3">
                             <div class="top-menu">@Model.Requests[0].Product.Vendor.VendorEnName</div>
                         </div>
-                        <input type="hidden" asp-for="@Model.Requests[0].Product.VendorID" />
+                        <input type="hidden" asp-for="@Model.QuoteFileUpload" />
+
+
+                        <input type="hidden" asp-for="@Model.Requests[0].Product.ProductSubcategoryID" />
                         <input type="hidden" asp-for="@Model.ParentQuoteID" />
                         <div class="col-3 offset-2">
                             <div class="form-group d-inline-flex">
@@ -51,12 +54,12 @@
                         </div>
 
                         @*<div class="col-3">
-                <div class="form-group d-inline-flex">
-                    <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                    <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
-                    <span asp-validation-for="@Model.QuoteDate" class="text-danger-centarix"></span>
-                </div>
-            </div>*@
+            <div class="form-group d-inline-flex">
+                <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
+                <span asp-validation-for="@Model.QuoteDate" class="text-danger-centarix"></span>
+            </div>
+        </div>*@
 
                     </div>
                     <div class="container p-0">
@@ -142,7 +145,7 @@
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
+                                                <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" value="@(Math.Round((Model.Requests[i].Cost??0)/Model.Requests[i].ExchangeRate, 2))"/>
                                             </div>
                                             <div class="input-group">
                                                 <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
@@ -159,19 +162,19 @@
                                     </td>
                                     <td width="15%" class="border-right">
                                         <div class="form-group">
-                                            <input value="" class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" />
+                                            <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value ="@DateTime.Now.AddDays(Model.Requests[i].ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")"/>
                                         </div>
                                     </td>
                                 </tr>
                              }
                             <tr class="border-0  no-hover ">
                                 <td colspan="3" class="p-0">
-                                    <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1  modal-footer-mt">
+                                    <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1  modal-footer-mt" >
                                 </td>
                                 <td colspan="4" class="p-0 ">
                                     <div class="form-group text-center modal-footer-mt">
-                                        <input type="submit" asp-action="EditQuoteDetails" name="OrderType" value="Save" class="custom-button between-button-margin custom-button-font lab-man-background-color" />
-                                        <button type="button" class="custom-cancel custom-button px-5" data-dismiss="modal" onclick="$.fn.CloseModal('edit-quote');">Cancel</button>
+                                        <input type="submit" @*asp-action="EditQuoteDetails" name="OrderType"*@ value="Save" class="custom-button between-button-margin custom-button-font lab-man-background-color save-quote-details" />
+                                        <button type="button" class="custom-cancel custom-button px-5" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('edit-quote');">Cancel</button>
                                     </div>
                                 </td>
 
@@ -192,3 +195,25 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+<script>
+    $(".save-quote-details").click(function (e) {
+        e.preventDefault();
+        var formData = new FormData($("#myForm")[0]);
+        $.ajax({
+            processData: false,
+            contentType: false,
+            async: true,
+            url: "/Requests/EditQuoteDetails",
+            type: 'POST',
+            data: formData,
+            cache: false,
+            success: function (data) {
+                $.fn.OpenModal('modal', 'step-1', data)
+            },
+            error: function (jqxhr) {
+                $.fn.OpenModal('modal', 'edit-quote', jqxhr.responseText)
+                $('.mdb-select').materialSelect();
+            }
+        });
+    })
+</script>
