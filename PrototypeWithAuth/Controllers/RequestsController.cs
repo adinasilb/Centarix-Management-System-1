@@ -1917,6 +1917,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, bool NewRequestFromProduct = false, String SectionType = "")
         {
             DeleteTemporaryDocuments();
+            base.RemoveRequestSessions();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             Request request = _context.Requests
@@ -1971,6 +1972,11 @@ namespace PrototypeWithAuth.Controllers
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ExchangeRate = oldRequest.ExchangeRate;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Currency = oldRequest.Currency;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().IncludeVAT = oldRequest.IncludeVAT;
+                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().UnitTypeID = oldRequest.UnitTypeID;
+                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubUnitTypeID = oldRequest.SubUnitTypeID;
+                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubSubUnitTypeID = oldRequest.SubSubUnitTypeID;
+                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubUnit = oldRequest.SubUnit;
+                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubSubUnit = oldRequest.SubSubUnit;
                     var isInBudget = checkIfInBudget(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), oldRequest.Product);
                     using (var transaction = _context.Database.BeginTransaction())
                     {
@@ -2067,7 +2073,7 @@ namespace PrototypeWithAuth.Controllers
             var isRequests = true;
             var RequestNum = 1;
             int lastParentRequestOrderNum = 0;
-            var prs = _context.ParentRequests;
+            //var prs = _context.ParentRequests;
             if (_context.ParentRequests.Any())
             {
                 lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
