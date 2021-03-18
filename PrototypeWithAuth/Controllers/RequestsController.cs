@@ -3477,7 +3477,7 @@ namespace PrototypeWithAuth.Controllers
                     var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
                         foreach (var quote in editQuoteDetailsViewModel.Requests)
                         {
-                            throw new Exception();
+                            //throw new Exception();
                             var request = requests.Where(r => r.RequestID == quote.RequestID).FirstOrDefault();
 
                             request.ParentQuote.QuoteStatusID = 4;
