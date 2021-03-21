@@ -46,8 +46,9 @@
             <div class="form-group modal-line-1-header modal-sides row">
                 @if (Model.SectionType != AppUtility.MenuItems.Operations)
                 {
+                    var productNameRows = Model.Requests[0].Product.ProductName!=null ? Math.Ceiling((float)(Model.Requests[0].Product.ProductName.Length) / 45) : 1;
                     <div class="heading-1 modal-title col-8">
-                        <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
+                        <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name" placeholder="(item name)" rows="@productNameRows" cols="50" maxlength="150" style="resize:none;"></textarea>
                     </div>
                     <span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
                 }
