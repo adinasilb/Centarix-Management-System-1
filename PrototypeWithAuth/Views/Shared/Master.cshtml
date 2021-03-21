@@ -350,7 +350,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/Requests/EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestID=" + $(this).val();
+            var $itemurl = "/Requests/EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestID=" + $(this).attr("value");
             $.fn.CallPageRequest($itemurl, "quote");
             return false;
         });
@@ -618,16 +618,7 @@
 
         }
 
-        $(".load-terms-modal").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-
-            var $itemurl = "/Requests/TermsModal/?vendorID=" + $(this).val() + "&"+$.fn.getRequestIndexString();
-            console.log("itemurl: " + $itemurl);
-            $.fn.CallPageRequest($itemurl, "termsmodal");
-            return false;
-        });
+      
 
         $(".load-confirm-email").on("click", function (e) {
             e.preventDefault();

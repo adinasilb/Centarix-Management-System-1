@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.OrdersByVendorViewModel
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "LabManageQuotes";
@@ -14,48 +14,12 @@
     }
     else
     {
-   
-        <form method="post" enctype="multipart/form-data" style="height: 100%; ">
-            <table class="table table-headerspaced table-borderless table-hover mb-5 item-table">
-                <thead>
-                    <tr class="text-center">
-                        <td class="pb-0" width="15%"></td>
-                        <td class="pb-0" style="width:10%;">
-                            Item Name
-                        </td>
-                        <td class="pb-0" style="width:10%;">
-                            Vendor
-                        </td>
-                        <td class="pb-0" style="width:10%">
-                            Type
-                        </td>
-                        <td class="pb-0" style="width:10%">
-                            Amount
-                        </td>
-                        <td class="pb-0" style="width:10%">
-                            Price
-                            <div class="d-inline-block">
-                                @{
-                                    await Html.RenderPartialAsync("_PricePopoverCart", Model);
-                                }
-                            </div>
-                        </td>
-                        <td class="pb-0" style="width:15%">
-                            Requested By
-                        </td>
-                        <td class="pb-0" style="width:7%">
-                        </td>
-                        <td class="pb-0" style="width:13%">
-                        </td>
-                    </tr>
-                </thead>
-                <tbody class="partial-orders">
-                    @{
-                        await Html.RenderPartialAsync("_LabManageQuotes", Model);
-                    }
-                </tbody>
-            </table>
-        </form>
+        <div class="_IndexTableByVendor">
+            @{
+                await Html.RenderPartialAsync("_IndexTableByVendor", Model);
+            }
+        </div>
+
     }
 }
 

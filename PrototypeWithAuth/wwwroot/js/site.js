@@ -1697,20 +1697,7 @@ $(function () {
 		$('#addRequestComment').popover('toggle');
 
 	});
-	$(".more, .accNotification").off('click').click(function () {
-		var val = $(this).val();
-		$('[data-toggle="popover"]').popover('dispose');
-		$(this).popover({
-			sanitize: false,
-			placement: 'bottom',
-			html: true,
-			content: function () {
-				return $('#' + val).html();
-			}
-		});
-		$(this).popover('toggle');
 
-	});
 
 
 	$('.isRepeat').off("click").on("click", function () {

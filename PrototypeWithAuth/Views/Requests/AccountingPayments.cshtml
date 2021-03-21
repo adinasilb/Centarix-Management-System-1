@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.AccountingPaymentsViewModel
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "AccountingPayments";
@@ -6,11 +6,24 @@
 }
 
 
-<div class="partial-orders">
+    @if (Model.RequestsByVendor.Count() == 0)
+    {
+<div>
     @{
-        await Html.RenderPartialAsync("_AccountingPayments", Model);
+        await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
     }
 </div>
+    }
+    else
+    {
+<div class="_IndexTableByVendor">
+    @{
+        await Html.RenderPartialAsync("_IndexTableByVendor", Model);
+    }
+</div>
+
+    }
+
 <script type="text/javascript">
     $(function () {
         console.log("in fx accounting payments");

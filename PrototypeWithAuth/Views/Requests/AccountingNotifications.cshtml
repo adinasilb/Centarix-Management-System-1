@@ -3,30 +3,28 @@
 @using System.Linq;
 @using System.Reflection;
 @using PrototypeWithAuth.AppData;
-@model PrototypeWithAuth.ViewModels.AccountingPaymentsViewModel
+@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @{
     ViewData["Title"] = "AccountingNotifications";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<script src="~/js/accounting.js"></script>
-<script src="~/js/site.js"></script>
 
 
-<div class="partial-orders">
+
+
+   @if (Model.RequestsByVendor.Count() == 0)
+    {
+<div>
     @{
-        await Html.RenderPartialAsync("_AccountingNotifications", Model);
+        await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
     }
 </div>
-<script>
-    $(".share-payment").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("in share payments accounting payments");
-    });
-    $("body").on("click", ".share-payment", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("in share payments accounting payments - body click");
-    });
-</script>
-
+    }
+    else
+    {
+<div class="_IndexTableByVendor">
+    @{
+        await Html.RenderPartialAsync("_IndexTableByVendor", Model);
+    }
+</div>
+}
