@@ -255,7 +255,7 @@
                     @{
                         double hoursWorked = Model.NewEmployee.SalariedEmployee?.HoursPerDay ?? 0;
                     }
-                    <input class="form-control-plaintext border-bottom mark-readonly" id="TimeSpan-HoursPerDay" type="time" value="@TimeSpan.FromHours(hoursWorked)" disabled />
+                    <input type="text" id="TimeSpan-HoursPerDay" name="TimeSpan-HoursPerDay" class="form-control-plaintext border-bottom mark-readonly" value="@hoursWorked" disabled />
                     <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-4">

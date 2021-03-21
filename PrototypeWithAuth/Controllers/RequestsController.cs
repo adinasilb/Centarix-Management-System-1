@@ -2090,11 +2090,13 @@ namespace PrototypeWithAuth.Controllers
                 if (HttpContext.Session.GetObject<Request>(requestName) != null)
                 {
                     var request = HttpContext.Session.GetObject<Request>(requestName);
-                    if(request.ParentRequest.Shipping != null)
+                    if(request.ParentRequest != null)
                     {
                         pr.Shipping = request.ParentRequest.Shipping;
                     }
                     request.ParentRequest = pr;
+                    request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
+                        .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
                     HttpContext.Session.SetObject(requestName, request);
                     allRequests.Add(request);
                 }

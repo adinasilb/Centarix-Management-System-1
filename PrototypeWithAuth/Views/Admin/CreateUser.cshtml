@@ -230,7 +230,7 @@
                                     <div class="col-4">
                                         <label class="control-label" asp-for="NewEmployee.SalariedEmployee.HoursPerDay"></label>
                                         <input type="hidden" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" />
-                                        <input class="form-control-plaintext border-bottom" id="TimeSpan-HoursPerDay" type="time" value="@string.Format("{0:hh\\:mm}", "0" @*Model.NewEmployee.SalariedEmployee.HoursPerDay*@)" />
+                                        <input type="text" id="TimeSpan-HoursPerDay" name="TimeSpan-HoursPerDay" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">

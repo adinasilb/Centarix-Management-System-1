@@ -49,11 +49,17 @@ $(function () {
 	});
 
 	$("#TimeSpan-HoursPerDay").on("change", function () {
-		var newTimespan = $(this).val();
-		var hours = parseInt(newTimespan.substr(0, 2));
-		var minutes = newTimespan.substr(3, 2);
+		var newHours = $(this).val().split(".");
+		var hours = parseInt(newHours[0]);
+		var minutes = newHours[1];
+		if (newHours.length == 1) {
+			minutes = "0"
+		}
+		else if (minutes.length == 1) {
+			minutes = minutes+ "0"
+		}
 		console.log("minutes: " + minutes);
-		var minutesFloat = parseFloat(minutes) / 60;
+		var minutesFloat = parseFloat("0."+minutes);
 		console.log("minutesFloat: " + minutesFloat);
 		var hoursPercentage = parseFloat(hours + minutesFloat);
 		console.log("hoursPercentage: " + hoursPercentage);

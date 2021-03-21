@@ -475,7 +475,6 @@ namespace PrototypeWithAuth.Controllers
                             }
                         }
                         _context.SaveChanges();
-                        throw new Exception();
                         await transaction.CommitAsync();
                         return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
                     }
