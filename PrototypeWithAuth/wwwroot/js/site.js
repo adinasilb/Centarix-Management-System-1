@@ -856,24 +856,14 @@ $(function () {
 		} else {
 			$(".installments").show();
 		}
-
 	});
 
-	$(".create-user .permissions-tab").on("click", function () {
+	$("body").on("click",".permissions-tab", function () {
 		console.log("permissions tab opened");
 		$.fn.HideAllPermissionsDivs();
 		$.fn.ChangeUserPermissionsButtons();
 		$(".main-permissions").show();
 	});
-
-	$(".modal .permissions-tab").on("click", function () {
-		console.log("permissions tab opened");
-		$.fn.HideAllPermissionsDivs();
-		$.fn.ChangeUserPermissionsButtons();
-		$(".main-permissions").show();
-	});
-
-
 
 
 	$.fn.HideAllPermissionsDivs = function () {
