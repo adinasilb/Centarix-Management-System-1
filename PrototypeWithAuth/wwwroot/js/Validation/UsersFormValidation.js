@@ -13,6 +13,24 @@ var isEdit = function () {
 var isUser = function () {
 	return $("#NewEmployee_EmployeeStatusID").val() == "4";
 }
+$.validator.addMethod("validTime", function (value, element) {
+	var t = value.split(':');
+	if (t[0].length == 1) {
+		value = "0" + value;
+	}
+	if (t[2] != null) {
+		$("#" + element.id).val(t[0] + ":" + t[1]);
+	}
+	var result = value.length == 0 || (/^\d\d:\d\d$/.test(value) &&
+		t[0] >= 0 && t[0] < 24 &&
+		t[1] >= 0 && t[1] < 60);
+	return result;
+}, "Invalid time");
+
+$.validator.addMethod("validHours", function (value, element) {
+	var result = parseFloat(value) > 0 && parseFloat(value) < 24;
+	return result;
+}, "Invalid Hours");
 
 $('.usersForm').validate({
 	rules: {
@@ -78,6 +96,10 @@ $('.usersForm').validate({
 			required: isEmployeeOnly,
 			number: true
 		},
+		"TimeSpan-HoursPerDay": {
+			required: isEmployeeOnly,
+			validHours: true
+        },
 		"NewEmployee.VacationDays": {
 			required: isEmployeeOnly,
 			number: true,
