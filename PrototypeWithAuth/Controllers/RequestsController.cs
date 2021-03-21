@@ -4724,6 +4724,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             var requestNum = 1;
+            RemoveRequestSessions();
             foreach (var req in requests)
             {
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
