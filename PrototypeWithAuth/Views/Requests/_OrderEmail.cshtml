@@ -3,6 +3,7 @@
 
 @{
     char currency = '₪';
+    double vat = 0;
  if (Model.Requests.Count() == 1 && Model.Requests[0].Currency == AppUtility.CurrencyEnum.USD.ToString())
  {
      currency = '$';
@@ -106,6 +107,7 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                 @foreach (var request in Model.Requests)
                 {
                     var cost = request.Cost;
+                    vat += request.VAT;
                     if (request.Currency == AppUtility.CurrencyEnum.USD.ToString())
                     {
                         cost = cost / request.ExchangeRate;
@@ -128,7 +130,6 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                     {
                         total = total / Model.Requests[0].ExchangeRate;
                     }
-                    double vat = total * .17;
                     double totalWithVat = total + vat;}
                 <tr>
                     <td colspan="@colspan" rowspan="6" class="borderless-cell">
