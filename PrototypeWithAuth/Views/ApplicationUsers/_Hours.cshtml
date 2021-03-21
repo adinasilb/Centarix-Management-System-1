@@ -87,13 +87,13 @@
                     <td width="11%"></td>
                     <td width="11%">Name</td>
                     <td width="11%">
-                        Job Category
-                    </td>
-                    <td width="11%">
-                        Job Title
-                    </td>
-                    <td width="11%">
                         Job Type
+                    </td>
+                    <td width="11%">
+                        Percentage
+                    </td>
+                    <td width="11%">
+                        Missing Days
                     </td>
                     <td width="10%">
                         Hours
@@ -124,27 +124,31 @@
                 </td>
                 <td width="11%">
                     <div>
-                        <a href="@Url.Action("UserHours", "ApplicationUsers", new {userId = @employee.Employee.Id})">
+                        <a href="@Url.Action("UserHours", "ApplicationUsers", new { userId = @employee.Employee.Id })">
                             @employee.Employee.FirstName  @employee.Employee.LastName
                         </a>
                     </div>
                 </td>
                 <td width="11%">
-                    @employee.Employee.JobSubcategoryType?.Description
-                </td>
-                <td width="11%">
-                    @employee.Employee.JobSubcategoryType?.JobCategoryType?.Description
-                </td>
-                <td width="11%">
                     @employee.Employee.EmployeeStatus.Description
                 </td>
+                <td width="11%">
+                    @{var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
+                        var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
+                        var totalHoursPercent = Math.Round((totalHours / totalHoursInRange) * 100, 2);
+                     }
+                    @totalHoursPercent%
+                </td>
+                <td width="11%">
+                    @employee.MissingDays
+                </td>
                 <td width="10%">
-                    @{var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
+                    @{totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
                         var totalHoursString = "";
                     }
                     @if (employee.Employee.EmployeeStatusID == 1)
                     {
-                        var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
+                        totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
                         var totalInMonth = TimeSpan.FromHours(totalHoursInRange);
                         totalHoursString = totalHours + ":" + employee.Hours.ToString("mm") + "/" + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
                     }

@@ -12,7 +12,7 @@
     var disabled = (pageType == AppUtility.PageTypeEnum.UsersWorkers) ? "disabled" : "";
     var borderColor = (pageType == AppUtility.PageTypeEnum.UsersWorkers ? "var(--user-color)" : "var(--timekeeper-color)");
 }
-
+<input type="hidden" id="userId" value="@Model.User.Id" />
 <div class="row mb-5">
     <div class="col-10">
 

@@ -1196,19 +1196,19 @@ $(function () {
 	$('.monthsHours .select-dropdown').off('change').change(function (e) {
 		console.log(".monthsHours chnage")
 		if ($(this).val() != '') {
-			$.fn.SortByMonth($(this).val(), $('#SelectedYear').val())
+			$.fn.SortByMonth($(this).val(), $('#SelectedYear').val(), $('#userId').val() )
 		}
 	});
 	$('.yearsHours .select-dropdown').off('change').change(function (e) {
 		console.log(".yearsHours chnage")
 		if ($(this).val() != '') {
-			$.fn.SortByMonth($('#months').val(), $(this).val())
+			$.fn.SortByMonth($('#months').val(), $(this).val(), $('#userId').val())
 		}
 	});
-	$.fn.SortByMonth = function (month, year) {
+	$.fn.SortByMonth = function (month, year, userId) {
 		$.ajax({
 			async: false,
-			url: '/Timekeeper/HoursPage?month=' + month + "&year=" + year + "&pageType=" + $('#masterPageType').val(),
+			url: '/Timekeeper/HoursPage?month=' + month + "&year=" + year + "&userId=" + userId + "&pageType=" + $('#masterPageType').val(),
 			type: 'GET',
 			cache: false,
 			success: function (data) {
