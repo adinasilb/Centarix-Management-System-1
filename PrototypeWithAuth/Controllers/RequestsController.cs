@@ -316,7 +316,11 @@ namespace PrototypeWithAuth.Controllers
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
             var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
+            var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
+            var popoverMoreIcon = new IconColumnViewModel("More");
+            var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
+            string checkboxString = "Checkbox";
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
@@ -385,17 +389,47 @@ namespace PrototypeWithAuth.Controllers
                     }
                     break;
                 case AppUtility.PageTypeEnum.AccountingNotifications:
+
+                    var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
+                    iconList.Add(addInvoiceIcon);
+                    iconList.Add(popoverPartialClarifyIcon);
+                    string value = "";
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
                             break;
                         case AppUtility.SidebarEnum.PartialDelivery:
+                            value = "PartialClarify";
                             break;
                         case AppUtility.SidebarEnum.ForClarification:
+                            value = "PartialClarify";
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
                             break;
                     }
+                    viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderBy(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                    {
+                        TotalCost = (r.Cost ?? 0) + r.VAT,
+                        ExchangeRate = r.ExchangeRate,
+                        Vendor = r.Product.Vendor,
+                        ButtonClasses = " invoice-add-all accounting-background-color ",
+                        ButtonText = "Add To All",
+                        Columns = new List<RequestIndexPartialColumnViewModel>()
+                        {
+                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID },
+                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
+                            new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID },                        
+                            new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } },
+                            new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
+                            new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
+                            new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
+                            new RequestIndexPartialColumnViewModel()
+                            {
+                                Title = "", Width = 10, Icons = iconList, AjaxID = r.RequestID, Note = AppUtility.GetNote(requestIndexObject.SidebarType, r)
+                            }
+                        }
+                    }).ToLookup(c => c.Vendor);
+                 
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
                     switch (requestIndexObject.SidebarType)
@@ -413,6 +447,32 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.StandingOrders:
                             break;
                     }
+                    var paymentList = GetPaymentRequests(requestIndexObject.SidebarType);
+                    iconList.Add(payNowIcon);
+                    iconList.Add(popoverMoreIcon);
+                    viewModelByVendor.RequestsByVendor = paymentList.OrderBy(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                    {
+                        TotalCost = (r.Cost ?? 0) + r.VAT,
+                        ExchangeRate = r.ExchangeRate,
+                        Vendor = r.Product.Vendor,
+                        ButtonClasses = " payments-pay-now accounting-background-color ",
+                        ButtonText = "Pay All",
+                        Columns = new List<RequestIndexPartialColumnViewModel>()
+                        {
+                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() {checkboxString} , AjaxID = r.RequestID},
+                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
+                            new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID },
+                            new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } },
+                            new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
+                            new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
+                            new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
+                            new RequestIndexPartialColumnViewModel()
+                            {
+                                Title = "", Width = 10, Icons = iconList, AjaxID = r.RequestID
+                            }
+                        }
+                    }).ToLookup(c => c.Vendor);
+
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
                     var cartRequests = _context.Requests
@@ -442,7 +502,7 @@ namespace PrototypeWithAuth.Controllers
                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                                 new RequestIndexPartialColumnViewModel()
                                 {
-                                    Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
+                                    Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID, 
                                 },
 
                         }
@@ -3702,67 +3762,21 @@ namespace PrototypeWithAuth.Controllers
                 return true;
             }
         }
-        [HttpGet]
-        [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> _AccountingPayments(AccountingPaymentsViewModel accountingPaymentsViewModel)
-        {
-            AccountingViewFunction(accountingPaymentsViewModel);
-
-            return PartialView(accountingPaymentsViewModel);
-        }
-
-
-        /*
-         *NEW Accounting VIEW
-         */
+  
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AccountingPayments(AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
-            AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
-            {
-                AccountingEnum = accountingPaymentsEnum,
-                PageType = AppUtility.PageTypeEnum.AccountingPayments
-            };
-            AccountingViewFunction(accountingPaymentsViewModel);
 
-            TempData["PayNowCount"] = accountingPaymentsViewModel.PayNowListNum;
+            TempData["PayNowCount"] = GetPaymentRequests(AppUtility.SidebarEnum.PayNow).Count();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingPayments;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingPaymentsEnum;
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Accounting, PageType = AppUtility.PageTypeEnum.AccountingPayments, SidebarType = accountingPaymentsEnum }));
 
-            return View(accountingPaymentsViewModel);
         }
 
-        private AccountingPaymentsViewModel AccountingViewFunction(AccountingPaymentsViewModel accountingPaymentsViewModel)
-        {
-            IQueryable<Request> requestsList = null;
-            if (accountingPaymentsViewModel.PageType == AppUtility.PageTypeEnum.AccountingPayments)
-            {
-                requestsList = GetPaymentRequests(accountingPaymentsViewModel.AccountingEnum);
-                var payNowListCount = _context.Requests
-                   .Where(r => r.RequestStatusID != 7 && r.Paid == false && r.PaymentStatusID == 3).Count();
-                accountingPaymentsViewModel.PayNowListNum = payNowListCount;
-            }
-            else
-            {
-                requestsList = GetPaymentNotificationRequests(accountingPaymentsViewModel.AccountingEnum);
-            }
-
-            accountingPaymentsViewModel.AccountingEnum = accountingPaymentsViewModel.AccountingEnum;
-            accountingPaymentsViewModel.Requests = requestsList.ToLookup(r => r.Product.Vendor);
-            
-            if (accountingPaymentsViewModel.SelectedPriceSort == null)
-            {
-                accountingPaymentsViewModel.SelectedPriceSort = new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
-            }
-            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = accountingPaymentsViewModel.SelectedPriceSort.Contains(p.ToString()) }));
-            accountingPaymentsViewModel.PriceSortEnums = priceSorts;
-
-            return accountingPaymentsViewModel;
-        }
         private IQueryable<Request> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum)
         {
             var requestsList = _context.Requests
@@ -3809,7 +3823,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory)
-                .Where(r => r.RequestStatusID != 7).AsQueryable();
+                .Where(r => r.RequestStatusID != 7);
             switch (accountingNotificationsEnum)
             {
                 case AppUtility.SidebarEnum.NoInvoice: //NOTE EXACT SAME QUERY IN ADDINVOICE MODAL
@@ -3872,31 +3886,16 @@ namespace PrototypeWithAuth.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("AccountingNotifications", new { accountingNotificationsEnum = type });
         }
-        [HttpGet]
-        [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> _AccountingNotifications(AccountingPaymentsViewModel accountingPaymentsViewModel)
-        {
-            AccountingViewFunction(accountingPaymentsViewModel);
-
-            return PartialView(accountingPaymentsViewModel);
-
-        }
+   
             [HttpGet]
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AccountingNotifications(AppUtility.SidebarEnum accountingNotificationsEnum = AppUtility.SidebarEnum.NoInvoice)
         {
-            AccountingPaymentsViewModel accountingPaymentsViewModel = new AccountingPaymentsViewModel()
-            {
-                AccountingEnum = accountingNotificationsEnum,
-                PageType = AppUtility.PageTypeEnum.AccountingNotifications
-            };
-
-            AccountingViewFunction(accountingPaymentsViewModel);
-
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingNotifications;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingNotificationsEnum;
-            return View(accountingPaymentsViewModel);
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Accounting, PageType = AppUtility.PageTypeEnum.AccountingNotifications, SidebarType = accountingNotificationsEnum }));
+
         }
 
         [HttpGet]

@@ -1,10 +1,13 @@
 ﻿$(function () {
 	$(".form-check.accounting-select .form-check-input ").on("click", function (e) {
+	
 		 if (!$(this).is(':checked')) 
 		 {
+			 
 			$(this).closest("tr").attr("class", "text-center");
          }
 		else{
+			 //alert("is checked")
 			 $(this).closest("tr").addClass("clicked-border-acc");
 		}
 		var activeVendor = $(".activeVendor").val();
@@ -28,7 +31,7 @@
 		if ($(".form-check.accounting-select .form-check-input:checked").length) {
 			if( $(".activeVendor").val() !=$(this).attr("vendorid"))
 			{
-				//alert("active vendors are ot equal - not doing anything")
+			//	alert("active vendors are ot equal - not doing anything")
 				$(this).removeAttr("checked");
 				$(this).prop("checked", false);
 				//alert("count checked: "+$(".form-check.accounting-select .form-check-input:checked").length)
@@ -83,9 +86,9 @@
 	$(".payments-pay-now").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		var vendorid = $(this).attr("vendor");
+		var vendorid = $(this).attr("value");
 		var paymentstatusid = $(this).attr("paymentstatus");
-		var typeEnum = $(this).attr("type");
+		var typeEnum =$("#masterSidebarType").val();
 		console.log("vendor: " + vendorid);
 		console.log("payment status: " + paymentstatusid);
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
@@ -97,8 +100,8 @@
 	$(".pay-one").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		var typeEnum = $(this).attr("enumType");
-		var requestid=$(this).attr("id");
+		var typeEnum = $("#masterSidebarType").val();
+		var requestid=$(this).attr("value");
 		var itemUrl = "/Requests/PaymentsPayModal/?requestid=" + requestid + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "payments-pay");
@@ -127,7 +130,7 @@
 	$(".invoice-add-all").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		var vendorid = $(this).attr("vendor");
+		var vendorid = $(this).attr("value");
 		var itemUrl = "/Requests/AddInvoiceModal/?vendorid=" + vendorid;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "add-invoice");
@@ -156,11 +159,25 @@
 	$(".invoice-add-one").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		var requestid = $(this).attr("request");
+		var requestid=$(this).attr("value");
 		var itemUrl = "/Requests/AddInvoiceModal/?requestid=" + requestid;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "add-invoice");
 	});
 
+		$(".more, .accNotification").off('click').click(function () {
+		var val = $(this).val();
+		$('[data-toggle="popover"]').popover('dispose');
+		$(this).popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#' + val).html();
+			}
+		});
+		$(this).popover('toggle');
+
+	});
 });
 

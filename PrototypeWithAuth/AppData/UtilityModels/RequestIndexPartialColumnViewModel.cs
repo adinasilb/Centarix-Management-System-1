@@ -17,6 +17,7 @@ namespace PrototypeWithAuth.ViewModels
         public string Image { get; set; }
         public string AjaxLink { get; set; }
         public AppUtility.FilterEnum FilterEnum {get ;set;}
+        public string Note { get; set; }
       
     }
 }
