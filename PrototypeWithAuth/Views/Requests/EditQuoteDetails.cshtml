@@ -208,7 +208,8 @@
             data: formData,
             cache: false,
             success: function (data) {
-                $.fn.OpenModal('modal', 'step-1', data)
+                $.fn.CloseModal('edit-quote');
+                $('.render-body').html(data);
             },
             error: function (jqxhr) {
                 $.fn.OpenModal('modal', 'edit-quote', jqxhr.responseText)
