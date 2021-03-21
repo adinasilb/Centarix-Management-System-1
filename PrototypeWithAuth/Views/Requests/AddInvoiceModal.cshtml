@@ -95,14 +95,15 @@
                                                 <input class="form-control-plaintext border-bottom cost-validation" asp-for="Requests[x].Cost" />
                                             </div>
                                         </td>
-                                        @if (Model.Requests.Count > 1)
-                                        {
+                                        
                                         <td style="width:30%;">
-                                            <a class="remove-invoice-item float-right" request="@Request.RequestID">
-                                                <i class="icon-delete-24px px-1 mr-3" style="font-size:1.6rem;"></i>
-                                            </a>
-                                        </td>
-                                        }
+                                            @if (Model.Requests.Count > 1)
+                                            {
+                                                <a class="remove-invoice-item float-right" request="@Request.RequestID">
+                                                    <i class="icon-delete-24px px-1 mr-3" style="font-size:1.6rem;"></i>
+                                                </a>
+                                            }
+                                            </td>
                                     </tr>
                                 }
                             </tbody>
