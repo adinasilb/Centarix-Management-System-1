@@ -198,23 +198,25 @@
 <script>
     $(".save-quote-details").click(function (e) {
         e.preventDefault();
-        var formData = new FormData($("#myForm")[0]);
-        $.ajax({
-            processData: false,
-            contentType: false,
-            async: true,
-            url: "/Requests/EditQuoteDetails",
-            type: 'POST',
-            data: formData,
-            cache: false,
-            success: function (data) {
-                $.fn.CloseModal('edit-quote');
-                $('.render-body').html(data);
-            },
-            error: function (jqxhr) {
-                $.fn.OpenModal('modal', 'edit-quote', jqxhr.responseText)
-                $('.mdb-select').materialSelect();
-            }
-        });
+        if ($("#myForm").valid) {
+            var formData = new FormData($("#myForm")[0]);
+            $.ajax({
+                processData: false,
+                contentType: false,
+                async: true,
+                url: "/Requests/EditQuoteDetails",
+                type: 'POST',
+                data: formData,
+                cache: false,
+                success: function (data) {
+                    $.fn.CloseModal('edit-quote');
+                    $('.render-body').html(data);
+                },
+                error: function (jqxhr) {
+                    $.fn.OpenModal('modal', 'edit-quote', jqxhr.responseText)
+                    $('.mdb-select').materialSelect();
+                }
+            });
+        }
     })
 </script>
