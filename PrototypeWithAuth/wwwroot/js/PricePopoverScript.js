@@ -69,7 +69,6 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     $('input[name=SelectedCurrency]').prop("checked", false)
     $("."+$(this).attr("id")).attr("checked", true);
     $("."+$(this).attr("id")).prop("checked", true);
-    $('#pricePopover').popover('show');
     console.log(this);
     $('#tempCurrency').val($(this).val())
     console.log($('#masterPageType').val())

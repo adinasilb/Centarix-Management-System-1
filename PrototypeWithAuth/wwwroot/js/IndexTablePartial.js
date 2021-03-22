@@ -27,6 +27,20 @@ $.ajax({
     return false;
 });
 
+
+
+
+$(".load-quote-details").on("click", function (e) {
+    console.log("in order details");
+    e.preventDefault();
+    e.stopPropagation();
+    $("#loading").show();
+    var $itemurl = "/Requests/EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestID=" + $(this).attr("value");
+    $.fn.CallPageRequest($itemurl, "quote");
+    return false;
+});
+
+
 $(".load-order-details").off('click').on("click", function (e) {
     console.log("in order details");
     e.preventDefault();

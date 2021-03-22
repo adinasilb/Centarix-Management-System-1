@@ -4,9 +4,9 @@
 
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-
-<script src="~/js/validate.js" asp-append-version="true"></script>
 <script src="~/js/Validation/EditQuoteDetailsFormValidation.js"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
+
 <script src="~/js/InitializeDatePicker.js"></script>
 <script src="~/js/WarantySupplyDateCalc.js"></script>
 <script src="~/js/SubUnit.js"></script>
@@ -40,7 +40,6 @@
                         <div class="col-3">
                             <div class="top-menu">@Model.Requests[0].Product.Vendor.VendorEnName</div>
                         </div>
-                        <input type="hidden" asp-for="@Model.QuoteFileUpload" />
 
 
                         <input type="hidden" asp-for="@Model.Requests[0].Product.ProductSubcategoryID" />
@@ -198,7 +197,18 @@
 <script>
     $(".save-quote-details").click(function (e) {
         e.preventDefault();
-        if ($("#myForm").valid) {
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+         
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('.activeSubmit ').removeClass('disabled-submit')
             var formData = new FormData($("#myForm")[0]);
             $.ajax({
                 processData: false,
@@ -210,7 +220,7 @@
                 cache: false,
                 success: function (data) {
                     $.fn.CloseModal('edit-quote');
-                    $('.render-body').html(data);
+                    $('._IndexTableDataByVendor').html(data);
                 },
                 error: function (jqxhr) {
                     $.fn.OpenModal('modal', 'edit-quote', jqxhr.responseText)
@@ -218,5 +228,7 @@
                 }
             });
         }
+        $(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
     })
 </script>
