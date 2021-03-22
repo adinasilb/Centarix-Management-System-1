@@ -1424,7 +1424,7 @@ $(function () {
 		var formData = new FormData($("#myForm")[0]);
 		//console.log(...formData)
 		console.log(dateFrom + "-" + dateTo);
-		alert("about to go into ajax, url: " + url);
+		//alert("about to go into ajax, url: " + url);
 		$.ajax({
 			processData: false,
 			contentType: false,
@@ -1441,7 +1441,7 @@ $(function () {
 					$(".report-days-off-partial").html(data);
 				}
 				else {
-					alert("else")
+				//	alert("else")
 					$(".render-body").html(data);
 				}
 			}
@@ -1462,7 +1462,7 @@ $(function () {
 
 	$(".modal").on("click", "#saveOffDayConfirmation", function (e) {
 		e.preventDefault();
-		alert("save sick confirmation");
+		//alert("save sick confirmation");
 		//alert($('#SelectedDate').val())
 		$("#FromDate").val($('#SelectedDate').val());
 		$("#Month").val($("#months").val());

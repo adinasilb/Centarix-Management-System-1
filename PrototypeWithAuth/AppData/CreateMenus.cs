@@ -1198,16 +1198,16 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-access_time-24px"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Salary) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Salary",
-                Controller = "ApplicationUsers",
-                Action = "Salary",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                IconName = "icon-monetization_on-24px"
-            });
+            //if (SidebarTitle == AppUtility.SidebarEnum.Salary) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Salary",
+            //    Controller = "ApplicationUsers",
+            //    Action = "Salary",
+            //    RouteValues = new RouteValueDictionary(),
+            //    Classes = CurrentClasses,
+            //    IconName = "icon-monetization_on-24px"
+            //});
             if (SidebarTitle == AppUtility.SidebarEnum.AwaitingApproval) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {

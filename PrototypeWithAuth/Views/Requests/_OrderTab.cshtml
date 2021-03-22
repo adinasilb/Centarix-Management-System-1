@@ -134,7 +134,7 @@
                 error: function (jqxhr) {
                     $("#loading").hide();
                     if (jqxhr.status == 500) {
-                        alert("made it to error")
+                       // alert("made it to error")
                         $("#order").html(jqxhr.responseText);
                         $(".order-tab").trigger("click");
                     }

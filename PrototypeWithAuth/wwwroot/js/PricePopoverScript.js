@@ -2,7 +2,7 @@
 
 function callIndexWithNewFilter(val, id) {
     $(id).attr("checked", !$(id).prop("checked"));
-    alert("In call index with new filter")
+  //  alert("In call index with new filter")
     if ($('#masterPageType').val() == "RequestCart" || $('#masterPageType').val() == "LabManagementQuotes" || $('#masterPageType').val() == "AccountingPayments" || $('#masterPageType').val() == "AccountingNotifications") {
         //var selectedPriceSort = [];
         //$("#priceSortContent .priceSort:checked").each(function (e) {
