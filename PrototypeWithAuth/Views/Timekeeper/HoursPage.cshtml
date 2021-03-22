@@ -5,13 +5,14 @@
 @model PrototypeWithAuth.ViewModels.SummaryHoursViewModel
 
 <script src="~/js/site.js" asp-append-version="true"></script>
-@{ 
-    var years = Enumerable.Range(AppUtility.YearStartedTimeKeeper, DateTime.Today.Year - AppUtility.YearStartedTimeKeeper  + 1);
+@{
+    var years = Enumerable.Range(AppUtility.YearStartedTimeKeeper, DateTime.Today.Year - AppUtility.YearStartedTimeKeeper + 1);
     var pageType = Model.PageType;
-    var pageColor = (pageType==AppUtility.PageTypeEnum.UsersWorkers ? "users" : "timekeeper");
+    var pageColor = (pageType == AppUtility.PageTypeEnum.UsersWorkers ? "users" : "timekeeper");
     var disabled = (pageType == AppUtility.PageTypeEnum.UsersWorkers) ? "disabled" : "";
     var borderColor = (pageType == AppUtility.PageTypeEnum.UsersWorkers ? "var(--user-color)" : "var(--timekeeper-color)");
 }
+<input type="hidden" id="userId" value="@Model.User.Id" />
 <div class="row mb-5">
     <div class="col-10">
 
@@ -118,7 +119,7 @@
 
                         }
                     }
-                    @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null)
+                    @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null && eh.EmployeeHours.CompanyDayOffID ==null)
                     {
                         <div class="py-2">
                             <select class="mdb-select @pageColor custom select-dropdown no-hours-reported mb-0 @disabled" date="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
@@ -167,7 +168,7 @@
                     }
                     else if ((eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null))
                     {
-                        <button type="button" class=" custom-button-table-font table-button @pageColor-color @disabled  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")" >Update Hours</button>
+                        <button type="button" class=" custom-button-table-font table-button @pageColor-color @disabled  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>
                     }
                     else if ((eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2)))
                     {
@@ -243,7 +244,7 @@
                 @Model.TotalHolidaysInMonth
             </div>
             <div class="col-2">
-        
+
                 @Model.EmployeeHours.Where(eh => eh.EmployeeHours.OffDayTypeID == 1).Count()
             </div>
             <div class="col-2">

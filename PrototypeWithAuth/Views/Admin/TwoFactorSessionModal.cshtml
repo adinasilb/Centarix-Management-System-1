@@ -22,8 +22,8 @@
                     </div>
                     <div class="row text-center">
 
-                        <button class="text custom-button custom-button-font between-button-margin remember-two-factor danger-color">Yes</button>
-                        <button class="custom-button custom-cancel text forget-two-factor">No</button>
+                        <button class="text custom-button custom-button-font between-button-margin two-factor-remember danger-color" value="true">Yes</button>
+                        <button class="custom-button custom-cancel text two-factor-remember" value="false">No</button>
 
                     </div>
                 </div>
@@ -33,35 +33,26 @@
 </div>
 <script>
     $(function () {
-        $(".remember-two-factor").click(function (e) {
+        $(".two-factor-remember").click(function (e) {
+            var remember = $(this).val();
             $.ajax({
                 processData: false,
                 contentType: false,
                 async: true,
-                url: "/Admin/TwoFactorSessionModal?rememberTwoFactor=true",
+                url: "/Admin/TwoFactorSessionModal?rememberTwoFactor=" + remember,
                 type: 'POST',
                 cache: false,
                 success: function (data) {
                     console.log("success")
                     $('.two-factor-session-modal').hide();
                     $('.modal-backdrop').remove();
+                },
+                error: function () {
+                    var error = "Something went wrong with renewing 2 factor";
+                    window.location.href = "/Identity/Account/LoginWith2fa?ErrorMessage=" + error;
                 }
             })
-        });
-        $(".forget-two-factor").click(function (e) {
-            $.ajax({
-                processData: false,
-                contentType: false,
-                async: true,
-                url: "/Admin/TwoFactorSessionModal?rememberTwoFactor=false",
-                type: 'POST',
-                cache: false,
-                success: function (data) {
-                    console.log("success")
-                    $('.two-factor-session-modal').hide();
-                    $('.modal-backdrop').remove();
-                }
-            })
+
         });
     })
 </script>

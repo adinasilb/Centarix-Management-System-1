@@ -17,6 +17,7 @@
     var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
+
     if (Model.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
@@ -26,7 +27,6 @@
     }
     else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
-
         form = "supplier-form";
         bcColor = "lab-man-background-color";
         color = "lab-man-filter";
@@ -87,31 +87,30 @@
                 <a href="" class="open-document-modal active-document-modal  @sectionType  withinDocModal" data-string="@Model.RequestFolderName" data-id="@requestid" style="display: none;" data-val="@Model.IsEdittable" showSwitch="@Model.ShowSwitch"></a>
                 <div class="modal-header modal-header-padding">
                     <div class="container">
-
                         <div class="row">
                             <div class="col-2">
                                 <input type="text" class="form-control-plaintext heading-1" asp-for="RequestFolderName" />
-
                             </div>
                             <div class="col-3 offset-7">
-
                             </div>
-
                         </div>
                         <div class="row">
                             <div class="col-3 offset-9">
                                 @if (@*User.IsInRole("Admin") &&*@ Model.ShowSwitch)
-{
-            <div class=" row text-right mb-0">
-                <div class="switch col-12 switch-margin">
-                    <label>
-                        <label class="edit-mode-switch-description">Edit Mode Off</label>
-                        <input type="checkbox" class="turn-edit-doc-on-off operations" @isChecked @*value="@Model.Request.RequestID"*@>
-                        <span class="lever"></span>
-                    </label>
-                </div>
-            </div>
-        }
+                                {
+                                    <div class=" row text-right mb-0">
+                                        <div class="switch col-12 switch-margin">
+                                            <label>
+                                                @{
+                                                    var switchDescription = Model.IsEdittable ? "Edit Mode On" : "Edit Mode Off";
+                                                 }
+                                                <label class="edit-mode-switch-description"> @switchDescription</label>
+                                                <input type="checkbox" class="turn-edit-doc-on-off operations" @isChecked @*value="@Model.Request.RequestID"*@>
+                                                <span class="lever"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -147,7 +146,6 @@
                                                     break;
                                             }
 
-
                                             for (int i = 0; i < EndCount; i++)
                                             {
                                                 var carouselItemClass = "carousel-item";
@@ -172,7 +170,7 @@
                                                                 <div class="card-body d-flex text-center align-items-center justify-content-center">
 
                                                                     <a href="\@Model.FileStrings[i]" target="_blank" class="mx-3  view-img">
-                                                                        <i class="icon-centarix-icons-09 @colorToUse " style="font-size:2rem" ></i>
+                                                                        <i class="icon-centarix-icons-09 @color " style="font-size:2rem" ></i>
                                                                     </a>
 
                                                                     @*@{var link = "delete-file-document"; }*@
@@ -218,12 +216,16 @@
                             <div class="mt-6">
                                 <img src="~/images/document_empty_image.png" />
                             </div>
-                            <div class="mt-4" style="        font-size: 1.125rem;
-        color: #646464; font-weight:400;"><span class="text-capitalize">No</span> @Model.RequestFolderName.ToString().ToLower() have been uploaded </div>
-            <div class="mt-2 pb-5 " style="        font-size: 1rem;
-        color: #646464; font-weight:400;"><span class="text-capitalize">Press</span> upload to add @Model.RequestFolderName.ToString().TrimEnd('s').ToLower()</div>
-            </div>
-        }
+                            <div class="mt-4" style="font-size: 1.125rem; color: #646464; font-weight:400;">
+                                <span class="text-capitalize">No</span> @Model.RequestFolderName.ToString().ToLower() have been uploaded 
+                            </div>
+                            <div class='mt-2 pb-5'>
+                                <div class='@(!Model.ShowSwitch ? "d-none" : "")' style="font-size: 1rem; color: #646464; font-weight:400;">
+                                    <span class="text-capitalize">Press</span> upload to add @Model.RequestFolderName.ToString().TrimEnd('s').ToLower()
+                                </div>
+                            </div>
+                        </div>
+                      }
                     <div class="row justify-content-center">
                         @if (Model.ShowSwitch || Model.IsEdittable)
                         {
@@ -268,6 +270,6 @@
         $.fn.CloseModal("documents");
     })
 </script>
-
+<script src="~/js/DeleteDocModal.js"></script>
 <script src="~/js/DocumentModalJS.js"></script>
 <script src="~/js/site.js"></script>

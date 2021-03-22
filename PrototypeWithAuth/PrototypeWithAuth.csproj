@@ -9,12 +9,16 @@
 
   <ItemGroup>
     <Compile Remove="Models\LocationModels\**" />
+    <Compile Remove="Views\Operations\**" />
     <Compile Remove="wwwroot\images\NewFolder\**" />
     <Content Remove="Models\LocationModels\**" />
+    <Content Remove="Views\Operations\**" />
     <Content Remove="wwwroot\images\NewFolder\**" />
     <EmbeddedResource Remove="Models\LocationModels\**" />
+    <EmbeddedResource Remove="Views\Operations\**" />
     <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
     <None Remove="Models\LocationModels\**" />
+    <None Remove="Views\Operations\**" />
     <None Remove="wwwroot\images\NewFolder\**" />
   </ItemGroup>
 
@@ -181,6 +185,10 @@
     <Compile Remove="Data\Migrations\20210301105934_AddDisplayNameSupplierOrderNumber.Designer.cs" />
     <Compile Remove="Data\Migrations\20210303085917_TookAwayLocationRoomInstances.cs" />
     <Compile Remove="Data\Migrations\20210303085917_TookAwayLocationRoomInstances.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210307125519_RedidSomeFieldsForAccounting.cs" />
+    <Compile Remove="Data\Migrations\20210307125519_RedidSomeFieldsForAccounting.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210311084725_IncludeVatRequest.cs" />
+    <Compile Remove="Data\Migrations\20210311084725_IncludeVatRequest.Designer.cs" />
   </ItemGroup>
 
 
@@ -226,7 +234,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Views\Operations\" />
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
   </ItemGroup>

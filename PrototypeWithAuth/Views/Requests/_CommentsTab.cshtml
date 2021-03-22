@@ -12,12 +12,25 @@
         markReadOnlyClass = "mark-readonly";
     }
 
-    var color = "order-inv-color";
+    var color = "";
 
-    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    switch (Model.SectionType)
     {
-
-        color = "oper-color";
+        case AppUtility.MenuItems.Operations:
+            color = "oper-color";
+            break;
+        case AppUtility.MenuItems.LabManagement:
+            color = "lab-man-color";
+            break;
+        case AppUtility.MenuItems.Accounting:
+            color = "accounting-color";
+            break;
+        case AppUtility.MenuItems.Requests:
+            color = "order-inv-color";
+            break;
+        case AppUtility.MenuItems.Users:
+            color = "users-color";
+            break;
     }
 }
 <div class="row">
@@ -62,8 +75,3 @@
         await Html.RenderPartialAsync(Url.Content("../Requests/CommentInfoPartialView"), new CommentsInfoViewModel { Comment = Model.Comments[i], Index = i, IsEdit = true });
     }
 </div>
-
-<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
-<script src="~/js/validate.js"></script>
-<script src="~/js/site.js"></script>
-<script src="~/js/CreateItem.js"></script>

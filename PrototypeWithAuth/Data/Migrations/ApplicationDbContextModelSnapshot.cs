@@ -192,14 +192,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsSuspended")
                         .HasColumnType("bit");
 
-                    b.Property<double>("LabMonthlyLimit")
-                        .HasColumnType("float");
+                    b.Property<decimal>("LabMonthlyLimit")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("LabOrderLimit")
-                        .HasColumnType("float");
+                    b.Property<decimal>("LabOrderLimit")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("LabUnitLimit")
-                        .HasColumnType("float");
+                    b.Property<decimal>("LabUnitLimit")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("LastLogin")
                         .HasColumnType("datetime2");
@@ -224,14 +224,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<double>("OperationMonthlyLimit")
-                        .HasColumnType("float");
+                    b.Property<decimal>("OperationMonthlyLimit")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("OperationOrderLimit")
-                        .HasColumnType("float");
+                    b.Property<decimal>("OperationOrderLimit")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("OperationUnitLimit")
-                        .HasColumnType("float");
+                    b.Property<decimal>("OperationUnitLimit")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -955,8 +955,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("LatestExchangeRate")
-                        .HasColumnType("float");
+                    b.Property<decimal>("LatestExchangeRate")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ExchangeRateID");
 
@@ -2236,12 +2236,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("Discount")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("InvoiceDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("InvoiceNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -2260,9 +2254,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("Taxes")
                         .HasColumnType("float");
 
-                    b.Property<bool>("WithoutOrder")
-                        .HasColumnType("bit");
-
                     b.HasKey("ParentRequestID");
 
                     b.HasIndex("ApplicationUserID");
@@ -2277,29 +2268,40 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CompanyAccountID")
+                    b.Property<int?>("CompanyAccountID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ParentRequestID")
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ParentRequestID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("PaymentReferenceDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Sum")
-                        .HasColumnType("float");
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Sum")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("PaymentID");
 
                     b.HasIndex("CompanyAccountID");
 
                     b.HasIndex("ParentRequestID");
+
+                    b.HasIndex("RequestID");
 
                     b.ToTable("Payments");
                 });
@@ -2341,11 +2343,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
-                            PaymentStatusID = 6,
-                            PaymentStatusDescription = "Paid"
-                        },
-                        new
-                        {
                             PaymentStatusID = 7,
                             PaymentStatusDescription = "Standing Order"
                         },
@@ -2369,6 +2366,18 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("PaymentTypeID");
 
                     b.ToTable("PaymentTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            PaymentTypeID = 1,
+                            PaymentTypeDescription = "Credit Card"
+                        },
+                        new
+                        {
+                            PaymentTypeID = 2,
+                            PaymentTypeDescription = "Bank Transfer"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.PhysicalAddress", b =>
@@ -2645,7 +2654,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ProductSubcategoryID = 804,
                             ImageURL = "/images/css/CategoryImages/renovation.png",
                             ParentCategoryID = 8,
-                            ProductSubcategoryDescription = "Rennovation"
+                            ProductSubcategoryDescription = "Renovation"
                         },
                         new
                         {
@@ -3009,8 +3018,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime?>("BatchExpiration")
                         .HasColumnType("datetime2");
 
-                    b.Property<double?>("Cost")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("Cost")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -3018,16 +3027,19 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Discount")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("ExchangeRate")
-                        .HasColumnType("float");
+                    b.Property<decimal>("ExchangeRate")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<byte?>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
 
                     b.Property<bool>("HasInvoice")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IncludeVAT")
                         .HasColumnType("bit");
 
                     b.Property<long?>("Installments")
@@ -3054,8 +3066,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("NoteToSupplier")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderType")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Paid")
                         .HasColumnType("bit");
@@ -3075,7 +3087,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RequestStatusID")
+                    b.Property<int>("RequestStatusID")
                         .HasColumnType("int");
 
                     b.Property<string>("SerialNumber")
@@ -3502,6 +3514,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            UnitTypeID = 24,
+                            UnitParentTypeID = 1,
+                            UnitTypeDescription = "Tube"
+                        },
+                        new
+                        {
                             UnitTypeID = 7,
                             UnitParentTypeID = 2,
                             UnitTypeDescription = "Kg"
@@ -3640,6 +3658,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            UnitTypeID = 24,
+                            ParentCategoryID = 1
+                        },
+                        new
+                        {
                             UnitTypeID = 17,
                             ParentCategoryID = 2
                         },
@@ -3730,6 +3753,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
+                            UnitTypeID = 24,
+                            ParentCategoryID = 2
+                        },
+                        new
+                        {
                             UnitTypeID = 5,
                             ParentCategoryID = 3
                         },
@@ -3756,6 +3784,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             UnitTypeID = 5,
+                            ParentCategoryID = 4
+                        },
+                        new
+                        {
+                            UnitTypeID = 24,
                             ParentCategoryID = 4
                         },
                         new
@@ -4393,12 +4426,16 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.CompanyAccount", "CompanyAccount")
                         .WithMany()
                         .HasForeignKey("CompanyAccountID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.ParentRequest", "ParentRequest")
+                    b.HasOne("PrototypeWithAuth.Models.ParentRequest", null)
                         .WithMany("Payments")
                         .HasForeignKey("ParentRequestID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany("Payments")
+                        .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -4475,7 +4512,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.RequestStatus", "RequestStatus")
                         .WithMany("Requests")
                         .HasForeignKey("RequestStatusID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.SubProject", "SubProject")
                         .WithMany("Requests")

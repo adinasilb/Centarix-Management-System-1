@@ -28,6 +28,7 @@ using Abp.Extensions;
 using System.Linq.Dynamic.Core;
 using OpenCvSharp;
 using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.Areas.Identity.Pages.Account;
 
 namespace PrototypeWithAuth.Controllers
 {
@@ -58,7 +59,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Users")]
-        public IActionResult Index(String? ErrorMessage =null)
+        public IActionResult Index(string ErrorMessage =null)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
@@ -469,7 +470,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    registerUserViewModel.ErrorMessage += ex.Message;
+                    registerUserViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.UsersUser;
                     TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Users;
                     TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
@@ -841,14 +842,14 @@ namespace PrototypeWithAuth.Controllers
                         //should we move the delete here and test for the extension just in case it breaks over there
 
                     }
-        
+                    //throw new Exception();
                     await transaction.CommitAsync();
                 }
                 catch (DbUpdateException ex)
                 {
                     await transaction.RollbackAsync();
                     Response.StatusCode = 500;
-                    registerUserViewModel.ErrorMessage = ex.Message;
+                    registerUserViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     FillViewDropdowns(registerUserViewModel);
                     return PartialView("EditUser", registerUserViewModel);
                 }
@@ -856,7 +857,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     Response.StatusCode = 500;
-                    registerUserViewModel.ErrorMessage = ex.Message;
+                    registerUserViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     FillViewDropdowns(registerUserViewModel);
                     return PartialView("EditUser", registerUserViewModel);
                 }
@@ -994,7 +995,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Index",new { ErrorMessage= ex.Message });
+                return RedirectToAction("Index",new { ErrorMessage= AppUtility.GetExceptionMessage(ex) });
             }
 
             return RedirectToAction("Index");
@@ -1024,32 +1025,52 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<bool> TwoFactorSessionModal(bool rememberTwoFactor = true)
-        {            
-            var user = _signManager.GetTwoFactorAuthenticationUserAsync();
-            var appUser = await _context.Employees.Where(e => e.Email == user.Result.Email).FirstOrDefaultAsync();
-            if (rememberTwoFactor)
+        public async Task<IActionResult> TwoFactorSessionModal(bool rememberTwoFactor = true)
+        {
+            try
             {
-                var cookieNum = 1;
-                while (_httpContextAccessor.HttpContext.Request.Cookies["TwoFactorCookie" + cookieNum] != null)
+                var user = _signManager.GetTwoFactorAuthenticationUserAsync();
+                var appUser = await _context.Employees.Where(e => e.Email == user.Result.Email).FirstOrDefaultAsync();
+                if (rememberTwoFactor)
                 {
-                    cookieNum++;
+                    var cookieNum = 1;
+                    while (_httpContextAccessor.HttpContext.Request.Cookies["TwoFactorCookie" + cookieNum] != null)
+                    {
+                        cookieNum++;
+                    }
+
+                    var cookieOptions = new CookieOptions
+                    {
+                        Expires = DateTime.Now.AddDays(30)
+                    };
+                    _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie" + cookieNum, appUser.Id, cookieOptions);
                 }
-
-                var cookieOptions = new CookieOptions
+                else
                 {
-                    Expires = DateTime.Now.AddDays(30)
-                };
-                _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie" + cookieNum, appUser.Id, cookieOptions);
+                    using (var transaction = _context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            appUser.RememberTwoFactor = false;
+                            _context.Update(appUser);
+                            await _context.SaveChangesAsync();
+                            await transaction.CommitAsync();
+                        }
+                        catch(Exception ex)
+                        {
+                            await transaction.RollbackAsync();
+                            throw ex;
+
+                        }
+                    }
+                }
             }
-            else
+            catch(Exception ex)
             {
-                appUser.RememberTwoFactor = false;
-                _context.Update(appUser);
-                await _context.SaveChangesAsync();
+                return View("DefaultView");
             }
 
-            return true;
+            return PartialView();
         }
 
         public async Task<IActionResult> editUserFunction(string id, int? Tab = 0)

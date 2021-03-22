@@ -3,16 +3,12 @@
 
 @{
     char currency = '₪';
- if (Model.Requests.Count() == 1 && Model.Requests.FirstOrDefault().Currency == AppUtility.CurrencyEnum.USD.ToString())
+    decimal vat = 0;
+ if (Model.Requests.Count() == 1 && Model.Requests[0].Currency == AppUtility.CurrencyEnum.USD.ToString())
  {
      currency = '$';
  }
- var colspan = 1;
-@if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-{
-
-    colspan = 4;
-}
+ var colspan = 4;
 }
 <div style="padding:1rem 2rem">
     <header class="page-header">
@@ -50,10 +46,10 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
     <div class="row">
         <div class="col-4">
             <div class="vendor-info">
-                <span class="heading-1">@Model.Requests.FirstOrDefault().Product.Vendor.VendorEnName</span><br>
-                <span>ID: @Model.Requests.FirstOrDefault().Product.Vendor.VendorBuisnessID</span><br>
-                <span>@Model.Requests.FirstOrDefault().Product.Vendor.VendorCity</span><br>
-                <span>Tel: @Model.Requests.FirstOrDefault().Product.Vendor.VendorTelephone</span>
+                <span class="heading-1">@Model.Requests[0].Product.Vendor.VendorEnName</span><br>
+                <span>ID: @Model.Requests[0].Product.Vendor.VendorBuisnessID</span><br>
+                <span>@Model.Requests[0].Product.Vendor.VendorCity</span><br>
+                <span>Tel: @Model.Requests[0].Product.Vendor.VendorTelephone</span>
             </div>
         </div>
         <div class="col-6 offset-2">
@@ -82,7 +78,7 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
         <table class="table confirm-table">
             <thead style="background-color: #D0001C; color: #ffffff;">
                 <tr>
-                    @if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                    @if (Model.Requests[0].Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     {
                         <th style="width:30%;">Items</th>
                         <th style="width:15%;">SKU</th>
@@ -106,30 +102,30 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                 @foreach (var request in Model.Requests)
                 {
                     var cost = request.Cost;
+                    vat += request.VAT;
                     if (request.Currency == AppUtility.CurrencyEnum.USD.ToString())
                     {
                         cost = cost / request.ExchangeRate;
                     }
                     <tr>
-                        <td style="font-weight: 500;">@request.SubUnit @request.Product.ProductName</td>
+                        <td style="font-weight: 500;">@request.Product.ProductName</td>
                         <td>@request.Product.CatalogNumber</td>
                         @if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
                             <td>@request.Unit</td>
-                            double unitPrice = (cost ?? 0) / request.Unit;
+                            decimal unitPrice = (cost ?? 0) / request.Unit;
                             <td>@currency @unitPrice.ToString("N2")</td>
                         }
                         <td>@request.Discount%</td>
                         <td>@currency @cost?.ToString("N2")</td>
                     </tr>
                 }
-                @{ double total = Model.Requests.Sum(r => r.Cost ?? 0);
+                @{ decimal total = Model.Requests.Sum(r => r.Cost ?? 0);
                     if (currency == '$')
                     {
-                        total = total / Model.Requests.FirstOrDefault().ExchangeRate;
+                        total = total / Model.Requests[0].ExchangeRate;
                     }
-                    double vat = total * .17;
-                    double totalWithVat = total + vat;}
+                    decimal totalWithVat = total + vat;}
                 <tr>
                     <td colspan="@colspan" rowspan="6" class="borderless-cell">
                         <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">

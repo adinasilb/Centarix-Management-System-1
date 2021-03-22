@@ -67,6 +67,7 @@ $(function () {
 			$("#validation-EmployeeStatus").removeClass("hidden");
 		}
 	}
+
 	$(".cost-validation").each(function () {
 		$(this).rules("add", {
 			required: true,
@@ -74,6 +75,7 @@ $(function () {
 			min: 1
 		});
 	});
+
 	$(".supply-days-validation").each(function () {
 		$(this).rules("add", {
 			min: 0,
@@ -137,6 +139,24 @@ $(function () {
 	$.validator.addMethod("selectRequired", function (value, element) {
 		return value != "" && value!=null;
 	}, 'Field is required');
+
+	$.validator.addMethod("notEqualTo",
+    function (value, element, param) {
+        var notEqual = true;
+        value = $.trim(value);
+        for (i = 0; i < param.length; i++) {
+
+            var checkElement = $(param[i]);
+            var success = !$.validator.methods.equalTo.call(this, value, element, checkElement);
+            // console.log('success', success);
+            if(!success)
+                notEqual = success;
+        }
+
+        return this.optional(element) || notEqual;
+    },
+    "Please enter a diferent value."
+);
 	//$.validator.addMethod("atleastOneHoursField", function (value, element) {
 	//	console.log($("#NewEmployeeWorkScope").val())
 	//	console.log($("#NewEmployee_SalariedEmployee_HoursPerDay").val())
@@ -168,12 +188,14 @@ $(function () {
 		}
 
 	});
+
+
 	$('#myForm input').change(function (e) {
 		console.log("validating input...");
-		//$("#myForm").data("validator").settings.ignore = "";
+		$("#myForm").data("validator").settings.ignore = "";
 		$('.error').addClass("beforeCallValid");
 		if ($('#myForm').valid()) {
-			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+			$('.activeSubmit').removeClass('disabled-submit')
 		} else {
 			$(".error:not(.beforeCallValid)").addClass("afterCallValid")
 			$(".error:not(.beforeCallValid)").removeClass("error")
@@ -181,8 +203,8 @@ $(function () {
 			$(".error").removeClass('beforeCallValid')
 			$(".afterCallValid").removeClass('error')
 			$(".afterCallValid").removeClass('afterCallValid')
-			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+			if (!$('.activeSubmit').hasClass('disabled-submit')) {
+				$('.activeSubmit').addClass('disabled-submit')
 			}
 		}
 		$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
@@ -198,7 +220,7 @@ $(function () {
 			}
 
 			if ($(this).hasClass('order-tab-link') ) {
-				$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+				$('.activeSubmit').removeClass('disabled-submit')
 			}
 
 			//change previous tabs to accessible --> only adding prev-tab in case we need to somehow get it after
@@ -260,42 +282,23 @@ $(function () {
 	$.fn.isBefore= function(sel){
 		 return 
 	};
-	$('#myForm').submit(function (e) {
+	$('#myForm, .modal #myForm').submit(function (e) {
 		//alert("validate form");
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
 		console.log("valid form: " + valid)
 		if (!valid) {
 			e.preventDefault();
-			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+			if (!$('.activeSubmit').hasClass('disabled-submit')) {
+				$('.activeSubmit').addClass('disabled-submit')
 			}
 
 		}
 		else {
-			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+			$('.activeSubmit ').removeClass('disabled-submit')
 		}
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
-	$('.modal #myForm').submit(function (e) {
-		//alert("validate form");
-		$(this).data("validator").settings.ignore = "";
-		var valid = $(this).valid();
-		console.log("valid form: " + valid)
-		if (!valid) {
-			e.preventDefault();
-			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
-			}
-
-		}
-		else {
-			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
-		}
-		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-	});
-
-
 
 
 });

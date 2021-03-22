@@ -27,10 +27,10 @@
     if (Model.PageType == AppUtility.PageTypeEnum.OperationsRequest)
     {
         activeClasses += " new-oper-button ";
-        newActiveClass += " new-oper-button ";
+        //newActiveClass += " new-oper-button ";
         orderedActiveClass += " new-oper-button ";
         receivedActiveClass += " new-oper-button ";
-        approvedActiveClass += " new-oper-button ";
+        //approvedActiveClass += " new-oper-button ";
     }
 
     switch (Model.RequestStatusID)
@@ -57,14 +57,16 @@
 <div class="">
     <div class="item-table">
         <ul class="pl-0">
-            <li class="list-inline-item active m-0">
-                <a class="@newActiveClass countStatus" value="1" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
-            </li>
-            <li class="list-inline-item m-0">
-                <a class="@approvedActiveClass countStatus" value="6" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
+            @if (Model.PageType != AppUtility.PageTypeEnum.OperationsRequest)
+            {
+                <li class="list-inline-item active m-0">
+                    <a class="@newActiveClass countStatus" value="1" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
+                </li>
+                <li class="list-inline-item m-0">
+                    <a class="@approvedActiveClass countStatus" value="6" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
 
-            </li>
-
+                </li>
+            }
             <li class="list-inline-item m-0">
                 <a class="@orderedActiveClass countStatus" value="2" href="#"> <i class="new-icon icon-centarix-icons-03"></i><label class="new-button-text">@orderedButtonText</label> </a>
             </li>

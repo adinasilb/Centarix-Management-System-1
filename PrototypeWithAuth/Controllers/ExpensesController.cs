@@ -87,8 +87,9 @@ namespace PrototypeWithAuth.Controllers
             ChartViewModel pieChartViewModel = new ChartViewModel();
             pieChartViewModel.SectionColor = new List<String>();
             pieChartViewModel.SectionName = new List<String>();
-            pieChartViewModel.SectionValue = new List<double>();
+            pieChartViewModel.SectionValue = new List<decimal>();
             pieChartViewModel.Currency = currency;
+            var latestExchangeRate = GetExchangeRateIfNull();
             if (summaryChartsViewModel.SelectedEmployees != null)
             {
                 var employees = _context.Employees.Where(e => summaryChartsViewModel.SelectedEmployees.Contains(e.Id));
@@ -100,10 +101,10 @@ namespace PrototypeWithAuth.Controllers
                         count = 0;
                     }
                     requestList = requests.Where(r => r.ApplicationUserCreatorID == e.Id);
-                    double cost = 0;
+                    decimal cost = 0;
                     if (isDollars)
                     {
-                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? latestExchangeRate  : r.ExchangeRate));
                     }
                     else
                     {
@@ -134,10 +135,10 @@ namespace PrototypeWithAuth.Controllers
                         count = 0;
                     }
                     requestList = requests.Where(r => r.Product.Vendor.VendorID == v.VendorID);
-                    double cost = 0;
+                    decimal cost = 0;
                     if (isDollars)
                     {
-                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
                     }
                     else
                     {
@@ -169,10 +170,10 @@ namespace PrototypeWithAuth.Controllers
                         count = 0;
                     }
                     requestList = requests.Where(r => r.Product.ProductSubcategoryID == ps.ProductSubcategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory);
-                    double cost = 0;
+                    decimal cost = 0;
                     if (isDollars)
                     {
-                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
                     }
                     else
                     {
@@ -204,10 +205,10 @@ namespace PrototypeWithAuth.Controllers
                         count = 0;
                     }
                     requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
-                    double cost = 0;
+                    decimal cost = 0;
                     if (isDollars)
                     {
-                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
                     }
                     else
                     {
@@ -239,10 +240,10 @@ namespace PrototypeWithAuth.Controllers
                         count = 0;
                     }
                     requestList = requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == c.CategoryTypeID).Include(r => r.Product).ThenInclude(r => r.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ThenInclude(pc => pc.CategoryType);
-                    double cost = 0;
+                    decimal cost = 0;
                     if (isDollars)
                     {
-                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
                     }
                     else
                     {
@@ -273,10 +274,10 @@ namespace PrototypeWithAuth.Controllers
                         count = 0;
                     }
                     requestList = requests.Where(r => r.SubProjectID == sp.SubProjectID);
-                    double cost = 0;
+                    decimal cost = 0;
                     if (isDollars)
                     {
-                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
                     }
                     else
                     {
@@ -309,10 +310,10 @@ namespace PrototypeWithAuth.Controllers
                         count = 0;
                     }
                     requestList = requests.Where(r => r.SubProject.ProjectID == s.ProjectID);
-                    double cost = 0;
+                    decimal cost = 0;
                     if (isDollars)
                     {
-                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        cost = requestList.Sum(r => r.Cost??0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
                     }
                     else
                     {
@@ -372,13 +373,14 @@ namespace PrototypeWithAuth.Controllers
                 var requestsFromMonth = _context.Requests.Where(r => r.CreationDate.Year == year && r.CreationDate.Month == i)
                     .Where(r => r.RequestStatusID == 3) //items that were paid for and received
                     .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory);
-                double lab = 0;
-                double operation = 0;
-                double instrument = 0;
-                double reagents = 0;
-                double plastics = 0;
-                double reusables = 0;
-                double total = 0;
+                decimal lab = 0;
+                decimal operation = 0;
+                decimal instrument = 0;
+                decimal reagents = 0;
+                decimal plastics = 0;
+                decimal reusables = 0;
+                decimal total = 0;
+                var latestExchangeRate = GetExchangeRateIfNull();
                 switch (currencyEnum)
                 {
                     case AppUtility.CurrencyEnum.NIS:
@@ -391,13 +393,13 @@ namespace PrototypeWithAuth.Controllers
                         total = requestsFromMonth.Sum(r => r.Cost??0);
                         break;
                     case AppUtility.CurrencyEnum.USD:
-                        lab = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
-                        operation = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
-                        instrument = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
-                        reagents = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 2).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
-                        plastics = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 1).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
-                        reusables = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 4).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
-                        total = requestsFromMonth.Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? AppUtility.ExchangeRateIfNull : r.ExchangeRate));
+                        lab = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
+                        operation = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
+                        instrument = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
+                        reagents = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 2).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
+                        plastics = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 1).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
+                        reusables = requestsFromMonth.Where(r => r.Product.ProductSubcategory.ParentCategoryID == 4).Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
+                        total = requestsFromMonth.Sum(r => r.Cost ?? 0 / (r.ExchangeRate == 0 ? latestExchangeRate : r.ExchangeRate));
                         break;
                 }
                 sti.Lab = string.Format("{0:n0}", Convert.ToInt32(lab));

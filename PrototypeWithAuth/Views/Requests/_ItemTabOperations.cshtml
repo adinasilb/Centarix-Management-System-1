@@ -1,0 +1,68 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@using PrototypeWithAuth.ViewModels
+
+@{ var request = Model.Requests.FirstOrDefault();}
+<span class="heading-1 modal-tab-name">Item</span>
+@{
+    var category = "";
+    if (Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum != null)
+    {
+        category = Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum;
+    }
+    var modalType = Model.ModalType;
+    var markReadOnlyClass = "";
+    var hiddenSummaryClass = "";
+    if (modalType == AppUtility.RequestModalType.Edit)
+    {
+        markReadOnlyClass = "mark-readonly";
+    }
+    if (modalType == AppUtility.RequestModalType.Summary)
+    {
+        hiddenSummaryClass = "hidden";
+        markReadOnlyClass = "mark-readonly";
+    }
+}
+
+<div class="operations-item-div">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="control-label">Currency</label>
+                        <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
+                            <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
+                            <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Requests[0].ExchangeRate" class="control-label"></label>
+                        <input asp-for="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
+                        <span asp-validation-for="Requests[0].ExchangeRate" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @for (int i = 0; i < Model.Requests.Count(); i++)
+    {
+        <div>
+            @{await Html.RenderPartialAsync("_PartialItemOperationsTab", new OperationsItemViewModel() { Request = Model.Requests[i], RequestIndex = i, ModalType = modalType, ParentCategories = Model.ParentCategories, ProductSubcategories = Model.ProductSubcategories });
+            }
+        </div>
+    }
+</div>
+@if (Model.ModalType == AppUtility.RequestModalType.Create)
+{
+    <div class="row text-center justify-content-center @hiddenSummaryClass">
+        <input type="button" id="addOperationItem" value="+ Add Item" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize add-item" style="font-size:1rem;" data-val="1" />
+    </div>
+}
+
+@*<script>$(".mdb-select").materialSelect()</script>*@

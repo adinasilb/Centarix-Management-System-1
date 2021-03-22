@@ -6,8 +6,8 @@
 	var formData = new FormData($(".DeleteDocumentModalForm")[0]);
 	$foldername = $("#FolderName").val();
 	$requestId = $("#RequestID").val();
-	var $SectionType = $("#SectionType").val();
-	alert($("#SectionType").val())
+	var $SectionType = $("#masterSectionType").val();
+	console.log($SectionType);
 		var $isEdittable = $('.active-document-modal').attr("data-val");
 		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
 	console.log("$requestId: " + $requestId);
@@ -17,7 +17,7 @@
 		data: formData,
 		success: (partialResult) => {
 			$.fn.CloseModal("documents-delete");
-			$.fn.OpenDocumentsModal($foldername, $requestId, true, $isEdittable, $SectionType, $showSwitch);
+			$.fn.OpenDocumentsModal($foldername, $requestId, $isEdittable, $SectionType, $showSwitch);
 			//$.fn.ChangeColorsOfDocs($foldername);
 		},
 		processData: false,
@@ -28,10 +28,15 @@
 
 
 $.fn.RemoveColorsOfDocs = function ($foldername) {
+	console.log("in remove colors")
 	$("#" + $foldername + " i").removeClass('oper-filter');
 	$("#" + $foldername + " i").removeClass('order-inv-filter')
 	$("#" + $foldername + " i").removeClass('lab-man-filter')
 	$("#" + $foldername + " i").addClass('opac87');
 	$("#" + $foldername+"Input").removeClass("contains-file");
-	$("#" + $foldername+"Input").valid();
+	if ($("#" + $foldername+"Input").rules()) {
+				$("#" + $foldername+"Input").valid();
+		}
+
+	$("#" + $foldername +" .document-border").removeClass("hasFile")
 };

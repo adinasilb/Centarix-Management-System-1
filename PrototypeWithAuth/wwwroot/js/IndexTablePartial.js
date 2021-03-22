@@ -27,6 +27,20 @@ $.ajax({
     return false;
 });
 
+
+
+
+$(".load-quote-details").on("click", function (e) {
+    console.log("in order details");
+    e.preventDefault();
+    e.stopPropagation();
+    $("#loading").show();
+    var $itemurl = "/Requests/EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestID=" + $(this).attr("value");
+    $.fn.CallPageRequest($itemurl, "quote");
+    return false;
+});
+
+
 $(".load-order-details").off('click').on("click", function (e) {
     console.log("in order details");
     e.preventDefault();
@@ -43,13 +57,11 @@ $(".load-order-details").off('click').on("click", function (e) {
     return false;
 });
  
-$(".load-product-details").off('click').on("click", function (e) {
-    
+$(".load-product-details").off('click').on("click", function (e) {    
     e.preventDefault();
     e.stopPropagation();
     $("#loading").show();
-    var $itemurl = "";
-    $itemurl = "/Requests/EditModalView/?id=" + $(this).val() + "&SectionType=" + $("#masterSectionType").val();
+    var $itemurl = "/Requests/EditModalView/?id=" + $(this).val() + "&SectionType=" +  $("#masterSectionType").val();
     $.fn.CallPageRequest($itemurl, "details");
     return false;
 });
@@ -62,8 +74,8 @@ $(".load-product-details-summary").off('click').on("click", function (e) {
     e.stopPropagation();
     $("#loading").show();
     //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-    var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false";
-    $.fn.CallPageRequest($itemurl, "details");
+    var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false"+"&SectionType=" +  $("#masterSectionType").val();
+    $.fn.CallPageRequest($itemurl, "summary");
     return false;
 });
 
@@ -150,8 +162,27 @@ $(".page-item a").off('click').on("click", function (e) {
     return false;
 });
 
+$("#Months, #Years").off("change").on("change", function (e) {
+    var years = [];
+	years = $("#Years").val();
+	var months = [];
+	months = $("#Months").val();
+   ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/","._IndexTableData", "GET", undefined, "", months, years);
+    return false;
+});
 
-function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "") {
+  $(".load-terms-modal").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#loading").show();
+
+            var $itemurl = "/Requests/TermsModal/?vendorID=" + $(this).val() + "&"+$.fn.getRequestIndexString();
+            console.log("itemurl: " + $itemurl);
+            $.fn.CallPageRequest($itemurl, "termsmodal");
+            return false;
+        });
+
+function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years) {
     console.log("in ajax partial index call"+url);
     var selectedPriceSort = [];
     $("#priceSortContent .priceSort:checked").each(function (e) {
@@ -170,7 +201,9 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
             SidebarType: $('#masterSidebarType').val(),
             SelectedPriceSort: selectedPriceSort,
             SelectedCurrency: $('#tempCurrency').val(),
-            SidebarFilterID: $('.sideBarFilterID').val()
+            SidebarFilterID: $('.sideBarFilterID').val(), 
+            months : months,
+            years : years
         };
        console.log(formdata);
     }
@@ -193,17 +226,6 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
     $(viewClass).html(data);
     $("#loading").hide();
     return true;
-},
-    error: function (jqxhr) {
-      
-        $("#loading").hide();
-
-        if (jqxhr.status == 500) {
-            $.fn.OpenModal('modal', modalClass, jqxhr.responseText)
-               
-           }
-
-        return true;
 }
     });
 

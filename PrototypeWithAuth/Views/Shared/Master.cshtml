@@ -78,12 +78,15 @@
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <div class="request_nav_body"> @RenderBody()</div>
-   
+    <div class="modals">
+        @{await Html.RenderPartialAsync("ModalLoader"); }
+    </div>
+
 
     <!--  SCRIPTS  -->
     <!-- JQuery -->
     @*load jquery ui*@
-    
+
     <script src="~/lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
     <!-- Bootstrap tooltips -->
@@ -105,7 +108,7 @@
         <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>*@
 
     <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script>
-    @*getting an 
+    @*getting an
         without type=module*@
     <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script>
     @*getting an error without type=module*@
@@ -177,8 +180,8 @@
     <script src="~/lib/bootstrap/dist/src/js/pro/file-input.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/mdb-autocomplete.js"></script>
     @*<script src="~/lib/bootstrap/dist/src/js/pro/picker-date.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker-time.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker.js"></script>*@
+        <script src="~/lib/bootstrap/dist/src/js/pro/picker-time.js"></script>
+        <script src="~/lib/bootstrap/dist/src/js/pro/picker.js"></script>*@
     <script src="~/lib/bootstrap/dist/src/js/pro/preloading.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/range-input.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/sidenav.js"></script>
@@ -241,11 +244,11 @@
     <script src="~/js/moment.min.js"></script>
     @*<script src="~/js/datepicker.min.js"></script>
 
-     Include English language 
-    <script src="~/js/datepicker.en.js"></script>*@
+         Include English language
+        <script src="~/js/datepicker.en.js"></script>*@
 
     <script>
-      
+
         $.fn.setUpChartDDlPlaceholders = function () {
             $("#select-options-SelectedCategoryTypes li:first").hide()
             $("#select-options-VendorCategoryTypes li:first").hide()
@@ -340,19 +343,8 @@
             return false;
         });
 
-      
 
-        $(".load-quote-details").on("click", function (e) {
-            console.log("in order details");
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "/Requests/EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestID=" + $(this).val();
-            $.fn.CallPageRequest($itemurl, "quote");
-            return false;
-        });
 
-       
         $(".js-go-to-controller").on("click", function (e) {
             console.log("inside of js-go-to-controller");
             e.preventDefault();
@@ -428,6 +420,10 @@
                 //$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist');
                 $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
                 $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
+                $.fn.EnableMaterialSelect('#operationsCategory', 'select-options-operationsCategory');
+                $.fn.EnableMaterialSelect('#operationsSubcategory', 'select-options-operationsSubcategory');
+                $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
+
             }
             if ($(element).hasClass('orders')) {
                 console.log("orders");
@@ -444,6 +440,10 @@
                     console.log('enabling');
                     $.fn.EnableSubUnits();
                     $.fn.ChangeSubUnitDropdown();
+                }
+                if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
+                    console.log("no quote")
+                    $(".requestPriceQuote").prop("disabled", true);
                 }
             }
             if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
@@ -479,7 +479,7 @@
                     switch ($type) {
                         case "details":
                             //$.fn.OnOpenModalView();
-                            $.fn.OpenModal('modal', 'edit-item', modal)
+                            $.fn.OpenModal('modal', 'edits', modal)
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
                             break;
@@ -487,7 +487,15 @@
                             $.fn.OpenModal('modal', 'reorder-item', modal)
                             $.fn.OnOpenModalView();
                             $("#cost").trigger('change');
+
+
                             //$.fn.CheckCurrency();
+                            break;
+                        case "summary":
+                            //$.fn.OnOpenModalView();
+                            $.fn.OpenModal('modal', 'edits', modal)
+                            $.fn.LoadSummaryModal();
+                            $('.modal-content a:first').tab('show');
                             break;
                         case "create":
                             //$.fn.OnOpenModalView();
@@ -496,7 +504,7 @@
                             $.fn.OpenModal('modal', 'received-item', modal)
                             $('.mdb-select').materialSelect();
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
-                            break;                    
+                            break;
                         case "termsmodal":
                             $.fn.OpenModal('modal', 'terms', modal)
                             break;
@@ -507,7 +515,11 @@
                             $.fn.OpenModal('modal', 'confirm-email', modal)
                             break;
                         case "quote":
-                            $.fn.OpenModal('modal', 'edit-quote', modal)
+                            $.fn.OpenModal('modal', 'edit-quote', modal);
+                            $('.mdb-select').materialSelect();
+                            break;
+                        case "locations": case "addlocation":
+                            $.fn.OpenModal('modal', 'add-location', modal)
                             break;
                     }
 
@@ -532,6 +544,7 @@
             $('.turn-edit-on-off').attr('name', 'details')
             $('.open-document-modal').attr("data-val", false);
         };
+
         $.fn.LoadEditModalDetails = function () {
             $("#cost").trigger('change');
             var category = $("#categoryDescription").val();
@@ -541,6 +554,17 @@
             $.fn.TurnToDetails();
             $('.open-document-modal').attr("showSwitch", true);
             $('.mdb-select').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+        }
+
+        $.fn.LoadSummaryModal = function () {
+            $("#cost").trigger('change');
+            var category = $("#categoryDescription").val();
+            console.log(category)
+            $("." + category).removeClass("d-none");
+            console.log("in detilas of case")
+            $.fn.TurnToDetails();
+            $('.mdb-select:not(.ignore-mdb)').materialSelect();
             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
@@ -583,16 +607,7 @@
 
         }
 
-        $(".load-terms-modal").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-
-            var $itemurl = "TermsModal/?vendorID=" + $(this).val() + "&"+$.fn.getRequestIndexString();
-            console.log("itemurl: " + $itemurl);
-            $.fn.CallPageRequest($itemurl, "termsmodal");
-            return false;
-        });
+      
 
         $(".load-confirm-email").on("click", function (e) {
             e.preventDefault();
@@ -641,12 +656,12 @@
         $.fn.OnOpenModal = function () {
             $('.modal-content a:first').tab('show');
             $('.mdb-select').materialSelect();
-            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
-            $('.mdb-select li:first-child').hide();
-            $('.mdb-select li:nth-child(2)').hide();
+            //$('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            //$('.mdb-select li:first-child').hide();
+            //$('.mdb-select li:nth-child(2)').hide();
         };
 
-      
+
 
         $.fn.getMenuItems = function () {
            // alert("get menu items")
@@ -671,7 +686,7 @@
                 cache: true,
                 success: function (data) {
                     $("#loading").hide();
-                    $.fn.OpenModal('users-form', 'edit-item', data)
+                    $.fn.OpenModal('users-form', 'edits', data)
                     $.fn.CalculateAge();
                     $.fn.OnOpenModal();
                 }
@@ -719,14 +734,6 @@
             });
         };
 
-        $("table tr .form-check-input.fci-acc").click(function () {
-            if ($(this).is(':checked')) {
-                $(this).closest("tr").addClass("clicked-border-acc");
-            }
-            else {
-                $(this).closest("tr").removeClass("clicked-border-acc");
-            }
-        });
 
         $("table tr .order-inv-form .form-check-input").click(function () {
             if ($(this).is(':checked')) {
@@ -810,7 +817,6 @@
             });
             $('#profile-img').popover('toggle');
 
-
         });
 
         //$("#parentlist").change(function () {
@@ -834,7 +840,6 @@
             e.stopPropagation();
             var $itemurl = "/Locations/AddLocation";
             var $modal = $(".location-modal-view");
-            $('.modal').replaceWith('');
             $.fn.CallPageRequest($itemurl, "locations");
             return false;
         });
@@ -976,7 +981,21 @@
             $.fn.UpdateNotificationLastRead();
 
         });
-        
+
+        $.fn.CallModal = function (url, modalClass) {
+            $.ajax({
+                async: false,
+                url: url,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal("modal", modalClass, data)
+                    $("#loading").hide();
+                    return false;
+                }
+            });
+        };
+
 
         $.fn.GetHoursString = function (date) {
             var date = new Date(date);
@@ -1056,7 +1075,7 @@
                     $.fn.OpenModal('documentsModal', 'documents', data)
                     var length = $('.iframe-container').length;
 			        if (length < 1) {
-				        $.fn.RemoveColorsOfDocs($foldername);
+                        $.fn.RemoveColorsOfDocs(enumString);
 			        }
                     return true;
                 }
@@ -1065,27 +1084,28 @@
         };
 
 
-        $.fn.AppendModalToBody = function(data)
-        {
-            $(".modal").modal('hide');
-            $(".modal").replaceWith('');
-            var modal = $(data);
-            $('body').append(modal);
-            $(".modal").modal({
-                backdrop: true,
-                keyboard: false,
-            });
-            //shows the modal
-            $(".modal").modal('show');
-            $('.modal-content a:first').tab('show');
-            $(".mdb-select").materialSelect();
+        //$.fn.AppendModalToBody = function(data)
+        //{
+        //    $(".modal").modal('hide');
+        //    $(".modal").replaceWith('');
+        //    var modal = $(data);
+        //    $('body').append(modal);
+        //    $(".modal").modal({
+        //        backdrop: true,
+        //        keyboard: false,
+        //    });
+        //    //shows the modal
+        //    $(".modal").modal('show');
+        //    $('.modal-content a:first').tab('show');
+        //    $(".mdb-select").materialSelect();
 
-        }
+        //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
             var backdrop = "static";
             if ($('.modal-backdrop').length > 0) {
                 backdrop = false;
             }
+            $('.' + modalClass).replaceWith('');
             $('.' + modalDivClass).html('');
             $('.' + modalDivClass).html(data);
             $("." + modalClass).modal({
@@ -1094,6 +1114,10 @@
             });
             //shows the modal
             $("." + modalClass).modal('show');
+            $('input[type ="submit"]').removeClass("activeSubmit");
+            $('button[type ="submit"]').removeClass("activeSubmit");
+            $('.' + modalDivClass+' input[type="submit"]').addClass("activeSubmit");
+            $('.' + modalDivClass + ' button[type="submit"]').addClass("activeSubmit");
 
         }
         $.fn.CloseModal = function (modalDivClass) {

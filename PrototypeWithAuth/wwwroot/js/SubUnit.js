@@ -8,37 +8,55 @@ $(function () {
 		$inputBox.val(theResult);
 	}
 
-	$.fn.CalculateSumPlusVat = function () {
+	$.fn.CalculateSumPlusVat = function (index = "0") {
 		var $exchangeRate = $("#exchangeRate").val();
 		if ($exchangeRate == "0") {
 			$exchangeRate = "1";
-        }
+		}
+		var dollarId = "sum-dollars";
+		var shekelId = "cost"
+		var vatId = "vat";
+		var vatDollarId = "vatInDollars";
+		var totalVatId = "sumPlusVat-Shekel";
+		var totalVatDollarId = "sumPlusVat-Dollar";
+		if ($('#masterSectionType').val() == "Operations")
+		{
+			dollarId = dollarId + index;
+			shekelId = "Requests_" + index + "__Cost";
+			vatId = "Requests_" + index + "__VAT";
+			vatDollarId = vatDollarId + index;
+			totalVatId = "Requests_" + index + "__TotalWithVat";
+			totalVatDollarId = totalVatDollarId + index;
+		}
 		//console.log("sumShek: " + sumShek);
 
 		//console.log("VatPercentage: " + VatPercentage);
 		//console.log("vatCalc: " + vatCalc);
 		//$("#Request_VAT").val(vatCalc)
 		//var vatInShekel = $("#Request_VAT").val();
-		if ($("#sum-dollars").prop("disabled")) {
-			$sumDollars = parseFloat($("#cost").val()) / $exchangeRate;
-			$iptBox = $('input[name="sum-dollars"]');
+		if ($("#" + dollarId).prop("disabled")) {
+			$sumDollars = parseFloat($("#" + shekelId).val()) / $exchangeRate;
+			console.log($sumDollars)
+			$iptBox = $('#'+dollarId);
 			$.fn.ShowResults($iptBox, $sumDollars);
 		}
-		else if ($("#cost").prop("readonly")) {
-			$sumShekel = $("#sum-dollars").val() * $exchangeRate;
-			$iptBox = $("#cost");
+		else if ($("#" + shekelId).prop("readonly")) {
+			$sumShekel = $("#" + dollarId).val() * $exchangeRate;
+			console.log("shekel " + $sumShekel)
+			$iptBox = $("#" + shekelId);
 			$.fn.ShowResults($iptBox, $sumShekel);
 		}
-		$sumShekel = parseFloat($("#cost").val());
+		$sumShekel = parseFloat($("#" + shekelId).val());
 		var vatCalc = $sumShekel * .17;
 		//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
-		$('#vat').val(vatCalc.toFixed(2));
-		$('.vatInDollars').val((vatCalc / $exchangeRate).toFixed(2));
+		$('#' + vatId).val(vatCalc.toFixed(2));
+		console.log("vat calc " + vatCalc)
+		$('#' + vatDollarId).val((vatCalc / $exchangeRate).toFixed(2));
 		$sumTotalVatShekel = $sumShekel + vatCalc;
-		$iptBox = $("input[name='sumPlusVat-Shekel']");
+		$iptBox = $("#" + totalVatId);
 		$.fn.ShowResults($iptBox, $sumTotalVatShekel);
 		$sumTotalVatDollars = $sumTotalVatShekel / $exchangeRate;
-		$iptBox = $("input[name='sumPlusVat-Dollar']");
+		$iptBox = $("#" + totalVatDollarId);
 		$.fn.ShowResults($iptBox, $sumTotalVatDollars);
 	};
 	$.fn.CalculateUnitAmounts = function () {
@@ -324,6 +342,10 @@ $(function () {
 			$("#subUnitTypeID").addClass('mark-readonly');
 			$.fn.ChangeSubUnitDropdown();
 			$.fn.CheckCurrency();
+			if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
+				console.log("no quote")
+				$(".requestPriceQuote").prop("disabled", true);
+			}
 		}
 		//else {
 		//	$.fn.DisableSubUnits();
@@ -346,6 +368,10 @@ $(function () {
 			$("#subSubUnitTypeID").addClass('mark-readonly');
 			$.fn.ChangeSubSubUnitDropdown();
 			$.fn.CheckCurrency();
+			if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
+				console.log("no quote")
+				$(".requestPriceQuote").prop("disabled", true);
+            }
 		}
 		//else {
 		//	$.fn.DisableSubSubUnits();
@@ -357,84 +383,58 @@ $(function () {
 	$.fn.CheckCurrency = function () {
 		console.log('check currency')
 		var currencyType = $("#currency").val();
+		var shekelSelector = "#cost";
+		var dollarSelector = "#sum-dollars";
+		if ($('#masterSectionType').val() == "Operations") {
+			shekelSelector = ".shekel-cost";
+			dollarSelector = ".dollar-cost";
+		}
+		var isRequestQuote = $(".isRequest").is(":checked")
 		switch (currencyType) {
 			case "USD":
-				$("#cost").prop("readonly", true);
-				$("#cost").addClass('disabled-text');
-				$("#sum-dollars").prop("disabled", false);
-				$("#sum-dollars").removeClass('disabled-text');
+				$(shekelSelector).prop("readonly", true);
+				$(shekelSelector).addClass('disabled-text');
+				$(dollarSelector).prop("disabled", false);
+				$(dollarSelector).removeClass('disabled-text');
+				$(dollarSelector).addClass('requestPriceQuote');
+				$(shekelSelector).removeClass('requestPriceQuote');
 
 
 				$("#unit-price-dollars").prop("disabled", false);
 				$("#unit-price-dollars").removeClass('disabled-text');
 				$("#unit-price-dollars").prop("readonly", false);
-				if (!$('.subUnitsCard').hasClass('d-none')) {
-					$("#subunit-price-dollars").prop("disabled", false);
-					$("#subunit-price-dollars").removeClass('disabled-text');
-					$("#subunit-price-dollars").prop("readonly", false);
-				}
-				if (!$('.subSubUnitsCard').hasClass('d-none')) {
-					$("#subsubunit-price-dollars").prop("disabled", false);
-					$("#subsubunit-price-dollars").removeClass('disabled-text');
-					$("#subsubunit-price-dollars").prop("readonly", false);
-				}
 				$(".request-cost-dollar-icon").removeClass('disabled-text');
 
 				$("#unit-price-shekel").prop("disabled", true);
 				$("#unit-price-shekel").addClass('disabled-text');
 				$("#unit-price-shekel").prop("readonly", true);
-				if (!$('.subUnitsCard').hasClass('d-none')) {
-					$("#subunit-price-shekel").prop("disabled", true);
-					$("#subunit-price-shekel").addClass('disabled-text');
-					$("#subunit-price-shekel").prop("readonly", true);
-				}
-				if (!$('.subSubUnitsCard').hasClass('d-none')) {
-					$("#subsubunit-price-shekel").prop("disabled", true);
-					$("#subsubunit-price-shekel").addClass('disabled-text');
-					$("#subsubunit-price-shekel").prop("readonly", true);
-				}
 				$(".request-cost-shekel-icon").addClass('disabled-text');
 				break;
 			case "NIS":
 			case undefined: //for the reorder modal
-				$("#cost").prop("readonly", false);
-				$("#cost").removeClass('disabled-text');
-				$("#sum-dollars").prop("disabled", true);
-				$("#sum-dollars").addClass('disabled-text');
+				$(shekelSelector).prop("readonly", false);
+				$(shekelSelector).removeClass('disabled-text');
+				$(dollarSelector).prop("disabled", true);
+				$(dollarSelector).addClass('disabled-text');
+				$(shekelSelector).addClass('requestPriceQuote');
+				$(dollarSelector).removeClass('requestPriceQuote');
 
 
 				$("#unit-price-dollars").prop("disabled", true);
 				$("#unit-price-dollars").addClass('disabled-text');
 				$("#unit-price-dollars").prop("readonly", true);
-				if (!$('.subUnitsCard').hasClass('d-none')) {
-					$("#subunit-price-dollars").prop("disabled", true);
-					$("#subunit-price-dollars").addClass('disabled-text');
-					$("#subunit-price-dollars").prop("readonly", true);
-				}
-				if (!$('.subSubUnitsCard').hasClass('d-none')) {
-					$("#subsubunit-price-dollars").prop("disabled", true);
-					$("#subsubunit-price-dollars").addClass('disabled-text');
-					$("#subsubunit-price-dollars").prop("readonly", true);
-				}
 				$(".request-cost-dollar-icon").addClass('disabled-text');
 
 				$("#unit-price-shekel").prop("disabled", false);
 				$("#unit-price-shekel").removeClass('disabled-text');
 				$("#unit-price-shekel").prop("readonly", false);
-				if (!$('.subUnitsCard').hasClass('d-none')) {
-					$("#subunit-price-shekel").prop("disabled", false);
-					$("#subunit-price-shekel").removeClass('disabled-text');
-					$("#subunit-price-shekel").prop("readonly", false);
-				}
-				if (!$('.subSubUnitsCard').hasClass('d-none')) {
-					$("#subsubunit-price-shekel").prop("disabled", false);
-					$("#subsubunit-price-shekel").removeClass('disabled-text');
-					$("#subsubunit-price-shekel").prop("readonly", false);
-				}
 				$(".request-cost-shekel-icon").removeClass('disabled-text');
 
 				break;
 		}
+		if (isRequestQuote) {
+			$(".requestPriceQuote ").attr("disabled", true);
+        }
 	};
 
 
@@ -516,16 +516,23 @@ $(function () {
 		$.fn.CalculateSubSubUnitAmounts();
 	});
 
-	$("#cost").change(function (e) {
-		$.fn.CalculateSumPlusVat();
-		$.fn.CalculateUnitAmounts();
-		$.fn.CalculateSubUnitAmounts();
-		$.fn.CalculateSubSubUnitAmounts();
+	$("body").off("change", "#cost, .cost").on("change", "#cost, .cost",function (e) {
+		console.log("change cost")
+		var index = 0;
+		if ($('#masterSectionType').val() == "Operations") {
+			index = $(this).attr('data-val');
+		}
+		$.fn.CalculateSumPlusVat(index);
+		if ($('#masterSectionType').val() != "Operations") {
+			$.fn.CalculateUnitAmounts();
+			$.fn.CalculateSubUnitAmounts();
+			$.fn.CalculateSubSubUnitAmounts();
+		}
 		//$.fn.CheckCurrency(); //for the reorder modal
 	});
 
 	$("#sum-dollars").change(function (e) {
-		alert("in change sum")
+		//alert("in change sum")
 		$.fn.CalculateSumPlusVat();
 		$.fn.CalculateUnitAmounts();
 		$.fn.CalculateSubUnitAmounts();

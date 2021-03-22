@@ -1,57 +1,183 @@
 ﻿$(function () {
-	$(".form-check.accounting-select").on("change", function (e) {
-		console.log("checkbox checked");
+	$(".form-check.accounting-select .form-check-input ").on("click", function (e) {
+	
+		 if (!$(this).is(':checked')) 
+		 {
+			 
+			$(this).closest("tr").attr("class", "text-center");
+         }
+		else{
+			 //alert("is checked")
+			 $(this).closest("tr").addClass("clicked-border-acc");
+		}
+		var activeVendor = $(".activeVendor").val();
+		if(activeVendor == "" && $(this).is(":checked"))
+		{
+		//	alert("reset vendor")
+			 $(".activeVendor").val($(this).attr("vendorid"))
+		}
 		var addToSelectedButton = $("#add-to-selected");
 		var paySelectedButton = $("#pay-selected");
+	
+
 		var selectedButton;
-		if (addToSelectedButton) {
+		if (addToSelectedButton.length>0) {
 			selectedButton = addToSelectedButton;
 		}
-		else if (paySelectedButton) {
+		else if (paySelectedButton.length>0) {
 			selectedButton = paySelectedButton;
 		}
-
+	
 		if ($(".form-check.accounting-select .form-check-input:checked").length) {
-			//var arrayOfSelected = [];
-			//$(".form-check.accounting-select .form-check-input:checked").not($(this).find(".form-check-input")).map(function () {
-			//	//return $(this).attr("vendorid")
-			//	arrayOfSelected.push($(this).attr("vendorid"));
-			//}).get()
-
-			//console.log("arrayofselected: " + arrayOfSelected);
-			//console.log("array of selected length: " + arrayOfSelected.length);
-			//console.log("vendor id of first selected checkbox: " + arrayOfSelected[0]);
-			//console.log("vendor id of this 1 try 1: " + $(this).attr("vendorid"));
-
-			//if (arrayOfSelected.length > 1 && arrayOfSelected[0] == $(this).attr("vendorid")) {
-
-				if (selectedButton.hasClass("hidden")) {
-					selectedButton.removeClass("hidden");
+			if( $(".activeVendor").val() !=$(this).attr("vendorid"))
+			{
+			//	alert("active vendors are ot equal - not doing anything")
+				$(this).removeAttr("checked");
+				$(this).prop("checked", false);
+				//alert("count checked: "+$(".form-check.accounting-select .form-check-input:checked").length)
+					$(this).closest("tr").attr("class", "text-center");
+				return false;
 			}
 
-			var arrayOfOtherVendorsCheckboxes = [];
-			$(".form-check.accounting-select .form-check-input").map(function () {
-				arrayOfOtherVendorsCheckboxes.push($(this));
-			});
-			console.log("arrayOfOtherVendorsCheckboxes: " + arrayOfOtherVendorsCheckboxes);
-			//arrayOfOtherVendorsCheckboxes.ea
-			//}
-			//else {
-			//	$(this).find(".form-check-input").prop("checked", false);
-			//	alert("can only select requests from the same vendor");
-			//}
-
-			//arrayOfSelected.splice(arrayOfSelected, $(this).attr("vendorid"));
-			//console.log("arrayofselected: " + arrayOfSelected);
-
-			//if (arrayOfSelected[0])
+			if (selectedButton.hasClass("hidden")) {
+				selectedButton.removeClass("hidden");
+			}
 
 		}
 		else {
 			if (!selectedButton.hasClass("hidden")) {
 				selectedButton.addClass("hidden");
 			}
+			$(".activeVendor").val($(this).attr(""))
 		}
 	});
 
+	
+	$(".remove-invoice-item").off("click").on("click", function (e) {
+		e.stopPropagation();
+		e.preventDefault();
+		$(this).closest("tr").replaceWith("");
+		if ($(".invoice-request").length == 1) {
+			$(".remove-invoice-item").replaceWith("");
+        }
+	});
+
+
+
+	$("#share-payment").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		console.log("in share payments site.js");
+	});
+
+	function SharePayment(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		console.log("in share payments fx site.js");
+	};
+
+	$("body").on("click", "#share-payment", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		console.log("in share payments body fx site.js");
+	});
+
+		/*--------------------------------Accounting Payment Notifications--------------------------------*/
+	$(".payments-pay-now").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var vendorid = $(this).attr("value");
+		var paymentstatusid = $(this).attr("paymentstatus");
+		var typeEnum =$("#masterSidebarType").val();
+		console.log("vendor: " + vendorid);
+		console.log("payment status: " + paymentstatusid);
+		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
+		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid + "&accountingPaymentsEnum=" + typeEnum;
+		$("#loading").show();
+		$.fn.CallModal(itemurl, "payments-pay");
+	});
+
+	$(".pay-one").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var typeEnum = $("#masterSidebarType").val();
+		var requestid=$(this).attr("value");
+		var itemUrl = "/Requests/PaymentsPayModal/?requestid=" + requestid + "&accountingPaymentsEnum=" + typeEnum;
+		$("#loading").show();
+		$.fn.CallModal(itemUrl, "payments-pay");
+	});
+
+	$("#pay-selected").off("click").on("click", function (e) {
+		var typeEnum = $(this).attr("type");
+		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+			return $(this).attr("id")
+		}).get()
+		console.log("arrayOfSelected: " + arrayOfSelected);
+		$("#loading").show();
+		$.ajax({
+			type: "GET",
+			url: "/Requests/PaymentsPayModal/?"+"accountingPaymentsEnum=" + typeEnum,
+			traditional: true,
+			data: { 'requestIds': arrayOfSelected },
+			cache: true,
+			success: function (data) {
+				$.fn.OpenModal("modal", "payments-pay", data)
+				$("#loading").hide();
+			}
+		});
+	});
+
+	$(".invoice-add-all").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var vendorid = $(this).attr("value");
+		var itemUrl = "/Requests/AddInvoiceModal/?vendorid=" + vendorid;
+		$("#loading").show();
+		$.fn.CallModal(itemUrl, "add-invoice");
+	});
+
+	$("#add-to-selected").off("click").on("click", function (e) {
+		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+			return $(this).attr("id")
+		}).get()
+		console.log("arrayOfSelected: " + arrayOfSelected);
+		//var itemUrl = "/Requests/AddInvoiceModal/?requestids=" + arrayOfSelected;
+		$("#loading").show();
+		$.ajax({
+			type: "GET",
+			url: "/Requests/AddInvoiceModal/",
+			traditional: true,
+			data: { 'requestIds': arrayOfSelected },
+			cache: true,
+			success: function (data) {
+				$.fn.OpenModal("modal", "add-invoice", data)
+				$("#loading").hide();
+			}
+		});
+	});
+
+	$(".invoice-add-one").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var requestid=$(this).attr("value");
+		var itemUrl = "/Requests/AddInvoiceModal/?requestid=" + requestid;
+		$("#loading").show();
+		$.fn.CallModal(itemUrl, "add-invoice");
+	});
+
+		$(".more, .accNotification").off('click').click(function () {
+		var val = $(this).val();
+		$('[data-toggle="popover"]').popover('dispose');
+		$(this).popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#' + val).html();
+			}
+		});
+		$(this).popover('toggle');
+
+	});
 });
+

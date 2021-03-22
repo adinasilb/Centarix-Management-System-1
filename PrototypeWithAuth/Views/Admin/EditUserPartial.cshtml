@@ -109,10 +109,15 @@
             </div>
 
             <div class="row">
-                <div class="col-6  p-0">
+                <div class="col-3  p-0">
                     <label asp-for="CentarixID" class="control-label"></label>
-                    <input asp-for="CentarixID" class="form-control-plaintext border-bottom " readonly/>
+                    <input asp-for="CentarixID" class="form-control-plaintext border-bottom " readonly />
                     <span asp-validation-for="CentarixID" class="text-danger-centarix"></span>
+                </div>
+                <div class="col-3 only-employee @hidden">
+                    <label asp-for="NewEmployee.IDNumber" class="control-label only-employee"></label>
+                    <input asp-for="NewEmployee.IDNumber" class="form-control-plaintext border-bottom mark-readonly only-employee" disabled />
+                    <span asp-validation-for="NewEmployee.IDNumber" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-6 ">
                     <label asp-for="Email" class="control-label "></label>
@@ -250,7 +255,7 @@
                     @{
                         double hoursWorked = Model.NewEmployee.SalariedEmployee?.HoursPerDay ?? 0;
                     }
-                    <input class="form-control-plaintext border-bottom mark-readonly" id="TimeSpan-HoursPerDay" type="time" value="@TimeSpan.FromHours(hoursWorked)" disabled />
+                    <input type="text" id="TimeSpan-HoursPerDay" name="TimeSpan-HoursPerDay" class="form-control-plaintext border-bottom mark-readonly" value="@hoursWorked" disabled />
                     <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-4">
@@ -699,7 +704,7 @@
 
     @*$(function () {
     $.fn.AddErrorMessage = function () {
-        alert("in error message with msg: " + @ViewBag.ErrorMessage);
+        //alert("in error message with msg: " + @ViewBag.ErrorMessage);
         $(".error-message").html(@ViewBag.ErrorMessage);
     };
     });*@

@@ -1,20 +1,24 @@
-﻿@model PrototypeWithAuth.ViewModels.OrdersByVendorViewModel
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
 @using PrototypeWithAuth.AppData
 @{
     ViewData["Title"] = "Cart";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
     if (Model.RequestsByVendor.Count() == 0)
     {
-    <div class="mt-4">
-        @{
-            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
-        }
-    </div>
+        <div class="mt-4">
+            @{
+                await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+            }
+        </div>
     }
+    else
+    {
+        <div class="_IndexTableByVendor">
+            @{
+                await Html.RenderPartialAsync("_IndexTableByVendor", Model);
+            }
+        </div>
+    }
+    
 }
 
-<div class="partial-orders">
-    @{
-        await Html.RenderPartialAsync("_Cart", Model);
-    }
-</div>

@@ -119,7 +119,8 @@ namespace PrototypeWithAuth.AppData
                         {
                             {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
                             { "SectionType", AppUtility.MenuItems.Operations },
-                            { "SidebarType", AppUtility.SidebarEnum.List }
+                            { "SidebarType", AppUtility.SidebarEnum.List },
+                            { "RequestStatusID", 2 }
                         },
                         Classes = AllClasses,
                         ID = "request-link"
@@ -184,12 +185,14 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "General",
-                        Controller = "ParentRequests",
-                        Action = "GeneralPaymentList",
+                        Controller = "Requests",
+                        Action = "AccountingGeneral",
                         RouteValues = new RouteValueDictionary()
-                {
-                    {"PageType", AppUtility.PageTypeEnum.AccountingGeneral }
-                },
+                        {
+                            {"PageType",  AppUtility.PageTypeEnum.AccountingGeneral },
+                            { "SectionType", AppUtility.MenuItems.Accounting },
+                            { "SidebarType", AppUtility.SidebarEnum.List }
+                        },
                         Classes = AllClasses
                     });
                     if (pageType == AppUtility.PageTypeEnum.AccountingSuppliers) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
@@ -882,7 +885,20 @@ namespace PrototypeWithAuth.AppData
                 Classes = Classes,
                 IconName = "icon-standing_orders-24px"
             });
-
+            if (SidebarTitle == AppUtility.SidebarEnum.SpecifyPayment) { Classes += ActiveClasses; } else { Classes = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                MenuItemsID = 5,
+                Description = "Specify Payment",
+                Controller = "Requests",
+                Action = "AccountingPayments",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"accountingPaymentsEnum", AppUtility.SidebarEnum.SpecifyPayment }
+                },
+                Classes = Classes,
+                IconName = "icon-standing_orders-24px"
+            });
             return SidebarMenuItems;
         }
 
@@ -994,6 +1010,32 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
 
+        public static List<MenuItems> CreateAccountingGeneralSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.SidebarEnum.List) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "List",
+                Controller = "Requests",
+                Action = "AccountingGeneral",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"PageType",  AppUtility.PageTypeEnum.AccountingGeneral },
+                    { "SectionType", AppUtility.MenuItems.Accounting },
+                    { "SidebarType", AppUtility.SidebarEnum.List }
+                },
+                Classes = CurrentClasses,
+                IconName = "icon-format_list_bulleted-24px-01"
+            });
+            
+
+            return SidebarMenuItems;
+        }
+
+
         public static List<MenuItems> CreateOperationsRequestsSidebar(AppUtility.PageTypeEnum PageType, AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses, AppUtility.PageTypeEnum pageType, AppUtility.CategoryTypeEnum categoryType)
         {
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
@@ -1009,7 +1051,8 @@ namespace PrototypeWithAuth.AppData
                         {
                             {"PageType",  AppUtility.PageTypeEnum.OperationsRequest },
                             { "SectionType", AppUtility.MenuItems.Operations },
-                            { "SidebarType", AppUtility.SidebarEnum.List }
+                            { "SidebarType", AppUtility.SidebarEnum.List },
+                            { "RequestStatusID", 2 }
                         },
                 Classes = CurrentClasses,
                 IconName = "icon-format_list_bulleted-24px-01"
@@ -1155,16 +1198,16 @@ namespace PrototypeWithAuth.AppData
                 Classes = CurrentClasses,
                 IconName = "icon-access_time-24px"
             });
-            if (SidebarTitle == AppUtility.SidebarEnum.Salary) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-            SidebarMenuItems.Add(new MenuItems()
-            {
-                Description = "Salary",
-                Controller = "ApplicationUsers",
-                Action = "Salary",
-                RouteValues = new RouteValueDictionary(),
-                Classes = CurrentClasses,
-                IconName = "icon-monetization_on-24px"
-            });
+            //if (SidebarTitle == AppUtility.SidebarEnum.Salary) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            //SidebarMenuItems.Add(new MenuItems()
+            //{
+            //    Description = "Salary",
+            //    Controller = "ApplicationUsers",
+            //    Action = "Salary",
+            //    RouteValues = new RouteValueDictionary(),
+            //    Classes = CurrentClasses,
+            //    IconName = "icon-monetization_on-24px"
+            //});
             if (SidebarTitle == AppUtility.SidebarEnum.AwaitingApproval) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {

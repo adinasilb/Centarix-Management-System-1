@@ -6,9 +6,9 @@
 
 @{
     var category = "";
-    if (Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum != null)
+    if (Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum != null)
     {
-        category = Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum;
+        category = Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum;
     }
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
@@ -79,7 +79,7 @@
     var amountCategories = AppUtility.ParentCategoryEnum.Proprietary;
 }
 
-
+@{ var request = Model.Requests[0];}
 <span class="heading-1 modal-tab-name">Item</span>
 @if (modalType == AppUtility.RequestModalType.Create && !Model.IsProprietary)
 {
@@ -87,21 +87,21 @@
         <div class="col-4 offset-8">
             <input type="checkbox" class="form-check-input filled-in isRequest" asp-for="IsRequestQuote" />
             <label class="form-check-label" asp-for="IsRequestQuote">Need To Request Price</label>
-            <input type="hidden" value="@Model.IsRequestQuote" id="requestQuoteValue" />
+            <input type="hidden" value="@Model.IsRequestQuote.ToString().ToLower()" id="requestQuoteValue" />
         </div>
     </div>
 }
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+            <label asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
             @if (Model.IsProprietary)
             {
-                <input asp-for="Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="form-control-plaintext border-bottom" type="text" readonly />
+                <input asp-for="Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="form-control-plaintext border-bottom" type="text" readonly />
             }
             else
             {
-                @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategory.ParentCategoryID,
+                @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ParentCategoryID,
              new SelectList(
              Model.ParentCategories,
              "ParentCategoryID",
@@ -109,21 +109,22 @@
              ), "Select Category",
              new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "parentlist", @searchable = "Select Category" })
             }
-            <span asp-validation-for="Request.Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
+            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" />
+            <span asp-validation-for="Requests[0].Product.ProductSubcategory.ParentCategoryID" class="text-danger-centarix"></span>
         </div>
     </div>
     <div class="col-md-6 px-4">
         <div class="form-group sublist">
-            <label asp-for="Request.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-            @Html.DropDownListFor(vm => vm.Request.Product.ProductSubcategory.ProductSubcategoryID,
+            <label asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+            @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ProductSubcategoryID,
 new SelectList(
 Model.ProductSubcategories,
 "ProductSubcategoryID",
 "ProductSubcategoryDescription"
 ), "Select Sub Category",
 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
-            <input type="hidden" asp-for="Request.Product.ProductSubcategory.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
-            <span asp-validation-for="Request.Product.ProductSubcategoryID" class="text-danger-centarix"></span>
+            <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
+            <span asp-validation-for="Requests[0].Product.ProductSubcategoryID" class="text-danger-centarix"></span>
         </div>
     </div>
 
@@ -141,15 +142,14 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                             </div>
                         </div>*@
 </div>
-@if (Model.SectionType != AppUtility.MenuItems.Operations)
-{
-    if (!Model.Request.Product.ProductSubcategory.ParentCategory.isProprietary)
+
+    @if (!Model.Requests[0].Product.ProductSubcategory.ParentCategory.isProprietary)
     {
         <div class="row">
             <!--<div class="col-md-4 @subProjectCategories">
                                     <div class="form-group SubProject">
                                         <label class="control-label">Sub Project:</label>
-                                        @Html.DropDownListFor(vm => vm.Request.SubProjectID,
+                                        @Html.DropDownListFor(vm => vm.Requests[0].SubProjectID,
             Enumerable.Empty<SelectListItem>(), "Select Sub Project",
             new { @class = "mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext " + subProjectCategories + " " + markReadOnlyClass, @id = "SubProject", @searchable = "Select Sub Project" })-->
             @*<select asp-for="Request.SubProjectID" id="SubProject" class="mdb-select mdb-select-subProject custom select-dropdown form-control-plaintext" searchable="Select Sub Project">
@@ -159,9 +159,9 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             </div>-->
             <div class="col-md-6 @vendorCategories">
                 <div class="form-group">
-                    <label asp-for="Request.Product.Vendor" class="control-label"></label>
+                    <label asp-for="Requests[0].Product.Vendor" class="control-label"></label>
                     @Html.DropDownListFor(
-        vm => vm.Request.Product.VendorID,
+        vm => vm.Requests[0].Product.VendorID,
         new SelectList(
         Model.Vendors,
         dataValueField: "VendorID",
@@ -170,15 +170,15 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
         "Select a Vendor",
         htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext " + vendorCategories + " " + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
         )
-                    <span asp-validation-for="Request.Product.VendorID" class="text-danger-centarix"></span>
+                    <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
                 </div>
             </div>
             <input class="@vendorCategories" type="hidden" value="" id="vendor-primary-email" />
             <div class="col-md-6 @companyIDCategories">
                 <div class="form-group">
                     @* IN MIDDLE *@
-                    <label asp-for="Request.Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                    <input asp-for="Request.Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom @companyIDCategories" readonly />
+                    <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
+                    <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom @companyIDCategories" disabled/>
                     @*don't need a validation here because you it's not saving*@
                 </div>
             </div>
@@ -186,14 +186,14 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
 
         <div class="row">
             <div class="col-md-6 @catalogCategories">
-                <label asp-for="Request.Product.CatalogNumber" class="control-label"></label>
-                <input asp-for="Request.Product.CatalogNumber" class="form-control-plaintext border-bottom @catalogCategories @markReadOnlyClass" />
-                <span asp-validation-for="Request.Product.CatalogNumber" class="text-danger-centarix"></span>
+                <label asp-for="Requests[0].Product.CatalogNumber" class="control-label"></label>
+                <input asp-for="Requests[0].Product.CatalogNumber" class="form-control-plaintext border-bottom catalog-number @catalogCategories @markReadOnlyClass" />
+                <span asp-validation-for="Requests[0].Product.CatalogNumber" class="text-danger-centarix"></span>
             </div>
             <div class="col-md-3 @warrantyCategories ">
-                <label asp-for="Request.Warranty" class="control-label"></label>
-                <input asp-for="Request.Warranty" class="form-control-plaintext border-bottom @warrantyCategories @markReadOnlyClass" type="text" />
-                <span asp-validation-for="Request.Warranty" class="text-danger-centarix"></span>
+                <label asp-for="Requests[0].Warranty" class="control-label"></label>
+                <input asp-for="Requests[0].Warranty" class="form-control-plaintext border-bottom @warrantyCategories @markReadOnlyClass" type="text" />
+                <span asp-validation-for="Requests[0].Warranty" class="text-danger-centarix"></span>
             </div>
             <div class="col-md-3 reusables equipment @warrantyCategories ">
                 <label class="control-label">Estimated End Date</label>
@@ -201,22 +201,22 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 <input type="text" name="WarrantyDate" class="form-control-plaintext border-bottom datepicker @warrantyCategories " disabled="disabled" />
             </div>
             <div class="col-md-3 @batchCategories ">
-                <label asp-for="Request.Batch" class="control-label"></label>
-                <input asp-for="Request.Batch" class="form-control-plaintext border-bottom @batchCategories @markReadOnlyClass" type="text" />
-                <span asp-validation-for="Request.Batch" class="text-danger-centarix"></span>
+                <label asp-for="Requests[0].Batch" class="control-label"></label>
+                <input asp-for="Requests[0].Batch" class="form-control-plaintext border-bottom @batchCategories @markReadOnlyClass" type="text" />
+                <span asp-validation-for="Requests[0].Batch" class="text-danger-centarix"></span>
             </div>
             <div class="col-md-3 reusables equipment @batchCategories ">
-                <label asp-for="Request.BatchExpiration" class="control-label"></label>
-                <input type="text" asp-for="Request.BatchExpiration" class="form-control-plaintext border-bottom datepicker @batchCategories @markReadOnlyClass" disabled="disabled" />
+                <label asp-for="Requests[0].BatchExpiration" class="control-label"></label>
+                <input type="text" asp-for="Requests[0].BatchExpiration" class="form-control-plaintext border-bottom datepicker @batchCategories @markReadOnlyClass" disabled="disabled" />
             </div>
         </div>
-        @if (modalType != AppUtility.RequestModalType.Create && Model.Request.ParentQuoteID != null)
+        @if (modalType != AppUtility.RequestModalType.Create && Model.Requests[0].ParentQuote?.QuoteNumber != null)
         {
             <div class="row @hiddenSummaryClass @quoteCategories">
                 <div class="col-md-6">
-                    <label asp-for="Request.ParentQuote.QuoteNumber" class="control-label"></label>
-                    <input asp-for="Request.ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom @quoteCategories @markReadOnlyClass" disabled />
-                    <span asp-validation-for="Request.ParentQuote.QuoteNumber" class="text-danger-centarix" />
+                    <label asp-for="Requests[0].ParentQuote.QuoteNumber" class="control-label"></label>
+                    <input asp-for="Requests[0].ParentQuote.QuoteNumber" readonly class="form-control-plaintext border-bottom @quoteCategories @markReadOnlyClass" disabled />
+                    <span asp-validation-for="Requests[0].ParentQuote.QuoteNumber" class="text-danger-centarix" />
                 </div>
                 @*<div class="col-md-6">
                         <label asp-for="Request.ParentQuote.QuoteDate" class="control-label"></label>
@@ -226,10 +226,12 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             </div>
         }
         <div class="row">
-            <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass requestPriceQuote">
-                <label asp-for="Request.ExpectedSupplyDays" class="control-label"></label>
-                <input asp-for="Request.ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days requestPriceQuote @supplyDaysCategories @markReadOnlyClass" type="text" />
-                <span asp-validation-for="Request.ExpectedSupplyDays" class="text-danger-centarix"></span>
+            @if (request.ExpectedSupplyDays != null || modalType == AppUtility.RequestModalType.Create)
+            { 
+             <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass requestPriceQuote">
+                <label asp-for="Requests[0].ExpectedSupplyDays" class="control-label"></label>
+                <input asp-for="Requests[0].ExpectedSupplyDays" class="form-control-plaintext border-bottom expected-supply-days requestPriceQuote @supplyDaysCategories @markReadOnlyClass" type="text" />
+                <span asp-validation-for="Requests[0].ExpectedSupplyDays" class="text-danger-centarix"></span>
             </div>
             <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass requestPriceQuote">
                 <div class="form-group">
@@ -240,154 +242,82 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     }
                     else
                     {
-                        if (Model.Request.RequestStatusID == 2)
+                        if (Model.Requests[0].RequestStatusID == 2)
                         {
-                            <input value="@Model.Request.ParentRequest.OrderDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories  " type="text" name="expected-supply-days" id="expected-supply-date" />
+                            <input value="@Model.Requests[0].ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories  " type="text" name="expected-supply-days" id="expected-supply-date" />
                         }
                         else
                         {
-                            <input value="@DateTime.Now.AddDays(Model.Request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
+                            <input value="@DateTime.Now.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy")" disabled class="form-control-plaintext border-bottom datepicker @supplyDaysCategories " type="text" name="expected-supply-days" id="expected-supply-date" />
                         }
                     }
                 </div>
             </div>
+            }
             <div class="col-md-4 @websiteCategories">
-                <label asp-for="Request.URL" class="control-label"></label>
-                <input asp-for="Request.URL" class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass" />
-                <span asp-validation-for="Request.URL" class="text-danger-centarix"></span>
+                <label asp-for="Requests[0].URL" class="control-label"></label>
+                <input asp-for="Requests[0].URL" class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass" />
+                <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
             </div>
         </div>
         <div class="row">
-            @if (Model.Request.Invoice != null)
+            @if (request.HasInvoice)
             {
                 <div class="col-md-3 ">
-                    <label asp-for="Request.Invoice.InvoiceNumber" class="control-label"></label>
-                    <input asp-for="Request.Invoice.InvoiceNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" />
-                    <span asp-validation-for="Request.Invoice.InvoiceNumber" class="text-danger-centarix"></span>
+                    <label asp-for="Requests[0].Invoice.InvoiceNumber" class="control-label"></label>
+                    <input asp-for="Requests[0].Invoice.InvoiceNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+                    <span asp-validation-for="Requests[0].Invoice.InvoiceNumber" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-md-3 ">
-                    <label asp-for="Request.Invoice.InvoiceDate" class="control-label"></label>
-                    <input asp-for="Request.Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" />
-                    <span asp-validation-for="Request.Invoice.InvoiceDate" class="text-danger-centarix"></span>
+                    <label asp-for="Requests[0].Invoice.InvoiceDate" class="control-label"></label>
+                    <input asp-for="Requests[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" />
+                    <span asp-validation-for="Requests[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
                 </div>
             }
-            @if (Model.Request.ParentRequest?.SupplierOrderNumber != null)
+            @if (request.ParentRequest?.SupplierOrderNumber != null)
             {
                 <div class="col-md-3 ">
-                    <label asp-for="Request.ParentRequest.SupplierOrderNumber" class="control-label"></label>
-                    <input asp-for="Request.ParentRequest.SupplierOrderNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" type="text" />
-                    <span asp-validation-for="Request.ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
+                    <label asp-for="Requests[0].ParentRequest.SupplierOrderNumber" class="control-label"></label>
+                    <input asp-for="Requests[0].ParentRequest.SupplierOrderNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" type="text" />
+                    <span asp-validation-for="Requests[0].ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-md-3">
-                    <label asp-for="Request.ParentRequest.OrderDate" class="control-label"></label>
-                    <input type="text" asp-for="Request.ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" />
-                    <span asp-validation-for="Request.ParentRequest.OrderDate" class="text-danger-centarix"></span>
+                    <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
+                    <input type="text" asp-for="Requests[0].ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" />
+                    <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
+
         </div>
     }
     else
     {
         <div class="row">
             <div class="col-md-4 form-group">
-                <label asp-for="Request.Unit" class="control-label"></label>
-                @Html.EditorFor(vm => vm.Request.Unit, new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit" } })
-                <span asp-validation-for="Request.Unit" class="text-danger-centarix"></span>
+                <label asp-for="Requests[0].Unit" class="control-label"></label>
+                @Html.EditorFor(vm => vm.Requests[0].Unit, new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit" } })
+                <span asp-validation-for="Requests[0].Unit" class="text-danger-centarix"></span>
             </div>
             <div class="col-md-8 form-group dropdown-select-div">
-                <label asp-for="Request.UnitType" class="control-label"></label>
+                <label asp-for="Requests[0].UnitType" class="control-label"></label>
                 @Html.DropDownListFor(
-                    vm => vm.Request.UnitTypeID,
+                    vm => vm.Requests[0].UnitTypeID,
                     Model.UnitTypeList,
                     "",
                     htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
                     )
-                <span asp-validation-for="Request.UnitType" class="text-danger-centarix"></span>
+                <span asp-validation-for="Requests[0].UnitType" class="text-danger-centarix"></span>
             </div>
         </div>
-        if (Model.Request.Product.ProductSubcategory.ProductSubcategoryDescription == "Cells")
+        if (request.Product.ProductSubcategory.ProductSubcategoryDescription == "Cells")
         {
             <div class="row">
                 <div class="col-md-4 @passageCategories @hiddenSummaryClass">
-                    <label asp-for="Request.Passage" class="control-label"></label>
-                    <input asp-for="Request.Passage" class="form-control-plaintext border-bottom expected-supply-days @passageCategories @markReadOnlyClass" type="text" />
-                    <span asp-validation-for="Request.Passage" class="text-danger-centarix"></span>
+                    <label asp-for="Requests[0].Passage" class="control-label"></label>
+                    <input asp-for="Requests[0].Passage" class="form-control-plaintext border-bottom expected-supply-days @passageCategories @markReadOnlyClass" type="text" />
+                    <span asp-validation-for="Requests[0].Passage" class="text-danger-centarix"></span>
                 </div>
 
             </div>
         }
     }
-}
-
-@if (Model.SectionType == AppUtility.MenuItems.Operations)
-{
-    //hebre name
-    //caralog number
-    //vat radio
-    //amount
-    //total price
-    //add item button
-    //check boc recieved
-
-    <div class="row">
-        <div class="col-12">
-            <label asp-for="Request.Product.ProductName" class="control-label"></label>
-            <input asp-for="Request.Product.ProductName" class="form-control-plaintext border-bottom  @markReadOnlyClass" />
-            <span asp-validation-for="Request.Product.ProductName" class="text-danger-centarix"></span>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            <label asp-for="Request.Product.ProductHebrewName" class="control-label"></label>
-            <input asp-for="Request.Product.ProductHebrewName" class="form-control-plaintext border-bottom  @markReadOnlyClass" />
-            <span asp-validation-for="Request.Product.ProductHebrewName" class="text-danger-centarix"></span>
-        </div>
-    </div>
-
-
-    <div class="row">
-        <div class="col-md-6">
-            <label asp-for="Request.Product.CatalogNumber" class="control-label"></label>
-            <input asp-for="Request.Product.CatalogNumber" class="form-control-plaintext border-bottom  @markReadOnlyClass" />
-            <span asp-validation-for="Request.Product.CatalogNumber" class="text-danger-centarix"></span>
-        </div>
-
-        <div class="col-md-6 ">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input filled-in" asp-for="IsReceived" />
-                <label class="form-check-label" asp-for="IsReceived">Received</label>
-            </div>
-        </div>
-        <div class="col-md-4 reusables equipment">
-            <label asp-for="Request.BatchExpiration" class="control-label"></label>
-            <input type="text" asp-for="Request.BatchExpiration" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" />
-        </div>
-    </div>
-
-    @*<div class="row">
-            <div class="col-md-6">
-                <label asp-for="Request.Product.CatalogNumber" class="control-label"></label>
-                <input asp-for="Request.Product.CatalogNumber" class="form-control-plaintext border-bottom  @markReadOnlyClass" />
-                <span asp-validation-for="Request.Product.CatalogNumber" class="text-danger-centarix"></span>
-            </div>
-
-            <div class="col-md-6 ">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input filled-in" asp-for="IsReceived" />
-                    <label class="form-check-label" asp-for="IsReceived">Received</label>
-                </div>
-            </div>
-            <div class="col-md-4 reusables equipment">
-                <label asp-for="Request.BatchExpiration" class="control-label"></label>
-                <input type="text" asp-for="Request.BatchExpiration" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" />
-            </div>
-        </div>*@
-
-}
-<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
-<script src="~/js/validate.js"></script>
-<script src="~/js/site.js"></script>
-<script src="~/js/SubUnit.js"></script>
-<script src="~/js/WarantySupplyDateCalc.js"></script>
-<script src="~/js/InitializeDatePicker.js"></script>

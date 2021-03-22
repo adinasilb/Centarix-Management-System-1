@@ -234,9 +234,13 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.PricePerSubSubUnit);
             modelBuilder.Entity<Request>().Ignore(e => e.TotalWithVat);
+            modelBuilder.Entity<Request>().Ignore(e => e.Ignore);
+            modelBuilder.Entity<Request>().Ignore(e => e.IsReceived);
             modelBuilder.Entity<ParentQuote>().Ignore(e => e.QuoteDate_submit);
             modelBuilder.Entity<ParentRequest>().Ignore(e => e.OrderDate_submit);
-            modelBuilder.Entity<ParentRequest>().Ignore(e => e.InvoiceDate_submit);
+            modelBuilder.Entity<Invoice>().Ignore(e => e.InvoiceDate_submit);
+            modelBuilder.Entity<Payment>().Ignore(e => e.PaymentReferenceDate_submit);
+            // modelBuilder.Entity<ParentRequest>().Ignore(e => e.InvoiceDate_submit);
             modelBuilder.Entity<Request>().Ignore(e => e.ArrivalDate_submit);
             modelBuilder.Entity<EmployeeHours>().Ignore(e => e.Date_submit);
             modelBuilder.Entity<Employee>().Ignore(e => e.StartedWorking_submit);

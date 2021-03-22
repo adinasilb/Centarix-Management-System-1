@@ -7,6 +7,7 @@ using PrototypeWithAuth.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 using MimeKit.Cryptography;
 using PrototypeWithAuth.AppData;
+using System.ComponentModel;
 
 namespace PrototypeWithAuth.Models
 {
@@ -25,9 +26,23 @@ namespace PrototypeWithAuth.Models
         public int? SubProjectID { get; set; }
         public SubProject SubProject { get; set; }
 
-        public int? RequestStatusID { get; set; }
+        private int _RequestStatusID { get; set; }
+        public int RequestStatusID { 
+            get
+            {
+                if (_RequestStatusID == 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return _RequestStatusID;
+                }
+            }
+            set { _RequestStatusID = value; } 
+        }
         public RequestStatus RequestStatus { get; set; }
-       
+
         public uint? AmountWithInLocation { get; set; } // in order to place different request objects into a location in a box, only dependent on the largest unit
         public uint? AmountWithOutLocation { get; set; } // in order to place different request objects into a location in a box
 
@@ -70,7 +85,7 @@ namespace PrototypeWithAuth.Models
         [Range(0, 255, ErrorMessage = "Field must be positive")]
         [Display(Name = "Warranty (Months)")]
         public byte? Warranty { get; set; } // this is the amount of months of the warranty. the datetime when it ends will be calculated on the frontend (now it's from the date ordered, but should it be from the date received instead?)
-       
+
         [Display(Name = "Batch/Lot")]
         public int? Batch { get; set; }
         [Display(Name = "Expiration Date")]
@@ -90,11 +105,11 @@ namespace PrototypeWithAuth.Models
         public DateTime CreationDate { get; set; }
         public int? ParentQuoteID { get; set; }
         public ParentQuote ParentQuote { get; set; }
-     
+
 
         public string? NoteToSupplier { get; set; }
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
-        public AppUtility.OrderTypeEnum OrderType {get; set;}
+        public string OrderType { get; set; }
 
 
 
@@ -102,7 +117,7 @@ namespace PrototypeWithAuth.Models
         //payment info
         public bool Paid { get; set; }
         public uint? Installments { get; set; } //number of installments
-        //public IEnumerable<Payment> Payments { get; set; }
+        public IEnumerable<Payment> Payments { get; set; }
 
         public int? PaymentStatusID { get; set; }
         [ForeignKey("PaymentStatusID")]
@@ -120,22 +135,29 @@ namespace PrototypeWithAuth.Models
 
         //price info
         public string Currency { get; set; }
-        [Range(1, Double.MaxValue, ErrorMessage = "Field must be more than 0")]
+        [Range(1,  (double)Decimal.MaxValue, ErrorMessage = "Field must be more than 0")]
         [Display(Name = "Price")]
-        public double? Cost { get; set; } //this is always shekel no matter what currency is
-        private double _VAT;
-        public double VAT
+        public decimal? Cost { get; set; } //this is always shekel no matter what currency is
+        private decimal _VAT;
+        public decimal VAT
         {
             get
             {
-                return Math.Round(.17 * Cost ?? 0, 2);
+                if (IncludeVAT)
+                {
+                    return Math.Round(.17m * Cost ?? 0, 2);
+                }
+                else
+                {
+                    return 0;
+                }
             }
             private set { _VAT = value; }
 
         }
 
-        private double _PricePerUnit;
-        public double PricePerUnit
+        private decimal _PricePerUnit;
+        public decimal PricePerUnit
         {
             get
             {
@@ -145,8 +167,8 @@ namespace PrototypeWithAuth.Models
 
         }
 
-        private double? _PricePerSubUnit;
-        public double? PricePerSubUnit
+        private decimal? _PricePerSubUnit;
+        public decimal? PricePerSubUnit
         {
             get
             {
@@ -156,8 +178,8 @@ namespace PrototypeWithAuth.Models
 
         }
 
-        private double? _PricePerSubSubUnit;
-        public double? PricePerSubSubUnit
+        private decimal? _PricePerSubSubUnit;
+        public decimal? PricePerSubSubUnit
         {
             get
             {
@@ -167,21 +189,21 @@ namespace PrototypeWithAuth.Models
 
         }
 
-        private double _TotalWithVat;
-        public double TotalWithVat
+        private decimal _TotalWithVat;
+        public decimal TotalWithVat
         {
             get
             {
                 return Math.Round(VAT + Cost ?? 0, 2);
             }
-            private set { _TotalWithVat = value; }
+            private set { ; }
 
         }
 
         [Display(Name = "Exchange Rate")]
-        public double ExchangeRate { get; set; } // holding the rate of exchange for this specific request
+        public decimal ExchangeRate { get; set; } // holding the rate of exchange for this specific request
         public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
-        public double Discount { get; set; }
+        public decimal Discount { get; set; }
 
 
 
@@ -195,5 +217,8 @@ namespace PrototypeWithAuth.Models
         [ForeignKey("ApplicationUserReceiverID")]
         public ApplicationUser ApplicationUserReceiver { get; set; }
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
+        public bool Ignore { get; set; }
+        public bool IsReceived { get; set; }
+        public bool IncludeVAT { get; set; }
     }
 }

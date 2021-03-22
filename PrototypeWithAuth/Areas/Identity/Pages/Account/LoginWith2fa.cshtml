@@ -37,7 +37,7 @@
     $(document).ready(function () {
         if ($("#twoFactorSession").val() == "True") {
             console.log("remember two factor")
-            $.fn.CallModal("/../../Admin/TwoFactorSessionModal");
+            $.fn.CallModal("/../../Admin/TwoFactorSessionModal", "two-factor-expired");
         }
         else {
             console.log($("#twoFactorSession").val());

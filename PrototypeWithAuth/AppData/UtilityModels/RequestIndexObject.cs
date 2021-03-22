@@ -45,7 +45,22 @@ namespace PrototypeWithAuth.AppData
             }
             set { _RequestStatusID = value; }
         }
-        public AppUtility.SidebarEnum SidebarType { get; set; }
+        private AppUtility.SidebarEnum _SidebarType;
+        public AppUtility.SidebarEnum SidebarType
+        {
+            get
+            {
+                if (_SidebarType == AppUtility.SidebarEnum.None)
+                {
+                    return AppUtility.SidebarEnum.List;
+                }
+                else
+                {
+                    return _SidebarType;
+                }
+            }
+            set { _SidebarType = value; }
+        }
         public String SidebarFilterID { get; set; }
         public AppUtility.PageTypeEnum PageType 
         {

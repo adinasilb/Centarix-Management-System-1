@@ -18,7 +18,7 @@
                         <label>@col.Title</label>
                         <div class="d-inline-block">
                             @{
-                                await Html.RenderPartialAsync("_PricePopover", Model);
+                                await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
                             }
                         </div>
                     break;

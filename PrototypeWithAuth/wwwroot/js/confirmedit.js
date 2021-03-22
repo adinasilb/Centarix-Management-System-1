@@ -56,7 +56,7 @@
 						cache: true,
 						success: function (data) {
 							$('.indexTable').html(data);
-
+							
 						}
 					});
 
@@ -77,7 +77,7 @@
 						cache: true,
 						success: function (data) {
 							$('#usersTable').html(data);
-							alert("Updated CentarixID: " + $("#CentarixID").val());
+						//	alert("Updated CentarixID: " + $("#CentarixID").val());
 							$("#OriginalStatusID").attr("CentarixID", $("#CentarixID").val());
 						}
 					});
@@ -92,7 +92,13 @@
 				//}
 			},
 			error: function (xhr) {
-				$.fn.AppendModalToBody(xhr.responseText);
+				$.fn.OpenModal("modal", "edits", xhr.responseText)				
+				if ($('.turn-edit-on-off').hasClass('operations') || $('.turn-edit-on-off').hasClass('orders')) {
+					$.fn.LoadEditModalDetails();
+				}
+				else {
+					$.fn.OnOpenModal();
+                }
 			}
 		});
 		$.fn.TurnToDetails();
@@ -119,7 +125,7 @@
 
 		}
 		else if ($('.turn-edit-on-off').hasClass('users')) {
-			alert("in users");
+			//alert("in users");
 			url = "/Admin/EditUserPartial?id=" + id + "&Tab=" + selectedTab;
 
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
@@ -142,6 +148,7 @@
 				console.log("cancel edit successful!")
 				//open the confirm edit modal
 				$('.partial-div').html(data);
+				
 				$('.name').val($('.old-name').val())
 				if ($('.turn-edit-on-off').hasClass('orders')) {
 					$.fn.LoadEditModalDetails();
@@ -214,7 +221,7 @@
 				}
 
 				$.fn.CloseModal("confirm-exit");
-				$.fn.CloseModal("edit-item");
+				$.fn.CloseModal("edits");
 				//$('.confirm-exit-modal').remove();
 				//$(".modal").modal('hide');
 				//$(".modal").replaceWith('');

@@ -1,9 +1,9 @@
 ﻿@model AddInvoiceViewModel
 @using PrototypeWithAuth.AppData
-    <script src="~/js/Validation/AddInvoiceFormValidation.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-<script src="~/js/validate.js" asp-append-version="true"></script>
-<link href="~/css/site.css" rel="stylesheet" />
+<script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/Validation/AddInvoiceFormValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/accounting.js"></script>
 
 <div class="modal modal-view fader on-form-modal accounting-form" id="myModal" data-backdrop="false">
     <div class="add-invoice-modal modal-dialog-centered mx-auto">
@@ -36,7 +36,7 @@
                                 <span class="float-right">Invoice Date: </span>
                             </div>
                             <div class="col-2">
-                                <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom" />
+                                <input asp-for="Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker" asp-format="{0:dd/MM/yyyy}" />
                                 <span asp-validation-for="Invoice.InvoiceDate" class="text-danger-centarix"></span>
                             </div>
                         </div>
@@ -66,14 +66,18 @@
                                 @foreach (var Request in Model.Requests)
                                 {
                                     x++;
-                                    <tr class="">
+                                    <tr class="invoice-request">
                                         <td style="width:15%;">
                                             <input style="display: none;" asp-for="Requests[x].RequestID" />
-                                            @if (Request.Product.ProductSubcategory.ImageURL != null)
-                                            {
-                                                var imageurl = Request.Product.ProductSubcategory.ImageURL;
-                                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                            @{  
+                                                var imageurl = "/images/css/CategoryImages/placeholder.png";
+                                                if (Request.Product.ProductSubcategory.ImageURL != null)
+                                                {
+                                                    imageurl = Request.Product.ProductSubcategory.ImageURL;
+                                                }
                                             }
+
+                                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
                                         </td>
                                         <td style="width:25%;">
                                             @Request.Product.ProductName
@@ -91,11 +95,15 @@
                                                 <input class="form-control-plaintext border-bottom cost-validation" asp-for="Requests[x].Cost" />
                                             </div>
                                         </td>
+                                        
                                         <td style="width:30%;">
-                                            <a href="" class="remove-invoice-item float-right" request="@Request.RequestID">
-                                                <i class="icon-delete-24px px-1 mr-3" style="font-size:1.6rem;"></i>
-                                            </a>
-                                        </td>
+                                            @if (Model.Requests.Count > 1)
+                                            {
+                                                <a class="remove-invoice-item float-right" request="@Request.RequestID">
+                                                    <i class="icon-delete-24px px-1 mr-3" style="font-size:1.6rem;"></i>
+                                                </a>
+                                            }
+                                            </td>
                                     </tr>
                                 }
                             </tbody>
@@ -113,7 +121,7 @@
                                     </button>*@
                             </div>
                             <div class="col-2 offset-5">
-                                <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" id="SaveInvoiceModal" value="Save" />
+                                <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" value="Save" />
                             </div>
                             <div class="col-2">
                                 <button data-dismiss="modal" class="custom-button custom-cancel" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>

@@ -121,7 +121,7 @@
     }
     else if (pageType == AppUtility.PageTypeEnum.AccountingGeneral)
     {
-        //TODO: LATER
+        SidebarMenuItems = CreateMenus.CreateAccountingGeneralSidebar(sidebarType, originalNavClasses, "accounting-filter");
     }
     else if (pageType == AppUtility.PageTypeEnum.AccountingSuppliers)
     {
@@ -320,9 +320,6 @@
             </div>
         </div>
     </main>
-    <div class="modals">
-        @{await Html.RenderPartialAsync("ModalLoader"); }
-    </div>
 </div>
 
 @section requestNavScript{
@@ -354,7 +351,10 @@
                 }
                 if (jqxhr.status == 500) {
                     if ($(".error-msg").length > 0) {
-                        $(".error-msg").html(jqxhr.responseText);
+                        if (jqxhr.responseText.indexOf('<div') == -1)
+                        {
+                            $(".error-msg").html(jqxhr.responseText);
+                        }
                     }
                     else if (jqxhr.responseText != null) {
                         alert("Error 500: " + jqxhr.responseText);
@@ -415,23 +415,7 @@
             $("#user-budget-tab").prop("disabled", true);
             $("#user-images-tab").prop("disabled", true);
             $("#user-more-tab").prop("disabled", true);
-            var $itemurl = "";
-            if ($("#tdprconfirmemail").val()) {
-                console.log("tdprconfirmemail");
-                $("#tdprconfirmemail").hide();
-                $itemurl = "/Requests/ConfirmEmailModal/?" + $.fn.getRequestIndexString();
-                $("#loading").show();
-                $.fn.CallPage($itemurl, "confirmemail");
-            }
 
-            if ($("#tdterms").val()) {
-                $("#tdterms").hide();
-                //alert("in tdterms.val()");
-                $itemurl = "/Requests/TermsModal/?" + $.fn.getRequestIndexString();
-                console.log("terms url " + $itemurl)
-                //$("#loading").show();
-                $.fn.CallPage($itemurl, "terms");
-            }
 
            
             $.fn.GetNotifcationCount();
@@ -440,6 +424,34 @@
 
 
       });
+        $("body").on("click", ".save-item", function (e) {
+            e.preventDefault();
+            console.log('save-item-click')
+            var url = "";
+            if ($(this).hasClass("side-menu")) {
+                url = $(this).parent("a").attr("href");
+            }
+            else {
+                url = $(this).attr("href")
+            }
+            url = encodeURIComponent(url)
+            $itemurl = "/Requests/ConfirmExit/?MenuItem=" + $("#masterSectionType").val() + "&url=" + url;
+            console.log($itemurl);
+            $.fn.CloseModal("confirm-exit");
+            $.ajax({
+                async: true,
+                url: $itemurl,
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    $("#loading").hide();
+                    $.fn.OpenModal('confirm-exit-modal', 'confirm-exit', data)
+                    $(".modal-open-state").attr("text", "open");
+                }
+
+            });
+
+        });
     //    $(".add-item").on("click", function (e) {
     //        e.preventDefault();
     //        console.log("item click")

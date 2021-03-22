@@ -9,7 +9,7 @@ namespace PrototypeWithAuth.AppData
 {
     public static class SessionExtensions
     {
-        public enum SessionNames { Comment, Request, Payment /*CommentList, RequestList, PaymentList*/, Email }
+        public enum SessionNames { Comment, Request, Payment /*CommentList, RequestList, */ , Email }
         public static void SetObject(this ISession session, string key, object value)
         {
             //var simpleJsonString = JsonSerializer.Create();

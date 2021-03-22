@@ -25,10 +25,10 @@
                             </div>
                         </button>
                     </div>
-                    <div class="col-6 form-group modal-line-1-header " style="display:grid;"><input class=" heading-1 userName form-control-plaintext border-0 d-table-cell align-middle" disabled value="@Model.FirstName @Model.LastName" /></div>
+                    <div class="col-6 form-group modal-line-1-header " style="display:grid;"><input class=" heading-1 name userName form-control-plaintext border-0 d-table-cell align-middle" disabled value="@Model.FirstName @Model.LastName" /></div>
                     <div class=" modal-line-1-header">
 
-                        <input type="submit" id="addUser" value="Add User" asp-action="CreateUser" class="custom-button custom-button-font  disabled-submit users-background-color" style="float: right;" />
+                        <input type="submit" id="addUser" value="Add User" asp-action="CreateUser" class="custom-button custom-button-font  disabled-submit users-background-color activeSubmit" style="float: right;" />
                     </div>
                 </div>
                 <div class="row">
@@ -135,13 +135,13 @@
                                             optionLabel: "Select A Category",
                                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee job-category", @searchable = "default value", }
                                             )
-                                        <span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>
+                                        @*<span asp-validation-for="NewEmployee.JobSubcategoryType.JobCategoryTypeID" class="text-danger-centarix"></span>*@
                                     </div>
                                     <div class="col-6  only-employee">
                                         <label class="control-label only-employee">Job Subcategory</label>
                                         <select asp-for="NewEmployee.JobSubcategoryTypeID" class="mdb-select custom select-dropdown form-control-plaintext only-employee job-subcategory remove-extra-border" id="job-subcategory" searchable="default value">
                                         </select>
-                                        <span asp-validation-for="NewEmployee.JobSubcategoryTypeID" class="text-danger-centarix"></span>
+                                        @*<span asp-validation-for="NewEmployee.JobSubcategoryTypeID" class="text-danger-centarix"></span>*@
                                     </div>
                                 </div>
                                 <div class="row ">
@@ -173,7 +173,7 @@
                                             optionLabel: "Select A Degree",
                                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
                                             )
-                                        <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
+                                        @*<span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>*@
                                     </div>
                                     <div class="col-4 only-employee">
                                         <label asp-for="NewEmployee.StartedWorking" class="control-label only-employee"></label>
@@ -193,7 +193,7 @@
                                             optionLabel: "Select A Status",
                                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
                                             )
-                                        <span asp-validation-for="NewEmployee.MaritalStatusID" class="text-danger-centarix"></span>
+                                        @*<span asp-validation-for="NewEmployee.MaritalStatusID" class="text-danger-centarix"></span>*@
                                     </div>
                                     <div class="col-4 only-employee">
                                         <label class="control-label only-employee">Citizenship</label>
@@ -206,7 +206,7 @@
                                             optionLabel: "Select A Country",
                                             htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext only-employee", @searchable = "default value" }
                                             )
-                                        <span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>
+                                        @*<span asp-validation-for="NewEmployee.DegreeID" class="text-danger-centarix"></span>*@
                                     </div>
                                     <div class="col-4 only-employee">
                                         <label asp-for="NewEmployee.TaxCredits" class="control-label only-employee"></label>
@@ -230,7 +230,7 @@
                                     <div class="col-4">
                                         <label class="control-label" asp-for="NewEmployee.SalariedEmployee.HoursPerDay"></label>
                                         <input type="hidden" asp-for="NewEmployee.SalariedEmployee.HoursPerDay" />
-                                        <input class="form-control-plaintext border-bottom" id="TimeSpan-HoursPerDay" type="time" value="@string.Format("{0:hh\\:mm}", "0" @*Model.NewEmployee.SalariedEmployee.HoursPerDay*@)" />
+                                        <input type="text" id="TimeSpan-HoursPerDay" name="TimeSpan-HoursPerDay" class="form-control-plaintext border-bottom " />
                                         <span asp-validation-for="NewEmployee.SalariedEmployee.HoursPerDay" class="text-danger-centarix"></span>
                                     </div>
                                     <div class="col-4">
@@ -648,7 +648,7 @@
     <script>
         $(".upload-image").off("click").on("click", function (e) {
             console.log("in upload image 2");
-            $.fn.CallModal2("/Admin/UserImageModal");
+            $.fn.OpenUserImageModal("/Admin/UserImageModal");
             return false;
         });
 

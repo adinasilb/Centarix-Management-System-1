@@ -29,12 +29,12 @@ namespace PrototypeWithAuth.Data
 
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
-        public double LabMonthlyLimit { get; set; }
-        public double LabUnitLimit { get; set; }
-        public double LabOrderLimit { get; set; }
-        public double OperationMonthlyLimit { get; set; }
-        public double OperationUnitLimit { get; set; }
-        public double OperationOrderLimit { get; set; }
+        public decimal LabMonthlyLimit { get; set; }
+        public decimal LabUnitLimit { get; set; }
+        public decimal LabOrderLimit { get; set; }
+        public decimal OperationMonthlyLimit { get; set; }
+        public decimal OperationUnitLimit { get; set; }
+        public decimal OperationOrderLimit { get; set; }
         public bool IsSuspended { get; set; }
         public bool IsDeleted { get; set; }
         public string UserImage { get; set; }

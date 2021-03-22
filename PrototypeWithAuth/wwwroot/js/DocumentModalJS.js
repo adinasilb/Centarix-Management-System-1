@@ -43,7 +43,7 @@
 
 				var $enumString = $(".open-document-modal.active-document-modal").data("string");
 				var $requestId = $(".open-document-modal.active-document-modal").data("id");
-				var section = "";
+				var section = $("#masterSectionType").val();
 				
 				if ($(".open-document-modal.active-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
 					section = "Operations"
@@ -62,19 +62,14 @@
 	});
 
 	
-
+	//seems to not be used. only diff is that other one has $(".open-document-modal").removeClass("active-document-modal");
 	$(".open-document-modal").off('click').on("click", function (e) {
 
 		e.preventDefault();
 		e.stopPropagation();
-		console.log("clicked open doc modal");
-		$(".open-document-modal").removeClass("active-document-modal");
-		var section = "";
-		if ($(".open-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
-			section = "Operations";
-		} else if ($(".open-document-modal").hasClass('labManagement') || $(".open-document-modal").hasClass('LabManagement')) {
-			section = "LabManagement";
-		}
+		console.log("clicked open doc modal 1");
+		var section = $("#masterSectionType").val();
+		console.log("section"+section)
 		$(this).addClass("active-document-modal");
 		var enumString = $(this).data("string");
 		console.log("enumString: " + enumString);

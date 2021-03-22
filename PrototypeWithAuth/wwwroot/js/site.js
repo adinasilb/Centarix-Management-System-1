@@ -30,7 +30,7 @@ $(function () {
 
 	//modal adjust scrollability/height
 	//$("#myModal").modal('handleUpdate');
-
+	
 	$(".stop-event").on("click", function (e) {
 		console.log("in stop event");
 		e.preventDefault();
@@ -39,18 +39,22 @@ $(function () {
 	});
 
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
-	$("#parentlist").off("change").on("change", function () {
-		$.fn.parentListChange();
-	});
-
-	//$('.modal').off("change").on('change', '#parentlist', function () {
-	//	$.fn.parentListChange();
-	//});
-
-
-	$.fn.parentListChange = function () {
+	$("body").off("change", "#parentlist, .parentlist").on("change", "#parentlist, .parentlist", function () {
+		console.log("change parent")
 		console.log("in parent list");
-		var parentCategoryId = $("#parentlist").val();
+		var parentCategoryId = $(this).val();
+		var sublistSelector = "#sublist";
+		var requestIndex = "";
+		if ($("#masterSectionType").val() == "Operations") {
+			console.log("operations")
+			parentCategoryId = $(this).val();
+			requestIndex = $(this).attr("request-index");
+			sublistSelector = "select.mdb-select" + requestIndex;
+			console.log("requestIndex " + requestIndex)
+		}
+		else {
+			//parentCategoryId = $("#parentlist").val();
+		}
 		console.log("parentcategoryid: " + parentCategoryId);
 		var url = "/Requests/GetSubCategoryList";
 		console.log("url: " + url);
@@ -58,17 +62,17 @@ $(function () {
 		$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
 			console.log(" in json")
 			var firstitem1 = '<option value=""> Select Subcategory</option>';
-			$("#sublist").empty();
-			$("#sublist").append(firstitem1);
+			$(sublistSelector).empty();
+			$(sublistSelector).append(firstitem1);
 
 			$.each(data, function (i, subCategory) {
 				var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
-				$("#sublist").append(newitem1);
+				$(sublistSelector).append(newitem1);
 			});
-			$("#sublist").materialSelect();
+			$(sublistSelector).materialSelect();
 			return false;
 		});
-	};
+	});
 
 	//change product subcategory dropdown according to the parent categroy selection when a parent category is selected
 	//$(".Project").change(function () {
@@ -139,23 +143,6 @@ $(function () {
 	});
 
 
-	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
-	$(".payments-table").on("change", ".paymentType", function (e) {
-		var paymentTypeID = $(this).val();
-		var url = "/CompanyAccounts/GetAccountsByPaymentType";
-		var id = "" + $(this).attr('id');
-		var number = id.substr(12, 1);
-		var newid = "NewPayments_" + number + "__CompanyAccountID";
-		$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
-			var item = "";
-			$("#" + newid).empty();
-			$.each(data, function (i, companyAccount) {
-				item += '<option value="' + companyAccount.companyAccountID + '">' + companyAccount.companyAccountNum + '</option>'
-			});
-			$("#" + newid).html(item);
-		});
-	});
-
 
 	//$('input[type=text]').on('blur', function () {
 	//		$(this).prev().prev().css('border-bottom', '1px solid black');
@@ -183,29 +170,7 @@ $(function () {
 	//	});
 	//});
 
-	//payments on the price modal -cascading dropdown choice with json
 
-	$(".paymentType").change(function () {
-		var paymentTypeId = $(this).val();
-		var url = "/Requests/GetCompanyAccountList";
-		var paymentTypeId = $(this).attr("id");
-		var firstNum = paymentTypeId.charAt(12);
-		var secondNum = paymentTypeId.charAt(13);
-		var numId = firstNum;
-		if (secondNum != "_") {
-			numId = firstNum + secondNum;
-		}
-		var companyAccountId = "NewPayments_" + numId + "__CompanyAccount";
-
-		$.getJSON(url, { paymentTypeId: paymentTypeId }, function (data) {
-			var item = "";
-			$("#" + companyAccountId).empty();
-			$.each(data, function (i, companyAccount) {
-				item += '<option value="' + companyAccount.companyAccountId + '">' + companyAccount.companyAccountNum + ' - hello</option>'
-			});
-			$("#" + companyAccountId).html(item);
-		});
-	});
 
 	$('.modal').on('change', '#vendorList', function () {
 		console.log('in on change vendor')
@@ -376,19 +341,14 @@ $(function () {
 		//});
 	});
 
-
+	//it seems that this is the method that's being used
 	$(".open-document-modal").off('click').on("click", function (e) {
 
 		e.preventDefault();
 		e.stopPropagation();
-		console.log("clicked open doc modal");
+		console.log("clicked open doc modal 2");
 		$(".open-document-modal").removeClass("active-document-modal");
-		var section = "";
-		if ($(".open-document-modal").hasClass('operations') || $(".open-document-modal").hasClass('Operations')) {
-			section = "Operations";
-		} else if ($(".open-document-modal").hasClass('labManagement') || $(".open-document-modal").hasClass('LabManagement')) {
-			section = "LabManagement";
-		}
+		var section = $("#masterSectionType").val();
 		$(this).addClass("active-document-modal");
 		var enumString = $(this).data("string");
 		console.log("enumString: " + enumString);
@@ -828,7 +788,7 @@ $(function () {
 		$("#user-image").attr("src", "/" + imgPath);
 		$(".userImage i").hide();
 
-		$.fn.CloseModal('user-image');
+		$.fn.CloseModal('user-picture');
 	});
 
 	$("#InvoiceImage").on("change", function () {
@@ -896,24 +856,14 @@ $(function () {
 		} else {
 			$(".installments").show();
 		}
-
 	});
 
-	$(".create-user .permissions-tab").on("click", function () {
+	$("body").on("click",".permissions-tab", function () {
 		console.log("permissions tab opened");
 		$.fn.HideAllPermissionsDivs();
 		$.fn.ChangeUserPermissionsButtons();
 		$(".main-permissions").show();
 	});
-
-	$(".modal .permissions-tab").on("click", function () {
-		console.log("permissions tab opened");
-		$.fn.HideAllPermissionsDivs();
-		$.fn.ChangeUserPermissionsButtons();
-		$(".main-permissions").show();
-	});
-
-
 
 
 	$.fn.HideAllPermissionsDivs = function () {
@@ -1186,102 +1136,7 @@ $(function () {
 		});
 	}
 
-	/*--------------------------------Accounting Payment Notifications--------------------------------*/
-	$(".payments-pay-now").off("click").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		var vendorid = $(this).attr("vendor");
-		var paymentstatusid = $(this).attr("paymentstatus");
-		var typeEnum = $(this).attr("type");
-		console.log("vendor: " + vendorid);
-		console.log("payment status: " + paymentstatusid);
-		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
-		var itemurl = "/Requests/PaymentsPayModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid + "&accountingPaymentsEnum=" + typeEnum;
-		$("#loading").show();
-		$.fn.CallModal(itemurl);
-	});
-
-	$(".invoice-add-all").off("click").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		var vendorid = $(this).attr("vendor");
-		var itemUrl = "/Requests/AddInvoiceModal/?vendorid=" + vendorid;
-		$("#loading").show();
-		$.fn.CallModal(itemUrl);
-	});
-
-	$("#add-to-selected").off("click").on("click", function (e) {
-		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
-			return $(this).attr("id")
-		}).get()
-		console.log("arrayOfSelected: " + arrayOfSelected);
-		//var itemUrl = "/Requests/AddInvoiceModal/?requestids=" + arrayOfSelected;
-		$("#loading").show();
-		$('.modal').replaceWith('');
-		$(".modal-backdrop").remove();
-		$.ajax({
-			type: "GET",
-			url: "/Requests/AddInvoiceModal/",
-			traditional: true,
-			data: { 'requestIds': arrayOfSelected },
-			cache: true,
-			success: function (data) {
-				$("#loading").hide();
-				//console.log("data:");
-				//console.log(data);
-				var modal = $(data);
-				$('body').append(modal);
-				//replaces the modal-view class with the ModalView view
-				//$(".modal-view").html(data);
-				//turn off data dismiss by clicking out of the box and by pressing esc
-				$(".modal-view").modal({
-					backdrop: true,
-					keyboard: false,
-				});
-				//shows the modal
-				$(".modal").modal('show');
-			}
-		});
-		//$.fn.CallModal(itemUrl);
-	});
-
-	$(".invoice-add-one").off("click").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		var requestid = $(this).attr("request");
-		var itemUrl = "/Requests/AddInvoiceModal/?requestid=" + requestid;
-		$("#loading").show();
-		$.fn.CallModal(itemUrl);
-	});
-
-	$.fn.CallModal = function (url) {
-		console.log("in call modal, url: " + url);
-		$('.modal').replaceWith('');
-		$(".modal-backdrop").remove();
-		$.ajax({
-			async: false,
-			url: url,
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				$("#loading").hide();
-				var modal = $(data);
-				$('body').append(modal);
-				//replaces the modal-view class with the ModalView view
-				//$(".modal-view").html(data);
-				//turn off data dismiss by clicking out of the box and by pressing esc
-				$(".modal").modal({
-					backdrop: true,
-					keyboard: false,
-				});
-				//shows the modal
-				$(".modal").modal('show');
-				return false;
-			}
-		});
-	};
-
-	$.fn.CallModal2 = function (url) {
+	$.fn.OpenUserImageModal = function (url) {
 		console.log("in call modal2, url: " + url);
 		$.ajax({
 			async: true,
@@ -1289,45 +1144,48 @@ $(function () {
 			type: 'GET',
 			cache: false,
 			success: function (data) {
-				$.fn.OpenModal('userImageModal', 'user-image', data)
+				$.fn.OpenModal('userImageModal', 'user-picture', data);
+				$("#loading").hide();
 			}
 		});
 	};
 
 
-	$(".remove-invoice-item").off("click").on("click", function (e) {
-		e.stopPropagation();
-		e.preventDefault();
-	});
-
-
-
-	$("#share-payment").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("in share payments site.js");
-	});
-
-	function SharePayment(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("in share payments fx site.js");
-	};
-
-	$("body").on("click", "#share-payment", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		console.log("in share payments body fx site.js");
-	});
 
 	$("#entry").dblclick(function () {
 		console.log("in entry")
 		$('#entryForm').trigger('submit');
 	});
 	$("#exit").dblclick(function () {
-		console.log("in exit")
-		$.fn.GetEmployeeHourFromToday();
-		return false;
+		console.log("in exit");
+			$('.modal').replaceWith('');
+			$(".modal-backdrop").remove();
+			$.ajax({
+				async: false,
+				url: 'ExitModal',
+				type: 'GET',
+				cache: false,
+				success: function (data) {
+					$("#loading").hide();
+					var modal = $(data);
+					$('body').append(modal);
+					//replaces the modal-view class with the ModalView view
+					//$(".modal-view").html(data);
+					//turn off data dismiss by clicking out of the box and by pressing esc
+					$(".modal").modal({
+						backdrop: true,
+						keyboard: false,
+					});
+					//shows the modal
+					$(".modal").modal('show');
+					//console.log("in success");
+					return false;
+				},
+				error: function (xhr) {
+					//console.log("in error");
+					$(".render-body").html(xhr.responseText);
+                }
+			});
 	});
 	$("#entry").off('click').click(function (e) {
 		e.preventDefault();
@@ -1338,19 +1196,19 @@ $(function () {
 	$('.monthsHours .select-dropdown').off('change').change(function (e) {
 		console.log(".monthsHours chnage")
 		if ($(this).val() != '') {
-			$.fn.SortByMonth($(this).val(), $('#SelectedYear').val())
+			$.fn.SortByMonth($(this).val(), $('#SelectedYear').val(), $('#userId').val() )
 		}
 	});
 	$('.yearsHours .select-dropdown').off('change').change(function (e) {
 		console.log(".yearsHours chnage")
 		if ($(this).val() != '') {
-			$.fn.SortByMonth($('#months').val(), $(this).val())
+			$.fn.SortByMonth($('#months').val(), $(this).val(), $('#userId').val())
 		}
 	});
-	$.fn.SortByMonth = function (month, year) {
+	$.fn.SortByMonth = function (month, year, userId) {
 		$.ajax({
 			async: false,
-			url: '/Timekeeper/HoursPage?month=' + month + "&year=" + year + "&pageType=" + $('#masterPageType').val(),
+			url: '/Timekeeper/HoursPage?month=' + month + "&year=" + year + "&userId=" + userId + "&pageType=" + $('#masterPageType').val(),
 			type: 'GET',
 			cache: false,
 			success: function (data) {
@@ -1360,7 +1218,8 @@ $(function () {
 	};
 
 	$(".open-work-from-home-modal").off('click').click(function (e) {
-		e.preventDefault()
+		e.preventDefault();
+		var pageType;
 		if ($(this).hasClass("SummaryHours")) {
 			pageType = "SummaryHours";
 		}
@@ -1369,11 +1228,12 @@ $(function () {
 		}
 		var itemurl = "UpdateHours?PageType=" + pageType + "&isWorkFromHome=" + true;
 		$("#loading").show();
-		$.fn.CallModal(itemurl);
+		$.fn.CallModal(itemurl, "update-time-worked");
 	});
 
 	$(".open-update-hours-modal").off('click').click(function (e) {
 		e.preventDefault();
+		var pageType;
 		var val = $(this).attr("value");
 		if (val != '') {
 			var date = new Date(val).toISOString();
@@ -1387,7 +1247,7 @@ $(function () {
 		}
 		var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + date;
 		$("#loading").show();
-		$.fn.CallModal(itemurl);
+		$.fn.CallModal(itemurl, "update-time-worked");
 	});
 
 	$(".report-off-day").off('click').click(function (e) {
@@ -1395,7 +1255,7 @@ $(function () {
 		var pageType = $("#masterPageType").val();
 		var itemurl = "OffDayModal?PageType=" + pageType + "&OffDayType=" + offDayType;
 		$("#loading").show();
-		$.fn.CallModal(itemurl);
+		$.fn.CallModal(itemurl, "off-day");
 	});
 
 	$('.no-hours-reported').off('change').change(function (e) {
@@ -1405,32 +1265,24 @@ $(function () {
 			case "1":
 				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate + "&isWorkFromHome=" + true;
 				$("#loading").show();
-				$.fn.CallModal(itemurl)
+				$.fn.CallModal(itemurl, "update-time-worked")
 				break;
 			case "2":
 				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate;
 				$("#loading").show();
-				$.fn.CallModal(itemurl);
+				$.fn.CallModal(itemurl, "update-time-worked");
 				break;
 			case "3":
 				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SickDay";
-				$.fn.CallModal(itemurl);
+				$.fn.CallModal(itemurl, "off-day");
 				break;
 			case "4":
 				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=VacationDay";
-				$.fn.CallModal(itemurl);
+				$.fn.CallModal(itemurl,"off-day");
 				break;
 		}
 	});
-	//$(".confirm-report-offDay").off('click').click(function (e) {
 
-	//	$("#loading").show();
-	//	var pageType = $("#masterPageType").val();
-	//	var	selectedDate = $(this).val();
-	//	console.log("selecteddate: " + selectedDate);
-	//	var itemurl = "OffDayConfirmModal?PageType=" + pageType + "&date=" + selectedDate;
-	//	$.fn.CallModal(itemurl);
-	//});
 	$("body").on("change", "#EmployeeHour_Date", function (e) {
 		$('.day-of-week').val($.fn.GetDayOfWeek($.fn.formatDateForSubmit($(this).val())));
 	});
@@ -1478,63 +1330,8 @@ $(function () {
 		console.log("in clarify, checkbox val: " + $(this).val());
 	};
 
-	//$.fn.GetEmployeeHourFromHome = function (date) {
-	//	console.log(date);
-	//	$.fn.CallModal('UpdateHours?chosenDate=' + date + "&isWorkFromHome=" + true)
-	//};
-	$.fn.GetEmployeeHourFromToday = function () {
-		$.fn.CallModal('ExitModal');
-	};
 
-
-
-	//DROPDOWN
-	/*Dropdown Menu*/
-	$('.dropdown-main').off("click").on("click", function () {
-		$(this).attr('tabindex', 1).focus();
-		//$(this).toggleClass('active');
-		$(this).find('.dropdown-menu').slideToggle(300);
-	});
-	$('.dropdown-main').focusout(function () {
-		$(this).removeClass('active');
-		$(this).find('.dropdown-menu').slideUp(300);
-	});
-	$('.dropdown-main .dropdown-menu li').click(function () {
-		console.log($(this).text())
-		$(this).parents('.dropdown-main').find('span:not(.caret)').text($(this).text());
-		$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
-	});
-	/*End Dropdown Menu*/
-
-
-	$('.dropdown-menu li').click(function () {
-		var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-			msg = '<span class="msg">Hidden input value: ';
-		$('.msg').html(msg + input + '</span>');
-	});
-
-
-
-	$('.dropdown-multiple').click(function () {
-		$(this).attr('tabindex', 1).focus();
-		$(this).addClass('active');
-		$(this).find('.dropdown-menu-multiple').slideToggle(300);
-	});
-	$('.dropdown-multiple').focusout(function () {
-		$(this).removeClass('active');
-		$(this).find('.dropdown-menu-multiple').slideUp(300);
-	});
-	$('.dropdown-multiple .dropdown-menu div label').click(function () {
-		//$(this).parents('.dropdown').find('span').text($(this).text());
-		$(this).parents('.dropdown-multiple').find('input').attr('value', $(this).attr('id'));
-		$(this).parents('.dropdown-multiple').addClass('active');
-	});
-	$('.dropdown-multiple .dropdown-menu div .form-check-input').click(function () {
-		//$(this).parents('.dropdown').find('span').text($(this).text());
-		console.log("in multiple")
-		//alert("in multiple");
-		$(this).parents('.dropdown-multiple').find('span:not(.caret)').append($(this).find('label').text());
-	});
+	
 	/*End Dropdown Menu*/
 
 
@@ -1606,19 +1403,7 @@ $(function () {
 		$('#EmployeeHour_TotalHours').val(totalHours);
 	}
 
-	//});
-	/*End Dropdown Menu*/
-	//$("body").off('click').on("click", ".upload-image", function (e) {
-	//$("body").off('click').on("click", ".upload-image", function (e) {
-	//	console.log("in upload image");
-	//	$.fn.CallModal2("/Admin/UserImageModal");
-	//});
 
-	//$('.dropdown-menu li').click(function () {
-	//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-	//		msg = '<span class="msg">Hidden input value: ';
-	//	$('.msg').html(msg + input + '</span>');
-	//}); 
 	$.fn.SaveOffDays = function (url, month) {
 		var rangeTo = $('.datepicker--cell.-selected-.-range-to-');
 		var dateRangeToDay = rangeTo.attr('data-date');
@@ -1639,7 +1424,7 @@ $(function () {
 		var formData = new FormData($("#myForm")[0]);
 		//console.log(...formData)
 		console.log(dateFrom + "-" + dateTo);
-		alert("about to go into ajax, url: " + url);
+		//alert("about to go into ajax, url: " + url);
 		$.ajax({
 			processData: false,
 			contentType: false,
@@ -1656,7 +1441,7 @@ $(function () {
 					$(".report-days-off-partial").html(data);
 				}
 				else {
-					alert("else")
+				//	alert("else")
 					$(".render-body").html(data);
 				}
 			}
@@ -1677,7 +1462,7 @@ $(function () {
 
 	$(".modal").on("click", "#saveOffDayConfirmation", function (e) {
 		e.preventDefault();
-		alert("save sick confirmation");
+		//alert("save sick confirmation");
 		//alert($('#SelectedDate').val())
 		$("#FromDate").val($('#SelectedDate').val());
 		$("#Month").val($("#months").val());
@@ -1709,25 +1494,13 @@ $(function () {
 	$(".open-ehaa-modal").off("click").on("click", function (e) {
 		e.preventDefault();
 		$("#loading").show();
-		$("#ehaaModal").replaceWith('');
+		//$("#ehaaModal").replaceWith('');
 		console.log("in ehaa modal: " + $(this).val());
-		$.ajax({
-			async: false,
-			url: '/Timekeeper/_EmployeeHoursAwaitingApproval?ehaaID=' + $(this).attr("value"),
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				$("#loading").hide();
-				var modal = $(data);
-				$('body').append(modal);
-				$("#ehaaModal").modal({
-					backdrop: false,
-					keyboard: false,
-				});
-				//shows the modal
-				$("#ehaaModal").modal('show');
-			}
-		});
+			
+			var url = '/Timekeeper/_EmployeeHoursAwaitingApproval?ehaaID=' + $(this).attr("value");
+			
+			$.fn.CallModal(url, "hours-awaiting-approval");
+			
 	});
 	$(".back-button").off("click").on("click", function () {
 		console.log('back button');
@@ -1771,7 +1544,7 @@ $(function () {
 		}
 		else {
 			console.log('close edit')
-			$.fn.CloseModal("edit-item");
+			$.fn.CloseModal("edits");
         }
 	})
 
@@ -1849,6 +1622,10 @@ $(function () {
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
+		if($('#' + dataActivates+" .search-wrap").length>0)
+		{
+			selectedIndex = selectedIndex-1;
+		}
 		var isOptGroup = false;
 		if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
 		if (isOptGroup) {
@@ -1868,11 +1645,9 @@ $(function () {
 					console.log("Test")
 					selectedIndex = selectedIndex - 3;
 					break;
-			}
+			} 
 
-		} else {
-			selectedIndex = selectedIndex - 1;
-		}
+		} 
 		$(selectID).destroyMaterialSelect();
 		$(selectID).prop("disabled", false);
 		$(selectID).prop('selectedIndex', selectedIndex);
@@ -1922,20 +1697,7 @@ $(function () {
 		$('#addRequestComment').popover('toggle');
 
 	});
-	$(".more").off('click').click(function () {
-		var val = $(this).val();
-		$('[data-toggle="popover"]').popover('dispose');
-		$(this).popover({
-			sanitize: false,
-			placement: 'bottom',
-			html: true,
-			content: function () {
-				return $('#' + val).html();
-			}
-		});
-		$(this).popover('toggle');
 
-	});
 
 
 	$('.isRepeat').off("click").on("click", function () {
@@ -2028,34 +1790,6 @@ $(function () {
 	//		}
 	//	});
 	//});
-	$(".save-item").click(function (e) {
-		e.preventDefault();
-		console.log('save-item-click')
-		var url = "";
-		if ($(this).hasClass("side-menu")) {
-			url = $(this).parent("a").attr("href");
-		}
-		else {
-			url = $(this).attr("href")
-		}
-		url = encodeURIComponent(url)
-		$itemurl = "/Requests/ConfirmExit/?url=" + url;
-		console.log($itemurl);
-		$.fn.CloseModal("confirm-exit");
-		$.ajax({
-			async: true,
-			url: $itemurl,
-			type: 'GET',
-			cache: true,
-			success: function (data) {
-				$("#loading").hide();
-				$.fn.OpenModal('confirm-exit-modal', 'confirm-exit', data)
-				$(".modal-open-state").attr("text", "open");
-			}
-
-		});
-
-	})
 
 
 

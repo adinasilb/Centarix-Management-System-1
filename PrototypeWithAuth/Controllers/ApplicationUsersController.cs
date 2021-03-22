@@ -135,6 +135,7 @@ namespace PrototypeWithAuth.Controllers
                 int workDays = 0;
                 double sickDays = 0;
                 double vacationSickCount = 0;
+                int missingDays = 0;
                 TimeSpan hours = new TimeSpan();
                 switch (yearlyMonthlyEnum)
                 {
@@ -146,6 +147,7 @@ namespace PrototypeWithAuth.Controllers
                         workDays = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null && eh.Date.Year == year && eh.Date.Month == month  && eh.Date.Date <= DateTime.Now.Date) || (eh.IsBonus && eh.OffDayTypeID!= null && eh.Date.Date <= DateTime.Now.Date)).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
                         vacationSickCount = sickDays + vacationDays;
+                        missingDays = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id && eh.Date.Year == year && eh.Date.Month == month && eh.Exit1 == null && eh.TotalHours == null && eh.OffDayType == null).Count();
                         break;
                     case YearlyMonthlyEnum.Yearly:
                         sickDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 1 && eh.Date.Year == year && eh.Date.Date <= DateTime.Now.Date && eh.IsBonus == false).Count();
@@ -155,6 +157,7 @@ namespace PrototypeWithAuth.Controllers
                         workDays = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null && eh.Date.Year == year && eh.Date.Date <= DateTime.Now.Date) || (eh.IsBonus && eh.OffDayTypeID != null && eh.Date.Date <= DateTime.Now.Date)).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
                         vacationSickCount = sickDays + vacationDays;
+                        missingDays = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id && eh.Date.Year == year && (eh.Exit1 == null && eh.TotalHours == null && eh.OffDayType == null)).Count();
                         break;
                 }
 
@@ -165,7 +168,8 @@ namespace PrototypeWithAuth.Controllers
                     VacationDays = vacationDays,
                     WorkingDays = workDays,
                     Hours = hours,
-                    VacationSickCount = vacationSickCount
+                    VacationSickCount = vacationSickCount,
+                    MissingDays = missingDays
                 };
                 workerHoursViewModel.Add(worker);
             }
@@ -368,12 +372,13 @@ namespace PrototypeWithAuth.Controllers
                     {
                         throw ex;
                     }
+                    //throw new Exception();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return RedirectToAction("_AwaitingApproval", new { ErrorMessage = ex.Message});
+                    return RedirectToAction("_AwaitingApproval", new { ErrorMessage = AppUtility.GetExceptionMessage(ex) });
 
                 }
             }
@@ -451,7 +456,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                return RedirectToAction("_AwaitingApproval", new { ErrorMessage= ex.Message});
+                return RedirectToAction("_AwaitingApproval", new { ErrorMessage= AppUtility.GetExceptionMessage(ex) });
             }
 
             return RedirectToAction("_AwaitingApproval");
