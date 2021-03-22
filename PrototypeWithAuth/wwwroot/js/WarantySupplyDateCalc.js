@@ -37,7 +37,7 @@
 		$(".expected-supply-days").val(amountOfDays);
 	});
 
-	$("#Request_Warranty").change(function () {
+$(".warranty-months").change(function () {
 			var date; 
 		if ($("#Request_ParentRequest_OrderDate").length > 0) {
 			console.log("in first of of check roder date")

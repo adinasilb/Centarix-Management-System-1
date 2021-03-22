@@ -463,7 +463,7 @@
             console.log("in call page function");
             console.log("itemurl " + $itemurl);
             //delete existing modals
-            $('.modal:not(#visualZoomModal)').replaceWith('');
+            //$('.modal:not(#visualZoomModal)').replaceWith('');
             //$(".modal-backdrop").remove();
             $('#loading').show();
             $.ajax({
@@ -484,9 +484,10 @@
                             $('.modal-content a:first').tab('show');
                             break;
                         case "reorder":
-                            $.fn.OpenModal('modal', 'reorder-item', modal)
-                            $.fn.OnOpenModalView();
+                            $.fn.OpenModal('reorderModal', 'reorder-item', modal)
+                            //$.fn.OnOpenModalView();
                             $("#cost").trigger('change');
+                            $(".reorderModal .mdb-select").materialSelect();
 
 
                             //$.fn.CheckCurrency();

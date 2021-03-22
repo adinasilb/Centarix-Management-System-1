@@ -189,6 +189,12 @@
     <Compile Remove="Data\Migrations\20210307125519_RedidSomeFieldsForAccounting.Designer.cs" />
     <Compile Remove="Data\Migrations\20210311084725_IncludeVatRequest.cs" />
     <Compile Remove="Data\Migrations\20210311084725_IncludeVatRequest.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210322095501_ExchangeRate3Decimals.cs" />
+    <Compile Remove="Data\Migrations\20210322095501_ExchangeRate3Decimals.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210322100824_ExchangeRate3Decimals.cs" />
+    <Compile Remove="Data\Migrations\20210322100824_ExchangeRate3Decimals.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210322101014_ExchangeRate3Decimals.cs" />
+    <Compile Remove="Data\Migrations\20210322101014_ExchangeRate3Decimals.Designer.cs" />
   </ItemGroup>
 
 

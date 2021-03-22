@@ -192,13 +192,13 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             </div>
             <div class="col-md-3 @warrantyCategories ">
                 <label asp-for="Requests[0].Warranty" class="control-label"></label>
-                <input asp-for="Requests[0].Warranty" class="form-control-plaintext border-bottom @warrantyCategories @markReadOnlyClass" type="text" />
+                <input asp-for="Requests[0].Warranty" class="form-control-plaintext border-bottom warranty-months @warrantyCategories @markReadOnlyClass" type="text" />
                 <span asp-validation-for="Requests[0].Warranty" class="text-danger-centarix"></span>
             </div>
             <div class="col-md-3 reusables equipment @warrantyCategories ">
                 <label class="control-label">Estimated End Date</label>
                 @*no date in backend so set to zero*@
-                <input type="text" name="WarrantyDate" class="form-control-plaintext border-bottom datepicker @warrantyCategories " disabled="disabled" />
+                <input type="text" name="WarrantyDate" class="form-control-plaintext border-bottom datepicker @warrantyCategories" style="pointer-events:none;"/>
             </div>
             <div class="col-md-3 @batchCategories ">
                 <label asp-for="Requests[0].Batch" class="control-label"></label>
