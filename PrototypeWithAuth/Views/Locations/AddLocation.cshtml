@@ -96,24 +96,39 @@
 
     });
     $("#submitAddLocation").click(function (e) {
-        e.preventDefault();
-        $("#loading").show();
-        var formData = new FormData($("#myForm")[0]);
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: "/Locations/AddLocation",
-            data: formData,
-            traditional: true,
-            type: "POST",
-            cache: false,
-            success: function (data) {
-                $("#loading").hide();
-                $.fn.CloseModal('add-location');
-                $('.render-body').html(data);
-                return true;
+        e.preventDefault();       
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+            e.preventDefault();
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
             }
-        })
+
+        }
+        else {
+            $("#loading").show();
+            $('.activeSubmit ').removeClass('disabled-submit')
+            var formData = new FormData($("#myForm")[0]);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Locations/AddLocation",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $("#loading").hide();
+                    $.fn.CloseModal('add-location');
+                    $('.render-body').html(data);
+                    return true;
+                }
+            })
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        
     })
 </script>

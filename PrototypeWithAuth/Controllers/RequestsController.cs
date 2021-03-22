@@ -36,7 +36,6 @@ using System.Text.Json;
 using Newtonsoft.Json;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.AppData.Exceptions;
-using Microsoft.VisualBasic.FileIO;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -4604,7 +4603,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 if (additionalRequests)
                 {
-                    FileSystem.CopyDirectory(requestFolderFrom, requestFolderTo);
+                  AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
                 }
                 else
                 {
