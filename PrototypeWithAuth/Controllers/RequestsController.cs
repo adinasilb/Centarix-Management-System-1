@@ -4074,39 +4074,41 @@ namespace PrototypeWithAuth.Controllers
                         RequestToSave.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
                         RequestToSave.HasInvoice = true;
                         _context.Update(RequestToSave);
-                    }
-                    await _context.SaveChangesAsync();
 
-                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string requestFolder = Path.Combine(uploadFolder, addInvoiceViewModel.Requests[0].RequestID.ToString());
-                    Directory.CreateDirectory(requestFolder);
-                    if (addInvoiceViewModel.InvoiceImage != null)
-                    {
-                        int x = 1;
-                        //create file
-                        string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
-                        if (Directory.Exists(folderPath))
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                        string requestFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
+                        Directory.CreateDirectory(requestFolder);
+                        if (addInvoiceViewModel.InvoiceImage != null)
                         {
-                            var filesInDirectory = Directory.GetFiles(folderPath);
-                            x = filesInDirectory.Length + 1;
+                            int x = 1;
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+                            if (Directory.Exists(folderPath))
+                            {
+                                var filesInDirectory = Directory.GetFiles(folderPath);
+                                x = filesInDirectory.Length + 1;
+                            }
+                            else
+                            {
+                                Directory.CreateDirectory(folderPath);
+                            }
+                            string uniqueFileName = x + addInvoiceViewModel.InvoiceImage.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            FileStream filestream = new FileStream(filePath, FileMode.Create);
+                            addInvoiceViewModel.InvoiceImage.CopyTo(filestream);
+                            filestream.Close();
                         }
-                        else
-                        {
-                            Directory.CreateDirectory(folderPath);
-                        }
-                        string uniqueFileName = x + addInvoiceViewModel.InvoiceImage.FileName;
-                        string filePath = Path.Combine(folderPath, uniqueFileName);
-                        FileStream filestream = new FileStream(filePath, FileMode.Create);
-                        addInvoiceViewModel.InvoiceImage.CopyTo(filestream);
-                        filestream.Close();
-                        await transaction.CommitAsync();
+                        await _context.SaveChangesAsync();
+
                     }
+
+                    await transaction.CommitAsync();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
                     addInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                    Response.StatusCode = 500;               
+                    Response.StatusCode = 500;
                     return PartialView("InvoiceModal", addInvoiceViewModel);
                 }
             }          
@@ -4707,6 +4709,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         foreach (var req in requests)
                         {
+                            req.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == req.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefault();
                             if (req.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
                             {
                                 SaveUsingSessions = false;
@@ -4732,6 +4735,10 @@ namespace PrototypeWithAuth.Controllers
                                 if(req.Product !=null)
                                 {
                                     req.Product.Vendor = null;
+                                    if (termsViewModel.SectionType == AppUtility.MenuItems.Operations) //TODO: better if
+                                    {
+                                        req.Product.ProductSubcategory = null;
+                                    }
                                 }
                                 if (req.PaymentStatusID == 7)
                                 {
