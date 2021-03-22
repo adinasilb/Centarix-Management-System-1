@@ -3528,11 +3528,12 @@ namespace PrototypeWithAuth.Controllers
                     catch(Exception ex)
                     {
                         transaction.RollbackAsync();
+                        editQuoteDetailsViewModel.Requests.ForEach(r => DeleteTemporaryDocuments(r.RequestID));                        
                         throw ex;
                     }
                 }
                 
-                return RedirectToAction("LabManageQuotes");
+                return RedirectToAction("_IndexTableDataByVendor", new { PageType  = AppUtility.PageTypeEnum.LabManagementQuotes, SectionType = AppUtility.MenuItems.LabManagement, SideBarType = AppUtility.SidebarEnum.Quotes});
             }
             catch (Exception ex)
             {
@@ -3621,10 +3622,10 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        private void DeleteTemporaryDocuments()
+        private void DeleteTemporaryDocuments(int requestID = 0)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string requestFolder = Path.Combine(uploadFolder, "0");
+            string requestFolder = Path.Combine(uploadFolder, requestID.ToString());
 
             if (Directory.Exists(requestFolder))
             {
