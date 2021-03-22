@@ -37,11 +37,11 @@ $("#LocationInstances_0__Height").on("change", function (e) {
 });
 
 $(".empty-shelf-check").on("click", function () {
-	alert("empty shelf clicked!");
+	//alert("empty shelf clicked!");
 });
 
 $(".empty-shelf-check").on("change", function () {
-	alert("empty shelf changed!");
+	//alert("empty shelf changed!");
 });
 
 $(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function () {
