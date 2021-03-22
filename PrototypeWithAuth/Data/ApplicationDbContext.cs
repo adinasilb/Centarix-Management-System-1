@@ -249,6 +249,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
 
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
+            modelBuilder.Entity<ExchangeRate>().Property(e => e.LatestExchangeRate).HasColumnType("decimal(18,3)");
+            modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete
