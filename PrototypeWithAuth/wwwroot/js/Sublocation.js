@@ -17,7 +17,7 @@ $("#LocationInstances_0__Height").on("change", function (e) {
 				var newOption = "<div class='form-check locations'>";
 				newOption += "<input type='checkbox' class='form-check-input empty-shelf-check emptyShelf' data-val='false' data-num='" + idNum + "' id='" + optId + "' name='" + optName + "' value='true'>";
 				newOption += "<label class='form-check-label' for='" + optId + "'>";
-				newOption += "Shelf " + x;
+				newOption += "Floor " + x;
 				newOption += "</label></div>";
 				select.append(newOption);
 				//('.mdb-select').material
