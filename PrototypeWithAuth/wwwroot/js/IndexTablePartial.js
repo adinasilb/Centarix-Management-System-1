@@ -1,34 +1,5 @@
 ﻿
 
-$("body, .modal").off('click').on("click", ".load-reorder-details", function (e) {
-    console.log("in order details");
-    e.preventDefault();
-    e.stopPropagation();
-    $("#loading").show();
-       var selectedPriceSort = [];
-    $("#priceSortContent .priceSort:checked").each(function (e) {
-        selectedPriceSort.push($(this).attr("enum"));
-    })
-    var section = $("#masterSectionType").val()
-    //takes the item value and calls the Products controller with the ModalView view to render the modal inside
-    var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value")  +  "&"+$.fn.getRequestIndexString()
-$.ajax({
-            async: true,
-            type: 'GET',
-            cache: false,
-            url: $itemurl,
-            success: function (data) {
-                $.fn.OpenModal('reorderModal', 'reorder-item', data)
-                $('#loading').hide();
-                $(".reorder-unit").materialSelect();
-            }
-
-    });
-    return false;
-});
-
-
-
 
 $(".load-quote-details").on("click", function (e) {
     console.log("in order details");
