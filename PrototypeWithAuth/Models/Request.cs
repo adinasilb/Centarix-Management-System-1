@@ -135,17 +135,17 @@ namespace PrototypeWithAuth.Models
 
         //price info
         public string Currency { get; set; }
-        [Range(1, Double.MaxValue, ErrorMessage = "Field must be more than 0")]
+        [Range(1,  (double)Decimal.MaxValue, ErrorMessage = "Field must be more than 0")]
         [Display(Name = "Price")]
-        public double? Cost { get; set; } //this is always shekel no matter what currency is
-        private double _VAT;
-        public double VAT
+        public decimal? Cost { get; set; } //this is always shekel no matter what currency is
+        private decimal _VAT;
+        public decimal VAT
         {
             get
             {
                 if (IncludeVAT)
                 {
-                    return Math.Round(.17 * Cost ?? 0, 2);
+                    return Math.Round(.17m * Cost ?? 0, 2);
                 }
                 else
                 {
@@ -156,8 +156,8 @@ namespace PrototypeWithAuth.Models
 
         }
 
-        private double _PricePerUnit;
-        public double PricePerUnit
+        private decimal _PricePerUnit;
+        public decimal PricePerUnit
         {
             get
             {
@@ -167,8 +167,8 @@ namespace PrototypeWithAuth.Models
 
         }
 
-        private double? _PricePerSubUnit;
-        public double? PricePerSubUnit
+        private decimal? _PricePerSubUnit;
+        public decimal? PricePerSubUnit
         {
             get
             {
@@ -178,8 +178,8 @@ namespace PrototypeWithAuth.Models
 
         }
 
-        private double? _PricePerSubSubUnit;
-        public double? PricePerSubSubUnit
+        private decimal? _PricePerSubSubUnit;
+        public decimal? PricePerSubSubUnit
         {
             get
             {
@@ -189,8 +189,8 @@ namespace PrototypeWithAuth.Models
 
         }
 
-        private double _TotalWithVat;
-        public double TotalWithVat
+        private decimal _TotalWithVat;
+        public decimal TotalWithVat
         {
             get
             {
@@ -201,9 +201,9 @@ namespace PrototypeWithAuth.Models
         }
 
         [Display(Name = "Exchange Rate")]
-        public double ExchangeRate { get; set; } // holding the rate of exchange for this specific request
+        public decimal ExchangeRate { get; set; } // holding the rate of exchange for this specific request
         public int? Terms { get; set; } // if terms is selected, keep decremtnting, when = zero, gets status of pay now
-        public double Discount { get; set; }
+        public decimal Discount { get; set; }
 
 
 

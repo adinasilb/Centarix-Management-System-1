@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.ViewModels
     public class CartTotalViewModel : ViewModelBase
     {
         public Vendor Vendor { get; set; }
-        public double VendorCartTotal { get; set; }
+        public decimal VendorCartTotal { get; set; }
         public Request Request { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
     }

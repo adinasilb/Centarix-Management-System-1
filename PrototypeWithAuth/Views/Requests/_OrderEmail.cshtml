@@ -3,7 +3,7 @@
 
 @{
     char currency = '₪';
-    double vat = 0;
+    decimal vat = 0;
  if (Model.Requests.Count() == 1 && Model.Requests[0].Currency == AppUtility.CurrencyEnum.USD.ToString())
  {
      currency = '$';
@@ -113,19 +113,19 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                         @if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
                             <td>@request.Unit</td>
-                            double unitPrice = (cost ?? 0) / request.Unit;
+                            decimal unitPrice = (cost ?? 0) / request.Unit;
                             <td>@currency @unitPrice.ToString("N2")</td>
                         }
                         <td>@request.Discount%</td>
                         <td>@currency @cost?.ToString("N2")</td>
                     </tr>
                 }
-                @{ double total = Model.Requests.Sum(r => r.Cost ?? 0);
+                @{ decimal total = Model.Requests.Sum(r => r.Cost ?? 0);
                     if (currency == '$')
                     {
                         total = total / Model.Requests[0].ExchangeRate;
                     }
-                    double totalWithVat = total + vat;}
+                    decimal totalWithVat = total + vat;}
                 <tr>
                     <td colspan="@colspan" rowspan="6" class="borderless-cell">
                         <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">

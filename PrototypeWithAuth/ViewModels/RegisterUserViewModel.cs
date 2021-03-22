@@ -88,23 +88,23 @@ namespace PrototypeWithAuth.ViewModels
         //Budget
 
         [Display(Name = "Monthly Limit")]
-        public double LabMonthlyLimit { get; set; }
+        public decimal LabMonthlyLimit { get; set; }
 
         [Display(Name = "Unit Limit")]
-        public double LabUnitLimit { get; set; }
+        public decimal LabUnitLimit { get; set; }
 
         [Display(Name = "Order Limit")]
 
-        public double LabOrderLimit { get; set; }
+        public decimal LabOrderLimit { get; set; }
 
         [Display(Name = "Monthly Limit")]
-        public double OperationMonthlyLimit { get; set; }
+        public decimal OperationMonthlyLimit { get; set; }
 
         [Display(Name = "Unit Limit")]
-        public double OperationUnitLimit { get; set; }
+        public decimal OperationUnitLimit { get; set; }
 
         [Display(Name = "Order Limit")]
-        public double OperaitonOrderLimit { get; set; }
+        public decimal OperaitonOrderLimit { get; set; }
 
         //public IFormFile UserImage { get; set; }
         public string UserImage { get; set; }
