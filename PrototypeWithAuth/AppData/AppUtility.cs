@@ -156,8 +156,8 @@ namespace PrototypeWithAuth.AppData
                 stringRate = stringRate.Replace("{", "");
                 stringRate = stringRate.Replace("}", "");
                 decimal.TryParse(stringRate, out rate);
-
-                return Math.Round(rate, 3);
+                rate = Math.Round(rate, 3);
+                return rate;
             }
             catch (Exception ex)
             {
