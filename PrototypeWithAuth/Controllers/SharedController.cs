@@ -172,6 +172,10 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
+        public decimal GetExchangeRateIfNull()
+        {
+            return _context.ExchangeRates.Select(er => er.LatestExchangeRate).FirstOrDefault();
+        }
 
     }
 }

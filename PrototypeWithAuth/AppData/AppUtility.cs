@@ -142,25 +142,25 @@ namespace PrototypeWithAuth.AppData
         public static double ExchangeRateIfNull = 3.5;
         public static int YearStartedTimeKeeper = 2021;
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
-        public static double GetExchangeRateFromApi()
+        public static decimal GetExchangeRateFromApi()
         {
             var client = new RestClient("http://api.currencylayer.com/live?access_key=8a8f7defe393388b7249ffcdb09d6a34");
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
-            double rate = 0.0;
+            decimal rate = 0.0m;
             try
             {
                 dynamic tmp = JsonConvert.DeserializeObject(response.Content);
                 String stringRate = (string)tmp.quotes.USDILS;
                 stringRate = stringRate.Replace("{", "");
                 stringRate = stringRate.Replace("}", "");
-                Double.TryParse(stringRate, out rate);
+                decimal.TryParse(stringRate, out rate);
 
                 return Math.Round(rate, 3);
             }
             catch (Exception ex)
             {
-                return 0.0;
+                return 0.0m;
             }
 
         }

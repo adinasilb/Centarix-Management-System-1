@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public List<String> SectionName { get; set; }
         public List<String> SectionColor { get; set; }
-        public List<double> SectionValue { get; set; }
+        public List<decimal> SectionValue { get; set; }
         public String Currency { get; set; }
     }
 }
