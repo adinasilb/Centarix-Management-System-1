@@ -4707,6 +4707,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         foreach (var req in requests)
                         {
+                            req.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == req.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefault();
                             if (req.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
                             {
                                 SaveUsingSessions = false;
@@ -4732,6 +4733,10 @@ namespace PrototypeWithAuth.Controllers
                                 if(req.Product !=null)
                                 {
                                     req.Product.Vendor = null;
+                                    if (termsViewModel.SectionType == AppUtility.MenuItems.Operations) //TODO: better if
+                                    {
+                                        req.Product.ProductSubcategory = null;
+                                    }
                                 }
                                 if (req.PaymentStatusID == 7)
                                 {

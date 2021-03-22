@@ -569,10 +569,7 @@ namespace PrototypeWithAuth.AppData
             }
 
             DirectoryInfo[] dirs = dir.GetDirectories();
-            if(dirs.Count()<=0)
-            {
-                return;
-            }
+            
             // If the destination directory doesn't exist, create it.       
             Directory.CreateDirectory(destDirName);
 
@@ -583,9 +580,8 @@ namespace PrototypeWithAuth.AppData
                 string tempPath = Path.Combine(destDirName, file.Name);
                 file.CopyTo(tempPath, false);
             }
-
             // If copying subdirectories, copy them and their contents to new location.
-            if (copySubDirs)
+            if (dirs.Count() > 0)
             {
                 foreach (DirectoryInfo subdir in dirs)
                 {
