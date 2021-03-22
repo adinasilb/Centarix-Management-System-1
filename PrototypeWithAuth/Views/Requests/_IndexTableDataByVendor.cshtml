@@ -6,13 +6,16 @@
 <form method="post" enctype="multipart/form-data" style="height: 100%;">
     @foreach (var vendor in Model.RequestsByVendor)
     {
+        <table  class="table table-headerspaced  table-borderless table-hover mb-5 ">
+            <tr class="text-dark border-0 no-hover h-50" >
+                <td class="p-0"  rowspan="2" width="14%" ><span class="heading-1">@vendor.Key.VendorEnName.ToLower()</span></td>
+                <td class="border-bottom"></td>
+        <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
+    </table>
         <table class="table table-headerspaced table-borderless table-hover mb-5 item-table">
 
-            <tr class="text-dark border-0 no-hover h-50" style="line-height:50%;">
-                <td width="10%" class="p-0" rowspan="2"><span class="heading-1">@vendor.Key.VendorEnName.ToLower()</span></td>
-                <td colspan="7" class="border-bottom"></td>
-            </tr>
-            <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
+            
+       
             <tbody>
                 @{ var requests = vendor.Select(r => r).ToList();}
 
