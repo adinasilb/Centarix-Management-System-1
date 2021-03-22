@@ -113,7 +113,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text request-cost-shekel-icon @disableShekel" >&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom requestPriceQuote @shekelReadOnly @disableShekel" name="unit-price-shekel" id="unit-price-shekel" value="@Model.Requests[0].PricePerUnit" @disabledShekelProperty />
+                                    <input class="form-control-plaintext border-bottom requestPriceQuote @shekelReadOnly @disableShekel" name="unit-price-shekel" id="unit-price-shekel" value="@Math.Round(Model.Requests[0].PricePerUnit, 2)" @disabledShekelProperty />
                                 </div>
                             </div>
                         </div>
@@ -175,7 +175,7 @@ Model.UnitTypeList,
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text requestPriceQuote disabled-text" disabled >&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom disabled-text" disabled name="subunit-price-shekel" id="subunit-price-shekel" value="@Model.Requests[0].PricePerSubUnit" />
+                                    <input class="form-control-plaintext border-bottom disabled-text" disabled name="subunit-price-shekel" id="subunit-price-shekel" value="@Math.Round((decimal)Model.Requests[0].PricePerSubUnit, 2)" />
                                 </div>
                             </div>
                         </div>
@@ -252,7 +252,7 @@ Model.UnitTypeList,
                                 <div class="input-group ">
                                     <span class="input-group-text requestPriceQuote disabled-text" disabled>&#x20aa;</span>
                                     <input class="form-control-plaintext border-bottom disabled-text" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled
-                                           value="@Model.Requests[0].PricePerSubSubUnit" />
+                                           value="@Math.Round((decimal)Model.Requests[0].PricePerSubSubUnit, 2)" />
                                     <span asp-validation-for="Requests[0].SubSubUnit" class="text-danger-centarix"></span>
                                 </div>
                             </div>
