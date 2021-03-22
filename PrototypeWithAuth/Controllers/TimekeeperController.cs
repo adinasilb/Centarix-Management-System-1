@@ -520,6 +520,7 @@ namespace PrototypeWithAuth.Controllers
                     ehaa.EmployeeHoursStatusEntry2ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry2ID;
                     ehaa.PartialOffDayTypeID = updateHoursViewModel.EmployeeHour.PartialOffDayTypeID;
                     ehaa.PartialOffDayHours = updateHoursViewModel.EmployeeHour.PartialOffDayHours;
+                    ehaa.IsDenied = false;
                     //mark as forgot to report if bool is true and not work from home
                     if (updateHoursViewModel.IsForgotToReport && updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID != 1)
                     {
