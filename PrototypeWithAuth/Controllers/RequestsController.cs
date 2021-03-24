@@ -2148,11 +2148,8 @@ namespace PrototypeWithAuth.Controllers
                         pr.Shipping = request.ParentRequest.Shipping;
                     }
                     request.ParentRequest = pr;
-                    if (request.Product == null)
-                    {
-                        request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
+                    request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
                         .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
-                    }
                     HttpContext.Session.SetObject(requestName, request);
                     allRequests.Add(request);
                 }
@@ -4709,7 +4706,14 @@ namespace PrototypeWithAuth.Controllers
                     {
                         foreach (var req in requests)
                         {
-                            req.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == req.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefault();
+                            if (req.Product == null)
+                            {
+                                req.Product = _context.Products.Where(p => p.ProductID == req.ProductID).Include(p => p.ProductSubcategory).FirstOrDefault();
+                            }
+                            else
+                            {
+                                req.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == req.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefault();
+                            }
                             if (req.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
                             {
                                 SaveUsingSessions = false;
