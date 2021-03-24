@@ -33,6 +33,7 @@ namespace PrototypeWithAuth.Models
         [Required]
         [MaxLength (50)]
         [EmailAddress]
+        [Display(Name = "Orders Email")]
         public string OrdersEmail { get; set; }
         [Required]
         [Phone]
