@@ -123,6 +123,7 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                 @{ decimal total = Model.Requests.Sum(r => r.Cost ?? 0);
                     if (currency == '$')
                     {
+                        vat= vat/ Model.Requests[0].ExchangeRate;
                         total = total / Model.Requests[0].ExchangeRate;
                     }
                     decimal totalWithVat = total + vat;}
