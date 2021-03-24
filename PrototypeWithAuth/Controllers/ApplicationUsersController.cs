@@ -142,22 +142,22 @@ namespace PrototypeWithAuth.Controllers
                     case YearlyMonthlyEnum.Monthly:
                         sickDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 1 && eh.Date.Year == year && eh.Date.Month == month && eh.IsBonus == false).Count();
                         vacationDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 2 && eh.Date.Year == year && eh.Date.Month == month && eh.Date.Date<=DateTime.Now.Date && eh.IsBonus == false).Count();
-                        var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month && eh.IsBonus==false).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                        var vacationHours = employee.EmployeeHours.Where(eh =>eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month && eh.IsBonus==false).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                         vacationDays = Math.Round(vacationDays + (vacationHours / employee.SalariedEmployee?.HoursPerDay??1), 2);
                         workDays = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null && eh.Date.Year == year && eh.Date.Month == month  && eh.Date.Date <= DateTime.Now.Date) || (eh.IsBonus && eh.OffDayTypeID!= null && eh.Date.Date <= DateTime.Now.Date)).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
                         vacationSickCount = sickDays + vacationDays;
-                        missingDays = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id && eh.Date.Year == year && eh.Date.Month == month && eh.Exit1 == null && eh.TotalHours == null && eh.OffDayType == null).Count();
+                        missingDays = employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month && eh.Exit1 == null && eh.TotalHours == null && eh.OffDayTypeID == null && eh.PartialOffDayHours == null).Count();
                         break;
                     case YearlyMonthlyEnum.Yearly:
                         sickDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 1 && eh.Date.Year == year && eh.Date.Date <= DateTime.Now.Date && eh.IsBonus == false).Count();
                         vacationDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 2 && eh.Date.Year == year && eh.IsBonus == false).Count();
-                        vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                        vacationHours = employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                         vacationDays = Math.Round(vacationDays + (vacationHours / employee.SalariedEmployee?.HoursPerDay ?? 1), 2);
                         workDays = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null && eh.Date.Year == year && eh.Date.Date <= DateTime.Now.Date) || (eh.IsBonus && eh.OffDayTypeID != null && eh.Date.Date <= DateTime.Now.Date)).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
                         vacationSickCount = sickDays + vacationDays;
-                        missingDays = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id && eh.Date.Year == year && (eh.Exit1 == null && eh.TotalHours == null && eh.OffDayType == null)).Count();
+                        missingDays = employee.EmployeeHours.Where(eh => eh.Date.Year == year && (eh.Exit1 == null && eh.TotalHours == null && eh.OffDayType == null)).Count();
                         break;
                 }
 
