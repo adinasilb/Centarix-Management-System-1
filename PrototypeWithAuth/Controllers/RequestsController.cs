@@ -390,20 +390,25 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.AccountingNotifications:
 
                     var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
-                    iconList.Add(addInvoiceIcon);
                     iconList.Add(popoverPartialClarifyIcon);
                     string value = "";
+                    string buttonText = "";
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
+                            checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.PartialDelivery:
                             value = "PartialClarify";
+                            checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.ForClarification:
                             value = "PartialClarify";
+                            checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
+                            iconList.Add(addInvoiceIcon);
+                            buttonText = "Add To All";
                             break;
                     }
                     viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderBy(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
@@ -412,7 +417,7 @@ namespace PrototypeWithAuth.Controllers
                         ExchangeRate = r.ExchangeRate,
                         Vendor = r.Product.Vendor,
                         ButtonClasses = " invoice-add-all accounting-background-color ",
-                        ButtonText = "Add To All",
+                        ButtonText = buttonText,
                         Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
                             new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID },
@@ -3846,7 +3851,7 @@ namespace PrototypeWithAuth.Controllers
             switch (accountingNotificationsEnum)
             {
                 case AppUtility.SidebarEnum.NoInvoice: //NOTE EXACT SAME QUERY IN ADDINVOICE MODAL
-                    requestsList = requestsList.Where(r => r.HasInvoice == false);
+                    requestsList = requestsList.Where(r => r.HasInvoice == false /*&& (r.IsReceived == true || r.Paid == true)*/); //crashes on isReceived
                     break;
                 case AppUtility.SidebarEnum.DidntArrive:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
