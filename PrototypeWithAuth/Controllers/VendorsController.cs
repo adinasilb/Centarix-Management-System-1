@@ -169,6 +169,8 @@ namespace PrototypeWithAuth.Controllers
              &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorBIC) || fv.VendorBIC.Contains(vendorSearchViewModel.VendorBIC))
              &&
+            (String.IsNullOrEmpty(vendorSearchViewModel.VendorRoutingNum) || fv.VendorRoutingNum.Contains(vendorSearchViewModel.VendorBIC))
+             &&
             (String.IsNullOrEmpty(vendorSearchViewModel.VendorGoldAccount) || fv.VendorGoldAccount.Contains(vendorSearchViewModel.VendorGoldAccount)));
 
 
@@ -211,7 +213,7 @@ namespace PrototypeWithAuth.Controllers
 
         //string? enName, string? heName, string? bizID, string? contactPerson, string? contactEmail,
         //string? orderEmail, string? phoneNum1, string? phoneNum2, string? faxNum, string? city, string? street, string? zip,
-        //string? website, string? bank, string? bankBranch, string? bankAccount, string? swift, string? BIC, string? goldAccount
+        //string? website, string? bank, string? bankBranch, string? bankAccount, string? swift, string? BIC, string? goldAccount string? routingNum
 
 
 
