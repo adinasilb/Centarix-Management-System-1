@@ -78,7 +78,11 @@ namespace PrototypeWithAuth.Models
         [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         [Display(Name = "Account Number")]
         public string VendorAccountNum{ get; set; }
-        
+
+        [RegularExpression("([0-9]*)", ErrorMessage = "field must be a number")]
+        [Display(Name = "Routing Number")]
+        public string VendorRoutingNum { get; set; }
+
         [Display(Name = "Swift")]
         public string VendorSwift { get; set; }
         
