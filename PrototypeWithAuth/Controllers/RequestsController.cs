@@ -2278,8 +2278,9 @@ namespace PrototypeWithAuth.Controllers
                     //instantiate the body builder
                     var builder = new BodyBuilder();
 
-
-                    var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                    var userId = requests.FirstOrDefault().ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
+                    //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                    var currentUser = _context.Users.FirstOrDefault(u => u.Id == userId);
                     //var users = _context.Users.ToList();
                     //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
                     string ownerEmail = currentUser.Email;
