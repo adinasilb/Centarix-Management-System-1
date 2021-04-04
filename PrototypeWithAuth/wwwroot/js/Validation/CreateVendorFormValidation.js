@@ -10,7 +10,6 @@
 		},
 		"Vendor.VendorCountry": "required",
 		"Vendor.VendorCity": "required",
-		"Vendor.VendorStreet": "required",
 		"Vendor.VendorTelephone": {
 			required: true,
 			minlength: 9
@@ -28,10 +27,7 @@
 		"Vendor.InfoEmail": {
 			email: true
 		},
-		"Vendor.VendorBank": "required",
-		"Vendor.VendorBankBranch": "required",
 		"Vendor.VendorAccountNum": {
-			required: true,
 			number: true,
 			min: 1,
 			integer: true

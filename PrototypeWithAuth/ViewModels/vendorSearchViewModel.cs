@@ -77,6 +77,9 @@ namespace PrototypeWithAuth.ViewModels
         [Display(Name = "BIC")]
         public string VendorBIC { get; set; }
 
+        [Display(Name = "Routing Number")]
+        public string VendorRoutingNum { get; set; }
+
         [Display(Name = "Gold Account")]
         public string VendorGoldAccount { get; set; }
 

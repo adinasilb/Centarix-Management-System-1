@@ -29,10 +29,12 @@ namespace PrototypeWithAuth.Models
         
         [MaxLength (50)]
         [EmailAddress]
+        [Display(Name = "Info Email")]
         public string InfoEmail { get; set; }
         [Required]
         [MaxLength (50)]
         [EmailAddress]
+        [Display(Name = "Orders Email")]
         public string OrdersEmail { get; set; }
         [Required]
         [Phone]
@@ -53,7 +55,7 @@ namespace PrototypeWithAuth.Models
         [MaxLength(50)]
         [Display(Name = "Country")]
         public string VendorCountry { get; set; }
-        [Required]
+        
         [MaxLength(50)]
         [Display(Name = "Street")]
         public string VendorStreet { get; set; }
@@ -64,19 +66,23 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Website")]
         public string VendorWebsite { get; set; }
         
-        [Required, MaxLength (50)]
+        [MaxLength (50)]
         [Display(Name = "Bank Name")]
         public string VendorBank { get; set; }
         
-        [Required, MaxLength(4)]
+        [MaxLength(4)]
         [Display(Name = "Branch")]
         public string VendorBankBranch { get; set; }
         
-        [Required]
+        
         [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
         [Display(Name = "Account Number")]
         public string VendorAccountNum{ get; set; }
-        
+
+        [RegularExpression("([0-9]*)", ErrorMessage = "field must be a number")]
+        [Display(Name = "Routing Number")]
+        public string VendorRoutingNum { get; set; }
+
         [Display(Name = "Swift")]
         public string VendorSwift { get; set; }
         
