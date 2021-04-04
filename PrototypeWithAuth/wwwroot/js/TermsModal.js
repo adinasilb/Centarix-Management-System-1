@@ -122,7 +122,7 @@ $(function () {
 
 			if(paymentTypeID=="2")
 			{
-				$(".payment-reference").removeClass("d-none");
+				$(".bank").removeClass("d-none");
 				$("#Payment_Reference").attr("disabled", false);
 			}
 			else
