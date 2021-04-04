@@ -2148,8 +2148,16 @@ namespace PrototypeWithAuth.Controllers
                         pr.Shipping = request.ParentRequest.Shipping;
                     }
                     request.ParentRequest = pr;
-                    request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
-                        .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                    if (request.Product == null)
+                    {
+                        request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
+                          .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                    }
+                    else
+                    {   
+                        request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
+                        request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
+                    }
                     HttpContext.Session.SetObject(requestName, request);
                     allRequests.Add(request);
                 }
