@@ -1392,7 +1392,10 @@ $(function () {
 			//if (hours < 10) { hours = '0' + hours }
 			var mins = Math.round(60 * (totalentryhours - hours));
 			if (mins < 10) { mins = '0' + mins }
-			
+			if (mins == 60) {
+				hours += 1;
+				mins = "00";
+            }
 			var totalHours = hours + ":" + mins;
 			console.log(hours+":"+ mins)
 			if (hours < 0 || isNaN(hours) || isNaN(mins)) {

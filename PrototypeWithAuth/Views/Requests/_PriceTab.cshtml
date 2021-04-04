@@ -175,7 +175,7 @@ Model.UnitTypeList,
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text requestPriceQuote disabled-text" disabled >&#x20aa;</span>
-                                    <input class="form-control-plaintext border-bottom disabled-text" disabled name="subunit-price-shekel" id="subunit-price-shekel" value="@Math.Round((decimal)Model.Requests[0].PricePerSubUnit, 2)" />
+                                    <input class="form-control-plaintext border-bottom disabled-text" disabled name="subunit-price-shekel" id="subunit-price-shekel" value="@(Model.Requests[0].PricePerSubUnit!= null?Math.Round((decimal)Model.Requests[0].PricePerSubUnit, 2):0)" />
                                 </div>
                             </div>
                         </div>
@@ -252,7 +252,7 @@ Model.UnitTypeList,
                                 <div class="input-group ">
                                     <span class="input-group-text requestPriceQuote disabled-text" disabled>&#x20aa;</span>
                                     <input class="form-control-plaintext border-bottom disabled-text" name="subsubunit-price-shekel" id="subsubunit-price-shekel" disabled
-                                           value="@Math.Round((decimal)Model.Requests[0].PricePerSubSubUnit, 2)" />
+                                           value="@(Model.Requests[0].PricePerSubSubUnit!=null?Math.Round((decimal)Model.Requests[0].PricePerSubSubUnit, 2):0)" />
                                     <span asp-validation-for="Requests[0].SubSubUnit" class="text-danger-centarix"></span>
                                 </div>
                             </div>
