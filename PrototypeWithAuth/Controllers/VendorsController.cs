@@ -40,8 +40,13 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: Vendors
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, int categoryType = 1, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
+            var categoryType = 1;
+            if(SectionType == AppUtility.MenuItems.Operations)
+            {
+                categoryType = 2;
+            }
             if (categoryType == 1)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;                
