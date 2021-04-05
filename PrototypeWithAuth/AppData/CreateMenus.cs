@@ -275,7 +275,7 @@ namespace PrototypeWithAuth.AppData
                     break;
                 case AppUtility.MenuItems.Protocols:
                     ActiveClasses = " text-dark expenses-filter";
-                    if (pageType == AppUtility.PageTypeEnum.ExpensesSummary) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    if (pageType == AppUtility.PageTypeEnum.ProtocolsWorkflow) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Workflow",
@@ -285,7 +285,7 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = ""
                     });
-                    if (pageType == AppUtility.PageTypeEnum.ExpensesStatistics) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    if (pageType == AppUtility.PageTypeEnum.ProtocolsProtocols) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Protocols",
@@ -295,7 +295,7 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = ""
                     });
-                    if (pageType == AppUtility.PageTypeEnum.ExpensesCost) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    if (pageType == AppUtility.PageTypeEnum.ProtocolsCreate) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Create",
@@ -305,7 +305,7 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = ""
                     });
-                    if (pageType == AppUtility.PageTypeEnum.ExpensesCost) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    if (pageType == AppUtility.PageTypeEnum.ProtocolsReports) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Report",
@@ -315,7 +315,7 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = ""
                     });
-                    if (pageType == AppUtility.PageTypeEnum.ExpensesCost) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    if (pageType == AppUtility.PageTypeEnum.ProtocolsResources) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Resources",
