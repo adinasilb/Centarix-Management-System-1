@@ -200,7 +200,7 @@
                 </div>
                 <div class="col-4 only-employee @hidden">
                     <label asp-for="NewEmployee.StartedWorking" class="control-label only-employee"></label>
-                    <input asp-for="NewEmployee.StartedWorking" type="text" class="form-control-plaintext border-bottom only-employee mark-readonly datepicker" disabled />
+                    <input asp-for="NewEmployee.StartedWorking" type="text" class="form-control-plaintext border-bottom only-employee mark-readonly datepicker" disabled asp-format="{0:dd/MM/yyyy}"  />
                     <span asp-validation-for="NewEmployee.StartedWorking" class="text-danger-centarix"></span>
                 </div>
             </div>
