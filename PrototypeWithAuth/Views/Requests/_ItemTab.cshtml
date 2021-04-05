@@ -270,7 +270,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 </div>
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].Invoice.InvoiceDate" class="control-label"></label>
-                    <input asp-for="Requests[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" />
+                    <input asp-for="Requests[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" asp-format="{0:dd/MM/yyyy}"  />
                     <span asp-validation-for="Requests[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
                 </div>
             }
