@@ -18,7 +18,7 @@ namespace PrototypeWithAuth.Controllers
         public JsonResult GetAccountsByPaymentType(int PaymentTypeID)
         {
             var companyAccountLists = _context.CompanyAccounts
-                .Select(ca => new { ca.CompanyAccountID, ca.CompanyAccountNum, ca.PaymentTypeID })
+                .Select(ca => new { ca.CompanyAccountID, ca.CompanyAccountNum, ca.PaymentTypeID, ca.CompanyBankName })
                 .Where(ca => ca.PaymentTypeID == PaymentTypeID).ToList();
             return Json(companyAccountLists);
         }

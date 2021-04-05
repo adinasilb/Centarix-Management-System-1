@@ -6,6 +6,7 @@
                     $('.picker__input--target').attr("data-val",date);
                     $('.picker__input--target').attr("value", moment(context.select));
                 },
+                
 
               });
      });
