@@ -3861,7 +3861,7 @@ namespace PrototypeWithAuth.Controllers
             switch (accountingNotificationsEnum)
             {
                 case AppUtility.SidebarEnum.NoInvoice: 
-                    requestsList = requestsList.Where(r => r.HasInvoice == false);
+                    requestsList = requestsList.Where(r => r.HasInvoice == false && (r.Paid ||r.RequestStatusID==3));
                     break;
                 case AppUtility.SidebarEnum.DidntArrive:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
@@ -4038,7 +4038,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Where(r => r.IsDeleted == false && r.HasInvoice==false).Where(r=>r.RequestStatusID !=7);
+                    .Where(r => r.IsDeleted == false && r.HasInvoice== false && (r.Paid || r.RequestStatusID == 3)).Where(r=>r.RequestStatusID !=7);
             if (vendorid != null)
             {
                 Requests = queryableRequests 
