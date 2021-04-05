@@ -1828,7 +1828,6 @@ namespace PrototypeWithAuth.Controllers
                 //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
                 //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
                 //    requestItemViewModel.Request.ParentQuote = parentQuote;
-
                 //}
 
                 var product = _context.Products.Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == request.ProductID);
@@ -2996,11 +2995,7 @@ namespace PrototypeWithAuth.Controllers
 
             var parentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
 
-            //if it's an empty shelf- reset the location to the parent location instance id:
-            if (parentLocationInstance.LocationTypeID == 201 && parentLocationInstance.IsEmptyShelf)
-            {
-                parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
-            }
+
 
             var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
             LocationInstance secondChildLi = null;
@@ -3034,12 +3029,19 @@ namespace PrototypeWithAuth.Controllers
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
-                if (parentLocationInstance.IsEmptyShelf == true || (secondChildLi != null && !Is80Freezer) || (Is80Freezer && !hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
+            if (/*parentLocationInstance.IsEmptyShelf == true ||*/ (secondChildLi != null && !Is80Freezer) || (Is80Freezer && hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
             else
             {
+                //if it's an empty shelf- reset the location to the parent location instance id:
+                if (/*parentLocationInstance.LocationTypeID == 201 &&*/ parentLocationInstance.IsEmptyShelf)
+                {
+                    parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    LocationInstanceID = parentLocationInstance.LocationInstanceID;
+                }
+
                 receivedModalVisualViewModel.ParentLocationInstance = parentLocationInstance;
 
                 if (receivedModalVisualViewModel.ParentLocationInstance != null)

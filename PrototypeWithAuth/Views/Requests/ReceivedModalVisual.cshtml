@@ -59,20 +59,37 @@
 
                             if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && Model.ChildrenLocationInstances[z].IsEmptyShelf)
                             {
+                                var description = "";
+                                if (Model.ChildrenLocationInstances[z].LocationTypeID == 201)
+                                {
+                                    description = Model.ChildrenLocationInstances[z].LocationInstanceName;
+                                }
+                                else
+                                {
+                                    description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
+                                }
                                 classes += " open-new-visual";
                                 <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
                                     <div>
                                         @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID })
                                         <div class="row-1"><i class="@iconClass"></i></div>
                                         <div class="row-2 text-left">
-                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, description + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
                                         </div>
                                     </div>
                                 </td>
                             }
                             else if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && !Model.ChildrenLocationInstances[z].IsEmptyShelf)
                             {
-
+                                var description = "";
+                                if(Model.ChildrenLocationInstances[z].LocationTypeID == 201)
+                                {
+                                    description = Model.ChildrenLocationInstances[z].LocationInstanceName;
+                                }
+                                else
+                                {
+                                    description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
+                                }
                                 classes += " open-new-visual";
 
                                 <td class="@outerClass not-clickable" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
@@ -82,7 +99,7 @@
                                             <i class=@*"@iconClass"*@></i>
                                         </div>
                                         <div class="row-2 text-left">
-                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, description + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
                                         </div>
                                     </div>
                                 </td>
@@ -108,6 +125,15 @@
                             }
                             else
                             {
+                                var description = "";
+                                if (Model.ChildrenLocationInstances[z].LocationTypeID == 503)
+                                {
+                                    description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
+                                }
+                                else
+                                {
+                                    description = Model.ChildrenLocationInstances[z].Place;
+                                }
                                 <td class="@outerClass" style="padding:0px;">
                                     <div>
                                         @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @liid = liID, @class = @classes })
@@ -115,7 +141,7 @@
                                             <i class="@iconClass"></i>
                                         </div>
                                         <div class="row-2 text-left">
-                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass })
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, description+ " ", htmlAttributes: new { @class = labelClass })
                                         </div>
                                     </div>
                                 </td>
