@@ -107,6 +107,7 @@ $(function () {
 	$( ".paymentType").off("change").change( function (e) {
 		console.log("changepayment type")
 		var paymentTypeID = $(this).val();
+		console.log(paymentTypeID)
 		var url = "/CompanyAccounts/GetAccountsByPaymentType";
 		var newid = "Payment_CompanyAccountID";
 		$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
@@ -116,18 +117,24 @@ $(function () {
 
 			$.each(data, function (i, companyAccount) {
 				var newitem1 = '<option value="' + companyAccount.companyAccountID + '">' + companyAccount.companyAccountNum + '</option>';
+				if (paymentTypeID == "2")
+				{
+					newitem1 = '<option value="' + companyAccount.companyAccountID + '">' + companyAccount.companyBankName + '</option>'
+                }
 				$("#" + newid).append(newitem1);
 			});
 			$("#" + newid).materialSelect();
 
 			if(paymentTypeID=="2")
 			{
-				$(".payment-reference").removeClass("d-none");
+				$(".credit-card").addClass("d-none");
+				$(".bank").removeClass("d-none");
 				$("#Payment_Reference").attr("disabled", false);
 			}
 			else
 			{
-				$(".payment-reference").addClass("d-none");
+				$(".bank").addClass("d-none");
+				$(".credit-card").removeClass("d-none");
 				$("#Payment_Reference").attr("disabled", true);
 			}
 			//$("#" + newid).rules("add",{selectRequired : true})

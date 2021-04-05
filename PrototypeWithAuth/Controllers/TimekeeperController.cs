@@ -663,7 +663,7 @@ namespace PrototypeWithAuth.Controllers
                 offDayViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
             }
            
-            return RedirectToAction("SummaryHours", new { Month = new DateTime(DateTime.Now.Year, offDayViewModel.Month ?? DateTime.Now.Month, 1), errorMessage = offDayViewModel.ErrorMessage});
+            return RedirectToAction("SummaryHours", new { Month = offDayViewModel.Month, Year = offDayViewModel.FromDate.Year, errorMessage = offDayViewModel.ErrorMessage});
         }
 
         private async Task SaveOffDay(DateTime dateFrom, DateTime dateTo, AppUtility.OffDayTypeEnum offDayType)

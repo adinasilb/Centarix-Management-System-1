@@ -40,26 +40,32 @@
                                                 <div class="table-icon-div">
                                                     <ul class="list-unstyled p-0 m-0">
                                                         <li>
-                                                            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@col.AjaxID">
+                                                            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@(col.AjaxID+"more")">
                                                                 <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;">
                                                                 </i>
                                                             </button>
                                                         </li>
-                                                        <div style="display:none;" id="@col.AjaxID">
-                                                            @if (Model.SidebarType != AppUtility.SidebarEnum.StandingOrders)
-                                                            {
-                                                                var links = AppUtility.GetPaymentsPopoverLinks(Model.SidebarType);
-                                                                foreach (var link in links)
+                                                        <li>
+                                                            <div style="display:none;" id="@(col.AjaxID+"more")">
+                                                                @if (Model.SidebarType != AppUtility.SidebarEnum.StandingOrders)
                                                                 {
-                                                                    <div class="row px-3 accounting-popover">
-                                                                        <a asp-action="@link.Action" asp-controller="@link.Controller" asp-route-currentStatus="@link.CurrentLocation" asp-route-requestID="@col.AjaxID" asp-route-newStatus="@link.Description" class="btn-link text no-hover"><i class="@link.Icon " style="color:@link.Color"></i><label class="m-2">@Html.DisplayFor(e => link.Description)</label></a>
-                                                                    </div>
-                                                                    <hr class="m-0" />
+                                                                    var links = AppUtility.GetPaymentsPopoverLinks(Model.SidebarType);
+                                                                    foreach (var link in links)
+                                                                    {
+                                                                        <div class="row px-3 accounting-popover">
+                                                                            <a asp-action="@link.Action" asp-controller="@link.Controller" asp-route-currentStatus="@link.CurrentLocation"
+                                                                               asp-route-requestID="@col.AjaxID" asp-route-newStatus="@link.Description" class="btn-link text no-hover">
+                                                                                <i class="@link.Icon " style="color:@link.Color"></i>
+                                                                                <label class="m-2">@Html.DisplayFor(e => link.Description)</label>
+                                                                            </a>
+                                                                        </div>
+                                                                        <hr class="m-0" />
+                                                                    }
                                                                 }
-                                                            }
 
 
-                                                        </div>
+                                                            </div>
+                                                        </li>
 
                                                     </ul>
                                                 </div>
@@ -78,9 +84,9 @@
                                                                 {
 
                                                                     case AppUtility.SidebarEnum.PartialDelivery:
-                                                                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@col.AjaxID">
+                                                                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
                                                                             <i class="icon-remove_shopping_cart-24px green-overlay px-1" style="font-size:1.6rem;"></i>
-                                                                        </button> popoverText = "Was ther order fully delivered?";
+                                                                        </button> popoverText = "Was the order fully delivered?";
                                                                         popoverNote = col.Note;
                                                                         break;
                                                                     case AppUtility.SidebarEnum.ForClarification:
@@ -189,9 +195,12 @@
                         }
                         <span class="text font-weight-bold">Total: @string.Format(new CultureInfo(currencyFormat), "{0:c}", sum)</span>
                     </td>
+                    @if (requests.FirstOrDefault().ButtonText != "")
+                    {
                     <td colspan="2">
                         <button class="custom-button-font custom-button @requests.FirstOrDefault().ButtonClasses float-right  cart" type="button" value="@vendor.Key.VendorID">@requests.FirstOrDefault().ButtonText</button>
                     </td>
+                    }
                 </tr>
 
 

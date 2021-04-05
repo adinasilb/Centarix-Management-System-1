@@ -390,20 +390,25 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.AccountingNotifications:
 
                     var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
-                    iconList.Add(addInvoiceIcon);
                     iconList.Add(popoverPartialClarifyIcon);
                     string value = "";
+                    string buttonText = "";
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
+                            checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.PartialDelivery:
                             value = "PartialClarify";
+                            checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.ForClarification:
                             value = "PartialClarify";
+                            checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
+                            iconList.Add(addInvoiceIcon);
+                            buttonText = "Add To All";
                             break;
                     }
                     viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderBy(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
@@ -412,7 +417,7 @@ namespace PrototypeWithAuth.Controllers
                         ExchangeRate = r.ExchangeRate,
                         Vendor = r.Product.Vendor,
                         ButtonClasses = " invoice-add-all accounting-background-color ",
-                        ButtonText = "Add To All",
+                        ButtonText = buttonText,
                         Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
                             new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID },
@@ -1823,7 +1828,6 @@ namespace PrototypeWithAuth.Controllers
                 //    parentQuote.QuoteNumber = requestItemViewModel.Request.ParentQuote.QuoteNumber;
                 //    parentQuote.QuoteDate = requestItemViewModel.Request.ParentQuote.QuoteDate;
                 //    requestItemViewModel.Request.ParentQuote = parentQuote;
-
                 //}
 
                 var product = _context.Products.Include(p => p.Vendor).Include(p => p.ProductSubcategory).FirstOrDefault(v => v.ProductID == request.ProductID);
@@ -2148,8 +2152,16 @@ namespace PrototypeWithAuth.Controllers
                         pr.Shipping = request.ParentRequest.Shipping;
                     }
                     request.ParentRequest = pr;
-                    request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
-                        .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                    if (request.Product == null)
+                    {
+                        request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
+                          .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                    }
+                    else
+                    {   
+                        request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
+                        request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
+                    }
                     HttpContext.Session.SetObject(requestName, request);
                     allRequests.Add(request);
                 }
@@ -2273,8 +2285,9 @@ namespace PrototypeWithAuth.Controllers
                     //instantiate the body builder
                     var builder = new BodyBuilder();
 
-
-                    var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                    var userId = requests.FirstOrDefault().ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
+                    //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                    var currentUser = _context.Users.FirstOrDefault(u => u.Id == userId);
                     //var users = _context.Users.ToList();
                     //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
                     string ownerEmail = currentUser.Email;
@@ -2982,11 +2995,7 @@ namespace PrototypeWithAuth.Controllers
 
             var parentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
 
-            //if it's an empty shelf- reset the location to the parent location instance id:
-            if (parentLocationInstance.LocationTypeID == 201 && parentLocationInstance.IsEmptyShelf)
-            {
-                parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
-            }
+
 
             var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
             LocationInstance secondChildLi = null;
@@ -3020,12 +3029,19 @@ namespace PrototypeWithAuth.Controllers
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
-                if (parentLocationInstance.IsEmptyShelf == true || (secondChildLi != null && !Is80Freezer) || (Is80Freezer && !hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
+            if (/*parentLocationInstance.IsEmptyShelf == true ||*/ (secondChildLi != null && !Is80Freezer) || (Is80Freezer && hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
             else
             {
+                //if it's an empty shelf- reset the location to the parent location instance id:
+                if (/*parentLocationInstance.LocationTypeID == 201 &&*/ parentLocationInstance.IsEmptyShelf)
+                {
+                    parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    LocationInstanceID = parentLocationInstance.LocationInstanceID;
+                }
+
                 receivedModalVisualViewModel.ParentLocationInstance = parentLocationInstance;
 
                 if (receivedModalVisualViewModel.ParentLocationInstance != null)
@@ -3064,15 +3080,14 @@ namespace PrototypeWithAuth.Controllers
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
              .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
                     bool hasLocationInstances = false;
-                    foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
-                    {
-                        if (place.Placed)
-                        {
-                            hasLocationInstances = true;
-                        }
-                    }
                     if (receivedLocationViewModel.CategoryType == 1)
-                    {
+                    {   foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
+                        {
+                            if (place.Placed)
+                            {
+                                hasLocationInstances = true;
+                            }
+                        }
                         await SaveLocations(receivedModalVisualViewModel, requestReceived);
 
                         if (hasLocationInstances)
@@ -3845,8 +3860,8 @@ namespace PrototypeWithAuth.Controllers
                 .Where(r => r.RequestStatusID != 7);
             switch (accountingNotificationsEnum)
             {
-                case AppUtility.SidebarEnum.NoInvoice: //NOTE EXACT SAME QUERY IN ADDINVOICE MODAL
-                    requestsList = requestsList.Where(r => r.HasInvoice == false);
+                case AppUtility.SidebarEnum.NoInvoice: 
+                    requestsList = requestsList.Where(r => r.HasInvoice == false && (r.Paid ||r.RequestStatusID==3));
                     break;
                 case AppUtility.SidebarEnum.DidntArrive:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
@@ -3860,7 +3875,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return requestsList;
         }
-            [HttpGet]
+        [HttpGet]
         [Authorize(Roles = " Accounting")]
         public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
         {
@@ -4023,7 +4038,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Where(r => r.IsDeleted == false && r.HasInvoice==false);
+                    .Where(r => r.IsDeleted == false && r.HasInvoice== false && (r.Paid || r.RequestStatusID == 3)).Where(r=>r.RequestStatusID !=7);
             if (vendorid != null)
             {
                 Requests = queryableRequests 

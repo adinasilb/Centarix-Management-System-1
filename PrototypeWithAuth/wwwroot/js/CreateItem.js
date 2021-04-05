@@ -21,7 +21,10 @@
                     success: function (data) {
                         $(".outer-partial").html(data);
                         $(".mdb-select").materialSelect();
-
+                        $(".top-menu").addClass("save-item");
+                        $(".side-menu").addClass("save-item");
+                        $(".module-button ").addClass("save-item");
+                        $(".notificationDiv").addClass("save-item");
                         $("#loading").hide();
                         var category = $("#categoryDescription").val();
                         console.log("category " + category)
@@ -103,12 +106,11 @@
          $(".requestPriceQuote ").attr("disabled", true)
          $(".requestQuoteHide").removeClass("d-none");
         }
-        else {
+     else if ($('#sublist').val() != ''){
             $(".requestPriceQuote").removeClass("d-none");
          $(".requestPriceQuote ").attr("disabled", false)
          $(".requestQuoteHide").addClass("d-none");
         }
-    
     })
     $('.complete-order').click(function (e) {
         if (!$(this).hasClass('disabled-submit')) {

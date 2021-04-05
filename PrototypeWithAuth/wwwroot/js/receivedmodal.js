@@ -65,6 +65,17 @@
 	function SLI(el) {
 		//alert("in SLI function");
 		//ONE ---> GET THE NEXT DROPDOWNLIST
+		if($(el).attr("isNoRack")=="true")
+		{
+			$(".hasRackBlock").addClass("d-none");
+		}
+		else 
+		{
+			if($(".hasRackBlock").hasClass("d-none"))
+			{
+				$(".hasRackBlock").removeClass("d-none");
+			}
+		}
 		var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
 		$(nextSelect).html('');
 		console.log(nextSelect)
@@ -163,8 +174,13 @@
 				var emptyText = "";
 				if (field.isEmptyShelf && field.labPartID<=0) {
 					emptyText = " (nr)";
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" >' + field.locationInstanceName + emptyText + '</li>'
 				}
-				item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" >' + field.locationInstanceName + emptyText + '</li>'
+				else
+				{
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" >' + field.locationInstanceName + emptyText + '</li>'
+				}
+				
 			});
 			nextSelect.append(item);
 		});
@@ -172,19 +188,20 @@
 	};
 
 
-	//RECEIVED MODAL VISUAL
-	$(".open-new-visual").on("click", function () {
-		var childlocationinstanceid = $(this).parent().attr("id");
-		var parentlocationinstanceid = $("#ParentLocationInstance_LocationInstanceID").val();
+	////RECEIVED MODAL VISUAL
+	//$(".open-new-visual").on("click", function () {
+	//	alert('$(".open-new-visual").on("click"')
+	//	var childlocationinstanceid = $(this).parent().attr("id");
+	//	var parentlocationinstanceid = $("#ParentLocationInstance_LocationInstanceID").val();
 
-		//get the name of the parentlocationinstance
-		var name = $(this).parents().parents().children(".LocationInstanceName").val();
-		//fill the shelves dropdown with the name
-		$("#1").parents('.dropdown-main').find('span:not(.caret)').text(name);
-		$("#1").parents('.dropdown-main').find('input').attr('value', childlocationinstanceid);
+	//	//get the name of the parentlocationinstance
+	//	var name = $(this).parents().parents().children(".LocationInstanceName").val();
+	//	//fill the shelves dropdown with the name
+	//	$("#1").parents('.dropdown-main').find('span:not(.caret)').text(name);
+	//	$("#1").parents('.dropdown-main').find('input').attr('value', childlocationinstanceid);
 
-		//now send a new visual
-	});
+	//	//now send a new visual
+	//});
 
 	$(".visual-locations td").on("click", function () {
 		if (!$(this).hasClass("not-clickable")) {
@@ -195,7 +212,7 @@
 				console.log("lip val: " + lip.val());
 				$(".complete-order").removeClass("disabled-submit")
 				if (lip.val() == "true") {
-					console.log("TRUE!");
+					//console.log("TRUE!");
 					lip.val("false"); //IMPT: sending back the true value to controller to place it here
 
 					$(this).children('div').first().children(".row-1").children("i").addClass("icon-add_circle_outline-24px1");
@@ -208,7 +225,7 @@
 
 				}
 				else {
-					console.log("FALSE!");
+					//console.log("FALSE!");
 					lip.val("true"); //IMPT: sending back the true value to controller to place it here
 
 					$(this).children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
