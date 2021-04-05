@@ -281,7 +281,11 @@ namespace PrototypeWithAuth.AppData
                         Description = "Workflow",
                         Controller = "Protocols",
                         Action = "Index",
-                        RouteValues = new RouteValueDictionary(),
+                        RouteValues = new RouteValueDictionary()
+                        {
+                        {"PageType", AppUtility.PageTypeEnum.ProtocolsWorkflow },
+                        {"SidebarType", AppUtility.SidebarEnum.CurrentProtocols }
+                        },
                         Classes = AllClasses,
                         ID = ""
                     });
@@ -291,7 +295,11 @@ namespace PrototypeWithAuth.AppData
                         Description = "Protocols",
                         Controller = "Protocols",
                         Action = "Index",
-                        RouteValues = new RouteValueDictionary(),
+                        RouteValues = new RouteValueDictionary()
+                        {
+                        {"PageType", AppUtility.PageTypeEnum.ProtocolsProtocols },
+                        {"SidebarType", AppUtility.SidebarEnum.List }
+                        },
                         Classes = AllClasses,
                         ID = ""
                     });
@@ -301,7 +309,11 @@ namespace PrototypeWithAuth.AppData
                         Description = "Create",
                         Controller = "Protocols",
                         Action = "Index",
-                        RouteValues = new RouteValueDictionary(),
+                        RouteValues = new RouteValueDictionary()
+                        {
+                        {"PageType", AppUtility.PageTypeEnum.ProtocolsCreate},
+                        {"SidebarType", AppUtility.SidebarEnum.ResearchProtocol }
+                        },
                         Classes = AllClasses,
                         ID = ""
                     });
@@ -311,7 +323,11 @@ namespace PrototypeWithAuth.AppData
                         Description = "Report",
                         Controller = "Protocols",
                         Action = "Index",
-                        RouteValues = new RouteValueDictionary(),
+                        RouteValues = new RouteValueDictionary()
+                        {
+                        {"PageType", AppUtility.PageTypeEnum.ProtocolsReports },
+                        {"SidebarType", AppUtility.SidebarEnum.DailyReports }
+                        },
                         Classes = AllClasses,
                         ID = ""
                     });
@@ -321,7 +337,11 @@ namespace PrototypeWithAuth.AppData
                         Description = "Resources",
                         Controller = "Protocols",
                         Action = "Index",
-                        RouteValues = new RouteValueDictionary(),
+                        RouteValues = new RouteValueDictionary()
+                        {
+                        {"PageType", AppUtility.PageTypeEnum.ProtocolsReports },
+                        {"SidebarType", AppUtility.SidebarEnum.Library }
+                        },
                         Classes = AllClasses,
                         ID = ""
                     });
