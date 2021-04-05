@@ -339,7 +339,7 @@ namespace PrototypeWithAuth.AppData
                         Action = "Index",
                         RouteValues = new RouteValueDictionary()
                         {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsReports },
+                        {"PageType", AppUtility.PageTypeEnum.ProtocolsResources },
                         {"SidebarType", AppUtility.SidebarEnum.Library }
                         },
                         Classes = AllClasses,

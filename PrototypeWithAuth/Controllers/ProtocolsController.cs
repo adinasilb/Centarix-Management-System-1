@@ -9,7 +9,7 @@ namespace PrototypeWithAuth.Controllers
 {
     public class ProtocolsController : Controller
     {
-        public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType, AppUtility.SidebarEnum SidebarType)
+        public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.ProtocolsWorkflow, AppUtility.SidebarEnum SidebarType = AppUtility.SidebarEnum.CurrentProtocols)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarType;
