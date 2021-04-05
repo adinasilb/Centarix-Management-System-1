@@ -274,7 +274,7 @@ namespace PrototypeWithAuth.AppData
                 //    });
                     break;
                 case AppUtility.MenuItems.Protocols:
-                    ActiveClasses = " text-dark expenses-filter";
+                    ActiveClasses = " text-dark protocols-filter";
                     if (pageType == AppUtility.PageTypeEnum.ProtocolsWorkflow) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
