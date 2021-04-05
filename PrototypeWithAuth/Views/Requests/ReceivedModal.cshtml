@@ -104,13 +104,18 @@
                                 <div class="col-2 text-center">
                                     <br />
                                     <div class="form-check">
+                                        <button href="#" id="clarifyPopover" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow">
+                                        </button>
                                         <input type="checkbox" class="form-check-input filled-in clarify-checkbox" asp-for="Request.IsClarify" />
                                         <label class="form-check-label " asp-for="Request.IsClarify">Clarify</label>
+
                                     </div>
                                 </div>
                                 <div class="col-2 text-center">
                                     <br />
                                     <div class="form-check">
+                                        <button href="#" id="partialPopover" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow">
+                                        </button>
                                         <input type="checkbox" class="form-check-input filled-in partial-checkbox" asp-for="Request.IsPartial" />
                                         <label class="form-check-label " asp-for="Request.IsPartial">Partial</label>
                                     </div>
@@ -131,13 +136,54 @@
                                         <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
                                         <label asp-for="Arrival">Arrival</label>
                                     </div>*@
-                                <div class="col-2 text-center ">
-                                    <label asp-for="Request.NoteForClarifyDelivery" class="control-label clarify-note d-none">Clarify Note</label>
-                                    <textarea asp-for="Request.NoteForClarifyDelivery" class="form-control-plaintext border-bottom clarify-note d-none"></textarea>
+                            <div class="clarify-popover m-5" style="display:none">
+                                <label asp-for="Request.NoteForClarifyDelivery" class="control-label">Clarify Note</label>
+                                <div>
+                                    <div class="container">
+                                        <div class="">
+                                            <textarea asp-for="Request.NoteForClarifyDelivery" class="popover-clarify-note"></textarea>
+                                        </div>
+                                        <div class="row mt-2 text-center">
+                                            <div class="col-6 p-1">
+                                                <button type="button" href="#" class="rounded-pill small-text p-0 m-0 btn text-capitalize clarify-note-close" style="width: 100%;
+                                                        border: 1px solid var(--acc-color);
+                                                        background-color: transparent;
+                                                        color: var(--acc-color);">
+                                                    Save
+                                                </button>
+                                            </div>
+                                            <div class="col-6 p-1 ">
+                                                <button class="rounded-pill p-0 m-0 small-text clarify-note-close" style="background-color: transparent; border-width:1px !important; width: 100%;">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-2 text-center ">
-                                    <label asp-for="Request.NoteForPartialDelivery" class="control-label partial-note d-none">Partial Note</label>
-                                    <textarea asp-for="Request.NoteForPartialDelivery" class="form-control-plaintext border-bottom partial-note d-none"></textarea>
+                            </div>
+                                <div class="partial-popover" style="display:none">
+                                    <label asp-for="Request.NoteForPartialDelivery" class="control-label">Partial Note</label>
+                                    <div>
+                                        <div class="container">
+                                            <div class="">
+                                                <textarea asp-for="Request.NoteForPartialDelivery" class="popover-partial-note"></textarea>
+                                            </div>
+                                            <div class="row mt-2 text-center">
+                                                <div class="col-6 p-1">
+                                                    <button type="button" href="#" class="rounded-pill small-text p-0 m-0 btn text-capitalize partial-note-close" style="width: 100%;
+                                                        border: 1px solid var(--acc-color);
+                                                        background-color: transparent;
+                                                        color: var(--acc-color);">Save
+                                                    </button>
+                                                </div>
+                                                <div class="col-6 p-1 ">
+                                                    <button class="rounded-pill p-0 m-0 small-text partial-note-close" style="background-color: transparent; border-width:1px !important; width: 100%;">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 @*<div class="col-1 text-center">
                                         <input type="checkbox" id="test-chkbx" class="new-chckbx" />
@@ -238,25 +284,59 @@
 <script src="~/js/InitializeDatePicker.js"></script>
 <script>
     $(".clarify-checkbox").click(function () {
+        $('[data-toggle="popover"]').each(function () {
+            $(this).popover('dispose');
+        });
         if ($(this).is(":checked")) {
-            $(".clarify-note").removeClass("d-none");
-            $(".clarify-note ").attr("disabled", false)
-        }
-        else {
-            $(".clarify-note").addClass("d-none");
-            $(".clarify-note").attr("disabled", true)
+            $('#clarifyPopover').popover({
+                sanitize: false,
+                placement: 'bottom',
+                html: true,
+                content: function () {
+                    return $('.clarify-popover').html();
+                }
+            });
+            $('#clarifyPopover').popover('toggle');
         }
     });
     $(".partial-checkbox").click(function () {
+        $('[data-toggle="popover"]').each(function () {
+            $(this).popover('dispose');
+        });
         if ($(this).is(":checked")) {
-            $(".partial-note").removeClass("d-none");
-            $(".partial-note ").attr("disabled", false)
-        }
-        else {
-            $(".partial-note").addClass("d-none");
-            $(".partial-note ").attr("disabled", true)
+            $('#partialPopover').popover({
+                sanitize: false,
+                placement: 'bottom',
+                html: true,
+                content: function () {
+                    return $('.partial-popover').html();
+                }
+            });
+            $('#partialPopover').popover('toggle');
         }
     });
+    $('body').off('change', ".popover-partial-note").on('change', '.popover-partial-note', function (e) {
+        $('.popover-partial-note').val($(this).val());
+    })
+    $('body').off('change', ".popover-clarify-note").on('change', '.popover-clarify-note', function (e) {
+        $('.popover-clarify-note').val($(this).val());
+    })
+    $('body').off('click', ".partial-note-close").on('click', ".partial-note-close", function (e) {
+        if ($(this).val() == "Cancel") {
+            $(".popover-partial-note").val("");
+        }
+        $('[data-toggle="popover"]').each(function () {
+            $(this).popover('dispose');
+        });
+    })
+    $('body').off('click', ".clarify-note-close").on('click', ".clarify-note-close", function (e) {
+        if ($(this).val() == "Cancel") {
+            $(".popover-clarify-note").val("");
+        }
+        $('[data-toggle="popover"]').each(function () {
+            $(this).popover('dispose');
+        });
+    })
     $(".submit-received").click(function (e) {
         //alert("validate form");
         e.preventDefault();

@@ -95,12 +95,6 @@
                             </div>
                         </div>
                         <div class="row ">
-                            <div class="col-3 pl-0">
-                                <div class="form-group">
-                                    <label class="control-label">Reference Date</label>
-                                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="@((Model.Payment.PaymentReferenceDate != new DateTime()) ? Model.Payment.PaymentReferenceDate.ToShortDateString() : "")" />
-                                </div>
-                            </div>
                             <div class="col-3">
                                 <div class="payment-type form-group">
                                     <label class="control-label">Payment Type</label>
@@ -112,13 +106,25 @@
                                 </div>
                             </div>
                             <div class="col-3">
-                                <div class="form-group payment-account">
-                                    <label class="control-label">Account ID</label>
+                                <div class="form-group credit-card d-none">
+                                    <label class="control-label">Card #</label>
                                     <select class="mdb-select custom select-dropdown form-control-plaintext companyAccountNum mdb-select-sublist " asp-for="Payment.CompanyAccountID"></select>
                                 </div>
                             </div>
                             <div class="col-3">
-                                <div class="form-group payment-reference d-none">
+                                <div class="form-group bank d-none">
+                                    <label class="control-label">Bank Name</label>
+                                    <select class="mdb-select custom select-dropdown form-control-plaintext companyAccountNum mdb-select-sublist " asp-for="Payment.CompanyAccountID"></select>
+                                </div>
+                            </div>
+                            <div class="col-3 pl-0">
+                                <div class="form-group d-none">
+                                    <label class="control-label">Reference Date</label>
+                                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="@((Model.Payment.PaymentReferenceDate != new DateTime()) ? Model.Payment.PaymentReferenceDate.ToShortDateString() : "")" />
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group bank d-none">
                                     <label class="control-label">Payment Reference</label>
                                     <input class="form-control-plaintext border-bottom reference-1" type="text" disabled asp-for="Payment.Reference" />
                                 </div>
