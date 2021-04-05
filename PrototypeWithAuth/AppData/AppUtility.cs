@@ -41,7 +41,8 @@ namespace PrototypeWithAuth.AppData
             UsersUser, UsersWorkers,
             OperationsRequest, OperationsInventory, OperationsSearch,
             ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
-            ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources
+            ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask
+
         }
         public enum SidebarEnum
         {
@@ -71,7 +72,7 @@ namespace PrototypeWithAuth.AppData
             SpecifyPayment,
             CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
-            Library, Personal, SharedWithMe, Favorites, Active, Done, Calendar
+            Library, Personal, SharedWithMe, Favorites, Active, Done, LastProtocol
         }
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
