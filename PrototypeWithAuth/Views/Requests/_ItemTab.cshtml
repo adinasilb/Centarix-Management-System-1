@@ -117,12 +117,12 @@
         <div class="form-group sublist">
             <label asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
             @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ProductSubcategoryID,
-new SelectList(
-Model.ProductSubcategories,
-"ProductSubcategoryID",
-"ProductSubcategoryDescription"
-), "Select Sub Category",
-new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
+                new SelectList(
+                Model.ProductSubcategories,
+                "ProductSubcategoryID",
+                "ProductSubcategoryDescription"
+                ), "Select Sub Category",
+                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
             <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategoryID" class="text-danger-centarix"></span>
         </div>

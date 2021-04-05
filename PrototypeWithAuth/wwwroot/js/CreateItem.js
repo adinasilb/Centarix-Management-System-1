@@ -106,12 +106,11 @@
          $(".requestPriceQuote ").attr("disabled", true)
          $(".requestQuoteHide").removeClass("d-none");
         }
-        else {
+     else if ($('#sublist').val() != ''){
             $(".requestPriceQuote").removeClass("d-none");
          $(".requestPriceQuote ").attr("disabled", false)
          $(".requestQuoteHide").addClass("d-none");
         }
-    
     })
     $('.complete-order').click(function (e) {
         if (!$(this).hasClass('disabled-submit')) {
