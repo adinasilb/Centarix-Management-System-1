@@ -1606,7 +1606,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Favorites",
                 Controller = "Protocols",
-                Action = "Favorites",
+                Action = "ProtocolsFavorites",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-monetization_on-24px"
@@ -1616,7 +1616,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Shared With Me",
                 Controller = "Protocols",
-                Action = "SharedWithMe",
+                Action = "ProtocolsSharedWithMe",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-monetization_on-24px"
@@ -1684,7 +1684,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Robotic Protocol",
                 Controller = "Protocols",
-                Action = "RoboticProtocol",
+                Action = "RobioticProtocol",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-monetization_on-24px"
@@ -1741,7 +1741,7 @@ namespace PrototypeWithAuth.AppData
                 {
                     Description = "Shared With Me",
                     Controller = "Protocols",
-                    Action = "SharedWithMe",
+                    Action = "ReportsSharedWithMe",
                     RouteValues = new RouteValueDictionary(),
                     Classes = CurrentClasses,
                     IconName = "icon-monetization_on-24px"
@@ -1778,7 +1778,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Shared With Me",
                 Controller = "Protocols",
-                Action = "SharedWithMe",
+                Action = "ResourcesSharedWithMe",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-monetization_on-24px"
@@ -1788,7 +1788,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Favorites",
                 Controller = "Protocols",
-                Action = "Favorites",
+                Action = "ResourcesFavorites",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-monetization_on-24px"
