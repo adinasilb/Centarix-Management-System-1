@@ -3875,7 +3875,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return requestsList;
         }
-            [HttpGet]
+        [HttpGet]
         [Authorize(Roles = " Accounting")]
         public async Task<IActionResult> ChangePaymentStatus(AppUtility.PaymentsPopoverEnum newStatus, int requestID, AppUtility.PaymentsPopoverEnum currentStatus)
         {
