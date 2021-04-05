@@ -69,9 +69,9 @@ namespace PrototypeWithAuth.AppData
             Add, AwaitingApproval,
             [Display(Name = "Specify Payment")]
             SpecifyPayment,
-            CurrentProtocols, Projects, SharedProjects, MyProtocols, ResearchProtocol, KitProtocol,
+            CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
-            Library, Personal, SharedWithMe, Favorites
+            Library, Personal, SharedWithMe, Favorites, LastProtocol
         }
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
