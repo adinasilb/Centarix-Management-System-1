@@ -69,7 +69,7 @@ namespace PrototypeWithAuth.AppData
             Add, AwaitingApproval,
             [Display(Name = "Specify Payment")]
             SpecifyPayment,
-            CurrentProtocols, Projects, SharedProjects, MyProtocols, ResearchProtocol, KitProtocol,
+            CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
             Library, Personal, SharedWithMe, Favorites, Active, Done, Calendar
         }

@@ -280,7 +280,7 @@ namespace PrototypeWithAuth.AppData
                     {
                         Description = "Workflow",
                         Controller = "Protocols",
-                        Action = "Index",
+                        Action = "CurrentProtocols",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsWorkflow },
@@ -308,7 +308,7 @@ namespace PrototypeWithAuth.AppData
                     {
                         Description = "Create",
                         Controller = "Protocols",
-                        Action = "Index",
+                        Action = "ResearchProtocol",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsCreate},
@@ -322,7 +322,7 @@ namespace PrototypeWithAuth.AppData
                     {
                         Description = "Report",
                         Controller = "Protocols",
-                        Action = "Index",
+                        Action = "DailyReports",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsReports },
@@ -336,7 +336,7 @@ namespace PrototypeWithAuth.AppData
                     {
                         Description = "Resources",
                         Controller = "Protocols",
-                        Action = "Index",
+                        Action = "Library",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsResources },
@@ -1527,5 +1527,273 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
 
+        public static List<MenuItems> CreateProtocolsWorkflowSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.SidebarEnum.CurrentProtocols) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Current Protocols",
+                Controller = "Protocols",
+                Action = "CurrentProtocols",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-assignment_ind-24px-1"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.Projects) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Projects",
+                Controller = "Protocols",
+                Action = "Projects",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-access_time-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.SharedProjects) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Shared Projects",
+                Controller = "Protocols",
+                Action = "SharedProjects",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.Calendar) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Calendar",
+                Controller = "Protocols",
+                Action = "Calendar",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+
+        public static List<MenuItems> CreateProtocolsProtocolsSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.SidebarEnum.List) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "List",
+                Controller = "Protocols",
+                Action = "Index",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-assignment_ind-24px-1"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.MyProtocols) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "My Protocols",
+                Controller = "Protocols",
+                Action = "MyProtocols",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-access_time-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.Favorites) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Favorites",
+                Controller = "Protocols",
+                Action = "Favorites",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Shared With Me",
+                Controller = "Protocols",
+                Action = "SharedWithMe",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.LastProtocol) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Last Protocol",
+                Controller = "Protocols",
+                Action = "LastProtocol",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+
+            return SidebarMenuItems;
+        }
+        public static List<MenuItems> CreateProtocolsCreateSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.SidebarEnum.ResearchProtocol) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Research Protocol",
+                Controller = "Protocols",
+                Action = "ResearchProtocol",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-assignment_ind-24px-1"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.KitProtocol) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Kit Protocol",
+                Controller = "Protocols",
+                Action = "KitProtocol",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-access_time-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.SOPProtocol) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "SOP Protocol",
+                Controller = "Protocols",
+                Action = "SOPProtocol",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.BufferCreating) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Buffer Creating",
+                Controller = "Protocols",
+                Action = "BufferCreating",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.RoboticProtocol) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Robotic Protocol",
+                Controller = "Protocols",
+                Action = "RoboticProtocol",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.MaintenanceProtocol) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Maintenance Protocol",
+                Controller = "Protocols",
+                Action = "MaintenanceProtocol",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            return SidebarMenuItems;
+        }
+        public static List<MenuItems> CreateProtocolsReportsSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+            {
+                List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+                string CurrentClasses = OrigClasses;
+
+                if (SidebarTitle == AppUtility.SidebarEnum.DailyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+                SidebarMenuItems.Add(new MenuItems()
+                {
+                    Description = "Daily Reports",
+                    Controller = "Protocols",
+                    Action = "DailyReports",
+                    RouteValues = new RouteValueDictionary(),
+                    Classes = CurrentClasses,
+                    IconName = "icon-assignment_ind-24px-1"
+                });
+                if (SidebarTitle == AppUtility.SidebarEnum.WeeklyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+                SidebarMenuItems.Add(new MenuItems()
+                {
+                    Description = "Weekly Reports",
+                    Controller = "Protocols",
+                    Action = "WeeklyReports",
+                    RouteValues = new RouteValueDictionary(),
+                    Classes = CurrentClasses,
+                    IconName = "icon-access_time-24px"
+                });
+                if (SidebarTitle == AppUtility.SidebarEnum.MonthlyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+                SidebarMenuItems.Add(new MenuItems()
+                {
+                    Description = "Monthly Reports",
+                    Controller = "Protocols",
+                    Action = "MonthlyReports",
+                    RouteValues = new RouteValueDictionary(),
+                    Classes = CurrentClasses,
+                    IconName = "icon-monetization_on-24px"
+                });
+                if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+                SidebarMenuItems.Add(new MenuItems()
+                {
+                    Description = "Shared With Me",
+                    Controller = "Protocols",
+                    Action = "SharedWithMe",
+                    RouteValues = new RouteValueDictionary(),
+                    Classes = CurrentClasses,
+                    IconName = "icon-monetization_on-24px"
+                });
+                return SidebarMenuItems;
+        }
+        public static List<MenuItems> CreateProtocolsResourcesSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        {
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
+
+            if (SidebarTitle == AppUtility.SidebarEnum.Library) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Library",
+                Controller = "Protocols",
+                Action = "Library",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-assignment_ind-24px-1"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.Personal) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Personal",
+                Controller = "Protocols",
+                Action = "Personal",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-access_time-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Shared With Me",
+                Controller = "Protocols",
+                Action = "SharedWithMe",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.Favorites) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Favorites",
+                Controller = "Protocols",
+                Action = "Favorites",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            return SidebarMenuItems;
+        }
     }
 }
