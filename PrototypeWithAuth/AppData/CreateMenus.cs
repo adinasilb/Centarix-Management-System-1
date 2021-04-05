@@ -274,6 +274,57 @@ namespace PrototypeWithAuth.AppData
                 //    });
                     break;
                 case AppUtility.MenuItems.Protocols:
+                    ActiveClasses = " text-dark expenses-filter";
+                    if (pageType == AppUtility.PageTypeEnum.ExpensesSummary) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Workflow",
+                        Controller = "Protocols",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = ""
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.ExpensesStatistics) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Protocols",
+                        Controller = "Protocols",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = ""
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.ExpensesCost) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Create",
+                        Controller = "Protocols",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = ""
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.ExpensesCost) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Report",
+                        Controller = "Protocols",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = ""
+                    });
+                    if (pageType == AppUtility.PageTypeEnum.ExpensesCost) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    MainMenuItems.Add(new MenuItems()
+                    {
+                        Description = "Resources",
+                        Controller = "Protocols",
+                        Action = "Index",
+                        RouteValues = new RouteValueDictionary(),
+                        Classes = AllClasses,
+                        ID = ""
+                    });
                     break;
                 case AppUtility.MenuItems.Reports:
                     ActiveClasses = " text-dark expenses-filter";
