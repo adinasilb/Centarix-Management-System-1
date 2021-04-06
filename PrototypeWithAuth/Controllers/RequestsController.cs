@@ -93,6 +93,7 @@ namespace PrototypeWithAuth.Controllers
 
             var viewmodel = await GetIndexViewModel(requestIndexObject);
             SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
+            viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
 
             if (ViewBag.ErrorMessage != null)
             {

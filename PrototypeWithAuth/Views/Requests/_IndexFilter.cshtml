@@ -9,7 +9,7 @@
 @using System.Globalization
 @using X.PagedList.Mvc.Core @* import this so we get our HTML Helper *@
 
-<div class="container-fluid">
+<div class="container-fluid order-inv-form">
     <div class="row">
         <ul class="list-unstyled mb-0 ">
             <li>
@@ -25,6 +25,10 @@
                     await Html.RenderPartialAsync("_InventoryFilterResults", Model);
                 }
             </div>
+
         </ul>
+        <div id="inventoryFilterContentDiv" class="container inventoryFilterDiv">
+
+        </div>
     </div>
 </div>

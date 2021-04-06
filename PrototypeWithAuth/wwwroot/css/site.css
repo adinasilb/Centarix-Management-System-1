@@ -2281,3 +2281,13 @@ table.visual-locations-table td .visual-locations-div {
     font-weight: 600;
     margin-top: 60px;
 }
+
+.inventory-filter-col
+{    
+    max-height:35rem;
+    overflow:scroll;
+}
+
+.inventoryFilterDiv .popover {
+
+}

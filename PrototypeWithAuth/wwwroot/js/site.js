@@ -208,9 +208,6 @@ $(function () {
 		//put the business id into the form
 	}
 
-
-
-
 	$.fn.CheckVendorAndCatalogNumbers = function () {
 		//var vendorID = $("#vendorList").val();
 		//var catalogNumber = $("#Request_Catalog").val();
@@ -233,8 +230,6 @@ $(function () {
 	$.fn.leapYear = function (year) {
 		return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
 	}
-
-
 
 
 	$(".modal").on('hide.bs.modal', function () {
@@ -294,54 +289,6 @@ $(function () {
 		//});
 	});
 
-
-
-
-	function changeTerms(checkbox) {
-		if (checkbox.checked) {
-			$(".installments").hide();
-			console.log("checked");
-			$("#Request_Terms").append(`<option value="${"0"}">${"Pay Now"}</option>`);;
-			$("#Request_Terms").val("0");
-			$("#Request_Terms").attr("disabled", true);
-		}
-		else {
-			console.log("unchecked");
-			$(".installments").show()
-			$("#Request_Terms").attr("disabled", false);
-			$("#Request_Terms option[value='0']").remove();
-		}
-	}
-
-	$(".open-invoice-doc-modal").off('click').click(function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		//console.log("in opened invoice doc modal");
-		//$("#documentsModal").replaceWith('');
-		//var urltogo = $("#documentSubmit").attr("url");
-		//var arrRequestIds = $(".form-check.accounting-select .form-check-input:checked").map(function () {
-		//	return $(this).attr("id")
-		//}).get()
-		//urltogo = urltogo + "?ids=" + arrRequestIds + "&RequestFolderNameEnum=Invoices&IsEdittable=true&IsOperations=false&IsNotifications=true";
-		//console.log("urltogo: " + urltogo);
-		//$.ajax({
-		//	async: true,
-		//	url: urltogo,
-		//	type: 'GET',
-		//	cache: false,
-		//	success: function (data) {
-		//		var modal = $(data);
-		//		$('body').append(modal);
-		//		$("#documentsModal").modal({
-		//			backdrop: false,
-		//			keyboard: true,
-		//		});
-		//		$(".modal").modal('show');
-		//	}
-		//});
-	});
-
-	//it seems that this is the method that's being used
 	$(".open-document-modal").off('click').on("click", function (e) {
 
 		e.preventDefault();
@@ -362,7 +309,6 @@ $(function () {
 	});
 
 
-
 	$(".file-select").on("change", function (e) {
 		console.log("file was changed");
 		$cardDiv = $(this).closest("div.card");
@@ -370,92 +316,6 @@ $(function () {
 		$cardDiv.addClass("document-border");
 		return true;
 	});
-
-
-
-
-	//$(".close").click(function () {
-	//	console.log("close");
-	//	$(".modal").hide();
-	//	$(".modal").modal('hide');
-	//	$('.modal').replaceWith('');
-	//	//$.ajax({
-	//	//	async: true,
-	//	//	url: "Locations/Index",
-	//	//	type: 'GET',
-	//	//	cache: false,
-	//	//});
-	//});
-
-	//$.fn.updateDebt = function () {
-	//	console.log("in update debt");
-	//	var sum = $("#Request_Cost").val();
-	//	var installments = $("#Request_ParentRequest_Installments").val();
-	//	var tdate = new Date();
-	//	var dd = tdate.getDate(); //yields day
-	//	var MM = tdate.getMonth(); //yields month
-	//	var yyyy = tdate.getFullYear(); //yields year
-	//	if (dd < 10) {
-	//		dd = "0" + dd
-	//	}
-	//	if (MM < 10) {
-	//		MM = "0" + (MM + 1)
-	//	} else {
-	//		MM = MM + 1;
-	//	}
-	//	var today = yyyy + "-" + (MM) + "-" + dd;
-	//	console.log("today:" + today);
-	//	//count how many installment dates already passed
-	//	var count = 0;
-	//	if (installments != 0) {
-	//		$(".payments-table .payment-date").each(function (index) {
-	//			var date = $(this).val();
-	//			console.log("date: " + date);
-	//			if (today >= date) {
-	//				console.log("today > date");
-	//				//date passed
-	//				count = count + 1
-	//			}
-	//		});
-	//	}
-	//	if (count != 0) {
-	//		var paymentPerMonth = sum / installments;
-	//		console.log(" paymentPerMonth: " + paymentPerMonth);
-	//		var amountToSubstractFromDebt = paymentPerMonth * count;
-	//		console.log(" amountToSubstractFromDebt: " + amountToSubstractFromDebt);
-	//		var debt = sum - amountToSubstractFromDebt
-	//		console.log(" sum: " + sum);
-	//		console.log(" debt: " + debt);
-	//		$("#Debt").val(debt);
-	//	} else {
-	//		$("#Debt").val(sum);
-	//	}
-	//	var vatCalc = sum * .17;
-	//	console.log("vatCalc" + vatCalc);
-	//	$('#Request_VAT').val(vatCalc.toFixed(2));
-	//};
-
-	//$(".payments-table").on("change", ".payment-date", function (e) {
-	//	console.log("in change .payments-table ");
-	//	$.fn.updateDebt();
-	//});
-
-	//$("#Request_ExchangeRate").change(function (e) {
-	//	console.log("in change #Request_ExchangeRate ");
-	//	$.fn.updateDebt();
-	//});
-
-
-	//$("#sum-dollars").change(function (e) {
-	//	console.log("in change #sum-dollars ");
-	//	$.fn.updateDebt();
-	//});
-
-	//$("#Request_ParentRequest_Installments").change(function () {
-	//	console.log("in change Request_ParentRequest_Installments ");
-	//	$.fn.updateDebt();
-	//});
-
 
 	$(".load-location-index-view").off("click").on("click", function (e) {
 		//clear the div to restart filling with new children
@@ -1321,25 +1181,6 @@ $(function () {
 	};
 
 
-	//RECEIVEDMODAL:
-	function changePartialDelivery() {
-		console.log("in partial delivery, checkbox val: " + $(this).val());
-	};
-
-	function changeClarify() {
-		console.log("in clarify, checkbox val: " + $(this).val());
-	};
-
-
-	
-	/*End Dropdown Menu*/
-
-
-	//$('.dropdown-menu li').click(function () {
-	//	var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
-	//		msg = '<span class="msg">Hidden input value: ';
-	//	$('.msg').html(msg + input + '</span>');
-	//}); 
 	$("body").on("change", "#EmployeeHour_TotalHours", function (e) {
 		$('#EmployeeHour_Exit1').val('');
 		$('#EmployeeHour_Exit2').val('');
@@ -1488,11 +1329,6 @@ $(function () {
 			}
 		});
 	});
-
-	
-	//function ChangeEdits() {
-	//	alert("sitejs change edits");
-	//};
 
 	$(".open-ehaa-modal").off("click").on("click", function (e) {
 		e.preventDefault();
@@ -1674,12 +1510,12 @@ $(function () {
 
 	});
 
-	});
 	$("#invFilterPopover").click(function () {
 		$('[data-toggle="popover"]').popover('dispose');
 		$('#invFilterPopover').popover({
 			sanitize: false,
 			placement: 'bottom',
+			container: '#inventoryFilterContentDiv',
 			html: true,
 			trigger: 'manual',
 			content: function () {
@@ -1691,6 +1527,7 @@ $(function () {
 		$('#invFilterPopover').removeClass('custom-order-inv');
 		//$('#inventoryFilterContent').style.display = "block";
 	});
+
 	$("#home-btn").click(function () {
 			$('[data-toggle="popover"]').popover('dispose');
 			$("#home-btn").popover({
@@ -1726,38 +1563,6 @@ $(function () {
 		$('#ExternalCalibrations_0__IsRepeat').val(val)
 	});
 
-
-	//$(".mdb-select ul").off("click").on("click", function () {
-	//	alert("select ul clicked!");
-	//});
-
-	//$(".mdb-select ul").off("change").on("change", function () {
-	//	alert("select ul changed!");
-	//});
-
-	//$(".mdb-select ul li").off("click").on("click", function () {
-	//	alert("select ul li clicked!");
-	//});
-
-	//$(".mdb-select ul li").off("change").on("change", function () {
-	//	alert("select ul li changed!");
-	//});
-
-	//$(".select-dropdown").off("click").on("click", function () {
-	//	alert("select dropdown clicked");
-	//});
-
-	//$(".select-dropdown").off("change").on("change", function () {
-	//	alert("select dropdown changed");
-	//});
-
-	//$(".mdb-select").off("click").on("click", function () {
-	//	alert("select clicked!");
-	//});
-
-	//$(".mdb-select").off("change").on("change", function () {
-	//	alert("select changed!");
-	//});
 	$('.modal #FirstName').off('change').change(function () {
 		$('.userName').val($(this).val() + " " + $('#LastName').val())
 	});
@@ -1797,21 +1602,6 @@ $(function () {
 			}
 		});
 	})
-
-	//$('body').on('click', '.callIndexPartial', function () {
-	//	var url = $(this).attr('url');
-	//	$.ajax({
-	//		async: true,
-	//		url: url,
-	//		type: 'GET',
-	//		cache: true,
-	//		success: function (data) {
-	//			$('.index-partial').html(data);
-	//		}
-	//	});
-	//});
-
-
 
 });
 
