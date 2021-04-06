@@ -35,7 +35,7 @@
                 <div class="inventory-filter-col selected">
                     @foreach (var type in Model.SelectedTypes)
                     {
-                        <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.CategoryTypeDescription</span></button>
+                        <button id="" type="button" class="table-button my-1 w-100 text-left filter-btn-select" style="border-radius:0.5rem;"><span class="filter-button-description">@type.CategoryTypeDescription</span></button>
                     }
                 </div>
             </div>
@@ -50,7 +50,7 @@
                     <div class="inventory-filter-col selected">
                         @foreach (var type in Model.SelectedVendors)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.VendorEnName</span></button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left filter-btn-select" style="border-radius:0.5rem;"><span class="filter-button-description">@type.VendorEnName</span></button>
                         }
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                     <div class="inventory-filter-col selected">
                         @foreach (var type in Model.SelectedOwners)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.FirstName @type.LastName</span></button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left filter-btn-select" style="border-radius:0.5rem;"><span class="filter-button-description">@type.FirstName @type.LastName</span></button>
                         }
                     </div>
 
@@ -81,7 +81,7 @@
                     <div class="inventory-filter-col selected">
                         @foreach (var type in Model.SelectedLocations)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.LocationTypeName</span></button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left filter-btn-select" style="border-radius:0.5rem;"><span class="filter-button-description">@type.LocationTypeName</span></button>
                         }
                     </div>
                 </div>
@@ -96,11 +96,11 @@
                     <div class="inventory-filter-col selected">
                         @foreach (var type in Model.SelectedCategories)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ParentCategoryDescription</span></button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left filter-btn-select" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ParentCategoryDescription</span></button>
                         }
                     </div>
                 </div>
-                <div class="border-right col mh-100 filter-col">
+                <div class="border-right col mh-100 filter-col subcategory-col">
                     <input value="Subcategory" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col not-selected">
                         @foreach (var type in Model.Subcategories)
@@ -111,7 +111,7 @@
                     <div class="inventory-filter-col selected">
                         @foreach (var type in Model.SelectedSubcategories)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProductSubcategoryDescription</span></button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left filter-btn-select" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProductSubcategoryDescription</span></button>
                         }
                     </div>
                 </div>

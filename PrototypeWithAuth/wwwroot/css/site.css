@@ -2300,3 +2300,7 @@ table.visual-locations-table td .visual-locations-div {
     -webkit-box-orient: vertical;
 }
 
+.filter-btn-select {
+    background-color: #2196F3;
+    color:white;
+}

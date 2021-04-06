@@ -4897,9 +4897,9 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public IActionResult _InventoryFilterResults()
+        public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters)
         {
-            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel();
+            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters);
 
             return PartialView(inventoryFilterViewModel);
         }
