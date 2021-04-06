@@ -1,0 +1,16 @@
+﻿@model PrototypeWithAuth.ViewModels.HasShelfViewModel
+@{
+    var locationHeightID = "LocationInstances_2__Height";
+    var locationHeightName = "LocationInstances[2].Height";
+    var locationTypeID = "LocationInstances_2__LocationTypeID";
+    var locationTypeName = "LocationInstances[2].LocationTypeID";
+}
+<input type="hidden" class="labPartName" value="@Model.LocationName" />
+@if (Model.HasShelves)
+{
+    <span class="">
+        Shelves
+    </span>
+    <input name="@locationHeightName" id="@locationHeightID" min="0" class="form-control-plaintext border-bottom" />
+    <input name="@locationTypeName" id="@locationTypeID" value="503" style="display: none;" />
+}

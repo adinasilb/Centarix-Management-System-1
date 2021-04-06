@@ -2,19 +2,22 @@
 $(function () {
 
 
-	$("#NewEmployee_DOB").on("change", function () {
+	$("#NewEmployee_DOB").off("change").on("change", function () {
+		var val = $(this).val();
+		val = val.split("/").reverse().join("-");
+		var DOB = moment(val);
 		var age = 0;
-		console.log("age: " + age);
-		var DOB = new Date($(this).val());
 		//var Today = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
-		//console.log("dob: " + DOB);
-		//console.log("today: " + Today);
+		console.log("dob: " + DOB);
 		var today = new Date();
+		console.log("today: " + today);
 		age = Math.floor((today - DOB) / (365.25 * 24 * 60 * 60 * 1000));
+		//alert(age);
 		if (isNaN(age)) {
 			age = '';
 		}
 		$("input[name='Age']").val(age);
+		$("input[name='NewEmployee.DOB_submit']").val(val)
 	});
 
 	$("#GeneratePassword").off('click').on("click", function () {
@@ -47,11 +50,17 @@ $(function () {
 	});
 
 	$("#TimeSpan-HoursPerDay").on("change", function () {
-		var newTimespan = $(this).val();
-		var hours = parseInt(newTimespan.substr(0, 2));
-		var minutes = newTimespan.substr(3, 2);
+		var newHours = $(this).val().split(".");
+		var hours = parseInt(newHours[0]);
+		var minutes = newHours[1];
+		if (newHours.length == 1) {
+			minutes = "0"
+		}
+		else if (minutes.length == 1) {
+			minutes = minutes+ "0"
+		}
 		console.log("minutes: " + minutes);
-		var minutesFloat = parseFloat(minutes) / 60;
+		var minutesFloat = parseFloat("0."+minutes);
 		console.log("minutesFloat: " + minutesFloat);
 		var hoursPercentage = parseFloat(hours + minutesFloat);
 		console.log("hoursPercentage: " + hoursPercentage);
@@ -95,7 +104,15 @@ $(function () {
 		$("#validation-EmployeeStatus").addClass("hidden");
 		if (val == "4") {
 			$('.only-employee').removeClass("error");
+			$('.only-employee').addClass("hidden");
+			$('.only-employee').addClass("m-0");
 		}
+		else {
+			$('.only-employee').removeClass("hidden");
+			$('.only-employee').removeClass("m-0");
+        }
+
+		$.fn.AppendAsteriskToRequired();
 
 		var centarixIDInput = $('#CentarixID');
 		if (val == $("#OriginalStatusID").val()) {
@@ -123,5 +140,31 @@ $(function () {
 		}
 
 
+	});
+	$("body, .modal").off("change", ".job-category").on("change", ".job-category", function () {
+		console.log("in on change before fx");
+		//$.fn.changeProject($(this).val());
+		console.log("job-category was changed");
+		var categoryID = $(this).val();
+		var url = "/Admin/GetJobSubcategoryTypeList";
+
+		var jobSubcategory = $("#job-subcategory");
+
+		$.getJSON(url, { JobCategoryTypeID: categoryID }, function (data) {
+			var item1 = "<option value=''>Select Sub Category Type</option>";
+			jobSubcategory.empty();
+			jobSubcategory.append(item1);
+			$.each(data, function (i, subCategory) {
+				item = '<option value="' + subCategory.jobSubcategoryTypeID + '">' + subCategory.description + '</option>'
+				jobSubcategory.append(item);
+			});
+			//jobSubcategory.destroyMaterialSelect();
+			//jobSubcategory.prop("disabled", false);
+			//jobSubcategory.removeAttr("disabled");
+			//$('[data-activates="select-options-job-subcategory"]').prop('disabled', false);
+			jobSubcategory.materialSelect();
+			return false;
+		});
+		return false;
 	});
 });

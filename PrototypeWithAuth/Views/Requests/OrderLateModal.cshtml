@@ -3,7 +3,7 @@
 <div class="modal modal-document fader" id="orderLateModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="sm-modal modal-dialog-centered mx-auto" >
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('order-late');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
@@ -27,7 +27,7 @@
                 <div class="modal-footer border-0 p-0" >
                     <div class="mx-auto modal-footer-mt">
                         <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin" asp-action="OrderLateModal" value="Send" />
-                        <button class="custom-button custom-cancel cancel-email" data-dismiss="modal"  onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
+                        <button type="button" class="custom-button custom-cancel cancel-email" data-dismiss="modal"  onclick="$.fn.CloseModal('order-late');">Cancel</button>
                     </div>
                 </div>
             </form>

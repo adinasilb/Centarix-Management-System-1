@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class CostsProjectViewModel
+    public class CostsProjectViewModel : ViewModelBase
     {
         public string ItemName { get; set; }
         public IEnumerable<ParentCategory> ParentCategoryList { get; set; }

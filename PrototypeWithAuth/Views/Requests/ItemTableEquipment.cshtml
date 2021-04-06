@@ -1,0 +1,22 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+@using PrototypeWithAuth.AppData
+@{
+    ViewData["Title"] = "Equipment List";
+
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+@if (Model.PagedList.Count == 0)
+    {
+<div>
+    @{
+        await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+    }
+</div>
+    }
+    else
+    {
+<div class="_IndexTable">
+    @{await Html.RenderPartialAsync("_IndexTable", Model); }
+</div>
+    }
+

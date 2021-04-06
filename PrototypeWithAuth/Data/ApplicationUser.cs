@@ -29,12 +29,12 @@ namespace PrototypeWithAuth.Data
 
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
-        public double LabMonthlyLimit { get; set; }
-        public double LabUnitLimit { get; set; }
-        public double LabOrderLimit { get; set; }
-        public double OperationMonthlyLimit { get; set; }
-        public double OperationUnitLimit { get; set; }
-        public double OperationOrderLimit { get; set; }
+        public decimal LabMonthlyLimit { get; set; }
+        public decimal LabUnitLimit { get; set; }
+        public decimal LabOrderLimit { get; set; }
+        public decimal OperationMonthlyLimit { get; set; }
+        public decimal OperationUnitLimit { get; set; }
+        public decimal OperationOrderLimit { get; set; }
         public bool IsSuspended { get; set; }
         public bool IsDeleted { get; set; }
         public string UserImage { get; set; }
@@ -47,6 +47,7 @@ namespace PrototypeWithAuth.Data
         [Display(Name = "Phone Number 2")]
         public string PhoneNumber2 { get; set; }
         public bool NeedsToResetPassword { get; set; }
+        public bool RememberTwoFactor { get; set; }
         public DateTime DateLastReadNotifications { get; set; }
         public DateTime LastLogin { get; set; }
         public IEnumerable<Request> RequestsReceived { get; set; }

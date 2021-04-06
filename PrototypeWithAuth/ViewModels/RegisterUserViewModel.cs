@@ -11,10 +11,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using PrototypeWithAuth.Models;
 using Microsoft.AspNetCore.Mvc;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class RegisterUserViewModel
+    public class RegisterUserViewModel : ViewModelBase
     {
         public string ApplicationUserID { get; set; } //this is used for the Edit form
         public int UserNum { get; set; }
@@ -87,23 +88,23 @@ namespace PrototypeWithAuth.ViewModels
         //Budget
 
         [Display(Name = "Monthly Limit")]
-        public double LabMonthlyLimit { get; set; }
+        public decimal LabMonthlyLimit { get; set; }
 
         [Display(Name = "Unit Limit")]
-        public double LabUnitLimit { get; set; }
+        public decimal LabUnitLimit { get; set; }
 
         [Display(Name = "Order Limit")]
 
-        public double LabOrderLimit { get; set; }
+        public decimal LabOrderLimit { get; set; }
 
         [Display(Name = "Monthly Limit")]
-        public double OperationMonthlyLimit { get; set; }
+        public decimal OperationMonthlyLimit { get; set; }
 
         [Display(Name = "Unit Limit")]
-        public double OperationUnitLimit { get; set; }
+        public decimal OperationUnitLimit { get; set; }
 
         [Display(Name = "Order Limit")]
-        public double OperaitonOrderLimit { get; set; }
+        public decimal OperaitonOrderLimit { get; set; }
 
         //public IFormFile UserImage { get; set; }
         public string UserImage { get; set; }
@@ -117,6 +118,7 @@ namespace PrototypeWithAuth.ViewModels
         public FormFile NewEmployeeImage { get; set; }
         public int NewEmployeeStatus { get; set; }
         public List<JobCategoryType> JobCategoryTypes { get; set; }
+        public List<JobSubcategoryType> JobSubcategoryTypes { get; set; }
         public List<EmployeeStatus> EmployeeStatuses { get; set; }
         public List<MaritalStatus> MaritalStatuses { get; set; }
         public List<Degree> Degrees { get; set; }
@@ -138,6 +140,5 @@ namespace PrototypeWithAuth.ViewModels
         [TempData]
         public string StatusMessage { get; set; }
         public bool ConfirmedEmail { get; set; }
-        public List<string> Errors { get; set; }
     }
 }

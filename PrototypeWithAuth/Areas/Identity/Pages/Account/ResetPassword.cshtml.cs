@@ -126,6 +126,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 if (!user.IsSuspended) //don't want to unlock them out if they are suspended
                 {
                     user.LockoutEnd = DateTime.Now;
+                    user.LockoutEnabled = false;
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
@@ -188,7 +189,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("Elixir"),
+                _urlEncoder.Encode("ElixirLocalHost"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }

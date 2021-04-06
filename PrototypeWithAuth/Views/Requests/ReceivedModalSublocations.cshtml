@@ -1,12 +1,18 @@
 ﻿@model PrototypeWithAuth.ViewModels.ReceivedModalSublocationsViewModel
-
-<script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/customDropdown.js"></script>
+<script src="~/js/site.js" ></script>
 <script src="~/js/receivedmodal.js"></script>
+
 <div class="row">
     @for (int i = 0; i < Model.locationTypeNames.Count - 1; i++) //do count - 1 because we don't want them to select the smallest instances
     {
         var id = i;
-        <div class="form-group col-3 ">
+        var hasRackBlock = "";
+        if (i > 1)
+        {
+            hasRackBlock = "hasRackBlock";
+        }
+        <div class="form-group col-3 @hasRackBlock ">
             <label class="control-label">@Model.locationTypeNames[i]</label>
             @if (i == 0)
             {
@@ -43,11 +49,11 @@
                     <div class=" form-control-plaintext border-bottom p-0">
                         <span class="choose p-0"></span>
                         <div class="dropdown dropdown-main">
-                            <div class="select d-inline-flex "  id="@id" style="padding-right:1.25rem;">
+                            <div class="select d-inline-flex " id="@id" style="padding-right:1.25rem;">
                                 <span class="caret py-0">
                                     ▼
                                 </span>
-                                <span class="overflow-hidden overflow-left">select</span>
+                                <span class="overflow-hidden ">select</span>
 
                             </div>
 

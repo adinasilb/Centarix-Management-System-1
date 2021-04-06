@@ -5,6 +5,16 @@
 @inject UserManager<ApplicationUser> UserManager
 <table class="table table-headerspaced col-12 ">
     <tbody>
+       @if(Model.Count()>0)
+       { 
+            <tr>
+                @if (Model[0].ErrorMessage != null)
+                {
+                    <span class="text danger-text view-bag-error">Error: @Model[0].ErrorMessage</span>
+
+                }
+            </tr>
+        }
         <tr class="text-center " style="border-color:transparent; border-bottom: 1px solid lightgrey;">
             <td width="12%"></td>
             <td class="text-left" width="10%">
@@ -26,7 +36,9 @@
             <td width="9%">
                 Total
             </td>
-            <td width="15%">
+            <td width="10%">
+            </td>
+            <td width="5%">
             </td>
         </tr>
         @{
@@ -64,9 +76,9 @@
                     <td width="12%">
                         @{
                             var src = "/UserImages/user-image-placeholder.png";
-                            if (UserManager.GetUserAsync(User).Result.UserImage != null)
+                            if (hours.EmployeeHoursAwaitingApproval.Employee.UserImage != null)
                             {
-                                src = src = "\\" + AppUtility.GetLastFiles(UserManager.GetUserAsync(User).Result.UserImage, 2);
+                                src = src = "\\" + AppUtility.GetLastFiles(hours.EmployeeHoursAwaitingApproval.Employee.UserImage, 2);
                             }
                         }
                         <img id="user-image" class="circular-profile-img circular-profile-img-65" src="@src" />
@@ -88,26 +100,37 @@
                     </td>
 
                     <td width="9%">
-                        <label class="@Entry1 m-0">@hours.EmployeeHoursAwaitingApproval.Entry1?.ToShortTimeString()</label>
+                        <label class="@Entry1 m-0">@hours.EmployeeHoursAwaitingApproval.Entry1?.ToString("HH:mm")</label>
                         @if (hours.EmployeeHoursAwaitingApproval.Entry2 != null)
                         {
                             <br />
                         }
-                        <label class="@Entry2 m-0">@hours.EmployeeHoursAwaitingApproval.Entry2?.ToShortTimeString() </label>
+                        <label class="@Entry2 m-0">@hours.EmployeeHoursAwaitingApproval.Entry2?.ToString("HH:mm") </label>
                     </td>
                     <td width="9%">
-                        <label class="@Exit1 m-0">@hours.EmployeeHoursAwaitingApproval.Exit1?.ToShortTimeString() </label>
+                        <label class="@Exit1 m-0">@hours.EmployeeHoursAwaitingApproval.Exit1?.ToString("HH:mm") </label>
                         @if (hours.EmployeeHoursAwaitingApproval.Exit2?.ToShortTimeString() != null)
                         {
                             <br />
                         }
-                        <label class="@Exit2 m-0">@hours.EmployeeHoursAwaitingApproval.Exit2?.ToShortTimeString()</label>
+                        <label class="@Exit2 m-0">@hours.EmployeeHoursAwaitingApproval.Exit2?.ToString("HH:mm")</label>
                     </td>
                     <td width="9%" class="@TotalHours">
                         @hours.EmployeeHoursAwaitingApproval.TotalHours?.ToString(@"h\:mm")
                     </td>
-                    <td width="15%">
-                        <button type="button" class="rounded-pill px-4 py-1 text-white no-box-shadow border-0 approve-hours" style="background-color:var(--user-color)" value="@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID">Approve</button>
+                    <td width="10%">
+                        <div class="table-icon-div">
+                            <button type="button" class="rounded-pill px-4 py-1 mx-2 text-white no-box-shadow border-0 approve-hours" style="background-color:var(--user-color)" value="@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID">Approve</button>                           
+                        </div>
+
+                    </td>
+                    <td width="5%">
+                        <div class="table-icon-div">                           
+                            <a href="" data-approvalid=@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID class="deny-approval-modal-icon" data-toggle="tooltip" data-placement="top" onclick="OpenDenyApprovalModal(@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID)">
+                                <i style="font-size:2rem;" class="icon-delete-24px hover-bold"></i>
+                            </a>
+                        </div>
+
                     </td>
 
                 </tr>

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Web;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +19,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Diagnostics;
-using System.Web;
+using RestSharp;
+using Microsoft.AspNetCore.Http;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
@@ -29,10 +36,11 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager,
             ILogger<LoginModel> logger,
-            UserManager<ApplicationUser> userManager, ApplicationDbContext context
+            UserManager<ApplicationUser> userManager, ApplicationDbContext context, IHttpContextAccessor httpContextAccessor
           )
         {
             _userManager = userManager;
@@ -40,6 +48,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [BindProperty]
@@ -48,6 +57,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public string ReturnUrl { get; set; }
+        public bool TwoFactorSessionExpired { get; set; }
 
         [TempData]
         public string ErrorMessage { get; set; }
@@ -64,8 +74,11 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Remember me")]
             public bool RememberMe { get; set; }
+
+            [Display(Name = "Remember Two Factor Authentication")]
+            public bool RememberTwoFactor { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null, string errorMessage=null, string successMessage = null)
@@ -98,7 +111,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 var user = await _userManager.FindByEmailAsync(Input.Email);
                 //var user = await _userManager.FindByEmailAsync(Input.Email);
-               // var passwordValidator = new PasswordValidator<ApplicationUser>();
+                // var passwordValidator = new PasswordValidator<ApplicationUser>();
                 //var identityUserManager = new UserManager<IdentityUser>(user);
                 var validPassword = await _signInManager.UserManager.CheckPasswordAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -125,7 +138,74 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 }
                 else if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl });
+                    string myIpAddress = AppUtility.GetMyIPAddress();
+                    var ipEnd = myIpAddress.Split(".").LastOrDefault();
+                    var ipEndNum = -1;
+                    Int32.TryParse(ipEnd, out ipEndNum);
+
+                    if (user.RememberTwoFactor == true)
+                    {
+                        string cookie = null;
+                        var isCookie = true;
+                        var cookieNum = 1;
+                        var cookieName = "";
+                        while (isCookie)
+                        {
+                            cookieName = "TwoFactorCookie" + cookieNum;
+                            if (_httpContextAccessor.HttpContext.Request.Cookies[cookieName] != null)
+                            {
+                                if (_httpContextAccessor.HttpContext.Request.Cookies[cookieName] == user.Id)
+                                {
+                                    isCookie = false;
+                                    cookie = _httpContextAccessor.HttpContext.Request.Cookies[cookieName];
+                                }
+                            }
+                            else
+                            {
+                                isCookie = false;
+                            }
+                            cookieNum++;
+                        }
+
+                        if (cookie != null)
+                        {
+                       
+                            var pa = _context.PhysicalAddresses.Where(p => p.Address == AppUtility.PhysicalAddress && p.EmployeeID == user.Id).FirstOrDefault();
+                            if (pa != null)
+                            {
+                                if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
+                                {
+                                    user.TwoFactorEnabled = false;
+                                    _context.Update(user);
+                                    _context.SaveChanges();
+                                    result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                                    user.TwoFactorEnabled = true;
+                                    _context.Update(user);
+                                    _context.SaveChanges();
+                                    if (result.Succeeded)
+                                    {
+                                        return LocalRedirect(returnUrl);
+                                    }
+                                    else
+                                    {
+                                        ModelState.AddModelError(string.Empty, "Something went wrong in login. Please try again.");
+                                        return Page();
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            TwoFactorSessionExpired = true;
+                        }
+                    }
+                    else if (Input.RememberTwoFactor)
+                    {
+                        return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, TwoFactorSessionExpired, InputRememberTwoFactor = Input.RememberTwoFactor });
+                    }
+
+
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, TwoFactorSessionExpired });
                 }
                 //else if (!validPassword)
                 //{
@@ -136,7 +216,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 else if (result.IsLockedOut && validPassword)
                 {
                     _logger.LogInformation("User locked out.");
-                    if (user.NeedsToResetPassword && !user.IsSuspended )
+                    if (user.NeedsToResetPassword && !user.IsSuspended)
                     {
                         //await _signInManager.SignOutAsync();
                         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -152,6 +232,18 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                 else
                 {
                     _logger.LogInformation("User login failed.");
+                    if (user == null)
+                    {
+                        ErrorMessage = "Invalid Username";
+                    }
+                    else if (!validPassword)
+                    {
+                        ErrorMessage = "Invalid Password";
+                    }
+                    else
+                    {
+                        ErrorMessage = "Invalid Login Attempt";
+                    }
                     //var user = await _userManager.FindByEmailAsync(Input.Email);
                     //if (user.NeedsToResetPassword)
                     //{
@@ -160,10 +252,10 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     //    return RedirectToPage("./ResetPassword", new { code = code });
                     //}
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
             }
+            ErrorMessage = "";
 
             // If we got this far, something failed, redisplay form
             return Page();

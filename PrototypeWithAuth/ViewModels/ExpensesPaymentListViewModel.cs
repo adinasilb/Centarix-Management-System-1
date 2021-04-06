@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using PrototypeWithAuth.ViewModels;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class ExpensesPaymentListViewModel
+    public class ExpensesPaymentListViewModel : ViewModelBase
     {
         public ParentCategory ParentCategory { get; set; }
 

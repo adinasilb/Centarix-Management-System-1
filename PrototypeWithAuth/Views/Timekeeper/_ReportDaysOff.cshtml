@@ -1,4 +1,4 @@
-﻿@model List<PrototypeWithAuth.ViewModels.SummaryOfDaysOffViewModel>
+﻿@model PrototypeWithAuth.ViewModels.SummaryOfDaysOffViewModel
 @using Microsoft.AspNetCore.Identity
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
@@ -10,80 +10,114 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
 }
+<div class="row">
+    @if (Model.ErrorMessage != null && Model.ErrorMessage != "")
+    {
+        <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+
+    }
+</div>
 <div class="row   mb-5 text-center ">
-    <div class="col-7">
+    <div class="col-8">
         <div class="row  entry-exit-background p-5 ">
-            <div class="col-6 ">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6 ">
 
-                <button class="custom-button-font custom-button timekeeper-alt-color report-vacation-days @AppUtility.SidebarEnum.ReportDaysOff" type="button">
-                    <i class="icon-luggage-24px-1 mx-2" style="font-size: 1.25rem;position: relative;"></i>Report vacation day
-                </button>
-                <br />
-                <label class=" text mt-3 " style=" color: #808080;"> Vacation Days</label>
-                <i class="icon-info-24px-2 m-2" style="font-size: 1.25rem;top: .24rem;color: #808080;position: relative;"></i>
-            </div>
+                        <button class="custom-button-font custom-button timekeeper-alt-color report-off-day @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.VacationDay" type="button">
+                            <i class="icon-luggage-24px-1 mx-2" style="font-size: 1.25rem;position: relative;"></i>Report vacation day
+                        </button>
+                        <br />
+                        <label class=" text mt-3 " style=" color: #808080;">@Model.TotalVacationDaysPerYear Vacation Days Per Year</label>
+                    </div>
 
-            <div class="col-6  ">
+                    <div class="col-6  ">
+                        <button class="custom-button-font custom-button timekeeper-color report-off-day  @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.SickDay" style="" type="button">
+                            <i class="icon-sick-24px-1 mx-2" style="font-size: 1.25rem;position: relative;">
+                            </i> Report sick leave
+                        </button>
+                        <br />
+                        <label class=" text mt-3 " style=" color: #808080;">@Model.TotalSickDaysPerYear Sick Days Per Year</label>
 
+                    </div>
 
-                <button class="custom-button-font custom-button timekeeper-color report-sick-days  @AppUtility.SidebarEnum.ReportDaysOff" style="" type="button">
-                    <i class="icon-sick-24px-1 mx-2" style="font-size: 1.25rem;position: relative;">
-                    </i> Report sick leave
-                </button>
-                <br />
-                <label class=" text mt-3" style=" color: #808080;"> Sick Days</label>
-                <i class="icon-info-24px-2 mx-2" style="font-size: 1.25rem; top: .24rem;position: relative;"></i>
+                </div>
+
+                <div class="row ">
+                    <div class="offset-3 col-6  ">
+                        <button class="custom-button-font custom-button disabled-color report-off-day  @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.MaternityLeave" style="" type="button">
+                            Report Maternity Leave
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
 <div class="row mt-6">
-    <div class="col-7 mt-4 mb-5">
+    <div class="col-8 mt-4 mb-5">
 
         <div class="row">
             <div class="col-4 heading-1 p-0"><label class="m-0 p-0">Summary Of Days Off</label></div>
             <div class="col-4 heading-1 ">
-                <label class="font-weight-bolder text m-0 p-0"> Vacation Days Left: @Model.Select(d => d.VacationDaysLeft).Sum(vd => vd)</label>
+                <label class="font-weight-bolder text m-0 p-0"> Vacation Days Left: @Model.VacationDaysLeft</label>
             </div>
-
+            <div class="col-4 heading-1 ">
+                <label class="font-weight-bolder text m-0 p-0"> Sick Days Left: @Model.SickDaysLeft</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 heading-1 p-0"><label class="m-0 p-0"></label></div>
+            <div class="col-4 heading-1 ">
+                <label class=" text m-0 p-0"> Bonus Vacation: @Model.BonusVacationDays</label>
+            </div>
+            <div class="col-4 heading-1 ">
+                <label class=" text m-0 p-0"> Bonus Sick: @Model.BonusSickDays</label>
+            </div>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-7">
+    <div class="col-8">
         <div class="row p-3 text-center ">
-            <div class="col-3 pl-5 text-left">
+            <div class="col ">
                 Year
             </div>
-            <div class="col-3">
+            <div class="col">
                 Total Vacation Days
             </div>
-            <div class="col-3">
+            <div class="col">
                 Vacation Days Taken
             </div>
-            <div class="col-3">
+            <div class="col">
+                Total Sick Days
+            </div>
+            <div class="col">
                 Sick Days Taken
             </div>
         </div>
-        @foreach (var year in Model)
+        @foreach (var year in Model.DaysOffs)
         {
-            <div class="row border p-3 text-center">
+    <div class="row border p-3 text-center">
 
-                <div class="col-3 pl-5 text-left">
-                    @year.Year
-                </div>
-                <div class="col-3">
-                    @year.TotalVacationDays
-                </div>
-                <div class="col-3">
-                    @year.VacationDaysTaken
-                </div>
-                <div class="col-3">
-                    @year.SickDaysTaken
-                </div>
+        <div class="col">
+            @year.Year
+        </div>
+        <div class="col">
+            @Math.Round(year.TotalVacationDays,2)
+        </div>
+        <div class="col">
+            @year.VacationDaysTaken
+        </div>
+        <div class="col">
+            @year.TotalSickDays
+        </div>
+        <div class="col">
+            @year.SickDaysTaken
+        </div>
 
-            </div>
+    </div>
         }
 
 

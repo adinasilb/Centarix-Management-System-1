@@ -29,13 +29,13 @@
 
 		if (!valid) {
 			$(".chartForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-			if (!$('input[type="submit"], button[type="submit"] ').hasClass('disabled-submit')) {
-				$('input[type="submit"], button[type="submit"] ').addClass('disabled-submit')
+			if (!$('.activeSubmit').hasClass('disabled-submit')) {
+				$('.activeSubmit').addClass('disabled-submit')
 			}
 			return false;
 		}
 		else {
-			$('input[type="submit"], button[type="submit"] ').removeClass('disabled-submit')
+			$('.activeSubmit').removeClass('disabled-submit')
 			var formData = new FormData($(".chartForm")[0]);
 			$.ajax({
 				url: url,

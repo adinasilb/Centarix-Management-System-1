@@ -1,0 +1,214 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
+@using System.Text;
+@using System.Globalization;
+@using PrototypeWithAuth.AppData
+
+<form method="post" enctype="multipart/form-data" style="height: 100%;">
+    @foreach (var vendor in Model.RequestsByVendor)
+    {
+        <table  class="table table-headerspaced  table-borderless table-hover mb-5 ">
+            <tr class="text-dark border-0 no-hover h-50" >
+                <td class="p-0"  rowspan="2" width="14%" ><span class="heading-1">@vendor.Key.VendorEnName.ToLower()</span></td>
+                <td class="border-bottom"></td>
+        <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
+    </table>
+        <table class="table table-headerspaced table-borderless table-hover mb-5 item-table">
+
+            
+       
+            <tbody>
+                @{ var requests = vendor.Select(r => r).ToList();}
+
+                @foreach (var row in requests)
+                {
+                    <tr class="text-center inv-list-item">
+                        @foreach (var col in row.Columns)
+                        {
+                            <td width="@col.Width%" class="@(col.Width == 0 ? "p-0" : "")">
+                                @if (col.Image != null)
+                                {
+                                    <img src="@col.Image" alt="Image" width="75" class="category-image" />
+                                }
+                                else if (col.Icons != null)
+                                {
+                                    <div class="d-inline-flex">
+
+                                        @foreach (var icon in col.Icons)
+                                        {
+                                            if (icon.IconClass?.Equals("More") ?? false)
+                                            {
+                                                <div class="table-icon-div">
+                                                    <ul class="list-unstyled p-0 m-0">
+                                                        <li>
+                                                            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@(col.AjaxID+"more")">
+                                                                <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;">
+                                                                </i>
+                                                            </button>
+                                                        </li>
+                                                        <li>
+                                                            <div style="display:none;" id="@(col.AjaxID+"more")">
+                                                                @if (Model.SidebarType != AppUtility.SidebarEnum.StandingOrders)
+                                                                {
+                                                                    var links = AppUtility.GetPaymentsPopoverLinks(Model.SidebarType);
+                                                                    foreach (var link in links)
+                                                                    {
+                                                                        <div class="row px-3 accounting-popover">
+                                                                            <a asp-action="@link.Action" asp-controller="@link.Controller" asp-route-currentStatus="@link.CurrentLocation"
+                                                                               asp-route-requestID="@col.AjaxID" asp-route-newStatus="@link.Description" class="btn-link text no-hover">
+                                                                                <i class="@link.Icon " style="color:@link.Color"></i>
+                                                                                <label class="m-2">@Html.DisplayFor(e => link.Description)</label>
+                                                                            </a>
+                                                                        </div>
+                                                                        <hr class="m-0" />
+                                                                    }
+                                                                }
+
+
+                                                            </div>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                            }
+                                            else if (icon.IconClass?.Equals("PartialClarify") ?? false)
+                                            {
+                                                <div class="table-icon-div">
+                                                    <ul class="list-unstyled p-0 m-0">
+                                                        <li>
+                                                            @{ String popoverID = col.AjaxID + "accNotification";
+                                                                var popoverText = "";
+                                                                var popoverNote = "";
+                                                            }
+                                                            @{
+                                                                switch (Model.SidebarType)
+                                                                {
+
+                                                                    case AppUtility.SidebarEnum.PartialDelivery:
+                                                                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
+                                                                            <i class="icon-remove_shopping_cart-24px green-overlay px-1" style="font-size:1.6rem;"></i>
+                                                                        </button> popoverText = "Was the order fully delivered?";
+                                                                        popoverNote = col.Note;
+                                                                        break;
+                                                                    case AppUtility.SidebarEnum.ForClarification:
+                                                                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow accNotification" value="@popoverID">
+                                                                            <i class="icon-notification_didnt_arrive-24px green-overlay px-1" style="font-size:1.6rem;"></i>
+                                                                        </button> popoverText = "Has the order been clarified?";
+                                                                        popoverNote = col.Note;
+                                                                        break;
+
+                                                                }
+                                                            }
+
+                                                        </li>
+                                                        <div style="display:none;" id="@popoverID">
+                                                            <div class="container">
+                                                                <div class="row border py-3 px-4 mb-3">@popoverNote</div>
+                                                                <div class="row small-text">
+                                                                    @popoverText
+                                                                </div>
+
+                                                                <div class="row mt-2 text-center">
+
+                                                                    <div class="col-6 p-1">
+                                                                        <a asp-action="HandleNotifications" asp-controller="Requests" asp-route-requestID="@col.AjaxID" asp-route-type="@Model.SidebarType" class="rounded-pill small-text p-0 m-0 btn text-capitalize  handleNotification " style="        width: 100%;
+        border: 1px solid var(--acc-color);
+        background-color: transparent;
+        color: var(--acc-color);">Save</a>
+                                                                    </div>
+                                                                    <div class="col-6 p-1 ">
+                                                                        <button class="rounded-pill p-0 m-0 small-text" style="background-color: transparent; border-width:1px !important; width: 100%;">
+                                                                            Cancel
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </ul>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="table-icon-div">
+                                                    <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                                       title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                        <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                                    </a>
+                                                </div>
+                                            }
+
+
+                                        }
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    for (int val = 0; val < col.Value.Count; val++)
+                                    {
+                                        if (val != 0)
+                                        {
+                                            <br />
+                                        }
+                                        if (col.AjaxLink != null)
+                                        {
+                                            <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID" data-target="item" href="item">
+                                                <p class="m-0">@col.Value[val]</p>
+                                            </button>
+                                        }
+                                        else if (col.Value[val].Equals("Checkbox"))
+                                        {
+                                            <div class="form-check accounting-select">
+                                                <input type="checkbox" class="form-check-input fci-acc filled-in" id="@col.AjaxID" vendorid="@row.Vendor.VendorID">
+                                                <label class="form-check-label" for="@col.AjaxID"></label>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <label class="m-0 p-0">@col.Value[val]</label>
+                                        }
+                                    }
+
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+
+                <tr class="border-0 mb-5 no-hover">
+                    @for (int i = 0; i < requests.FirstOrDefault().Columns.Count() - 4; i++)
+                    {
+                        <td></td>
+                    }
+
+                    <td class="text-center">
+                        <span class="text font-weight-bold">Items: @vendor.Count()</span>
+                    </td>
+                    <td class="text-center">
+                        @{
+                            var currencyFormat = "he-IL";
+                            var sum = requests.Sum(r => r.TotalCost);
+                            if (Model.PricePopoverViewModel.SelectedCurrency == AppUtility.CurrencyEnum.USD)
+                            {
+                                currencyFormat = "en-US";
+                                sum = requests.Sum(r => r.TotalCost / r.ExchangeRate);
+                            }
+                        }
+                        <span class="text font-weight-bold">Total: @string.Format(new CultureInfo(currencyFormat), "{0:c}", sum)</span>
+                    </td>
+                    @if (requests.FirstOrDefault().ButtonText != "")
+                    {
+                    <td colspan="2">
+                        <button class="custom-button-font custom-button @requests.FirstOrDefault().ButtonClasses float-right  cart" type="button" value="@vendor.Key.VendorID">@requests.FirstOrDefault().ButtonText</button>
+                    </td>
+                    }
+                </tr>
+
+
+
+        </table>
+    }
+</form>
+<script src="~/js/accounting.js"></script>
+<script src="~/js/IndexTablePartial.js"></script>
+<script src="~/js/PricePopoverScript.js"></script>
+<script src="~/js/ConfirmDeleteScript.js"></script>

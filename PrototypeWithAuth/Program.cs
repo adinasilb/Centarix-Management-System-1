@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth
@@ -32,36 +33,8 @@ namespace PrototypeWithAuth
             //        var logger = services.GetRequiredService<ILogger<Program>>();
             //        logger.LogError(exception, "An error occurred while creating roles");
             //    }
-            CreateHostBuilder(args).Build().Run();
 
-          
-
-//            var host = CreateHostBuilder(args);
-//​
-//            using (var scope = host.ConfigureServices.scope())
-//            {
-//                var services = scope.ServiceProvider;
-//                try
-//                {
-//                    var serviceProvider = services.GetRequiredService<IServiceProvider>();
-//                    var configuration = services.GetRequiredService<IConfiguration>();
-//                    SeedRoles.CreateRoles(serviceProvider, configuration).Wait();
-
-//                }
-//                catch (Exception exception)
-//                {
-//                    var logger = services.GetRequiredService<ILogger<Program>>();
-//                    logger.LogError(exception, "An error occurred while creating roles");
-//                }
-//            }
-//​
-//            host.Build().Run();
-
-
-
-
-
-
+            CreateHostBuilder(args).Build().Run();     
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

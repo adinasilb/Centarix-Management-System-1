@@ -1,0 +1,58 @@
+﻿
+
+<div class="modal modal-view two-factor-session-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
+
+    <div class="modal-dialog-centered mx-auto modal-lg" role="document" style="max-height:100%; width:32rem;">
+
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-padding">
+                <div class="modal-header pt-0" style="border-bottom: 0;">
+                    <input type="hidden" text="open" class="modal-open-state" />
+                    <div class="row heading-1">
+                        Remember Two Factor Authentication Expired
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        Remember Two Factor Authentication is expired. Do you want to Remember Two Factor Authentication again?
+                    </div>
+                    <div class="row text-center">
+
+                        <button class="text custom-button custom-button-font between-button-margin two-factor-remember danger-color" value="true">Yes</button>
+                        <button class="custom-button custom-cancel text two-factor-remember" value="false">No</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $(".two-factor-remember").click(function (e) {
+            var remember = $(this).val();
+            $.ajax({
+                processData: false,
+                contentType: false,
+                async: true,
+                url: "/Admin/TwoFactorSessionModal?rememberTwoFactor=" + remember,
+                type: 'POST',
+                cache: false,
+                success: function (data) {
+                    console.log("success")
+                    $('.two-factor-session-modal').hide();
+                    $('.modal-backdrop').remove();
+                },
+                error: function () {
+                    var error = "Something went wrong with renewing 2 factor";
+                    window.location.href = "/Identity/Account/LoginWith2fa?ErrorMessage=" + error;
+                }
+            })
+
+        });
+    })
+</script>

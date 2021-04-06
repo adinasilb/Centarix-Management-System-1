@@ -17,13 +17,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<PaymentStatus>().HasData(
                 new PaymentStatus
                 {
-                    PaymentStatusID = 1,
-                    PaymentStatusDescription = "No Invoice" //TODO: should this be renamed ordered or will none cover all bases?
-                },
-                new PaymentStatus
-                {
                     PaymentStatusID = 2,
-                    PaymentStatusDescription = "Not Paid"
+                    PaymentStatusDescription = "+ 30"
                 },
                 new PaymentStatus
                 {
@@ -33,21 +28,41 @@ namespace PrototypeWithAuth.Data
                 new PaymentStatus
                 {
                     PaymentStatusID = 4,
-                    PaymentStatusDescription = "Pay Later"
+                    PaymentStatusDescription = "Pay Upon Arrival"
                 },
                 new PaymentStatus
                 {
                     PaymentStatusID = 5,
                     PaymentStatusDescription = "Installments"
                 },
+                 new PaymentStatus
+                 {
+                     PaymentStatusID = 7,
+                     PaymentStatusDescription = "Standing Order"
+                 },
                 new PaymentStatus
                 {
-                    PaymentStatusID = 6,
-                    PaymentStatusDescription = "Paid"
+                    PaymentStatusID = 8,
+                    PaymentStatusDescription = "Specify Payment Later"
                 }
             );
 
-            modelBuilder.Entity<CategoryType>().HasData(
+            modelBuilder.Entity<PaymentType>().HasData(
+               new PaymentType
+               {
+                   PaymentTypeID = 1,
+                   PaymentTypeDescription = "Credit Card"
+
+               },
+               new PaymentType
+               {
+                   PaymentTypeID = 2,
+                   PaymentTypeDescription = "Bank Transfer"
+               }
+           );
+
+
+           modelBuilder.Entity<CategoryType>().HasData(
                 new CategoryType
                 {
                     CategoryTypeID = 1,
@@ -71,44 +86,296 @@ namespace PrototypeWithAuth.Data
                new ParentCategory
                {
                    ParentCategoryID = 2,
-                   ParentCategoryDescription = "Reagents",
+                   ParentCategoryDescription = "Reagents And Chemicals",
                    CategoryTypeID = 1
                },
                new ParentCategory
                {
                    ParentCategoryID = 3,
-                   ParentCategoryDescription = "Proprietry",
+                   ParentCategoryDescription = "Cells",
                    CategoryTypeID = 1
                },
                 new ParentCategory
                 {
                     ParentCategoryID = 4,
-                    ParentCategoryDescription = "Reusable",
+                    ParentCategoryDescription = "Reusables",
                     CategoryTypeID = 1
                 },
-                new ParentCategory
-                {
-                    ParentCategoryID = 5,
-                    ParentCategoryDescription = "Equipment",
-                    CategoryTypeID = 1
-                },
+                //new ParentCategory
+                //{
+                //    ParentCategoryID = 5,
+                //    ParentCategoryDescription = "Equipment",
+                //    CategoryTypeID = 1
+                //},
                 new ParentCategory
                 {
                     ParentCategoryID = 6,
-                    ParentCategoryDescription = "Operation",
+                    ParentCategoryDescription = "IT",
                     CategoryTypeID = 2
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 8,
+                    ParentCategoryDescription = "Day To Day",
+                    CategoryTypeID = 2
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 9,
+                    ParentCategoryDescription = "Travel",
+                    CategoryTypeID = 2
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 10,
+                    ParentCategoryDescription = "Advisment",
+                    CategoryTypeID = 2
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 11,
+                    ParentCategoryDescription = "Regulations",
+                    CategoryTypeID = 2
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 12,
+                    ParentCategoryDescription = "Governments",
+                    CategoryTypeID = 2
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 13,
+                    ParentCategoryDescription = "General",
+                    CategoryTypeID = 2
+                },
+                new ParentCategory
+                {
+                    ParentCategoryID = 7,
+                    ParentCategoryDescription = "Proprietary",
+                    CategoryTypeID = 1,
+                    isProprietary = true
                 }
             );
+
+            modelBuilder.Entity<UnitTypeParentCategory>().HasData
+              (
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 1,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 2,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 19,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 3,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 24,
+                    ParentCategoryID = 1
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 17,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 18,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 1,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 2,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 19,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 3,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 7,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 8,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 9,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 10,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 11,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 12,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 13,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 20,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 21,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 22,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 23,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 24,
+                    ParentCategoryID = 2
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 3
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 1,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 2,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 19,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 3,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 24,
+                    ParentCategoryID = 4
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 5,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 10,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 9,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 20,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 21,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 22,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 13,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 12,
+                    ParentCategoryID = 7
+                },
+                new UnitTypeParentCategory
+                {
+                    UnitTypeID = 11,
+                    ParentCategoryID = 7
+                }
+              );
 
             modelBuilder.Entity<ProductSubcategory>().HasData
               (
 
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 101,
-                    ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "3D Cells Grow"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 101,
+                //    ParentCategoryID = 1,
+                //    ProductSubcategoryDescription = "3D Cells Grow"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 102,
@@ -116,13 +383,13 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryDescription = "PCR Plates",
                     ImageURL = "/images/css/CategoryImages/PCR.png"
                 },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 103,
-                    ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Blood Tubes",
-                    ImageURL = "/images/css/CategoryImages/blood_tubes.png"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 103,
+                //    ParentCategoryID = 1,
+                //    ProductSubcategoryDescription = "Blood Tubes",
+                //    ImageURL = "/images/css/CategoryImages/blood_tubes.png"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 104,
@@ -134,7 +401,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 105,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "Dishes"
+                    ProductSubcategoryDescription = "Petri Dishes"
                 },
                 new ProductSubcategory
                 {
@@ -158,6 +425,12 @@ namespace PrototypeWithAuth.Data
                 },
                 new ProductSubcategory
                 {
+                    ProductSubcategoryID = 109,
+                    ParentCategoryID = 1,
+                    ProductSubcategoryDescription = "Robot Tips"
+                },
+                new ProductSubcategory
+                {
                     ProductSubcategoryID = 201,
                     ParentCategoryID = 2,
                     ProductSubcategoryDescription = "Chemical Powder",
@@ -167,7 +440,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 202,
                     ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "DNA Enzyme",
+                    ProductSubcategoryDescription = "Enzyme",
                     ImageURL = "/images/css/CategoryImages/dna_enzyme.png"
                 },
                 new ProductSubcategory
@@ -239,337 +512,401 @@ namespace PrototypeWithAuth.Data
                     ProductSubcategoryDescription = "Media Supplement",
                     ImageURL = "/images/css/CategoryImages/media_supplement.png"
                 },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 213,
-                    ParentCategoryID = 2,
-                    ProductSubcategoryDescription = "Plasmid Purification"
-                },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 213,
+                //    ParentCategoryID = 2,
+                //    ProductSubcategoryDescription = "Plasmid Purification"
+                //},
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 301,
                     ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Virus",
-                    ImageURL = "/images/css/CategoryImages/virus.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 302,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Plasmid",
-                    ImageURL = "/images/css/CategoryImages/plasmid.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 303,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Primers",
-                    ImageURL = "/images/css/CategoryImages/primer.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 304,
-                    ParentCategoryID = 3,
-                    ProductSubcategoryDescription = "Probes"
+                    ProductSubcategoryDescription = "Cells"
                 },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 401,
                     ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Beaker",
-                    ImageURL = "/images/css/CategoryImages/beaker.png"
+                    ProductSubcategoryDescription = "Reusables"
                 },
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 401,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Beaker",
+                //    ImageURL = "/images/css/CategoryImages/beaker.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 402,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Measuring",
+                //    ImageURL = "/images/css/CategoryImages/measuring.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 403,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Tube Holders",
+                //    ImageURL = "/images/css/CategoryImages/tube_holder.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 404,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Buckets",
+                //    ImageURL = "/images/css/CategoryImages/bucket.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 405,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "Cooling Racks"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 406,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "-196 Box",
+                //    ImageURL = "/images/css/CategoryImages/196box.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 407,
+                //    ParentCategoryID = 4,
+                //    ProductSubcategoryDescription = "-80 Box",
+                //    ImageURL = "/images/css/CategoryImages/80box.png"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 501,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 502,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument Parts"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 503,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument Check"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 504,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument Fixing"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 505,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument Calibration"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 506,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Instrument Warranty"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 507,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Lab Software"
+                //},
+                //new ProductSubcategory
+                //{
+                //    ProductSubcategoryID = 508,
+                //    ParentCategoryID = 5,
+                //    ProductSubcategoryDescription = "Lab Furniture"
+                //},
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 402,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Measuring",
-                    ImageURL = "/images/css/CategoryImages/measuring.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 403,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Tube Holders",
-                    ImageURL = "/images/css/CategoryImages/tube_holder.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 404,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Buckets",
-                    ImageURL = "/images/css/CategoryImages/bucket.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 405,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "Cooling Racks"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 406,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "-196 Box",
-                    ImageURL = "/images/css/CategoryImages/196box.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 407,
-                    ParentCategoryID = 4,
-                    ProductSubcategoryDescription = "-80 Box",
-                    ImageURL = "/images/css/CategoryImages/80box.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 501,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 502,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument Parts"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 503,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument Check"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 504,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument Fixing"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 505,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument Calibration"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 506,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Instrument Warranty"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 507,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Lab Software"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 508,
-                    ParentCategoryID = 5,
-                    ProductSubcategoryDescription = "Lab Furniture"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 601,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Computer",
-                    ImageURL = "/images/css/CategoryImages/computer.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 602,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 801,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Rent",
                     ImageURL = "/images/css/CategoryImages/rent.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 603,
+                    ProductSubcategoryID = 602,
                     ParentCategoryID = 6,
                     ProductSubcategoryDescription = "Communication",
                     ImageURL = "/images/css/CategoryImages/communications.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 604,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 808,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Branding",
                     ImageURL = "/images/css/CategoryImages/branding.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 605,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Travel",
-                    ImageURL = "/images/css/CategoryImages/travel.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 606,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 809,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Shipment",
                     ImageURL = "/images/css/CategoryImages/shippment.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 607,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Transportation",
-                    ImageURL = "/images/css/CategoryImages/transportation.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 608,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Rennovation",
+                    ProductSubcategoryID = 804,
+                    ParentCategoryID = 8,
+                    ProductSubcategoryDescription = "Renovation",
                     ImageURL = "/images/css/CategoryImages/renovation.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 609,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 812,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Bookkeeping",
                     ImageURL = "/images/css/CategoryImages/bookeeping.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 610,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Law Advisement",
+                    ProductSubcategoryID = 1001,
+                    ParentCategoryID = 10,
+                    ProductSubcategoryDescription = "Law",
                     ImageURL = "/images/css/CategoryImages/legal.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 611,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 1201,
+                    ParentCategoryID = 12,
                     ProductSubcategoryDescription = "Tax",
                     ImageURL = "/images/css/CategoryImages/taxes.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 612,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 811,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Books And Journal",
                     ImageURL = "/images/css/CategoryImages/books.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 613,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Regulations",
-                    ImageURL = "/images/css/CategoryImages/regulations.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 614,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Clinical Regulation",
+                    ProductSubcategoryID = 1004,
+                    ParentCategoryID = 10,
+                    ProductSubcategoryDescription = "Clinical Experiments",
                     ImageURL = "/images/css/CategoryImages/clinical_regulation.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 615,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 901,
+                    ParentCategoryID = 9,
                     ProductSubcategoryDescription = "Conference",
                     ImageURL = "/images/css/CategoryImages/conference.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 616,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 807,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Company Events",
                     ImageURL = "/images/css/CategoryImages/company_events.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 617,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 805,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Insurance",
                     ImageURL = "/images/css/CategoryImages/insurance.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 618,
+                    ProductSubcategoryID = 1301,
+                    ParentCategoryID = 13,
+                    ProductSubcategoryDescription = "General",
+                    ImageURL = "/images/css/CategoryImages/general.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1102,
+                    ParentCategoryID = 11,
+                    ProductSubcategoryDescription = "General",
+                    ImageURL = "/images/css/CategoryImages/general.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 604,
                     ParentCategoryID = 6,
                     ProductSubcategoryDescription = "General",
                     ImageURL = "/images/css/CategoryImages/general.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 619,
+                    ProductSubcategoryID = 814,
+                    ParentCategoryID = 8,
+                    ProductSubcategoryDescription = "General",
+                    ImageURL = "/images/css/CategoryImages/general.png"
+                 },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 1203,
+                    ParentCategoryID = 12,
+                    ProductSubcategoryDescription = "General",
+                    ImageURL = "/images/css/CategoryImages/general.png"
+                },
+                new ProductSubcategory
+                 {
+                     ProductSubcategoryID = 1005,
+                     ParentCategoryID = 10,
+                     ProductSubcategoryDescription = "General",
+                     ImageURL = "/images/css/CategoryImages/general.png"
+                 },
+                new ProductSubcategory
+                 {
+                     ProductSubcategoryID = 905,
+                     ParentCategoryID = 9,
+                     ProductSubcategoryDescription = "General",
+                     ImageURL = "/images/css/CategoryImages/general.png"
+                 },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 601,
                     ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Software",
+                    ProductSubcategoryDescription = "Hardware",
                     ImageURL = "/images/css/CategoryImages/software.png"
                 },
                 new ProductSubcategory
+                 {
+                     ProductSubcategoryID = 603,
+                     ParentCategoryID = 6,
+                     ProductSubcategoryDescription = "Cybersecurity",
+                     ImageURL = "/images/css/CategoryImages/software.png"
+                 },
+                new ProductSubcategory
                 {
-                    ProductSubcategoryID = 620,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 903,
+                    ParentCategoryID = 9,
                     ProductSubcategoryDescription = "Hotels",
                     ImageURL = "/images/css/CategoryImages/hotels.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 621,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 902,
+                    ParentCategoryID = 9,
                     ProductSubcategoryDescription = "Flight Tickets",
                     ImageURL = "/images/css/CategoryImages/flight_tickets.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 622,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Scientific Advice",
+                    ProductSubcategoryID = 1002,
+                    ParentCategoryID = 10,
+                    ProductSubcategoryDescription = "Scientific",
                     ImageURL = "/images/css/CategoryImages/sciemtific_advice.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 623,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Brokerage"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 624,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Business Advice",
+                    ProductSubcategoryID = 1003,
+                    ParentCategoryID = 10,
+                    ProductSubcategoryDescription = "Business",
                     ImageURL = "/images/css/CategoryImages/business_advice.png"
-                },
+                },                
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 625,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Electric Appliances",
-                    ImageURL = "/images/css/CategoryImages/appliances.png"
-                },
-                new ProductSubcategory
-                {
-                    ProductSubcategoryID = 626,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 1101,
+                    ParentCategoryID = 11,
                     ProductSubcategoryDescription = "Safety",
                     ImageURL = "/images/css/CategoryImages/safety.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 627,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 904,
+                    ParentCategoryID = 9,
                     ProductSubcategoryDescription = "Food",
                     ImageURL = "/images/css/CategoryImages/food.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 628,
-                    ParentCategoryID = 6,
-                    ProductSubcategoryDescription = "Stationary",
-                    ImageURL = "/images/css/CategoryImages/stationary.png"
+                    ProductSubcategoryID = 810,
+                    ParentCategoryID = 8,
+                    ProductSubcategoryDescription = "Food",
+                    ImageURL = "/images/css/CategoryImages/food.png"
                 },
                 new ProductSubcategory
                 {
-                    ProductSubcategoryID = 629,
-                    ParentCategoryID = 6,
+                    ProductSubcategoryID = 806,
+                    ParentCategoryID = 8,
                     ProductSubcategoryDescription = "Furniture",
                     ImageURL = "/images/css/CategoryImages/furniture.png"
+                },
+                 new ProductSubcategory
+                 {
+                     ProductSubcategoryID = 802,
+                     ParentCategoryID = 8,
+                     ProductSubcategoryDescription = "Electricity",
+                 },
+                  new ProductSubcategory
+                  {
+                      ProductSubcategoryID = 803,
+                      ParentCategoryID = 8,
+                      ProductSubcategoryDescription = "Parking",
+                  },
+                   new ProductSubcategory
+                   {
+                       ProductSubcategoryID = 813,
+                       ParentCategoryID = 8,
+                       ProductSubcategoryDescription = "Graphics",
+                       ImageURL = "/images/css/CategoryImages/furniture.png"
+                   },
+                    new ProductSubcategory
+                    {
+                        ProductSubcategoryID = 1202,
+                        ParentCategoryID = 12,
+                        ProductSubcategoryDescription = "Fees",
+                        ImageURL = "/images/css/CategoryImages/furniture.png"
+                    },
+                new ProductSubcategory
+                 {
+                     ProductSubcategoryID = 701,
+                     ParentCategoryID = 7,
+                     ProductSubcategoryDescription = "Virus",
+                     ImageURL = "/images/css/CategoryImages/virus.png"
+                 },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 702,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Plasmid",
+                    ImageURL = "/images/css/CategoryImages/plasmid.png"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 703,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Probes"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 704,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Cells"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 705,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Bacteria with Plasmids"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 706,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Blood"
+                },
+                new ProductSubcategory
+                {
+                    ProductSubcategoryID = 707,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Serum"
                 }
+
               );
             modelBuilder.Entity<RequestStatus>().HasData
           (
@@ -588,20 +925,25 @@ namespace PrototypeWithAuth.Data
                   RequestStatusID = 3,
                   RequestStatusDescription = "RecievedAndIsInventory"  // request page, under recieved (only pass in the first 50) and under Inventory
               },
-               new RequestStatus
-               {
-                   RequestStatusID = 4,
-                   RequestStatusDescription = "Partial" // request page, under order
-               },
-                new RequestStatus
-                {
-                    RequestStatusID = 5,
-                    RequestStatusDescription = "Clarify" // request page, under order
-                },
+              // new RequestStatus
+              // {
+              //     RequestStatusID = 4,
+              //     RequestStatusDescription = "Partial" // request page, under order
+              // },
+              //  new RequestStatus
+              //  {
+              //      RequestStatusID = 5,
+              //      RequestStatusDescription = "Clarify" // request page, under order
+              //  },
                 new RequestStatus
                 {
                     RequestStatusID = 6,
                     RequestStatusDescription = "Approved" // request page, under order
+                },
+                new RequestStatus
+                {
+                    RequestStatusID = 7,
+                    RequestStatusDescription = "Saved To Inventory" 
                 }
              );
             modelBuilder.Entity<UnitParentType>().HasData
@@ -639,6 +981,12 @@ namespace PrototypeWithAuth.Data
              },
              new UnitType
              {
+                 UnitTypeID = 19,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Case"
+             },
+             new UnitType
+             {
                  UnitTypeID = 3,
                  UnitParentTypeID = 1,
                  UnitTypeDescription = "Pack"
@@ -660,6 +1008,12 @@ namespace PrototypeWithAuth.Data
                  UnitTypeID = 6,
                  UnitParentTypeID = 1,
                  UnitTypeDescription = "Vial"
+             },
+             new UnitType
+             {
+                 UnitTypeID = 24,
+                 UnitParentTypeID = 1,
+                 UnitTypeDescription = "Tube"
              },
              new UnitType
              {
@@ -703,12 +1057,36 @@ namespace PrototypeWithAuth.Data
                  UnitParentTypeID = 2,
                  UnitTypeDescription = "ul"
              },
-             new UnitType
-             {
-                 UnitTypeID = 14,
-                 UnitParentTypeID = 2,
-                 UnitTypeDescription = "gal"
-             },
+            new UnitType
+            {
+                UnitTypeID = 14,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "gal"
+            },
+            new UnitType
+            {
+                UnitTypeID = 20,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "pmol"
+            },
+            new UnitType
+            {
+                UnitTypeID = 21,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "nmol"
+            },
+            new UnitType
+            {
+                UnitTypeID = 22,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "umol"
+            },
+            new UnitType
+            {
+                UnitTypeID = 23,
+                UnitParentTypeID = 2,
+                UnitTypeDescription = "mol"
+            },
              new UnitType
              {
                  UnitTypeID = 15,
@@ -834,98 +1212,6 @@ namespace PrototypeWithAuth.Data
                 }
             );
 
-            modelBuilder.Entity<Menu>().HasData(
-                new Menu
-                {
-                    menuID = 1,
-                    MenuDescription = AppUtility.MenuItems.Requests.ToString(),
-                    MenuViewName = "Orders & Inventory",
-                    ControllerName = "Requests",
-                    ActionName = "Index",
-                    MenuImageURL = "/images/css/main_menu_icons/inventory.png"
-                },
-                new Menu
-                {
-                    menuID = 2,
-                    MenuDescription = AppUtility.MenuItems.Protocols.ToString(),
-                    MenuViewName = "Protocols",
-                    ControllerName = "",
-                    ActionName = "",
-                    MenuImageURL = "/images/css/main_menu_icons/protocols.png"
-                },
-                new Menu
-                {
-                    menuID = 3,
-                    MenuDescription = AppUtility.MenuItems.Operations.ToString(),
-                    MenuViewName = "Operation",
-                    ControllerName = "Operations",
-                    ActionName = "Index",
-                    MenuImageURL = "/images/css/main_menu_icons/operation.png"
-                },
-                new Menu
-                {
-                    menuID = 4,
-                    MenuDescription = AppUtility.MenuItems.Biomarkers.ToString(),
-                    MenuViewName = "Biomarkers",
-                    ControllerName = "",
-                    ActionName = "",
-                    MenuImageURL = "/images/css/main_menu_icons/biomarkers.png"
-                },
-                new Menu
-                {
-                    menuID = 5,
-                    MenuDescription = AppUtility.MenuItems.TimeKeeper.ToString(),
-                    MenuViewName = "Timekeeper",
-                    ControllerName = "Timekeeper",
-                    ActionName = "ReportHours",
-                    MenuImageURL = "/images/css/main_menu_icons/timekeeper.png"
-                },
-                new Menu
-                {
-                    menuID = 6,
-                    MenuDescription = AppUtility.MenuItems.LabManagement.ToString(),
-                    MenuViewName = "Lab Management",
-                    ControllerName = "Vendors",
-                    ActionName = "IndexForPayment",
-                    MenuImageURL = "/images/css/main_menu_icons/lab.png"
-                },
-                new Menu
-                {
-                    menuID = 7,
-                    MenuDescription = AppUtility.MenuItems.Accounting.ToString(),
-                    MenuViewName = "Accounting",
-                    ControllerName = "Requests",
-                    ActionName = "AccountingPayments",
-                    MenuImageURL = "/images/css/main_menu_icons/accounting.png"
-                },
-                new Menu
-                {
-                    menuID = 8,
-                    MenuDescription = AppUtility.MenuItems.Reports.ToString(),
-                    MenuViewName = "Reports",
-                    ControllerName = "Expenses",
-                    ActionName = "SummaryPieCharts",
-                    MenuImageURL = "/images/css/main_menu_icons/expenses.png"
-                },
-                new Menu
-                {
-                    menuID = 9,
-                    MenuDescription = AppUtility.MenuItems.Income.ToString(),
-                    MenuViewName = "Income",
-                    ControllerName = "",
-                    ActionName = "",
-                    MenuImageURL = "/images/css/main_menu_icons/income.png"
-                },
-                new Menu
-                {
-                    menuID = 10,
-                    MenuDescription = AppUtility.MenuItems.Users.ToString(),
-                    MenuViewName = "Users",
-                    ControllerName = "Admin",
-                    ActionName = "Index",
-                    MenuImageURL = "/images/css/main_menu_icons/users.png"
-                }
-            );
             modelBuilder.Entity<QuoteStatus>().HasData(
                 new QuoteStatus
                 {
@@ -1007,6 +1293,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 101,
                     LocationTypeName = "Rack",
                     LocationTypePluralName = "Racks",
+                    LocationTypeNameAbbre = "R",
                     LocationTypeParentID = 100,
                     LocationTypeChildID = 102,
                     Depth = 1
@@ -1016,6 +1303,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 102,
                     LocationTypeName = "Box",
                     LocationTypePluralName = "Boxes",
+                    LocationTypeNameAbbre = "B",
                     LocationTypeParentID = 101,
                     LocationTypeChildID = 103,
                     Depth = 2
@@ -1024,6 +1312,7 @@ namespace PrototypeWithAuth.Data
                 {
                     LocationTypeID = 103,
                     LocationTypeName = "Box Unit",
+                    LocationTypeNameAbbre = "B",
                     LocationTypePluralName = "Box Units",
                     LocationTypeParentID = 102,
                     Limit = 1,
@@ -1040,8 +1329,9 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 201,
-                    LocationTypeName = "Shelf",
-                    LocationTypePluralName = "Shelves",
+                    LocationTypeName = "Floor",
+                    LocationTypePluralName = "Floors",
+                    LocationTypeNameAbbre = "F",
                     LocationTypeParentID = 200,
                     LocationTypeChildID = 202,
                     Depth = 1
@@ -1051,6 +1341,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 202,
                     LocationTypeName = "Rack",
                     LocationTypePluralName = "Racks",
+                    LocationTypeNameAbbre = "R",
                     LocationTypeParentID = 201,
                     LocationTypeChildID = 203,
                     Depth = 2
@@ -1058,8 +1349,9 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 203,
-                    LocationTypeName = "Box",
-                    LocationTypePluralName = "Boxes",
+                    LocationTypeName = "Shelf",
+                    LocationTypePluralName = "Shelves",
+                    LocationTypeNameAbbre = "S",
                     LocationTypeParentID = 202,
                     LocationTypeChildID = 204,
                     Depth = 3
@@ -1067,12 +1359,23 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 204,
-                    LocationTypeName = "Box Unit",
-                    LocationTypePluralName = "Box Units",
+                    LocationTypeName = "Box",
+                    LocationTypePluralName = "Boxes",
+                    LocationTypeNameAbbre = "B",
                     LocationTypeParentID = 203,
-                    Limit = 1,
+                    LocationTypeChildID = 205,
                     Depth = 4
                 },
+                   new LocationType
+                   {
+                       LocationTypeID = 205,
+                       LocationTypeName = "Box Unit",
+                       LocationTypePluralName = "Box Units",
+                       LocationTypeNameAbbre = "B",
+                       LocationTypeParentID = 204,
+                       Limit = 1,
+                       Depth = 5
+                   },
                 new LocationType
                 {
                     LocationTypeID = 300,
@@ -1086,14 +1389,15 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 301,
                     LocationTypeName = "Shelf",
                     LocationTypePluralName = "Shelves",
+                    LocationTypeNameAbbre = "S",
                     LocationTypeParentID = 300,
                     Depth = 1
                 },
                 new LocationType
                 {
                     LocationTypeID = 400,
-                    LocationTypeName = "-4°C",
-                    LocationTypePluralName = "-4°C",
+                    LocationTypeName = "4°C",
+                    LocationTypePluralName = "4°C",
                     LocationTypeChildID = 401,
                     Depth = 0
                 },
@@ -1102,6 +1406,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 401,
                     LocationTypeName = "Shelf",
                     LocationTypePluralName = "Shelves",
+                    LocationTypeNameAbbre = "S",
                     LocationTypeParentID = 400,
                     Depth = 1
                 },
@@ -1116,12 +1421,194 @@ namespace PrototypeWithAuth.Data
                 new LocationType
                 {
                     LocationTypeID = 501,
-                    LocationTypeName = "Shelf",
-                    LocationTypePluralName = "Shelves",
+                    LocationTypeName = "Location",
+                    LocationTypePluralName = "Locations",
                     LocationTypeParentID = 500,
+                    LocationTypeChildID = 502,
                     Depth = 1
+                },
+                 new LocationType
+                 {
+                     LocationTypeID = 502,
+                     LocationTypeName = "Lab Part",
+                     LocationTypePluralName = "Lab Parts",
+                     LocationTypeParentID = 501,
+                     LocationTypeChildID = 503,
+                     Depth = 2
+                 },
+                new LocationType
+                {
+                    LocationTypeID = 503,
+                    LocationTypeName = "Section",
+                    LocationTypePluralName = "Sections",
+                    LocationTypeNameAbbre ="S",
+                    LocationTypeParentID = 502,
+                    Depth = 3
                 }
             );
+            modelBuilder.Entity<LocationRoomType>().HasData(
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 1,
+                        LocationRoomTypeDescription = "Laboratory",
+                        LocationAbbreviation = "L"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 2,
+                        LocationRoomTypeDescription = "Tissue Culture",
+                        LocationAbbreviation = "TC"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 3,
+                        LocationRoomTypeDescription = "Equipment Room",
+                        LocationAbbreviation = "E"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 4,
+                        LocationRoomTypeDescription = "Refrigerator Room",
+                        LocationAbbreviation = "R"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 5,
+                        LocationRoomTypeDescription = "Washing Room",
+                        LocationAbbreviation = "W"
+                    },
+                    new LocationRoomType
+                    {
+                        LocationRoomTypeID = 6,
+                        LocationRoomTypeDescription = "Storage Room",
+                        LocationAbbreviation = "S"
+                    }
+                );
+            modelBuilder.Entity<LocationInstance>().HasData(
+                       new LocationInstance
+                       {
+                           LocationInstanceID = 1,
+                           LocationInstanceName = "25°C",
+                           Height = 7,
+                           Width =1,
+                           LocationTypeID = 500
+
+                       },
+                       new LocationInstance
+                       {
+                           LocationInstanceID = 2,
+                           LocationInstanceParentID =1,
+                           LocationRoomTypeID = 1,
+                            LocationInstanceName = "Laboratory 1",
+                           LocationInstanceAbbrev = "L1",
+                           LocationTypeID = 501,
+                            Width = 1,
+                       },
+                       new LocationInstance
+                       {
+                           LocationInstanceID = 3,
+                           LocationInstanceParentID = 1,
+                           LocationRoomTypeID = 1,
+                           LocationInstanceName = "Laboratory 2",
+                           LocationInstanceAbbrev ="L2",
+                           LocationTypeID = 501,
+                            Width = 1,
+                       },
+                       new LocationInstance
+                       {
+                           LocationInstanceID = 4,
+                           LocationInstanceParentID = 1,
+                           LocationInstanceName = "Tissue Culture 1",
+                           LocationInstanceAbbrev = "TC1",
+                           LocationTypeID = 501,
+                           LocationRoomTypeID = 2,
+                           Width = 1,
+                       },
+                        new LocationInstance
+                        {
+                            LocationInstanceID = 5,
+                            LocationInstanceParentID = 1,
+                            LocationTypeID = 501,
+                            LocationRoomTypeID = 3,
+                            LocationInstanceName = "Equipment Room 1",
+                            LocationInstanceAbbrev = "E1",
+                             Width = 1,
+
+                        },
+                        new LocationInstance
+                        {
+                            LocationInstanceID = 6,
+                            LocationInstanceParentID = 1,
+                            LocationTypeID = 501,
+                            LocationRoomTypeID = 4,
+                            LocationInstanceName = "Refrigerator Room 1",
+                            LocationInstanceAbbrev = "R1",
+                             Width = 1,
+
+                        },
+                        new LocationInstance
+                        {
+                            LocationInstanceID = 7,
+                            LocationInstanceParentID = 1,
+                            LocationTypeID = 501,
+                            LocationRoomTypeID = 5,
+                            LocationInstanceName = "Washing Room 1",
+                            LocationInstanceAbbrev = "W1",
+                             Width = 1,
+
+                        },
+                        new LocationInstance
+                        {
+                            LocationInstanceID= 8,
+                            LocationInstanceParentID = 1,
+                            LocationTypeID = 501,
+                            LocationRoomTypeID = 6,
+                            LocationInstanceName = "Storage Room 1",
+                            LocationInstanceAbbrev = "S1",
+                            Width = 1,
+
+                        }
+                 );
+            modelBuilder.Entity<LabPart>().HasData(
+                    new LabPart
+                    {
+                        LabPartID = 1,
+                        LabPartName = "Closet" ,
+                        LabPartNameAbbrev ="C",
+                        HasShelves = true
+                    },
+                    new LabPart
+                    {
+                        LabPartID = 2,
+                        LabPartName = "Glass Closet",
+                        LabPartNameAbbrev = "G",
+                        HasShelves = true
+                    },
+                    new LabPart
+                    {
+                        LabPartID = 3,
+                        LabPartNameAbbrev = "T",
+                        LabPartName = "Table",
+                    },
+                    new LabPart
+                    {
+                        LabPartID = 4,
+                        LabPartNameAbbrev = "D",
+                        LabPartName = "Drawer",
+                    },
+                    new LabPart
+                    {
+                        LabPartID = 5,
+                        LabPartNameAbbrev = "S",
+                        LabPartName = "Shelf"
+                    },
+                    new LabPart
+                    {
+                        LabPartID = 6,
+                        LabPartNameAbbrev = "B",
+                        LabPartName = "Bench"
+                    }
+               );
             modelBuilder.Entity<OffDayType>().HasData(
                         new OffDayType
                         {
@@ -1131,7 +1618,12 @@ namespace PrototypeWithAuth.Data
                          new OffDayType
                          {
                              OffDayTypeID = 2,
-                             Description = " Vacation Day"
+                             Description = "Vacation Day"
+                         },
+                         new OffDayType
+                         {
+                             OffDayTypeID = 3,
+                             Description = "Maternity Leave"
                          }
                   );
             modelBuilder.Entity<EmployeeHoursStatus>().HasData(
@@ -1187,57 +1679,403 @@ namespace PrototypeWithAuth.Data
                       JobCategoryTypeID = 1,
                       Description = "Executive"
                   },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 2,
-                     Description = "Senior Manager"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 3,
-                     Description = "Manager"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 4,
-                     Description = "Senior Bioinformatician"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 5,
-                     Description = "Bioinformatician"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 6,
-                     Description = "Senior Scientist"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 7,
-                     Description = "Lab Technician"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 8,
-                     Description = "Research Associate"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 9,
-                     Description = "Software Developer"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 10,
-                     Description = "Administration"
-                 },
-                 new JobCategoryType
-                 {
-                     JobCategoryTypeID = 11,
-                     Description = "General"
-                 }
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 2,
+                      Description = "Rejuvenation"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 3,
+                      Description = "Biomarker"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 4,
+                      Description = "Delivery Systems"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 5,
+                      Description = "Clinical Trials"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 6,
+                      Description = "Business Development"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 7,
+                      Description = "Software Development"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 8,
+                      Description = "General"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 9,
+                      Description = "Lab"
+                  },
+                  new JobCategoryType
+                  {
+                      JobCategoryTypeID = 10,
+                      Description = "Bioinformatics"
+                  }
               );
+            modelBuilder.Entity<JobSubcategoryType>().HasData(
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 201,
+                    JobCategoryTypeID = 2,
+                    Description = "Senior Scientist"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 202,
+                    JobCategoryTypeID = 2,
+                    Description = "Research Associate"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 203,
+                    JobCategoryTypeID = 2,
+                    Description = "Lab Technician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 204,
+                    JobCategoryTypeID = 2,
+                    Description = "Team Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 205,
+                    JobCategoryTypeID = 2,
+                    Description = "Production Worker"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 206,
+                    JobCategoryTypeID = 2,
+                    Description = "Operation Executive"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 207,
+                    JobCategoryTypeID = 2,
+                    Description = "Business Development"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 208,
+                    JobCategoryTypeID = 2,
+                    Description = "Sales"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 209,
+                    JobCategoryTypeID = 2,
+                    Description = "Lab Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 210,
+                    JobCategoryTypeID = 2,
+                    Description = "Bioinformatician"
+                },
+                                new JobSubcategoryType
+                                {
+                                    JobSubcategoryTypeID = 301,
+                                    JobCategoryTypeID = 3,
+                                    Description = "Senior Scientist"
+                                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 302,
+                    JobCategoryTypeID = 3,
+                    Description = "Research Associate"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 303,
+                    JobCategoryTypeID = 3,
+                    Description = "Lab Technician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 304,
+                    JobCategoryTypeID = 3,
+                    Description = "Team Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 305,
+                    JobCategoryTypeID = 3,
+                    Description = "Production Worker"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 306,
+                    JobCategoryTypeID = 3,
+                    Description = "Operation Executive"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 307,
+                    JobCategoryTypeID = 3,
+                    Description = "Business Development"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 308,
+                    JobCategoryTypeID = 3,
+                    Description = "Sales"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 309,
+                    JobCategoryTypeID = 3,
+                    Description = "Lab Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 310,
+                    JobCategoryTypeID = 3,
+                    Description = "Bioinformatician"
+                },
+                                new JobSubcategoryType
+                                {
+                                    JobSubcategoryTypeID = 401,
+                                    JobCategoryTypeID = 4,
+                                    Description = "Senior Scientist"
+                                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 402,
+                    JobCategoryTypeID = 4,
+                    Description = "Research Associate"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 403,
+                    JobCategoryTypeID = 4,
+                    Description = "Lab Technician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 404,
+                    JobCategoryTypeID = 4,
+                    Description = "Team Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 405,
+                    JobCategoryTypeID = 4,
+                    Description = "Production Worker"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 406,
+                    JobCategoryTypeID = 4,
+                    Description = "Operation Executive"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 407,
+                    JobCategoryTypeID = 4,
+                    Description = "Business Development"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 408,
+                    JobCategoryTypeID = 4,
+                    Description = "Sales"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 409,
+                    JobCategoryTypeID = 4,
+                    Description = "Lab Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 410,
+                    JobCategoryTypeID = 4,
+                    Description = "Bioinformatician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 101,
+                    JobCategoryTypeID = 1,
+                    Description = "CEO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 102,
+                    JobCategoryTypeID = 1,
+                    Description = "CTO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 103,
+                    JobCategoryTypeID = 1,
+                    Description = "COO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 104,
+                    JobCategoryTypeID = 1,
+                    Description = "President"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 105,
+                    JobCategoryTypeID = 1,
+                    Description = "Director"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 106,
+                    JobCategoryTypeID = 1,
+                    Description = "CSO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 107,
+                    JobCategoryTypeID = 1,
+                    Description = "CMO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 108,
+                    JobCategoryTypeID = 1,
+                    Description = "CFO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 109,
+                    JobCategoryTypeID = 1,
+                    Description = "CBO"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 601,
+                    JobCategoryTypeID = 6,
+                    Description = "Sales"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 701,
+                    JobCategoryTypeID = 7,
+                    Description = "Elixir"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 702,
+                    JobCategoryTypeID = 7,
+                    Description = "Automation Developer"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 703,
+                    JobCategoryTypeID = 7,
+                    Description = "Other"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 801,
+                    JobCategoryTypeID = 8,
+                    Description = "Cooking"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 802,
+                    JobCategoryTypeID = 8,
+                    Description = "Cleaning"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 803,
+                    JobCategoryTypeID = 8,
+                    Description = "IT"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 804,
+                    JobCategoryTypeID = 8,
+                    Description = "Administration"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 805,
+                    JobCategoryTypeID = 8,
+                    Description = "Operations Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 806,
+                    JobCategoryTypeID = 8,
+                    Description = "Branch Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 901,
+                    JobCategoryTypeID = 9,
+                    Description = "Lab Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 902,
+                    JobCategoryTypeID = 9,
+                    Description = "Automations Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 903,
+                    JobCategoryTypeID = 9,
+                    Description = "Automations Implementer"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 1001,
+                    JobCategoryTypeID = 10,
+                    Description = "Senior Bioinformatician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 1002,
+                    JobCategoryTypeID = 10,
+                    Description = "Bioinformatician Executive"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 1003,
+                    JobCategoryTypeID = 10,
+                    Description = "Bioinformatician Team Manager"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 1004,
+                    JobCategoryTypeID = 10,
+                    Description = "Bioinformatics Technician"
+                },
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 1005,
+                    JobCategoryTypeID = 10,
+                    Description = "Bioinformatics Researcher"
+                },
+              
+                new JobSubcategoryType
+                {
+                    JobSubcategoryTypeID = 501,
+                    JobCategoryTypeID = 5,
+                    Description = "Clinical Trials"
+                }
+            );
             modelBuilder.Entity<Degree>().HasData(
                 new Degree
                 {
@@ -1320,7 +2158,7 @@ namespace PrototypeWithAuth.Data
                  Icon = "icon-inhouse-maintainance-24px"
              }
          );
-           
+
             modelBuilder.Entity<CompanyDayOffType>().HasData(
              new CompanyDayOffType
              {

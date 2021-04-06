@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using PrototypeWithAuth.AppData.UtilityModels;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class DocumentsModalViewModel
+    public class DocumentsModalViewModel : ViewModelBase
     {
         public AppUtility.RequestFolderNamesEnum RequestFolderName { get; set; }
         public List<Request> Requests { get; set; }
@@ -18,6 +19,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<IFormFile> FilesToSave { get; set; }
         public bool IsEdittable { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
-        public bool IsNotifications { get; set; }
+        public AppUtility.PageTypeEnum PageType { get; set; }
+        public bool ShowSwitch { get; set; }
     }
 }

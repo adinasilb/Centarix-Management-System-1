@@ -1,8 +1,11 @@
 ﻿@model PrototypeWithAuth.ViewModels.LocationTypeViewModel;
 @using PrototypeWithAuth.AppData;
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    if (!AppUtility.IsAjaxRequest(Context.Request))
+    {
+        ViewData["Title"] = "Index";
+        Layout = "~/Views/Shared/RequestNavView.cshtml";
+    }
     var pagetype = "";
     switch (TempData[AppUtility.TempDataTypes.MenuType.ToString()])
     {
@@ -15,7 +18,8 @@
     }
 }
 
-<input type="hidden" asp-for="SectionType"/>
+<input type="hidden" asp-for="SectionType" />
+<script src="~/js/site.js"></script>
 <div class="locations-page @pagetype " style=" margin-right: -5.625rem !important;">
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 
@@ -42,13 +46,13 @@
             </div>
         </div>
         <div class="col-3">
-            @if (@*(@User.IsInRole("Admin") || @User.IsInRole("Manager")) &&*@ Model.SectionType == AppUtility.MenuItems.LabManagement)
-            {
-                <button class="custom-button custom-button-font lab-man-background-color load-add-location  mt-3 float-right" data-target="item" data-backdrop="static" data-keyboard="false" href="item" style="vertical-align: middle;">
-                    + &nbsp;&nbsp; Add Location
-                </button>
+            @*@if ((@User.IsInRole("Admin") || @User.IsInRole("Manager")) && Model.SectionType == AppUtility.MenuItems.LabManagement)
+                {
+                    <button class="custom-button custom-button-font lab-man-background-color load-add-location  mt-3 float-right" data-target="item" data-backdrop="static" data-keyboard="false" href="item" style="vertical-align: middle;">
+                        + &nbsp;&nbsp; Add Location
+                    </button>
 
-            }
+                }*@
         </div>
     </div>
 
@@ -57,16 +61,16 @@
         <div class="col-md-3 colOne pr-0" style="max-width:15%;">
 
         </div>
-       
-        <div class=" second-col filled-location-class text-center d-none pl-0 pt-3 " style="max-width:45%;">
+
+        <div class=" second-col  text-center  pl-0 pt-3 " style="width:40%; min-width:670px; ">
             <div class="container-fluid li-name-container d-none"><div class="row location-parent-name  li-name pb-4" style=" padding-left: 2.8125rem !important;"></div></div>
-            <div class="container">
+            <div class="">
                 <div class="row p-0 m-0 colTwoSublocations"></div>
             </div>
         </div>
 
         <div class="col-7 VisualBoxColumn mr-0  pr-0 location-parent-name" style="        max-width: 40%;
-      
+
 ">
 
         </div>

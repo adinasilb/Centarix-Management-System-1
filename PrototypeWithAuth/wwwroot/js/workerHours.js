@@ -1,6 +1,6 @@
 ﻿$(function () {
 	$.fn.reloadHoursPage = function (year, month, yearlyMonthlyEnum) {
-		alert("in reload hours page");
+		//alert("in reload hours page");
 		var yeardiff = false;
 		if ($('#TotalWorkingDaysInYear').attr('year') == year) {
 			var amountInYear = $('#TotalWorkingDaysInYear').val();
@@ -35,7 +35,7 @@
 	};
 	$('.yearlyMonthlySwitch').off('click').on("click", function (e) {
 		//$('body').off("change", ".workersHoursMonths").on("change", ".workersHoursMonths", function () {
-		alert("in yearly monthly switch");
+		//alert("in yearly monthly switch");
 		e.preventDefault();
 		var year = $(this).attr('year');
 		var yearlyMonthlyEnum = $(this).attr('yearlyMonthlyEnum');
@@ -61,6 +61,4 @@
 		$.fn.reloadHoursPage(year, month, yearlyMonthlyEnum);
 		return false;
 	});
-
-
 })

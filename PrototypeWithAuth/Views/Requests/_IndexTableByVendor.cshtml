@@ -1,0 +1,60 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModelByVendor
+@using PrototypeWithAuth.AppData
+@if (Model.RequestsByVendor.Count() > 0)
+{
+    <input type="hidden" class="activeVendor" value="" />
+    @if (Model.PageType == AppUtility.PageTypeEnum.AccountingNotifications)
+    {
+        <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" id="add-to-selected">Add To Selected</button>
+    }
+    else
+    {
+        <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" type="@Model.SidebarType" id="pay-selected">Pay Selected</button>
+    }
+
+    <table class="table table-headerspaced table-noheaderlines table-hover ">
+        <thead>
+            <tr class="text-center">
+                @foreach (var col in Model.RequestsByVendor.First().First().Columns)
+                {
+
+                    <th width="@col.Width%">
+                        @switch (col.FilterEnum)
+                        {
+                            case AppUtility.FilterEnum.Price:
+                                <label>@col.Title</label>
+                                <div class="d-inline-block">
+                                    @{
+                                        await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
+                                    }
+                                </div>
+                                break;
+                            default:
+                                <label>@col.Title</label>
+                                break;
+                        }
+
+                    </th>
+
+                }
+
+
+            </tr>
+        </thead>
+
+    </table>
+    <div class="_IndexTableDataByVendor">
+        @{
+            await Html.RenderPartialAsync("_IndexTableDataByVendor", Model);
+        }
+    </div>
+}
+else
+{
+    <div>
+        @{
+            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPagePartial.cshtml", Model);
+        }
+    </div>
+}
+<script src="~/js/PricePopoverScript.js"></script>

@@ -22,20 +22,23 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         [Display(Name = "Order Date")]
         public DateTime OrderDate { get; set; }
-        
+        public DateTime OrderDate_submit { get { return OrderDate; } set { OrderDate = value; } }
+
         [Display(Name = "Order Number")]
         public int? OrderNumber { get; set; }
 
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
-        [Display(Name = "Invoice Number")]
-        public string InvoiceNumber { get; set; }
+        //[RegularExpression("([1-9][0-9]*)", ErrorMessage = "field must be a number")]
+        //[Display(Name = "Invoice Number")]
+        //public string InvoiceNumber { get; set; }
 
-        [DataType(DataType.Date)]
-        [Display(Name = "Invoice Date")]
-        public DateTime InvoiceDate { get; set; }
+        //[DataType(DataType.Date)]
+        //[Display(Name = "Invoice Date")]
+        //public DateTime InvoiceDate { get; set; }
+        //public DateTime InvoiceDate_submit { get { return InvoiceDate; } set { InvoiceDate = value; } }
+        [Display(Name = "Supplier Order Number")]
+        public string SupplierOrderNumber { get; set; }
         public IEnumerable<Payment> Payments { get; set; }
         public bool IsDeleted { get; set; } //this is set to true if all the requests under this parentrequest are deleted
-        public bool WithoutOrder { get; set; }
         public double Discount { get; set; }
         public double Taxes { get; set; }
         public double Credit { get; set; }

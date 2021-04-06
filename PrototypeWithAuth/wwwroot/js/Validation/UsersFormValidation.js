@@ -7,37 +7,61 @@ var isEmployeeOnly = function () {
 var isUserAndIsNotEdit = function () {
 	return $("#NewEmployee_EmployeeStatusID").val() == "4" && $('#myForm').hasClass('editUser') == false;
 }
-
+var isEdit = function () {
+	return $('#myForm').hasClass('editUser');
+}
 var isUser = function () {
 	return $("#NewEmployee_EmployeeStatusID").val() == "4";
 }
+$.validator.addMethod("validTime", function (value, element) {
+	var t = value.split(':');
+	if (t[0].length == 1) {
+		value = "0" + value;
+	}
+	if (t[2] != null) {
+		$("#" + element.id).val(t[0] + ":" + t[1]);
+	}
+	var result = value.length == 0 || (/^\d\d:\d\d$/.test(value) &&
+		t[0] >= 0 && t[0] < 24 &&
+		t[1] >= 0 && t[1] < 60);
+	return result;
+}, "Invalid time");
+
+$.validator.addMethod("validHours", function (value, element) {
+	var result = parseFloat(value) > 0 && parseFloat(value) < 24;
+	return result;
+}, "Invalid Hours");
 
 $('.usersForm').validate({
 	rules: {
 		"FirstName": "required",
 		"LastName": "required",
-		"CentarixID": {
-			required: true,
-			//number: true,
-			minlength: 1,
-			//integer: true
-		},
+		//"CentarixID": {
+		//	required: true,
+		//	//number: true,
+		//	minlength: 1,
+		//	//integer: true
+		//},
 		"Email": {
 			email: true,
-			required: true
+			required: true,
+			remote:{
+				url: '/Admin/CheckUserEmailExist?isEdit='+isEdit()+"&currentEmail="+$(".turn-edit-on-off").attr("currentEmail"),
+				type: 'POST',
+				data: { "email":function(){ return $("#Email").val()}},
+			}
 		},
 		"PhoneNumber": {
 			required: true,
 			minlength: 9
 		},
-		"NewEmployee.JobTitle": {
-			required: isEmployee,
-		},
 		"NewEmployee.DOB": {
-			required: isEmployee,
-			date: true
+			required: isEmployee
 		},
-		"NewEmployee.JobCategoryTypeID": {
+		"NewEmployee.JobSubcategoryType.JobCategoryTypeID":{
+			selectRequired: isEmployee,
+		},
+		"NewEmployee.JobSubcategoryTypeID": {
 			selectRequired: isEmployee,
 		},
 		"NewEmployee.DegreeID": {
@@ -72,6 +96,10 @@ $('.usersForm').validate({
 			required: isEmployeeOnly,
 			number: true
 		},
+		"TimeSpan-HoursPerDay": {
+			required: isEmployeeOnly,
+			validHours: true
+        },
 		"NewEmployee.VacationDays": {
 			required: isEmployeeOnly,
 			number: true,
@@ -122,5 +150,8 @@ $('.usersForm').validate({
 			required: "",
 			min: "",
 		},
+		Email:{
+			remote:"email already exists"
+		}
 	}
 });

@@ -1,16 +1,24 @@
-﻿using System;
+﻿using PrototypeWithAuth.AppData.UtilityModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class SummaryOfDaysOffViewModel
+    public class SummaryOfDaysOffViewModel : ViewModelBase
     {
-        public int Year { get; set; }
-        public int TotalVacationDays { get; set; }
-        public int VacationDaysTaken { get; set; }
-        public int SickDaysTaken { get; set; }
-        public int VacationDaysLeft { private set {; } get { return TotalVacationDays - VacationDaysTaken; } }
+        public IEnumerable<PrototypeWithAuth.ViewModels.DaysOffViewModel> DaysOffs { get; set; }
+        public double SickDaysLeft { get; set; }
+        private double _VacationDaysLeft;
+        public double VacationDaysLeft
+        {
+            get { return Math.Round(_VacationDaysLeft, 2); }
+            set { _VacationDaysLeft = value; }
+        }
+        public double TotalVacationDaysPerYear { get; set; }
+        public double TotalSickDaysPerYear { get; set; }
+        public double BonusSickDays { get; set; }
+        public double BonusVacationDays { get; set; }
     }
 }

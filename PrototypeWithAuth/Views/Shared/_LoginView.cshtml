@@ -4,9 +4,9 @@
 @inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Centarix Management";
-    //Layout = "~/Views/Shared/_GeneralView.cshtml";
+    Layout = "~/Views/Shared/Master.cshtml";
 }
-<!DOCTYPE html>
+@*<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,14 +22,14 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link href="~/css/Master.css" rel="stylesheet" />
     @*need to have decompressed full css file and set the apend tag to true in any file that doesnt hve or inherit from this file*@
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    @*<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 
     <link rel="icon" type="image/x-icon" href="~/favicon.ico">
 
 
 
 </head>
-<body>
+<body>*@
     @*@if (SignInManager.IsSignedIn(User) & (User.IsInRole("Admin")))
             {
                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("GetHomeView", "Admin", new { })"> </form>
@@ -148,18 +148,26 @@
         </header>
                     }*@
 
-    <div class="text-center container col-md-7 center-horizontally" style="min-width:560px">
-        <div class="row h-100">
-            <div class="col-12 my-auto">
-                <br /><br /><br /><br /><br /><br /><br />
-                <img style="width:30em; max-width: 100%; min-width:500px" class="mb-3" src="~/images/css/Centarix_Logo.png" alt="Centarix Logo" />
-                <br /><br />
-                <h2 style="color:#DB2127; font-weight:600" class="mb-5">Maximizing Health</h2>
+    <div class="container-fluid" style="min-width:560px">
+        <div class="row h-25">
+            <div class="col-12 p-2 justify-content-start">
+                <img style="width:18%; max-width: 100%;" class="mb-3" src="~/images/centarix_logo-02.png" alt="Centarix Logo" />
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-7 mx-auto text-center center-horizontally">
+                <div class="row h-100">
+                    <div class="col-12 my-auto">
+                        <br /><br /><br /><br /><br /><br /><br />
+                        <img style="width:55%; max-width: 100%;" class="mb-3" src="~/images/css/Centarix_Logo.png" alt="Centarix Logo" />
+                        <br />
 
-
-                <main role="main" class="pb-3">
-                    @RenderBody()
-                </main>
+                        <main role="main" class="pb-3">
+                            @RenderBody()
+                        </main>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -169,9 +177,9 @@
                 &copy; 2020 - Centarix Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </div>
         </footer>*@
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
-</html>
+</html>*@

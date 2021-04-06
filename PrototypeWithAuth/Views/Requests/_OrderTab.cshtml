@@ -1,0 +1,147 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+
+@{
+    var requestQuoteHide = "";
+
+}
+<div class="row">
+    @if (Model.ErrorMessage != null)
+    {
+        <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+
+    }
+</div>
+<div class="row">
+    <div class="col-12">
+        <span class="heading-1 modal-tab-name">Order</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <label class="control-label">Send to: (Add up to 5 email addresses@*- including the suppliers email address*@)</label>
+        <input class="form-control-plaintext border-bottom" type="text" id="allEmails" />
+        @for (int e = 0; e < Model.EmailAddresses.Count; e++)
+        {
+            var supplierEmailClass = "emailaddresses ";
+            if (e == 0)
+            {
+                supplierEmailClass = "isSupplier";
+            }
+            <input type="hidden" asp-for="EmailAddresses[e]" class="@supplierEmailClass" />
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <label class="control-label">Notes to the supplier</label>
+        <input asp-for="Requests.FirstOrDefault().NoteToSupplier" class="form-control-plaintext border-bottom" />
+    </div>
+</div>
+<div class="form-group">
+    @*you can only add to cart if you are creating a new one*@
+    <div class="row requestPriceQuote">
+        <div class="col-7 align-vertical-middle-col">
+            <span class="small-text">If you want to process a single order immediately</span>
+        </div>
+        <div class="col-5">
+            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.OrderNow"
+                    class="text w-100 custom-order-inv custom-button float-right submitOrder">
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.OrderNow.ToString())
+            </button>
+        </div>
+    </div>
+    <div class="row requestPriceQuote">
+        <div class="col-7 align-vertical-middle-col">
+            <span class="small-text">If you want to order multiple items</span>
+        </div>
+        <div class="col-5">
+            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
+                    class="text w-100 custom-order-inv custom-button float-right submitOrder ">
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+            </button>
+
+        </div>
+    </div>
+    <div class="row requestQuoteHide">
+        <div class="col-7 align-vertical-middle-col">
+            <span class="small-text">Ask the secretary to get a price quote</span>
+        </div>
+        <div class="col-5">
+            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.RequestPriceQuote"
+                    class="text p-0 w-100 custom-order-inv custom-button create-modal-submit activeSubmit">
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+            </button>
+
+        </div>
+    </div>
+    <div class="row requestPriceQuote">
+        <div class="col-7 align-vertical-middle-col">
+            <span class="small-text">Update the purchase of an item</span>
+        </div>
+        <div class="col-5">
+            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AlreadyPurchased"
+                    class="p-0  text w-100 custom-order-inv custom-button create-modal-submit submitOrder">
+                @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AlreadyPurchased.ToString())
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/site.js"></script>
+
+<script>
+    $(".submitOrder").off('click').on("click", function (e) {
+        e.preventDefault();
+        console.log("submit reorder");
+        //alert("validate form");
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('.activeSubmit').removeClass('disabled-submit')
+            $("#loading").show();
+            var formData = new FormData($("#myForm")[0]);
+            console.log(...formData);
+            var orderType = $(this).val();
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/AddItemView?OrderType=" + orderType,
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal('modalStep1', 'step-1', data)
+                    $("#loading").hide();
+                    return true;
+                },
+                error: function (jqxhr) {
+                    $("#loading").hide();
+                    if (jqxhr.status == 500) {
+                       // alert("made it to error")
+                        $("#order").html(jqxhr.responseText);
+                        $(".order-tab").trigger("click");
+                    }
+                }
+            });
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+        //return false;
+    });</script>

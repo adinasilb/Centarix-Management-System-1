@@ -64,25 +64,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     @*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">*@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="~/css/datepicker.min.css" rel="stylesheet" type="text/css">
+    @*<link href="~/css/datepicker.min.css" rel="stylesheet" type="text/css">*@
 
 </head>
 
 <body style="display:none" class="body">
 
-    <div class="center" role="status" id="loading" style="        z-index: 5000;
+    <div class="center" role="status" id="loading" style="        z-index: 9999;
         left: calc(960px - 182.5px) !important;
         width: fit-content;
         display: none;">
         <img src="~/images/css/Loading/centarix_loading3.gif" />
     </div>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderBody()
+    <div class="request_nav_body"> @RenderBody()</div>
+    <div class="modals">
+        @{await Html.RenderPartialAsync("ModalLoader"); }
+    </div>
+
 
     <!--  SCRIPTS  -->
     <!-- JQuery -->
     @*load jquery ui*@
-    
+
     <script src="~/lib/jquery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap/dist/js/jquery.min.js"></script>
     <!-- Bootstrap tooltips -->
@@ -104,7 +108,7 @@
         <script src="~/lib/bootstrap/dist/js/addons/datatables.min.js"></script>*@
 
     <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select.min.js"></script>
-    @*getting an 
+    @*getting an
         without type=module*@
     <script type="module" src="~/lib/bootstrap/dist/js/addons/datatables-select2.min.js"></script>
     @*getting an error without type=module*@
@@ -175,9 +179,9 @@
     <script src="~/lib/bootstrap/dist/src/js/pro/collapsible.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/file-input.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/mdb-autocomplete.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker-date.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker-time.js"></script>
-    <script src="~/lib/bootstrap/dist/src/js/pro/picker.js"></script>
+    @*<script src="~/lib/bootstrap/dist/src/js/pro/picker-date.js"></script>
+        <script src="~/lib/bootstrap/dist/src/js/pro/picker-time.js"></script>
+        <script src="~/lib/bootstrap/dist/src/js/pro/picker.js"></script>*@
     <script src="~/lib/bootstrap/dist/src/js/pro/preloading.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/range-input.js"></script>
     <script src="~/lib/bootstrap/dist/src/js/pro/sidenav.js"></script>
@@ -238,131 +242,13 @@
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/moment.js"></script>
     <script src="~/js/moment.min.js"></script>
-    <script src="~/js/datepicker.min.js"></script>
+    @*<script src="~/js/datepicker.min.js"></script>
 
-    <!-- Include English language -->
-    <script src="~/js/datepicker.en.js"></script>
+         Include English language
+        <script src="~/js/datepicker.en.js"></script>*@
 
     <script>
-        $(document).ready(function () {
-       
-            console.log("in doc ready");
-           //$('input[type = "datetime-local"]').attr("type", "date")
-            //$('form').change(function () {
-            //    console.log("form change");
-            //    $(".input-group .form-control-plaintext").unwrap();
-            //    $(".input-group .form-control-plaintext").unwrap();
-            //    $(".input-group").remove('.input-group-text');
-            //    $(".form-control-plaintext.input-validation-error").wrap("<div class=\"input-group invalid\"></div>");
 
-            //    $(".input-group.invalid").append('<span class="input-group-text">&#36;</span>');
-            //});
-           // $('form').attr('autocomplete', 'off');
-            $(document).ajaxError(function (event, jqxhr, settings, exception) {
-                $('#loading').hide();
-                if (jqxhr.status == 401) {
-                    alert("Cookie timed out. Please login again.");
-                }
-                if (jqxhr.status == 400) {
-                    alert("Error 400: error making request");
-                }
-                if (jqxhr.status == 500) {
-                    if ($(".error-msg").length > 0) {
-                        $(".error-msg").html(jqxhr.responseText);
-                    }
-                    else if (jqxhr.responseText != null) {
-                        alert("Error 500: " + jqxhr.responseText);
-                    }
-                    else {
-                        alert("Error 500: error carrying out request");
-                    }
-                }
-            });
-            $('[data-toggle="tooltip"]').tooltip()
-
-            $("#alertCount").hide();
-
-
-
-
-            //Try to disable autocomplete on all inputs --> but chrome may ignore it
-            $("input:text,form").attr("autocomplete", "off");
-
-
-           /* $('input[data-val-required]').each(function () {
-                $(this).prev('label').first().append('*');
-            });
-            $('input[required]').each(function () {
-                $(this).prev('label').first().append('*');
-            });*/
-       
-            $('body').hide();
-            $(window).on('load', function () {
-                $('body').show();
-            });
-            $('#dtBasicExample').DataTable();
-            $('.dataTables_length').addClass('bs-select');
-            $.fn.ChangeCheckboxesToFilledIn()
-            $.fn.setUpChartDDlPlaceholders()
-            //$('.mdb-select').focusin(function () { $('.search-wrap input.search').focus() });
-            $('.timekeeper .dropdown-content').removeClass('w-100');
-            $('.datepicker').pickadate();
-            $('#request-search a:first').tab('show'); @* I had to put this in here b / c otherwise it wasn't coming up on .search-link.click*@
-            $('.edit-user a:first').tab('show');
-            $('#myForm a:first').tab('show');
-            $(".contact-info:hidden:first").find(".contact-active").val(true);
-            $.fn.AddContactValidation();
-            $(".contact-info:hidden:first").show();
-
-            //vendors
-
-            //  $('[data-toggle="popover"]').popover();
-            $("#vendor-payments-tab").prop("disabled", true);
-            $("#vendor-categories-tab").prop("disabled", true);
-            $("#vendor-comment-tab").prop("disabled", true);
-            $("#vendor-contact-tab").prop("disabled", true);
-
-
-            $("#TermsModal #Terms").val("Select");
-            //users
-            $("#user-permissions-tab").prop("disabled", true);
-            $("#user-budget-tab").prop("disabled", true);
-            $("#user-images-tab").prop("disabled", true);
-            $("#user-more-tab").prop("disabled", true);
-            var $itemurl = "";
-            if ($("#tdprconfirmemail").val()) {
-                console.log("tdprconfirmemail");
-                $("#tdprconfirmemail").hide();
-                $itemurl = "/Requests/ConfirmEmailModal/?id=" + @TempData["ParentRequestID"] + "";
-                $("#loading").show();
-                $.fn.CallPage($itemurl, "confirmemail");
-            }
-
-            if ($("#tdterms").val()) {
-                $("#tdterms").hide();
-                //alert("in tdterms.val()");
-                $itemurl = "/Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true";
-                console.log("url " + $itemurl)
-                //$("#loading").show();
-                $.fn.CallPage($itemurl, "terms");
-                }
-
-            if ($("#tdconfirmemail").val()) {
-                console.log("tdconfirmemail");
-                $("#tdconfirmemail").hide();
-                $itemurl = "/Requests/ConfirmEmailModal/?id=" + @TempData["RequestID"] + "&isSingleOrder=true";
-                //$("#loading").show();
-                $.fn.CallPage($itemurl, "confirmemail");
-
-
-
-            }
-            $.fn.GetNotifcationCount();
-            $.fn.GetNotifications();
-            $.fn.getMenuItems();
-
-           
-        });
         $.fn.setUpChartDDlPlaceholders = function () {
             $("#select-options-SelectedCategoryTypes li:first").hide()
             $("#select-options-VendorCategoryTypes li:first").hide()
@@ -424,11 +310,14 @@
                     //shows the modal
                     $(".modal").modal('show');
                     //reset so do not open the modal again
-                    $('#tdconfirmemail').val('');
+                    $('#tduploadquotes').val('');
+                    $('#tduploadorders').val('');
                     $('#tdprconfirmemail').val('');
-                    $.fn.OnOpenModalView();
+                    $('#tdconfirmemail').val('');
+                    $("#tdterms").val('')
+                    //$.fn.OnOpenModalView();
                     $(".termsModal").modal('show');
-                    AddTempDataMemory();
+
 
 
                 }
@@ -454,19 +343,8 @@
             return false;
         });
 
-      
 
-        $(".load-quote-details").on("click", function (e) {
-            console.log("in order details");
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-            var $itemurl = "/Requests/EditQuoteDetails/?id=" + $(".key-vendor-id").val() + "&requestID=" + $(this).val();
-            $.fn.CallPageRequest($itemurl, "quote");
-            return false;
-        });
 
-       
         $(".js-go-to-controller").on("click", function (e) {
             console.log("inside of js-go-to-controller");
             e.preventDefault();
@@ -487,8 +365,6 @@
 
     $.fn.CallOrderLateModal = function (id) {
         console.log("in call modal, id: " + id);
-        $('.modal').replaceWith('');
-        $(".modal-backdrop").remove();
         $('#loading').show();
         //var url = @Url.Action("Requests", "OrderLate");
         var url = "/Requests/OrderLateModal/?id=" + id;
@@ -501,13 +377,7 @@
             //dataType: "string",
             success: function (data) {
                 $('#loading').hide();
-                var modal = $(data);
-                $('body').append(modal);
-                $(".modal-view").modal({
-                    backdrop: true,
-                    keyboard: false,
-                });
-                $(".modal").modal('show');
+                $.fn.OpenModal('modal','order-late', data)
             }
 
         });
@@ -533,27 +403,68 @@
 
         };*@
 
+        function enableMarkReadonly(element) {
+            console.log("in if details");
+            $('.mark-readonly').attr("disabled", false);
+            //TODO: add in mark-readonly fields for subunits
+            //$.fn.CheckUnitsFilled();
+            //$.fn.CheckSubUnitsFilled();
+            $('.mark-edditable').data("val", true);
+            $('.edit-mode-switch-description').text("Edit Mode On");
+            $('.turn-edit-on-off').attr('name', 'edit');
 
-        function AddTempDataMemory() {
-            //console.log("about to get set the hidden fors in the modal view to remember where the user was");
+            //turn off document modals
+            if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
+                console.log("orders operations");
+               // $.fn.EnableMaterialSelect('#parentlist', 'select-options-parentlist');
+                //$.fn.EnableMaterialSelect('#sublist', 'select-options-sublist');
+                $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
+                $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
+                $.fn.EnableMaterialSelect('#operationsCategory', 'select-options-operationsCategory');
+                $.fn.EnableMaterialSelect('#operationsSubcategory', 'select-options-operationsSubcategory');
+                $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
 
-            $("#Page").val(parseInt(@TempData["TempPage"]));
-            $("#RequestStatusID").val(parseInt(@TempData["TempRequestStatusID"]));
-            $("#SubCategoryID").val(parseInt(@TempData["TempSubcategoryID"]));
-            $("#VendorID").val(parseInt(@TempData["TempVendorID"]));
+            }
+            if ($(element).hasClass('orders')) {
+                console.log("orders");
+                $.fn.EnableMaterialSelect('#Request_SubProject_ProjectID', 'select-options-Request_SubProject_ProjectID');
+                $.fn.EnableMaterialSelect('#SubProject', 'select-options-SubProject');
+                $.fn.EnableMaterialSelect('#unitTypeID', 'select-options-unitTypeID');
+                console.log($("#subSubUnitTypeID"))
+                if ($("#subSubUnitTypeID").hasClass('mark-readonly')) {
+                    $.fn.EnableSubSubUnits();
+                    $.fn.ChangeSubSubUnitDropdown();
+                }
+                console.log($("#subUnitTypeID"))
+                if ($("#subUnitTypeID").hasClass('mark-readonly')) {
+                    console.log('enabling');
+                    $.fn.EnableSubUnits();
+                    $.fn.ChangeSubUnitDropdown();
+                }
+                if ($("#quoteStatus").val() == "1" || $("#quoteStatus").val() == "2") {
+                    console.log("no quote")
+                    $(".requestPriceQuote").prop("disabled", true);
+                }
+            }
+            if ($(element).hasClass('suppliers') || $(element).hasClass('accounting')) {
+                $.fn.EnableMaterialSelect('#VendorCategoryTypes', 'select-options-VendorCategoryTypes');
+            }
+            if ($(element).hasClass('users')) {
+                $.fn.EnableMaterialSelect('#job-subcategory', 'select-options-job-subcategory');
+                $.fn.EnableMaterialSelect('#NewEmployee_JobSubcategoryType_JobCategoryTypeID', 'select-options-NewEmployee_JobSubcategoryType_JobCategoryTypeID');
+                $.fn.EnableMaterialSelect('#NewEmployee_DegreeID', 'select-options-NewEmployee_DegreeID');
+                $.fn.EnableMaterialSelect('#NewEmployee_MaritalStatusID', 'select-options-NewEmployee_MaritalStatusID');
+                $.fn.EnableMaterialSelect('#NewEmployee_CitizenshipID', 'select-options-NewEmployee_CitizenshipID');
+            }
+        }
 
-            $("#ApplicationUserID").val("@TempData["TempApplicationUserID"]?.ToString()");
-
-            //console.log("PageType:" + @TempData["TempPageType"]);
-            $("#PageType").val(@TempData["TempPageType"]);
-        };
 
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
             console.log("itemurl " + $itemurl);
             //delete existing modals
-            $('.modal').replaceWith('');
-            $(".modal-backdrop").remove();
+            //$('.modal:not(#visualZoomModal)').replaceWith('');
+            //$(".modal-backdrop").remove();
             $('#loading').show();
             $.ajax({
                 async: true,
@@ -565,71 +476,58 @@
                     $('#loading').hide();
                     console.log("success!");
                     var modal = $(data);
-                    $('body').append(modal);
-                    //replaces the modal-view class with the ModalView view
-                    //$(".modal-view").html(data);
-                    //turn off data dismiss by clicking out of the box and by pressing esc
-                    $(".modal-view").modal({
-                        backdrop: true,
-                        keyboard: true,
-                    });
-                    //shows the modal
-                    $(".modal").modal('show');
-                    //$(".modal").on('show.bs.modal', function (e) {
-                    //    $(".modal .modal-dialog").attr('class', 'modal-dialog zoomInRight animated');
-                    //})
-                    //bootstrap dynamically adds a class of modal-backdrop which must be taken off to make it clickable
-                    //$(".modal-backdrop").remove();
-                    //$('.modal').find('input').first().focus();
-                    //$(".modal").popover('hide')
                     switch ($type) {
                         case "details":
-                            $.fn.OnOpenModalView();
-                            AddTempDataMemory();
-                            break;
-                        case "edit":
-                            $.fn.OnOpenModalView();
-                            AddTempDataMemory();
+                            //$.fn.OnOpenModalView();
+                            $.fn.OpenModal('modal', 'edits', modal)
+                            $.fn.LoadEditModalDetails();
+                            $('.modal-content a:first').tab('show');
                             break;
                         case "reorder":
-                            $.fn.OnOpenModalView();
-                            AddTempDataMemory();
-                            $("#Request_Cost").trigger('change');
+                            $.fn.OpenModal('reorderModal', 'reorder-item', modal)
+                            //$.fn.OnOpenModalView();
+                            $("#cost").trigger('change');
+                            $(".reorderModal .mdb-select").materialSelect();
+
+
+                            //$.fn.CheckCurrency();
+                            break;
+                        case "summary":
+                            //$.fn.OnOpenModalView();
+                            $.fn.OpenModal('modal', 'edits', modal)
+                            $.fn.LoadSummaryModal();
+                            $('.modal-content a:first').tab('show');
                             break;
                         case "create":
-                            $.fn.OnOpenModalView();
-                            AddTempDataMemory();
+                            //$.fn.OnOpenModalView();
                             break;
                         case "received":
+                            $.fn.OpenModal('modal', 'received-item', modal)
                             $('.mdb-select').materialSelect();
                             $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
-                            AddTempDataMemory();
-                            break;
-                        case "confirmemail":
-                            AddTempDataMemory();
-                            break;
-                        case "delete":
-                            AddTempDataMemory();
-                            break;
-                        case "quote":
-                            AddTempDataMemory();
-                            break;
-                        case "orderlate":
-                            //AddTempDataMemory();
                             break;
                         case "termsmodal":
-                            //alert("in termsmodal success!");
-                            $(".terms-disabled").hide();
-                            $(".paid-disabled").hide();
+                            $.fn.OpenModal('modal', 'terms', modal)
+                            break;
+                        case "delete":
+                            $.fn.OpenModal('modal', 'delete-item', modal)
+                            break;
+                        case "confirmemail":
+                            $.fn.OpenModal('modal', 'confirm-email', modal)
+                            break;
+                        case "quote":
+                            $.fn.OpenModal('modal', 'edit-quote', modal);
                             $('.mdb-select').materialSelect();
-                            AddTempDataMemory();
+                            break;
+                        case "locations": case "addlocation":
+                            $.fn.OpenModal('modal', 'add-location', modal)
                             break;
                     }
 
                 },
                 error: function (xhr, status, error) {
-                    var err = eval("(" + xhr.responseText + ")");
-                    console.log("in error..." + err.Description);
+                    //var err = eval("(" + xhr.responseText + ")");
+                    console.log("in error..." + error.Description);
                     $("#loading").hide();
                     //alert(err.Message);
                 }
@@ -638,6 +536,37 @@
                 //    console.log("ajax call went wrong:" /*+ request.responseText*/);
                 //}
             });
+        }
+        $.fn.TurnToDetails = function () {
+            $('.mark-readonly').prop("disabled", true);
+            $('.mark-readonly input').prop("disabled", true);
+            $('.mark-edditable').attr("data-val", false)
+            $('.edit-mode-switch-description').text("Edit Mode Off");
+            $('.turn-edit-on-off').attr('name', 'details')
+            $('.open-document-modal').attr("data-val", false);
+        };
+
+        $.fn.LoadEditModalDetails = function () {
+            $("#cost").trigger('change');
+            var category = $("#categoryDescription").val();
+            console.log(category)
+            $("." + category).removeClass("d-none");
+            console.log("in detilas of case")
+            $.fn.TurnToDetails();
+            $('.open-document-modal').attr("showSwitch", true);
+            $('.mdb-select').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+        }
+
+        $.fn.LoadSummaryModal = function () {
+            $("#cost").trigger('change');
+            var category = $("#categoryDescription").val();
+            console.log(category)
+            $("." + category).removeClass("d-none");
+            console.log("in detilas of case")
+            $.fn.TurnToDetails();
+            $('.mdb-select:not(.ignore-mdb)').materialSelect();
+            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
 
@@ -679,16 +608,7 @@
 
         }
 
-        $(".load-terms-modal").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $("#loading").show();
-
-            var $itemurl = "TermsModal/?id=" + $(this).val() + "&IsCart=true";
-            console.log("itemurl: " + $itemurl);
-            $.fn.CallPageRequest($itemurl, "termsmodal");
-            return false;
-        });
+      
 
         $(".load-confirm-email").on("click", function (e) {
             e.preventDefault();
@@ -737,20 +657,12 @@
         $.fn.OnOpenModal = function () {
             $('.modal-content a:first').tab('show');
             $('.mdb-select').materialSelect();
-            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
-            $('.mdb-select li:first-child').hide();
-            $('.mdb-select li:nth-child(2)').hide();
+            //$('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            //$('.mdb-select li:first-child').hide();
+            //$('.mdb-select li:nth-child(2)').hide();
         };
 
 
-        $.fn.DeleteUserModal = function (userid) {
-            console.log("in delete user modal function");
-            $itemurl = '/Admin/DeleteUserModal?id=' + userid;
-            $.fn.CallPageUser($itemurl, '');
-            return false;
-        };
-
-      
 
         $.fn.getMenuItems = function () {
            // alert("get menu items")
@@ -768,8 +680,6 @@
 
         $.fn.CallPageUser = function ($itemurl) {
             //delete existing modals
-            $('.modal').replaceWith('');
-            $(".modal-backdrop").remove();
             $.ajax({
                 async: true,
                 url: $itemurl,
@@ -777,15 +687,8 @@
                 cache: true,
                 success: function (data) {
                     $("#loading").hide();
-                    //console.log("success!");
-                    var modal = $(data);
-                    $('body').append(modal);
-                    $(".modal-view").modal({
-                        backdrop: true,
-                        keyboard: true,
-                    });
+                    $.fn.OpenModal('users-form', 'edits', data)
                     $.fn.CalculateAge();
-                    $(".modal").modal('show');
                     $.fn.OnOpenModal();
                 }
             });
@@ -832,14 +735,6 @@
             });
         };
 
-        $("table tr .form-check-input.fci-acc").click(function () {
-            if ($(this).is(':checked')) {
-                $(this).closest("tr").addClass("clicked-border-acc");
-            }
-            else {
-                $(this).closest("tr").removeClass("clicked-border-acc");
-            }
-        });
 
         $("table tr .order-inv-form .form-check-input").click(function () {
             if ($(this).is(':checked')) {
@@ -923,7 +818,6 @@
             });
             $('#profile-img').popover('toggle');
 
-
         });
 
         //$("#parentlist").change(function () {
@@ -952,10 +846,7 @@
         });
 
 
-        $('#submitAddLocation').click(function () {
-            e.preventDefault();
-            $('#loading').show();
-        });
+
 
         $(".load-add-location-type").on("click", function (e) {
             console.log("load add location type 3");
@@ -1050,7 +941,7 @@
                         bold = "font-weight-bold";
                     }
 
-                    var newitem1 = '<a class="opac87  '+bold+' " href="'+ link+'"><div id="notification-info" class="px-3 pb-2 mb-3 ">' +
+                    var newitem1 = '<a class="opac87 notificationDiv '+bold+' " href="'+ link+'"><div id="notification-info" class="px-3 pb-2 mb-3 ">' +
                         '<div class="col-12 border-right-0 border-left-0 border-top-0 border-bottom  pb-2 mb-3 " >' +
                         '<div class="row ">' +
                         '<div class=" float-left " >' +
@@ -1092,6 +983,21 @@
 
         });
 
+        $.fn.CallModal = function (url, modalClass) {
+            $.ajax({
+                async: false,
+                url: url,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $.fn.OpenModal("modal", modalClass, data)
+                    $("#loading").hide();
+                    return false;
+                }
+            });
+        };
+
+
         $.fn.GetHoursString = function (date) {
             var date = new Date(date);
             var hours = date.getHours();
@@ -1125,7 +1031,102 @@
                 $("label[for='Clarify']").removeClass("white-background");
             }
         };
+        $.fn.getRequestIndexString = function(){
+            var selectedPriceSort = [];
+            $("#priceSortContent .priceSort:checked").each(function (e) {
+                selectedPriceSort.push($(this).attr("enum"));
+            })
+            return(
+            "PageNumber=" + $('.page-number').val() +
+                "&RequestStatusID=" + $(".request-status-id").val() +
+                "&PageType=" + $('#masterPageType').val() +
+                "&SectionType=" + $('#masterSectionType').val() +
+                "&SidebarType=" + $('#masterSidebarType').val() +
+                "&SelectedPriceSort=" + selectedPriceSort +
+                "&SelectedCurrency=" + $('#tempCurrency').val() +
+                "&SidebarFilterID=" + $('.sideBarFilterID').val());
+        }
+        $.fn.formatDateForSubmit = function(val)
+        {
+            return new Date(val.split("/").reverse().join("-")).toISOString();
+        }
 
+
+        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch) {
+            $('#loading').show();
+            //alert("in documents modal in document modal js")
+            //$(".modal-backdrop").first().removeClass();
+            var urltogo = $("#documentSubmit").attr("url");
+            if (urltogo == "") {
+                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch;
+	        }
+            else {
+                //var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
+                console.log("urltogo: " + urltogo);
+                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch;
+            }
+
+            $.ajax({
+                async: true,
+                url: urltogo,
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $('#loading').hide();
+                    $.fn.OpenModal('documentsModal', 'documents', data)
+                    var length = $('.iframe-container').length;
+			        if (length < 1) {
+                        $.fn.RemoveColorsOfDocs(enumString);
+			        }
+                    return true;
+                }
+            });
+            return true;
+        };
+
+
+        //$.fn.AppendModalToBody = function(data)
+        //{
+        //    $(".modal").modal('hide');
+        //    $(".modal").replaceWith('');
+        //    var modal = $(data);
+        //    $('body').append(modal);
+        //    $(".modal").modal({
+        //        backdrop: true,
+        //        keyboard: false,
+        //    });
+        //    //shows the modal
+        //    $(".modal").modal('show');
+        //    $('.modal-content a:first').tab('show');
+        //    $(".mdb-select").materialSelect();
+
+        //}
+        $.fn.OpenModal = function (modalClass, modalDivClass, data) {
+            var backdrop = "static";
+            if ($('.modal-backdrop').length > 0) {
+                backdrop = false;
+            }
+            $('.' + modalClass).replaceWith('');
+            $('.' + modalDivClass).html('');
+            $('.' + modalDivClass).html(data);
+            $("." + modalClass).modal({
+                backdrop: backdrop,
+                keyboard: false,
+            });
+            //shows the modal
+            $("." + modalClass).modal('show');
+            $('input[type ="submit"]').removeClass("activeSubmit");
+            $('button[type ="submit"]').removeClass("activeSubmit");
+            $('.' + modalDivClass+' input[type="submit"]').addClass("activeSubmit");
+            $('.' + modalDivClass + ' button[type="submit"]').addClass("activeSubmit");
+
+        }
+        $.fn.CloseModal = function (modalDivClass) {
+            $('.' + modalDivClass).html('');
+            if ($('.modal').length == 0) {
+                $('.modal-backdrop').remove();
+            }
+        }
     </script>
 
     @if (IsSectionDefined("requestNavScript"))

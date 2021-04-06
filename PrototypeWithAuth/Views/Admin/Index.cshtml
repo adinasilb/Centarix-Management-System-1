@@ -7,17 +7,14 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-
-
-
-    TempData["Email1"] = TempData["Email1"]?.ToString() ?? "";
-    TempData["Email2"] = TempData["Email2"]?.ToString() ?? "";
-    TempData["Email3"] = TempData["Email3"]?.ToString() ?? "";
-    TempData["Email4"] = TempData["Email4"]?.ToString() ?? "";
-    TempData["Email5"] = TempData["Email5"]?.ToString() ?? "";
 }
-    @*<script src="~/js/UserIndexPartial.js"></script>*@
-    <input type="hidden" id="PageType" value="@TempData[AppUtility.TempDataTypes.PageType.ToString()]"/>
-    <div id="usersTable">
-        @{ await Html.RenderPartialAsync("_Index", Model);}
-    </div>
+@*<script src="~/js/UserIndexPartial.js"></script>*@
+<input type="hidden" id="PageType" value="@TempData[AppUtility.TempDataTypes.PageType.ToString()]" />
+@if (Model.ErrorMessage != null)
+{
+    <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span></div>
+    <br />
+}
+<div id="usersTable">
+    @{ await Html.RenderPartialAsync("_Index", Model);}
+</div>

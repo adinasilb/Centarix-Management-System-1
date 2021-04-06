@@ -1,0 +1,109 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> _userManager
+
+@{ string showItem = "";
+    string showLocation = "";
+    string showPrice = "";
+    string showDocuments = "";
+    string showComments = "";
+    string showHistory = "";
+    string showOrder = "";
+    switch (Model.Tab)
+    {
+        case 1:
+            showItem = " active show ";
+            break;
+        case 2:
+            showLocation = " active show ";
+            break;
+        case 3:
+            showPrice = " active show ";
+            break;
+        case 4:
+            showDocuments = " active show ";
+            break;
+        case 5:
+            showComments = " active show ";
+            break;
+        case 6:
+            showHistory = " active show ";
+            break;
+        case 7:
+            showOrder = " active show ";
+            break;
+
+    }
+}
+
+<div class="container-fluid div-tabs no-box-shadow p-0">
+    <input type="hidden" value="@Model.ModalType" id="modalType" />
+
+    @if (Model.ModalType == AppUtility.RequestModalType.Edit)
+    {
+        <div class=" row text-right mb- ">
+            <div class="switch col-12 switch-margin">
+                <label>
+                    <label class="edit-mode-switch-description">Edit Mode Off</label>
+                    <input type="checkbox" class="turn-edit-on-off  orders " value="@Model.Requests.FirstOrDefault().RequestID" productID="@Model.Requests.FirstOrDefault().ProductID" name="details">
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+    }
+    <div class="tab-content">
+        @if (Model.SectionType == AppUtility.MenuItems.Operations)
+        {
+            <div id="item" class="tab-pane fade in @showItem" value="1">
+                @{await Html.RenderPartialAsync("_ItemTabOperations", Model); }
+            </div>
+        }
+        else
+        {
+            <div id="item" class="tab-pane fade in @showItem" value="1">
+                @{await Html.RenderPartialAsync("_ItemTab", Model); }
+            </div>
+        }
+        @if ((Model.ModalType.Equals(AppUtility.RequestModalType.Summary) || Model.Requests.FirstOrDefault().RequestStatusID == 3 || Model.RequestStatusID == 7) && Model.SectionType != AppUtility.MenuItems.Operations)
+        {
+            <div id="location" class="tab-pane fade @showLocation" value="2">
+                @{await Html.RenderPartialAsync("_LocationTab", Model); }
+            </div>
+        }
+        @if (!Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.isProprietary && Model.SectionType != AppUtility.MenuItems.Operations)
+        {
+            <div id="price" class="tab-pane fade @showPrice" value="3">
+                @{await Html.RenderPartialAsync("_PriceTab", Model); }
+            </div>
+        }
+        <div id="documents" class="tab-pane fade @showDocuments" value="4">
+            @{await Html.RenderPartialAsync("_DocumentsTab", Model); }
+        </div>
+        <div id="comments" class="tab-pane fade @showComments" value="5">
+            @{await Html.RenderPartialAsync("_CommentsTab", Model); }
+        </div>
+        @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) && Model.RequestStatusID != 7)
+        {<div id="history" class="tab-pane fade @showHistory" value="6">
+                @{await Html.RenderPartialAsync("_HistoryTab", Model); }
+            </div>
+        }
+        @if (Model.ModalType.Equals(AppUtility.RequestModalType.Create) && Model.SectionType != AppUtility.MenuItems.Operations)
+        {
+            <div id="order" class="tab-pane fade order-tab @showOrder" value="7">
+                @{await Html.RenderPartialAsync("_OrderTab", Model); }
+            </div>
+        }
+    </div>
+</div>
+<script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/site.js"></script>
+<script src="~/js/SubUnit.js"></script>
+<script src="~/js/CreateItem.js"></script>
+<script src="~/js/WarantySupplyDateCalc.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/customDropdown.js"></script>
+<script src="~/js/IndexTablePartial.js"></script>

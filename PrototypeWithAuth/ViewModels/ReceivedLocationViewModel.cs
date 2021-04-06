@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class ReceivedLocationViewModel
+    public class ReceivedLocationViewModel : ViewModelBase
     {
         public ApplicationUser applicationUserHolder { get; set; }
         public int LocationTypeID { get; set; }//this is just here for now so we have a place to store the dropdownlistfor but I don't know if we actually needs to save it b/c we don't need to access it
@@ -26,12 +27,14 @@ namespace PrototypeWithAuth.ViewModels
 
         //The following properties are for remembering where you are on the request Index to follow through to the right page
         public int? Page { get; set; }
-        public int RequestStatusID { get; set; }
+        public int PageRequestStatusID { get; set; }
         public int SubCategoryID { get; set; }
         public int CategoryType { get; set; }
         public int VendorID { get; set; }
         public string ApplicationUserID { get; set; }
         public int /*AppUtility.RequestPageTypeEnum*/ PageType { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
+        public RequestIndexObject RequestIndexObject { get; set; }
+        public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
     }
 }

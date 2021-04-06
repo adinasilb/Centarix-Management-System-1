@@ -26,12 +26,12 @@ namespace PrototypeWithAuth.Models
         public string CommentType { get; set; }
 
 
+        private DateTime _CommentTimeStamp;
         [DataType(DataType.Date)]
-        private DateTime commentTimeStamp = DateTime.Now; //should this be readonly -ADINA
         public DateTime CommentTimeStamp
         {
-            get => commentTimeStamp;
-            set { }
+            get => _CommentTimeStamp == new DateTime() ? DateTime.Now : _CommentTimeStamp;
+            set { _CommentTimeStamp = value; }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class EditQuoteDetailsViewModel
+    public class EditQuoteDetailsViewModel : ViewModelBase
     {
-        public List<Reorder> Reorders { get; set; }
-        [DataType(DataType.Date)]
-        public Vendor Vendor { get; set; }
-
+        public List<Request> Requests { get; set; }
         [DataType(DataType.Date)]
         [Display(Name = "Quote Date")]
         public DateTime QuoteDate { get; set; }
