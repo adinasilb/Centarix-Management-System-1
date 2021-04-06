@@ -230,7 +230,7 @@
                 </div>
                 <div class="">
                     <ul class="list-unstyled m-0">
-                        <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-trigger="focus" data-placement="bottom" data-container="body" class="btn no-box-shadow p-0 m-0 " style="margin-right: 1.313rem !important;"><div class="alerts-icon"><i style='font-size: 2.3rem;   color: #808080;' class='icon-notification_top_menu'></i> <span id="alertCount" class="alert-count "></span></div>  </button> </li>
+                        <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-placement="bottom" data-container="body" class="btn no-box-shadow p-0 m-0 " style="margin-right: 1.313rem !important;"><div class="alerts-icon"><i style='font-size: 2.3rem;   color: #808080;' class='icon-notification_top_menu'></i> <span id="alertCount" class="alert-count "></span></div>  </button> </li>
                         <div style="display:none;" id="notifications-popover">
                             <button type="button" class="close popover-close" style="font-size:2rem;" >&times;</button>
                             <div style="width:410px" class="p-4 heading-1">
@@ -454,7 +454,6 @@
         });
 
         $("body").on("click", ".popover-close", function (e) {
-            alert('called');
             $('[data-toggle="popover"]').popover('dispose');
         });
     //    $(".add-item").on("click", function (e) {

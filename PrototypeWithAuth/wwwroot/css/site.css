@@ -2299,3 +2299,6 @@ table.visual-locations-table td .visual-locations-div {
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
 }
+.filter-col {
+    overflow: hidden
+}
