@@ -682,3 +682,9 @@ table td, table td .btn, .text, table th {
 .location-visual-font{
     font-size:11.59px !important;
 }
+
+body.modal-open {
+    /* background shouldn't scroll when a modal is open*/
+    overflow: hidden;
+    position: fixed;
+}
