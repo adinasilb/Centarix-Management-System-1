@@ -8,7 +8,7 @@
 @using System.Globalization
 @using X.PagedList.Mvc.Core @* import this so we get our HTML Helper *@
 
-    <div style="width:1600px; height:35.75rem; margin:0;" class="container-fluid overflow-hidden order-inv-form">
+    <div style="width:1200px; height:35.75rem; margin:0;" class="container-fluid overflow-hidden order-inv-form">
         <div class="row">
             <div class=" col-1 offset-11">
                 <button type="button" class="close popover-close" style="font-size:2rem;">&times;</button>
@@ -24,19 +24,31 @@
             </div>
         </div>
         <div class="row " >
+            <div class="border-right col filter-col">
+                <input value="Type" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
+                <div class="inventory-filter-col not-selected">
+                    @foreach (var type in Model.Types)
+                    {
+                        <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.CategoryTypeDescription</span></button>
+                    }
+                </div>
+                <div class="inventory-filter-col selected">
+                    @foreach (var type in Model.SelectedTypes)
+                    {
+                        <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.CategoryTypeDescription</span></button>
+                    }
+                </div>
+            </div>
                 <div class="border-right col filter-col">
-                    <input value="Type" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
-                    <div class="inventory-filter-col">
-                        @foreach (var type in Model.Types)
+                    <input value="Vendor" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
+                    <div class="inventory-filter-col not-selected ">
+                        @foreach (var type in Model.Vendors)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.CategoryTypeDescription</span></button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.VendorEnName</span></button>
                         }
                     </div>
-                </div>
-                <div class="border-right col filter-col">
-                    <input value="Vendor" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom"  />
-                    <div class="inventory-filter-col ">
-                        @foreach (var type in Model.Vendors)
+                    <div class="inventory-filter-col selected">
+                        @foreach (var type in Model.SelectedVendors)
                         {
                             <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.VendorEnName</span></button>
                         }
@@ -44,17 +56,30 @@
                 </div>
                 <div class="border-right col filter-col">
                     <input value="Owner" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
-                    <div class="inventory-filter-col">
+                    <div class="inventory-filter-col not-selected">
                         @foreach (var type in Model.Owners)
                         {
                             <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.FirstName @type.LastName</span></button>
                         }
                     </div>
+                    <div class="inventory-filter-col selected">
+                        @foreach (var type in Model.SelectedOwners)
+                        {
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.FirstName @type.LastName</span></button>
+                        }
+                    </div>
+
                 </div>
                 <div class="border-right col filter-col">
                     <input value="Location" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
-                    <div class="inventory-filter-col">
+                    <div class="inventory-filter-col not-selected">
                         @foreach (var type in Model.Locations)
+                        {
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.LocationTypeName</span></button>
+                        }
+                    </div>
+                    <div class="inventory-filter-col selected">
+                        @foreach (var type in Model.SelectedLocations)
                         {
                             <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.LocationTypeName</span></button>
                         }
@@ -62,8 +87,14 @@
                 </div>
                 <div class="border-right col filter-col">
                     <input value="Category" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
-                    <div class="inventory-filter-col">
+                    <div class="inventory-filter-col not-selected">
                         @foreach (var type in Model.Categories)
+                        {
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ParentCategoryDescription</span></button>
+                        }
+                    </div>
+                    <div class="inventory-filter-col selected">
+                        @foreach (var type in Model.SelectedCategories)
                         {
                             <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ParentCategoryDescription</span></button>
                         }
@@ -71,14 +102,20 @@
                 </div>
                 <div class="border-right col mh-100 filter-col">
                     <input value="Subcategory" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
-                    <div class="inventory-filter-col">
+                    <div class="inventory-filter-col not-selected">
                         @foreach (var type in Model.Subcategories)
                         {
                             <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProductSubcategoryDescription</span></button>
                         }
                     </div>
+                    <div class="inventory-filter-col selected">
+                        @foreach (var type in Model.SelectedSubcategories)
+                        {
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProductSubcategoryDescription</span></button>
+                        }
+                    </div>
                 </div>
-                <div class="border-right col filter-col">
+                @*<div class="border-right col filter-col">
                     <input value="Project" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Projects)
@@ -95,7 +132,7 @@
                             <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"> <span class="filter-button-description">@type.SubProjectDescription</span></button>
                         }
                     </div>
-                </div>
+                </div>*@
             </div>
     </div>
     <script src="~/js/InventoryFilterScript.js"></script>
