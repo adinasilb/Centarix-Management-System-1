@@ -130,6 +130,7 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.PriceSortEnums = priceSorts;
             viewmodel.currency = AppUtility.CurrencyEnum.NIS;
             viewmodel.MenuType = SectionType;
+            viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
 
             //add in to the view bag whatever erros there are
             if (ViewBag.ErrorMessage != null)
@@ -3752,6 +3753,28 @@ namespace PrototypeWithAuth.Controllers
             }
 
             return RedirectToAction("AccountingNotifications");
+        }
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public IActionResult _InventoryFilterResults()
+        {
+            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel();
+
+            return PartialView(inventoryFilterViewModel);
+        }
+        private InventoryFilterViewModel GetInventoryFilterViewModel()
+        {
+            return new InventoryFilterViewModel()
+            {
+                Types = _context.CategoryTypes.ToList(),
+                Vendors = _context.Vendors.ToList(),
+                Owners = _context.Employees.ToList(),
+                Locations = _context.LocationTypes.Where(r=>r.Depth==0).ToList(),
+                Categories = _context.ParentCategories.ToList(),
+                Subcategories = _context.ProductSubcategories.Distinct().ToList(),
+                Projects = _context.Projects.ToList(),
+                SubProjects = _context.SubProjects.ToList()
+            };
         }
 
         /*

@@ -1,0 +1,30 @@
+﻿@model InventoryFilterViewModel
+
+@using PrototypeWithAuth.AppData;
+@using PrototypeWithAuth.ViewModels;
+
+@using PrototypeWithAuth.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@using System.Globalization
+@using X.PagedList.Mvc.Core @* import this so we get our HTML Helper *@
+
+<div class="container-fluid">
+    <div class="row">
+        <ul class="list-unstyled mb-0 ">
+            <li>
+                <input type="text" value="Search" class="text  custom-order-inv custom-button mb-4 mx-3" />
+                <button type="button" id="invFilterPopover" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body"
+                        class="text custom-button custom-order-inv mb-5" value="Filter">
+                    Filter
+                </button>
+            </li>
+
+            <div style="display:none;" id="inventoryFilterContent" class="container-fluid">
+                @{
+                    await Html.RenderPartialAsync("_InventoryFilterResults", Model);
+                }
+            </div>
+        </ul>
+    </div>
+</div>

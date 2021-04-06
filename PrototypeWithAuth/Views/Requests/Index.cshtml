@@ -90,7 +90,7 @@
     {
         Request = true;
     }
-    else if (Model.PageType.Equals(AppUtility.PageTypeEnum.RequestInventory))
+    else if (Model.PageType.Equals(AppUtility.PageTypeEnum.RequestInventory) || Model.PageType.Equals(AppUtility.PageTypeEnum.RequestSummary))
     {
         Inventory = true;
     }
@@ -209,6 +209,14 @@
     }
     @if (Model.PagedList.Count() > 0)
     {
+        if (Inventory)
+        {
+            <div>
+                @{
+                    await Html.RenderPartialAsync("_IndexFilter", Model.InventoryFilterViewModel);
+                }
+            </div>
+        }
         <table class="table table-headerspaced table-noheaderlines table-hover ">
             <thead>
                 <tr class="text-center">

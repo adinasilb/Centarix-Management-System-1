@@ -10,6 +10,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class RequestIndexViewModel
     {
+        public InventoryFilterViewModel InventoryFilterViewModel { get; set; }
        public IPagedList<PrototypeWithAuth.Models.Request> PagedList { get; set; }
        public List<PriceSortViewModel> PriceSortEnums { get; set; }
         public List<String> PriceSortEnumsList { get; set; }
