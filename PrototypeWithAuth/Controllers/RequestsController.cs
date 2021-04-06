@@ -150,7 +150,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests, LabManagement, Operations")]
-        private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months=null, List<int> Years=null)
+        private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null, SelectedFilters selectedFilters = null)
         {
             int categoryID = 1;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
@@ -297,9 +297,34 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ParentRequest).Include(r=>r.ApplicationUserCreator)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
+                    .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).AsQueryable();
 
-                onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
+
+            if(selectedFilters!=null)
+            {
+                if(selectedFilters.SelectedCategoriesIDs.Count() > 0)
+                {
+                    RequestPassedInWithInclude = RequestPassedInWithInclude.Where(r => selectedFilters.SelectedCategoriesIDs.Contains(r.Product.ProductSubcategory.ParentCategoryID));
+                }
+                if(selectedFilters.SelectedSubcategoriesIDs.Count() > 0)
+                {
+                    RequestPassedInWithInclude = RequestPassedInWithInclude.Where(r => selectedFilters.SelectedSubcategoriesIDs.Contains(r.Product.ProductSubcategoryID));
+                }
+                if (selectedFilters.SelectedVendorsIDs.Count() > 0)
+                {
+                    RequestPassedInWithInclude = RequestPassedInWithInclude.Where(r => selectedFilters.SelectedVendorsIDs.Contains(r.Product.VendorID??0));
+                }
+                if (selectedFilters.SelectedLocationsIDs.Count() > 0)
+                {
+                    RequestPassedInWithInclude = RequestPassedInWithInclude.Where(r => selectedFilters.SelectedLocationsIDs.Contains(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID));
+                }
+                if (selectedFilters.SelectedOwnersIDs.Count() > 0)
+                {
+                    RequestPassedInWithInclude = RequestPassedInWithInclude.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
+                }
+            }
+
+            onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
         
             requestIndexViewModel.PagedList = onePageOfProducts;
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
@@ -894,9 +919,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years)
+        public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years, SelectedFilters selectedFilters = null)
         {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years);
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters);
             return PartialView(viewModel);
         }
 
