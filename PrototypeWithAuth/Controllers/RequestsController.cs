@@ -4903,20 +4903,50 @@ namespace PrototypeWithAuth.Controllers
 
             return PartialView(inventoryFilterViewModel);
         }
-        private InventoryFilterViewModel GetInventoryFilterViewModel()
+        private InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters =null)
         {
-            return new InventoryFilterViewModel()
+            if(selectedFilters !=null)
             {
-                Types = _context.CategoryTypes.ToList(),
-                Vendors = _context.Vendors.ToList(),
-                Owners = _context.Employees.ToList(),
-                Locations = _context.LocationTypes.Where(r=>r.Depth==0).ToList(),
-                Categories = _context.ParentCategories.ToList(),
-                Subcategories = _context.ProductSubcategories.Distinct().ToList(),
-                Projects = _context.Projects.ToList(),
-                SubProjects = _context.SubProjects.ToList()
-            };
+                return new InventoryFilterViewModel()
+                {
+                    Types = _context.CategoryTypes.Where(ct => !selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
+                    Vendors = _context.Vendors.Where(v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
+                    Owners = _context.Employees.Where(o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
+                    Locations = _context.LocationTypes.Where(l => l.Depth == 0).Where(l => selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID)).ToList(),
+                    Categories = _context.ParentCategories.Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.CategoryTypeID)).ToList(),
+                    Subcategories = _context.ProductSubcategories.Distinct().Where(v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
+                    SelectedTypes = _context.CategoryTypes.Where(ct => selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
+                    SelectedVendors = _context.Vendors.Where(v => selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
+                    SelectedOwners = _context.Employees.Where(o => selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
+                    SelectedLocations = _context.LocationTypes.Where(l => l.Depth == 0).Where(l => selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID)).ToList(),
+                    SelectedCategories = _context.ParentCategories.Where(c => selectedFilters.SelectedCategoriesIDs.Contains(c.CategoryTypeID)).ToList(),
+                    SelectedSubcategories = _context.ProductSubcategories.Distinct().Where(v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
+                    //Projects = _context.Projects.ToList(),
+                    //SubProjects = _context.SubProjects.ToList()
+                };
+            }
+            else
+            {
+                return new InventoryFilterViewModel()
+                {
+                    Types = _context.CategoryTypes.ToList(),
+                    Vendors = _context.Vendors.ToList(),
+                    Owners = _context.Employees.ToList(),
+                    Locations = _context.LocationTypes.Where(r => r.Depth == 0).ToList(),
+                    Categories = _context.ParentCategories.ToList(),
+                    Subcategories = _context.ProductSubcategories.Distinct().ToList(),
+                    SelectedTypes = new List<CategoryType>(),
+                    SelectedVendors = new List<Vendor>(),
+                    SelectedOwners = new List<Employee>(),
+                    SelectedLocations = new List<LocationType>(),
+                    SelectedCategories = new List<ParentCategory>(),
+                    SelectedSubcategories = new List<ProductSubcategory>(),
+                    //Projects = _context.Projects.ToList(),
+                    //SubProjects = _context.SubProjects.ToList()
+                };
+            }
         }
+           
 
 
         [HttpGet]

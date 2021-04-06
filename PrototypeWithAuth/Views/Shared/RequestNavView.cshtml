@@ -455,6 +455,7 @@
 
         $("body").on("click", ".popover-close", function (e) {
             $('[data-toggle="popover"]').popover('dispose');
+            $('body').removeClass('popover-open');
         });
     //    $(".add-item").on("click", function (e) {
     //        e.preventDefault();
