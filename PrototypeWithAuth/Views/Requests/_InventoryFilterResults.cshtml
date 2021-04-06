@@ -24,7 +24,7 @@
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Types)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;">@type.CategoryTypeDescription</button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.CategoryTypeDescription</span></button>
                         }
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                     <div class="inventory-filter-col ">
                         @foreach (var type in Model.Vendors)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;">@type.VendorEnName</button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.VendorEnName</span></button>
                         }
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Locations)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;">@type.LocationTypeName</button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.LocationTypeName</span></button>
                         }
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Categories)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;">@type.ParentCategoryDescription</button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ParentCategoryDescription</span></button>
                         }
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Subcategories)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;">@type.ProductSubcategoryDescription</button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProductSubcategoryDescription</span></button>
                         }
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.SubProjects)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;">@type.SubProjectDescription</button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"> <span class="filter-button-description">@type.SubProjectDescription</span></button>
                         }
                     </div>
                 </div>
