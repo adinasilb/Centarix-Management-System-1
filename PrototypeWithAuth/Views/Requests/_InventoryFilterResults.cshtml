@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="row " >
-                <div class="border-right col">
+                <div class="border-right col filter-col">
                     <input value="Type" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Types)
@@ -28,26 +28,26 @@
                         }
                     </div>
                 </div>
-                <div class="border-right col">
-                    <input value="Vendor" class="mb-2 disabled-text w-100" />
-                    <div class="inventory-filter-col">
+                <div class="border-right col filter-col">
+                    <input value="Vendor" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom"  />
+                    <div class="inventory-filter-col ">
                         @foreach (var type in Model.Vendors)
                         {
                             <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;">@type.VendorEnName</button>
                         }
                     </div>
                 </div>
-                <div class="border-right col">
-                    <input value="Owner" class="mb-2 disabled-text w-100" />
+                <div class="border-right col filter-col">
+                    <input value="Owner" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Owners)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;">@type.FirstName @type.LastName</button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.FirstName @type.LastName</span></button>
                         }
                     </div>
                 </div>
-                <div class="border-right col">
-                    <input value="Location" class="mb-2 disabled-text w-100" />
+                <div class="border-right col filter-col">
+                    <input value="Location" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Locations)
                         {
@@ -55,8 +55,8 @@
                         }
                     </div>
                 </div>
-                <div class="border-right col">
-                    <input value="Category" class="mb-2 disabled-text w-100" />
+                <div class="border-right col filter-col">
+                    <input value="Category" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Categories)
                         {
@@ -64,8 +64,8 @@
                         }
                     </div>
                 </div>
-                <div class="border-right col mh-100">
-                    <input value="Subcategory" class="mb-2 disabled-text w-100" />
+                <div class="border-right col mh-100 filter-col">
+                    <input value="Subcategory" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Subcategories)
                         {
@@ -73,17 +73,17 @@
                         }
                     </div>
                 </div>
-                <div class="border-right col">
-                    <input value="Project" class="mb-2 disabled-text w-100" />
+                <div class="border-right col filter-col">
+                    <input value="Project" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.Projects)
                         {
-                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;">@type.ProjectDescription</button>
+                            <button id="" type="button" class="table-button my-1 w-100 text-left" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProjectDescription</span></button>
                         }
                     </div>
                 </div>
-                <div class="border-right col">
-                    <input value="Subproject" class="mb-2 disabled-text w-100" />
+                <div class="border-right col filter-col">
+                    <input value="Subproject" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col">
                         @foreach (var type in Model.SubProjects)
                         {

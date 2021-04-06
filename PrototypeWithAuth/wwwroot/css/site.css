@@ -2291,3 +2291,11 @@ table.visual-locations-table td .visual-locations-div {
 .inventoryFilterDiv .popover {
 
 }
+.filter-button-description {
+    text-overflow: ellipsis;
+    width: 8rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
