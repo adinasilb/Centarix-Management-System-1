@@ -272,7 +272,19 @@
                                 <div class="modal-sides modal-body-top-p">
                                     <div id="contact-info">
                                         <input type="hidden" value="1" id="contact-index" />
-                                        @{await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = new VendorContact(), Index = 0 });}
+                                        @{
+                                            if (Model.VendorContacts.Count == 0)
+                                            {
+                                                await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = new VendorContact(), Index = 0 });
+                                            }
+                                            else
+                                            {
+                                                for (int i = 0; i < Model.VendorContacts.Count; i++)
+                                                {
+                                                    await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = Model.VendorContacts[i]?.VendorContact, Index = i });
+                                                }
+                                            }
+                                        }
                                     </div>
                                 </div>
                                 <div class="text-center">

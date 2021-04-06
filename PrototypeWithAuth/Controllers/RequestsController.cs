@@ -2207,7 +2207,6 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-
                 string uploadFolder = Path.Combine("wwwroot", "files");
                 string uploadFile = Path.Combine(uploadFolder, "OrderForm.pdf");
 
@@ -4719,7 +4718,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     try
                     {
-                        foreach (var req in requests)
+                            foreach (var req in requests)
                         {
                             if (req.Product == null)
                             {
@@ -4860,9 +4859,10 @@ namespace PrototypeWithAuth.Controllers
                             }
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
-                           
+                            
                             return RedirectToAction("Index", termsViewModel.RequestIndexObject);
                         }
+
                     }
                     catch (Exception ex)
                     {
