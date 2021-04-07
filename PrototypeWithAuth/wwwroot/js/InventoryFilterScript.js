@@ -41,35 +41,6 @@ $('body').on('click', '.btn-filter', function () {
 
 });
 
-$("#applyFilter").click(function(){
-   var data = $.fn.BindSelectedFilters();
-    $.ajax({
-		processData: false,
-		contentType: false,
-		data: data,
-		async: true,
-		url: "/Requests/_IndexTableData?"+$.fn.getRequestIndexString(),
-		type: 'GET',
-		cache: false,
-		success: function (data) {
-			$("._IndexTableData").html(data);
-			  $('[data-toggle="popover"]').popover('dispose');
-            $('body').removeClass('popover-open');
-        }
-    });
-});
-
-$.fn.BindSelectedFilters = function () {
-	var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
-	var selectedOwner = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
-	var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
-	var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
-	var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
-	return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner }
-}
-
-
-
 $(".category-search").on('change input',function(){
 	var searchText=$(this).val();
 	if(searchText=="")

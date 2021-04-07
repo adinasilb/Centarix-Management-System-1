@@ -4932,7 +4932,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if(selectedFilters !=null)
             {
-                return new InventoryFilterViewModel()
+                InventoryFilterViewModel inventoryFilterViewModel =  new InventoryFilterViewModel()
                 {
                     //Types = _context.CategoryTypes.Where(ct => !selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
                     Vendors = _context.Vendors.Where(v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
@@ -4949,6 +4949,11 @@ namespace PrototypeWithAuth.Controllers
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
                 };
+                if(inventoryFilterViewModel.SelectedCategories.Count() > 0)
+                {
+                    inventoryFilterViewModel.Subcategories = inventoryFilterViewModel.Subcategories.Where(ps => inventoryFilterViewModel.SelectedCategories.Contains(ps.ParentCategory)).ToList();
+                }
+                return inventoryFilterViewModel;
             }
             else
             {

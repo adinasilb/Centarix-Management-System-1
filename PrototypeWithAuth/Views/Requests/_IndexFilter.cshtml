@@ -32,3 +32,25 @@
         </div>
     </div>
 </div>
+<script>
+    $('body').on('click', "#applyFilter", function () {
+        alert('clicked!')
+        var data = $.fn.BindSelectedFilters();
+        $.ajax({
+        //    processData: false,
+        //    contentType: false,
+            data: data,
+            async: true,
+            traditional: true,
+            url: "/Requests/_IndexTableData?" + $.fn.getRequestIndexString(),
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                $("._IndexTableData").html(data);
+                $('[data-toggle="popover"]').popover('dispose');
+                $('body').removeClass('popover-open');
+            }
+        });
+    });
+   
+</script>
