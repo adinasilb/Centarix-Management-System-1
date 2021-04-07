@@ -30,20 +30,20 @@ $('body').off('click').on('click', '.btn-filter', function () {
 		arr.splice($.inArray(id, arr), 1);
 		numFilters = Number($('.numFilters').attr("value")) - 1;
 	}
-	console.log(data);
+	//console.log(data);
     $.ajax({
-			//processData: false,
-			//contentType: false,
-			data: data,
-			traditional:true,
+		//processData: false,
+		//contentType: false,
+		data: data,
+		traditional:true,
 		async: true,
 		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters,
-			type: 'GET',
-			cache: false,
-			success: function (newData) {
-				$('#inventoryFilterContent').html(newData);
-				$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
-            }
+		type: 'GET',
+		cache: false,
+		success: function (newData) {
+			$('#inventoryFilterContent').html(newData);
+			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
+        }
      });
 
 });
@@ -160,6 +160,20 @@ $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) 
 	$('body').removeClass('popover-open');
 	$('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
 	$('#invFilterPopover').addClass('custom-order-inv');
+}); 
+
+$('body').on('click', '.clear-filters', function () {
+	//alert("clicked!");
+	$.ajax({
+		async: true,
+		url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0",
+		type: 'GET',
+		cache: false,
+		success: function (newData) {
+			$('#inventoryFilterContent').html(newData);
+			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
+		}
+	});
 });
 
 
