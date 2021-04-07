@@ -595,14 +595,16 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.RequestSummary:
                   
-                    iconList.Add(deleteIcon);
+               
                     switch (requestIndexObject.RequestStatusID)
                     {
                         case 7:
+                            iconList.Add(deleteIcon);
                             onePageOfProducts = await GetSummaryProprietaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                         default:
                             iconList.Add(reorderIcon);
+                            iconList.Add(deleteIcon);
                             onePageOfProducts = await GetSummaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                     }
