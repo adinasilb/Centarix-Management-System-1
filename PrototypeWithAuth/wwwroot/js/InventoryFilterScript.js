@@ -158,6 +158,8 @@ $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) 
 	//alert('x button')
 	$('[data-toggle="popover"]').popover('dispose');
 	$('body').removeClass('popover-open');
+	$('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+	$('#invFilterPopover').addClass('custom-order-inv');
 });
 
 

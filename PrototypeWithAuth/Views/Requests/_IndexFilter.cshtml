@@ -49,6 +49,8 @@
                 $("._IndexTableData").html(data);
                 $('[data-toggle="popover"]').popover('dispose');
                 $('body').removeClass('popover-open');
+                $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+                $('#invFilterPopover').addClass('custom-order-inv');
             }
         });
     });
