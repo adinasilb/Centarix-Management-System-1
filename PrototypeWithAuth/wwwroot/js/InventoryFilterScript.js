@@ -52,3 +52,39 @@ $.fn.BindSelectedFilters = function(){
     var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
 	return {SelectedCategories: selectedCategory, SelectedSubCategories : selectedSubCategory, SelectedLocations : selectedLocation, SelectedVendors: selectedVendor, SelectedOwner : selectedOwner}
 }
+
+
+
+$(".category-search").change(function(){
+	var searchText=$(this).val();
+	if(searchText=="")
+	{
+		$('.category-col .not-selected button').removeClass("d-none");
+	}
+	else
+	{
+	$('.category-col .not-selected button').each(function(i, e){
+			if($(e).attr("labelName").toLowerCase().indexOf(searchText) <=0)
+			{
+				$(e).addClass("d-none")
+			}
+			else
+			{
+				$(e).removeClass("d-none")
+			}
+	});
+	}
+	
+});
+$(".subCategory-search").change(function(){
+
+});
+$(".vendor-search").change(function(){
+});
+$(".owner-search").change(function(){
+});
+$(".location-search").change(function(){
+});
+
+
+
