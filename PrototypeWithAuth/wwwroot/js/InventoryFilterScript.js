@@ -54,35 +54,110 @@ $.fn.BindSelectedFilters = function(){
 
 
 
-$(".category-search").change(function(){
+$(".category-search").on('change input',function(){
 	var searchText=$(this).val();
 	if(searchText=="")
 	{
-		$('.category-col .not-selected button').removeClass("d-none");
+		$('.popover .category-col .not-selected button').removeClass("d-none");
 	}
 	else
 	{
-	$('.category-col .not-selected button').each(function(i, e){
-			if($(e).attr("labelName").toLowerCase().indexOf(searchText) <=0)
-			{
-				$(e).addClass("d-none")
-			}
-			else
-			{
-				$(e).removeClass("d-none")
-			}
-	});
+		$('.popover .category-col .not-selected button').each(function(i, e){
+				if($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) <0)
+				{
+					$(e).addClass("d-none")
+				}
+				else
+				{
+					$(e).removeClass("d-none")
+				}
+		});
 	}
 	
 });
-$(".subCategory-search").change(function(){
+$(".subCategory-search").on('change input',function(){
+		var searchText=$(this).val();
+	if(searchText=="")
+	{
+		$('.popover .subcategory-col .not-selected button').removeClass("d-none");
+	}
+	else
+	{
+		$('.popover .subcategory-col .not-selected button').each(function(i, e){
+				if($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) <0)
+				{
+					$(e).addClass("d-none")
+				}
+				else
+				{
+					$(e).removeClass("d-none")
+				}
+		});
+	}
 
 });
-$(".vendor-search").change(function(){
+$(".vendor-search").on('change input',function(){
+	var searchText=$(this).val();
+	if(searchText=="")
+	{
+		$('.popover .vendor-col .not-selected button').removeClass("d-none");
+	}
+	else
+	{
+		$('.popover .vendor-col .not-selected button').each(function(i, e){
+				if($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) <0)
+				{
+					$(e).addClass("d-none")
+				}
+				else
+				{
+					$(e).removeClass("d-none")
+				}
+		});
+	}
+
 });
-$(".owner-search").change(function(){
+$(".owner-search").on('change input',function(){
+		var searchText=$(this).val();
+	if(searchText=="")
+	{
+		$('.popover .owner-col .not-selected button').removeClass("d-none");
+	}
+	else
+	{
+		$('.popover .owner-col .not-selected button').each(function(i, e){
+				if($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) <0)
+				{
+					$(e).addClass("d-none")
+				}
+				else
+				{
+					$(e).removeClass("d-none")
+				}
+		});
+	}
+
 });
-$(".location-search").change(function(){
+$(".location-search").on('change input',function(){
+		var searchText=$(this).val();
+	if(searchText=="")
+	{
+		$('.popover .location-col .not-selected button').removeClass("d-none");
+	}
+	else
+	{
+		$('.popover .location-col .not-selected button').each(function(i, e){
+				if($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) <0)
+				{
+					$(e).addClass("d-none")
+				}
+				else
+				{
+					$(e).removeClass("d-none")
+				}
+		});
+	}
+
 });
 
 
