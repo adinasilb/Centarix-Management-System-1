@@ -6,24 +6,34 @@
 $('#invFilterPopover').on('shown.bs.popover', function () {
     $('body').addClass('popover-open');
 })
-$('body').on('click', '.btn-filter', function () {
+$('body').off('click').on('click', '.btn-filter', function () {
 	var data = $.fn.BindSelectedFilters();
 	var id = $(this).val();
-	var col = $(this).parent().parent()
-	console.log(data);
-
+	var col = $(this).parent().parent();
+	var arr;
 	if (col.hasClass('vendor-col')) {
-		data.SelectedVendorsIDs.push(id);
-	} else if (col.hasClass('owner-col')) {
-		data.SelectedOwnersIDs.push(id);
-	} else if (col.hasClass('location-col')) {
-		data.SelectedLocationsIDs.push(id);
-	} else if (col.hasClass('category-col')) {
-		data.SelectedCategoriesIDs.push(id);
-	} else if (col.hasClass('subcategory-col')) {
-		data.SelectedSubCategoriesIDs.push(id);
+			arr = data.SelectedVendorsIDs;
+		} else if (col.hasClass('owner-col')) {
+			arr = data.SelectedOwnersIDs;
+		} else if (col.hasClass('location-col')) {
+			arr = data.SelectedLocationsIDs;
+		} else if (col.hasClass('category-col')) {
+			arr = data.SelectedCategoriesIDs;
+		} else if (col.hasClass('subcategory-col')) {
+			arr = data.SelectedSubCategoriesIDs;
 	}
-    
+	
+
+	if ($(this).parent().hasClass('not-selected')) {
+		arr.push(id);
+	} else {
+		//arr = jQuery.grep(arr, function (value) {
+		//	return value != id;
+		//})
+		arr.splice($.inArray(id, arr), 1);
+	}
+	console.log(arr);
+    console.log('data;' + data)
     $.ajax({
 			//processData: false,
 			//contentType: false,
@@ -147,5 +157,10 @@ $(".location-search").on('change input',function(){
 
 });
 
+$("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) {
+	alert('x button')
+	$('[data-toggle="popover"]').popover('dispose');
+	$('body').removeClass('popover-open');
+});
 
 

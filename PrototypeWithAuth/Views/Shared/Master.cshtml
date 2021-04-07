@@ -1135,6 +1135,10 @@
             var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
             return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner }
         }
+        $("body").on("click", ".popover-close", function (e) {
+            $('[data-toggle="popover"]').popover('dispose');
+            $('body').removeClass('popover-open');
+        });
     </script>
 
     @if (IsSectionDefined("requestNavScript"))
