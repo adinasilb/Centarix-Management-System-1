@@ -59,13 +59,13 @@ $("#applyFilter").click(function(){
     });
 });
 
-$.fn.BindSelectedFilters = function(){
-    var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
+$.fn.BindSelectedFilters = function () {
+	var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
 	var selectedOwner = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
 	var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
-    var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
-    var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
-	return {SelectedCategories: selectedCategory, SelectedSubCategories : selectedSubCategory, SelectedLocations : selectedLocation, SelectedVendors: selectedVendor, SelectedOwner : selectedOwner}
+	var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
+	var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+	return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner }
 }
 
 
