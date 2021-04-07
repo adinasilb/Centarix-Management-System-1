@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="row " >
-            <div class="border-right col filter-col category-type-col">
+            @*<div class="border-right col filter-col category-type-col">
                 <input value="Type" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                 <div class="inventory-filter-col not-selected">
                     @foreach (var type in Model.Types)
@@ -38,7 +38,7 @@
                         <button id="" type="button" class="table-button my-1 w-100 text-left filter-btn-select" value="@type.CategoryTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.CategoryTypeDescription</span></button>
                     }
                 </div>
-            </div>
+            </div>*@
                 <div class="border-right col filter-col vendor-col">
                     <input value="Vendor" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col not-selected ">
@@ -86,14 +86,14 @@
                     </div>
                 </div>
                 <div class="border-right col filter-col category-col">
-                    <input value="Category" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
-                    <div class="inventory-filter-col not-selected">
+                    <input value="Category" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" style="max-height:25rem" />
+                    <div class="inventory-filter-col not-selected" style="max-height:12.5rem">
                         @foreach (var type in Model.Categories)
                         {
                             <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left" value="@type.ParentCategoryID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ParentCategoryDescription</span></button>
                         }
                     </div>
-                    <div class="inventory-filter-col selected">
+                    <div class="inventory-filter-col selected" >
                         @foreach (var type in Model.SelectedCategories)
                         {
                             <button id="" type="button" class="table-button my-1 w-100 text-left filter-btn-select" value="@type.ParentCategoryID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ParentCategoryDescription</span></button>

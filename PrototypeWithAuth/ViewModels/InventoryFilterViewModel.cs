@@ -10,8 +10,8 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class InventoryFilterViewModel
     {
-        public List<CategoryType> Types { get; set; }
-        public List<CategoryType> SelectedTypes { get; set; }
+        //public List<CategoryType> Types { get; set; }
+        //public List<CategoryType> SelectedTypes { get; set; }
         public List<int> SelectedTypesIDs { get; set; }
         public List<Vendor> Vendors { get; set; }
         public List<Vendor> SelectedVendors { get; set; }
