@@ -6,3 +6,19 @@
 $('#invFilterPopover').on('shown.bs.popover', function () {
     $('body').addClass('popover-open');
 })
+
+
+
+
+
+
+
+
+
+$("#applyFilter").click(function(){
+
+
+
+
+
+});
