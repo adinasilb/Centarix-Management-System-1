@@ -310,7 +310,7 @@ namespace PrototypeWithAuth.Controllers
 
                         if(employeeHoursBeingApproved.OffDayTypeID==4)
                         {
-                            user.SpecialVacationDays += 1;
+                            user.SpecialDays += 1;
                         }
 
                         employeeHoursBeingApproved.OffDayTypeID = null;

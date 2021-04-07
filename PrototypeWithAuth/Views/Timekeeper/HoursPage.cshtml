@@ -129,13 +129,13 @@
                                 <option value="3" class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SickDay">Report sick day</option>
                                 <option value="4" class="confirm-report-offDay @AppUtility.OffDayTypeEnum.VacationDay">Report vacation day</option>
 
-                                @if (eh.EmployeeHours.Employee.SpecialVacationDays > 0)
+                                @if (eh.EmployeeHours.Employee.SpecialDays > 0)
                                 {
-                                    <option value="5" class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SpecialVacationDay">Report special day</option>
+                                    <option value="5" class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SpecialDay">Report special day</option>
                                 }
                                 else
                                 {
-                                    <option value="5" disabled class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SpecialVacationDay">Report special vacation day</option>
+                                    <option value="5" disabled class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SpecialDay">Report special vacation day</option>
                                 }
 
                             </select>

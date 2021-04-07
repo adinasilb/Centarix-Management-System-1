@@ -87,8 +87,8 @@ namespace PrototypeWithAuth.Models
         public double BonusSickDays { get { return 0; } set {; } }
         [Display(Name = "Bonus Vacation Days")]
         public double BonusVacationDays { get { return 0; } set {; } }
-        [Display(Name = "Special Vacation Days")]
-        public double SpecialVacationDays { get; set; }
+        [Display(Name = "Special Days")]
+        public double SpecialDays { get; set; }
         private double _VacationDaysPerMonth;
         public double VacationDaysPerMonth
         {

@@ -623,7 +623,7 @@ namespace PrototypeWithAuth.Controllers
                         employeeEditted.RollOverVacationDays = registerUserViewModel.NewEmployee.RollOverVacationDays;
                         //employeeEditted.BonusSickDays = registerUserViewModel.NewEmployee.BonusSickDays;
                         //employeeEditted.BonusVacationDays = registerUserViewModel.NewEmployee.BonusVacationDays;
-                        employeeEditted.SpecialVacationDays = registerUserViewModel.NewEmployee.SpecialVacationDays;
+                        employeeEditted.SpecialDays = registerUserViewModel.NewEmployee.SpecialDays;
                         //employeeEditted.JobSubategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
 
                         _context.Update(employeeEditted);

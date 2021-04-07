@@ -1629,7 +1629,7 @@ namespace PrototypeWithAuth.Data
                          new OffDayType
                          {
                              OffDayTypeID = 4,
-                             Description = "Special Vacation Day"
+                             Description = "Special Day"
                          }
                   );
             modelBuilder.Entity<EmployeeHoursStatus>().HasData(

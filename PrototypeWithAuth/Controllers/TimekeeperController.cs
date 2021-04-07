@@ -717,7 +717,7 @@ namespace PrototypeWithAuth.Controllers
                                 if(offDayTypeID==4)
                                 {
                                     employeeHour.Employee = user;
-                                    employeeHour.Employee.SpecialVacationDays -= 1;
+                                    employeeHour.Employee.SpecialDays -= 1;
                                 }
                                 employeeHour.IsBonus = false;
                                 employeeHour.OffDayType = _context.OffDayTypes.Where(odt => odt.OffDayTypeID == offDayTypeID).FirstOrDefault();

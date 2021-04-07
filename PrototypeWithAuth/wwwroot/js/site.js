@@ -1284,7 +1284,7 @@ $(function () {
 				$.fn.CallModal(itemurl,"off-day");
 				break;
 			case "5":
-				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SpecialVacationDay";
+				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SpecialDay";
 				$.fn.CallModal(itemurl,"off-day");
 			break;
 		}

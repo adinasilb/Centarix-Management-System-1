@@ -53,12 +53,12 @@
                                 </a>
                             </div>
                             @{var disabled = "style=pointer-events:none;color:gray!important;";}
-                            @if(Model.Employee.SpecialVacationDays>0)
+                            @if(Model.Employee.SpecialDays>0)
                             {
                                 disabled = "";
                             }
                             <div class="row moreOffDay-btn p-1">
-                                <a href="#" class="text-black  @AppUtility.SidebarEnum.ReportDaysOff" @disabled value="@AppUtility.OffDayTypeEnum.SpecialVacationDay" onclick="$.fn.reportOffDay(this)">
+                                <a href="#" class="text-black  @AppUtility.SidebarEnum.ReportDaysOff" @disabled value="@AppUtility.OffDayTypeEnum.SpecialDay" onclick="$.fn.reportOffDay(this)">
                                     Report Special Day
                                 </a>
                             </div>
@@ -89,7 +89,7 @@
                 <label class="font-weight-bolder text m-0 p-0"> Sick Days Left: @Model.SickDaysLeft</label>
             </div>
             <div class="col-2 heading-1 ">
-                <label class="font-weight-bolder text m-0 p-0"> Special Days: @Model.Employee.SpecialVacationDays</label>
+                <label class="font-weight-bolder text m-0 p-0"> Special Days: @Model.Employee.SpecialDays</label>
             </div>
         </div>
         @*<div class="row">
