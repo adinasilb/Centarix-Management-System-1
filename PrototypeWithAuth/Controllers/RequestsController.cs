@@ -4922,24 +4922,24 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters)
+        public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters, int numFilters)
         {
-            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters);
-
+            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters);
             return PartialView(inventoryFilterViewModel);
         }
-        private InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters =null)
+        private InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters =null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
         {
+            int categoryType = sectionType == AppUtility.MenuItems.Requests ? 1 : 2;
             if(selectedFilters !=null)
             {
                 InventoryFilterViewModel inventoryFilterViewModel =  new InventoryFilterViewModel()
                 {
                     //Types = _context.CategoryTypes.Where(ct => !selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
-                    Vendors = _context.Vendors.Where(v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
                     Owners = _context.Employees.Where(o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
                     Locations = _context.LocationTypes.Where(l => l.Depth == 0).Where(l => !selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID)).ToList(),
                     Categories = _context.ParentCategories.Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID)).ToList(),
                     Subcategories = _context.ProductSubcategories.Distinct().Where(v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
+                    Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType)).Where(v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
                     //SelectedTypes = _context.CategoryTypes.Where(ct => selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
                     SelectedVendors = _context.Vendors.Where(v => selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
                     SelectedOwners = _context.Employees.Where(o => selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
@@ -4948,11 +4948,13 @@ namespace PrototypeWithAuth.Controllers
                     SelectedSubcategories = _context.ProductSubcategories.Distinct().Where(v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
+                    NumFilters = numFilters
                 };
                 if(inventoryFilterViewModel.SelectedCategories.Count() > 0)
                 {
                     inventoryFilterViewModel.Subcategories = inventoryFilterViewModel.Subcategories.Where(ps => inventoryFilterViewModel.SelectedCategories.Contains(ps.ParentCategory)).ToList();
                 }
+                
                 return inventoryFilterViewModel;
             }
             else
@@ -4960,7 +4962,8 @@ namespace PrototypeWithAuth.Controllers
                 return new InventoryFilterViewModel()
                 {
                     //Types = _context.CategoryTypes.ToList(),
-                    Vendors = _context.Vendors.ToList(),
+                    //Vendors = _context.Vendors.ToList(),
+                    Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType)).ToList(),
                     Owners = _context.Employees.ToList(),
                     Locations = _context.LocationTypes.Where(r => r.Depth == 0).ToList(),
                     Categories = _context.ParentCategories.ToList(),
@@ -4973,6 +4976,7 @@ namespace PrototypeWithAuth.Controllers
                     SelectedSubcategories = new List<ProductSubcategory>(),
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
+                    NumFilters = numFilters
                 };
             }
         }

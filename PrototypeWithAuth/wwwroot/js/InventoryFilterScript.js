@@ -22,25 +22,22 @@ $('body').off('click').on('click', '.btn-filter', function () {
 		} else if (col.hasClass('subcategory-col')) {
 			arr = data.SelectedSubCategoriesIDs;
 	}
-	
-
+	var numFilters;
 	if ($(this).parent().hasClass('not-selected')) {
 		arr.push(id);
+		numFilters = Number($('.numFilters').attr("value")) + 1;
 	} else {
-		//arr = jQuery.grep(arr, function (value) {
-		//	return value != id;
-		//})
 		arr.splice($.inArray(id, arr), 1);
+		numFilters = Number($('.numFilters').attr("value")) - 1;
 	}
-	console.log(arr);
-    console.log('data;' + data)
+	console.log(data);
     $.ajax({
 			//processData: false,
 			//contentType: false,
 			data: data,
 			traditional:true,
-			async: true,
-			url: "/Requests/_InventoryFilterResults",
+		async: true,
+		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters,
 			type: 'GET',
 			cache: false,
 			success: function (newData) {
@@ -158,7 +155,7 @@ $(".location-search").on('change input',function(){
 });
 
 $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) {
-	alert('x button')
+	//alert('x button')
 	$('[data-toggle="popover"]').popover('dispose');
 	$('body').removeClass('popover-open');
 });
