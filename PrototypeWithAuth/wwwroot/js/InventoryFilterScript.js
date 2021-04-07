@@ -6,7 +6,7 @@
 $('#invFilterPopover').on('shown.bs.popover', function () {
     $('body').addClass('popover-open');
 })
-$('.btn-filter').click(function () {     
+$('.btn-filter').click(function () {
 	
    var data = $.fn.BindSelectedFilters();
    $.ajax({
@@ -40,15 +40,14 @@ $("#applyFilter").click(function(){
             $('body').removeClass('popover-open');
         }
     });
-
-
 });
 
 $.fn.BindSelectedFilters = function(){
-    var selectedVendor = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
-    var selectedOwner = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
-    var selectedLocation = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
-    var selectedCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+    var selectedVendor = $(".popover .category-type-col .selected button").map(function () { return $(this).attr("value"); }).get();
+    var selectedOwner = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
+	var selectedLocation = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
+	var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
+    var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
     var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
 	return {SelectedCategories: selectedCategory, SelectedSubCategories : selectedSubCategory, SelectedLocations : selectedLocation, SelectedVendors: selectedVendor, SelectedOwner : selectedOwner}
 }
