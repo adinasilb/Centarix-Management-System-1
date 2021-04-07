@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="row " >
-            <div class="border-right col filter-col">
+            <div class="border-right col filter-col category-type-col">
                 <input value="Type" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                 <div class="inventory-filter-col not-selected">
                     @foreach (var type in Model.Types)
@@ -39,7 +39,7 @@
                     }
                 </div>
             </div>
-                <div class="border-right col filter-col">
+                <div class="border-right col filter-col vendor-col">
                     <input value="Vendor" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col not-selected ">
                         @foreach (var type in Model.Vendors)
@@ -54,7 +54,7 @@
                         }
                     </div>
                 </div>
-                <div class="border-right col filter-col">
+                <div class="border-right col filter-col owner-col">
                     <input value="Owner" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col not-selected">
                         @foreach (var type in Model.Owners)
@@ -70,7 +70,7 @@
                     </div>
 
                 </div>
-                <div class="border-right col filter-col">
+                <div class="border-right col filter-col location-col">
                     <input value="Location" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col not-selected">
                         @foreach (var type in Model.Locations)
@@ -85,7 +85,7 @@
                         }
                     </div>
                 </div>
-                <div class="border-right col filter-col">
+                <div class="border-right col filter-col category-col">
                     <input value="Category" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom" />
                     <div class="inventory-filter-col not-selected">
                         @foreach (var type in Model.Categories)
