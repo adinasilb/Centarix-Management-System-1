@@ -63,7 +63,118 @@ $.fn.BindSelectedFilters = function(){
     var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
 	var selectedOwner = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
 	var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
-	var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
-	var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
-	return {SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs : selectedSubCategory, SelectedLocationsIDs : selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs : selectedOwner}
+    var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
+    var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+	return {SelectedCategories: selectedCategory, SelectedSubCategories : selectedSubCategory, SelectedLocations : selectedLocation, SelectedVendors: selectedVendor, SelectedOwner : selectedOwner}
 }
+
+
+
+$(".category-search").on('change input',function(){
+	var searchText=$(this).val();
+	if(searchText=="")
+	{
+		$('.popover .category-col .not-selected button').removeClass("d-none");
+	}
+	else
+	{
+		$('.popover .category-col .not-selected button').each(function(i, e){
+				if($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) <0)
+				{
+					$(e).addClass("d-none")
+				}
+				else
+				{
+					$(e).removeClass("d-none")
+				}
+		});
+	}
+	
+});
+$(".subCategory-search").on('change input',function(){
+		var searchText=$(this).val();
+	if(searchText=="")
+	{
+		$('.popover .subcategory-col .not-selected button').removeClass("d-none");
+	}
+	else
+	{
+		$('.popover .subcategory-col .not-selected button').each(function(i, e){
+				if($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) <0)
+				{
+					$(e).addClass("d-none")
+				}
+				else
+				{
+					$(e).removeClass("d-none")
+				}
+		});
+	}
+
+});
+$(".vendor-search").on('change input',function(){
+	var searchText=$(this).val();
+	if(searchText=="")
+	{
+		$('.popover .vendor-col .not-selected button').removeClass("d-none");
+	}
+	else
+	{
+		$('.popover .vendor-col .not-selected button').each(function(i, e){
+				if($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) <0)
+				{
+					$(e).addClass("d-none")
+				}
+				else
+				{
+					$(e).removeClass("d-none")
+				}
+		});
+	}
+
+});
+$(".owner-search").on('change input',function(){
+		var searchText=$(this).val();
+	if(searchText=="")
+	{
+		$('.popover .owner-col .not-selected button').removeClass("d-none");
+	}
+	else
+	{
+		$('.popover .owner-col .not-selected button').each(function(i, e){
+				if($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) <0)
+				{
+					$(e).addClass("d-none")
+				}
+				else
+				{
+					$(e).removeClass("d-none")
+				}
+		});
+	}
+
+});
+$(".location-search").on('change input',function(){
+		var searchText=$(this).val();
+	if(searchText=="")
+	{
+		$('.popover .location-col .not-selected button').removeClass("d-none");
+	}
+	else
+	{
+		$('.popover .location-col .not-selected button').each(function(i, e){
+				if($(e).attr("labelName").toString().toLowerCase().indexOf(searchText) <0)
+				{
+					$(e).addClass("d-none")
+				}
+				else
+				{
+					$(e).removeClass("d-none")
+				}
+		});
+	}
+
+});
+
+
+
