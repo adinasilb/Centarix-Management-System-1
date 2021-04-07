@@ -2284,7 +2284,7 @@ table.visual-locations-table td .visual-locations-div {
 
 .inventory-filter-col
 {    
-    max-height:28rem;
+    max-height:25rem;
     overflow:scroll;
 }
 
