@@ -1625,6 +1625,12 @@ namespace PrototypeWithAuth.Data
                              OffDayTypeID = 3,
                              Description = "Maternity Leave"
                          }
+                         ,
+                         new OffDayType
+                         {
+                             OffDayTypeID = 4,
+                             Description = "Special Vacation Day"
+                         }
                   );
             modelBuilder.Entity<EmployeeHoursStatus>().HasData(
                 new EmployeeHoursStatus

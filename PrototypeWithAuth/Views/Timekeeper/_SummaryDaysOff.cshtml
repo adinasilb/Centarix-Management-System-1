@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="row  mt-6 ">
-                <table class=" col-5 text-center ">
+                <table class=" col text-center ">
                     <thead>
                         <tr class="text-left ">
                             <th class="p-4 text font-weight-bold">Vacations</th>
@@ -81,7 +81,7 @@
                         @foreach (var vactionDay in Model.VacationDaysTaken)
                         {
                             <tr class="border text-left">
-                                <td class="px-5 py-3">
+                                <td class="px-4 py-3">
                                     <label class="text-left col-6 mb-0 pl-5">@vactionDay.Date.DayOfWeek</label><label class="text-right pr-5 mb-0 col-6">@vactionDay.Date.ToString("dd/MM/yyyy")</label>
                                 </td>
                             </tr>
@@ -89,7 +89,7 @@
 
                     </tbody>
                 </table>
-                <table class="col-5 offset-2 text-center">
+                <table class="col offset-1 text-center">
                     <thead>
                         <tr class="text-left">
                             <th class="p-4 text-left text font-weight-bold">Sick Days</th>
@@ -99,8 +99,25 @@
                         @foreach (var vactionDay in Model.SickDaysTaken)
                         {
                             <tr class="border text-left">
-                                <td class="px-5 py-3"> 
-                                <label class="text-left col-6 mb-0 pl-5">@vactionDay.Date.DayOfWeek</label><label class="text-right pr-5 mb-0 col-6">@vactionDay.Date.ToString("dd/MM/yyyy")</label>
+                                <td class="px-4 py-3">
+                                    <label class="text-left col-6 mb-0 pl-5">@vactionDay.Date.DayOfWeek</label><label class="text-right pr-5 mb-0 col-6">@vactionDay.Date.ToString("dd/MM/yyyy")</label>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <table class="col offset-1  text-center">
+                    <thead>
+                        <tr class="text-left">
+                            <th class="p-4 text-left text font-weight-bold">Special Days</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var vactionDay in Model.SpecialDaysTaken)
+                        {
+                            <tr class="border text-left">
+                                <td class="px-4 py-3">
+                                    <label class="text-left col-6 mb-0 pl-5">@vactionDay.Date.DayOfWeek</label><label class="text-right pr-5 mb-0 col-6">@vactionDay.Date.ToString("dd/MM/yyyy")</label>
                                 </td>
                             </tr>
                         }

@@ -31,7 +31,7 @@
                         <label class=" text mt-3 " style=" color: #808080;">@Model.TotalVacationDaysPerYear Vacation Days Per Year</label>
                     </div>
 
-                    <div class="col-6  ">
+                    <div class="col-5  ">
                         <button class="custom-button-font custom-button timekeeper-color report-off-day  @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.SickDay" style="" type="button">
                             <i class="icon-sick-24px-1 mx-2" style="font-size: 1.25rem;position: relative;">
                             </i> Report sick leave
@@ -40,14 +40,36 @@
                         <label class=" text mt-3 " style=" color: #808080;">@Model.TotalSickDaysPerYear Sick Days Per Year</label>
 
                     </div>
-
+                    <div class="col-1">
+                        <a href="#" id="moreOffDay" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="text-black p-0 m-0 no-box-shadow ">
+                            <i class="icon-more_vert-24px" style="font-size:3rem;"></i>
+                        </a>
+                    </div>
+                    <div style="display:none;" id="moreOffDaysPopover">
+                        <div class="container ">
+                            <div class="row moreOffDay-btn p-1">
+                                <a href="#" class=" text-black @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.MaternityLeave"  onclick="$.fn.reportOffDay(this)">
+                                    Report Maternity Leave
+                                </a>
+                            </div>
+                            @{var disabled = "style=pointer-events:none;color:gray!important;";}
+                            @if(Model.Employee.SpecialVacationDays>0)
+                            {
+                                disabled = "";
+                            }
+                            <div class="row moreOffDay-btn p-1">
+                                <a href="#" class="text-black  @AppUtility.SidebarEnum.ReportDaysOff" @disabled value="@AppUtility.OffDayTypeEnum.SpecialVacationDay" onclick="$.fn.reportOffDay(this)">
+                                    Report Special Day
+                                </a>
+                            </div>
+                        </div>
+                       
+                    </div>
                 </div>
 
                 <div class="row ">
                     <div class="offset-3 col-6  ">
-                        <button class="custom-button-font custom-button disabled-color report-off-day  @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.MaternityLeave" style="" type="button">
-                            Report Maternity Leave
-                        </button>
+                       
                     </div>
                 </div>
             </div>
@@ -60,14 +82,17 @@
 
         <div class="row">
             <div class="col-4 heading-1 p-0"><label class="m-0 p-0">Summary Of Days Off</label></div>
-            <div class="col-4 heading-1 ">
+            <div class="col-3 heading-1 ">
                 <label class="font-weight-bolder text m-0 p-0"> Vacation Days Left: @Model.VacationDaysLeft</label>
             </div>
-            <div class="col-4 heading-1 ">
+            <div class="col-3 heading-1 ">
                 <label class="font-weight-bolder text m-0 p-0"> Sick Days Left: @Model.SickDaysLeft</label>
             </div>
+            <div class="col-2 heading-1 ">
+                <label class="font-weight-bolder text m-0 p-0"> Special Days: @Model.Employee.SpecialVacationDays</label>
+            </div>
         </div>
-        <div class="row">
+        @*<div class="row">
             <div class="col-4 heading-1 p-0"><label class="m-0 p-0"></label></div>
             <div class="col-4 heading-1 ">
                 <label class=" text m-0 p-0"> Bonus Vacation: @Model.BonusVacationDays</label>
@@ -75,7 +100,7 @@
             <div class="col-4 heading-1 ">
                 <label class=" text m-0 p-0"> Bonus Sick: @Model.BonusSickDays</label>
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
 <div class="row">
@@ -124,3 +149,18 @@
 
     </div>
 </div>
+<script>
+    $("#moreOffDay").click(function () {
+        $('[data-toggle="popover"]').popover('dispose');
+        $('#moreOffDay').popover({
+            sanitize: false,
+            placement: 'bottom',
+            html: true,
+            content: function () {
+                return $('#moreOffDaysPopover').html();
+            }
+        });
+        $('#moreOffDay').popover('toggle');
+
+    });
+</script>

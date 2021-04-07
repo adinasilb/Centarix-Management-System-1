@@ -1249,13 +1249,16 @@ $(function () {
 		$("#loading").show();
 		$.fn.CallModal(itemurl, "update-time-worked");
 	});
-
-	$(".report-off-day").off('click').click(function (e) {
-		var offDayType = $(this).attr("value");
+	$.fn.reportOffDay =function(e)
+	{
+		var offDayType = $(e).attr("value");
 		var pageType = $("#masterPageType").val();
 		var itemurl = "OffDayModal?PageType=" + pageType + "&OffDayType=" + offDayType;
 		$("#loading").show();
 		$.fn.CallModal(itemurl, "off-day");
+	}
+	$(".report-off-day").off('click').click(function () {
+			$.fn.reportOffDay($(this));
 	});
 
 	$('.no-hours-reported').off('change').change(function (e) {
@@ -1280,6 +1283,10 @@ $(function () {
 				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=VacationDay";
 				$.fn.CallModal(itemurl,"off-day");
 				break;
+			case "5":
+				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SpecialVacationDay";
+				$.fn.CallModal(itemurl,"off-day");
+			break;
 		}
 	});
 
@@ -1700,6 +1707,8 @@ $(function () {
 		$('#addRequestComment').popover('toggle');
 
 	});
+
+
 
 
 

@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public double VacationDays { get; set; }
         public IEnumerable<EmployeeHours> VacationDaysTaken { get; set; }
+        public IEnumerable<EmployeeHours> SpecialDaysTaken { get; set; }
         public double  VacationDaysTakenCount { get; set; }
         public IEnumerable<EmployeeHours> SickDaysTaken { get; set; }
         private double _SickDays;

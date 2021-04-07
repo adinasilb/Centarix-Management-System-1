@@ -337,9 +337,10 @@ center-horizontally {
     background-color: rgb(232,240,254);
 }
 
-.comment-btn:hover {
+.comment-btn:hover, .moreOffDay-btn:hover {
     background-color: rgb(232,240,254);
 }
+
 
 .sidenav-button:hover {
     background-color: rgba(0,0,0,.08);
