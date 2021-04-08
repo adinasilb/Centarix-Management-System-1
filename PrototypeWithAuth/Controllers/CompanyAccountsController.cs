@@ -17,8 +17,9 @@ namespace PrototypeWithAuth.Controllers
         }
         public JsonResult GetAccountsByBank(int CompanyAccountID)
         {
-            var companyAccountLists = _context.CompanyAccounts
-                .Select(ca => new { ca.CompanyAccountID, ca.CompanyBankName }).ToList();
+            var companyAccountLists = _context.CreditCards
+                .Select(cc => new { cc.CreditCardID, cc.CardNumber, cc.CompanyAccountID})
+                .Where(cc => cc.CompanyAccountID == CompanyAccountID).ToList();
             return Json(companyAccountLists);
         }
     }
