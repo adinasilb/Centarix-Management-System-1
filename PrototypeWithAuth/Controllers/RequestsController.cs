@@ -924,6 +924,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _IndexTableWithProprietaryTabs(RequestIndexObject requestIndexObject, List<int> months, List<int> years, SelectedFilters selectedFilters = null)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters);
+
             return PartialView(viewModel);
         }
 
@@ -933,6 +934,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years);
+            SetViewModelProprietaryCounts(requestIndexObject, viewModel);
             return PartialView(viewModel);
         }
 
