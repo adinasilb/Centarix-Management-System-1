@@ -743,6 +743,12 @@ namespace PrototypeWithAuth.Controllers
                                         _context.SaveChanges();
                                     }
                                 }
+                                else
+                                {
+                                    _context.Update(employeeHour);
+                                    _context.SaveChanges();
+
+                                }
                               
                             }
                         }
@@ -793,6 +799,11 @@ namespace PrototypeWithAuth.Controllers
                                         Date = dateFrom
                                     };
                                 }
+                                if (offDayTypeID == 4)
+                                {
+                                    employeeHour.Employee = user;
+                                    employeeHour.Employee.SpecialDays -= 1;
+                                }
                                 if (!alreadyOffDay)
                                 {
                                     if(user.BonusSickDays >=1 || user.BonusVacationDays>=1)
@@ -812,7 +823,12 @@ namespace PrototypeWithAuth.Controllers
                                             _context.Remove(ehaa);
                                         }
                                     }
-                                   
+                                    else
+                                    {
+                                        _context.Update(employeeHour);
+                                        _context.SaveChanges();
+
+                                    }
                                 }
 
 
