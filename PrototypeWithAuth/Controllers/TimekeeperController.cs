@@ -724,7 +724,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             if (!alreadyOffDay)
                             {
-                                if(user.BonusSickDays>0 || user.BonusVacationDays>0)
+                                if(user.BonusSickDays>=1 || user.BonusVacationDays>=1)
                                 {
                                     var vacationLeftCount = base.GetUsersOffDaysLeft(user, offDayTypeID, dateFrom.Year);
                                     if (dateFrom.Year != dateTo.Year && dateTo.Year != 1)
@@ -795,7 +795,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 if (!alreadyOffDay)
                                 {
-                                    if(user.BonusSickDays >0 || user.BonusVacationDays>0)
+                                    if(user.BonusSickDays >=1 || user.BonusVacationDays>=1)
                                     {
                                         var vacationLeftCount = base.GetUsersOffDaysLeft(user, offDayTypeID, dateFrom.Year);
                                         if (dateFrom.Year != dateTo.Year && dateTo.Year != 1)
