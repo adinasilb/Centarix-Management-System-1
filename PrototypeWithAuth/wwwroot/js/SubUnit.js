@@ -108,20 +108,12 @@ $(function () {
 		}
 	};
 	$.fn.CalculatePriceShekels = function () {
-		var $exchangeRate = $("#exchangeRate").val();
-		var $unitPrice = $("#unit-price-shekel").val();
-		var $priceShekels = $unitPrice * $("#unit").val();
-		$iptBox = $("#cost");
-		$.fn.ShowResults($iptBox, $priceShekels);
-		var $priceDollars = $priceShekels / $exchangeRate;
-		var $iptBox = $("input[name='sum-dollars']");
-		$.fn.ShowResults($iptBox, $priceDollars);
+		$.fn.CalculateSum();
 		$unitPriceDollars = $unitPrice / $exchangeRate;
 		$iptBox = $("input[name='unit-price-dollars']");
 		$.fn.ShowResults($iptBox, $unitPriceDollars)
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
-		$.fn.CalculateSumPlusVat();
 	};
 	$.fn.CalculatePriceDollars = function () {
 		var $unitPrice = $("#unit-price-dollars").val();
@@ -139,6 +131,17 @@ $(function () {
 		$.fn.CalculateSubSubUnitAmounts();
 		$.fn.CalculateSumPlusVat();
 	};
+	$.fn.CalculateSum = function () {
+		var $exchangeRate = $("#exchangeRate").val();
+		var $unitPrice = $("#unit-price-shekel").val();
+		var $priceShekels = $unitPrice * $("#unit").val();
+		$iptBox = $("#cost");
+		$.fn.ShowResults($iptBox, $priceShekels);
+		var $priceDollars = $priceShekels / $exchangeRate;
+		var $iptBox = $("input[name='sum-dollars']");
+		$.fn.ShowResults($iptBox, $priceDollars);
+		$.fn.CalculateSumPlusVat();
+    }
 	$.fn.EnableSubUnits = function () {
 		$("#subUnit").prop("disabled", false);
 		$.fn.EnableMaterialSelect('#subUnitTypeID', 'select-options-subUnitTypeID');
@@ -441,9 +444,12 @@ $(function () {
 
 
 	$("#unit").change(function () {
-		$.fn.CalculateUnitAmounts();
-		$.fn.CalculateSubUnitAmounts();
-		$.fn.CalculateSubSubUnitAmounts();
+		//calculate the cost instead
+		$.fn.CalculatePriceDollars();
+		console.log('in unit change');
+	//	$.fn.CalculateUnitAmounts();
+	//	$.fn.CalculateSubUnitAmounts();
+	//	$.fn.CalculateSubSubUnitAmounts();
 	});
 
 	$(".modal").on("change", "#unitTypeID", function () {
