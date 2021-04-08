@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210408071036_UpdatePaymentTypes")]
+    partial class UpdatePaymentTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -535,28 +537,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("CompanyAccountID");
 
                     b.ToTable("CompanyAccounts");
-
-                    b.HasData(
-                        new
-                        {
-                            CompanyAccountID = 1,
-                            CompanyBankName = "Discount"
-                        },
-                        new
-                        {
-                            CompanyAccountID = 2,
-                            CompanyBankName = "Mercantile"
-                        },
-                        new
-                        {
-                            CompanyAccountID = 3,
-                            CompanyBankName = "Leumi"
-                        },
-                        new
-                        {
-                            CompanyAccountID = 4,
-                            CompanyBankName = "Payoneer"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.CompanyDayOff", b =>
@@ -705,56 +685,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("CompanyAccountID");
 
                     b.ToTable("CreditCard");
-
-                    b.HasData(
-                        new
-                        {
-                            CreditCardID = 1,
-                            CardNumber = "2543",
-                            CompanyAccountID = 2
-                        },
-                        new
-                        {
-                            CreditCardID = 2,
-                            CardNumber = "4694",
-                            CompanyAccountID = 2
-                        },
-                        new
-                        {
-                            CreditCardID = 3,
-                            CardNumber = "3485",
-                            CompanyAccountID = 2
-                        },
-                        new
-                        {
-                            CreditCardID = 4,
-                            CardNumber = "0054",
-                            CompanyAccountID = 2
-                        },
-                        new
-                        {
-                            CreditCardID = 5,
-                            CardNumber = "4971",
-                            CompanyAccountID = 1
-                        },
-                        new
-                        {
-                            CreditCardID = 6,
-                            CardNumber = "4424",
-                            CompanyAccountID = 1
-                        },
-                        new
-                        {
-                            CreditCardID = 7,
-                            CardNumber = "4432",
-                            CompanyAccountID = 1
-                        },
-                        new
-                        {
-                            CreditCardID = 8,
-                            CardNumber = "7972",
-                            CompanyAccountID = 3
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Degree", b =>
