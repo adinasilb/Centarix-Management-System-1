@@ -866,27 +866,6 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        [HttpGet]
-        [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> Documents()
-        {
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Documents;
-            return View();
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "TimeKeeper")]
-        public async Task<IActionResult> CompanyAbsences()
-        {
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.CompanyAbsences;
-            return View();
-        }
-
-
     }
 }
 
