@@ -2056,20 +2056,19 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
 
-                    var action = "Index";
+                    var action = reorderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary ? "IndexInventory" : "Index";
                     switch (OrderTypeEnum)
                     {
                         case AppUtility.OrderTypeEnum.AlreadyPurchased:
                             action = "UploadOrderModal";
                             break;
                         case AppUtility.OrderTypeEnum.OrderNow:
-                            action = "UploadQuoteModal";
-                            break;
                         case AppUtility.OrderTypeEnum.AddToCart:
                             action = "UploadQuoteModal";
                             break;
                     }
                     reorderViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
+                    
                     return RedirectToAction(action, "Requests", reorderViewModel.RequestIndexObject);
                 }
                 catch (Exception ex)
@@ -2237,13 +2236,15 @@ namespace PrototypeWithAuth.Controllers
                     RequestNum++;
                 }
                 var action = "Index";
-
-
-                if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                {
+                    action = "IndexInventory";
+                }
+                else if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
                 {
                     action = "LabManageOrders";
                 }
-                if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
+                else if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
                 {
                     action = "Cart";
                 }
@@ -4245,7 +4246,7 @@ namespace PrototypeWithAuth.Controllers
                                 throw ex;
                             }
                             base.RemoveRequestSessions();
-                            var action = "Index";
+                            var action = "_IndexTableData";
                             if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
                                 action = "_IndexTableWithCounts";
@@ -4254,10 +4255,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 action = "NotificationsView";
                             }
-                            else
-                            {
-                                action = "_IndexTableData";
-                            }
+                         
                             return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
                         }
                         catch (Exception ex)
@@ -4348,7 +4346,7 @@ namespace PrototypeWithAuth.Controllers
                     RequestNum++;
 
                 }
-                var action = "Index";
+                string action;
                 if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
                 {
                     action = "TermsModal";
@@ -4853,8 +4851,12 @@ namespace PrototypeWithAuth.Controllers
                             }
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
-                            
-                            return RedirectToAction("Index", termsViewModel.RequestIndexObject);
+                            var action = "Index";
+                            if(termsViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                            {
+                                action = "IndexInventory";
+                            }
+                            return RedirectToAction(action, termsViewModel.RequestIndexObject);
                         }
 
                     }
