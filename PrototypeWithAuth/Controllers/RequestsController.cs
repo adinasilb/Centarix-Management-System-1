@@ -3945,8 +3945,10 @@ namespace PrototypeWithAuth.Controllers
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
             {
                 Requests = requestsToPay,
-                AccountingEnum = accountingPaymentsEnum, 
-                Payment = new Payment()                
+                AccountingEnum = accountingPaymentsEnum,
+                Payment = new Payment(),
+                PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
+                CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList()
             };
 
             //check if payment status type is installments to show the installments in the view model
@@ -3993,6 +3995,9 @@ namespace PrototypeWithAuth.Controllers
                         payment.Reference = paymentsPayModalViewModel.Payment.Reference;
                         payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;
                         payment.PaymentReferenceDate = paymentsPayModalViewModel.Payment.PaymentReferenceDate;
+                        payment.PaymentTypeID = paymentsPayModalViewModel.Payment.PaymentTypeID;
+                        payment.CreditCardID = paymentsPayModalViewModel.Payment.CreditCardID;
+                        payment.CheckNumber = paymentsPayModalViewModel.Payment.CheckNumber;
                         payment.IsPaid = true;
                         _context.Update(payment);
                         _context.Update(requestToUpdate);
