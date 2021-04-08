@@ -724,22 +724,26 @@ namespace PrototypeWithAuth.Controllers
                             }
                             if (!alreadyOffDay)
                             {
-                                var vacationLeftCount = base.GetUsersOffDaysLeft(user, offDayTypeID, dateFrom.Year);
-                                if (dateFrom.Year != dateTo.Year && dateTo.Year != 1)
+                                if(user.BonusSickDays>0 || user.BonusVacationDays>0)
                                 {
-                                    vacationLeftCount += base.GetUsersOffDaysLeft(user, offDayTypeID, dateTo.Year);
-                                }
-                                if (vacationLeftCount < 1)
-                                {
-                                    TakeBonusDay(user, offDayTypeID, employeeHour);
-                                }
-                                _context.Update(employeeHour);
-                                _context.SaveChanges();
-                                if (ehaa != null)
-                                {
-                                    _context.Remove(ehaa);
+                                    var vacationLeftCount = base.GetUsersOffDaysLeft(user, offDayTypeID, dateFrom.Year);
+                                    if (dateFrom.Year != dateTo.Year && dateTo.Year != 1)
+                                    {
+                                        vacationLeftCount += base.GetUsersOffDaysLeft(user, offDayTypeID, dateTo.Year);
+                                    }
+                                    if (vacationLeftCount < 1)
+                                    {
+                                        TakeBonusDay(user, offDayTypeID, employeeHour);
+                                    }
+                                    _context.Update(employeeHour);
                                     _context.SaveChanges();
+                                    if (ehaa != null)
+                                    {
+                                        _context.Remove(ehaa);
+                                        _context.SaveChanges();
+                                    }
                                 }
+                              
                             }
                         }
                         //throw new Exception();
@@ -791,20 +795,24 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 if (!alreadyOffDay)
                                 {
-                                    var vacationLeftCount = base.GetUsersOffDaysLeft(user, offDayTypeID, dateFrom.Year);
-                                    if (dateFrom.Year != dateTo.Year && dateTo.Year != 1)
+                                    if(user.BonusSickDays >0 || user.BonusVacationDays>0)
                                     {
-                                        vacationLeftCount += base.GetUsersOffDaysLeft(user, offDayTypeID, dateTo.Year);
+                                        var vacationLeftCount = base.GetUsersOffDaysLeft(user, offDayTypeID, dateFrom.Year);
+                                        if (dateFrom.Year != dateTo.Year && dateTo.Year != 1)
+                                        {
+                                            vacationLeftCount += base.GetUsersOffDaysLeft(user, offDayTypeID, dateTo.Year);
+                                        }
+                                        if (vacationLeftCount < 1)
+                                        {
+                                            TakeBonusDay(user, offDayTypeID, employeeHour);
+                                        }
+                                        _context.Update(employeeHour);
+                                        if (ehaa != null)
+                                        {
+                                            _context.Remove(ehaa);
+                                        }
                                     }
-                                    if (vacationLeftCount < 1)
-                                    {
-                                        TakeBonusDay(user, offDayTypeID, employeeHour);
-                                    }
-                                    _context.Update(employeeHour);
-                                    if (ehaa != null)
-                                    {
-                                        _context.Remove(ehaa);
-                                    }
+                                   
                                 }
 
 
