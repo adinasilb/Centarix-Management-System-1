@@ -1510,23 +1510,7 @@ $(function () {
 
 	});
 
-	$("#invFilterPopover").click(function () {
-		$('[data-toggle="popover"]').popover('dispose');
-		$('#invFilterPopover').popover({
-			sanitize: false,
-			placement: 'bottom',
-			container: '#inventoryFilterContentDiv',
-			html: true,
-			trigger: 'manual',
-			content: function () {
-				return $('#inventoryFilterContent').html();
-			}
-		});
-		$('#invFilterPopover').popover('toggle');
-		$('#invFilterPopover').addClass('order-inv-background-color custom-button-font');
-		$('#invFilterPopover').removeClass('custom-order-inv');
-		//$('#inventoryFilterContent').style.display = "block";
-	});
+	
 
 	$("#home-btn").click(function () {
 			$('[data-toggle="popover"]').popover('dispose');
