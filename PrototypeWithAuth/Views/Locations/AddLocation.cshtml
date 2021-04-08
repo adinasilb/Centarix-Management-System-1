@@ -119,12 +119,19 @@
                 data: formData,
                 traditional: true,
                 type: "POST",
+                timeout: 540000,
                 cache: false,
                 success: function (data) {
                     $("#loading").hide();
                     $.fn.CloseModal('add-location');
                     $('.render-body').html(data);
                     return true;
+                },
+                error: function (x, t, m) {
+                    if (t === "timeout") {
+                        alert ("browser timed out. you may not see location for another couple minutes")
+                        $.fn.CloseModal('add-location');
+                    }
                 }
             })
         }

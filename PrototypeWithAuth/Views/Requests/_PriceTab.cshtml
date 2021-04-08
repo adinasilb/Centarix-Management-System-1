@@ -414,7 +414,7 @@ Model.UnitTypeList,
             <div class="col-3">
                 <div class="payment-type form-group">
                     <label class="control-label">Payment Type</label>
-                    <input class="form-control-plaintext border-bottom" value="@payments[i].CompanyAccount.PaymentType.PaymentTypeDescription" disabled />
+                    <input class="form-control-plaintext border-bottom" value="@payments[i].PaymentType.PaymentTypeDescription" disabled />
                 </div>
             </div>
             <div class="col-3">
@@ -423,7 +423,7 @@ Model.UnitTypeList,
                     <input class="form-control-plaintext border-bottom reference-1" disabled vaule="@payments[i].CompanyAccount.CompanyAccountID" />
                 </div>
             </div>
-            @if (payments[i].CompanyAccount.PaymentTypeID == 2)
+            @if (payments[i].PaymentTypeID == 2)
             {
                 <div class="col-3">
                     <div class="form-group payment-reference">
