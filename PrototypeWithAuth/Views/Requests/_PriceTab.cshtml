@@ -435,7 +435,16 @@ Model.UnitTypeList,
                 </div>
             </div>
         }
-        </div>
+        @if (payments[i].PaymentTypeID == 2)
+        {
+            <div class="col-3">
+                <div class="form-group payment-reference">
+                    <label class="control-label">Check Number</label>
+                    <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].CheckNumber" />
+                </div>
+            </div>
+        }
+    </div>
 
     }
 </div>
