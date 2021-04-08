@@ -239,18 +239,18 @@ namespace PrototypeWithAuth.AppData
                     },
                         Classes = AllClasses
                     });
-                    if (pageType == AppUtility.PageTypeEnum.LabManagementEquipment) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Equipment",
-                        Controller = "Calibrations",
-                        Action = "Index",
-                        RouteValues = new RouteValueDictionary()
-                        {
+                    //if (pageType == AppUtility.PageTypeEnum.LabManagementEquipment) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Equipment",
+                    //    Controller = "Calibrations",
+                    //    Action = "Index",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
 
-                        },
-                        Classes = AllClasses
-                    });
+                    //    },
+                    //    Classes = AllClasses
+                    //});
                     if (pageType == AppUtility.PageTypeEnum.LabManagementQuotes) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
