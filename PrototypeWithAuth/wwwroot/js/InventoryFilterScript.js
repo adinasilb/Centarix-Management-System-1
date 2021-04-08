@@ -38,7 +38,7 @@ $('body').off('click').on('click', '.btn-filter', function () {
 		traditional:true,
 		async: true,
 		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters,
-		type: 'GET',
+		type: 'POST',
 		cache: false,
 		success: function (newData) {
 			$('#inventoryFilterContent').html(newData);
@@ -167,7 +167,7 @@ $('body').on('click', '.clear-filters', function () {
 	$.ajax({
 		async: true,
 		url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0",
-		type: 'GET',
+		type: 'POST',
 		cache: false,
 		success: function (newData) {
 			$('#inventoryFilterContent').html(newData);

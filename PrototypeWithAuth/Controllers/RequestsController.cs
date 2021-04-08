@@ -4929,7 +4929,7 @@ namespace PrototypeWithAuth.Controllers
             };
             return viewModel;
         }
-        [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Requests")]
         public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters, int numFilters)
         {

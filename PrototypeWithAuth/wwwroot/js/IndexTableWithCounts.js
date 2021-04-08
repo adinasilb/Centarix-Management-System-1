@@ -14,7 +14,7 @@ function clearFilter() {
     $.ajax({
         async: true,
         url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0",
-        type: 'GET',
+        type: 'POST',
         cache: false,
         success: function(newData) {
             $('#inventoryFilterContent').html(newData);
