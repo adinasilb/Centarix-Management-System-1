@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210408080206_AddCreditCardsToDB")]
+    partial class AddCreditCardsToDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2365,9 +2367,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("CompanyAccountID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CreditCardID")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -2398,8 +2397,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("PaymentID");
 
                     b.HasIndex("CompanyAccountID");
-
-                    b.HasIndex("CreditCardID");
 
                     b.HasIndex("ParentRequestID");
 
@@ -4375,7 +4372,7 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.CreditCard", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.CompanyAccount", "CompanyAccount")
-                        .WithMany("CreditCards")
+                        .WithMany()
                         .HasForeignKey("CompanyAccountID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4539,11 +4536,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("CompanyAccountID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.CreditCard", "CreditCard")
-                        .WithMany()
-                        .HasForeignKey("CreditCardID")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.ParentRequest", null)
                         .WithMany("Payments")

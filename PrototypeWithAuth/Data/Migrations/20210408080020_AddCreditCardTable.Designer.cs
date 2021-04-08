@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210408080020_AddCreditCardTable")]
+    partial class AddCreditCardTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -705,56 +707,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("CompanyAccountID");
 
                     b.ToTable("CreditCards");
-
-                    b.HasData(
-                        new
-                        {
-                            CreditCardID = 1,
-                            CardNumber = "2543",
-                            CompanyAccountID = 2
-                        },
-                        new
-                        {
-                            CreditCardID = 2,
-                            CardNumber = "4694",
-                            CompanyAccountID = 2
-                        },
-                        new
-                        {
-                            CreditCardID = 3,
-                            CardNumber = "3485",
-                            CompanyAccountID = 2
-                        },
-                        new
-                        {
-                            CreditCardID = 4,
-                            CardNumber = "0054",
-                            CompanyAccountID = 2
-                        },
-                        new
-                        {
-                            CreditCardID = 5,
-                            CardNumber = "4971",
-                            CompanyAccountID = 1
-                        },
-                        new
-                        {
-                            CreditCardID = 6,
-                            CardNumber = "4424",
-                            CompanyAccountID = 1
-                        },
-                        new
-                        {
-                            CreditCardID = 7,
-                            CardNumber = "4432",
-                            CompanyAccountID = 1
-                        },
-                        new
-                        {
-                            CreditCardID = 8,
-                            CardNumber = "7972",
-                            CompanyAccountID = 3
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Degree", b =>
@@ -2365,9 +2317,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("CompanyAccountID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CreditCardID")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -2398,8 +2347,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("PaymentID");
 
                     b.HasIndex("CompanyAccountID");
-
-                    b.HasIndex("CreditCardID");
 
                     b.HasIndex("ParentRequestID");
 
@@ -4375,7 +4322,7 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.CreditCard", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.CompanyAccount", "CompanyAccount")
-                        .WithMany("CreditCards")
+                        .WithMany()
                         .HasForeignKey("CompanyAccountID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4539,11 +4486,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("CompanyAccountID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.CreditCard", "CreditCard")
-                        .WithMany()
-                        .HasForeignKey("CreditCardID")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.ParentRequest", null)
                         .WithMany("Payments")

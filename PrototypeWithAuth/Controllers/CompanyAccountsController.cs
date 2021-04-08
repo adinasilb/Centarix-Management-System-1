@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.Controllers
         {
             _context = context;
         }
-        public JsonResult GetAccountsByPaymentType(int PaymentTypeID)
+        public JsonResult GetAccountsByBank(int CompanyAccountID)
         {
             var companyAccountLists = _context.CompanyAccounts
                 .Select(ca => new { ca.CompanyAccountID, ca.CompanyBankName }).ToList();
