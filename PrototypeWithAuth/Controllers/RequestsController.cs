@@ -1621,19 +1621,6 @@ namespace PrototypeWithAuth.Controllers
 
             FillDocumentsInfo(requestItemViewModel, uploadFolder2, productSubcategory);
 
-            //first get the list of payment types there are
-            var paymentTypeIds = _context.CompanyAccounts.Select(ca => ca.PaymentTypeID).Distinct().ToList();
-            //initialize the dictionary
-            requestItemViewModel.CompanyAccountListsByPaymentTypeID = new Dictionary<int, IEnumerable<CompanyAccount>>();
-            //foreach paymenttype
-            foreach (var paymentTypeID in paymentTypeIds)
-            {
-                var caList = _context.CompanyAccounts.Where(ca => ca.PaymentTypeID == paymentTypeID);
-                requestItemViewModel.CompanyAccountListsByPaymentTypeID.Add(paymentTypeID, caList);
-            }
-
-
-
             //locations:
             //get the list of requestLocationInstances in this request
             //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
