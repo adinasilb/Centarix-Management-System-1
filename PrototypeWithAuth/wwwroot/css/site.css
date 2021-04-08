@@ -2282,10 +2282,11 @@ table.visual-locations-table td .visual-locations-div {
     margin-top: 60px;
 }
 
-.inventory-filter-col
-{    
-  /*  max-height:25rem;*/
-    overflow:scroll;
+.inventory-filter-col {
+
+    min-height: 12.5rem;
+    max-height: 12.5rem;
+    overflow: scroll;
 }
 
 .inventoryFilterDiv .popover {
@@ -2303,4 +2304,16 @@ table.visual-locations-table td .visual-locations-div {
 .filter-btn-select {
     background-color: #2196F3;
     color:white;
+}
+.custom-small-filter-button {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+.order-inv-form .custom-small-filter-button {
+    color: var(--order-inv-color);
+    border-color: var(--order-inv-color) !important;
+}
+.oper-form .custom-small-button {
+    color: var(--operations-color);
+    border-color: var(--operations-color) !important;
 }
