@@ -97,7 +97,7 @@
                             </div>
                         </div>
                         <div class="row ">
-                            <div class="col-3">
+                            <div class="col-3 pl-0">
                                 <div class="payment-type form-group">
                                     <label class="control-label">Bank Name</label>
                                     @Html.DropDownListFor(vm => vm.Payment.CompanyAccountID,
@@ -178,8 +178,9 @@
             cache: false,
             success: function (data) {
                 $.fn.CloseModal("payments-pay");
-                                                return true;
-                                            },
+                $(".render-body").html(data);
+                return true;
+            },
             error: function (jqxhr) {
                 $.fn.OpenModal("modal", "payments-pay", jqxhr.responseText);
                                             }

@@ -4,25 +4,28 @@
     ViewData["Title"] = "AccountingPayments";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-
-
-    @if (Model.RequestsByVendor.Count() == 0)
+@if (AppUtility.IsAjaxRequest(this.Context.Request))
     {
-<div>
-    @{
-        await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+        Layout = null;
     }
-</div>
-    }
-    else
-    {
-<div class="_IndexTableByVendor">
-    @{
-        await Html.RenderPartialAsync("_IndexTableByVendor", Model);
-    }
-</div>
 
-    }
+@if (Model.RequestsByVendor.Count() == 0)
+{
+    <div>
+        @{
+            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+        }
+    </div>
+}
+else
+{
+    <div class="_IndexTableByVendor">
+        @{
+            await Html.RenderPartialAsync("_IndexTableByVendor", Model);
+        }
+    </div>
+
+}
 
 <script type="text/javascript">
     $(function () {
