@@ -13,9 +13,7 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int CompanyAccountID { get; set; }
-        public string CompanyBankNum { get; set; }
         public string CompanyBankName { get; set; }
-        public string CompanyBranchNum { get; set; }
         public IEnumerable<CreditCard> CreditCards { get; set; }
     }
 }
