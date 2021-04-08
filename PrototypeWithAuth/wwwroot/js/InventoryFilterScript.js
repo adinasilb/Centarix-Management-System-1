@@ -163,17 +163,7 @@ $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) 
 }); 
 
 $('body').on('click', '.clear-filters', function () {
-	//alert("clicked!");
-	$.ajax({
-		async: true,
-		url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0",
-		type: 'POST',
-		cache: false,
-		success: function (newData) {
-			$('#inventoryFilterContent').html(newData);
-			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
-		}
-	});
+	$.fn.ClearFilter();
 });
 
 

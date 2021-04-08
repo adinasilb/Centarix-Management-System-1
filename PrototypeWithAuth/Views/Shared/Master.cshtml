@@ -1139,6 +1139,19 @@
             $('[data-toggle="popover"]').popover('dispose');
             $('body').removeClass('popover-open');
         });
+
+        $.fn.ClearFilter = function () {
+            $.ajax({
+                async: true,
+                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0",
+                type: 'GET',
+                cache: false,
+                success: function (newData) {
+                    $('#inventoryFilterContent').html(newData);
+                    $('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
+                }
+            });
+        }
     </script>
 
     @if (IsSectionDefined("requestNavScript"))
