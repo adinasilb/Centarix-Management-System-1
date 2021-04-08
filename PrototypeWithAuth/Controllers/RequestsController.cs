@@ -129,7 +129,7 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.ReceivedCount = receivedCount;
         }
 
-        private void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel)
+        private void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedFilters selectedFilters = null)
         {
             int categoryID = 0;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
@@ -141,12 +141,51 @@ namespace PrototypeWithAuth.Controllers
                 categoryID = 2;
             }
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
-              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
-
+.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
+            IQueryable<Request> fullRequestsListProprietary = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
+.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
+            if (requestIndexObject.RequestStatusID ==7)
+            {
+                fullRequestsListProprietary = filterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
+            }
+            else
+            {
+                fullRequestsList = filterListBySelectFilters(selectedFilters, fullRequestsList);
+            }
+          
             int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsListProprietary, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             viewmodel.ProprietaryCount = proprietaryCount;
             viewmodel.NonProprietaryCount = nonProprietaryCount;
+        }
+
+        private static IQueryable<Request> filterListBySelectFilters(SelectedFilters selectedFilters, IQueryable<Request> fullRequestsListProprietary)
+        {
+            if (selectedFilters != null)
+            {
+                if (selectedFilters.SelectedCategoriesIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedCategoriesIDs.Contains(r.Product.ProductSubcategory.ParentCategoryID));
+                }
+                if (selectedFilters.SelectedSubcategoriesIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedSubcategoriesIDs.Contains(r.Product.ProductSubcategoryID));
+                }
+                if (selectedFilters.SelectedVendorsIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedVendorsIDs.Contains(r.Product.VendorID ?? 0));
+                }
+                if (selectedFilters.SelectedLocationsIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedLocationsIDs.Contains(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID));    
+                }
+                if (selectedFilters.SelectedOwnersIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
+                }
+            }
+
+            return fullRequestsListProprietary;
         }
 
         [Authorize(Roles = "Requests, LabManagement, Operations")]
@@ -300,29 +339,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).AsQueryable();
 
 
-            if(selectedFilters!=null)
-            {
-                if(selectedFilters.SelectedCategoriesIDs.Count() > 0)
-                {
-                    RequestPassedInWithInclude = RequestPassedInWithInclude.Where(r => selectedFilters.SelectedCategoriesIDs.Contains(r.Product.ProductSubcategory.ParentCategoryID));
-                }
-                if(selectedFilters.SelectedSubcategoriesIDs.Count() > 0)
-                {
-                    RequestPassedInWithInclude = RequestPassedInWithInclude.Where(r => selectedFilters.SelectedSubcategoriesIDs.Contains(r.Product.ProductSubcategoryID));
-                }
-                if (selectedFilters.SelectedVendorsIDs.Count() > 0)
-                {
-                    RequestPassedInWithInclude = RequestPassedInWithInclude.Where(r => selectedFilters.SelectedVendorsIDs.Contains(r.Product.VendorID??0));
-                }
-                if (selectedFilters.SelectedLocationsIDs.Count() > 0)
-                {
-                    RequestPassedInWithInclude = RequestPassedInWithInclude.Where(r => selectedFilters.SelectedLocationsIDs.Contains(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID));
-                }
-                if (selectedFilters.SelectedOwnersIDs.Count() > 0)
-                {
-                    RequestPassedInWithInclude = RequestPassedInWithInclude.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
-                }
-            }
+            RequestPassedInWithInclude = filterListBySelectFilters(selectedFilters, RequestPassedInWithInclude);
 
             onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
         
@@ -924,7 +941,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _IndexTableWithProprietaryTabs(RequestIndexObject requestIndexObject, List<int> months, List<int> years, SelectedFilters selectedFilters = null)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters);
-
+            SetViewModelProprietaryCounts(requestIndexObject, viewModel, selectedFilters);
             return PartialView(viewModel);
         }
 
@@ -934,7 +951,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years);
-            SetViewModelProprietaryCounts(requestIndexObject, viewModel);
+
             return PartialView(viewModel);
         }
 
