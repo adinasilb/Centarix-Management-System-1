@@ -5,22 +5,12 @@
     $(this).addClass("active")
     //reset page number
     $('.page-number').val(1);
-    clearFilter();
+    $.fn.ClearFilter();
     ajaxPartialIndexTable($(this).attr("value"), "/Requests/_IndexTable", "._IndexTable", "GET")
 });
 
 
-function clearFilter() {
-    $.ajax({
-        async: true,
-        url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0",
-        type: 'GET',
-        cache: false,
-        success: function(newData) {
-            $('#inventoryFilterContent').html(newData);
-        }
-    });
-}
+
 //function ajaxCallToPartialTable(status) {
 //    var selectedPriceSort = [];
 //    $("#priceSortContent .priceSort:checked").each(function (e) {
