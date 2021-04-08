@@ -88,6 +88,10 @@ namespace PrototypeWithAuth.AppData
                 }
                 else
                 {
+                    if(_SelectedPriceSort[0]==null)
+                    {
+                        return new List<string>() { AppUtility.PriceSortEnum.TotalVat.ToString() };
+                    }
                     return _SelectedPriceSort;
                 }
             }
