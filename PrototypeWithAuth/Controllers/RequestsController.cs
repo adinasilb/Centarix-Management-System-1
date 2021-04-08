@@ -93,6 +93,7 @@ namespace PrototypeWithAuth.Controllers
 
             var viewmodel = await GetIndexViewModel(requestIndexObject);
             SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
+            viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
 
             if (ViewBag.ErrorMessage != null)
             {
@@ -128,7 +129,7 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.ReceivedCount = receivedCount;
         }
 
-        private void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel)
+        private void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedFilters selectedFilters = null)
         {
             int categoryID = 0;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
@@ -140,16 +141,55 @@ namespace PrototypeWithAuth.Controllers
                 categoryID = 2;
             }
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
-              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
-
+.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
+            IQueryable<Request> fullRequestsListProprietary = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
+.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
+            if (requestIndexObject.RequestStatusID ==7)
+            {
+                fullRequestsListProprietary = filterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
+            }
+            else
+            {
+                fullRequestsList = filterListBySelectFilters(selectedFilters, fullRequestsList);
+            }
+          
             int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsListProprietary, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             viewmodel.ProprietaryCount = proprietaryCount;
             viewmodel.NonProprietaryCount = nonProprietaryCount;
         }
 
+        private static IQueryable<Request> filterListBySelectFilters(SelectedFilters selectedFilters, IQueryable<Request> fullRequestsListProprietary)
+        {
+            if (selectedFilters != null)
+            {
+                if (selectedFilters.SelectedCategoriesIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedCategoriesIDs.Contains(r.Product.ProductSubcategory.ParentCategoryID));
+                }
+                if (selectedFilters.SelectedSubcategoriesIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedSubcategoriesIDs.Contains(r.Product.ProductSubcategoryID));
+                }
+                if (selectedFilters.SelectedVendorsIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedVendorsIDs.Contains(r.Product.VendorID ?? 0));
+                }
+                if (selectedFilters.SelectedLocationsIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedLocationsIDs.Contains((int)(Math.Floor(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID / 100.0) * 100)));    
+                }
+                if (selectedFilters.SelectedOwnersIDs.Count() > 0)
+                {
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
+                }
+            }
+
+            return fullRequestsListProprietary;
+        }
+
         [Authorize(Roles = "Requests, LabManagement, Operations")]
-        private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months=null, List<int> Years=null)
+        private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null, SelectedFilters selectedFilters = null)
         {
             int categoryID = 1;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
@@ -296,9 +336,12 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.ParentRequest).Include(r=>r.ApplicationUserCreator)
                     .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance);
+                    .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).AsQueryable();
 
-                onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
+
+            RequestPassedInWithInclude = filterListBySelectFilters(selectedFilters, RequestPassedInWithInclude);
+
+            onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
         
             requestIndexViewModel.PagedList = onePageOfProducts;
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
@@ -306,6 +349,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
             requestIndexViewModel.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
+            requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters);
             return requestIndexViewModel;
         }
         [Authorize(Roles = "Requests, LabManagement, Operations")]
@@ -595,14 +639,16 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.RequestSummary:
                   
-                    iconList.Add(deleteIcon);
+               
                     switch (requestIndexObject.RequestStatusID)
                     {
                         case 7:
+                            iconList.Add(deleteIcon);
                             onePageOfProducts = await GetSummaryProprietaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                         default:
                             iconList.Add(reorderIcon);
+                            iconList.Add(deleteIcon);
                             onePageOfProducts = await GetSummaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                     }
@@ -892,10 +938,22 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _IndexTableWithProprietaryTabs(RequestIndexObject requestIndexObject, List<int> months, List<int> years, SelectedFilters selectedFilters = null)
+        {
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters);
+            SetViewModelProprietaryCounts(requestIndexObject, viewModel, selectedFilters);
+            return PartialView(viewModel);
+        }
+
+
+        [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years)
         {
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years);
+
             return PartialView(viewModel);
         }
 
@@ -1619,19 +1677,6 @@ namespace PrototypeWithAuth.Controllers
 
             FillDocumentsInfo(requestItemViewModel, uploadFolder2, productSubcategory);
 
-            //first get the list of payment types there are
-            var paymentTypeIds = _context.CompanyAccounts.Select(ca => ca.PaymentTypeID).Distinct().ToList();
-            //initialize the dictionary
-            requestItemViewModel.CompanyAccountListsByPaymentTypeID = new Dictionary<int, IEnumerable<CompanyAccount>>();
-            //foreach paymenttype
-            foreach (var paymentTypeID in paymentTypeIds)
-            {
-                var caList = _context.CompanyAccounts.Where(ca => ca.PaymentTypeID == paymentTypeID);
-                requestItemViewModel.CompanyAccountListsByPaymentTypeID.Add(paymentTypeID, caList);
-            }
-
-
-
             //locations:
             //get the list of requestLocationInstances in this request
             //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
@@ -2067,20 +2112,19 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
 
-                    var action = "Index";
+                    var action = reorderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary ? "IndexInventory" : "Index";
                     switch (OrderTypeEnum)
                     {
                         case AppUtility.OrderTypeEnum.AlreadyPurchased:
                             action = "UploadOrderModal";
                             break;
                         case AppUtility.OrderTypeEnum.OrderNow:
-                            action = "UploadQuoteModal";
-                            break;
                         case AppUtility.OrderTypeEnum.AddToCart:
                             action = "UploadQuoteModal";
                             break;
                     }
                     reorderViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
+                    
                     return RedirectToAction(action, "Requests", reorderViewModel.RequestIndexObject);
                 }
                 catch (Exception ex)
@@ -2207,7 +2251,6 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-
                 string uploadFolder = Path.Combine("wwwroot", "files");
                 string uploadFile = Path.Combine(uploadFolder, "OrderForm.pdf");
 
@@ -2249,13 +2292,15 @@ namespace PrototypeWithAuth.Controllers
                     RequestNum++;
                 }
                 var action = "Index";
-
-
-                if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                {
+                    action = "IndexInventory";
+                }
+                else if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
                 {
                     action = "LabManageOrders";
                 }
-                if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
+                else if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
                 {
                     action = "Cart";
                 }
@@ -3957,8 +4002,10 @@ namespace PrototypeWithAuth.Controllers
             PaymentsPayModalViewModel paymentsPayModalViewModel = new PaymentsPayModalViewModel()
             {
                 Requests = requestsToPay,
-                AccountingEnum = accountingPaymentsEnum, 
-                Payment = new Payment()                
+                AccountingEnum = accountingPaymentsEnum,
+                Payment = new Payment(),
+                PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
+                CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList()
             };
 
             //check if payment status type is installments to show the installments in the view model
@@ -4005,6 +4052,9 @@ namespace PrototypeWithAuth.Controllers
                         payment.Reference = paymentsPayModalViewModel.Payment.Reference;
                         payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;
                         payment.PaymentReferenceDate = paymentsPayModalViewModel.Payment.PaymentReferenceDate;
+                        payment.PaymentTypeID = paymentsPayModalViewModel.Payment.PaymentTypeID;
+                        payment.CreditCardID = paymentsPayModalViewModel.Payment.CreditCardID;
+                        payment.CheckNumber = paymentsPayModalViewModel.Payment.CheckNumber;
                         payment.IsPaid = true;
                         _context.Update(payment);
                         _context.Update(requestToUpdate);
@@ -4252,7 +4302,7 @@ namespace PrototypeWithAuth.Controllers
                                 throw ex;
                             }
                             base.RemoveRequestSessions();
-                            var action = "Index";
+                            var action = "_IndexTableData";
                             if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
                                 action = "_IndexTableWithCounts";
@@ -4261,10 +4311,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 action = "NotificationsView";
                             }
-                            else
-                            {
-                                action = "_IndexTableData";
-                            }
+                         
                             return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
                         }
                         catch (Exception ex)
@@ -4355,7 +4402,7 @@ namespace PrototypeWithAuth.Controllers
                     RequestNum++;
 
                 }
-                var action = "Index";
+                string action;
                 if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
                 {
                     action = "TermsModal";
@@ -4719,7 +4766,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     try
                     {
-                        foreach (var req in requests)
+                            foreach (var req in requests)
                         {
                             if (req.Product == null)
                             {
@@ -4860,9 +4907,14 @@ namespace PrototypeWithAuth.Controllers
                             }
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
-                           
-                            return RedirectToAction("Index", termsViewModel.RequestIndexObject);
+                            var action = "Index";
+                            if(termsViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                            {
+                                action = "IndexInventory";
+                            }
+                            return RedirectToAction(action, termsViewModel.RequestIndexObject);
                         }
+
                     }
                     catch (Exception ex)
                     {
@@ -4894,6 +4946,67 @@ namespace PrototypeWithAuth.Controllers
             };
             return viewModel;
         }
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters, int numFilters)
+        {
+            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters);
+            return PartialView(inventoryFilterViewModel);
+        }
+        private InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters =null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
+        {
+            int categoryType = sectionType == AppUtility.MenuItems.Requests ? 1 : 2;
+            if(selectedFilters !=null)
+            {
+                InventoryFilterViewModel inventoryFilterViewModel =  new InventoryFilterViewModel()
+                {
+                    //Types = _context.CategoryTypes.Where(ct => !selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
+                    Owners = _context.Employees.Where(o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
+                    Locations = _context.LocationTypes.Where(l => l.Depth == 0).Where(l => !selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID)).ToList(),
+                    Categories = _context.ParentCategories.Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID)).ToList(),
+                    Subcategories = _context.ProductSubcategories.Distinct().Where(v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
+                    Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType)).Where(v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
+                    //SelectedTypes = _context.CategoryTypes.Where(ct => selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
+                    SelectedVendors = _context.Vendors.Where(v => selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
+                    SelectedOwners = _context.Employees.Where(o => selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
+                    SelectedLocations = _context.LocationTypes.Where(l => l.Depth == 0).Where(l => selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID)).ToList(),
+                    SelectedCategories = _context.ParentCategories.Where(c => selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID)).ToList(),
+                    SelectedSubcategories = _context.ProductSubcategories.Distinct().Where(v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
+                    //Projects = _context.Projects.ToList(),
+                    //SubProjects = _context.SubProjects.ToList()
+                    NumFilters = numFilters
+                };
+                if(inventoryFilterViewModel.SelectedCategories.Count() > 0)
+                {
+                    inventoryFilterViewModel.Subcategories = inventoryFilterViewModel.Subcategories.Where(ps => inventoryFilterViewModel.SelectedCategories.Contains(ps.ParentCategory)).ToList();
+                }
+                
+                return inventoryFilterViewModel;
+            }
+            else
+            {
+                return new InventoryFilterViewModel()
+                {
+                    //Types = _context.CategoryTypes.ToList(),
+                    //Vendors = _context.Vendors.ToList(),
+                    Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType)).ToList(),
+                    Owners = _context.Employees.ToList(),
+                    Locations = _context.LocationTypes.Where(r => r.Depth == 0).ToList(),
+                    Categories = _context.ParentCategories.ToList(),
+                    Subcategories = _context.ProductSubcategories.Distinct().ToList(),
+                    //SelectedTypes = new List<CategoryType>(),
+                    SelectedVendors = new List<Vendor>(),
+                    SelectedOwners = new List<Employee>(),
+                    SelectedLocations = new List<LocationType>(),
+                    SelectedCategories = new List<ParentCategory>(),
+                    SelectedSubcategories = new List<ProductSubcategory>(),
+                    //Projects = _context.Projects.ToList(),
+                    //SubProjects = _context.SubProjects.ToList()
+                    NumFilters = numFilters
+                };
+            }
+        }
+           
 
 
         [HttpGet]

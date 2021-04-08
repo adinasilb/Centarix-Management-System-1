@@ -121,7 +121,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
 
 });
 $("#pricePopover").off('click').click(function () {
-    console.log("popover")
+    $('[data-toggle="popover"]').popover('dispose');
         $(this).addClass("activePopover");
 		$('[data-toggle="popover"]').each(function() {
             if(!$(this).hasClass("activePopover"))

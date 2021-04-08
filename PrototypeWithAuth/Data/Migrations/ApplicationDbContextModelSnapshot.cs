@@ -523,28 +523,34 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CompanyAccountNum")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(5)")
-                        .HasMaxLength(5);
-
                     b.Property<string>("CompanyBankName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CompanyBankNum")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CompanyBranchNum")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaymentTypeID")
-                        .HasColumnType("int");
-
                     b.HasKey("CompanyAccountID");
 
-                    b.HasIndex("PaymentTypeID");
-
                     b.ToTable("CompanyAccounts");
+
+                    b.HasData(
+                        new
+                        {
+                            CompanyAccountID = 1,
+                            CompanyBankName = "Discount"
+                        },
+                        new
+                        {
+                            CompanyAccountID = 2,
+                            CompanyBankName = "Mercantile"
+                        },
+                        new
+                        {
+                            CompanyAccountID = 3,
+                            CompanyBankName = "Leumi"
+                        },
+                        new
+                        {
+                            CompanyAccountID = 4,
+                            CompanyBankName = "Payoneer"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.CompanyDayOff", b =>
@@ -671,6 +677,77 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             CompanyDayOffTypeID = 18,
                             Name = "Simchat Torah"
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.CreditCard", b =>
+                {
+                    b.Property<int>("CreditCardID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CardNumber")
+                        .HasColumnType("nvarchar(4)")
+                        .HasMaxLength(4);
+
+                    b.Property<int>("CompanyAccountID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CreditCardID");
+
+                    b.HasIndex("CompanyAccountID");
+
+                    b.ToTable("CreditCards");
+
+                    b.HasData(
+                        new
+                        {
+                            CreditCardID = 1,
+                            CardNumber = "2543",
+                            CompanyAccountID = 2
+                        },
+                        new
+                        {
+                            CreditCardID = 2,
+                            CardNumber = "4694",
+                            CompanyAccountID = 2
+                        },
+                        new
+                        {
+                            CreditCardID = 3,
+                            CardNumber = "3485",
+                            CompanyAccountID = 2
+                        },
+                        new
+                        {
+                            CreditCardID = 4,
+                            CardNumber = "0054",
+                            CompanyAccountID = 2
+                        },
+                        new
+                        {
+                            CreditCardID = 5,
+                            CardNumber = "4971",
+                            CompanyAccountID = 1
+                        },
+                        new
+                        {
+                            CreditCardID = 6,
+                            CardNumber = "4424",
+                            CompanyAccountID = 1
+                        },
+                        new
+                        {
+                            CreditCardID = 7,
+                            CardNumber = "4432",
+                            CompanyAccountID = 1
+                        },
+                        new
+                        {
+                            CreditCardID = 8,
+                            CardNumber = "7972",
+                            CompanyAccountID = 3
                         });
                 });
 
@@ -2079,6 +2156,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             OffDayTypeID = 3,
                             Description = "Maternity Leave"
+                        },
+                        new
+                        {
+                            OffDayTypeID = 4,
+                            Description = "Special Day"
                         });
                 });
 
@@ -2271,7 +2353,13 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CompanyAccountID")
+                    b.Property<string>("CheckNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CompanyAccountID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CreditCardID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -2289,6 +2377,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("PaymentReferenceDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("PaymentTypeID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
 
@@ -2302,7 +2393,11 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("CompanyAccountID");
 
+                    b.HasIndex("CreditCardID");
+
                     b.HasIndex("ParentRequestID");
+
+                    b.HasIndex("PaymentTypeID");
 
                     b.HasIndex("RequestID");
 
@@ -2379,7 +2474,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             PaymentTypeID = 2,
-                            PaymentTypeDescription = "Bank Transfer"
+                            PaymentTypeDescription = "Check"
+                        },
+                        new
+                        {
+                            PaymentTypeID = 3,
+                            PaymentTypeDescription = "Wire"
                         });
                 });
 
@@ -4056,6 +4156,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<double>("RollOverVacationDays")
                         .HasColumnType("float");
 
+                    b.Property<double>("SpecialDays")
+                        .HasColumnType("float");
+
                     b.Property<DateTime>("StartedWorking")
                         .HasColumnType("datetime2");
 
@@ -4254,20 +4357,20 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.CompanyAccount", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.PaymentType", "PaymentType")
-                        .WithMany()
-                        .HasForeignKey("PaymentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.CompanyDayOff", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.CompanyDayOffType", "CompanyDayOffType")
                         .WithMany()
                         .HasForeignKey("CompanyDayOffTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.CreditCard", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.CompanyAccount", "CompanyAccount")
+                        .WithMany("CreditCards")
+                        .HasForeignKey("CompanyAccountID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -4428,12 +4531,24 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.CompanyAccount", "CompanyAccount")
                         .WithMany()
                         .HasForeignKey("CompanyAccountID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.CreditCard", "CreditCard")
+                        .WithMany()
+                        .HasForeignKey("CreditCardID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.ParentRequest", null)
                         .WithMany("Payments")
                         .HasForeignKey("ParentRequestID")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.PaymentType", "PaymentType")
+                        .WithMany()
+                        .HasForeignKey("PaymentTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany("Payments")

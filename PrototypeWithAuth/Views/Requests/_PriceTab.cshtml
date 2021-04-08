@@ -403,36 +403,48 @@ Model.UnitTypeList,
     @for (int i = 0; i < payments.Count(); i++)
     {
 
-        <div class="row">
-            <div class="col-3 pl-0">
-                <div class="form-group">
-                    <label class="control-label">Date</label>
-                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="@payments[i].PaymentReferenceDate" disabled />
-                </div>
+    <div class="row">
+        <div class="col-3 pl-0">
+            <div class="form-group">
+                <label class="control-label">Date</label>
+                <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="@payments[i].PaymentReferenceDate" disabled />
             </div>
+        </div>
 
-            <div class="col-3">
-                <div class="payment-type form-group">
-                    <label class="control-label">Payment Type</label>
-                    <input class="form-control-plaintext border-bottom" value="@payments[i].CompanyAccount.PaymentType.PaymentTypeDescription" disabled />
-                </div>
+        <div class="col-3">
+            <div class="payment-type form-group">
+                <label class="control-label">Payment Type</label>
+                <input class="form-control-plaintext border-bottom" value="@payments[i].PaymentType.PaymentTypeDescription" disabled />
             </div>
+        </div>
+        @if (payments[i].PaymentTypeID == 1)
+        {
             <div class="col-3">
                 <div class="form-group payment-account">
                     <label class="control-label">Account ID</label>
-                    <input class="form-control-plaintext border-bottom reference-1" disabled vaule="@payments[i].CompanyAccount.CompanyAccountID" />
+                    <input class="form-control-plaintext border-bottom reference-1" disabled vaule="@payments[i].CreditCard.CardNumber" />
                 </div>
             </div>
-            @if (payments[i].CompanyAccount.PaymentTypeID == 2)
-            {
-                <div class="col-3">
-                    <div class="form-group payment-reference">
-                        <label class="control-label">Payment Reference</label>
-                        <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].Reference" />
-                    </div>
+        }
+        @if (payments[i].PaymentTypeID == 3)
+        {
+            <div class="col-3">
+                <div class="form-group payment-reference">
+                    <label class="control-label">Payment Reference</label>
+                    <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].Reference" />
                 </div>
-            }
-        </div>
+            </div>
+        }
+        @if (payments[i].PaymentTypeID == 2)
+        {
+            <div class="col-3">
+                <div class="form-group payment-reference">
+                    <label class="control-label">Check Number</label>
+                    <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].CheckNumber" />
+                </div>
+            </div>
+        }
+    </div>
 
     }
 </div>

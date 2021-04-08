@@ -76,7 +76,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<UnitParentType> UnitParentTypes { get; set; }
         public DbSet<IpRange> IpRanges { get; set; }
         public DbSet<PhysicalAddress> PhysicalAddresses { get; set; }
-
+        public DbSet<CreditCard> CreditCards { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

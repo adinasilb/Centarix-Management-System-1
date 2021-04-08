@@ -64,7 +64,7 @@
 				else if ($('.turn-edit-on-off').hasClass('users')) {
 					var url = "";
 					var pageType = $('#PageType').val();
-					if (pageType == "Workers") {
+					if (pageType == "UsersWorkers") {
 						url = "/ApplicationUsers/_Details"
 					}
 					else {

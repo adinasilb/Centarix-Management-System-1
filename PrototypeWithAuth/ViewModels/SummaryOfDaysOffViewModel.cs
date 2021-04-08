@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace PrototypeWithAuth.ViewModels
         public double TotalSickDaysPerYear { get; set; }
         public double BonusSickDays { get; set; }
         public double BonusVacationDays { get; set; }
+        public Employee Employee {get ;set;}
     }
 }

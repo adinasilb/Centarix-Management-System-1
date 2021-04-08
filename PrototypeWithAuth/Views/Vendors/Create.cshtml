@@ -45,7 +45,7 @@
                             <div class="container-fluid div-tabs text-center modal-sides">
                                 <ul class="nav nav-tabs text-center container-fluid pr-0 border-bottom-0 nav-tabs-icons" style="">
                                     <li class="nav-item"><a data-toggle="tab" href="#details" id="vendor-details-tab" class="nav-link next-tab  @navLinkClass "><i class="icon-storefront-24px" style="font-size: 2rem;"></i><br />Details</a></li>
-                                    <li class="nav-item"><a data-toggle="tab" href="#categories" id="vendor-categories-tab" class="nav-link next-tab @navLinkClass" disabled><i class="icon-category-24px1" style="font-size: 2rem;"></i><br />Categories</a></li>
+                                    @*<li class="nav-item"><a data-toggle="tab" href="#categories" id="vendor-categories-tab" class="nav-link next-tab @navLinkClass" disabled><i class="icon-category-24px1" style="font-size: 2rem;"></i><br />Categories</a></li>*@
                                     <li class="nav-item"><a data-toggle="tab" href="#payment" id="vendor-payments-tab" class="nav-link next-tab @navLinkClass" disabled><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Payment</a></li>
                                     <li class="nav-item"><a data-toggle="tab" id="vendor-comment-tab" href="#comments" class="nav-link next-tab @navLinkClass " disabled><i class="icon-centarix-icons-06" style="font-size: 2rem;"></i><br />Comments</a></li>
                                     <li class="nav-item"><a data-toggle="tab" id="vendor-contact-tab" href="#contact" class="nav-link next-tab   @navLinkClass " disabled><i class="icon-perm_contact_calendar-24px" e.css style="font-size: 2rem;"></i><br />Contact</a></li>
@@ -272,7 +272,19 @@
                                 <div class="modal-sides modal-body-top-p">
                                     <div id="contact-info">
                                         <input type="hidden" value="1" id="contact-index" />
-                                        @{await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = new VendorContact(), Index = 0 });}
+                                        @{
+                                            if (Model.VendorContacts.Count == 0)
+                                            {
+                                                await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = new VendorContact(), Index = 0 });
+                                            }
+                                            else
+                                            {
+                                                for (int i = 0; i < Model.VendorContacts.Count; i++)
+                                                {
+                                                    await Html.RenderPartialAsync("ContactInfoPartial", new AddContactViewModel { VendorContact = Model.VendorContacts[i]?.VendorContact, Index = i });
+                                                }
+                                            }
+                                        }
                                     </div>
                                 </div>
                                 <div class="text-center">

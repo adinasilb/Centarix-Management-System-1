@@ -271,7 +271,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                 <label asp-for="RequestItemViewModel.Requests[0].VAT" class="control-label"></label>
                                 <div class="input-group">
                                     <span class="input-group-text disabled-text">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom vatInDollars disabled-text" disabled value="@String.Format("{0:n}", (Math.Round(Model.RequestItemViewModel.Requests[0].VAT / Model.RequestItemViewModel.Requests[0].ExchangeRate, 2)))" />
+                                    <input class="form-control-plaintext border-bottom vatInDollars disabled-text" id="vatInDollars" disabled value="@String.Format("{0:n}", (Math.Round(Model.RequestItemViewModel.Requests[0].VAT / Model.RequestItemViewModel.Requests[0].ExchangeRate, 2)))" />
                                 </div>
                             </div>
                         </div>
