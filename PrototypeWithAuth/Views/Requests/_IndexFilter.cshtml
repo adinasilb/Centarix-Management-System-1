@@ -42,11 +42,11 @@
             data: data,
             async: true,
             traditional: true,
-            url: "/Requests/_IndexTableData?" + $.fn.getRequestIndexString(),
+            url: "/Requests/_IndexTableWithProprietaryTabs?" + $.fn.getRequestIndexString(),
             type: 'GET',
             cache: false,
             success: function (data) {
-                $("._IndexTableData").html(data);
+                $("._IndexTableWithProprietaryTabs").html(data);
                 $('[data-toggle="popover"]').popover('dispose');
                 $('body').removeClass('popover-open');
                 $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
