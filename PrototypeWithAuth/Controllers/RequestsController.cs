@@ -3175,6 +3175,10 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
                         requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                         requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
+                        if(requestReceived.PaymentStatusID == 4)
+                        {
+                             requestReceived.PaymentStatusID = 3;
+                        }
                         _context.Update(requestReceived);
                         await _context.SaveChangesAsync();
 
