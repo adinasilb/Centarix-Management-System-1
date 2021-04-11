@@ -42,6 +42,7 @@
                 <div>
                     @{await Html.RenderPartialAsync("_OrderEmail", Model); }
                 </div>
+                
                 <div class="modal-footer p-4">
                     <div class="m-auto">
                         <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin complete-order" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />

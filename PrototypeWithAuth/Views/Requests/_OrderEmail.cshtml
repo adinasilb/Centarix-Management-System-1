@@ -4,11 +4,11 @@
 @{
     char currency = '₪';
     decimal vat = 0;
- if (Model.Requests.Count() == 1 && Model.Requests[0].Currency == AppUtility.CurrencyEnum.USD.ToString())
- {
-     currency = '$';
- }
- var colspan = 4;
+    if (Model.Requests[0].Currency == AppUtility.CurrencyEnum.USD.ToString())
+    {
+        currency = '$';
+    }
+    var colspan = 4;
 }
 <div style="padding:1rem 2rem">
     <header class="page-header">
@@ -68,7 +68,7 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                     if (notes != "")
                     { <span class="heading-1">Please Note:</span><br> }
                     @Html.Raw(notes);
-                    
+
                 }
             </div>
         </div>
@@ -91,7 +91,6 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                     {
                         <th>Items</th>
                         <th>SKU</th>
-
                         <th>Total</th>
                     }
 
@@ -99,38 +98,47 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
             </thead>
             <tbody>
 
-                @foreach (var request in Model.Requests)
-                {
-                    var cost = request.Cost;
-                    vat += request.VAT;
-                    if (request.Currency == AppUtility.CurrencyEnum.USD.ToString())
+                @{ decimal total = 0;
+                    foreach (var request in Model.Requests)
                     {
-                        cost = cost / request.ExchangeRate;
-                    }
-                    <tr>
-                        <td style="font-weight: 500;">@request.Product.ProductName</td>
-                        <td>@request.Product.CatalogNumber</td>
-                        @if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                        var cost = request.Cost;
+
+                        if (request.Currency == AppUtility.CurrencyEnum.USD.ToString())
                         {
-                            <td>@request.Unit</td>
-                            decimal unitPrice = (cost ?? 0) / request.Unit;
-                            <td>@currency @unitPrice.ToString("N2")</td>
+                            cost = cost / request.ExchangeRate;
+                            total = total + ((request.Cost ?? 0) / request.ExchangeRate);
+                            vat += request.VAT / request.ExchangeRate;
                         }
-                        <td>@request.Discount%</td>
-                        <td>@currency @cost?.ToString("N2")</td>
-                    </tr>
-                }
-                @{ decimal total = Model.Requests.Sum(r => r.Cost ?? 0);
-                    if (currency == '$')
-                    {
-                        vat= vat/ Model.Requests[0].ExchangeRate;
-                        total = total / Model.Requests[0].ExchangeRate;
+                        else
+                        {
+                            total = total + (request.Cost ?? 0);
+                            vat += request.VAT;
+                        }
+                        <tr>
+                            <td style="font-weight: 500;">@request.Product.ProductName</td>
+                            <td>@request.Product.CatalogNumber</td>
+                            @if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                            {
+                                <td>@request.Unit</td>
+                                decimal unitPrice = (cost ?? 0) / request.Unit;
+                                <td>@currency @unitPrice.ToString("N2")</td>
+                            }
+                            <td>@request.Discount%</td>
+                            <td>@currency @cost?.ToString("N2")</td>
+                        </tr>
                     }
-                    decimal totalWithVat = total + vat;}
+                    var shipping = Model.Requests[0].ParentRequest?.Shipping ?? 0;
+                    total = total + (decimal)shipping;
+                    decimal totalWithVat = total + vat;
+                }
                 <tr>
-                    <td colspan="@colspan" rowspan="6" class="borderless-cell">
+                    <td colspan="@colspan" rowspan="4" class="borderless-cell">
                         <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
                     </td>
+                    <td>Shipping</td>
+                    <td>@currency @shipping.ToString("N2")</td>
+                </tr>
+                <tr>
                     <td>Total</td>
                     <td>@currency @total.ToString("N2")</td>
                 </tr>
@@ -140,17 +148,40 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                     <td>@currency @vat.ToString("N2")</td>
                 </tr>
                 <tr>
-                    <td style="font-weight: bold;">Total To Pay</td>
+                    <td class="font-weight-bold">Total To Pay</td>
 
-                    <td style="font-weight: bold;">@currency @totalWithVat.ToString("N2")</td>
+                    <td class="font-weight-bold">@currency @totalWithVat.ToString("N2")</td>
                 </tr>
             </tbody>
         </table>
     </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    @{
+        var installments = "";
+        if (Model.Requests.FirstOrDefault().PaymentStatus?.PaymentStatusID == 5)
+        {
+            installments = Model.Requests.FirstOrDefault().Installments.ToString() + " ";
+        }
+    }
+    @if (Model.Requests.FirstOrDefault().PaymentStatus != null)
+    {<div class="m-4" style="width:25%;">
+        <span class="heading-1">
+            Payment Terms:
+        </span><br />
+        <span class="text">
+            @installments
+            @Model.Requests.FirstOrDefault().PaymentStatus.PaymentStatusDescription
+        </span><br />
+    </div>
+    }
 </div>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />

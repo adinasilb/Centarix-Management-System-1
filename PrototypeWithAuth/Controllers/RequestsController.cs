@@ -677,7 +677,7 @@ namespace PrototypeWithAuth.Controllers
 
         private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetForApprovalRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                             {
@@ -698,7 +698,7 @@ namespace PrototypeWithAuth.Controllers
 
         private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetApprovedRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                             {
@@ -718,7 +718,7 @@ namespace PrototypeWithAuth.Controllers
 
         private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetOrderedRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                             {
@@ -741,7 +741,7 @@ namespace PrototypeWithAuth.Controllers
 
         private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetAccountingGeneralRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                             {
@@ -759,7 +759,7 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
@@ -782,7 +782,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetForApprovalOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                             {
@@ -803,7 +803,7 @@ namespace PrototypeWithAuth.Controllers
 
         private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetApprovedOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                             {
@@ -825,7 +825,7 @@ namespace PrototypeWithAuth.Controllers
 
         private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetOrderedOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                             {
@@ -847,7 +847,7 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
@@ -869,7 +869,7 @@ namespace PrototypeWithAuth.Controllers
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetSummaryProprietaryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
 
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
@@ -891,7 +891,7 @@ namespace PrototypeWithAuth.Controllers
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetSummaryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
 
-            onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
@@ -2191,6 +2191,7 @@ namespace PrototypeWithAuth.Controllers
                 if (HttpContext.Session.GetObject<Request>(requestName) != null)
                 {
                     var request = HttpContext.Session.GetObject<Request>(requestName);
+                    request.PaymentStatus = _context.PaymentStatuses.Where(ps => ps.PaymentStatusID == request.PaymentStatusID).FirstOrDefault();
                     if(request.ParentRequest != null)
                     {
                         pr.Shipping = request.ParentRequest.Shipping;
@@ -2996,6 +2997,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult ReceivedModalSublocations(int LocationTypeID)
         {
+            if(LocationTypeID ==500)
+            {
+                LocationTypeID = 501;
+            }
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
             {
                 locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID),
@@ -3175,6 +3180,10 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
                         requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                         requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
+                        if(requestReceived.PaymentStatusID == 4)
+                        {
+                             requestReceived.PaymentStatusID = 3;
+                        }
                         _context.Update(requestReceived);
                         await _context.SaveChangesAsync();
 
