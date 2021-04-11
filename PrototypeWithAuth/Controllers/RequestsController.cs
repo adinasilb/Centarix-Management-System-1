@@ -2191,6 +2191,7 @@ namespace PrototypeWithAuth.Controllers
                 if (HttpContext.Session.GetObject<Request>(requestName) != null)
                 {
                     var request = HttpContext.Session.GetObject<Request>(requestName);
+                    request.PaymentStatus = _context.PaymentStatuses.Where(ps => ps.PaymentStatusID == request.PaymentStatusID).FirstOrDefault();
                     if(request.ParentRequest != null)
                     {
                         pr.Shipping = request.ParentRequest.Shipping;
