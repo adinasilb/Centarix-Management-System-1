@@ -758,7 +758,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
+     {
             onePageOfProducts = await RequestPassedInWithInclude.OrderBy(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
@@ -1704,12 +1704,14 @@ namespace PrototypeWithAuth.Controllers
                     LocationInstance parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).Include(li => li.LocationType).FirstOrDefault();
                     //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
                     //need to test b/c the model is int? which is nullable
-                    receivedLocationViewModel.locationInstancesSelected.Add(parentLocationInstance);
+       
                     var locationType = parentLocationInstance.LocationType;
                     while (locationType.Depth != 0)
                     {
                         locationType = _context.LocationTypes.Where(l => l.LocationTypeID == locationType.LocationTypeParentID).FirstOrDefault();
                     }
+                
+                    receivedLocationViewModel.locationInstancesSelected.Add(parentLocationInstance);
                     requestItemViewModel.ParentDepthZeroOfSelected = locationType;
                     requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
 
