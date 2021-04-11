@@ -93,7 +93,15 @@ $('.ordersItemForm').validate({
 $("body, .modal").off("change", '#vendorList').on("change", '#vendorList' , function(){
 	//alert("in change vendor")
 	//$('#Request_0__Product_CatalogNumber').valid();
-	$('.catalog-number').valid();
+		$('.error').addClass("beforeCallValid");
+		$('.catalog-number').valid();
+		$(".error:not(.beforeCallValid)").addClass("afterCallValid")
+		$(".error:not(.beforeCallValid)").removeClass("error")
+		$("label.afterCallValid").remove()
+		$(".error").removeClass('beforeCallValid')
+		$(".afterCallValid").removeClass('error')
+		$(".afterCallValid").removeClass('afterCallValid')
+
 });
 	
 });
