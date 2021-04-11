@@ -114,28 +114,29 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                             total = total + (request.Cost ?? 0);
                             vat += request.VAT;
                         }
-                    <tr>
-                        <td style="font-weight: 500;">@request.Product.ProductName</td>
-                        <td>@request.Product.CatalogNumber</td>
-                        @if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                        {
-                            <td>@request.Unit</td>
-                            decimal unitPrice = (cost ?? 0) / request.Unit;
-                            <td>@currency @unitPrice.ToString("N2")</td>
-                        }
-                        <td>@request.Discount%</td>
-                        <td>@currency @cost?.ToString("N2")</td>
-                    </tr>
+                        <tr>
+                            <td style="font-weight: 500;">@request.Product.ProductName</td>
+                            <td>@request.Product.CatalogNumber</td>
+                            @if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                            {
+                                <td>@request.Unit</td>
+                                decimal unitPrice = (cost ?? 0) / request.Unit;
+                                <td>@currency @unitPrice.ToString("N2")</td>
+                            }
+                            <td>@request.Discount%</td>
+                            <td>@currency @cost?.ToString("N2")</td>
+                        </tr>
                     }
-                    total = total + (decimal)Model.Requests[0].ParentRequest.Shipping;
+                    var shipping = Model.Requests[0].ParentRequest?.Shipping ?? 0;
+                    total = total + (decimal)shipping;
                     decimal totalWithVat = total + vat;
-                  }
+                }
                 <tr>
                     <td colspan="@colspan" rowspan="4" class="borderless-cell">
                         <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
                     </td>
                     <td>Shipping</td>
-                    <td>@currency @Model.Requests[0].ParentRequest.Shipping.ToString("N2")</td>
+                    <td>@currency @shipping.ToString("N2")</td>
                 </tr>
                 <tr>
                     <td>Total</td>
@@ -147,17 +148,40 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                     <td>@currency @vat.ToString("N2")</td>
                 </tr>
                 <tr>
-                    <td class ="font-weight-bold">Total To Pay</td>
+                    <td class="font-weight-bold">Total To Pay</td>
 
-                    <td class ="font-weight-bold">@currency @totalWithVat.ToString("N2")</td>
+                    <td class="font-weight-bold">@currency @totalWithVat.ToString("N2")</td>
                 </tr>
             </tbody>
         </table>
     </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    @{
+        var installments = "";
+        if (Model.Requests.FirstOrDefault().PaymentStatus?.PaymentStatusID == 5)
+        {
+            installments = Model.Requests.FirstOrDefault().Installments.ToString() + " ";
+        }
+    }
+    @if (Model.Requests.FirstOrDefault().PaymentStatus != null)
+    {<div class="m-4" style="width:25%;">
+        <span class="heading-1">
+            Payment Terms:
+        </span><br />
+        <span class="text">
+            @installments
+            @Model.Requests.FirstOrDefault().PaymentStatus.PaymentStatusDescription
+        </span><br />
+    </div>
+    }
 </div>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />

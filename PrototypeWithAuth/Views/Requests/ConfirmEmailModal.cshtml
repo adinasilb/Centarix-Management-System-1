@@ -42,14 +42,7 @@
                 <div>
                     @{await Html.RenderPartialAsync("_OrderEmail", Model); }
                 </div>
-                <div class="m-4" style="width:25%;">
-                    <span class="heading-1">
-                        Payment Terms:
-                    </span><br/>
-                    <span class="text">
-                        @Model.Requests.FirstOrDefault().PaymentStatus.PaymentStatusDescription
-                    </span><br/>
-                </div>
+                
                 <div class="modal-footer p-4">
                     <div class="m-auto">
                         <input type="submit" class="custom-button custom-button-font @bcColor between-button-margin complete-order" asp-action="ConfirmEmailModal" value="Confirm & Send Email" />
