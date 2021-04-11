@@ -714,7 +714,7 @@ namespace PrototypeWithAuth.Controllers
                                     RemoveEmployeeBonusDay(employeeHour, user);
                                 }
                                 employeeHour.OffDayTypeID = offDayTypeID;
-                                if(offDayTypeID==4)
+                                if(offDayTypeID==4 && employeeHour.OffDayTypeID!=4)
                                 {
                                     employeeHour.Employee = user;
                                     employeeHour.Employee.SpecialDays -= 1;
@@ -799,7 +799,7 @@ namespace PrototypeWithAuth.Controllers
                                         Date = dateFrom
                                     };
                                 }
-                                if (offDayTypeID == 4)
+                                if (offDayTypeID == 4 && employeeHour.OffDayTypeID != 4)
                                 {
                                     employeeHour.Employee = user;
                                     employeeHour.Employee.SpecialDays -= 1;

@@ -177,7 +177,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 if (selectedFilters.SelectedLocationsIDs.Count() > 0)
                 {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedLocationsIDs.Contains(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID));    
+                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedLocationsIDs.Contains((int)(Math.Floor(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID / 100.0) * 100)));    
                 }
                 if (selectedFilters.SelectedOwnersIDs.Count() > 0)
                 {
@@ -3469,8 +3469,6 @@ namespace PrototypeWithAuth.Controllers
                             try
                             {
                                 request.RequestStatusID = 6; //approved
-                                request.ParentQuote = new ParentQuote();
-                                request.ParentQuote.QuoteStatusID = 1;
                                 _context.Update(request);
                                 await _context.SaveChangesAsync();
                                 RequestNotification requestNotification = new RequestNotification();
