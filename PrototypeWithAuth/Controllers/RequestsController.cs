@@ -3469,8 +3469,6 @@ namespace PrototypeWithAuth.Controllers
                             try
                             {
                                 request.RequestStatusID = 6; //approved
-                                request.ParentQuote = new ParentQuote();
-                                request.ParentQuote.QuoteStatusID = 1;
                                 _context.Update(request);
                                 await _context.SaveChangesAsync();
                                 RequestNotification requestNotification = new RequestNotification();
