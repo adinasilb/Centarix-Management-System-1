@@ -364,10 +364,11 @@ Model.UnitTypeList,
     <input type="hidden" asp-for="Requests[0].IncludeVAT" value="true" />
     @if (Model.Requests[0].RequestStatusID != 1 && Model.Requests[0].RequestStatusID != 6)
     {
-        <div class="col-3">
-            <label class="control-label" asp-for="Requests[0].PaymentStatus.PaymentStatusDescription">Terms</label>
-            <input asp-for="Requests[0].PaymentStatus.PaymentStatusDescription" class="form-control-plaintext border-bottom" disabled />
-        </div>
+<div class="col-3">
+    <label class="control-label" asp-for="Requests[0].PaymentStatus.PaymentStatusDescription">Terms</label>
+    <input asp-for="Requests[0].PaymentStatus.PaymentStatusDescription" class="form-control-plaintext border-bottom" disabled />
+    <input type="hidden" asp-for="Requests[0].PaymentStatusID"/>
+</div>
     }
     </div>
 @if (Model.Requests[0].RequestStatusID != 1 && Model.Requests[0].RequestStatusID != 6)
