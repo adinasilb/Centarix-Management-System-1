@@ -142,7 +142,7 @@
             var spaces =  val.split(" ");
             var spaceCount = spaces.length;
              console.log(spaceCount)
-            var rows = Math.ceil((val.length+spaceCount) / 50);
+            var rows = Math.ceil((val.length+spaceCount) / 45);
             var lines =   val.split("\n");
             var lineCount = lines.length;
            // console.log(lineCount)
@@ -151,7 +151,8 @@
             }
             if(rows>3)
             {
-               $(this).val(val.slice(0,-1))
+                $(this).val(val.slice(0, -1))
+                rows = 3;
             }
             $(this).attr('rows', rows);
         });
