@@ -1572,16 +1572,25 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _PartialItemOperationsTab(int index)
+        public async Task<IActionResult> _PartialItemOperationsTab(int index, int subcategoryID = 0)
         {
             var operationsItemViewModel = new OperationsItemViewModel()
             {
                 RequestIndex = index,
-                //Request = new Request(),
                 ModalType = AppUtility.RequestModalType.Create,
                 ParentCategories = _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToList(),
                 ProductSubcategories = new List<ProductSubcategory>()
             };
+            if(subcategoryID > 0)
+            {
+                operationsItemViewModel.Request = new Request();
+                operationsItemViewModel.Request.Product = new Product();
+                operationsItemViewModel.Request.Product.ProductSubcategoryID = subcategoryID;
+                operationsItemViewModel.Request.Product.ProductSubcategory =
+                    _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == subcategoryID).FirstOrDefault();
+                operationsItemViewModel.ProductSubcategories =
+                    _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == operationsItemViewModel.Request.Product.ProductSubcategory.ParentCategoryID).ToList();
+            }
             //operationsItemViewModel.Request.Product = new Product();
             //operationsItemViewModel.Request.Product.ProductSubcategory = new ProductSubcategory();
             return PartialView(operationsItemViewModel);
