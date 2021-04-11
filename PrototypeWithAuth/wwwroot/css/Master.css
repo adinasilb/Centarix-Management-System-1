@@ -685,5 +685,5 @@ table td, table td .btn, .text, table th {
 
 body.modal-open, body.popover-open {
     /* background shouldn't scroll when a modal is open*/
-    overflow: hidden;
+    overflow: hidden !important;
 }

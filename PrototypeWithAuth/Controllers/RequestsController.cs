@@ -2997,6 +2997,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult ReceivedModalSublocations(int LocationTypeID)
         {
+            if(LocationTypeID ==500)
+            {
+                LocationTypeID = 501;
+            }
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
             {
                 locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID),
@@ -3176,6 +3180,10 @@ namespace PrototypeWithAuth.Controllers
                         requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
                         requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                         requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
+                        if(requestReceived.PaymentStatusID == 4)
+                        {
+                             requestReceived.PaymentStatusID = 3;
+                        }
                         _context.Update(requestReceived);
                         await _context.SaveChangesAsync();
 
@@ -3470,8 +3478,6 @@ namespace PrototypeWithAuth.Controllers
                             try
                             {
                                 request.RequestStatusID = 6; //approved
-                                request.ParentQuote = new ParentQuote();
-                                request.ParentQuote.QuoteStatusID = 1;
                                 _context.Update(request);
                                 await _context.SaveChangesAsync();
                                 RequestNotification requestNotification = new RequestNotification();

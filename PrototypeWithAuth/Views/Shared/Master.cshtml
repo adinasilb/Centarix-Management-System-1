@@ -1125,6 +1125,7 @@
             $('.' + modalDivClass).html('');
             if ($('.modal').length == 0) {
                 $('.modal-backdrop').remove();
+                $('.body').removeClass('modal-open');
             }
         }
         $.fn.BindSelectedFilters = function () {
