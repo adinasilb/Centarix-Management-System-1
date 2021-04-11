@@ -1532,19 +1532,7 @@ $(function () {
 			$("#home-btn").popover('toggle');
 
 	});
-	$("#addRequestComment").click(function () {
-		$('[data-toggle="popover"]').popover('dispose');
-		$('#addRequestComment').popover({
-			sanitize: false,
-			placement: 'bottom',
-			html: true,
-			content: function () {
-				return $('#popover-content').html();
-			}
-		});
-		$('#addRequestComment').popover('toggle');
-
-	});
+	
 
 
 

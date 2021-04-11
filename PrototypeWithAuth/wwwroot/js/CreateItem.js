@@ -235,4 +235,21 @@
         console.log(index)
         $("#Requests_" + index + "__IsReceived").attr("value", checked)
     })
+
+    $('body').on('click', "#addRequestComment", function () {
+        console.log("clicked!");
+        console.log($('#popover-content').html())
+        $('[data-toggle="popover"]').popover('dispose');
+        $('#addRequestComment').popover({
+            sanitize: false,
+            placement: 'bottom',
+            html: true,
+            content: function () {
+                console.log('in function')
+                return $('#popover-content').html();
+            }
+        });
+        $('#addRequestComment').popover('toggle');
+
+    });
 })
