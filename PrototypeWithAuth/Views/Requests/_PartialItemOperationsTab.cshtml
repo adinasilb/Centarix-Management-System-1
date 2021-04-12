@@ -59,14 +59,14 @@
                 }
             }
             <label class="control-label">Category</label>
-            <select id="@parentCategoryID" name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" >
+            <select id="@parentCategoryID" name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" searchable="Select Category">
                 @if (Model.Request?.Product.ProductSubcategory.ParentCategoryID == 0 || Model.Request?.Product.ProductSubcategory.ParentCategoryID == null)
                 {
                     <option class="disabled-color" disabled selected>Select a Category</option>
                 }
                 else
                 {
-                    <option class="disabled-color" disabled >Select a Category</option>
+                    <option class="disabled-color" disabled>Select a Category</option>
                 }
 
                 @foreach (var category in Model.ParentCategories)
@@ -109,7 +109,7 @@
                     subCategoryID = dynamicID + "Product_ProductSubcategory_ProductSubcategoryID";
                 }
             }
-        <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category">
+        <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" searchable="Select Subcategory">
             @if (Model.Request?.Product.ProductSubcategoryID == 0 || Model.Request?.Product.ProductSubcategoryID == null)
             {
                 <option class="disabled-color" disabled selected>Select a Subcategory</option>
@@ -225,7 +225,14 @@
     </div>
     <input type="hidden" id="@(dynamicID)IncludeVAT" name="@(dynamicName)IncludeVAT" value="true"/>
 </div>
-    <div class="row vat-info@(Model.RequestIndex) @(Model.Request?.IncludeVAT == true?"":"d-none")">
+    @{ 
+        var includeVat = "";
+        if(Model.Request?.IncludeVAT == false)
+        {
+            includeVat = "d-none";
+        }
+      }
+    <div class="row vat-info@(Model.RequestIndex) @includeVat">
     <div class="col-md-2">
         <div class="form-group">
             <label class="control-label">VAT</label>

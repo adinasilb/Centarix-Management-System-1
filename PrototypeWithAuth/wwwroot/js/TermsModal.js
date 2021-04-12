@@ -106,6 +106,7 @@ $(function () {
 	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
 	$( ".paymentType").off("change").change( function (e) {
 		console.log("changepayment type")
+		$(".payment-date").removeClass("d-none")
 		var paymentTypeID = $(this).val();
 		var companyAccountID = $("#bankName").val();
 		console.log(companyAccountID)
@@ -145,6 +146,7 @@ $(function () {
 		return false;
 	});
 	$("#bankName").off("change").change(function (e) {
+		$('.payment-type').removeClass('d-none');
 		var companyAccountID = $(this).val();
 		if ($("select.paymentType").val() == "1") {
 			var url = "/CompanyAccounts/GetAccountsByBank";

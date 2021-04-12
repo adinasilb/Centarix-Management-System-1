@@ -246,7 +246,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
             modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
-
+            modelBuilder.Entity<Request>().Property(r => r.IncludeVAT).HasDefaultValue(true);
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<ExchangeRate>().Property(e => e.LatestExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
