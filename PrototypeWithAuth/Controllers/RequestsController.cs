@@ -4505,6 +4505,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     newRequest.RequestStatusID = 1;
                 }
+                newRequest.Cost = 0;
                 newRequest.ParentQuote = new ParentQuote();
                 newRequest.ParentQuote.QuoteStatusID = 1;
                 newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote.ToString();
