@@ -2318,3 +2318,7 @@ table.visual-locations-table td .visual-locations-div {
     color: var(--operations-color);
     border-color: var(--operations-color) !important;
 }
+
+body.modal-open .popover{
+    z-index:5500 !important;
+}

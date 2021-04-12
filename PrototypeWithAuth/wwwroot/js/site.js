@@ -61,11 +61,15 @@ $(function () {
 
 		$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
 			console.log(" in json")
-			var firstitem1 = '<option value=""> Select Subcategory</option>';
-			$(sublistSelector).empty();
+			$(sublistSelector).children("option").each(function (i, option) {
+				option.remove();
+			});
+			var firstitem1 = '<option value="" disabled> Select Subcategory</option>';
+			
 			$(sublistSelector).append(firstitem1);
 
 			$.each(data, function (i, subCategory) {
+				console.log(subCategory.productSubcategoryDescription)
 				var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
 				$(sublistSelector).append(newitem1);
 			});
