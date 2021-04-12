@@ -1227,7 +1227,7 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.SectionType = SectionType;
-            RemoveRequestSessions();
+            RemoveRequestWithCommentsAndEmailSessions();
             return View(requestItemViewModel);
         }
 
@@ -1238,7 +1238,7 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                RemoveRequestSessions();
+                RemoveRequestWithCommentsAndEmailSessions();
                 var vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
                 var categoryType = 1;
                 var exchangeRate = requestItemViewModel.Requests.FirstOrDefault().ExchangeRate;
@@ -1331,7 +1331,7 @@ namespace PrototypeWithAuth.Controllers
                                     }
                                     MoveDocumentsOutOfTempFolder(request, additionalRequests);
                                     await transaction.CommitAsync();
-                                    base.RemoveRequestSessions();
+                                    base.RemoveRequestWithCommentsAndEmailSessions();
                                 }
                                 else if (OrderType != AppUtility.OrderTypeEnum.SaveOperations)
                                 {
@@ -1348,7 +1348,7 @@ namespace PrototypeWithAuth.Controllers
                             catch (Exception ex)
                             {
                                 await transaction.RollbackAsync();
-                                base.RemoveRequestSessions();
+                                base.RemoveRequestWithCommentsAndEmailSessions();
                                 throw ex;
                             }
                         }
@@ -2030,7 +2030,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, bool NewRequestFromProduct = false, String SectionType = "")
         {
             DeleteTemporaryDocuments();
-            base.RemoveRequestSessions();
+            base.RemoveRequestWithCommentsAndEmailSessions();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
             Request request = _context.Requests
@@ -2103,7 +2103,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault());
                                 await transaction.CommitAsync();
-                                base.RemoveRequestSessions();
+                                base.RemoveRequestWithCommentsAndEmailSessions();
                             }
                             switch (OrderTypeEnum)
                             {
@@ -2118,7 +2118,7 @@ namespace PrototypeWithAuth.Controllers
                         catch (Exception ex)
                         {
                             transaction.Rollback();
-                            base.RemoveRequestSessions();
+                            base.RemoveRequestWithCommentsAndEmailSessions();
                             throw ex;
                         }
                     }
@@ -2505,13 +2505,13 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 //throw new Exception();
                                 await transaction.CommitAsync();
-                                base.RemoveRequestSessions();
+                                base.RemoveRequestWithCommentsAndEmailSessions();
 
                             }
                             catch (Exception ex)
                             {
                                 transaction.Rollback();
-                                base.RemoveRequestSessions();
+                                base.RemoveRequestWithCommentsAndEmailSessions();
                                 throw ex;
                             }
 
@@ -3679,7 +3679,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ConfirmExit(ConfirmExitViewModel confirmExit)
         {
             DeleteTemporaryDocuments();
-            RemoveRequestSessions();
+            RemoveRequestWithCommentsAndEmailSessions();
 
             if (confirmExit.URL.IsEmpty())
             {
@@ -4268,7 +4268,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (isCancel)
             {
-                RemoveRequestSessions();
+                RemoveRequestWithCommentsAndEmailSessions();
                 DeleteTemporaryDocuments();
                 return PartialView("Default");
             }
@@ -4319,7 +4319,7 @@ namespace PrototypeWithAuth.Controllers
                                 Directory.Move(requestFolderTo, requestFolderFrom);
                                 throw ex;
                             }
-                            base.RemoveRequestSessions();
+                            base.RemoveRequestWithCommentsAndEmailSessions();
                             var action = "_IndexTableData";
                             if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
@@ -4387,7 +4387,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (isCancel)
             {
-                RemoveRequestSessions();
+                RemoveRequestWithCommentsAndEmailSessions();
                 DeleteTemporaryDocuments();
                 return PartialView("Default");
             }
@@ -4714,7 +4714,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(r => r.Vendor)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
                 }
-  
+                RemoveRequestWithCommentsAndEmailSessions();
             }
             else
             {
@@ -4726,6 +4726,7 @@ namespace PrototypeWithAuth.Controllers
                     if (HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
                         requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                       
                     }
                     else
                     {
@@ -4733,9 +4734,9 @@ namespace PrototypeWithAuth.Controllers
                     }
                     RequestNum++;
                 }
+                
             }
             var requestNum = 1;
-            RemoveRequestSessions();
             foreach (var req in requests)
             {
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
