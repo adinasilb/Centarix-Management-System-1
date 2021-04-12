@@ -11,7 +11,7 @@
         disabled = "";
 
     }
-    if(Model.Requests[0].RequestStatusID==3)
+    if (Model.Requests[0].RequestStatusID == 3)
     {
         disable = "disabled";
     }
@@ -21,131 +21,26 @@
     <span class="heading-1 col-12 modal-tab-name">Location</span>
 </div>
 <div class="row">
-    <div class="col-2">
-        <div class="form-group">
-            <label class="control-label" asp-for="ReceivedLocationViewModel.locationTypesDepthZero">Location Type</label>
-            <div class=" form-control-plaintext border-bottom p-0">
-                <span class="choose p-0"></span>
-                <div class="dropdown dropdown-main @disabled">
-                    <div class="select d-inline-flex">
-                        <span class="caret py-0">
-                            ▼
-                        </span>
-                        <span class="overflow-hidden">@Model.ParentDepthZeroOfSelected?.LocationTypeName</span>
-
-                    </div>
-
-                    <ul class="p-0 locationinstance dropdown-menu ">
-                        @if (Model.ReceivedLocationViewModel != null)
-                        {
-                            foreach (var locationType in Model.ReceivedLocationViewModel.locationTypesDepthZero)
-                            {
-                                <li id="@locationType.LocationTypeID" class="open-sublocations-types" @*onclick="loadReceivedModalSubLocations(this.id)"*@>
-                                    @locationType.LocationTypeName
-                                </li>
-                            }
-                        }
-                    </ul>
-
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <div class="col-10">
-        <div class="divSublocations container-fluid">
+            @{ var name = "";}
             @if (Model.ReceivedModalSublocationsViewModel != null)
             {
 
-                <div class="row">
-                    @{ var count = Model.ReceivedModalSublocationsViewModel.locationTypeNames.Count; }
-                    @for (int i = 0; i < count - 1; i++) //do count - 1 because we don't want them to select the smallest instances
+                var count = Model.ReceivedModalSublocationsViewModel.locationTypeNames.Count;
+                for (int i = 0; i < count - 1; i++) //do count - 1 because we don't want them to select the smallest instances
+                {
+                    var depth = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected.Count;
+
+
+
+                    var nameToAppend = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationInstanceAbbrev;
+                    if(nameToAppend==null)
                     {
-                        var id = "locationInstancesSelected[" + i + "]";
-                        var depth = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected.Count;
-                        var name = "";
-                        <div class="form-group col-3 ">
-                            <label class="control-label">@Model.ReceivedModalSublocationsViewModel.locationTypeNames[i]</label>
-                            @if (i == 0)
-                            {
-                                <div class="">
-                                    <div class=" form-control-plaintext border-bottom p-0">
-                                        <span class="choose p-0"></span>
-                                        <div class="dropdown dropdown-main disable-custom-mdbselect">
-                                            <div class="select d-inline-flex">
-                                                <span class="caret py-0">
-                                                    ▼
-                                                </span>
-                                                @if (i < depth)
-                                                {
-                                                    name = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationInstanceName;
-                                                }
-                                                <span class="overflow-hidden">@name</span>
-
-                                            </div>
-
-                                            <ul class="p-0 locationinstance dropdown-menu ">
-                                                @foreach (var locationType in Model.ReceivedModalSublocationsViewModel.locationInstancesDepthZero)
-                                                {
-                                                    <li id="@locationType.LocationInstanceID" onclick="SLI(this)" value="@locationType.LocationInstanceID">
-                                                        @locationType.LocationInstanceName
-                                                    </li>
-                                                }
-                                            </ul>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            }
-
-                            else
-                            {
-                                <div class="">
-                                    <div class=" form-control-plaintext border-bottom p-0">
-                                        <span class="choose p-0"></span>
-                                        <div class="dropdown dropdown-main disable-custom-mdbselect">
-                                            <div class="select d-inline-flex " style="padding-right:1.25rem;">
-                                                <span class="caret py-0">
-                                                    ▼
-                                                </span>
-                                                @if (i < depth)
-                                                {
-                                                    name = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationInstanceName;
-                                                }
-                                                <span class="overflow-hidden overflow-left">@name</span>
-
-                                            </div>
-
-                                            <ul class="p-0 locationinstance dropdown-menu ">
-                                                @if (i < depth)
-                                                {
-                                                    @*@for (int w=0; w<=Model.ChildrenLocationInstances.Count; w++)
-                                                        {
-                                                            <li id="@Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceID" onclick="SLI(this)" value="@Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceID">
-                                                                @Model.ChildrenLocationInstances[w].FirstOrDefault().LocationInstanceName
-                                                            </li>
-                                                        }*@
-                                                    @foreach (var location in Model.ChildrenLocationInstances[depth - 1 - ((i + (count - (count - depth))) - depth)])
-                                                    {
-                                                        <li id="@location.LocationInstanceID" onclick="SLI(this)" value="@location.LocationInstanceID">
-                                                            @location.LocationInstanceName
-                                                        </li>
-                                                    }
-                                                }
-                                            </ul>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
+                        nameToAppend = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationInstanceName;
                     }
-                </div>
-
+                    name += nameToAppend;
+                }
             }
-        </div>
-    </div>
+        <div class="col-12 heading-1 text-center">@name</div> 
 </div>
 <div class="row"><input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" @disable /></div>
 <div class="row">

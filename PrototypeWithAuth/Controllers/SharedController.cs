@@ -160,7 +160,7 @@ namespace PrototypeWithAuth.Controllers
             requestItem.DocumentsInfo.Add(folder);
         }
 
-        public void RemoveRequestSessions()
+        public void RemoveRequestWithCommentsAndEmailSessions()
         {
             var requiredKeys = HttpContext.Session.Keys.Where(x => x.StartsWith(AppData.SessionExtensions.SessionNames.Request.ToString()) ||
                 x.StartsWith(AppData.SessionExtensions.SessionNames.Comment.ToString()) ||
