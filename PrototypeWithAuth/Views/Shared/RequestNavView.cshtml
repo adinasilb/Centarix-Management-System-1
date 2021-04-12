@@ -356,7 +356,9 @@
                         }
                     }
                     else if (jqxhr.responseText != null) {
-                        alert("Error 500: " + jqxhr.responseText);
+                        if (jqxhr.responseText.indexOf('<div') == -1) {
+                            alert("Error 500: " + jqxhr.responseText);
+                        }
                     }
                     else {
                         alert("Error 500: error carrying out request");
