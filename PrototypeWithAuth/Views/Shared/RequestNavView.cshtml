@@ -113,7 +113,7 @@
     }
     else if (pageType == AppUtility.PageTypeEnum.AccountingPayments)
     {
-        SidebarMenuItems = CreateMenus.CreateAccountingPaymentsSidebar(sidebarType, originalNavClasses, "accounting-filter");
+        SidebarMenuItems = CreateMenus.CreateAccountingPaymentsSidebar(sidebarType, originalNavClasses, "accounting-filter", TempData["PayNowCount"].ToString());
     }
     else if (pageType == AppUtility.PageTypeEnum.AccountingNotifications)
     {
@@ -232,7 +232,7 @@
                     <ul class="list-unstyled m-0">
                         <li><button href="#" id="openNotifications" type="button" data-toggle="popover" data-placement="bottom" data-container="body" class="btn no-box-shadow p-0 m-0 " style="margin-right: 1.313rem !important;"><div class="alerts-icon"><i style='font-size: 2.3rem;   color: #808080;' class='icon-notification_top_menu'></i> <span id="alertCount" class="alert-count "></span></div>  </button> </li>
                         <div style="display:none;" id="notifications-popover">
-                            <button type="button" class="close popover-close" style="font-size:2rem;" >&times;</button>
+                            <button type="button" class="close popover-close" style="font-size:2rem;">&times;</button>
                             <div style="width:410px" class="p-4 heading-1">
                                 Notifications
                             </div>
@@ -300,7 +300,7 @@
                                 <a href="@Url.ActionLink(sidebarNavItem.Action, sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="text-black @sidebarNavItem.AjaxLink">
                                     <li class="nav-item sidenav-button @sidebarNavItem.Classes side-menu px-2" style="@liMargins">
                                         <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
-                                        <br /><span>@sidebarNavItem.Description</span><br />
+                                        <br /><span>@Html.Raw(sidebarNavItem.Description.Replace("\n","<br/>"))</span><br />
                                         <span class="hidden sidebarCount @sidebarNavItem.MenuItemsID"></span>
                                     </li>
                                 </a>
@@ -321,7 +321,6 @@
         </div>
     </main>
 </div>
-
 @section requestNavScript{
     <script src="~/js/InitializeDatePicker.js"></script>
     <script>
@@ -419,7 +418,7 @@
             $("#user-more-tab").prop("disabled", true);
 
 
-           
+
             $.fn.GetNotifcationCount();
             $.fn.GetNotifications();
             $.fn.getMenuItems();
@@ -455,7 +454,7 @@
 
         });
 
-        
+
     //    $(".add-item").on("click", function (e) {
     //        e.preventDefault();
     //        console.log("item click")
