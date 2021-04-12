@@ -33,7 +33,15 @@
                         <ul class="p-0 locationinstance dropdown-menu ">
                             @foreach (var locationType in Model.locationInstancesDepthZero)
                             {
-                                <li id="@locationType.LocationInstanceID" class="SLI-click" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
+
+                                var description = locationType.LocationInstanceAbbrev;
+
+                                    if (description == null)
+                                    {
+                                        description = locationType.LocationInstanceName;
+                                    }
+                                 
+                                <li id="@locationType.LocationInstanceID" class="SLI-click" data-string="@description" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
                                     @locationType.LocationInstanceName
                                 </li>
                             }

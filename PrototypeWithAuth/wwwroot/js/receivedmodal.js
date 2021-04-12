@@ -60,9 +60,23 @@
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
+			var name = ""
+		$(".dropdown.dropdown-main span:not(.caret)").each(function(){
+		if($(this).html()!="select")
+		{
+			if($(this).attr("description") !=undefined)
+			{
+				name+=$(this).attr("description");
+			}
+
+		}
+			
+		});
+		$(".locationFullName").html(name);
 	});
 
 	function SLI(el) {
+	
 		//alert("in SLI function");
 		//ONE ---> GET THE NEXT DROPDOWNLIST
 		if($(el).attr("isNoRack")=="true")
@@ -78,6 +92,11 @@
 		}
 		var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
 		$(nextSelect).html('');
+		//clear all the next selects
+		$(el).parents('.form-group').nextAll().each(function(){
+			$(this).find('.dropdown-menu').html('');
+			$(this).find('.dropdown-main').find('span:not(.caret)').text('select');
+		});
 		console.log(nextSelect)
 		console.log("selected")
 		var locationInstanceParentId = $(el).val();
@@ -89,7 +108,10 @@
 			FillNextSelect(nextSelect, locationInstanceParentId);
 			//alert("items: " + items);
 			//nextSelect.html(items);
+		
+		
 		}
+			
 		//TWO ---> FILL VISUAL VIEW
 		var myDiv = $(".visualView");
 		if (locationInstanceParentId == 0) { //if zero was selected
@@ -117,6 +139,7 @@
 			}
 		}
 		else {
+		
 			console.log("regular visual");
 			$.ajax({
 				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
@@ -164,6 +187,7 @@
 		}
 
 		$(el).parents('.dropdown-main').find('span:not(.caret)').text($(el).text());
+		$(el).parents('.dropdown-main').find('span:not(.caret)').attr("description", $(el).attr("data-string"));
 	};
 
 	function FillNextSelect(nextSelect, locationInstanceParentId) {
@@ -172,13 +196,18 @@
 			var item = "<li>Select Location Instance</li>";
 			$.each(result, function (i, field) {
 				var emptyText = "";
+				var description =field.locationInstanceAbbrev;
+				if(description ==null ||description =='')
+				{
+					description =field.locationInstanceName
+				}
 				if (field.isEmptyShelf && field.labPartID<=0) {
 					emptyText = " (nr)";
-					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" >' + field.locationInstanceName + emptyText + '</li>'
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
 				}
 				else
 				{
-					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" >' + field.locationInstanceName + emptyText + '</li>'
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
 				}
 				
 			});
