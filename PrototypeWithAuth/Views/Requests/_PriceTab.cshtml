@@ -8,26 +8,26 @@
     var Category = Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescription;
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
-    var disabledDollarProperty = "";
-    var disabledShekelProperty = "disabled";
+    var disabledDollarProperty = "disabled";
+    var disabledShekelProperty = "";
     var hideVat = "";
     var hideNoQuote = "";
-    var disableShekel = "disabled-text";
-    var disableDollar = "";
+    var disableShekel = "";
+    var disableDollar = "disabled-text";
     var dollarReadOnly = "";
     var shekelReadOnly = "";
     if (modalType == AppUtility.RequestModalType.Edit || modalType == AppUtility.RequestModalType.Summary)
     {
         markReadOnlyClass = "mark-readonly";
-        dollarReadOnly = "mark-readonly";
-        if (Model.Requests[0].Currency.Equals("NIS"))
+        shekelReadOnly = "mark-readonly";
+        if (Model.Requests[0].Currency.Equals("USD"))
         {
-            disableShekel = "";
-            disableDollar = "disabled-text";
-            disabledDollarProperty = "disabled";
-            disabledShekelProperty = "";
-            shekelReadOnly = "mark-readonly";
-            dollarReadOnly = "";
+            disableShekel = "disabled-text";
+            disableDollar = "";
+            disabledDollarProperty = "";
+            disabledShekelProperty = "readonly";
+            shekelReadOnly = "";
+            dollarReadOnly = "mark-readonly";
         }
     }
     if(modalType == AppUtility.RequestModalType.Edit && Model.Requests[0].ParentQuote?.QuoteStatusID < 3)
@@ -52,8 +52,8 @@
                 <div class="form-group">
                     <label class="control-label">Currency</label>
                     <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
-                        <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                         <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
+                        <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                     </select>
                 </div>
             </div>
@@ -281,7 +281,7 @@ Model.UnitTypeList,
             <label class="control-label"></label>
             <div class="input-group">
                 <span class="input-group-text request-cost-shekel-icon @disableShekel">&#x20aa;</span>
-                @if (disabledShekelProperty != "")
+                @if(disabledShekelProperty != "")
                 {
                     <input asp-for="Requests[0].Cost" class="form-control-plaintext border-bottom  @disableShekel requestPriceQuote" min="1" readonly id="cost" />
                 }

@@ -1517,6 +1517,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategoryID = productSubcategory.ParentCategoryID;
             requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
             requestItemViewModel.Requests.FirstOrDefault().IncludeVAT = true;
+            requestItemViewModel.Requests.FirstOrDefault().Cost = 0;
 
 
             if (productSubcategory != null && productSubcategory.ParentCategory.isProprietary)
