@@ -38,6 +38,7 @@
     {
         hideVat = "d-none";
     }
+    var color = Model.SectionType == AppUtility.MenuItems.Accounting ? "accounting-color" : Model.SectionType == AppUtility.MenuItems.LabManagement ? "lab-man-color" : "order-inv-color";
 }
 <input type="hidden" id="quoteStatus" value="@Model.Requests[0].ParentQuote?.QuoteStatusID" />
 
@@ -66,8 +67,8 @@
         </div>
     </div>
 </div>
-@if (Category != null && !Category.Equals(AppUtility.ParentCategoryEnum.Operation))
-{
+@* @if (Category != null && !Category.Equals(AppUtility.ParentCategoryEnum.Operation))
+{*@
     <div class="row" id="edit">
         <div class="col-md-4  RequestUnitCard ">
             <div class="border h-100 pt-4" @*style="padding-right: 2rem; padding-left: 2rem;"*@>
@@ -93,11 +94,11 @@
                                     }
                                 </select>*@
                             @Html.DropDownListFor(
-vm => vm.Requests[0].UnitTypeID,
-Model.UnitTypeList,
-"",
-htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
-)
+                                vm => vm.Requests[0].UnitTypeID,
+                                Model.UnitTypeList,
+                                "",
+                                htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext unit-type-select " + markReadOnlyClass, @id = "unitTypeID" }
+                                )
                             <span asp-validation-for="Requests[0].UnitType" class="text-danger-centarix"></span>
                         </div>
                     </div>
@@ -141,7 +142,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
 ">
                     <span aria-hidden="true">×</span>
                 </button>
-                <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub"><div class="row " style="display:initial;">          <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass" disabled style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize order-inv-color text">add sub unit</span></div></div></div>
+                <div class="mx-2rem addSubUnitCard mt-4 @plusDisplayNoneSub"><div class="row " style="display:initial;">          <div class="col-8 offset-2 text-center font-weight-light"><input type="button" value="+" class=" addSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass" disabled style="font-size: 5rem; line-height:normal" /><br><span class="text-capitalize @color text">add sub unit</span></div></div></div>
                 <div class="mx-2rem  subUnitsCard @cardDisplayNoneSub mt-4">
 
 
@@ -215,7 +216,7 @@ Model.UnitTypeList,
 
                             <input type="button" value="+" class=" addSubSubUnit btn m-0 p-0 no-box-shadow @markReadOnlyClass" disabled style="font-size: 5rem; line-height:normal" />
                             <br>
-                            <span class="text-capitalize order-inv-color text">add sub unit</span>
+                            <span class="text-capitalize @color text">add sub unit</span>
                         </div>
                     </div>
                 </div>
@@ -264,7 +265,7 @@ Model.UnitTypeList,
     </div>
 
 
-}
+@*}*@
 <div class="row requestPriceQuote @hideNoQuote">
     <div class="col-md-2">
         <div class="form-group">
@@ -423,7 +424,7 @@ Model.UnitTypeList,
             <div class="col-3">
                 <div class="form-group payment-account">
                     <label class="control-label">Account ID</label>
-                    <input class="form-control-plaintext border-bottom reference-1" disabled vaule="@payments[i].CreditCard.CardNumber" />
+                    <input class="form-control-plaintext border-bottom reference-1" disabled @*vaule="@payments[i].CreditCard.CardNumber"*@ />
                 </div>
             </div>
         }
