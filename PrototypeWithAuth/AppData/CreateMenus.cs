@@ -810,7 +810,7 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
 
-        public static List<MenuItems> CreateAccountingPaymentsSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        public static List<MenuItems> CreateAccountingPaymentsSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses, string payNowCount)
         {
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
@@ -833,7 +833,7 @@ namespace PrototypeWithAuth.AppData
             SidebarMenuItems.Add(new MenuItems()
             {
                 MenuItemsID = 2,
-                Description = "Pay Now",
+                Description = "Pay Now\n[" + payNowCount + "]",
                 Controller = "Requests",
                 Action = "AccountingPayments",
                 RouteValues = new RouteValueDictionary()
