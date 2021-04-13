@@ -480,21 +480,7 @@ namespace PrototypeWithAuth.Controllers
                  
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
-                    switch (requestIndexObject.SidebarType)
-                    {
-                        case AppUtility.SidebarEnum.MonthlyPayment:
-                            break;
-                        case AppUtility.SidebarEnum.PayNow:
-                            break;
-                        case AppUtility.SidebarEnum.PayLater:
-                            break;
-                        case AppUtility.SidebarEnum.SpecifyPayment:
-                            break;
-                        case AppUtility.SidebarEnum.Installments:
-                            break;
-                        case AppUtility.SidebarEnum.StandingOrders:
-                            break;
-                    }
+                    
                     var paymentList = GetPaymentRequests(requestIndexObject.SidebarType);
                     iconList.Add(payNowIcon);
                     iconList.Add(popoverMoreIcon);
