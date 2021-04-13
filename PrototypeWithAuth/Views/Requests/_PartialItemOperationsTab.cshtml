@@ -62,11 +62,11 @@
                     <select id="@parentCategoryID" name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" searchable="Select Category">
                         @if (Model.Request?.Product.ProductSubcategory.ParentCategoryID == 0 || Model.Request?.Product.ProductSubcategory.ParentCategoryID == null)
                         {
-                            <option class="disabled-color" disabled selected>Select a Category</option>
+                            <option class="disabled-color" disabled selected>Select Category</option>
                         }
                         else
                         {
-                            <option class="disabled-color" disabled>Select a Category</option>
+                            <option class="disabled-color" disabled>Select Category</option>
                         }
 
                         @foreach (var category in Model.ParentCategories)
@@ -112,11 +112,11 @@
                     <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" searchable="Select Subcategory">
                         @if (Model.Request?.Product.ProductSubcategoryID == 0 || Model.Request?.Product.ProductSubcategoryID == null)
                         {
-                            <option class="disabled-color" disabled selected>Select a Subcategory</option>
+                            <option class="disabled-color" disabled selected>Select Subcategory</option>
                         }
                         else
                         {
-                            <option class="disabled-color" disabled>Select a Subcategory</option>
+                            <option class="disabled-color" disabled>Select Subcategory</option>
                         }
                         @foreach (var category in Model.ProductSubcategories)
                         {
