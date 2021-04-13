@@ -693,6 +693,16 @@ namespace PrototypeWithAuth.Controllers
                             var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == dateFrom).FirstOrDefault();
                        
                             employeeHour = _context.EmployeeHours.Where(eh => eh.Date.Date == dateFrom.Date && eh.EmployeeID == userID).FirstOrDefault();
+                            if (offDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
+                            {
+                                //employeeHour.Employee = user;
+                                //employeeHour.Employee.SpecialDays -= 1;
+                                user.SpecialDays -= 1;
+                            }
+                            else if(employeeHour?.OffDayTypeID == 4 && offDayTypeID != 4)
+                            {
+                                user.SpecialDays += 1;
+                            }
                             if (employeeHour == null)
                             {
                                 employeeHour = new EmployeeHours
@@ -714,11 +724,7 @@ namespace PrototypeWithAuth.Controllers
                                     RemoveEmployeeBonusDay(employeeHour, user);
                                 }
                                 employeeHour.OffDayTypeID = offDayTypeID;
-                                if(offDayTypeID==4 && employeeHour.OffDayTypeID!=4)
-                                {
-                                    employeeHour.Employee = user;
-                                    employeeHour.Employee.SpecialDays -= 1;
-                                }
+                                
                                 employeeHour.IsBonus = false;
                                 employeeHour.OffDayType = _context.OffDayTypes.Where(odt => odt.OffDayTypeID == offDayTypeID).FirstOrDefault();
                             }
@@ -761,12 +767,22 @@ namespace PrototypeWithAuth.Controllers
                         companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date >= dateFrom && d.Date <= dateTo).ToList();
                         while (dateFrom <= dateTo)
                         {
-                            if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
+                           if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
                             {
-                                var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == dateFrom).FirstOrDefault();
+                               var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(eh => eh.EmployeeID == userID && eh.Date.Date == dateFrom).FirstOrDefault();
                                 if (employeeHours.Count() > 0)
                                 {
                                     employeeHour = employeeHours.Where(eh => eh.Date == dateFrom).FirstOrDefault();
+                                    if (offDayTypeID == 4 && employeeHour?.OffDayTypeID != 4)
+                                    {
+                                        //employeeHour.Employee = user;
+                                        //employeeHour.Employee.SpecialDays -= 1;
+                                        user.SpecialDays -= 1;
+                                    }
+                                    else if (employeeHour?.OffDayTypeID == 4 && offDayTypeID != 4)
+                                    {
+                                        user.SpecialDays += 1;
+                                    }
                                     if (employeeHour == null)
                                     {
                                         employeeHour = new EmployeeHours
@@ -799,11 +815,7 @@ namespace PrototypeWithAuth.Controllers
                                         Date = dateFrom
                                     };
                                 }
-                                if (offDayTypeID == 4 && employeeHour.OffDayTypeID != 4)
-                                {
-                                    employeeHour.Employee = user;
-                                    employeeHour.Employee.SpecialDays -= 1;
-                                }
+                                
                                 if (!alreadyOffDay)
                                 {
                                     if(user.BonusSickDays >=1 || user.BonusVacationDays>=1)
@@ -827,11 +839,8 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         _context.Update(employeeHour);
                                         _context.SaveChanges();
-
                                     }
                                 }
-
-
                             }
                             dateFrom = dateFrom.AddDays(1);
                             _context.SaveChanges();

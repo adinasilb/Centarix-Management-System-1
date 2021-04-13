@@ -114,12 +114,12 @@
                                 <div class="payment-type form-group d-none">
                                     <label class="control-label">Payment Type</label>
                                     @Html.DropDownListFor(vm => vm.Payment.PaymentTypeID,
-            new SelectList(
-            Model.PaymentTypes,
-            "PaymentTypeID",
-            "PaymentTypeDescription"
-            ), "Select Payment Type",
-            new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
+                                        new SelectList(
+                                        Model.PaymentTypes,
+                                        "PaymentTypeID",
+                                        "PaymentTypeDescription"
+                                        ), "Select Payment Type",
+                                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
                                 </div>
                             </div>
                             <div class="col-3 credit-card d-none">
