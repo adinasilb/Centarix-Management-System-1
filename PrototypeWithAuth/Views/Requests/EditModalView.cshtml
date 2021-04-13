@@ -45,6 +45,7 @@
             tabClass = "lab-man-nav-link";
             break;
     }
+    var requestCategoryType = Model.Requests[0].Product?.ProductSubcategory.ParentCategory.CategoryTypeID;
 }
 <div class="modal modal-view right fader on-form-modal @form editModal" aria-labelledby="Request" id="myModal" data-backdrop="false" style="z-index: 5000">
 
@@ -153,7 +154,7 @@
                                     {
                                         <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link @tabClass next-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
                                     }
-                                    @if (Model.Requests[0].RequestStatusID != 7 && Model.SectionType != AppUtility.MenuItems.Operations)
+                                    @if (Model.Requests[0].RequestStatusID != 7 && Model.SectionType != AppUtility.MenuItems.Operations && requestCategoryType!=2)
                                     {
                                         <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link @tabClass next-tab"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
                                     }

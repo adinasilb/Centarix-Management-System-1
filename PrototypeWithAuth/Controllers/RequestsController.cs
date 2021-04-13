@@ -376,7 +376,7 @@ namespace PrototypeWithAuth.Controllers
                                      .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);            
                    
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
                             {
                                 TotalCost = (r.Cost ?? 0)+r.VAT,
                                 ExchangeRate = r.ExchangeRate,
@@ -406,7 +406,7 @@ namespace PrototypeWithAuth.Controllers
             .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
                             {
                                 TotalCost = (r.Cost ?? 0)+r.VAT,
                                 ExchangeRate = r.ExchangeRate,
@@ -455,7 +455,7 @@ namespace PrototypeWithAuth.Controllers
                             buttonText = "Add To All";
                             break;
                     }
-                    viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderBy(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                    viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
                     {
                         TotalCost = (r.Cost ?? 0) + r.VAT,
                         ExchangeRate = r.ExchangeRate,
@@ -498,7 +498,7 @@ namespace PrototypeWithAuth.Controllers
                     var paymentList = GetPaymentRequests(requestIndexObject.SidebarType);
                     iconList.Add(payNowIcon);
                     iconList.Add(popoverMoreIcon);
-                    viewModelByVendor.RequestsByVendor = paymentList.OrderBy(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                    viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
                     {
                         TotalCost = (r.Cost ?? 0) + r.VAT,
                         ExchangeRate = r.ExchangeRate,
@@ -532,7 +532,7 @@ namespace PrototypeWithAuth.Controllers
               .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
 
                     iconList.Add(deleteIcon);
-                    viewModelByVendor.RequestsByVendor = cartRequests.OrderBy(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                    viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
                 {
                   
                     Vendor = r.Product.Vendor,
@@ -4589,6 +4589,8 @@ namespace PrototypeWithAuth.Controllers
                 if (request.IsReceived)
                 {
                     request.RequestStatusID = 3;
+                    request.ApplicationUserReceiverID = _userManager.GetUserId(User);
+                    request.ArrivalDate = DateTime.Now;
                 }
                 else
                 {
