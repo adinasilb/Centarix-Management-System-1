@@ -3920,8 +3920,8 @@ namespace PrototypeWithAuth.Controllers
                 .Where(r => r.RequestStatusID != 7);
             switch (accountingNotificationsEnum)
             {
-                case AppUtility.SidebarEnum.NoInvoice: 
-                    requestsList = requestsList.Where(r => r.HasInvoice == false && (r.Paid ||r.RequestStatusID==3));
+                case AppUtility.SidebarEnum.NoInvoice:
+                    requestsList = requestsList.Where(r => r.HasInvoice == false).Where(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID==3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 5/*installments*/) || (r.PaymentStatusID == 7/*standing orders*/) || (r.PaymentStatusID == 2/*specify payment*/ && r.RequestStatusID == 3));
                     break;
                 case AppUtility.SidebarEnum.DidntArrive:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
