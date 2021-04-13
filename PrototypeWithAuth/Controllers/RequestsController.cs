@@ -4146,10 +4146,21 @@ namespace PrototypeWithAuth.Controllers
 
                     foreach (var request in addInvoiceViewModel.Requests)
                     {
-                        var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
+                        var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r=>r.Payments).FirstOrDefault();
                         RequestToSave.Cost = request.Cost;
                         RequestToSave.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
-                        RequestToSave.HasInvoice = true;
+                        if(request.PaymentStatusID==5)
+                        {
+                            if(request.Payments.Count() ==request.Installments)
+                            {
+                                request.HasInvoice = true;
+                            }
+                        }
+                        else if (request.PaymentStatusID != 7)
+                        {
+                            request.HasInvoice = true;
+                        }
+
                         _context.Update(RequestToSave);
 
                         string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
