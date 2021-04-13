@@ -117,6 +117,7 @@ $(function () {
 				$(".wire").addClass("d-none");
 				$(".bank-check").addClass("d-none");
 				$("#Payment_CheckNumber").attr("disabled", true);
+				$("#Payment_Reference").attr("disabled", true);
 				var url = "/CompanyAccounts/GetAccountsByBank";
 				var newid = "Payment_CreditCardID";
 				$.getJSON(url, { companyAccountID: companyAccountID }, function (data) {
@@ -138,6 +139,7 @@ $(function () {
 				$(".cardNum").attr("disabled", true);
 				$("select.cardNum").empty();
 				$("#Payment_CheckNumber").attr("disabled", false);
+				$("#Payment_Reference").attr("disabled", true);
 				break;
 			case "3":
 				$(".wire").removeClass("d-none");

@@ -64,7 +64,7 @@ $(function () {
 			$(sublistSelector).children("option").each(function (i, option) {
 				option.remove();
 			});
-			var firstitem1 = '<option value="" disabled> Select Subcategory</option>';
+			var firstitem1 = '<option value=""> Select Subcategory</option>';
 			
 			$(sublistSelector).append(firstitem1);
 
