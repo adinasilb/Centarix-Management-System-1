@@ -1637,7 +1637,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product.Vendor)
                 .Include(r=> r.Invoice)
                 .Include(r => r.RequestStatus)
-                .Include(r => r.ApplicationUserCreator).Include(r=>r.PaymentStatus).Include(r=>r.Payments).ThenInclude(p=>p.CompanyAccount)
+                .Include(r => r.ApplicationUserCreator).Include(r=>r.PaymentStatus).Include(r=>r.Payments).ThenInclude(p=>p.CompanyAccount).Include(r=>r.ApplicationUserReceiver)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
             
@@ -1645,7 +1645,7 @@ namespace PrototypeWithAuth.Controllers
                  .Include(r => r.Product.ProductSubcategory).Include(r => r.Product.ProductSubcategory.ParentCategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Include(r => r.ParentRequest)
-                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType)
+                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).Include(r => r.ApplicationUserReceiver)
                     .ToList();
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
@@ -2424,10 +2424,7 @@ namespace PrototypeWithAuth.Controllers
                                     foreach (var r in requests)
                                     {
                                         r.RequestStatusID = 2;
-                                        if (r.PaymentStatusID == 7)
-                                        {
-                                            r.RequestStatusID = 3;
-                                        }
+                                      
                                         if (r.OrderType != AppUtility.OrderTypeEnum.OrderNow.ToString())
                                         {
                                             r.Product = null;
@@ -4828,6 +4825,8 @@ namespace PrototypeWithAuth.Controllers
                                 if (req.PaymentStatusID == 7)
                                 {
                                     req.RequestStatusID = 3;
+                                    req.ApplicationUserReceiverID = _userManager.GetUserId(User);
+                                    req.ArrivalDate = DateTime.Now;
                                 }
 
                                 _context.Update(req);
@@ -4855,6 +4854,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             if (req.PaymentStatusID == 7)
                             {
+                             
                                 var payment = new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) };
                                 if (SaveUsingSessions)
                                 {
