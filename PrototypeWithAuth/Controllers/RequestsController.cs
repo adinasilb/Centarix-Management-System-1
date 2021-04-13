@@ -4589,6 +4589,8 @@ namespace PrototypeWithAuth.Controllers
                 if (request.IsReceived)
                 {
                     request.RequestStatusID = 3;
+                    request.ApplicationUserReceiverID = _userManager.GetUserId(User);
+                    request.ArrivalDate = DateTime.Now;
                 }
                 else
                 {
