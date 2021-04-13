@@ -10,6 +10,7 @@ $('body').off('click').on('click', '.btn-filter', function () {
 	var data = $.fn.BindSelectedFilters();
 	var id = $(this).val();
 	var col = $(this).parent().parent();
+	//var isProprietary = $();
 	var arr;
 	if (col.hasClass('vendor-col')) {
 			arr = data.SelectedVendorsIDs;
