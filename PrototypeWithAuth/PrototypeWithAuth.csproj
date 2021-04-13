@@ -195,6 +195,10 @@
     <Compile Remove="Data\Migrations\20210322100824_ExchangeRate3Decimals.Designer.cs" />
     <Compile Remove="Data\Migrations\20210322101014_ExchangeRate3Decimals.cs" />
     <Compile Remove="Data\Migrations\20210322101014_ExchangeRate3Decimals.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413114532_AddProtocolsModel.cs" />
+    <Compile Remove="Data\Migrations\20210413114532_AddProtocolsModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413114935_AddProtocolsModel.cs" />
+    <Compile Remove="Data\Migrations\20210413114935_AddProtocolsModel.Designer.cs" />
   </ItemGroup>
 
 

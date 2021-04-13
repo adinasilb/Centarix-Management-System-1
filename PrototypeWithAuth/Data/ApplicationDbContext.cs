@@ -18,7 +18,22 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-        //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+        public DbSet<Report> Reports { get; set; }
+        public DbSet<ResourceType> ResourceTypes { get; set; }
+        public DbSet<Article> Articles { get; set; }
+        public DbSet<Material> Materials { get; set; }
+        public DbSet<MaterialCategory> MaterialCategories { get; set; }
+        public DbSet<ProtocolCategory> ProtocolCategories { get; set; }
+        public DbSet<ProtocolSubCategory> ProtocolSubCategories { get; set; }
+        public DbSet<LineType> LineTypes { get; set; }
+        public DbSet<FunctionLine> FunctionLines { get; set; }
+        public DbSet<MaterialProtocol> MaterialProtocols { get; set; }
+        public DbSet<ProtocolComment> ProtocolComments { get; set; }
+        public DbSet<Line> Lines { get; set; }
+        public DbSet<ProtocolInstance> ProtocolInstances { get; set; }
+        public DbSet<Url> Urls { get; set; }
+        public DbSet<FunctionType> FunctionTypes { get; set; }
+        public DbSet<Protocol> Protocols { get; set; }
         public DbSet<LocationRoomType> LocationRoomTypes { get; set; }
         public DbSet<LabPart> LabParts { get; set; }
         public DbSet<CentarixID> CentarixIDs { get; set; }
