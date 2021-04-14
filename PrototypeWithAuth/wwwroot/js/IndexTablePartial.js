@@ -107,6 +107,25 @@ $(".approve-order").off('click').on("click", function (e) {
     }
     return false;
 });
+
+$(".request-favorite").on("click", function (e) {
+    console.log("request favorite");
+    var emptyHeartClass = "request-favorite";
+    var fullHeartClass = " icon-favorite-24px";
+    $.ajax({
+        async: true,
+        url: "/Requests/RequestFavorite/?requestID=" + $(this).attr("value") + "&sectionType=" + $('#masterSectionType').val(),
+        traditional: true,
+        type: "GET",
+        cache: false,
+        success: function (data) {
+            $(this).parent().removeClass(emptyHeartClass);
+            $(this).parent().addClass(emptyHeartClass);
+            $("#loading").hide();
+        }
+    })
+});
+
 $(".create-calibration").off('click').on("click", function (e) {
     e.preventDefault();
 
