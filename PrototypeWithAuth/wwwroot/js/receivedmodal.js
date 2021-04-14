@@ -232,10 +232,49 @@
 	//	//now send a new visual
 	//});
 
-	$(".visual-locations td").on("click", function () {
+	$(".visual-locations td").on("click", function (e) {
 		if (!$(this).hasClass("not-clickable")) {
+			if (e.shiftKey) {
+				var firstSelected = $(".first-selected");
+				var currentBox = $(this);
+				var boxIsPrevious = false;
+				if ($(this).prevAll().filter(firstSelected).length == 0) {
+					boxIsPrevious = true;
+                }
+				if (!firstSelected.parent("tr").is($(this).parent("tr"))) {
+					if ($(this).parent("tr").prevAll().filter(firstSelected.parent("tr")).length == 0) {
+						boxIsPrevious = true;
+                    }
+					firstSelected.parent("tr").nextUntil($(this).parent("tr").next()).each(function () {
+						var end = false;
+						$(this).children("td").each(function () {
+							if (!end) {
+								if ($(this).is(currentBox)) {
+									end = true
+								}
+								else {
+									if (!$(this).hasClass("graduated-table-background-color")) {
+										$(this).addClass('location-selected')
+										$(this).children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
+										$(this).children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
+									}
+								}
+							}
+						})
+					})					
+				}
+				console.log(boxIsPrevious)
+				firstSelected.nextUntil($(this), ".visual-box").each(function () {
+					if (!$(this).hasClass("graduated-table-background-color")) {
+						$(this).addClass('location-selected')
+						$(this).children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
+						$(this).children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
+					}
+				})
+			}
+			$(".first-selected").removeClass("first-selected");
+			$(this).addClass("first-selected");
 			if ($(this).has("i").length) {
-
 				var locationInstanceId = $(this).children('div').first().children("input").first().attr("liid");
 				var lip = $(".liid." + locationInstanceId);
 				console.log("lip val: " + lip.val());
@@ -254,6 +293,7 @@
 
 				}
 				else {
+					$(this).children(".css-checkbox").addClass("first");
 					//console.log("FALSE!");
 					lip.val("true"); //IMPT: sending back the true value to controller to place it here
 
@@ -265,7 +305,9 @@
 					$("#locationSelected-error").replaceWith('');
 				}
 			}
+			
 		}
 	});
+
 
 });
