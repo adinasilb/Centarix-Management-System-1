@@ -209,6 +209,10 @@
     <Compile Remove="Data\Migrations\20210413111752_addFavoriteRequestTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20210414072057_SetUpProtocolsDB.cs" />
     <Compile Remove="Data\Migrations\20210414072057_SetUpProtocolsDB.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210414073227_SetUpProtocolsDB.cs" />
+    <Compile Remove="Data\Migrations\20210414073227_SetUpProtocolsDB.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210414073423_SetUpProtocolsDB.cs" />
+    <Compile Remove="Data\Migrations\20210414073423_SetUpProtocolsDB.Designer.cs" />
   </ItemGroup>
 
 

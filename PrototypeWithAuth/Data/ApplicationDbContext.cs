@@ -38,7 +38,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<ProtocolComment> ProtocolComments { get; set; }
         public DbSet<Line> Lines { get; set; }
         public DbSet<ProtocolInstance> ProtocolInstances { get; set; }
-        public DbSet<Url> Urls { get; set; }
+        public DbSet<Link> Links { get; set; }
         public DbSet<FunctionType> FunctionTypes { get; set; }
         public DbSet<Protocol> Protocols { get; set; }
         public DbSet<LocationRoomType> LocationRoomTypes { get; set; }
