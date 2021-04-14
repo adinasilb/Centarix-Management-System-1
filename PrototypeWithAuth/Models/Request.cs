@@ -76,10 +76,6 @@ namespace PrototypeWithAuth.Models
 
         ///[DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
 
-
-
-        [Display(Name = "Serial Number")]
-        public string SerialNumber { get; set; }
         [Display(Name = "Website")]
         public string URL { get; set; }
         [Range(0, 255, ErrorMessage = "Field must be positive")]

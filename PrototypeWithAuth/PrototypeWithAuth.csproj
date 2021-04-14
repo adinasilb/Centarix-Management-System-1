@@ -203,6 +203,8 @@
     <Compile Remove="Data\Migrations\20210408075729_AddCreditCardTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20210411124959_IncludeVatTrueModel.cs" />
     <Compile Remove="Data\Migrations\20210411124959_IncludeVatTrueModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413120346_AddProductCreationDate.cs" />
+    <Compile Remove="Data\Migrations\20210413120346_AddProductCreationDate.Designer.cs" />
   </ItemGroup>
 
 
