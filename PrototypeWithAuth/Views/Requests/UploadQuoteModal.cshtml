@@ -162,9 +162,12 @@
                         console.log('remove save item')
                         $(".save-item").removeClass("save-item").off('click')
                         console.log("Index");
-                        if ( $(".editModal").length >0) {
+                        if ($(".editModal").length > 0) {
                             $(".render-body").html(data)
-                        }                      
+                        }
+                        else if ($('#masterPageType').val() == "RequestSummary") {
+                            window.location.href = "/Requests/IndexInventory?" + $.fn.getRequestIndexString();
+                        }
                         else {
                             window.location.href = "/Requests/Index"
                         }

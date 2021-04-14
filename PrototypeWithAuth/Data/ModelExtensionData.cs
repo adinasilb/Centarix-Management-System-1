@@ -57,11 +57,88 @@ namespace PrototypeWithAuth.Data
                new PaymentType
                {
                    PaymentTypeID = 2,
-                   PaymentTypeDescription = "Bank Transfer"
+                   PaymentTypeDescription = "Check"
+               },
+               new PaymentType
+               {
+                   PaymentTypeID = 3,
+                   PaymentTypeDescription = "Wire"
                }
            );
 
+            modelBuilder.Entity<CompanyAccount>().HasData(
+                new CompanyAccount
+                {
+                    CompanyAccountID = 1,
+                    CompanyBankName = "Discount"
+                },
+                new CompanyAccount
+                {
+                    CompanyAccountID = 2,
+                    CompanyBankName = "Mercantile"
+                },
+                new CompanyAccount
+                {
+                    CompanyAccountID = 3,
+                    CompanyBankName = "Leumi"
+                },
+                new CompanyAccount
+                {
+                    CompanyAccountID = 4,
+                    CompanyBankName = "Payoneer"
+                }
+            );
 
+            modelBuilder.Entity<CreditCard>().HasData(
+                new CreditCard
+                {
+                    CreditCardID = 1,
+                    CompanyAccountID = 2,
+                    CardNumber = "2543"
+                },
+                new CreditCard
+                {
+                    CreditCardID = 2,
+                    CompanyAccountID = 2,
+                    CardNumber = "4694"
+                },
+                new CreditCard
+                {
+                    CreditCardID = 3,
+                    CompanyAccountID = 2,
+                    CardNumber = "3485"
+                },
+                new CreditCard
+                {
+                    CreditCardID = 4,
+                    CompanyAccountID = 2,
+                    CardNumber = "0054"
+                },
+                new CreditCard
+                {
+                    CreditCardID = 5,
+                    CompanyAccountID = 1,
+                    CardNumber = "4971"
+                },
+                new CreditCard
+                {
+                    CreditCardID = 6,
+                    CompanyAccountID = 1,
+                    CardNumber = "4424"
+                },
+                new CreditCard
+                {
+                    CreditCardID = 7,
+                    CompanyAccountID = 1,
+                    CardNumber = "4432"
+                },
+                new CreditCard
+                {
+                    CreditCardID = 8,
+                    CompanyAccountID = 3,
+                    CardNumber = "7972"
+                }
+           );
            modelBuilder.Entity<CategoryType>().HasData(
                 new CategoryType
                 {
@@ -380,7 +457,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 102,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "PCR Plates",
+                    ProductSubcategoryDescription = "PCR",
                     ImageURL = "/images/css/CategoryImages/PCR.png"
                 },
                 //new ProductSubcategory
@@ -1624,6 +1701,12 @@ namespace PrototypeWithAuth.Data
                          {
                              OffDayTypeID = 3,
                              Description = "Maternity Leave"
+                         }
+                         ,
+                         new OffDayType
+                         {
+                             OffDayTypeID = 4,
+                             Description = "Special Day"
                          }
                   );
             modelBuilder.Entity<EmployeeHoursStatus>().HasData(

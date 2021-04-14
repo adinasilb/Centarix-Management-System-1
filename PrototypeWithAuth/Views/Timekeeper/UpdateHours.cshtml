@@ -9,7 +9,7 @@
             </button>
 
             <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto; " class="modal-padding UpdateHoursForm">
-                <input type="hidden" asp-for="IsForgotToReport" />
+           
                 @{var disabled = false;
                     if (Model.PageType?.Equals("SummaryHours") == true)
                     {

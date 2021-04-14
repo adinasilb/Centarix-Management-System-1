@@ -23,10 +23,15 @@ namespace PrototypeWithAuth.Models
         public string Reference { get; set; }
         //public int RequestID { get; set; }
         //public Request Request { get; set; }
+        public string CheckNumber { get; set; }
         public int RequestID { get; set; }
         public Request Request { get; set; }
         public int? CompanyAccountID { get; set; }
         public CompanyAccount CompanyAccount{ get; set; }
+        public int? CreditCardID { get; set; }
+        public CreditCard CreditCard { get; set; }
+        public int? PaymentTypeID { get; set; }
+        public PaymentType PaymentType { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsPaid { get; set; }
     }

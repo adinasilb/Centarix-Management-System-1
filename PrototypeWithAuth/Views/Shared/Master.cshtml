@@ -1125,7 +1125,33 @@
             $('.' + modalDivClass).html('');
             if ($('.modal').length == 0) {
                 $('.modal-backdrop').remove();
+                $('.body').removeClass('modal-open');
             }
+        }
+        $.fn.BindSelectedFilters = function () {
+            var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedOwner = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
+            return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner }
+        }
+        $("body").on("click", ".popover-close", function (e) {
+            $('[data-toggle="popover"]').popover('dispose');
+            $('body').removeClass('popover-open');
+        });
+
+        $.fn.ClearFilter = function () {
+            $.ajax({
+                async: true,
+                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0",
+                type: 'POST',
+                cache: false,
+                success: function (newData) {
+                    $('#inventoryFilterContent').html(newData);
+                    $('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
+                }
+            });
         }
     </script>
 

@@ -182,16 +182,20 @@ span.choose {
     display: none !important;
 }
 
-.order-inv-form .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
+.order-inv-form .RequestUnitCard div:first-child, .order-inv-form .RequestSubunitCard div:first-child, .order-inv-form .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--order-inv-color) !important;
 }
-.supplier-form .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
+.supplier-form .RequestUnitCard div:first-child, .supplier-form .RequestSubunitCard div:first-child, .supplier-form .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--lab-man-color) !important;
 }
+.accounting-form .RequestUnitCard div:first-child, .accounting-form .RequestSubunitCard div:first-child, .accounting-form .RequestSubsubunitCard div:first-child {
+    border-radius: 18px;
+    border-color: var(--acc-color) !important;
+}
 
-i.fas {
+i .fas {
     color: rgba(150, 150, 150, .9) !important;
     background-color: #fff !important;
     /*border: 0 !important;
@@ -337,9 +341,10 @@ center-horizontally {
     background-color: rgb(232,240,254);
 }
 
-.comment-btn:hover {
+.comment-btn:hover, .moreOffDay-btn:hover {
     background-color: rgb(232,240,254);
 }
+
 
 .sidenav-button:hover {
     background-color: rgba(0,0,0,.08);
@@ -2280,4 +2285,44 @@ table.visual-locations-table td .visual-locations-div {
     font-size: 2.25rem;
     font-weight: 600;
     margin-top: 60px;
+}
+
+.inventory-filter-col {
+
+    min-height: 12.5rem;
+    max-height: 12.5rem;
+    overflow: scroll;
+}
+
+.inventoryFilterDiv .popover {
+
+}
+.filter-button-description {
+    text-overflow: ellipsis;
+    width: 8rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.filter-btn-select {
+    background-color: #2196F3;
+    color:white;
+}
+.custom-small-filter-button {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+.order-inv-form .custom-small-filter-button {
+    color: var(--order-inv-color);
+    border-color: var(--order-inv-color) !important;
+}
+.oper-form .custom-small-button {
+    color: var(--operations-color);
+    border-color: var(--operations-color) !important;
+}
+
+body.modal-open .popover{
+    z-index:5500 !important;
 }

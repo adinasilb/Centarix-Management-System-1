@@ -305,9 +305,16 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 user.BonusSickDays += 1;
                             }
-                            _context.Update(user);
+                          
                         }
+
+                        if(employeeHoursBeingApproved.OffDayTypeID==4)
+                        {
+                            user.SpecialDays += 1;
+                        }
+
                         employeeHoursBeingApproved.OffDayTypeID = null;
+                        _context.Update(user);
                     }
                     if (employeeHours?.PartialOffDayTypeID != null)
                     {

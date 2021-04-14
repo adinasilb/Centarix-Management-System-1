@@ -195,10 +195,18 @@
     <Compile Remove="Data\Migrations\20210322100824_ExchangeRate3Decimals.Designer.cs" />
     <Compile Remove="Data\Migrations\20210322101014_ExchangeRate3Decimals.cs" />
     <Compile Remove="Data\Migrations\20210322101014_ExchangeRate3Decimals.Designer.cs" />
-    <Compile Remove="Data\Migrations\20210413114532_AddProtocolsModel.cs" />
-    <Compile Remove="Data\Migrations\20210413114532_AddProtocolsModel.Designer.cs" />
-    <Compile Remove="Data\Migrations\20210413114935_AddProtocolsModel.cs" />
-    <Compile Remove="Data\Migrations\20210413114935_AddProtocolsModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210408074243_pluraliseCreditCard.cs" />
+    <Compile Remove="Data\Migrations\20210408074243_pluraliseCreditCard.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210408074912_CreditCardsList.cs" />
+    <Compile Remove="Data\Migrations\20210408074912_CreditCardsList.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210408075729_AddCreditCardTable.cs" />
+    <Compile Remove="Data\Migrations\20210408075729_AddCreditCardTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210411124959_IncludeVatTrueModel.cs" />
+    <Compile Remove="Data\Migrations\20210411124959_IncludeVatTrueModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413120346_AddProductCreationDate.cs" />
+    <Compile Remove="Data\Migrations\20210413120346_AddProductCreationDate.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413111752_addFavoriteRequestTable.cs" />
+    <Compile Remove="Data\Migrations\20210413111752_addFavoriteRequestTable.Designer.cs" />
   </ItemGroup>
 
 

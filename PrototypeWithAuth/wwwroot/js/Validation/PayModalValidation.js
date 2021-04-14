@@ -1,17 +1,24 @@
 ﻿$('.payModalForm').validate({
 	rules: {
-        "paymentType": {
-            required: true
+        "Payment.PaymentTypeID": {
+            selectRequired: true
+        },
+        "Payment.CreditCardID": {
+            selectRequired: true
         },
         "Payment.PaymentReferenceDate": {
-            required: true,
-            maxDate: new Date()
+            required: true
+            //maxDate: new Date()
         },
-        "Payment.CompanyAccountId": {
+        "Payment.CompanyAccountID": { 
             selectRequired: true
         },
         "Payment.Reference": {
-            selectRequired: true
+            required: true
+        },
+        "Payment.CheckNumber": {
+            required: true,
+            number: true
         }
 	}
 });

@@ -18,6 +18,9 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+        public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
+        public DbSet<ShareRequest> ShareRequests { get; set; }
         public DbSet<TagProtocol> TagProtocols { get; set; }
         public DbSet<Tags> Tags { get; set; }
         public DbSet<Report> Reports { get; set; }
@@ -93,7 +96,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<UnitParentType> UnitParentTypes { get; set; }
         public DbSet<IpRange> IpRanges { get; set; }
         public DbSet<PhysicalAddress> PhysicalAddresses { get; set; }
-
+        public DbSet<CreditCard> CreditCards { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -263,10 +266,11 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
             modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
-
+            modelBuilder.Entity<Request>().Property(r => r.IncludeVAT).HasDefaultValue(true);
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<ExchangeRate>().Property(e => e.LatestExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
+            modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete
