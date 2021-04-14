@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210414064558_addFavoriteTable")]
+    partial class addFavoriteTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2618,7 +2620,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ProductSubcategoryID = 102,
                             ImageURL = "/images/css/CategoryImages/PCR.png",
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "PCR Plates"
+                            ProductSubcategoryDescription = "PCR"
                         },
                         new
                         {
@@ -3420,6 +3422,33 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasFilter("[EmployeeId] IS NOT NULL");
 
                     b.ToTable("SalariedEmployees");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
+                {
+                    b.Property<int>("ShareRequestID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FromApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ToApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ShareRequestID");
+
+                    b.HasIndex("FromApplicationUserID");
+
+                    b.HasIndex("RequestID");
+
+                    b.HasIndex("ToApplicationUserID");
+
+                    b.ToTable("ShareRequests");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
@@ -4740,6 +4769,25 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
                         .WithOne("SalariedEmployee")
                         .HasForeignKey("PrototypeWithAuth.Models.SalariedEmployee", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("FromApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
