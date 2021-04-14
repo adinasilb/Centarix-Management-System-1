@@ -110,17 +110,19 @@ $(".approve-order").off('click').on("click", function (e) {
 
 $(".request-favorite").on("click", function (e) {
     console.log("request favorite");
-    var emptyHeartClass = "request-favorite";
-    var fullHeartClass = " icon-favorite-24px";
+    var emptyHeartClass = "icon-favorite_border-24px";
+    var fullHeartClass = "icon-favorite-24px";
+    var requestFavorite = $(this);
     $.ajax({
         async: true,
-        url: "/Requests/RequestFavorite/?requestID=" + $(this).attr("value") + "&sectionType=" + $('#masterSectionType').val(),
+        url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&sectionType=" + $('#masterSectionType').val(),
         traditional: true,
         type: "GET",
         cache: false,
         success: function (data) {
-            $(this).parent().removeClass(emptyHeartClass);
-            $(this).parent().addClass(emptyHeartClass);
+            alert(requestFavorite.attr("class"));
+            requestFavorite.children("i").removeClass(emptyHeartClass);
+            requestFavorite.children("i").addClass(fullHeartClass);
             $("#loading").hide();
         }
     })
