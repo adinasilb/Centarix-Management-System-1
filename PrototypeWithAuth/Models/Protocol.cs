@@ -8,5 +8,8 @@ namespace PrototypeWithAuth.Models
 {
     public class Protocol
     {
+        public int ProtocolID { get; set; }
+        public string Name { get; set; }
+
     }
 }

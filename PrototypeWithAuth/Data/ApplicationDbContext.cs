@@ -18,6 +18,8 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<TagProtocol> TagProtocols { get; set; }
+        public DbSet<Tags> Tags { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<ResourceType> ResourceTypes { get; set; }
         public DbSet<Article> Articles { get; set; }
