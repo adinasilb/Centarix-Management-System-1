@@ -10,7 +10,7 @@ using PrototypeWithAuth.Data;
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210414081408_SetUpProtocolsDB")]
+    [Migration("20210414105019_SetUpProtocolsDB")]
     partial class SetUpProtocolsDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -3306,11 +3306,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ApplicationUserCreatorID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ApplicationUserCreatorId")
+                    b.Property<string>("ApplicationUserCreatorID")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -3335,7 +3335,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("ProtocolID");
 
-                    b.HasIndex("ApplicationUserCreatorId");
+                    b.HasIndex("ApplicationUserCreatorID");
 
                     b.HasIndex("ProtocolSubCategoryID");
 
@@ -3366,6 +3366,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApplicationUserCreatorID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CommentTimeStamp")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ProtocolCommentDescription")
                         .HasColumnType("nvarchar(max)");
 
@@ -3373,6 +3379,8 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProtocolCommentID");
+
+                    b.HasIndex("ApplicationUserCreatorID");
 
                     b.ToTable("ProtocolComments");
                 });
@@ -3384,10 +3392,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ApplicationUserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ApplicationUserId")
+                    b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("CurrentLineID")
@@ -3404,7 +3409,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("ProtocolInstanceID");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("ApplicationUserID");
 
                     b.HasIndex("CurrentLineID");
 
@@ -5204,7 +5209,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
                         .WithMany()
-                        .HasForeignKey("ApplicationUserCreatorId")
+                        .HasForeignKey("ApplicationUserCreatorID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.ProtocolSubCategory", "ProtocolSubCategory")
@@ -5220,11 +5225,19 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolComment", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserCreatorID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolInstance", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("ApplicationUserId")
+                        .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Line", "CurrentLine")

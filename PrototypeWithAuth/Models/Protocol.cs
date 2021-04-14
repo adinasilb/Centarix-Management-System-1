@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PrototypeWithAuth.Models
 {
@@ -20,12 +21,13 @@ namespace PrototypeWithAuth.Models
         public string Theory { get; set; }
         public IEnumerable<Link> Urls { get; set; }
         public IEnumerable<MaterialProtocol> MaterialProtocols { get; set; }
-        public IEnumerable<Line> Line { get; set; }
-        public int ApplicationUserCreatorID { get; set; }
+        public IEnumerable<Line> Line { get; set; }        
+        public string ApplicationUserCreatorID { get; set; }
         public ApplicationUser ApplicationUserCreator { get; set; }
         public int ProtocolSubCategoryID { get; set; }
         public ProtocolSubCategory ProtocolSubCategory { get; set; }
         public int ProtocolTypeID { get; set; }
         public ProtocolType ProtocolType { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

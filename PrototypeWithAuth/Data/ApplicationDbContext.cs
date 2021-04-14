@@ -21,6 +21,9 @@ namespace PrototypeWithAuth.Data
        
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
+        public DbSet<ProtocolInstanceResult> ProtocolInstanceResults { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<AuthorProtocol> AuthorProtocols { get; set; }
         public DbSet<ProtocolType> ProtocolTypes { get; set; }
         public DbSet<TagArticle> TagArticles { get; set; }
         public DbSet<TagProtocol> TagProtocols { get; set; }
@@ -289,6 +292,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<FunctionLine>()
               .HasKey(f => new { f.FunctionTypeID, f.LineID });
 
+            modelBuilder.Entity<AuthorProtocol>()
+                .HasKey(a => new { a.AuthorID, a.ProtocolID });
+
             //set up many to many relationshipw
             modelBuilder.Entity<LineType>()
                 .HasOne(l=>l.LineTypeParent)
@@ -302,6 +308,8 @@ namespace PrototypeWithAuth.Data
 
 
             modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
+            modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
+
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

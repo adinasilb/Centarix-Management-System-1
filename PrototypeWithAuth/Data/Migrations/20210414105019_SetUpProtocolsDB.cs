@@ -82,11 +82,19 @@ namespace PrototypeWithAuth.Data.Migrations
                     ProtocolCommentID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProtocolCommmentType = table.Column<string>(nullable: true),
-                    ProtocolCommentDescription = table.Column<string>(nullable: true)
+                    ProtocolCommentDescription = table.Column<string>(nullable: true),
+                    ApplicationUserCreatorID = table.Column<string>(nullable: true),
+                    CommentTimeStamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProtocolComments", x => x.ProtocolCommentID);
+                    table.ForeignKey(
+                        name: "FK_ProtocolComments_AspNetUsers_ApplicationUserCreatorID",
+                        column: x => x.ApplicationUserCreatorID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -227,17 +235,17 @@ namespace PrototypeWithAuth.Data.Migrations
                     VersionNumber = table.Column<string>(nullable: true),
                     ShortDescription = table.Column<string>(nullable: true),
                     Theory = table.Column<string>(nullable: true),
-                    ApplicationUserCreatorID = table.Column<int>(nullable: false),
-                    ApplicationUserCreatorId = table.Column<string>(nullable: true),
+                    ApplicationUserCreatorID = table.Column<string>(nullable: true),
                     ProtocolSubCategoryID = table.Column<int>(nullable: false),
-                    ProtocolTypeID = table.Column<int>(nullable: false)
+                    ProtocolTypeID = table.Column<int>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Protocols", x => x.ProtocolID);
                     table.ForeignKey(
-                        name: "FK_Protocols_AspNetUsers_ApplicationUserCreatorId",
-                        column: x => x.ApplicationUserCreatorId,
+                        name: "FK_Protocols_AspNetUsers_ApplicationUserCreatorID",
+                        column: x => x.ApplicationUserCreatorID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -414,8 +422,7 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     ProtocolInstanceID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ApplicationUserID = table.Column<int>(nullable: false),
-                    ApplicationUserId = table.Column<string>(nullable: true),
+                    ApplicationUserID = table.Column<string>(nullable: true),
                     ProtocolID = table.Column<int>(nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
@@ -425,8 +432,8 @@ namespace PrototypeWithAuth.Data.Migrations
                 {
                     table.PrimaryKey("PK_ProtocolInstances", x => x.ProtocolInstanceID);
                     table.ForeignKey(
-                        name: "FK_ProtocolInstances_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_ProtocolInstances_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -500,9 +507,14 @@ namespace PrototypeWithAuth.Data.Migrations
                 column: "ProductID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProtocolInstances_ApplicationUserId",
+                name: "IX_ProtocolComments_ApplicationUserCreatorID",
+                table: "ProtocolComments",
+                column: "ApplicationUserCreatorID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProtocolInstances_ApplicationUserID",
                 table: "ProtocolInstances",
-                column: "ApplicationUserId");
+                column: "ApplicationUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProtocolInstances_CurrentLineID",
@@ -515,9 +527,9 @@ namespace PrototypeWithAuth.Data.Migrations
                 column: "ProtocolID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Protocols_ApplicationUserCreatorId",
+                name: "IX_Protocols_ApplicationUserCreatorID",
                 table: "Protocols",
-                column: "ApplicationUserCreatorId");
+                column: "ApplicationUserCreatorID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Protocols_ProtocolSubCategoryID",

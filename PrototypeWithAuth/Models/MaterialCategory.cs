@@ -10,6 +10,6 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int MaterialCategoryID { get; set; }
-        public string MaterialDescription { get; set; }
+        public string MaterialCategoryDescription { get; set; }
     }
 }

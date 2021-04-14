@@ -215,6 +215,8 @@
     <Compile Remove="Data\Migrations\20210414073423_SetUpProtocolsDB.Designer.cs" />
     <Compile Remove="Data\Migrations\20210414080205_SetUpProtocolsDB.cs" />
     <Compile Remove="Data\Migrations\20210414080205_SetUpProtocolsDB.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210414081408_SetUpProtocolsDB.cs" />
+    <Compile Remove="Data\Migrations\20210414081408_SetUpProtocolsDB.Designer.cs" />
   </ItemGroup>
 
 
