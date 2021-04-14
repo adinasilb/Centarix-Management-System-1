@@ -182,16 +182,20 @@ span.choose {
     display: none !important;
 }
 
-.order-inv-form .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
+.order-inv-form .RequestUnitCard div:first-child, .order-inv-form .RequestSubunitCard div:first-child, .order-inv-form .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--order-inv-color) !important;
 }
-.supplier-form .RequestUnitCard div:first-child, .RequestSubunitCard div:first-child, .RequestSubsubunitCard div:first-child {
+.supplier-form .RequestUnitCard div:first-child, .supplier-form .RequestSubunitCard div:first-child, .supplier-form .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--lab-man-color) !important;
 }
+.accounting-form .RequestUnitCard div:first-child, .accounting-form .RequestSubunitCard div:first-child, .accounting-form .RequestSubsubunitCard div:first-child {
+    border-radius: 18px;
+    border-color: var(--acc-color) !important;
+}
 
-i.fas {
+i .fas {
     color: rgba(150, 150, 150, .9) !important;
     background-color: #fff !important;
     /*border: 0 !important;
@@ -2317,4 +2321,8 @@ table.visual-locations-table td .visual-locations-div {
 .oper-form .custom-small-button {
     color: var(--operations-color);
     border-color: var(--operations-color) !important;
+}
+
+body.modal-open .popover{
+    z-index:5500 !important;
 }

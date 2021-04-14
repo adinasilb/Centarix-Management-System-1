@@ -61,11 +61,15 @@ $(function () {
 
 		$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
 			console.log(" in json")
+			$(sublistSelector).children("option").each(function (i, option) {
+				option.remove();
+			});
 			var firstitem1 = '<option value=""> Select Subcategory</option>';
-			$(sublistSelector).empty();
+			
 			$(sublistSelector).append(firstitem1);
 
 			$.each(data, function (i, subCategory) {
+				console.log(subCategory.productSubcategoryDescription)
 				var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
 				$(sublistSelector).append(newitem1);
 			});
@@ -1532,19 +1536,7 @@ $(function () {
 			$("#home-btn").popover('toggle');
 
 	});
-	$("#addRequestComment").click(function () {
-		$('[data-toggle="popover"]').popover('dispose');
-		$('#addRequestComment').popover({
-			sanitize: false,
-			placement: 'bottom',
-			html: true,
-			content: function () {
-				return $('#popover-content').html();
-			}
-		});
-		$('#addRequestComment').popover('toggle');
-
-	});
+	
 
 
 

@@ -28,15 +28,15 @@
 }
 
 <div class="operations-item-div">
-    <div class="row">
+    <div class="row mb-0">
         <div class="col-md-4">
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">
                         <label class="control-label">Currency</label>
                         <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
-                            <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                             <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
+                            <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                         </select>
                     </div>
                 </div>

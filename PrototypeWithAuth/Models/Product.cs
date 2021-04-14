@@ -48,5 +48,9 @@ namespace PrototypeWithAuth.Models
         public string CatalogNumber { get; set; }
         public string ProductHebrewName { get; set; }
 
+        [Display(Name = "Serial Number")]
+        public string SerialNumber { get; set; }
+        public DateTime ProductCreationDate { get; set; }
+
     }
 }

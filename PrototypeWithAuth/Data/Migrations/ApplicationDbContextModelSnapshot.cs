@@ -2356,7 +2356,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("CheckNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CompanyAccountID")
+                    b.Property<int?>("CompanyAccountID")
                         .HasColumnType("int");
 
                     b.Property<int?>("CreditCardID")
@@ -2377,7 +2377,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("PaymentReferenceDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PaymentTypeID")
+                    b.Property<int?>("PaymentTypeID")
                         .HasColumnType("int");
 
                     b.Property<string>("Reference")
@@ -2522,6 +2522,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ProductComment")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("ProductCreationDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
                     b.Property<string>("ProductHebrewName")
                         .HasColumnType("nvarchar(max)");
 
@@ -2540,6 +2545,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("ReorderLevel")
                         .HasColumnType("int");
+
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UnitsInOrder")
                         .HasColumnType("int");
@@ -2588,7 +2596,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ProductSubcategoryID = 102,
                             ImageURL = "/images/css/CategoryImages/PCR.png",
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "PCR Plates"
+                            ProductSubcategoryDescription = "PCR"
                         },
                         new
                         {
@@ -3143,7 +3151,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IncludeVAT")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<long?>("Installments")
                         .HasColumnType("bigint");
@@ -3192,9 +3202,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("RequestStatusID")
                         .HasColumnType("int");
-
-                    b.Property<string>("SerialNumber")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SubProjectID")
                         .HasColumnType("int");
@@ -3391,6 +3398,33 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasFilter("[EmployeeId] IS NOT NULL");
 
                     b.ToTable("SalariedEmployees");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
+                {
+                    b.Property<int>("ShareRequestID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FromApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ToApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ShareRequestID");
+
+                    b.HasIndex("FromApplicationUserID");
+
+                    b.HasIndex("RequestID");
+
+                    b.HasIndex("ToApplicationUserID");
+
+                    b.ToTable("ShareRequests");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
@@ -4531,8 +4565,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.CompanyAccount", "CompanyAccount")
                         .WithMany()
                         .HasForeignKey("CompanyAccountID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.CreditCard", "CreditCard")
                         .WithMany()
@@ -4547,8 +4580,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.PaymentType", "PaymentType")
                         .WithMany()
                         .HasForeignKey("PaymentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany("Payments")
@@ -4699,6 +4731,25 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
                         .WithOne("SalariedEmployee")
                         .HasForeignKey("PrototypeWithAuth.Models.SalariedEmployee", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("FromApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

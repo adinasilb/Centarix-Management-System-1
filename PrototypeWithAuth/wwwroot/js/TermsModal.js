@@ -106,14 +106,18 @@ $(function () {
 	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
 	$( ".paymentType").off("change").change( function (e) {
 		console.log("changepayment type")
+		$(".payment-date").removeClass("d-none")
 		var paymentTypeID = $(this).val();
 		var companyAccountID = $("#bankName").val();
 		console.log(companyAccountID)
 		switch (paymentTypeID) {
 			case "1":
 				$(".credit-card").removeClass("d-none");
+				$(".cardNum").attr("disabled", false);
 				$(".wire").addClass("d-none");
 				$(".bank-check").addClass("d-none");
+				$("#Payment_CheckNumber").attr("disabled", true);
+				$("#Payment_Reference").attr("disabled", true);
 				var url = "/CompanyAccounts/GetAccountsByBank";
 				var newid = "Payment_CreditCardID";
 				$.getJSON(url, { companyAccountID: companyAccountID }, function (data) {
@@ -132,19 +136,23 @@ $(function () {
 				$(".bank-check").removeClass("d-none");
 				$(".wire").addClass("d-none");
 				$(".credit-card").addClass("d-none");
+				$(".cardNum").attr("disabled", true);
 				$("select.cardNum").empty();
 				$("#Payment_CheckNumber").attr("disabled", false);
+				$("#Payment_Reference").attr("disabled", true);
 				break;
 			case "3":
 				$(".wire").removeClass("d-none");
 				$(".bank-check").addClass("d-none");
 				$(".credit-card").addClass("d-none");
+				$(".cardNum").attr("disabled", true);
 				$("#Payment_Reference").attr("disabled", false);
 				$("select.cardNum").empty();
         }
 		return false;
 	});
 	$("#bankName").off("change").change(function (e) {
+		$('.payment-type').removeClass('d-none');
 		var companyAccountID = $(this).val();
 		if ($("select.paymentType").val() == "1") {
 			var url = "/CompanyAccounts/GetAccountsByBank";
