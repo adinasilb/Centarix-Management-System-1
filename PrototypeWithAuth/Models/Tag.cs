@@ -6,11 +6,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Report
+    public class Tag
     {
         [Key]
-        public int ReportID { get; set; }
-        public string ReportDescription { get; set; }
-
+        public int TagID { get; set; }
+        public string TagDescription { get; set; }
     }
 }

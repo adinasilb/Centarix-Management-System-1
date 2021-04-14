@@ -6,11 +6,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PrototypeWithAuth.Models
 {
-    public class Report
+    public class ProtocolType
     {
         [Key]
-        public int ReportID { get; set; }
-        public string ReportDescription { get; set; }
-
+        public int ProtocolTypeID { get; set; }
+        public string ProtocolTypeDescription { get; set; }
     }
 }

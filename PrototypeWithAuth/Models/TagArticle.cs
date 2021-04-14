@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class MaterialProtocol
+    public class TagArticle
     {
+
         [Key, Column(Order = 1)]
-        public int ProtocolID { get; set; }
-        public Protocol Protocol { get; set; }
+        public int ArticleID { get; set; }
+        public Article Article { get; set; }
         [Key, Column(Order = 2)]
-        public int MaterialID { get; set; }
-        public Material Material { get; set; }
+        public int TagID { get; set; }
+        public Tag Tag { get; set; }
     }
 }

@@ -207,6 +207,8 @@
     <Compile Remove="Data\Migrations\20210413120346_AddProductCreationDate.Designer.cs" />
     <Compile Remove="Data\Migrations\20210413111752_addFavoriteRequestTable.cs" />
     <Compile Remove="Data\Migrations\20210413111752_addFavoriteRequestTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210414072057_SetUpProtocolsDB.cs" />
+    <Compile Remove="Data\Migrations\20210414072057_SetUpProtocolsDB.Designer.cs" />
   </ItemGroup>
 
 

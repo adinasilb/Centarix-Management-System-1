@@ -18,11 +18,13 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-        //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+       
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
+        public DbSet<ProtocolType> ProtocolTypes { get; set; }
+        public DbSet<TagArticle> TagArticles { get; set; }
         public DbSet<TagProtocol> TagProtocols { get; set; }
-        public DbSet<Tags> Tags { get; set; }
+        public DbSet<Tag> Tags { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<ResourceType> ResourceTypes { get; set; }
         public DbSet<Article> Articles { get; set; }
@@ -271,6 +273,35 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ExchangeRate>().Property(e => e.LatestExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
+
+            /*PROTOCOLS*/
+            ///set up composite keys
+
+            modelBuilder.Entity<TagProtocol>()
+              .HasKey(t => new { t.TagID, t.ProtocolID });
+
+            modelBuilder.Entity<TagArticle>()
+              .HasKey(t => new { t.ArticleID, t.TagID });
+
+            modelBuilder.Entity<MaterialProtocol>()
+              .HasKey(m => new { m.MaterialID, m.ProtocolID });
+
+            modelBuilder.Entity<FunctionLine>()
+              .HasKey(f => new { f.FunctionTypeID, f.LineID });
+
+            //set up many to many relationshipw
+            modelBuilder.Entity<LineType>()
+                .HasOne(l=>l.LineTypeParent)
+                .WithMany()
+                .HasForeignKey(ltp => ltp.LineTypeParentID);
+
+            modelBuilder.Entity<LineType>()
+               .HasOne(lt => lt.LineTypeChild)
+               .WithMany()
+               .HasForeignKey(ltc => ltc.LineTypeChildID);
+
+
+            modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete
