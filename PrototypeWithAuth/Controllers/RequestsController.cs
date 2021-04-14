@@ -4980,7 +4980,7 @@ namespace PrototypeWithAuth.Controllers
             InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, isProprietary: isProprietary);
             return PartialView(inventoryFilterViewModel);
         }
-        private InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters =null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
+        private InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters =null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, bool isProprietary = false)
         {
             int categoryType = sectionType == AppUtility.MenuItems.Requests ? 1 : 2;
             if(selectedFilters !=null)
