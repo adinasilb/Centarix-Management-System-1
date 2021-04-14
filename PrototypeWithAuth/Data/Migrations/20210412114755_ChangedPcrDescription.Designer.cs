@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210412114755_ChangedPcrDescription")]
+    partial class ChangedPcrDescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2522,11 +2524,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ProductComment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ProductCreationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
                     b.Property<string>("ProductHebrewName")
                         .HasColumnType("nvarchar(max)");
 
@@ -2545,9 +2542,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("ReorderLevel")
                         .HasColumnType("int");
-
-                    b.Property<string>("SerialNumber")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UnitsInOrder")
                         .HasColumnType("int");
@@ -3202,6 +3196,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("RequestStatusID")
                         .HasColumnType("int");
+
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SubProjectID")
                         .HasColumnType("int");

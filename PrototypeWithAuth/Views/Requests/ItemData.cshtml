@@ -37,6 +37,7 @@
             break;
 
     }
+    var requestCategoryType = Model.Requests[0].Product?.ProductSubcategory.ParentCategory.CategoryTypeID;
 }
 
 <div class="container-fluid div-tabs no-box-shadow p-0">
@@ -55,7 +56,7 @@
         </div>
     }
     <div class="tab-content">
-        @if (Model.SectionType == AppUtility.MenuItems.Operations)
+        @if (Model.SectionType == AppUtility.MenuItems.Operations || (Model.SectionType == AppUtility.MenuItems.Accounting && requestCategoryType == 2))
         {
             <div id="item" class="tab-pane fade in @showItem" value="1">
                 @{await Html.RenderPartialAsync("_ItemTabOperations", Model); }
@@ -73,7 +74,7 @@
                 @{await Html.RenderPartialAsync("_LocationTab", Model); }
             </div>
         }
-        @if (!Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.isProprietary && Model.SectionType != AppUtility.MenuItems.Operations)
+        @if (!Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.isProprietary && Model.SectionType != AppUtility.MenuItems.Operations && requestCategoryType!=2)
         {
             <div id="price" class="tab-pane fade @showPrice" value="3">
                 @{await Html.RenderPartialAsync("_PriceTab", Model); }

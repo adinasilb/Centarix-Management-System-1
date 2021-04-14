@@ -457,7 +457,7 @@ namespace PrototypeWithAuth.Data
                 {
                     ProductSubcategoryID = 102,
                     ParentCategoryID = 1,
-                    ProductSubcategoryDescription = "PCR Plates",
+                    ProductSubcategoryDescription = "PCR",
                     ImageURL = "/images/css/CategoryImages/PCR.png"
                 },
                 //new ProductSubcategory
