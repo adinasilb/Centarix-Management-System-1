@@ -476,7 +476,7 @@ namespace PrototypeWithAuth.AppData
                 },
                 Classes = menuClass,
                 IconName = "icon-add_circle_outline-24px1",
-                AjaxLink = "add-item"
+                AjaxLink = "add-item-sidebar"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1143,7 +1143,7 @@ namespace PrototypeWithAuth.AppData
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-add_circle_outline-24px1",
-                AjaxLink = "add-item"               
+                AjaxLink = "add-item-sidebar"               
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()

@@ -7,9 +7,12 @@ $('#invFilterPopover').on('shown.bs.popover', function () {
     $('body').addClass('popover-open');
 })
 $('body').off('click').on('click', '.btn-filter', function () {
+	//alert("in filter function")
 	var data = $.fn.BindSelectedFilters();
 	var id = $(this).val();
 	var col = $(this).parent().parent();
+	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+	console.log('status ' + $(".request-status-id").attr("value"));
 	var arr;
 	if (col.hasClass('vendor-col')) {
 			arr = data.SelectedVendorsIDs;
@@ -37,7 +40,7 @@ $('body').off('click').on('click', '.btn-filter', function () {
 		data: data,
 		traditional:true,
 		async: true,
-		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters,
+		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&isProprietary="+ isProprietary,
 		type: 'POST',
 		cache: false,
 		success: function (newData) {
@@ -163,7 +166,8 @@ $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) 
 }); 
 
 $('body').on('click', '.clear-filters', function () {
-	$.fn.ClearFilter();
+	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+	$.fn.ClearFilter(isProprietary);
 });
 
 

@@ -93,7 +93,7 @@ namespace PrototypeWithAuth.Controllers
 
             var viewmodel = await GetIndexViewModel(requestIndexObject);
             SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
-            viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
+            //viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
 
             if (ViewBag.ErrorMessage != null)
             {
@@ -349,7 +349,8 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
             requestIndexViewModel.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
-            requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters);
+            bool isProprietary = requestIndexObject.RequestStatusID == 7 ? true : false;
+            requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, isProprietary: isProprietary);
             return requestIndexViewModel;
         }
         [Authorize(Roles = "Requests, LabManagement, Operations")]
@@ -5008,12 +5009,12 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters, int numFilters)
+        public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters, int numFilters, bool isProprietary)
         {
-            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters);
+            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, isProprietary: isProprietary);
             return PartialView(inventoryFilterViewModel);
         }
-        private InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
+        private InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, bool isProprietary = false)
         {
             int categoryType = sectionType == AppUtility.MenuItems.Requests ? 1 : 2;
             if (selectedFilters != null)
@@ -5023,8 +5024,9 @@ namespace PrototypeWithAuth.Controllers
                     //Types = _context.CategoryTypes.Where(ct => !selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
                     Owners = _context.Employees.Where(o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
                     Locations = _context.LocationTypes.Where(l => l.Depth == 0).Where(l => !selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID)).ToList(),
-                    Categories = _context.ParentCategories.Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID)).ToList(),
-                    Subcategories = _context.ProductSubcategories.Distinct().Where(v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
+                    Categories = _context.ParentCategories.Where(c => c.CategoryTypeID == categoryType && c.isProprietary == isProprietary).Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID)).ToList(),
+                    Subcategories = _context.ProductSubcategories.Distinct().Where(sc => sc.ParentCategory.CategoryTypeID == categoryType && sc.ParentCategory.isProprietary == isProprietary)
+                        .Where(v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
                     Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType)).Where(v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
                     //SelectedTypes = _context.CategoryTypes.Where(ct => selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
                     SelectedVendors = _context.Vendors.Where(v => selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
@@ -5052,8 +5054,8 @@ namespace PrototypeWithAuth.Controllers
                     Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType)).ToList(),
                     Owners = _context.Employees.ToList(),
                     Locations = _context.LocationTypes.Where(r => r.Depth == 0).ToList(),
-                    Categories = _context.ParentCategories.ToList(),
-                    Subcategories = _context.ProductSubcategories.Distinct().ToList(),
+                    Categories = _context.ParentCategories.Where(c => c.CategoryTypeID == categoryType && c.isProprietary == isProprietary).ToList(),
+                    Subcategories = _context.ProductSubcategories.Distinct().Where(sc => sc.ParentCategory.CategoryTypeID == categoryType && sc.ParentCategory.isProprietary == isProprietary).ToList(),
                     //SelectedTypes = new List<CategoryType>(),
                     SelectedVendors = new List<Vendor>(),
                     SelectedOwners = new List<Employee>(),
@@ -5066,9 +5068,7 @@ namespace PrototypeWithAuth.Controllers
                 };
             }
         }
-
-
-
+        
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _CartTotalModal(int requestID, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)

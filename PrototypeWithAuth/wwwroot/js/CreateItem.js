@@ -119,6 +119,7 @@
     })
 
     $('.add-item').off('click').on('click', function (e) {
+       
         var newIndex = $(this).attr('data-val');
         var currency = $("#currency").val();
         var subcategoryID = $("#Requests_0__Product_ProductSubcategory_ProductSubcategoryID").val();

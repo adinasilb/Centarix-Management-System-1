@@ -320,7 +320,7 @@
                                 <a href="@Url.ActionLink(sidebarNavItem.Action, sidebarNavItem.Controller, sidebarNavItem.RouteValues)" class="text-black @sidebarNavItem.AjaxLink">
                                     <li class="nav-item sidenav-button @sidebarNavItem.Classes side-menu px-2" style="@liMargins">
                                         <i class="@sidebarNavItem.IconName" style="font-size: 1.75rem; "></i>
-                                        <br /><span>@Html.Raw(sidebarNavItem.Description.Replace("\n","<br/>"))</span><br />
+                                        <br /><span class="sidebarTitle @sidebarNavItem.MenuItemsID">@Html.Raw(sidebarNavItem.Description.Replace("\n","<br/>"))</span><br />
                                         <span class="hidden sidebarCount @sidebarNavItem.MenuItemsID"></span>
                                     </li>
                                 </a>
@@ -475,7 +475,7 @@
         });
 
 
-    //    $(".add-item").on("click", function (e) {
+    //    $(".add-item-sidebar").on("click", function (e) {
     //        e.preventDefault();
     //        console.log("item click")
     //        $(this).attr("href", "");
