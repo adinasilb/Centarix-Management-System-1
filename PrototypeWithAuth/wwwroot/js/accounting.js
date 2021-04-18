@@ -165,7 +165,7 @@
 		$.fn.CallModal(itemUrl, "add-invoice");
 	});
 
-		$(".more, .accNotification").off('click').click(function () {
+	$(".more, .accNotification").off('click').click(function () {
 		var val = $(this).val();
 		$('[data-toggle="popover"]').popover('dispose');
 		$(this).popover({

@@ -59,20 +59,37 @@
 
                             if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && Model.ChildrenLocationInstances[z].IsEmptyShelf)
                             {
+                                var description = "";
+                                if (Model.ChildrenLocationInstances[z].LocationTypeID == 201)
+                                {
+                                    description = Model.ChildrenLocationInstances[z].LocationInstanceName;
+                                }
+                                else
+                                {
+                                    description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
+                                }
                                 classes += " open-new-visual";
                                 <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
                                     <div>
                                         @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID })
                                         <div class="row-1"><i class="@iconClass"></i></div>
                                         <div class="row-2 text-left">
-                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, description + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
                                         </div>
                                     </div>
                                 </td>
                             }
                             else if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && !Model.ChildrenLocationInstances[z].IsEmptyShelf)
                             {
-
+                                var description = "";
+                                if(Model.ChildrenLocationInstances[z].LocationTypeID == 201)
+                                {
+                                    description = Model.ChildrenLocationInstances[z].LocationInstanceName;
+                                }
+                                else
+                                {
+                                    description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
+                                }
                                 classes += " open-new-visual";
 
                                 <td class="@outerClass not-clickable" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
@@ -82,16 +99,16 @@
                                             <i class=@*"@iconClass"*@></i>
                                         </div>
                                         <div class="row-2 text-left">
-                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, description + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
                                         </div>
                                     </div>
                                 </td>
                             }
                             else if (Model.ChildrenLocationInstances[z].IsFull)
                             {
-                                var backgroundClass = " order-inv-filter ";
+                                var backgroundClass = "graduated-table-background-color  ";
 
-                                <td class="@outerClass location-selected" style="padding:0px;  ">
+                                <td class="@outerClass location-selected @backgroundClass" style="padding:0px;  ">
                                     <div class="">
                                         @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @liid = liID, @class = @classes })
 
@@ -108,6 +125,15 @@
                             }
                             else
                             {
+                                var description = "";
+                                if (Model.ChildrenLocationInstances[z].LocationTypeID == 503)
+                                {
+                                    description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
+                                }
+                                else
+                                {
+                                    description = Model.ChildrenLocationInstances[z].Place;
+                                }
                                 <td class="@outerClass" style="padding:0px;">
                                     <div>
                                         @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @liid = liID, @class = @classes })
@@ -115,7 +141,7 @@
                                             <i class="@iconClass"></i>
                                         </div>
                                         <div class="row-2 text-left">
-                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass })
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, description+ " ", htmlAttributes: new { @class = labelClass })
                                         </div>
                                     </div>
                                 </td>
@@ -145,15 +171,33 @@
                                 outerClass = "visual-box " + is12X12Class;
                             }
                             var labelClass = "tiny-label-font-size m-0";
+                            var description = "";
+                            if (Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 503)
+                            {
+                                description = Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceAbbrev;
+                            }
+                            else if(Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 205 || Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 104)
+                            {
+
+                                description = Model.RequestChildrenLocationInstances[z].LocationInstance.Place;
+                            }
+                            else
+                            {
+                                description = Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceName;
+                            }
 
                             if (Model.RequestChildrenLocationInstances[z].LocationInstance.IsFull || Model.RequestChildrenLocationInstances[z].LocationInstance.ContainsItems)
                             {
-                                var backgroundColor = " order-inv-filter ";
-                                if (!Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                                var backgroundColor = "  ";
+                                if (!Model.RequestChildrenLocationInstances[z].IsThisRequest && Model.RequestChildrenLocationInstances[z].LocationInstance.IsFull )
                                 {
-                                    backgroundColor = " graduated-table-filter ";
+                                    backgroundColor = " graduated-table-background-color ";
                                 }
-                                <td class="@outerClass  not-clickable location-selected @backgroundColor" style="padding:0px;  ">
+                                else if(!Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                                {
+                                    backgroundColor = " white ";
+                                }
+                                <td class="@outerClass  not-clickable location-selected @backgroundColor  " style="padding:0px;  ">
                                     <div class="">
                                         @Html.CheckBoxFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, htmlAttributes: new { @checked = true, @disabled = "disabled", @liid = liID, @class = @classes })
 
@@ -163,21 +207,22 @@
                                         </div>
 
                                         <div class="row-2 text-left">
-                                            @Html.LabelFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, Model.RequestChildrenLocationInstances[z].LocationInstance.Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                            @Html.LabelFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, description + " ", htmlAttributes: new { @class = labelClass, @value = "" })
                                         </div>
                                     </div>
                                 </td>
                             }
                             else
                             {
+                               
                                 <td class="@outerClass not-clickable" style="padding:0px;">
                                     <div>
                                         @Html.CheckBoxFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, htmlAttributes: new { @checked = false, @liid = liID, @class = @classes })
                                         <div class="row-1">
-                                            <i class="@iconClass"></i>
+                                         
                                         </div>
                                         <div class="row-2 text-left">
-                                            @Html.LabelFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, Model.RequestChildrenLocationInstances[z].LocationInstance.Place + " ", htmlAttributes: new { @class = labelClass })
+                                            @Html.LabelFor(m => m.RequestChildrenLocationInstances[z].LocationInstance.IsFull, description + " ", htmlAttributes: new { @class = labelClass })
                                         </div>
                                     </div>
                                 </td>

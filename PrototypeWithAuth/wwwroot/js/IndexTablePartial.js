@@ -185,19 +185,19 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
    }
 
     $.ajax({
-    contentType: contentType,
-    processData: processType,
-    async: true,
-    url: url,
-    data: formdata,
-    traditional: true,
-    type: type,
-    cache: false,
-    success: function (data) {
-    $(viewClass).html(data);
-    $("#loading").hide();
-    return true;
-}
+        contentType: contentType,
+        processData: processType,
+        async: true,
+        url: url,
+        data: formdata,
+        traditional: true,
+        type: type,
+        cache: false,
+        success: function (data) {
+        $(viewClass).html(data);
+        $("#loading").hide();
+        return true;
+    }
     });
 
     return false;

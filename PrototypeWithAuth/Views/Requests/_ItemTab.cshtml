@@ -117,12 +117,12 @@
         <div class="form-group sublist">
             <label asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
             @Html.DropDownListFor(vm => vm.Requests[0].Product.ProductSubcategory.ProductSubcategoryID,
-new SelectList(
-Model.ProductSubcategories,
-"ProductSubcategoryID",
-"ProductSubcategoryDescription"
-), "Select Sub Category",
-new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
+                new SelectList(
+                Model.ProductSubcategories,
+                "ProductSubcategoryID",
+                "ProductSubcategoryDescription"
+                ), "Select Sub Category",
+                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext " + markReadOnlyClass, @id = "sublist", @searchable = "Select Sub Category" })
             <input type="hidden" asp-for="Requests[0].Product.ProductSubcategory.ProductSubcategoryID" disabled class="proprietryHidenCategory" />
             <span asp-validation-for="Requests[0].Product.ProductSubcategoryID" class="text-danger-centarix"></span>
         </div>
@@ -178,7 +178,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 <div class="form-group">
                     @* IN MIDDLE *@
                     <label asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="control-label"></label>
-                    <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom @companyIDCategories" disabled/>
+                    <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " disabled/>
                     @*don't need a validation here because you it's not saving*@
                 </div>
             </div>
@@ -260,7 +260,8 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
             </div>
         </div>
-        <div class="row">
+        @if (request.HasInvoice || request.ParentRequest?.SupplierOrderNumber != null)
+        {<div class="row">
             @if (request.HasInvoice)
             {
                 <div class="col-md-3 ">
@@ -270,7 +271,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 </div>
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].Invoice.InvoiceDate" class="control-label"></label>
-                    <input asp-for="Requests[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" />
+                    <input asp-for="Requests[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" asp-format="{0:dd/MM/yyyy}"  />
                     <span asp-validation-for="Requests[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
                 </div>
             }
@@ -289,6 +290,21 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             }
 
         </div>
+        }
+        @if(request.RequestStatusID == 3)
+        {
+        <div class="row">
+            <div class="col-md-3 ">
+                <label asp-for="Requests[0].ArrivalDate" class="control-label"></label>
+                <input asp-for="Requests[0].ArrivalDate" class="form-control-plaintext border-bottom" disabled type="text" />
+            </div>
+            <div class="col-md-3">
+                <label class="control-label">Receiver</label>
+                <input type="text" class="form-control-plaintext border-bottom" disabled value="@Model.Requests[0].ApplicationUserReceiver.FirstName @Model.Requests[0].ApplicationUserReceiver.LastName"/>
+                <input type="hidden" asp-for="Requests[0].ApplicationUserReceiverID" />
+            </div>
+        </div>
+        }
     }
     else
     {

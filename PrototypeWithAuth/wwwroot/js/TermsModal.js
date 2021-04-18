@@ -106,34 +106,69 @@ $(function () {
 	//since the paymentType field is dynamically created, the function needs to be bound the payments-table b/c js binds server-side
 	$( ".paymentType").off("change").change( function (e) {
 		console.log("changepayment type")
+		$(".payment-date").removeClass("d-none")
 		var paymentTypeID = $(this).val();
-		var url = "/CompanyAccounts/GetAccountsByPaymentType";
-		var newid = "Payment_CompanyAccountID";
-		$.getJSON(url, { paymentTypeID: paymentTypeID }, function (data) {
-			var firstitem1 = '<option value="">Select</option>';
-			$("#" + newid).empty();
-			$("#" + newid).append(firstitem1);
-
-			$.each(data, function (i, companyAccount) {
-				var newitem1 = '<option value="' + companyAccount.companyAccountID + '">' + companyAccount.companyAccountNum + '</option>';
-				$("#" + newid).append(newitem1);
-			});
-			$("#" + newid).materialSelect();
-
-			if(paymentTypeID=="2")
-			{
-				$(".payment-reference").removeClass("d-none");
-				$("#Payment_Reference").attr("disabled", false);
-			}
-			else
-			{
-				$(".payment-reference").addClass("d-none");
+		var companyAccountID = $("#bankName").val();
+		console.log(companyAccountID)
+		switch (paymentTypeID) {
+			case "1":
+				$(".credit-card").removeClass("d-none");
+				$(".cardNum").attr("disabled", false);
+				$(".wire").addClass("d-none");
+				$(".bank-check").addClass("d-none");
+				$("#Payment_CheckNumber").attr("disabled", true);
 				$("#Payment_Reference").attr("disabled", true);
-			}
-			//$("#" + newid).rules("add",{selectRequired : true})
-			return false;
-		});
+				var url = "/CompanyAccounts/GetAccountsByBank";
+				var newid = "Payment_CreditCardID";
+				$.getJSON(url, { companyAccountID: companyAccountID }, function (data) {
+					var firstitem1 = '<option value="">Select</option>';
+					$("#" + newid).empty();
+					$("#" + newid).append(firstitem1);
+
+					$.each(data, function (i, creditCard) {
+						var newitem1 = '<option value="' + creditCard.creditCardID + '">' + creditCard.cardNumber + '</option>';
+						$("#" + newid).append(newitem1);
+					});
+					$("#" + newid).materialSelect();
+				});
+				break;
+			case "2":
+				$(".bank-check").removeClass("d-none");
+				$(".wire").addClass("d-none");
+				$(".credit-card").addClass("d-none");
+				$(".cardNum").attr("disabled", true);
+				$("select.cardNum").empty();
+				$("#Payment_CheckNumber").attr("disabled", false);
+				$("#Payment_Reference").attr("disabled", true);
+				break;
+			case "3":
+				$(".wire").removeClass("d-none");
+				$(".bank-check").addClass("d-none");
+				$(".credit-card").addClass("d-none");
+				$(".cardNum").attr("disabled", true);
+				$("#Payment_Reference").attr("disabled", false);
+				$("select.cardNum").empty();
+        }
 		return false;
+	});
+	$("#bankName").off("change").change(function (e) {
+		$('.payment-type').removeClass('d-none');
+		var companyAccountID = $(this).val();
+		if ($("select.paymentType").val() == "1") {
+			var url = "/CompanyAccounts/GetAccountsByBank";
+			var newid = "Payment_CreditCardID";
+			$.getJSON(url, { companyAccountID: companyAccountID }, function (data) {
+				var firstitem1 = '<option value="">Select</option>';
+				$("#" + newid).empty();
+				$("#" + newid).append(firstitem1);
+
+				$.each(data, function (i, creditCard) {
+					var newitem1 = '<option value="' + creditCard.creditCardID + '">' + creditCard.cardNumber + '</option>';
+					$("#" + newid).append(newitem1);
+				});
+				$("#" + newid).materialSelect();
+			});
+        }
 	});
 
 	//$(".modal").on('change', "#Paid", function () {

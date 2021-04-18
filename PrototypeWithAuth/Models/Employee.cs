@@ -84,9 +84,11 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Roll Over Vacation Days")]
         public double RollOverVacationDays { get; set; }
         [Display(Name = "Bonus Sick Days")]
-        public double BonusSickDays { get; set; }
+        public double BonusSickDays { get { return 0; } set {; } }
         [Display(Name = "Bonus Vacation Days")]
-        public double BonusVacationDays { get; set; }
+        public double BonusVacationDays { get { return 0; } set {; } }
+        [Display(Name = "Special Days")]
+        public double SpecialDays { get; set; }
         private double _VacationDaysPerMonth;
         public double VacationDaysPerMonth
         {

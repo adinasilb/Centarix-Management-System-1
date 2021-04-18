@@ -15,11 +15,11 @@ namespace PrototypeWithAuth.Controllers
         {
             _context = context;
         }
-        public JsonResult GetAccountsByPaymentType(int PaymentTypeID)
+        public JsonResult GetAccountsByBank(int CompanyAccountID)
         {
-            var companyAccountLists = _context.CompanyAccounts
-                .Select(ca => new { ca.CompanyAccountID, ca.CompanyAccountNum, ca.PaymentTypeID })
-                .Where(ca => ca.PaymentTypeID == PaymentTypeID).ToList();
+            var companyAccountLists = _context.CreditCards
+                .Select(cc => new { cc.CreditCardID, cc.CardNumber, cc.CompanyAccountID})
+                .Where(cc => cc.CompanyAccountID == CompanyAccountID).ToList();
             return Json(companyAccountLists);
         }
     }

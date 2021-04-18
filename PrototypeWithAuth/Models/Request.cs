@@ -76,10 +76,6 @@ namespace PrototypeWithAuth.Models
 
         ///[DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
 
-
-
-        [Display(Name = "Serial Number")]
-        public string SerialNumber { get; set; }
         [Display(Name = "Website")]
         public string URL { get; set; }
         [Range(0, 255, ErrorMessage = "Field must be positive")]
@@ -219,6 +215,14 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
         public bool IsReceived { get; set; }
-        public bool IncludeVAT { get; set; }
+        private bool _IncludeVAT = true;
+        public bool IncludeVAT { get
+            {
+                return _IncludeVAT;
+            }
+            set {
+                _IncludeVAT = value;
+            } 
+        }
     }
 }

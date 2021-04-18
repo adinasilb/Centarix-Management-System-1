@@ -4,9 +4,13 @@
     $(".active").removeClass("active")
     $(this).addClass("active")
     //reset page number
-      $('.page-number').val(1);
-    ajaxPartialIndexTable($(this).attr("value"), "/Requests/_IndexTable", "._IndexTable", "GET")
+    $('.page-number').val(1);
+    var requestStatusId = $(this).attr("value");
+    var isProprietary = requestStatusId == 7 ? true : false;
+    $.fn.ClearFilter(isProprietary);
+    ajaxPartialIndexTable(requestStatusId, "/Requests/_IndexTable", "._IndexTable", "GET")
 });
+
 
 //function ajaxCallToPartialTable(status) {
 //    var selectedPriceSort = [];

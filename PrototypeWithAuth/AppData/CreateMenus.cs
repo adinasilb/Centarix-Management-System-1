@@ -239,18 +239,18 @@ namespace PrototypeWithAuth.AppData
                     },
                         Classes = AllClasses
                     });
-                    if (pageType == AppUtility.PageTypeEnum.LabManagementEquipment) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Equipment",
-                        Controller = "Calibrations",
-                        Action = "Index",
-                        RouteValues = new RouteValueDictionary()
-                        {
+                    //if (pageType == AppUtility.PageTypeEnum.LabManagementEquipment) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Equipment",
+                    //    Controller = "Calibrations",
+                    //    Action = "Index",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
 
-                        },
-                        Classes = AllClasses
-                    });
+                    //    },
+                    //    Classes = AllClasses
+                    //});
                     if (pageType == AppUtility.PageTypeEnum.LabManagementQuotes) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
                     MainMenuItems.Add(new MenuItems()
                     {
@@ -405,7 +405,7 @@ namespace PrototypeWithAuth.AppData
                 },
                 Classes = menuClass,
                 IconName = "icon-add_circle_outline-24px1",
-                AjaxLink = "add-item"
+                AjaxLink = "add-item-sidebar"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -810,7 +810,7 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
 
-        public static List<MenuItems> CreateAccountingPaymentsSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
+        public static List<MenuItems> CreateAccountingPaymentsSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses, string payNowCount)
         {
             List<MenuItems> SidebarMenuItems = new List<MenuItems>();
 
@@ -833,7 +833,7 @@ namespace PrototypeWithAuth.AppData
             SidebarMenuItems.Add(new MenuItems()
             {
                 MenuItemsID = 2,
-                Description = "Pay Now",
+                Description = "Pay Now\n[" + payNowCount + "]",
                 Controller = "Requests",
                 Action = "AccountingPayments",
                 RouteValues = new RouteValueDictionary()
@@ -1072,7 +1072,7 @@ namespace PrototypeWithAuth.AppData
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-add_circle_outline-24px1",
-                AjaxLink = "add-item"               
+                AjaxLink = "add-item-sidebar"               
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1083,7 +1083,7 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary()
                 {
                     {"PageType", PageType },
-                    {"categoryType", 2 }
+                    { "SectionType", AppUtility.MenuItems.Operations }
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-category-24px1"
@@ -1097,8 +1097,7 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary()
                 {
                     {"PageType", PageType },
-                    {"categoryType", 2 },
-                           { "SectionType", AppUtility.MenuItems.Operations}
+                    { "SectionType", AppUtility.MenuItems.Operations}
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-storefront-24px"
@@ -1112,7 +1111,7 @@ namespace PrototypeWithAuth.AppData
                 RouteValues = new RouteValueDictionary()
                 {
                     {"PageType", PageType },
-                    {"categoryType", 2 }
+                    { "SectionType", AppUtility.MenuItems.Operations }
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-face-24px"

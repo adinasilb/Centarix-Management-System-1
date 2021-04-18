@@ -621,8 +621,9 @@ namespace PrototypeWithAuth.Controllers
                         employeeEditted.EmployeeStatusID = selectedStatusID;
                         employeeEditted.RollOverSickDays = registerUserViewModel.NewEmployee.RollOverSickDays;
                         employeeEditted.RollOverVacationDays = registerUserViewModel.NewEmployee.RollOverVacationDays;
-                        employeeEditted.BonusSickDays = registerUserViewModel.NewEmployee.BonusSickDays;
-                        employeeEditted.BonusVacationDays = registerUserViewModel.NewEmployee.BonusVacationDays;
+                        //employeeEditted.BonusSickDays = registerUserViewModel.NewEmployee.BonusSickDays;
+                        //employeeEditted.BonusVacationDays = registerUserViewModel.NewEmployee.BonusVacationDays;
+                        employeeEditted.SpecialDays = registerUserViewModel.NewEmployee.SpecialDays;
                         //employeeEditted.JobSubategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID;
 
                         _context.Update(employeeEditted);

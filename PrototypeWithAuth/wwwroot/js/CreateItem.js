@@ -21,7 +21,10 @@
                     success: function (data) {
                         $(".outer-partial").html(data);
                         $(".mdb-select").materialSelect();
-
+                        $(".top-menu").addClass("save-item");
+                        $(".side-menu").addClass("save-item");
+                        $(".module-button ").addClass("save-item");
+                        $(".notificationDiv").addClass("save-item");
                         $("#loading").hide();
                         var category = $("#categoryDescription").val();
                         console.log("category " + category)
@@ -103,12 +106,11 @@
          $(".requestPriceQuote ").attr("disabled", true)
          $(".requestQuoteHide").removeClass("d-none");
         }
-        else {
+     else if ($('#sublist').val() != ''){
             $(".requestPriceQuote").removeClass("d-none");
          $(".requestPriceQuote ").attr("disabled", false)
          $(".requestQuoteHide").addClass("d-none");
         }
-    
     })
     $('.complete-order').click(function (e) {
         if (!$(this).hasClass('disabled-submit')) {
@@ -117,11 +119,18 @@
     })
 
     $('.add-item').off('click').on('click', function (e) {
+       
         var newIndex = $(this).attr('data-val');
-        console.log(newIndex)
+        var currency = $("#currency").val();
+        var subcategoryID = $("#Requests_0__Product_ProductSubcategory_ProductSubcategoryID").val();
+        var url = "/Requests/_PartialItemOperationsTab?index=" + newIndex
+        if (subcategoryID != null) {
+            url = url + "&subcategoryID=" + subcategoryID
+        }
+        console.log(subcategoryID)
         $.ajax({
             async: true,
-            url: "/Requests/_PartialItemOperationsTab?index=" + newIndex,
+            url: url,
             type: 'GET',
             cache: false,
             success: function (data) {
@@ -130,6 +139,14 @@
                 $("#addOperationItem").attr('data-val', parseInt(newIndex) + 1);
                 $(".mdb-select" + newIndex).materialSelect();
                 $(".parent-select" + newIndex).materialSelect();
+                if (currency == "NIS") {
+                    $(".dollar-cost").attr("readonly", true)
+                    $(".dollar-cost").addClass("disabled-text");
+                    $(".request-cost-dollar-icon").addClass("disabled-text");
+                    $(".shekel-cost").attr("readonly", false)
+                    $(".shekel-cost").removeClass("disabled-text");
+                    $(".request-cost-shekel-icon").removeClass("disabled-text");
+                }
             }
         });
 
@@ -140,7 +157,7 @@
             var spaces =  val.split(" ");
             var spaceCount = spaces.length;
              console.log(spaceCount)
-            var rows = Math.ceil((val.length+spaceCount) / 50);
+            var rows = Math.ceil((val.length+spaceCount) / 45);
             var lines =   val.split("\n");
             var lineCount = lines.length;
            // console.log(lineCount)
@@ -149,7 +166,8 @@
             }
             if(rows>3)
             {
-               $(this).val(val.slice(0,-1))
+                $(this).val(val.slice(0, -1))
+                rows = 3;
             }
             $(this).attr('rows', rows);
         });
@@ -232,4 +250,21 @@
         console.log(index)
         $("#Requests_" + index + "__IsReceived").attr("value", checked)
     })
+
+    $('body').on('click', "#addRequestComment", function () {
+        console.log("clicked!");
+        console.log($('#popover-content').html())
+        $('[data-toggle="popover"]').popover('dispose');
+        $('#addRequestComment').popover({
+            sanitize: false,
+            placement: 'bottom',
+            html: true,
+            content: function () {
+                console.log('in function')
+                return $('#popover-content').html();
+            }
+        });
+        $('#addRequestComment').popover('toggle');
+
+    });
 })

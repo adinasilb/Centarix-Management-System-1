@@ -19,6 +19,8 @@ namespace PrototypeWithAuth.Data
 
         }
         //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+        public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
+        public DbSet<ShareRequest> ShareRequests { get; set; }
         public DbSet<LocationRoomType> LocationRoomTypes { get; set; }
         public DbSet<LabPart> LabParts { get; set; }
         public DbSet<CentarixID> CentarixIDs { get; set; }
@@ -76,7 +78,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<UnitParentType> UnitParentTypes { get; set; }
         public DbSet<IpRange> IpRanges { get; set; }
         public DbSet<PhysicalAddress> PhysicalAddresses { get; set; }
-
+        public DbSet<CreditCard> CreditCards { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -174,7 +176,6 @@ namespace PrototypeWithAuth.Data
             .WithMany(rs => rs.Requests)
             .HasForeignKey(r => r.RequestStatusID);
 
-
             modelBuilder.Entity<EmployeeHours>()
              .HasOne<EmployeeHoursStatus>(eh => eh.EmployeeHoursStatusEntry2)
              .WithMany(ehs => ehs.EmployeeHours)
@@ -247,10 +248,11 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
             modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
-
+            modelBuilder.Entity<Request>().Property(r => r.IncludeVAT).HasDefaultValue(true);
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<ExchangeRate>().Property(e => e.LatestExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
+            modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

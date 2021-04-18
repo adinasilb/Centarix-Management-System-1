@@ -1,7 +1,10 @@
 ﻿@model PrototypeWithAuth.ViewModels.PaymentsPayModalViewModel
 <script src="~/js/InitializeDatePicker.js"></script>
-<script src="~/js/validate.js"></script>
 <script src="~/js/Validation/PayModalValidation.js"></script>
+<script src="~/js/validate.js"></script>
+
+
+
 <div class="modal modal-view fader on-form-modal" id="myModal" data-backdrop="false">
     <div class="modal-dialog-centered mx-auto modal-xl" style="min-width:1000PX !important; top: 20%;">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
@@ -96,31 +99,53 @@
                         </div>
                         <div class="row ">
                             <div class="col-3 pl-0">
-                                <div class="form-group">
-                                    <label class="control-label">Reference Date</label>
-                                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="@((Model.Payment.PaymentReferenceDate != new DateTime()) ? Model.Payment.PaymentReferenceDate.ToShortDateString() : "")" />
-                                </div>
-                            </div>
-                            <div class="col-3">
                                 <div class="payment-type form-group">
+                                    <label class="control-label">Bank Name</label>
+                                    @Html.DropDownListFor(vm => vm.Payment.CompanyAccountID,
+                                        new SelectList(
+                                        Model.CompanyAccounts,
+                                        "CompanyAccountID",
+                                        "CompanyBankName"
+                                        ), "Select Bank Name",
+                                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext", @id = "bankName" })
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="payment-type form-group d-none">
                                     <label class="control-label">Payment Type</label>
-                                    <select class="mdb-select custom select-dropdown form-control-plaintext paymentType " name="paymentType">
-                                        <option value="">Select A Payment Type </option>
-                                        <option value="1">Credit Card</option>
-                                        <option value="2">Bank Account</option>
-                                    </select>
+                                    @Html.DropDownListFor(vm => vm.Payment.PaymentTypeID,
+                                        new SelectList(
+                                        Model.PaymentTypes,
+                                        "PaymentTypeID",
+                                        "PaymentTypeDescription"
+                                        ), "Select Payment Type",
+                                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
                                 </div>
                             </div>
-                            <div class="col-3">
-                                <div class="form-group payment-account">
-                                    <label class="control-label">Account ID</label>
-                                    <select class="mdb-select custom select-dropdown form-control-plaintext companyAccountNum mdb-select-sublist " asp-for="Payment.CompanyAccountID"></select>
+                            <div class="col-3 credit-card d-none">
+                                <div class="form-group ">
+                                    <label class="control-label credit-card d-none">Card #</label>
+                                    <select class="mdb-select custom select-dropdown form-control-plaintext cardNum mdb-select-sublist " disabled asp-for="Payment.CreditCardID"></select>
                                 </div>
                             </div>
-                            <div class="col-3">
-                                <div class="form-group payment-reference d-none">
+                            <div class="col-3 pl-0">
+                                <div class="form-group payment-date d-none">
+                                    <label class="control-label wire d-none">Transfer Date</label>
+                                    <label class="control-label credit-card">Reference Date</label>
+                                    <label class="control-label bank-check d-none">Cash Out Date</label>
+                                    <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="@((Model.Payment.PaymentReferenceDate != new DateTime()) ? Model.Payment.PaymentReferenceDate.ToShortDateString() : "")" />
+                                </div>
+                            </div>
+                            <div class="col-3 wire d-none">
+                                <div class="form-group ">
                                     <label class="control-label">Payment Reference</label>
                                     <input class="form-control-plaintext border-bottom reference-1" type="text" disabled asp-for="Payment.Reference" />
+                                </div>
+                            </div>
+                            <div class="col-3 bank-check d-none">
+                                <div class="form-group ">
+                                    <label class="control-label">Check Number</label>
+                                    <input class="form-control-plaintext border-bottom" type="text" disabled asp-for="Payment.CheckNumber" />
                                 </div>
                             </div>
                         </div>
@@ -142,24 +167,44 @@
 <script>
     $("#payPayment").click(function (e) {
         e.preventDefault();
-        var formData = new FormData($("#myForm")[0]);
-        $.ajax({
-            contentType: false,
-            processData: false,
-            async: true,
-            url: "/Requests/PaymentsPayModal",
-            data: formData,
-            traditional: true,
-            type: "POST",
-            cache: false,
-            success: function (data) {
-                $.fn.CloseModal("payments-pay");
-                return true;
-            },
-            error: function (jqxhr) {
-                $.fn.OpenModal("modal", "payments-pay", jqxhr.responseText);
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+            e.preventDefault();
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
             }
-        })
+
+        }
+        else {
+            var formData = new FormData($("#myForm")[0]);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/PaymentsPayModal",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+                    $.fn.CloseModal("payments-pay");
+                    $(".render-body").html(data);
+                    var payNowSidebar = $(".sidebarTitle.2");
+                    var payNowCount = @TempData["PayNowCount"];
+                    console.log(payNowCount)
+                    payNowSidebar.html("Pay Now <br> [" + payNowCount + "]");
+                    return true;
+                },
+                error: function (jqxhr) {
+                    $.fn.OpenModal("modal", "payments-pay", jqxhr.responseText);
+                }
+            })
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+
     })
 </script>
 <script src="~/js/TermsModal.js"></script>

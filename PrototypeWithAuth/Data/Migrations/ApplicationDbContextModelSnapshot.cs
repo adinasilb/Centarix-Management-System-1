@@ -523,25 +523,34 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CompanyAccountNum")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(5)")
-                        .HasMaxLength(5);
-
-                    b.Property<string>("CompanyBankNum")
+                    b.Property<string>("CompanyBankName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CompanyBranchNum")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PaymentTypeID")
-                        .HasColumnType("int");
 
                     b.HasKey("CompanyAccountID");
 
-                    b.HasIndex("PaymentTypeID");
-
                     b.ToTable("CompanyAccounts");
+
+                    b.HasData(
+                        new
+                        {
+                            CompanyAccountID = 1,
+                            CompanyBankName = "Discount"
+                        },
+                        new
+                        {
+                            CompanyAccountID = 2,
+                            CompanyBankName = "Mercantile"
+                        },
+                        new
+                        {
+                            CompanyAccountID = 3,
+                            CompanyBankName = "Leumi"
+                        },
+                        new
+                        {
+                            CompanyAccountID = 4,
+                            CompanyBankName = "Payoneer"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.CompanyDayOff", b =>
@@ -668,6 +677,77 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             CompanyDayOffTypeID = 18,
                             Name = "Simchat Torah"
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.CreditCard", b =>
+                {
+                    b.Property<int>("CreditCardID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CardNumber")
+                        .HasColumnType("nvarchar(4)")
+                        .HasMaxLength(4);
+
+                    b.Property<int>("CompanyAccountID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CreditCardID");
+
+                    b.HasIndex("CompanyAccountID");
+
+                    b.ToTable("CreditCards");
+
+                    b.HasData(
+                        new
+                        {
+                            CreditCardID = 1,
+                            CardNumber = "2543",
+                            CompanyAccountID = 2
+                        },
+                        new
+                        {
+                            CreditCardID = 2,
+                            CardNumber = "4694",
+                            CompanyAccountID = 2
+                        },
+                        new
+                        {
+                            CreditCardID = 3,
+                            CardNumber = "3485",
+                            CompanyAccountID = 2
+                        },
+                        new
+                        {
+                            CreditCardID = 4,
+                            CardNumber = "0054",
+                            CompanyAccountID = 2
+                        },
+                        new
+                        {
+                            CreditCardID = 5,
+                            CardNumber = "4971",
+                            CompanyAccountID = 1
+                        },
+                        new
+                        {
+                            CreditCardID = 6,
+                            CardNumber = "4424",
+                            CompanyAccountID = 1
+                        },
+                        new
+                        {
+                            CreditCardID = 7,
+                            CardNumber = "4432",
+                            CompanyAccountID = 1
+                        },
+                        new
+                        {
+                            CreditCardID = 8,
+                            CardNumber = "7972",
+                            CompanyAccountID = 3
                         });
                 });
 
@@ -2076,6 +2156,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             OffDayTypeID = 3,
                             Description = "Maternity Leave"
+                        },
+                        new
+                        {
+                            OffDayTypeID = 4,
+                            Description = "Special Day"
                         });
                 });
 
@@ -2268,7 +2353,13 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CheckNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("CompanyAccountID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CreditCardID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -2286,6 +2377,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("PaymentReferenceDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("PaymentTypeID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
 
@@ -2299,7 +2393,11 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("CompanyAccountID");
 
+                    b.HasIndex("CreditCardID");
+
                     b.HasIndex("ParentRequestID");
+
+                    b.HasIndex("PaymentTypeID");
 
                     b.HasIndex("RequestID");
 
@@ -2376,7 +2474,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             PaymentTypeID = 2,
-                            PaymentTypeDescription = "Bank Transfer"
+                            PaymentTypeDescription = "Check"
+                        },
+                        new
+                        {
+                            PaymentTypeID = 3,
+                            PaymentTypeDescription = "Wire"
                         });
                 });
 
@@ -2419,6 +2522,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ProductComment")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("ProductCreationDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
                     b.Property<string>("ProductHebrewName")
                         .HasColumnType("nvarchar(max)");
 
@@ -2437,6 +2545,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("ReorderLevel")
                         .HasColumnType("int");
+
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UnitsInOrder")
                         .HasColumnType("int");
@@ -2485,7 +2596,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             ProductSubcategoryID = 102,
                             ImageURL = "/images/css/CategoryImages/PCR.png",
                             ParentCategoryID = 1,
-                            ProductSubcategoryDescription = "PCR Plates"
+                            ProductSubcategoryDescription = "PCR"
                         },
                         new
                         {
@@ -3040,7 +3151,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IncludeVAT")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<long?>("Installments")
                         .HasColumnType("bigint");
@@ -3089,9 +3202,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("RequestStatusID")
                         .HasColumnType("int");
-
-                    b.Property<string>("SerialNumber")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SubProjectID")
                         .HasColumnType("int");
@@ -3288,6 +3398,33 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasFilter("[EmployeeId] IS NOT NULL");
 
                     b.ToTable("SalariedEmployees");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
+                {
+                    b.Property<int>("ShareRequestID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FromApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ToApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ShareRequestID");
+
+                    b.HasIndex("FromApplicationUserID");
+
+                    b.HasIndex("RequestID");
+
+                    b.HasIndex("ToApplicationUserID");
+
+                    b.ToTable("ShareRequests");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
@@ -3855,19 +3992,16 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("VendorAccountNum")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorBIC")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VendorBank")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("VendorBankBranch")
-                        .IsRequired()
                         .HasColumnType("nvarchar(4)")
                         .HasMaxLength(4);
 
@@ -3904,8 +4038,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<string>("VendorRoutingNum")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("VendorStreet")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -4052,6 +4188,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("float");
 
                     b.Property<double>("RollOverVacationDays")
+                        .HasColumnType("float");
+
+                    b.Property<double>("SpecialDays")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("StartedWorking")
@@ -4252,20 +4391,20 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.CompanyAccount", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.PaymentType", "PaymentType")
-                        .WithMany()
-                        .HasForeignKey("PaymentTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.CompanyDayOff", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.CompanyDayOffType", "CompanyDayOffType")
                         .WithMany()
                         .HasForeignKey("CompanyDayOffTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.CreditCard", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.CompanyAccount", "CompanyAccount")
+                        .WithMany("CreditCards")
+                        .HasForeignKey("CompanyAccountID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -4428,9 +4567,19 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("CompanyAccountID")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("PrototypeWithAuth.Models.CreditCard", "CreditCard")
+                        .WithMany()
+                        .HasForeignKey("CreditCardID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("PrototypeWithAuth.Models.ParentRequest", null)
                         .WithMany("Payments")
                         .HasForeignKey("ParentRequestID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.PaymentType", "PaymentType")
+                        .WithMany()
+                        .HasForeignKey("PaymentTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
@@ -4582,6 +4731,25 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
                         .WithOne("SalariedEmployee")
                         .HasForeignKey("PrototypeWithAuth.Models.SalariedEmployee", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("FromApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

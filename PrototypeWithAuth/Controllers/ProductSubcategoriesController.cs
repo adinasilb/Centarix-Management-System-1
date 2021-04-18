@@ -24,8 +24,13 @@ namespace PrototypeWithAuth.Controllers
 
         // GET: ProductSubcategories
         [Authorize(Roles = "Requests, Operations, LabManagement")]
-        public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, int categoryType=1)
+        public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
+            var categoryType = 1;
+            if(SectionType == AppUtility.MenuItems.Operations)
+            {
+                categoryType = 2;
+            }    
             if(PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
             {
                 TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
