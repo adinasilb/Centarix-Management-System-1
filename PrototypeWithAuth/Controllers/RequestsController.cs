@@ -2073,6 +2073,7 @@ namespace PrototypeWithAuth.Controllers
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubProjectID = oldRequest.SubProjectID;
+                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SerialNumber = oldRequest.Product.SerialNumber;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().URL = oldRequest.URL;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Warranty = oldRequest.Warranty;
@@ -3878,7 +3879,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
                     requestsList = requestsList
-                        .Where(r => r.PaymentStatusID == 2);
+                        .Where(r => r.PaymentStatusID == 2 && r.HasInvoice);
                     break;
                 case AppUtility.SidebarEnum.PayNow:
                     requestsList = requestsList
@@ -3899,7 +3900,7 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.SidebarEnum.SpecifyPayment:
                     requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 8);
+                .Where(r => r.PaymentStatusID == 8 && r.HasInvoice);
                     break;
             }
             return requestsList;
@@ -3915,7 +3916,7 @@ namespace PrototypeWithAuth.Controllers
             switch (accountingNotificationsEnum)
             {
                 case AppUtility.SidebarEnum.NoInvoice:
-                    requestsList = requestsList.Where(r => r.HasInvoice == false).Where(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID==3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 5/*installments*/) || (r.PaymentStatusID == 7/*standing orders*/) || (r.PaymentStatusID == 2/*specify payment*/ && r.RequestStatusID == 3));
+                    requestsList = requestsList.Where(r => r.HasInvoice == false).Where(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID==3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 5/*installments*/) || (r.PaymentStatusID == 7/*standing orders*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
                     break;
                 case AppUtility.SidebarEnum.DidntArrive:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
@@ -4044,6 +4045,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             var payments = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID);
                             var count = payments.Count();
+                            
                             payment = payments.OrderBy(p => p.PaymentDate).FirstOrDefault();
                             if (count <= 1)
                             {
@@ -4097,7 +4099,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Where(r => r.IsDeleted == false && r.HasInvoice == false && (r.Paid || r.RequestStatusID == 3)).Where(r => r.RequestStatusID != 7);
+                    .Where(r => r.IsDeleted == false && r.HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 5/*installments*/) || (r.PaymentStatusID == 7/*standing orders*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3))).Where(r => r.RequestStatusID != 7);
             if (vendorid != null)
             {
                 Requests = queryableRequests
@@ -4840,27 +4842,27 @@ namespace PrototypeWithAuth.Controllers
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }
-                            if (req.PaymentStatusID == 5)
-                            {
-                                for (int i = 0; i < req.Installments; i++)
-                                {
+                            //if (req.PaymentStatusID == 5)
+                            //{
+                            //    for (int i = 0; i < req.Installments; i++)
+                            //    {
 
-                                    var payment = new Payment() { PaymentDate = DateTime.Now.AddMonths(i), Sum = (req.Cost ?? 0 / req.Installments ?? 0) };
-                                    if (SaveUsingSessions)
-                                    {
-                                        var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
-                                        HttpContext.Session.SetObject(paymentName, payment);
-                                    }
-                                    else
-                                    {
-                                        payment.Request = req;
-                                        _context.Update(payment);
-                                        await _context.SaveChangesAsync();
-                                    }
-                                    PaymentNum++;
-                                }
-                            }
-                            if (req.PaymentStatusID == 7)
+                            //        var payment = new Payment() { PaymentDate = DateTime.Now.AddMonths(i), Sum = (req.Cost ?? 0 / req.Installments ?? 0) };
+                            //        if (SaveUsingSessions)
+                            //        {
+                            //            var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
+                            //            HttpContext.Session.SetObject(paymentName, payment);
+                            //        }
+                            //        else
+                            //        {
+                            //            payment.Request = req;
+                            //            _context.Update(payment);
+                            //            await _context.SaveChangesAsync();
+                            //        }
+                            //        PaymentNum++;
+                            //    }
+                            //}
+                            if (req.PaymentStatusID == 7 || req.PaymentStatusID == 5)
                             {
                              
                                 var payment = new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) };
