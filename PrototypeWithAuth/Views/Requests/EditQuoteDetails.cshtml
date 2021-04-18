@@ -143,12 +143,12 @@
                                     <td width="15%">
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <span class="input-group-text request-cost-dollar-icon">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" value="@(Math.Round((Model.Requests[i].Cost??0)/Model.Requests[i].ExchangeRate, 2))"/>
+                                                <span class="input-group-text request-cost-dollar-icon disabled-text">&#36;</span>
+                                                <input class="form-control-plaintext border-bottom disabled-text" id="sum-dollars" name="sum-dollars" value="@(Math.Round((Model.Requests[i].Cost??0)/Model.Requests[i].ExchangeRate, 2))" disabled/>
                                             </div>
                                             <div class="input-group">
-                                                <span class="input-group-text request-cost-shekel-icon disabled-text">&#x20aa;</span>
-                                                <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom disabled-text cost-validation" readonly id="cost" />
+                                                <span class="input-group-text request-cost-shekel-icon ">&#x20aa;</span>
+                                                <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom cost-validation" id="cost" />
                                                 <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
                                             </div>
                                         </div>
