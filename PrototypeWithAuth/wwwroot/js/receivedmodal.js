@@ -234,46 +234,7 @@
 
 	$(".visual-locations td").on("click", function (e) {
 		if (!$(this).hasClass("not-clickable")) {
-			if (e.shiftKey) {
-				var firstSelected = $(".first-selected");
-				var currentBox = $(this);
-				var boxIsPrevious = false;
-				if ($(this).prevAll().filter(firstSelected).length == 0) {
-					boxIsPrevious = true;
-                }
-				if (!firstSelected.parent("tr").is($(this).parent("tr"))) {
-					if ($(this).parent("tr").prevAll().filter(firstSelected.parent("tr")).length == 0) {
-						boxIsPrevious = true;
-                    }
-					firstSelected.parent("tr").nextUntil($(this).parent("tr").next()).each(function () {
-						var end = false;
-						$(this).children("td").each(function () {
-							if (!end) {
-								if ($(this).is(currentBox)) {
-									end = true
-								}
-								else {
-									if (!$(this).hasClass("graduated-table-background-color")) {
-										$(this).addClass('location-selected')
-										$(this).children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
-										$(this).children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
-									}
-								}
-							}
-						})
-					})					
-				}
-				console.log(boxIsPrevious)
-				firstSelected.nextUntil($(this), ".visual-box").each(function () {
-					if (!$(this).hasClass("graduated-table-background-color")) {
-						$(this).addClass('location-selected')
-						$(this).children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
-						$(this).children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
-					}
-				})
-			}
-			$(".first-selected").removeClass("first-selected");
-			$(this).addClass("first-selected");
+			
 			if ($(this).has("i").length) {
 				var locationInstanceId = $(this).children('div').first().children("input").first().attr("liid");
 				var lip = $(".liid." + locationInstanceId);
@@ -305,9 +266,105 @@
 					$("#locationSelected-error").replaceWith('');
 				}
 			}
-			
 		}
 	});
+	$(".visual-locations td").on("click", function (e) {
+		var element = $(this);
+		if (!element.hasClass("not-clickable")) {
+	
+			if (e.shiftKey) {
+				MultipleLocation(element, ToggleBoxUnitSelected);
+			}
+			$(".first-selected").removeClass("first-selected");
+			element.addClass("first-selected");
+		}
+	});
+	function ToggleBoxUnitSelected(element, select) {
+		var locationInstanceId = element.children('div').first().children("input").first().attr("liid");
+		var lip = $(".liid." + locationInstanceId);
+		if (select) {
+			element.addClass('location-selected')
+			element.children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
+			element.children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
+			lip.val("true")			
+		}
+		else {
+			element.removeClass('location-selected')
+			element.children('div').first().children(".row-1").children("i").addClass("icon-add_circle_outline-24px1");
+			element.children('div').first().children(".row-1").children("i").removeClass("icon-delete-24px");
+			lip.val("false")			
+        }
+    }
 
 
 });
+
+function MultipleLocation(element, ToggleBoxUnitSelected) {
+
+        console.log(element);
+        var firstSelected = $(".first-selected");
+        console.log(firstSelected);
+        var currentBox = element;
+        var boxIsPrevious = false;
+        var select = firstSelected.hasClass('location-selected');
+        if (!firstSelected.parent("tr").is(element.parent("tr"))) {
+            if (element.parent("tr").prevAll().filter(firstSelected.parent("tr")).length == 0) {
+                console.log("Earlier row");
+                boxIsPrevious = true;
+            }
+            var end = false;
+            if (boxIsPrevious) {
+                firstSelected.parent("tr").prevUntil(element.parent("tr").prev()).each(function() {
+                    var reversed = $(this).children("td").toArray().reverse();
+                    reversed.forEach(td => {
+						if (!end) {
+                            if ($(td).is(currentBox)) {
+                                end = true;
+                            }
+                            else {
+                                if (!$(td).hasClass("graduated-table-background-color")) {
+                                    ToggleBoxUnitSelected($(td), select);
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+            else {
+                firstSelected.parent("tr").nextUntil(element.parent("tr").next()).each(function() {
+                    $(this).children("td").each(function() {
+                        if (!end) {
+                            if ($(this).is(currentBox)) {
+                                end = true;
+                            }
+                            else {
+                                if (!$(this).hasClass("graduated-table-background-color")) {
+                                    ToggleBoxUnitSelected($(this), select);
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+        }
+        else {
+            if (element.prevAll().filter(firstSelected).length == 0) {
+                console.log("Earlier box");
+                boxIsPrevious = true;
+            }
+        }
+        if (boxIsPrevious) {
+			firstSelected.prevUntil(element, ".visual-box").each(function () {
+                if (!$(this).hasClass("graduated-table-background-color")) {
+                    ToggleBoxUnitSelected($(this), select);
+                }
+            });
+        }
+        else {
+            firstSelected.nextUntil(element, ".visual-box").each(function() {
+                if (!$(this).hasClass("graduated-table-background-color")) {
+                    ToggleBoxUnitSelected($(this), select);
+                }
+            });
+        }
+}
