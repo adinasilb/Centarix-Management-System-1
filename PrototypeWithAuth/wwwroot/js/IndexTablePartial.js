@@ -109,24 +109,50 @@ $(".approve-order").off('click').on("click", function (e) {
 });
 
 $(".request-favorite").on("click", function (e) {
-    console.log("request favorite");
     var emptyHeartClass = "icon-favorite_border-24px";
     var fullHeartClass = "icon-favorite-24px";
+    var fav = "request-favorite";
+    var unfav = "request-unlike";
+    var title = "Like";
     var requestFavorite = $(this);
-    $.ajax({
-        async: true,
-        url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&sectionType=" + $('#masterSectionType').val(),
-        traditional: true,
-        type: "GET",
-        cache: false,
-        success: function (data) {
-            alert(requestFavorite.attr("class"));
-            requestFavorite.children("i").removeClass(emptyHeartClass);
-            requestFavorite.children("i").addClass(fullHeartClass);
-            $("#loading").hide();
-        }
-    })
+    var FavType = "favorite";
+    if (requestFavorite.hasClass("request-unlike")) {
+        FavType = "unlike";
+        $.ajax({
+            async: true,
+            url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType,
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                requestFavorite.children("i").addClass(emptyHeartClass);
+                requestFavorite.children("i").removeClass(fullHeartClass);
+                requestFavorite.attr("data-original-title", title);
+                requestFavorite.removeClass(unfav);
+                $("#loading").hide();
+            }
+        })
+    }
+    else {
+        title = "Unlike";
+        $.ajax({
+            async: true,
+            url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType,
+            traditional: true,
+            type: "GET",
+            cache: false,
+            success: function (data) {
+                requestFavorite.children("i").removeClass(emptyHeartClass);
+                requestFavorite.children("i").addClass(fullHeartClass);
+                requestFavorite.attr("data-original-title", title);
+                requestFavorite.addClass(unfav);
+                $("#loading").hide();
+            }
+        })
+	}
+    
 });
+
 
 $(".create-calibration").off('click').on("click", function (e) {
     e.preventDefault();
