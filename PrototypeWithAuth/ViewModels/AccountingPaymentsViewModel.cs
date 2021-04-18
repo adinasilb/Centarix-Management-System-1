@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public AppUtility.SidebarEnum AccountingEnum { get; set; }
         public ILookup<Vendor, Request> Requests { get; set; }
-        public RequestProtocolsIndexViewModel RequestIndexPartialViewModel { get; set; }
+        public RequestIndexPartialViewModel RequestIndexPartialViewModel { get; set; }
         public int PayNowListNum { get; set; }
         public List<PriceSortViewModel> PriceSortEnums { get; set; }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }

@@ -8,7 +8,7 @@ using X.PagedList;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class RequestProtocolsIndexViewModel : ViewModelBase
+    public class RequestIndexProtocolsViewModel : ViewModelBase
     {
         public IPagedList<RequestIndexPartialRowViewModel> PagedList { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }

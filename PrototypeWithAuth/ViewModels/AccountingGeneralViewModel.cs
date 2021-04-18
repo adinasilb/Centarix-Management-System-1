@@ -7,7 +7,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class AccountingGeneralViewModel
     {
-        public RequestProtocolsIndexViewModel RequestIndexPartialViewModel { get; set; }
+        public RequestIndexPartialViewModel RequestIndexPartialViewModel { get; set; }
         public List<int> Months { get; set; }
         public List<int> Years { get; set; }
     }

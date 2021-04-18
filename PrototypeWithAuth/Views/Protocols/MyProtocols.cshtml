@@ -1,4 +1,14 @@
-﻿@{
+﻿
+@model PrototypeWithAuth.ViewModels.RequestIndexProtocolsViewModel
+@using PrototypeWithAuth.AppData;
+@using PrototypeWithAuth.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@{
     ViewData["Title"] = "My Protocol";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+
+<div class="_IndexTable">
+    @{ await Html.RenderPartialAsync("_IndexTable", Model);}
+</div>
