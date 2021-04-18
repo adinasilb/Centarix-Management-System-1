@@ -1,17 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic; 
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace PrototypeWithAuth.Controllers
 {
-    public class ProtocolsController : Controller
+    public class ProtocolsController : SharedController
     {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context)
+        {
+            _context = context;
+            _userManager = userManager;        
+        }
         public async Task<IActionResult> Index()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -42,170 +52,131 @@ namespace PrototypeWithAuth.Controllers
             return fullRequestsListProprietary;
         }
 
-        //private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null, SelectedFilters selectedFilters = null)
-        //{
-        //    int categoryID = 1;
-        //    if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-        //    {
-        //        categoryID = 2;
-        //    }
-        //    IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-        //    IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
-        // .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-        // .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Include(x => x.ParentRequest);
+        private async Task<ProtocolsIndexViewModel> GetIndexViewModel(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedFilters = null)
+        {
+            IQueryable<Protocol> ProtocolsPassedIn = Enumerable.Empty<Protocol>().AsQueryable();
+            IQueryable<Protocol> fullProtocolsList = _context.Protocols;     
+            
+            switch(protocolsIndexObject.PageType)
+            {
+                case AppUtility.PageTypeEnum.ProtocolsProtocols:
+                    switch(protocolsIndexObject.SidebarType)
+                    {
+                        case AppUtility.SidebarEnum.List:
+                            break;
+                        case AppUtility.SidebarEnum.MyProtocols:
+                            break;
+                        case AppUtility.SidebarEnum.Favorites:
+                            break;
+                        case AppUtility.SidebarEnum.SharedWithMe:
+                            break;
+                        case AppUtility.SidebarEnum.LastProtocol:
+                            break;
+                    }
+                    break;
 
-        //    int sideBarID = 0;
-        //    if (requestIndexObject.SidebarType != AppUtility.SidebarEnum.Owner)
-        //    {
-        //        int.TryParse(requestIndexObject.SidebarFilterID, out sideBarID);
-        //    }
-
-        //    if (requestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
-        //    {
-        //        if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Category)
-        //        {
-        //            RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
-        //                .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-        //                .Include(r => r.ParentRequest).Where(r => r.Product.ProductSubcategoryID == sideBarID).Include(r => r.ParentRequest);
-
-        //        }
-        //        else
-        //        {
-        //            RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
-        //                .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-        //                .Include(r => r.ParentRequest);
-        //        }
-        //        RequestsPassedIn.OrderByDescending(e => e.ParentRequest.OrderDate);
-        //    }
-        //    else if (ViewData["ReturnRequests"] != null)
-        //    {
-        //        RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
-        //    }
-        //    else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
-        //    {
-        //        /*
-        //         * In order to combine all the requests each one needs to be in a separate list
-        //         * Then you need to union them one at a time into separate variables
-        //         * you only need the separate union variable in order for the union to work
-        //         * and the original queries are on separate lists because each is querying the full database with a separate where
-        //         */
-
-        //        IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
-        //        if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 1)
-        //        {
-        //            TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 1);
-        //            RequestsPassedIn = TempRequestList;
-        //        }
-
-        //        if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 6)
-        //        {
-        //            TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 6);
-        //            RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-        //        }
-
-        //        if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 2)
-        //        {
-        //            TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
-        //            RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-        //        }
-
-        //        if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 3)
-        //        {
-        //            TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
-        //            RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-        //            TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
-        //            RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-        //            TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
-        //            RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-        //        }
-
-        //    }
-        //    else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
-        //    {
-        //        if (requestIndexObject.RequestStatusID == 7)
-        //        {
-        //            RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 7).Include(r => r.Product.ProductSubcategory)
-        //         .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
-        //        }
-        //        else
-        //        {
-        //            RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5).Include(r => r.Product.ProductSubcategory)
-        //           .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
-        //        }
-
-        //    }
-        //    else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.AccountingGeneral)
-        //    {
-        //        //we need both categories
-        //        RequestsPassedIn = _context.Requests.Include(r => r.ApplicationUserCreator)
-        //             .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-        //             .Include(r => r.ParentRequest).Where(r => Years.Contains(r.ParentRequest.OrderDate.Year)).Where(r => r.HasInvoice && r.Paid && !r.IsClarify && !r.IsPartial);
-        //        if (Months != null)
-        //        {
-        //            RequestsPassedIn = RequestsPassedIn.Where(r => Months.Contains(r.ParentRequest.OrderDate.Month));
-        //        }
-        //    }
-        //    else //we just want what is in inventory
-        //    {
-        //        RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5);
-        //    }
-        //    AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
-        //    //now that the lists are created sort by vendor or subcategory
-        //    var sidebarFilterDescription = "";
-        //    switch (requestIndexObject.SidebarType)
-        //    {
-        //        case AppUtility.SidebarEnum.Vendors:
-        //            sidebarFilterDescription = _context.Vendors.Where(v => v.VendorID == sideBarID).Select(v => v.VendorEnName).FirstOrDefault();
-        //            RequestsPassedIn = RequestsPassedIn
-        //             .OrderByDescending(r => r.ProductID)
-        //             .Where(r => r.Product.VendorID == sideBarID);
-        //            break;
-        //        case AppUtility.SidebarEnum.Type:
-        //            sidebarFilterDescription = _context.ProductSubcategories.Where(p => p.ProductSubcategoryID == sideBarID).Select(p => p.ProductSubcategoryDescription).FirstOrDefault();
-        //            RequestsPassedIn = RequestsPassedIn
-        //           .OrderByDescending(r => r.ProductID)
-        //           .Where(r => r.Product.ProductSubcategoryID == sideBarID);
-        //            break;
-        //        case AppUtility.SidebarEnum.Owner:
-        //            var owner = _context.Employees.Where(e => e.Id.Equals(requestIndexObject.SidebarFilterID)).FirstOrDefault();
-        //            sidebarFilterDescription = owner.FirstName + " " + owner.LastName;
-        //            RequestsPassedIn = RequestsPassedIn
-        //            .OrderByDescending(r => r.ProductID)
-        //            .Where(r => r.ApplicationUserCreatorID == requestIndexObject.SidebarFilterID);
-        //            break;
-        //    }
+            }
 
 
-        //    RequestIndexPartialViewModel requestIndexViewModel = new RequestIndexPartialViewModel();
-        //    requestIndexViewModel.PricePopoverViewModel = new PricePopoverViewModel();
-        //    requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
-        //    requestIndexViewModel.RequestStatusID = requestIndexObject.RequestStatusID;
-        //    requestIndexViewModel.PageType = requestIndexObject.PageType;
-        //    requestIndexViewModel.SidebarFilterID = requestIndexObject.SidebarFilterID;
-        //    requestIndexViewModel.ErrorMessage = requestIndexObject.ErrorMessage;
-        //    var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
-
-        //    var RequestPassedInWithInclude = RequestsPassedIn.Include(r => r.Product.ProductSubcategory)
-        //        .Include(r => r.ParentRequest).Include(r => r.ApplicationUserCreator)
-        //        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
-        //        .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-        //        .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).AsQueryable();
+            ProtocolsIndexViewModel protocolsIndexViewModel = new ProtocolsIndexViewModel();
+            protocolsIndexViewModel.PageNumber = protocolsIndexObject.PageNumber;
+            protocolsIndexViewModel.PageType = protocolsIndexObject.PageType;
+            protocolsIndexViewModel.ErrorMessage = protocolsIndexObject.ErrorMessage;
+            var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
 
 
-        //    RequestPassedInWithInclude = filterListBySelectFilters(selectedFilters, RequestPassedInWithInclude);
+            var ProtocolsPassedInWithInclude = filterListBySelectFilters(selectedFilters, fullProtocolsList);
 
-        //    onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
+            onePageOfProducts = await GetColumnsAndRows(protocolsIndexObject, onePageOfProducts, ProtocolsPassedInWithInclude);
 
-        //    requestIndexViewModel.PagedList = onePageOfProducts;
-        //    List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-        //    Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
-        //    requestIndexViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
-        //    requestIndexViewModel.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
-        //    requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
-        //    bool isProprietary = requestIndexObject.RequestStatusID == 7 ? true : false;
-        //    requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, isProprietary: isProprietary);
-        //    return requestIndexViewModel;
-        //}
+            protocolsIndexViewModel.PagedList = onePageOfProducts;
+            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
+            protocolsIndexViewModel.ProtocolsInventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters);
+            return protocolsIndexViewModel;
+        }
+        private ProtocolsInventoryFilterViewModel GetInventoryFilterViewModel(SelectedProtocolsFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
+        {
+            if (selectedFilters != null)
+            {
+                ProtocolsInventoryFilterViewModel inventoryFilterViewModel = new ProtocolsInventoryFilterViewModel()
+                {
+                    Owners = _context.Employees.Where(o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
+                    ProtocolCategories = _context.ProtocolCategories.Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ProtocolCategoryTypeID)).ToList(),
+                    ProtocolSubCategories = _context.ProtocolSubCategories.Distinct().Where(v => !selectedFilters.SelectedProtocolsSubcategoriesIDs.Contains(v.ProtocolSubCategoryTypeID)).ToList(),
+                    SelectedOwners = _context.Employees.Where(o => selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
+                    SelectedProtocolCategories = _context.ProtocolCategories.Where(c => selectedFilters.SelectedCategoriesIDs.Contains(c.ProtocolCategoryTypeID)).ToList(),
+                    SelectedProtocolSubCategories = _context.ProtocolSubCategories.Distinct().Where(v => selectedFilters.SelectedProtocolsSubcategoriesIDs.Contains(v.ProtocolSubCategoryTypeID)).ToList(),
+                    NumFilters = numFilters
+                };
+                if (inventoryFilterViewModel.ProtocolCategories.Count() > 0)
+                {
+                    inventoryFilterViewModel.ProtocolSubCategories = inventoryFilterViewModel.ProtocolSubCategories.Where(ps => inventoryFilterViewModel.ProtocolCategories.Contains(ps.ProtocolCategoryType)).ToList();
+                }
+
+                return inventoryFilterViewModel;
+            }
+            else
+            {
+                return new ProtocolsInventoryFilterViewModel()
+                {
+                    Owners = _context.Employees.ToList(),
+                    ProtocolCategories = _context.ProtocolCategories.ToList(),
+                    ProtocolSubCategories = _context.ProtocolSubCategories.ToList(),
+                    SelectedOwners = new List<Employee>(),
+                    SelectedProtocolCategories = new List<ProtocolCategory>(),
+                    SelectedProtocolSubCategories = new List<ProtocolSubCategory>(),
+                    NumFilters = numFilters
+                };
+            }
+        }
+
+        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRows(ProtocolsIndexObject protocolsIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProtocols, IQueryable<Protocol> ProtocolPassedInWithInclude)
+        {
+            List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
+            var defaultImage = "/images/css/CategoryImages/placeholder.png";
+            switch (protocolsIndexObject.PageType)
+            {
+                case AppUtility.PageTypeEnum.ProtocolsProtocols:
+                    switch (protocolsIndexObject.SidebarType)
+                    {
+                        case AppUtility.SidebarEnum.List:
+                            onePageOfProtocols = await GetListRows(protocolsIndexObject, onePageOfProtocols, ProtocolPassedInWithInclude, iconList, defaultImage);
+                            break;
+                        case AppUtility.SidebarEnum.MyProtocols:
+                            break;
+                        case AppUtility.SidebarEnum.Favorites:
+                            break;
+                        case AppUtility.SidebarEnum.SharedWithMe:
+                            break;
+                        case AppUtility.SidebarEnum.LastProtocol:
+                            break;
+                    }
+                    break;
+
+            }
+            return onePageOfProtocols;
+        }
+
+        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetListRows(ProtocolsIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProtocols, IQueryable<Protocol> ProtocolPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
+        {
+            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(p => new RequestIndexPartialRowViewModel()
+            {
+                Columns = new List<RequestIndexPartialColumnViewModel>()
+                            {
+                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = defaultImage},
+                                 new RequestIndexPartialColumnViewModel() { Title = "Name", Width=15, Value = new List<string>(){ p.Name}},
+                                 new RequestIndexPartialColumnViewModel() { Title = "Version", Width=10, Value = new List<string>(){ p.VersionNumber} },
+                                 new RequestIndexPartialColumnViewModel() { Title = "Creator", Width=10, Value = new List<string>(){p.ApplicationUserCreator.FirstName + " " + p.ApplicationUserCreator.LastName}},
+                                 new RequestIndexPartialColumnViewModel() { Title = "Time", Width=11, Value = new List<string>(){ } },
+                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ p.CreationDate.ToString("dd'/'MM'/'yyyy") }},
+                                 new RequestIndexPartialColumnViewModel() { Title = "Type", Width=10, Value = new List<string>(){ p.ProtocolType.ProtocolTypeDescription } },
+                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=12, Value = new List<string>(){ p.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } },
+                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Icons = iconList, AjaxID = p.ProtocolID }
+                            }
+            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+            return onePageOfProtocols;
+        }
+
         public async Task<IActionResult> CurrentProtocols()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;

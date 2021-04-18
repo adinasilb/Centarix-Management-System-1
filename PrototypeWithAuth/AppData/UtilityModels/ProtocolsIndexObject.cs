@@ -41,7 +41,6 @@ namespace PrototypeWithAuth.AppData
             }
             set { _SidebarType = value; }
         }
-        public String SidebarFilterID { get; set; }
         public AppUtility.PageTypeEnum PageType 
         {
             get
