@@ -5,7 +5,8 @@
     var color = "order-inv-color";
     var form = "order-inv-form";
     var dollarDisabled = "disabled disabled-text";
-    var shekelDisabled = "";
+    var shekelDisabledText = "";
+    var shekelReadOnly = "false";
     var hideVat = "";
     if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.LabManagement.ToString()))
     {
@@ -17,7 +18,8 @@
     if (Model.RequestItemViewModel.Requests[0].Currency == "USD")
     {
         dollarDisabled = "";
-        shekelDisabled = "disabled disabled-text";
+        shekelDisabledText = "disabled-text";
+        shekelReadOnly = "readonly";
     }
     if(!Model.RequestItemViewModel.Requests[0].IncludeVAT)
     {
@@ -130,8 +132,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                         </div>
                                         <div class="col-md-6">
                                             <div class="input-group">
-                                                <span class="input-group-text @shekelDisabled">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom @shekelDisabled" name="unit-price-shekel" id="unit-price-shekel"
+                                                <span class="input-group-text @shekelDisabledText">&#x20aa;</span>
+                                                <input class="form-control-plaintext border-bottom @shekelDisabledText" @shekelReadOnly name="unit-price-shekel" id="unit-price-shekel"
                                                        value="@Math.Round(Model.RequestItemViewModel.Requests[0].PricePerUnit, 2)" />
                                             </div>
                                         </div>
@@ -260,8 +262,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                             <div class="form-group">
                                 <label @*asp-for="RequestItemViewModel.Requests[0].Cost"*@ class="control-label"></label>
                                 <div class="input-group">
-                                    <span class="input-group-text @shekelDisabled">&#x20aa;</span>
-                                    <input asp-for="RequestItemViewModel.Requests[0].Cost" id="cost" class="form-control-plaintext border-bottom @shekelDisabled" min="1" />
+                                    <span class="input-group-text @shekelDisabledText">&#x20aa;</span>
+                                    <input name="RequestItemViewModel.Requests[0].Cost" id="cost" class="form-control-plaintext border-bottom @shekelDisabledText" @shekelReadOnly min="1" value="@Model.RequestItemViewModel.Requests[0].Cost" />
                                     <span class="text-danger-centarix" asp-validation-for="RequestItemViewModel.Requests[0].Cost"></span>
                                 </div>
                             </div>
