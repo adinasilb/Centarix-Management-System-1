@@ -1,0 +1,74 @@
+﻿@model ProtocolsInventoryFilterViewModel
+
+@using PrototypeWithAuth.AppData;
+@using PrototypeWithAuth.ViewModels;
+
+@using PrototypeWithAuth.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@using System.Globalization
+@using X.PagedList.Mvc.Core @* import this so we get our HTML Helper *@
+
+<div class="container-fluid order-inv-form">
+    <div class="row">
+        <ul class="list-unstyled mb-0 ">
+            <li>
+                @*<input type="text" value="Search" class="text  custom-order-inv custom-button mb-4 mx-3" />*@
+                <button type="button" id="invFilterPopover" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body"
+                        class="text custom-button custom-order-inv mb-5" value="Filter">
+                    Filter
+                </button>
+            </li>
+
+            <div style="display:none;" id="inventoryFilterContent" class="container-fluid">
+                @{
+                    await Html.RenderPartialAsync("_InventoryFilterResults", Model);
+                }
+            </div>
+
+        </ul>
+        <div id="inventoryFilterContentDiv" class="container inventoryFilterDiv">
+
+        </div>
+    </div>
+</div>
+<script>
+    $('body').on('click', "#applyFilter", function () {
+       // alert('clicked!')
+        var data = $.fn.BindSelectedFilters();
+        $.ajax({
+        //    processData: false,
+        //    contentType: false,
+            data: data,
+            async: true,
+            traditional: true,
+            url: "/Requests/_IndexTableWithProprietaryTabs?" + $.fn.getRequestIndexString(),
+            type: 'POST',
+            cache: false,
+            success: function (data) {
+                $("._IndexTableWithProprietaryTabs").html(data);
+                $('[data-toggle="popover"]').popover('dispose');
+                $('body').removeClass('popover-open');
+                $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
+                $('#invFilterPopover').addClass('custom-order-inv');
+            }
+        });
+    });
+    $("#invFilterPopover").click(function () {
+        $('[data-toggle="popover"]').popover('dispose');
+        $('#invFilterPopover').popover({
+            sanitize: false,
+            placement: 'bottom',
+            container: '#inventoryFilterContentDiv',
+            html: true,
+            trigger: 'manual',
+            content: function () {
+                return $('#inventoryFilterContent').html();
+            }
+        });
+        $('#invFilterPopover').popover('toggle');
+        $('#invFilterPopover').addClass('order-inv-background-color custom-button-font');
+        $('#invFilterPopover').removeClass('custom-order-inv');
+        //$('#inventoryFilterContent').style.display = "block";
+    });
+</script>

@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class RequestIndexPartialViewModelByVendor : ViewModelBase
     {
-        public ILookup<Vendor, RequestIndexPartialRowViewModel> RequestsByVendor { get; set; }
+        public ILookup<Vendor, RequestIndexProtocolsRowViewModel> RequestsByVendor { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
         public AppUtility.SidebarEnum SidebarType { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
