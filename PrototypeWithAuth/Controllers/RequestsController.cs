@@ -367,13 +367,14 @@ namespace PrototypeWithAuth.Controllers
         {
             RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
-            var editQuoteDetailsIcon = new IconColumnViewModel(0, " icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
-            var payNowIcon = new IconColumnViewModel(1, " icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
-            var addInvoiceIcon = new IconColumnViewModel(2, " icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
-            var deleteIcon = new IconColumnViewModel(3, " icon-delete-24px ", "black", "load-confirm-delete", "Delete");
-            var favoriteIcon = new IconColumnViewModel(4, " icon-favorite_border-24px", "black", "request-favorite", "Favorite");
-            var popoverMoreIcon = new IconColumnViewModel(5, "More");
-            var popoverPartialClarifyIcon = new IconColumnViewModel(6, "PartialClarify");
+            var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
+            var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
+            var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
+            
+            var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
+            var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
+            var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
             string checkboxString = "Checkbox";
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
@@ -570,13 +571,14 @@ namespace PrototypeWithAuth.Controllers
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude)
         {
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
-            var reorderIcon = new IconColumnViewModel(0, " icon-add_circle_outline-24px1 ", "#00CA72", "load-order-details", "Reorder");
-            var orderOperations = new IconColumnViewModel(1, " icon-add_circle_outline-24px1 ", "#00CA72", "order-approved-operation", "Order");
-            var deleteIcon = new IconColumnViewModel(2, " icon-delete-24px ", "black", "load-confirm-delete", "Delete");
-            var receiveIcon = new IconColumnViewModel(3, " icon-done-24px ", "#00CA72", "load-receive-and-location", "Receive");
-            var approveIcon = new IconColumnViewModel(4, " icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
-            var equipmentIcon = new IconColumnViewModel(5, " icon-settings-24px-1 ", "var(--lab-man-color);", "create-calibration", "Create Calibration");
-            var favoriteIcon = new IconColumnViewModel(6, " icon-favorite_border-24px", "black", "request-favorite", "Favorite");
+            var reorderIcon = new IconColumnViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", "load-order-details", "Reorder");
+            var orderOperations = new IconColumnViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", "order-approved-operation", "Order");
+            var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
+            var receiveIcon = new IconColumnViewModel(" icon-done-24px ", "#00CA72", "load-receive-and-location", "Receive");
+            var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
+            var equipmentIcon = new IconColumnViewModel(" icon-settings-24px-1 ", "var(--lab-man-color);", "create-calibration", "Create Calibration");
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
+            var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
@@ -601,7 +603,7 @@ namespace PrototypeWithAuth.Controllers
                         case 3:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            iconList.Add(deleteIcon);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
 
@@ -649,7 +651,7 @@ namespace PrototypeWithAuth.Controllers
                         default:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            iconList.Add(deleteIcon);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await GetSummaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                     }
@@ -677,7 +679,6 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.Favorites:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            iconList.Add(deleteIcon);
                             onePageOfProducts = await GetReceivedInventoryFavoriteRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                     }
@@ -828,7 +829,7 @@ namespace PrototypeWithAuth.Controllers
             var favoriteRequest = (_context.FavoriteRequests.Where(fr => fr.RequestID == RequestID).Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault());
             if (favIconIndex != null && favoriteRequest != null) //check these checks
             {
-                var unLikeIcon = new IconColumnViewModel(6, " icon-favorite-24px", "black", "request-favorite request-unlike", "Unlike");
+                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "black", "request-favorite request-unlike", "Unlike");
                 //favIcon = unLikeIcon;
                 newIconList[favIconIndex] = unLikeIcon;
             }

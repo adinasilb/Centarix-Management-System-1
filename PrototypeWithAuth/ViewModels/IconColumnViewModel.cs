@@ -10,15 +10,13 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class IconColumnViewModel : ViewModelBase
     {
-        public IconColumnViewModel(int? iconColumnViewModelID, string? iconClass = null, string? color = null, string? iconAjaxLink = null, string? tooltipTitle = null)
+        public IconColumnViewModel(string? iconClass = null, string? color = null, string? iconAjaxLink = null, string? tooltipTitle = null)
         {
-            IconColumnViewModelID = iconColumnViewModelID ?? 0;
             IconClass = iconClass;
             Color = color;
             IconAjaxLink = iconAjaxLink;
             TooltipTitle = tooltipTitle;
         }
-        public int IconColumnViewModelID { get; set; }
         public string IconClass { get; private set; }
         public string Color { get; private set; }
         public string IconAjaxLink { get; private set; }

@@ -387,10 +387,10 @@ namespace PrototypeWithAuth.AppData
             return priceColumn;
         }
 
-        public static List<T> CloneList<T>(T list)
-        {
-            return new List<T>();
-        }
+        //public static List<T> CloneList<T>(T list)
+        //{
+        //    return new List<T>();
+        //}
 
         public static List<T> DeepClone<T>(List<T> obj)
         {
