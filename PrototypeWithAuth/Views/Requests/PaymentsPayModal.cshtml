@@ -114,12 +114,12 @@
                                 <div class="payment-type form-group d-none">
                                     <label class="control-label">Payment Type</label>
                                     @Html.DropDownListFor(vm => vm.Payment.PaymentTypeID,
-            new SelectList(
-            Model.PaymentTypes,
-            "PaymentTypeID",
-            "PaymentTypeDescription"
-            ), "Select Payment Type",
-            new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
+                                        new SelectList(
+                                        Model.PaymentTypes,
+                                        "PaymentTypeID",
+                                        "PaymentTypeDescription"
+                                        ), "Select Payment Type",
+                                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext paymentType" })
                                 </div>
                             </div>
                             <div class="col-3 credit-card d-none">
@@ -191,6 +191,10 @@
                 success: function (data) {
                     $.fn.CloseModal("payments-pay");
                     $(".render-body").html(data);
+                    var payNowSidebar = $(".sidebarTitle.2");
+                    var payNowCount = @TempData["PayNowCount"];
+                    console.log(payNowCount)
+                    payNowSidebar.html("Pay Now <br> [" + payNowCount + "]");
                     return true;
                 },
                 error: function (jqxhr) {
@@ -199,8 +203,8 @@
             })
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-                                      
-                             
+
+
     })
 </script>
 <script src="~/js/TermsModal.js"></script>

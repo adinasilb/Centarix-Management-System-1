@@ -5,10 +5,11 @@
     $(this).addClass("active")
     //reset page number
     $('.page-number').val(1);
-    $.fn.ClearFilter();
-    ajaxPartialIndexTable($(this).attr("value"), "/Requests/_IndexTable", "._IndexTable", "GET")
+    var requestStatusId = $(this).attr("value");
+    var isProprietary = requestStatusId == 7 ? true : false;
+    $.fn.ClearFilter(isProprietary);
+    ajaxPartialIndexTable(requestStatusId, "/Requests/_IndexTable", "._IndexTable", "GET")
 });
-
 
 
 //function ajaxCallToPartialTable(status) {
