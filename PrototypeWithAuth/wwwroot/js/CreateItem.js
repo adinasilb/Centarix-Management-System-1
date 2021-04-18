@@ -139,13 +139,13 @@
                 $("#addOperationItem").attr('data-val', parseInt(newIndex) + 1);
                 $(".mdb-select" + newIndex).materialSelect();
                 $(".parent-select" + newIndex).materialSelect();
-                if (currency == "NIS") {
-                    $(".dollar-cost").attr("readonly", true)
-                    $(".dollar-cost").addClass("disabled-text");
-                    $(".request-cost-dollar-icon").addClass("disabled-text");
-                    $(".shekel-cost").attr("readonly", false)
-                    $(".shekel-cost").removeClass("disabled-text");
-                    $(".request-cost-shekel-icon").removeClass("disabled-text");
+                if (currency == "USD") {
+                    $(".dollar-cost").attr("disabled", false)
+                    $(".dollar-cost").removeClass("disabled-text");
+                    $(".request-cost-dollar-icon").removeClass("disabled-text");
+                    $(".shekel-cost").attr("readonly", true)
+                    $(".shekel-cost").addClass("disabled-text");
+                    $(".request-cost-shekel-icon").addClass("disabled-text");
                 }
             }
         });
