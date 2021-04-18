@@ -1589,7 +1589,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "Index",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-assignment_ind-24px-1"
+                IconName = "icon-format_list_bulleted-24px-01"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.MyProtocols) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1609,7 +1609,7 @@ namespace PrototypeWithAuth.AppData
                 Action = "ProtocolsFavorites",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
-                IconName = "icon-monetization_on-24px"
+                IconName = "icon-favorite_border-24px"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
