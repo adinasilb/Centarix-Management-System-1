@@ -292,6 +292,16 @@ namespace PrototypeWithAuth.Controllers
                     RequestsPassedIn = RequestsPassedIn.Where(r => Months.Contains(r.ParentRequest.OrderDate.Month));
                 }
             }
+            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.Favorites)
+            {
+                var usersFavoriteRequests = _context.FavoriteRequests.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                    .Select(fr => fr.RequestID).ToList();
+                RequestsPassedIn = fullRequestsList.Where(frl => usersFavoriteRequests.Contains(frl.RequestID));
+                //RequestsPassedIn = fullRequestsList.Where(frl =>
+                //_context.FavoriteRequests.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).Select(fr => fr.RequestID)
+                //.Contains(frl.RequestID));
+
+            }
             else //we just want what is in inventory
             {
                 RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5);
@@ -361,9 +371,10 @@ namespace PrototypeWithAuth.Controllers
             var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
             var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
+
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
-            var popoverMoreIcon = new IconColumnViewModel("More");
+            var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
             var resendIcon = new IconColumnViewModel("Resend");
             var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
             string checkboxString = "Checkbox";
@@ -570,6 +581,9 @@ namespace PrototypeWithAuth.Controllers
             var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
             var equipmentIcon = new IconColumnViewModel(" icon-settings-24px-1 ", "var(--lab-man-color);", "create-calibration", "Create Calibration");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
+            var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
+
+            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request");
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
@@ -594,7 +608,8 @@ namespace PrototypeWithAuth.Controllers
                         case 3:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            iconList.Add(deleteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
 
@@ -642,7 +657,7 @@ namespace PrototypeWithAuth.Controllers
                         default:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            iconList.Add(deleteIcon);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await GetSummaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                     }
@@ -663,6 +678,16 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.AccountingGeneral:
                     onePageOfProducts = await GetAccountingGeneralRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
+                    break;
+                case AppUtility.PageTypeEnum.RequestCart:
+                    switch (requestIndexObject.SidebarType)
+                    {
+                        case AppUtility.SidebarEnum.Favorites:
+                            iconList.Add(reorderIcon);
+                            iconList.Add(favoriteIcon);
+                            onePageOfProducts = await GetReceivedInventoryFavoriteRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
+                            break;
+                    }
                     break;
             }
 
@@ -768,12 +793,51 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
                              {
-                                 Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
+                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, iconList), AjaxID = r.RequestID
                              }
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
             return onePageOfProducts;
         }
+
+        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryFavoriteRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
+        {
+            var newIconList = iconList;
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            {
+                Columns = new List<RequestIndexPartialColumnViewModel>()
+                        {
+                             new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
+                             new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
+                             new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
+                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
+                             new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
+                             new RequestIndexPartialColumnViewModel()
+                             {
+                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, newIconList), AjaxID = r.RequestID
+                             }
+                        }
+            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+            return onePageOfProducts;
+        }
+
+        private List<IconColumnViewModel> GetIconListWithFavorites(int RequestID, List<IconColumnViewModel> iconList)
+        {
+            var newIconList = AppUtility.DeepClone(iconList);
+            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
+            var favoriteRequest = (_context.FavoriteRequests.Where(fr => fr.RequestID == RequestID).Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault());
+            if (favIconIndex != null && favoriteRequest != null) //check these checks
+            {
+                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "black", "request-favorite request-unlike", "Unlike");
+                newIconList[favIconIndex] = unLikeIcon;
+            }
+            return newIconList;
+        }
+
         private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetForApprovalOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
@@ -995,6 +1059,22 @@ namespace PrototypeWithAuth.Controllers
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             SetViewModelCounts(requestIndexObject, viewModel);
             SetViewModelProprietaryCounts(requestIndexObject, viewModel);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> IndexFavorites()
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            RequestIndexObject requestIndexObject = new RequestIndexObject()
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.Favorites
+            };
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             return View(viewModel);
         }
 
@@ -1568,7 +1648,7 @@ namespace PrototypeWithAuth.Controllers
              GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, "");
              GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, "");
          }
-*/
+    */
             DeleteTemporaryDocuments();
             return requestItemViewModel;
         }
@@ -1598,29 +1678,60 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(operationsItemViewModel);
         }
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> RequestFavorite(int requestID)
+        public async Task<IActionResult> RequestFavorite(int requestID, string FavType)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            var userID = _userManager.GetUserId(User);
+            if (FavType == "favorite")
             {
-                try
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    var favoriteRequest = new FavoriteRequest()
+                    try
                     {
-                        RequestID = requestID,
-                        ApplicationUserID = _userManager.GetUserId(User)
-                    };
-                    _context.Add(favoriteRequest);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
+                        var favoriteRequest = new FavoriteRequest()
+                        {
+                            RequestID = requestID,
+                            ApplicationUserID = userID
+                        };
+                        _context.Add(favoriteRequest);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    //throw new Exception(); //check this after!
+                    catch (Exception e)
+                    {
+                        await transaction.RollbackAsync();
+                        await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                    }
                 }
-                //throw new Exception(); //check this after!
-                catch (Exception e)
+            }
+            else if (FavType == "unlike")
+            {
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    await transaction.RollbackAsync();
-                    await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                    try
+                    {
+                        var favoriteRequest = _context.FavoriteRequests
+                            .Where(fr => fr.ApplicationUserID == userID)
+                            .Where(fr => fr.RequestID == requestID).FirstOrDefault();
+                        _context.Remove(favoriteRequest);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    //throw new Exception(); //check this after!
+                    catch (Exception e)
+                    {
+                        await transaction.RollbackAsync();
+                        await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                    }
                 }
             }
 
+            return new EmptyResult();
+        }
+
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ShareRequest(int requestID)
+        {
             return new EmptyResult();
         }
 
