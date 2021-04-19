@@ -364,6 +364,7 @@ namespace PrototypeWithAuth.Controllers
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("More");
+            var resendIcon = new IconColumnViewModel("Resend");
             var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
             string checkboxString = "Checkbox";
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
@@ -406,6 +407,7 @@ namespace PrototypeWithAuth.Controllers
             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
             .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
             .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
+                            iconList.Add(resendIcon);
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
                             viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()

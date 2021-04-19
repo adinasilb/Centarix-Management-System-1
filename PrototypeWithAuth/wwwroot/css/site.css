@@ -2326,3 +2326,13 @@ table.visual-locations-table td .visual-locations-div {
 body.modal-open .popover{
     z-index:5500 !important;
 }
+
+.btn-icon {
+    box-shadow: none;
+    color: #fff !important;
+    text-transform: capitalize;
+    border-radius: 50rem !important;
+    padding: .34rem 1.25rem !important;
+    border: 1px solid transparent;
+    margin: .375rem;
+}
