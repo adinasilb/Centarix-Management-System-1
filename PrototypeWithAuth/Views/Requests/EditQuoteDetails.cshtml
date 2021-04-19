@@ -160,7 +160,15 @@
                                                 </div>
                                                 <div class="input-group">
                                                     <span class="input-group-text request-cost-shekel-icon @shekelDisabledText">&#x20aa;</span>
-                                                    <input name="@Model.Requests[i].Cost" value="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom cost-validation @shekelDisabledText" id="cost" @shekelReadOnly/>
+                                                    @if (shekelDisabledText != "")
+                                                    {
+                                                        <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom  cost-validation @shekelDisabledText" min="1" readonly id="cost" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom" min="1" id="cost" />
+
+                                                    }
                                                     <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
                                                 </div>
                                             </div>
