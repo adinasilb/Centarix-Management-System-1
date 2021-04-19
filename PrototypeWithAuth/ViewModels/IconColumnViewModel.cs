@@ -21,5 +21,6 @@ namespace PrototypeWithAuth.ViewModels
         public string Color { get; private set; }
         public string IconAjaxLink { get; private set; }
         public string TooltipTitle { get; private set; }
+        public List<IconPopoverViewModel> IconPopovers { get; set; }
     }
 }

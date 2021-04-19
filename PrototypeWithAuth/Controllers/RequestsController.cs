@@ -370,7 +370,7 @@ namespace PrototypeWithAuth.Controllers
             var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
             var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
-            
+
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
@@ -578,7 +578,9 @@ namespace PrototypeWithAuth.Controllers
             var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
             var equipmentIcon = new IconColumnViewModel(" icon-settings-24px-1 ", "var(--lab-man-color);", "create-calibration", "Create Calibration");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
-            var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
+            var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
+
+            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.More, "ShareRequest", "Requests", AppUtility.PopoverEnum.None);
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
@@ -603,6 +605,7 @@ namespace PrototypeWithAuth.Controllers
                         case 3:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
@@ -1729,6 +1732,12 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
+            return new EmptyResult();
+        }
+
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ShareRequest(int requestID)
+        {
             return new EmptyResult();
         }
 

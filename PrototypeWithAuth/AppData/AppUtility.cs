@@ -100,6 +100,8 @@ namespace PrototypeWithAuth.AppData
         public enum RequestModalType { Create, Edit, Summary }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay }
+        public enum PopoverDescription { More, Share, Delete }
+        public enum PopoverEnum { None }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
