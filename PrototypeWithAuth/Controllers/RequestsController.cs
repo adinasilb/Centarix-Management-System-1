@@ -1977,14 +1977,15 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
+                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, uploadFolder);
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, uploadFolder);
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, uploadFolder);
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Shipments, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, uploadFolder);
+            
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, uploadFolder);
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Pictures, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, uploadFolder);
+                //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, uploadFolder);
+                //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, uploadFolder);
             }
         }
 
