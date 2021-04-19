@@ -665,7 +665,19 @@ namespace PrototypeWithAuth.AppData
                 Classes = menuClass,
                 IconName = "icon-notifications-24px"
             });
-
+            if (SidebarTitle == AppUtility.SidebarEnum.DidntArrive) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Didn't Arrive",
+                Controller = "Requests",
+                Action = "NotificationsView",
+                RouteValues = new RouteValueDictionary()
+                {
+                    {"DidntArrive", true }
+                },
+                Classes = menuClass,
+                IconName = "icon-local_shipping-24px"
+            });
             return SidebarMenuItems;
         }
         public static List<MenuItems> GetOrdersAndInventoryLocationSidebarMenuItems(string OrigClasses, string ActiveClasses, AppUtility.CategoryTypeEnum categoryType)
