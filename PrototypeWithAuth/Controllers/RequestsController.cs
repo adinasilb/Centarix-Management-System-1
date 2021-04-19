@@ -2352,20 +2352,21 @@ namespace PrototypeWithAuth.Controllers
                     message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
                     // add a "To" Email
+                    
                     message.To.Add(new MailboxAddress(vendorName, vendorEmail));
-                    if (emails.Count > 1)
+                    if (emails.Count >= 2)
                     {
                         message.Cc.Add(new MailboxAddress(emails[1]));
                     }
-                    if (emails.Count > 2)
+                    if (emails.Count >= 3)
                     {
                         message.Cc.Add(new MailboxAddress(emails[2]));
                     }
-                    if (emails.Count > 3)
+                    if (emails.Count >= 4)
                     {
                         message.Cc.Add(new MailboxAddress(emails[3]));
                     }
-                    if (emails.Count > 5)
+                    if (emails.Count >= 5)
                     {
                         message.Cc.Add(new MailboxAddress(emails[4]));
                     }
@@ -3767,7 +3768,7 @@ namespace PrototypeWithAuth.Controllers
             message.Subject = "Message to " + vendorName;
 
             //body
-            builder.TextBody = $"The order number {request.ParentRequest.OrderNumber} for {request.Product.ProductName} has not arrived yet.\n" +
+            builder.TextBody = $"The order number {request.ParentRequest.OrderNumber} for {request.Product.ProductName} , has not arrived yet.\n" +
                     $"Please update us on the matter.\n" +
                     $"Best regards,\n" +
                     $"{request.ApplicationUserCreator.FirstName} { request.ApplicationUserCreator.LastName}\n" +
