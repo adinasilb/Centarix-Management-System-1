@@ -16,6 +16,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace PrototypeWithAuth.AppData
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum PageTypeEnum
         {
-            None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary,
+            None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, RequestFavorite,
             AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments,
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,
             TimeKeeperReport, TimekeeperSummary,
@@ -47,7 +48,7 @@ namespace PrototypeWithAuth.AppData
         public enum SidebarEnum
         {
             None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List, Calibrate, Location, Cart, Notifications,
+            Quotes, List, Calibrate, Location, Cart, Favorites, Notifications,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker,
             Category, Details, Hours, Salary,
@@ -103,6 +104,8 @@ namespace PrototypeWithAuth.AppData
         public enum RequestModalType { Create, Edit, Summary }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay }
+        public enum PopoverDescription { More, Share, Delete }
+        public enum PopoverEnum { None }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -388,6 +391,21 @@ namespace PrototypeWithAuth.AppData
                 }
             }
             return priceColumn;
+        }
+
+        //public static List<T> CloneList<T>(T list)
+        //{
+        //    return new List<T>();
+        //}
+
+        public static List<T> DeepClone<T>(List<T> obj)
+        {
+            var newCopy = new List<T>();
+            foreach(var x in obj)
+            {
+                newCopy.Add(x);
+            }
+            return newCopy;
         }
 
         public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)
