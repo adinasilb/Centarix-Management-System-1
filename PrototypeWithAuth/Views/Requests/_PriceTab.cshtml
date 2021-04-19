@@ -377,9 +377,9 @@ Model.UnitTypeList,
 <div class="row">
 
     <div class="col-2">
-        <input type="checkbox" asp-for="Requests[0].Paid" class="form-check-input filled-in " disabled />
-        <label class="form-check-label" asp-for="Requests[0].Paid"></label>
-        <input type="hidden" asp-for="Requests[0].Paid" />
+        <input type="checkbox" asp-for="Requests[0].Payments.LastOrDefault().IsPaid" class="form-check-input filled-in " disabled />
+        <label class="form-check-label" asp-for="Requests[0].Payments.LastOrDefault().IsPaid"></label>
+        <input type="hidden" asp-for="Requests[0].Payments.LastOrDefault().IsPaid" />
     </div>
     <div class="col-2">
         <input type="checkbox" asp-for="Requests[0].IsPartial" class="form-check-input filled-in " disabled />
