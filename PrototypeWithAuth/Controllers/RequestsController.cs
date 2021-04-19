@@ -824,23 +824,14 @@ namespace PrototypeWithAuth.Controllers
 
         private List<IconColumnViewModel> GetIconListWithFavorites(int RequestID, List<IconColumnViewModel> iconList)
         {
-            //var AbstractCloneable = new AbstractCloneable();
-            //var newIconList = AbstractCloneable.Clone(iconList);
             var newIconList = AppUtility.DeepClone(iconList);
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
-            //var favIcon = newIconList.Where(ni => ni.IconAjaxLink.Contains("request-favorite")).FirstOrDefault();
             var favoriteRequest = (_context.FavoriteRequests.Where(fr => fr.RequestID == RequestID).Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault());
             if (favIconIndex != null && favoriteRequest != null) //check these checks
             {
                 var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "black", "request-favorite request-unlike", "Unlike");
-                //favIcon = unLikeIcon;
                 newIconList[favIconIndex] = unLikeIcon;
             }
-            //else if (favIconIndex != null && favoriteRequest == null)
-            //{
-            //    var favoriteIcon = new IconColumnViewModel(6, " icon-favorite_border-24px", "black", "request-favorite", "Favorite");
-            //    newIconList[favIconIndex] = favoriteIcon;
-            //}
             return newIconList;
         }
 

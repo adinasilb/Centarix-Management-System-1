@@ -57,9 +57,9 @@
                                                                             <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
                                                                             <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
                                                                         </a>*@
-                                                                    <a data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation"
-                                                                       data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description" class="btn-link text no-hover @iconpopover.AjaxCall">
-                                                                        <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
+                                                                    <a class="btn-link text no-hover @iconpopover.AjaxCall" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation"
+                                                                       data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description">
+                                                                        <i class="@iconpopover.Icon @iconpopover.AjaxCall" style="@iconpopover.Color"></i>
                                                                         <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
                                                                     </a>
                                                                 </div>

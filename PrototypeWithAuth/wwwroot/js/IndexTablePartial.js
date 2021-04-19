@@ -13,8 +13,10 @@
 
 });
 
-$(".share-request").on("click", function (e) {
+$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
 	alert("share request");
+	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
+alert("share request: " + )
 	$.ajax({
 		async: true,
 		url: "/Requests/ShareRequest/?id=" + val,
