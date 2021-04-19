@@ -377,7 +377,7 @@
             //dataType: "string",
             success: function (data) {
                 $('#loading').hide();
-                $.fn.OpenModal('modal','order-late', data)
+                $.fn.OpenModal('modal','late-order', data)
             }
 
         });
@@ -1141,10 +1141,10 @@
             $('body').removeClass('popover-open');
         });
 
-        $.fn.ClearFilter = function () {
+        $.fn.ClearFilter = function (isProprietary) {
             $.ajax({
                 async: true,
-                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0",
+                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&isProprietary=" + isProprietary,
                 type: 'POST',
                 cache: false,
                 success: function (newData) {

@@ -3,7 +3,7 @@
 <div class="modal modal-document fader" id="orderLateModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="sm-modal modal-dialog-centered mx-auto" >
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('order-late');">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('late-order');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding">
@@ -17,7 +17,7 @@
                 </div>
                 <div class="modal-body border rounded m-0 p-0">
                     <p class="p-3 text" >
-                        The order number @Model.ParentRequest.OrderNumber for @Model.Product.ProductName , has not arrived yet.<br />
+                        The order number @Model.ParentRequest.OrderNumber for @Model.Product.ProductName has not arrived yet.<br />
                         Please update us on the matter.<br />
                         Best regards,<br />
                         @Model.ApplicationUserCreator.FirstName @Model.ApplicationUserCreator.LastName <br />
@@ -27,7 +27,7 @@
                 <div class="modal-footer border-0 p-0" >
                     <div class="mx-auto modal-footer-mt">
                         <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin" asp-action="OrderLateModal" value="Send" />
-                        <button type="button" class="custom-button custom-cancel cancel-email" data-dismiss="modal"  onclick="$.fn.CloseModal('order-late');">Cancel</button>
+                        <button type="button" class="custom-button custom-cancel cancel-email" data-dismiss="modal"  onclick="$.fn.CloseModal('late-order');">Cancel</button>
                     </div>
                 </div>
             </form>

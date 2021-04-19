@@ -1,0 +1,85 @@
+﻿@model PrototypeWithAuth.ViewModels.ProtocolsIndexViewModel
+@using PrototypeWithAuth.AppData
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@if (AppUtility.IsAjaxRequest(Context.Request))
+{
+    <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text error-msg"></span></div>
+    <br />
+}
+<div class="">
+    <input type="hidden" asp-for="PageNumber" class="page-number" />
+    <table class="table table-headerspaced table-noheaderlines table-hover ">
+        <tbody>
+            @for (int i = 0; i < Model.PagedList.Count; i++)
+            {
+                <tr class="text-center ">
+                    @*<td width="7%">
+                        <div class="form-check order-inv-form">
+                            <input type="checkbox" class="form-check-input filled-in" id="@Model.PagedList[itemNum].RequestID">
+                            <label class="form-check-label" for="@Model.PagedList[itemNum].RequestID">@Model.PagedList[itemNum].RequestID</label>
+                        </div>
+                    *@
+                    @foreach (var col in Model.PagedList[i].Columns)
+                    {
+                        <td width="@col.Width%" class="@(col.Width==0 ? "p-0" :"")">
+                            @if (col.Image != null)
+                            {
+                                <img src="@col.Image" alt="Image" width="75" class="category-image" />
+                            }
+                            else if (col.Icons != null)
+                            {
+                                <div class="d-inline-flex">
+
+                                    @foreach (var icon in col.Icons)
+                                    {
+                                        <div class="table-icon-div">
+
+                                            <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                               title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                            </a>
+
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                for (int val = 0; val < col.Value.Count; val++)
+                                {
+                                    if (val != 0)
+                                    {
+                                        <br />
+                                    }
+                                    if (col.AjaxLink != null)
+                                    {
+                                        <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID" data-target="item" href="item">
+                                            <p class="m-0">@col.Value[val]</p>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <label class="m-0 p-0">@col.Value[val]</label>
+                                    }
+                                }
+
+                            }
+                        </td>
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-12 justify-content-center d-flex">
+        @Html.PagedListPager(Model.PagedList, page => Url.Action(" "), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item pr-4" }, DisplayLinkToNextPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToPreviousPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToLastPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToFirstPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, MaximumPageNumbersToDisplay = 10, DisplayEllipsesWhenNotShowingAllPageNumbers = true })
+    </div>
+</div>
+@if (AppUtility.IsAjaxRequest(this.Context.Request))
+{
+    <script>$('[data-toggle="tooltip"]').tooltip()</script>
+}

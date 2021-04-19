@@ -42,6 +42,7 @@ namespace PrototypeWithAuth.AppData
             UsersUser, UsersWorkers,
             OperationsRequest, OperationsInventory, OperationsSearch,
             ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
+            ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask
 
         }
         public enum SidebarEnum
@@ -61,7 +62,7 @@ namespace PrototypeWithAuth.AppData
             StandingOrders,
             [Display(Name = "No Invoice")]
             NoInvoice,
-            [Display(Name = "Didnt Arrive")]
+            [Display(Name = "Didn't Arrive")]
             DidntArrive,
             [Display(Name = "Partial Delivery")]
             PartialDelivery,
@@ -69,7 +70,10 @@ namespace PrototypeWithAuth.AppData
             ForClarification,
             Add, AwaitingApproval,
             [Display(Name = "Specify Payment")]
-            SpecifyPayment
+            SpecifyPayment,
+            CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
+            SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
+            Library, Personal, SharedWithMe, Favorites, Active, Done, LastProtocol
         }
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
