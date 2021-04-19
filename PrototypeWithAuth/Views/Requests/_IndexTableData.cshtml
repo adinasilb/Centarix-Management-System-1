@@ -52,8 +52,13 @@
                                                             @foreach (var iconpopover in icon.IconPopovers)
                                                             {
                                                                 <div class="row px-3 accounting-popover">
-                                                                    <a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
-                                                                       asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
+                                                                    @*<a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
+                                                                           asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
+                                                                            <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
+                                                                            <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                                        </a>*@
+                                                                    <a data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation"
+                                                                       data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description" class="btn-link text no-hover @iconpopover.AjaxCall">
                                                                         <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
                                                                         <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
                                                                     </a>
