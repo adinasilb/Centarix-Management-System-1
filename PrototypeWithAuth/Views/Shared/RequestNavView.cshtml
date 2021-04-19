@@ -167,6 +167,26 @@
     {
         SidebarMenuItems = CreateMenus.CreateExpensesWorkersSidebar(sidebarType, originalNavClasses, "expenses-filter");
     }
+    else if (pageType == AppUtility.PageTypeEnum.ProtocolsWorkflow)
+    {
+        SidebarMenuItems = CreateMenus.CreateProtocolsWorkflowSidebar(sidebarType, originalNavClasses, "protocols-filter");
+    }
+    else if (pageType == AppUtility.PageTypeEnum.ProtocolsProtocols)
+    {
+        SidebarMenuItems = CreateMenus.CreateProtocolsProtocolsSidebar(sidebarType, originalNavClasses, "protocols-filter");
+    }
+    else if (pageType == AppUtility.PageTypeEnum.ProtocolsCreate)
+    {
+        SidebarMenuItems = CreateMenus.CreateProtocolsCreateSidebar(sidebarType, originalNavClasses, "protocols-filter");
+    }
+    else if (pageType == AppUtility.PageTypeEnum.ProtocolsReports)
+    {
+        SidebarMenuItems = CreateMenus.CreateProtocolsReportsSidebar(sidebarType, originalNavClasses, "protocols-filter");
+    }
+    else if (pageType == AppUtility.PageTypeEnum.ProtocolsResources)
+    {
+        SidebarMenuItems = CreateMenus.CreateProtocolsResourcesSidebar(sidebarType, originalNavClasses, "protocols-filter");
+    }
 
     var sidebarWidth = "119px";
 

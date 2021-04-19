@@ -362,6 +362,7 @@ namespace PrototypeWithAuth.Controllers
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
             var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("More");
             var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
             string checkboxString = "Checkbox";
@@ -481,7 +482,7 @@ namespace PrototypeWithAuth.Controllers
 
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
-                    
+
                     var paymentList = GetPaymentRequests(requestIndexObject.SidebarType);
                     iconList.Add(payNowIcon);
                     iconList.Add(popoverMoreIcon);
@@ -566,6 +567,7 @@ namespace PrototypeWithAuth.Controllers
             var receiveIcon = new IconColumnViewModel(" icon-done-24px ", "#00CA72", "load-receive-and-location", "Receive");
             var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
             var equipmentIcon = new IconColumnViewModel(" icon-settings-24px-1 ", "var(--lab-man-color);", "create-calibration", "Create Calibration");
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
@@ -589,6 +591,7 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case 3:
                             iconList.Add(reorderIcon);
+                            iconList.Add(favoriteIcon);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
@@ -630,11 +633,13 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.RequestStatusID)
                     {
                         case 7:
+                            iconList.Add(favoriteIcon);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetSummaryProprietaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                         default:
                             iconList.Add(reorderIcon);
+                            iconList.Add(favoriteIcon);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetSummaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
@@ -1242,7 +1247,7 @@ namespace PrototypeWithAuth.Controllers
 
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p=>p.ProductCreationDate).LastOrDefault().SerialNumber ?? "L0").Substring(1));
+                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p => p.ProductCreationDate).LastOrDefault().SerialNumber ?? "L0").Substring(1));
 
                 var RequestNum = 1;
                 var i = 1;
@@ -1433,7 +1438,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
                 }
-                else {
+                else
+                {
                     parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToListAsync();
                 }
                 productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
@@ -1589,6 +1595,32 @@ namespace PrototypeWithAuth.Controllers
             //operationsItemViewModel.Request.Product.ProductSubcategory = new ProductSubcategory();
             return PartialView(operationsItemViewModel);
         }
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> RequestFavorite(int requestID)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var favoriteRequest = new FavoriteRequest()
+                    {
+                        RequestID = requestID,
+                        ApplicationUserID = _userManager.GetUserId(User)
+                    };
+                    _context.Add(favoriteRequest);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                //throw new Exception(); //check this after!
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                }
+            }
+
+            return new EmptyResult();
+        }
 
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemData(int? id, int? Tab = 0, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
@@ -1631,7 +1663,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product.Vendor)
                 .Include(r => r.Invoice)
                 .Include(r => r.RequestStatus)
-                .Include(r => r.ApplicationUserCreator).Include(r=>r.PaymentStatus).Include(r=>r.Payments).ThenInclude(p=>p.CompanyAccount).Include(r=>r.ApplicationUserReceiver)
+                .Include(r => r.ApplicationUserCreator).Include(r => r.PaymentStatus).Include(r => r.Payments).ThenInclude(p => p.CompanyAccount).Include(r => r.ApplicationUserReceiver)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
 
@@ -2338,7 +2370,7 @@ namespace PrototypeWithAuth.Controllers
                     var builder = new BodyBuilder();
 
                     var userId = requests.FirstOrDefault().ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
-                    //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                                                                                                                     //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
                     var currentUser = _context.Users.FirstOrDefault(u => u.Id == userId);
                     //var users = _context.Users.ToList();
                     //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
@@ -2419,7 +2451,7 @@ namespace PrototypeWithAuth.Controllers
                                     foreach (var r in requests)
                                     {
                                         r.RequestStatusID = 2;
-                                      
+
                                         if (r.OrderType != AppUtility.OrderTypeEnum.OrderNow.ToString())
                                         {
                                             r.Product = null;
@@ -3134,7 +3166,8 @@ namespace PrototypeWithAuth.Controllers
              .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
                     bool hasLocationInstances = false;
                     if (receivedLocationViewModel.CategoryType == 1)
-                    { foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
+                    {
+                        foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
                         {
                             if (place.Placed)
                             {
@@ -3564,7 +3597,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 using (var transaction = _context.Database.BeginTransaction())
                 {
-                    try {
+                    try
+                    {
                         var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Include(x => x.ParentQuote).Select(r => r);
                         //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
                         var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
@@ -4141,12 +4175,12 @@ namespace PrototypeWithAuth.Controllers
 
                     foreach (var request in addInvoiceViewModel.Requests)
                     {
-                        var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r=>r.Payments).FirstOrDefault();
+                        var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.Payments).FirstOrDefault();
                         RequestToSave.Cost = request.Cost;
                         RequestToSave.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
-                        if(request.PaymentStatusID==5)
+                        if (request.PaymentStatusID == 5)
                         {
-                            if(request.Payments.Count() ==request.Installments)
+                            if (request.Payments.Count() == request.Installments)
                             {
                                 request.HasInvoice = true;
                             }
@@ -4863,7 +4897,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             if (req.PaymentStatusID == 7)
                             {
-                             
+
                                 var payment = new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) };
                                 if (SaveUsingSessions)
                                 {
