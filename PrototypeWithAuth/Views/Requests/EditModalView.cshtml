@@ -137,12 +137,17 @@
                                 </div>
                             </div>
                         }
+                    <div class="form-group">
                         @if (Model.Requests[0].RequestStatusID != 7 && Model.SectionType != AppUtility.MenuItems.Operations)
                         {
                             <div class="d-flex align-items-center">
                                 <button type="button" value="@Model.Requests[0].RequestID" class="load-order-details custom-button custom-button-font @color m-auto">Request</button>
                             </div>
                         }
+                        <div class="row pt-2">
+                                Serial: @Model.Requests[0].Product.SerialNumber
+                        </div>
+                    </div>
 
                     </div>
                     <div class="row">

@@ -3767,10 +3767,10 @@ namespace PrototypeWithAuth.Controllers
             message.Subject = "Message to " + vendorName;
 
             //body
-            builder.TextBody = $"The order number {request.ParentRequest.OrderNumber} for {request.Product.ProductName} , has not arrived yet.\n" +
+            builder.TextBody = $"The order number {request.ParentRequest.OrderNumber} for {request.Product.ProductName} has not arrived yet.\n" +
                     $"Please update us on the matter.\n" +
                     $"Best regards,\n" +
-                    $"{request.ApplicationUserCreator.FirstName} { request.ApplicationUserCreator.FirstName}\n" +
+                    $"{request.ApplicationUserCreator.FirstName} { request.ApplicationUserCreator.LastName}\n" +
                     $"Centarix";
 
             message.Body = builder.ToMessageBody();
