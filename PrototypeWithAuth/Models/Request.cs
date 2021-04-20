@@ -111,14 +111,12 @@ namespace PrototypeWithAuth.Models
 
 
         //payment info
-        public bool Paid { get; set; }
         public uint? Installments { get; set; } //number of installments
         public IEnumerable<Payment> Payments { get; set; }
 
         public int? PaymentStatusID { get; set; }
         [ForeignKey("PaymentStatusID")]
         public PaymentStatus PaymentStatus { get; set; }
-        public bool HasInvoice { get; set; }
         public bool IsPartial { get; set; }
         public string NoteForPartialDelivery { get; set; }
         public bool IsClarify { get; set; }

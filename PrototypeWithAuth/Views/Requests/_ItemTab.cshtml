@@ -260,9 +260,9 @@
                 <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
             </div>
         </div>
-        @if (request.HasInvoice || request.ParentRequest?.SupplierOrderNumber != null)
+        @if (request.Payments.FirstOrDefault().HasInvoice || request.ParentRequest?.SupplierOrderNumber != null)
         {<div class="row">
-            @if (request.HasInvoice)
+            @if (request.Payments.FirstOrDefault().HasInvoice)
             {
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].Invoice.InvoiceNumber" class="control-label"></label>
