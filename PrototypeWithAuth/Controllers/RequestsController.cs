@@ -4859,11 +4859,11 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 if (req.Product != null)
                                 {
-                                    req.Product.Vendor = null;
-                                    if (termsViewModel.SectionType == AppUtility.MenuItems.Operations) //TODO: better if
-                                    {
-                                        req.Product.ProductSubcategory = null;
-                                    }
+                                //    req.Product.Vendor = null;
+                                    //if (termsViewModel.SectionType == AppUtility.MenuItems.Operations) //TODO: better if
+                                    //{
+                                    //    req.Product.ProductSubcategory = null;
+                                    //}
                                 }
                                 if (req.PaymentStatusID == 7)
                                 {
@@ -4871,7 +4871,7 @@ namespace PrototypeWithAuth.Controllers
                                     req.ApplicationUserReceiverID = _userManager.GetUserId(User);
                                     req.ArrivalDate = DateTime.Now;
                                 }
-
+                                _context.ChangeTracker.AutoDetectChangesEnabled = false;
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }
