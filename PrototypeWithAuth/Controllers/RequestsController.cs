@@ -413,8 +413,6 @@ namespace PrototypeWithAuth.Controllers
                             }).ToLookup(c => c.Vendor);
                             break;
                         case AppUtility.SidebarEnum.Quotes:
-                            var favoriteRequests = _context.FavoriteRequests.ToList();
-                            var userID = _userManager.GetUserId(User);
                             var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
             .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
@@ -440,7 +438,7 @@ namespace PrototypeWithAuth.Controllers
                                      new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                      new RequestIndexPartialColumnViewModel()
                                      {
-                                         Title = "", Width=10, Icons = GetIconListWithFavorites(r, iconList, favoriteRequests, userID), AjaxID = r.RequestID
+                                         Title = "", Width=10, Icons = GetIconListWithFavorites(r, iconList), AjaxID = r.RequestID
                                      }
                                 }
                             }).ToLookup(c => c.Vendor);
@@ -830,7 +828,7 @@ namespace PrototypeWithAuth.Controllers
             return onePageOfProducts;
         }
 
-        private static List<IconColumnViewModel> GetIconListWithFavorites(Request request, List<IconColumnViewModel> iconList, List<FavoriteRequest> favoriteRequests, string userID)
+        private static List<IconColumnViewModel> GetIconListWithFavorites(Request request, List<IconColumnViewModel> iconList, List<FavoriteRequest> favoriteRequests =null, string userID =null)
         {
             var newIconList = AppUtility.DeepClone(iconList);
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
