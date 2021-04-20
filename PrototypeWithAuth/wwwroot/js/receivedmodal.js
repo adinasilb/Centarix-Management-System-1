@@ -60,9 +60,23 @@
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
+			var name = ""
+		$(".dropdown.dropdown-main span:not(.caret)").each(function(){
+		if($(this).html()!="select")
+		{
+			if($(this).attr("description") !=undefined)
+			{
+				name+=$(this).attr("description");
+			}
+
+		}
+			
+		});
+		$(".locationFullName").html(name);
 	});
 
 	function SLI(el) {
+	
 		//alert("in SLI function");
 		//ONE ---> GET THE NEXT DROPDOWNLIST
 		if($(el).attr("isNoRack")=="true")
@@ -78,6 +92,11 @@
 		}
 		var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
 		$(nextSelect).html('');
+		//clear all the next selects
+		$(el).parents('.form-group').nextAll().each(function(){
+			$(this).find('.dropdown-menu').html('');
+			$(this).find('.dropdown-main').find('span:not(.caret)').text('select');
+		});
 		console.log(nextSelect)
 		console.log("selected")
 		var locationInstanceParentId = $(el).val();
@@ -89,7 +108,10 @@
 			FillNextSelect(nextSelect, locationInstanceParentId);
 			//alert("items: " + items);
 			//nextSelect.html(items);
+		
+		
 		}
+			
 		//TWO ---> FILL VISUAL VIEW
 		var myDiv = $(".visualView");
 		if (locationInstanceParentId == 0) { //if zero was selected
@@ -117,6 +139,7 @@
 			}
 		}
 		else {
+		
 			console.log("regular visual");
 			$.ajax({
 				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
@@ -164,6 +187,7 @@
 		}
 
 		$(el).parents('.dropdown-main').find('span:not(.caret)').text($(el).text());
+		$(el).parents('.dropdown-main').find('span:not(.caret)').attr("description", $(el).attr("data-string"));
 	};
 
 	function FillNextSelect(nextSelect, locationInstanceParentId) {
@@ -172,13 +196,18 @@
 			var item = "<li>Select Location Instance</li>";
 			$.each(result, function (i, field) {
 				var emptyText = "";
+				var description =field.locationInstanceAbbrev;
+				if(description ==null ||description =='')
+				{
+					description =field.locationInstanceName
+				}
 				if (field.isEmptyShelf && field.labPartID<=0) {
 					emptyText = " (nr)";
-					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" >' + field.locationInstanceName + emptyText + '</li>'
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
 				}
 				else
 				{
-					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" >' + field.locationInstanceName + emptyText + '</li>'
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
 				}
 				
 			});
@@ -203,10 +232,10 @@
 	//	//now send a new visual
 	//});
 
-	$(".visual-locations td").on("click", function () {
+	$(".visual-locations td").on("click", function (e) {
 		if (!$(this).hasClass("not-clickable")) {
+			
 			if ($(this).has("i").length) {
-
 				var locationInstanceId = $(this).children('div').first().children("input").first().attr("liid");
 				var lip = $(".liid." + locationInstanceId);
 				console.log("lip val: " + lip.val());
@@ -225,6 +254,7 @@
 
 				}
 				else {
+					$(this).children(".css-checkbox").addClass("first");
 					//console.log("FALSE!");
 					lip.val("true"); //IMPT: sending back the true value to controller to place it here
 
@@ -238,5 +268,103 @@
 			}
 		}
 	});
+	$(".visual-locations td").on("click", function (e) {
+		var element = $(this);
+		if (!element.hasClass("not-clickable")) {
+	
+			if (e.shiftKey) {
+				MultipleLocation(element, ToggleBoxUnitSelected);
+			}
+			$(".first-selected").removeClass("first-selected");
+			element.addClass("first-selected");
+		}
+	});
+	function ToggleBoxUnitSelected(element, select) {
+		var locationInstanceId = element.children('div').first().children("input").first().attr("liid");
+		var lip = $(".liid." + locationInstanceId);
+		if (select) {
+			element.addClass('location-selected')
+			element.children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
+			element.children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
+			lip.val("true")			
+		}
+		else {
+			element.removeClass('location-selected')
+			element.children('div').first().children(".row-1").children("i").addClass("icon-add_circle_outline-24px1");
+			element.children('div').first().children(".row-1").children("i").removeClass("icon-delete-24px");
+			lip.val("false")			
+        }
+    }
+
 
 });
+
+function MultipleLocation(element, ToggleBoxUnitSelected) {
+
+        console.log(element);
+        var firstSelected = $(".first-selected");
+        console.log(firstSelected);
+        var currentBox = element;
+        var boxIsPrevious = false;
+        var select = firstSelected.hasClass('location-selected');
+        if (!firstSelected.parent("tr").is(element.parent("tr"))) {
+            if (element.parent("tr").prevAll().filter(firstSelected.parent("tr")).length == 0) {
+                console.log("Earlier row");
+                boxIsPrevious = true;
+            }
+            var end = false;
+            if (boxIsPrevious) {
+                firstSelected.parent("tr").prevUntil(element.parent("tr").prev()).each(function() {
+                    var reversed = $(this).children("td").toArray().reverse();
+                    reversed.forEach(td => {
+						if (!end) {
+                            if ($(td).is(currentBox)) {
+                                end = true;
+                            }
+                            else {
+                                if (!$(td).hasClass("graduated-table-background-color")) {
+                                    ToggleBoxUnitSelected($(td), select);
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+            else {
+                firstSelected.parent("tr").nextUntil(element.parent("tr").next()).each(function() {
+                    $(this).children("td").each(function() {
+                        if (!end) {
+                            if ($(this).is(currentBox)) {
+                                end = true;
+                            }
+                            else {
+                                if (!$(this).hasClass("graduated-table-background-color")) {
+                                    ToggleBoxUnitSelected($(this), select);
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+        }
+        else {
+            if (element.prevAll().filter(firstSelected).length == 0) {
+                console.log("Earlier box");
+                boxIsPrevious = true;
+            }
+        }
+        if (boxIsPrevious) {
+			firstSelected.prevUntil(element, ".visual-box").each(function () {
+                if (!$(this).hasClass("graduated-table-background-color")) {
+                    ToggleBoxUnitSelected($(this), select);
+                }
+            });
+        }
+        else {
+            firstSelected.nextUntil(element, ".visual-box").each(function() {
+                if (!$(this).hasClass("graduated-table-background-color")) {
+                    ToggleBoxUnitSelected($(this), select);
+                }
+            });
+        }
+}

@@ -61,11 +61,15 @@ $(function () {
 
 		$.getJSON(url, { ParentCategoryId: parentCategoryId }, function (data) {
 			console.log(" in json")
+			$(sublistSelector).children("option").each(function (i, option) {
+				option.remove();
+			});
 			var firstitem1 = '<option value=""> Select Subcategory</option>';
-			$(sublistSelector).empty();
+			
 			$(sublistSelector).append(firstitem1);
 
 			$.each(data, function (i, subCategory) {
+				console.log(subCategory.productSubcategoryDescription)
 				var newitem1 = '<option value="' + subCategory.productSubcategoryID + '">' + subCategory.productSubcategoryDescription + '</option>';
 				$(sublistSelector).append(newitem1);
 			});
@@ -1109,13 +1113,16 @@ $(function () {
 		$("#loading").show();
 		$.fn.CallModal(itemurl, "update-time-worked");
 	});
-
-	$(".report-off-day").off('click').click(function (e) {
-		var offDayType = $(this).attr("value");
+	$.fn.reportOffDay =function(e)
+	{
+		var offDayType = $(e).attr("value");
 		var pageType = $("#masterPageType").val();
 		var itemurl = "OffDayModal?PageType=" + pageType + "&OffDayType=" + offDayType;
 		$("#loading").show();
 		$.fn.CallModal(itemurl, "off-day");
+	}
+	$(".report-off-day").off('click').click(function () {
+			$.fn.reportOffDay($(this));
 	});
 
 	$('.no-hours-reported').off('change').change(function (e) {
@@ -1140,6 +1147,10 @@ $(function () {
 				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=VacationDay";
 				$.fn.CallModal(itemurl,"off-day");
 				break;
+			case "5":
+				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SpecialDay";
+				$.fn.CallModal(itemurl,"off-day");
+			break;
 		}
 	});
 
@@ -1525,19 +1536,9 @@ $(function () {
 			$("#home-btn").popover('toggle');
 
 	});
-	$("#addRequestComment").click(function () {
-		$('[data-toggle="popover"]').popover('dispose');
-		$('#addRequestComment').popover({
-			sanitize: false,
-			placement: 'bottom',
-			html: true,
-			content: function () {
-				return $('#popover-content').html();
-			}
-		});
-		$('#addRequestComment').popover('toggle');
+	
 
-	});
+
 
 
 

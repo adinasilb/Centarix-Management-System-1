@@ -10,6 +10,8 @@ namespace PrototypeWithAuth.Models
     public class Product
     {
         //IMPT: When adding in data validation make sure that you turn data-val off in the search
+        //Rollback favorites and shares
+
         [Key]
         public int ProductID { get; set; }
 
@@ -47,6 +49,10 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Catalog Number")]
         public string CatalogNumber { get; set; }
         public string ProductHebrewName { get; set; }
+
+        [Display(Name = "Serial Number")]
+        public string SerialNumber { get; set; }
+        public DateTime ProductCreationDate { get; set; }
 
     }
 }

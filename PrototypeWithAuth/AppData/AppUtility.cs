@@ -16,6 +16,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -34,19 +35,20 @@ namespace PrototypeWithAuth.AppData
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum PageTypeEnum
         {
-            None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary,
+            None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, RequestFavorite,
             AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments,
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,
             TimeKeeperReport, TimekeeperSummary,
             UsersUser, UsersWorkers,
             OperationsRequest, OperationsInventory, OperationsSearch,
             ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
+            ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask
 
         }
         public enum SidebarEnum
         {
             None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List, Calibrate, Location, Cart, Notifications,
+            Quotes, List, Calibrate, Location, Cart, /*Favorites,*/ Notifications,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker,
             Category, Details, Hours, Salary,
@@ -60,7 +62,7 @@ namespace PrototypeWithAuth.AppData
             StandingOrders,
             [Display(Name = "No Invoice")]
             NoInvoice,
-            [Display(Name = "Didnt Arrive")]
+            [Display(Name = "Didn't Arrive")]
             DidntArrive,
             [Display(Name = "Partial Delivery")]
             PartialDelivery,
@@ -68,7 +70,10 @@ namespace PrototypeWithAuth.AppData
             ForClarification,
             Add, AwaitingApproval,
             [Display(Name = "Specify Payment")]
-            SpecifyPayment
+            SpecifyPayment,
+            CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
+            SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
+            Library, Personal, SharedWithMe, Favorites, Active, Done, LastProtocol
         }
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
@@ -98,7 +103,9 @@ namespace PrototypeWithAuth.AppData
         public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells }
         public enum RequestModalType { Create, Edit, Summary }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
-        public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave }
+        public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay }
+        public enum PopoverDescription { More, Share, Delete }
+        public enum PopoverEnum { None }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -384,6 +391,21 @@ namespace PrototypeWithAuth.AppData
                 }
             }
             return priceColumn;
+        }
+
+        //public static List<T> CloneList<T>(T list)
+        //{
+        //    return new List<T>();
+        //}
+
+        public static List<T> DeepClone<T>(List<T> obj)
+        {
+            var newCopy = new List<T>();
+            foreach(var x in obj)
+            {
+                newCopy.Add(x);
+            }
+            return newCopy;
         }
 
         public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)

@@ -18,7 +18,32 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-        //public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; } // do we not need to include this set in the db context???
+       
+        public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
+        public DbSet<ShareRequest> ShareRequests { get; set; }
+        public DbSet<ProtocolInstanceResult> ProtocolInstanceResults { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<AuthorProtocol> AuthorProtocols { get; set; }
+        public DbSet<ProtocolType> ProtocolTypes { get; set; }
+        public DbSet<TagArticle> TagArticles { get; set; }
+        public DbSet<TagProtocol> TagProtocols { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<Report> Reports { get; set; }
+        public DbSet<ResourceType> ResourceTypes { get; set; }
+        public DbSet<Article> Articles { get; set; }
+        public DbSet<Material> Materials { get; set; }
+        public DbSet<MaterialCategory> MaterialCategories { get; set; }
+        public DbSet<ProtocolCategory> ProtocolCategories { get; set; }
+        public DbSet<ProtocolSubCategory> ProtocolSubCategories { get; set; }
+        public DbSet<LineType> LineTypes { get; set; }
+        public DbSet<FunctionLine> FunctionLines { get; set; }
+        public DbSet<MaterialProtocol> MaterialProtocols { get; set; }
+        public DbSet<ProtocolComment> ProtocolComments { get; set; }
+        public DbSet<Line> Lines { get; set; }
+        public DbSet<ProtocolInstance> ProtocolInstances { get; set; }
+        public DbSet<Link> Links { get; set; }
+        public DbSet<FunctionType> FunctionTypes { get; set; }
+        public DbSet<Protocol> Protocols { get; set; }
         public DbSet<LocationRoomType> LocationRoomTypes { get; set; }
         public DbSet<LabPart> LabParts { get; set; }
         public DbSet<CentarixID> CentarixIDs { get; set; }
@@ -76,7 +101,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<UnitParentType> UnitParentTypes { get; set; }
         public DbSet<IpRange> IpRanges { get; set; }
         public DbSet<PhysicalAddress> PhysicalAddresses { get; set; }
-
+        public DbSet<CreditCard> CreditCards { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -241,15 +266,51 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Payment>().Ignore(e => e.PaymentReferenceDate_submit);
             // modelBuilder.Entity<ParentRequest>().Ignore(e => e.InvoiceDate_submit);
             modelBuilder.Entity<Request>().Ignore(e => e.ArrivalDate_submit);
+            modelBuilder.Entity<Request>().Ignore(e => e.BatchExpiration_submit);
             modelBuilder.Entity<EmployeeHours>().Ignore(e => e.Date_submit);
             modelBuilder.Entity<Employee>().Ignore(e => e.StartedWorking_submit);
             modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
             modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
-
+            modelBuilder.Entity<Request>().Property(r => r.IncludeVAT).HasDefaultValue(true);
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<ExchangeRate>().Property(e => e.LatestExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
+            modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
+
+            /*PROTOCOLS*/
+            ///set up composite keys
+
+            modelBuilder.Entity<TagProtocol>()
+              .HasKey(t => new { t.TagID, t.ProtocolID });
+
+            modelBuilder.Entity<TagArticle>()
+              .HasKey(t => new { t.ArticleID, t.TagID });
+
+            modelBuilder.Entity<MaterialProtocol>()
+              .HasKey(m => new { m.MaterialID, m.ProtocolID });
+
+            modelBuilder.Entity<FunctionLine>()
+              .HasKey(f => new { f.FunctionTypeID, f.LineID });
+
+            modelBuilder.Entity<AuthorProtocol>()
+                .HasKey(a => new { a.AuthorID, a.ProtocolID });
+
+            //set up many to many relationshipw
+            modelBuilder.Entity<LineType>()
+                .HasOne(l=>l.LineTypeParent)
+                .WithMany()
+                .HasForeignKey(ltp => ltp.LineTypeParentID);
+
+            modelBuilder.Entity<LineType>()
+               .HasOne(lt => lt.LineTypeChild)
+               .WithMany()
+               .HasForeignKey(ltc => ltc.LineTypeChildID);
+
+
+            modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
+            modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
+
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

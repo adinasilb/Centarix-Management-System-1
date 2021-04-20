@@ -377,7 +377,7 @@
             //dataType: "string",
             success: function (data) {
                 $('#loading').hide();
-                $.fn.OpenModal('modal','order-late', data)
+                $.fn.OpenModal('modal','late-order', data)
             }
 
         });
@@ -931,7 +931,13 @@
             $.getJSON("/Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
                     var timestamp = new Date(notification.timeStamp)
-                    var link = '/-1/-2?requestID=-3';
+                    var link = '/-1/-2?requestID=-3&didntArrive=-4';
+                    var isOrderLate = false;
+                    if(notification.status=="1")
+                    {
+                        isOrderLate = true;
+                    }
+                    link = link.replace("-4", isOrderLate);
                     link = link.replace("-3", notification.id);
                     link = link.replace("-2", notification.action);
                     link = link.replace("-1", notification.controller);
@@ -1125,6 +1131,7 @@
             $('.' + modalDivClass).html('');
             if ($('.modal').length == 0) {
                 $('.modal-backdrop').remove();
+                $('.body').removeClass('modal-open');
             }
         }
         $.fn.BindSelectedFilters = function () {
@@ -1140,10 +1147,10 @@
             $('body').removeClass('popover-open');
         });
 
-        $.fn.ClearFilter = function () {
+        $.fn.ClearFilter = function (isProprietary) {
             $.ajax({
                 async: true,
-                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0",
+                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&isProprietary=" + isProprietary,
                 type: 'POST',
                 cache: false,
                 success: function (newData) {

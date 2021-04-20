@@ -5,7 +5,8 @@
     var color = "order-inv-color";
     var form = "order-inv-form";
     var dollarDisabled = "disabled disabled-text";
-    var shekelDisabled = "";
+    var shekelDisabledText = "";
+    var shekelReadOnly = "false";
     var hideVat = "";
     if (TempData[AppUtility.TempDataTypes.MenuType.ToString()].Equals(AppUtility.MenuItems.LabManagement.ToString()))
     {
@@ -17,7 +18,8 @@
     if (Model.RequestItemViewModel.Requests[0].Currency == "USD")
     {
         dollarDisabled = "";
-        shekelDisabled = "disabled disabled-text";
+        shekelDisabledText = "disabled-text";
+        shekelReadOnly = "readonly";
     }
     if(!Model.RequestItemViewModel.Requests[0].IncludeVAT)
     {
@@ -119,7 +121,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                     </div>
                                 </div>
                                 <div class="form-group mb-4">
-                                    <label class="control-label">Price:</label>
+                                    <label class="control-label">Price Per Unit:</label>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="input-group">
@@ -130,8 +132,8 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                         </div>
                                         <div class="col-md-6">
                                             <div class="input-group">
-                                                <span class="input-group-text @shekelDisabled">&#x20aa;</span>
-                                                <input class="form-control-plaintext border-bottom @shekelDisabled" name="unit-price-shekel" id="unit-price-shekel"
+                                                <span class="input-group-text @shekelDisabledText">&#x20aa;</span>
+                                                <input class="form-control-plaintext border-bottom @shekelDisabledText" @shekelReadOnly name="unit-price-shekel" id="unit-price-shekel"
                                                        value="@Math.Round(Model.RequestItemViewModel.Requests[0].PricePerUnit, 2)" />
                                             </div>
                                         </div>
@@ -163,7 +165,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label">Price:</label>
+                                                <label class="control-label">Price Per Subunit:</label>
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="input-group">
@@ -216,7 +218,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label class="control-label">Price:</label>
+                                                    <label class="control-label">Price Per Sub-Subunit:</label>
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="input-group">
@@ -248,7 +250,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                     <div class="row mt-4">
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label class="control-label">Sum:</label>
+                                <label class="control-label">Total:</label>
                                 <div class="input-group">
                                     <span class="input-group-text @dollarDisabled">&#36;</span>
                                     <input class="form-control-plaintext border-bottom @dollarDisabled" name="sum-dollars" id="sum-dollars"
@@ -258,20 +260,20 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label asp-for="RequestItemViewModel.Requests[0].Cost" class="control-label"></label>
+                                <label @*asp-for="RequestItemViewModel.Requests[0].Cost"*@ class="control-label"></label>
                                 <div class="input-group">
-                                    <span class="input-group-text @shekelDisabled">&#x20aa;</span>
-                                    <input asp-for="RequestItemViewModel.Requests[0].Cost" id="cost" class="form-control-plaintext border-bottom @shekelDisabled" min="1" />
+                                    <span class="input-group-text @shekelDisabledText">&#x20aa;</span>
+                                    <input name="RequestItemViewModel.Requests[0].Cost" id="cost" class="form-control-plaintext border-bottom @shekelDisabledText" @shekelReadOnly min="1" value="@Model.RequestItemViewModel.Requests[0].Cost" />
                                     <span class="text-danger-centarix" asp-validation-for="RequestItemViewModel.Requests[0].Cost"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-2 @hideVat">
                             <div class="form-group">
-                                <label asp-for="RequestItemViewModel.Requests[0].VAT" class="control-label"></label>
+                                <label class="control-label">VAT:</label>
                                 <div class="input-group">
                                     <span class="input-group-text disabled-text">&#36;</span>
-                                    <input class="form-control-plaintext border-bottom vatInDollars disabled-text" disabled value="@String.Format("{0:n}", (Math.Round(Model.RequestItemViewModel.Requests[0].VAT / Model.RequestItemViewModel.Requests[0].ExchangeRate, 2)))" />
+                                    <input class="form-control-plaintext border-bottom vatInDollars disabled-text" id="vatInDollars" disabled value="@String.Format("{0:n}", (Math.Round(Model.RequestItemViewModel.Requests[0].VAT / Model.RequestItemViewModel.Requests[0].ExchangeRate, 2)))" />
                                 </div>
                             </div>
                         </div>
@@ -287,7 +289,7 @@ htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-p
                         </div>
                         <div class="col-md-2 @hideVat">
                             <div class="form-group">
-                                <label class="control-label">Total:</label>
+                                <label class="control-label">Total + VAT:</label>
                                 <div class="input-group">
                                     <span class="input-group-text disabled-text">&#36;</span>
                                     <input class="form-control-plaintext border-bottom disabled-text" id="sumPlusVat-Dollar" name="sumPlusVat-Dollar" disabled

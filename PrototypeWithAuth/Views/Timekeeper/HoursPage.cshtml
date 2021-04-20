@@ -119,7 +119,7 @@
 
                         }
                     }
-                    @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null && eh.EmployeeHours.CompanyDayOffID ==null)
+                    @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null && eh.EmployeeHours.CompanyDayOffID == null)
                     {
                         <div class="py-2">
                             <select class="mdb-select @pageColor custom select-dropdown no-hours-reported mb-0 @disabled" date="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
@@ -128,6 +128,16 @@
                                 <option value="2" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours">Update hours</option>
                                 <option value="3" class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SickDay">Report sick day</option>
                                 <option value="4" class="confirm-report-offDay @AppUtility.OffDayTypeEnum.VacationDay">Report vacation day</option>
+
+                                @if (eh.EmployeeHours.Employee.SpecialDays > 0)
+                                {
+                                    <option value="5" class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SpecialDay">Report special day</option>
+                                }
+                                else
+                                {
+                                    <option value="5" disabled class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SpecialDay">Report special vacation day</option>
+                                }
+
                             </select>
                         </div>
                     }

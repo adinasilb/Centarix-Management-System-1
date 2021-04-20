@@ -119,11 +119,18 @@
     })
 
     $('.add-item').off('click').on('click', function (e) {
+       
         var newIndex = $(this).attr('data-val');
-        console.log(newIndex)
+        var currency = $("#currency").val();
+        var subcategoryID = $("#Requests_0__Product_ProductSubcategory_ProductSubcategoryID").val();
+        var url = "/Requests/_PartialItemOperationsTab?index=" + newIndex
+        if (subcategoryID != null) {
+            url = url + "&subcategoryID=" + subcategoryID
+        }
+        console.log(subcategoryID)
         $.ajax({
             async: true,
-            url: "/Requests/_PartialItemOperationsTab?index=" + newIndex,
+            url: url,
             type: 'GET',
             cache: false,
             success: function (data) {
@@ -132,6 +139,14 @@
                 $("#addOperationItem").attr('data-val', parseInt(newIndex) + 1);
                 $(".mdb-select" + newIndex).materialSelect();
                 $(".parent-select" + newIndex).materialSelect();
+                if (currency == "USD") {
+                    $(".dollar-cost").attr("disabled", false)
+                    $(".dollar-cost").removeClass("disabled-text");
+                    $(".request-cost-dollar-icon").removeClass("disabled-text");
+                    $(".shekel-cost").attr("readonly", true)
+                    $(".shekel-cost").addClass("disabled-text");
+                    $(".request-cost-shekel-icon").addClass("disabled-text");
+                }
             }
         });
 
@@ -142,7 +157,7 @@
             var spaces =  val.split(" ");
             var spaceCount = spaces.length;
              console.log(spaceCount)
-            var rows = Math.ceil((val.length+spaceCount) / 50);
+            var rows = Math.ceil((val.length+spaceCount) / 45);
             var lines =   val.split("\n");
             var lineCount = lines.length;
            // console.log(lineCount)
@@ -151,7 +166,8 @@
             }
             if(rows>3)
             {
-               $(this).val(val.slice(0,-1))
+                $(this).val(val.slice(0, -1))
+                rows = 3;
             }
             $(this).attr('rows', rows);
         });
@@ -234,4 +250,21 @@
         console.log(index)
         $("#Requests_" + index + "__IsReceived").attr("value", checked)
     })
+
+    $('body').on('click', "#addRequestComment", function () {
+        console.log("clicked!");
+        console.log($('#popover-content').html())
+        $('[data-toggle="popover"]').popover('dispose');
+        $('#addRequestComment').popover({
+            sanitize: false,
+            placement: 'bottom',
+            html: true,
+            content: function () {
+                console.log('in function')
+                return $('#popover-content').html();
+            }
+        });
+        $('#addRequestComment').popover('toggle');
+
+    });
 })

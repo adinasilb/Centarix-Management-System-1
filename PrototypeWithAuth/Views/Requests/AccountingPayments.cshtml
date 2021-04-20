@@ -4,33 +4,36 @@
     ViewData["Title"] = "AccountingPayments";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-
-
-    @if (Model.RequestsByVendor.Count() == 0)
+@if (AppUtility.IsAjaxRequest(this.Context.Request))
     {
-<div>
-    @{
-        await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
-    }
-</div>
-    }
-    else
-    {
-<div class="_IndexTableByVendor">
-    @{
-        await Html.RenderPartialAsync("_IndexTableByVendor", Model);
-    }
-</div>
-
+        Layout = null;
     }
 
-<script type="text/javascript">
+@if (Model.RequestsByVendor.Count() == 0)
+{
+    <div>
+        @{
+            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+        }
+    </div>
+}
+else
+{
+    <div class="_IndexTableByVendor">
+        @{
+            await Html.RenderPartialAsync("_IndexTableByVendor", Model);
+        }
+    </div>
+
+}
+
+@*<script type="text/javascript">
     $(function () {
         console.log("in fx accounting payments");
         var payNowSidebar = $(".sidebarCount.2");
         payNowSidebar.removeClass("hidden");
         payNowSidebar.html("[" + @TempData["PayNowCount"] + "]");
     });
-</script>
+</script>*@
 
 

@@ -12,59 +12,72 @@
         {
             hasRackBlock = "hasRackBlock";
         }
-        <div class="form-group col-3 @hasRackBlock ">
-            <label class="control-label">@Model.locationTypeNames[i]</label>
-            @if (i == 0)
-            {
-                <div class="">
-                    <div class=" form-control-plaintext border-bottom p-0">
-                        <span class="choose p-0"></span>
-                        <div class="dropdown dropdown-main">
-                            <div class="select d-inline-flex" id="@id">
-                                <span class="caret py-0">
-                                    ▼
-                                </span>
-                                <span class="overflow-hidden">Select Type:</span>
 
-                            </div>
+    <div class="form-group col-3 @hasRackBlock ">
+        <label class="control-label">@Model.locationTypeNames[i]</label>
+        @if (i == 0)
+        {
 
-                            <ul class="p-0 locationinstance dropdown-menu ">
-                                @foreach (var locationType in Model.locationInstancesDepthZero)
-                                {
-                                    <li id="@locationType.LocationInstanceID" class="SLI-click" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
-                                        @locationType.LocationInstanceName
-                                    </li>
-                                }
-                            </ul>
+            <div class="">
+                <div class=" form-control-plaintext border-bottom p-0">
+                    <span class="choose p-0"></span>
+                    <div class="dropdown dropdown-main">
+                        <div class="select d-inline-flex" id="@id">
+                            <span class="caret py-0">
+                                ▼
+                            </span>
+                            <span class="overflow-hidden">Select Type:</span>
 
                         </div>
+
+                        <ul class="p-0 locationinstance dropdown-menu ">
+                            @foreach (var locationType in Model.locationInstancesDepthZero)
+                            {
+
+                                var description = locationType.LocationInstanceAbbrev;
+
+                                    if (description == null)
+                                    {
+                                        description = locationType.LocationInstanceName;
+                                    }
+                                 
+                                <li id="@locationType.LocationInstanceID" class="SLI-click" data-string="@description" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
+                                    @locationType.LocationInstanceName
+                                </li>
+                            }
+                        </ul>
+
                     </div>
                 </div>
+            </div>
 
-            }
 
-            else
-            {
-                <div class="">
-                    <div class=" form-control-plaintext border-bottom p-0">
-                        <span class="choose p-0"></span>
-                        <div class="dropdown dropdown-main">
-                            <div class="select d-inline-flex " id="@id" style="padding-right:1.25rem;">
-                                <span class="caret py-0">
-                                    ▼
-                                </span>
-                                <span class="overflow-hidden ">select</span>
 
-                            </div>
+        }
 
-                            <ul class="p-0 locationinstance dropdown-menu " style="display:none">
-                            </ul>
+        else
+        {
+        <div class="">
+            <div class=" form-control-plaintext border-bottom p-0">
+                <span class="choose p-0"></span>
+                <div class="dropdown dropdown-main">
+                    <div class="select d-inline-flex " id="@id" style="padding-right:1.25rem;">
+                        <span class="caret py-0">
+                            ▼
+                        </span>
+                        <span class="overflow-hidden ">select</span>
 
-                        </div>
                     </div>
+
+                    <ul class="p-0 locationinstance dropdown-menu " style="display:none">
+                    </ul>
+
                 </div>
-            }
+            </div>
         </div>
+        }
+    </div>
+
     }
 </div>
 <script>
