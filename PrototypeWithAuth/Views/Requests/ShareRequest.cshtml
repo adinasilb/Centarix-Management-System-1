@@ -1,22 +1,26 @@
-﻿<div class="modal modal-view share-request" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index:9999">
+﻿@model PrototypeWithAuth.ViewModels.ShareRequestViewModel
+
+<div class="modal modal-view share-request-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index:9999">
 
     <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; width:32rem;">
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
-            <button type="button" class="close modal-close-padding modal-close-style return-edit-modal" @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$(this).closest('.modal').hide()*@>
+            <button type="button" class="close modal-close-padding modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('share-request');">
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="modal-padding">
                 <div class="modal-header pt-0" style="border-bottom: 0;">
                     <input type="hidden" text="open" class="modal-open-state" />
                     <div class="row heading-1">
-                        Close Without Saving
+                        Share @Model.Request.Product.ProductName
                     </div>
                 </div>
 
                 <div class="modal-body">
                     <div class="row">
-                        Are you sure you would like to exit without saving changes?
+                        @Html.DropDownListFor(m => m.ApplicationUserID,
+            Model.ApplicationUsers, "Select User",
+            new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "userlist", @searchable = "Select User" })
                     </div>
                     <div class="row text-center">
 
