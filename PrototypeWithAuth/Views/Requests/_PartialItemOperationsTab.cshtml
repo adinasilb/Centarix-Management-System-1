@@ -106,10 +106,10 @@
                     }
                     else
                     {
-                        subCategoryID = dynamicID + "Product_ProductSubcategory_ProductSubcategoryID";
+                        subCategoryID = dynamicID + "Product_ProductSubcategoryID";
                     }
                 }
-                <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" searchable="Select Subcategory">
+                <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" searchable="Select Subcategory">
                     @if (Model.Request?.Product.ProductSubcategoryID == 0 || Model.Request?.Product.ProductSubcategoryID == null)
                     {
                         <option class="disabled-color" disabled selected>Select Subcategory</option>

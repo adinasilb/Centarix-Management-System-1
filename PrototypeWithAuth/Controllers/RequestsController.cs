@@ -1263,7 +1263,7 @@ namespace PrototypeWithAuth.Controllers
                             request.Product.Vendor = vendor;
                         }
 
-                        request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
+                        request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategoryID);
                         request.CreationDate = DateTime.Now;
                         var isInBudget = false;
                         if (!request.Product.ProductSubcategory.ParentCategory.isProprietary)//is proprietry
@@ -4830,12 +4830,12 @@ namespace PrototypeWithAuth.Controllers
                         {
                             if (req.Product == null)
                             {
-                                req.Product = _context.Products.Where(p => p.ProductID == req.ProductID).Include(p => p.ProductSubcategory).FirstOrDefault();
+                                req.Product = _context.Products.Where(p => p.ProductID == req.ProductID).FirstOrDefault();
                             }
-                            else
-                            {
-                                req.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == req.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefault();
-                            }
+                            //else
+                            //{
+                            //    req.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == req.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefault();
+                            //}
                             if (req.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
                             {
                                 SaveUsingSessions = false;
@@ -4872,12 +4872,16 @@ namespace PrototypeWithAuth.Controllers
                                     req.ApplicationUserReceiverID = _userManager.GetUserId(User);
                                     req.ArrivalDate = DateTime.Now;
                                 }
-                                _context.Entry(req.Product.Vendor).State = EntityState.Detached;
-                                _context.Entry(req.Product.ProductSubcategory).State = EntityState.Detached;
-
-                                _context.Entry(req.Product).State = EntityState.Detached;
-                                _context.ChangeTracker.AutoDetectChangesEnabled = false;
-                                _context.Update(req);
+                                var tracker =_context.ChangeTracker.Entries();
+                               if(req.ProductID ==0)
+                                {
+                                    _context.Add(req);
+                                }
+                                else
+                                {
+                                    _context.Update(req.Product);
+                                }
+                        
                                 prevRequest = req;
                                 await _context.SaveChangesAsync();
                             }
