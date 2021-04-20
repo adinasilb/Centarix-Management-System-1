@@ -4825,6 +4825,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     try
                     {
+                        Request prevRequest = null;
                         foreach (var req in requests)
                         {
                             if (req.Product == null)
@@ -4871,8 +4872,13 @@ namespace PrototypeWithAuth.Controllers
                                     req.ApplicationUserReceiverID = _userManager.GetUserId(User);
                                     req.ArrivalDate = DateTime.Now;
                                 }
+                                _context.Entry(req.Product.Vendor).State = EntityState.Detached;
+                                _context.Entry(req.Product.ProductSubcategory).State = EntityState.Detached;
+
+                                _context.Entry(req.Product).State = EntityState.Detached;
                                 _context.ChangeTracker.AutoDetectChangesEnabled = false;
                                 _context.Update(req);
+                                prevRequest = req;
                                 await _context.SaveChangesAsync();
                             }
                             if (req.PaymentStatusID == 5)
