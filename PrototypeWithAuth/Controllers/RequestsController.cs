@@ -438,7 +438,7 @@ namespace PrototypeWithAuth.Controllers
                                      new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                      new RequestIndexPartialColumnViewModel()
                                      {
-                                         Title = "", Width=15, Icons = GetIconListWithFavorites(r.RequestID, iconList), AjaxID = r.RequestID
+                                         Title = "", Width=15, Icons = GetIconListWithFavorites(r.RequestID, iconList, true), AjaxID = r.RequestID
                                      }
                                 }
                             }).ToLookup(c => c.Vendor);
@@ -792,7 +792,7 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
                              {
-                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, iconList), AjaxID = r.RequestID
+                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, iconList, false), AjaxID = r.RequestID
                              }
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
@@ -817,14 +817,14 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
                              {
-                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, newIconList), AjaxID = r.RequestID
+                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, newIconList, false), AjaxID = r.RequestID
                              }
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
             return onePageOfProducts;
         }
 
-        private  List<IconColumnViewModel> GetIconListWithFavorites(int RequestID, List<IconColumnViewModel> iconList)
+        private  List<IconColumnViewModel> GetIconListWithFavorites(int RequestID, List<IconColumnViewModel> iconList, bool isLabManQuotes)
         {
             var newIconList = AppUtility.DeepClone(iconList);
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
@@ -835,10 +835,15 @@ namespace PrototypeWithAuth.Controllers
                 newIconList[favIconIndex] = unLikeIcon;
             }
             var resendIcon = new IconColumnViewModel("Resend");
+            var resendPlaceholder = new IconColumnViewModel("ResendPlaceholder");
             var request = _context.Requests.Where(r=> r.RequestID == RequestID).Include(r => r.ParentQuote).FirstOrDefault();
             if (request.ParentQuote.QuoteStatusID == 2)
             {
                 newIconList.Insert(0, resendIcon);
+            }
+            else if(isLabManQuotes)
+            {
+                newIconList.Insert(0, resendPlaceholder);
             }
             return newIconList;
         }
