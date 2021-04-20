@@ -413,8 +413,6 @@ namespace PrototypeWithAuth.Controllers
                             }).ToLookup(c => c.Vendor);
                             break;
                         case AppUtility.SidebarEnum.Quotes:
-                            var favoriteRequests = _context.FavoriteRequests.ToList();
-                            var userID = _userManager.GetUserId(User);
                             var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
             .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
@@ -440,7 +438,7 @@ namespace PrototypeWithAuth.Controllers
                                      new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                      new RequestIndexPartialColumnViewModel()
                                      {
-                                         Title = "", Width=10, Icons = GetIconListWithFavorites(r, iconList, favoriteRequests, userID), AjaxID = r.RequestID
+                                         Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, iconList), AjaxID = r.RequestID
                                      }
                                 }
                             }).ToLookup(c => c.Vendor);
@@ -777,10 +775,8 @@ namespace PrototypeWithAuth.Controllers
             return onePageOfProducts;
         }
 
-        private  async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
+        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            var favoriteRequests = _context.FavoriteRequests.ToList();
-            var userID = _userManager.GetUserId(User);
             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
@@ -796,7 +792,7 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
                              {
-                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r, iconList, favoriteRequests, userID), AjaxID = r.RequestID
+                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, iconList), AjaxID = r.RequestID
                              }
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
@@ -806,8 +802,6 @@ namespace PrototypeWithAuth.Controllers
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryFavoriteRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
             var newIconList = iconList;
-            var favoriteRequests = _context.FavoriteRequests.ToList();
-            var userID = _userManager.GetUserId(User);
             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
@@ -823,24 +817,25 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
                              {
-                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r, newIconList, favoriteRequests, userID), AjaxID = r.RequestID
+                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, newIconList), AjaxID = r.RequestID
                              }
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
             return onePageOfProducts;
         }
 
-        private static List<IconColumnViewModel> GetIconListWithFavorites(Request request, List<IconColumnViewModel> iconList, List<FavoriteRequest> favoriteRequests, string userID)
+        private  List<IconColumnViewModel> GetIconListWithFavorites(int RequestID, List<IconColumnViewModel> iconList)
         {
             var newIconList = AppUtility.DeepClone(iconList);
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
-            var favoriteRequest = favoriteRequests.Where(fr => fr.RequestID == request.RequestID).Where(fr => fr.ApplicationUserID ==userID).FirstOrDefault();
+            var favoriteRequest = (_context.FavoriteRequests.Where(fr => fr.RequestID == RequestID).Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault());
             if (favIconIndex != null && favoriteRequest != null) //check these checks
             {
                 var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "black", "request-favorite request-unlike", "Unlike");
                 newIconList[favIconIndex] = unLikeIcon;
             }
             var resendIcon = new IconColumnViewModel("Resend");
+            var request = _context.Requests.Where(r=> r.RequestID == RequestID).Include(r => r.ParentQuote).FirstOrDefault();
             if (request.ParentQuote.QuoteStatusID == 2)
             {
                 newIconList.Add(resendIcon);
