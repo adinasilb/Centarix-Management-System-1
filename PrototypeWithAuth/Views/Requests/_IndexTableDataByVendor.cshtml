@@ -127,6 +127,13 @@
                                                     </ul>
                                                 </div>
                                             }
+                                            else if(icon.IconClass?.Equals("Resend") ?? false)
+                                            {
+                                                if(true)
+                                                {
+                                                    <button class="confirm-quote-resend btn-icon lab-man-background-color" data-title="Resend" value="@row.Columns.ElementAt(1).AjaxID" >Resend</button>
+                                                }
+                                            }
                                             else
                                             {
                                                 <div class="table-icon-div">
