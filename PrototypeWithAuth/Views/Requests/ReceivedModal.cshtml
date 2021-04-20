@@ -98,9 +98,9 @@
                                 </div>
                             </div>
                             @*<div class="col-1 text-center">
-                        <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                        <label asp-for="Arrival">Arrival</label>
-                    </div>*@
+                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                <label asp-for="Arrival">Arrival</label>
+            </div>*@
                             <div class="col-2 text-center">
                                 <br />
                                 <div class="form-check">
@@ -121,9 +121,9 @@
                                 </div>
                             </div>
                             @*<div class="col-1 text-center">
-                        <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                        <label for="test-chkbx">Trial</label>
-                    </div>*@
+                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                <label for="test-chkbx">Trial</label>
+            </div>*@
                         </div>
                         <div class="row">
                             <div class="col-4">
@@ -133,9 +133,9 @@
 
                             </div>
                             @*<div class="col-1 text-center">
-                        <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
-                        <label asp-for="Arrival">Arrival</label>
-                    </div>*@
+                <input type="checkbox" asp-for="Arrival" class="new-chckbx" />
+                <label asp-for="Arrival">Arrival</label>
+            </div>*@
                             <div class="clarify-popover m-5" style="display:none">
                                 <label asp-for="Request.NoteForClarifyDelivery" class="control-label">Clarify Note</label>
                                 <div>
@@ -187,11 +187,27 @@
                                 </div>
                             </div>
                             @*<div class="col-1 text-center">
-                        <input type="checkbox" id="test-chkbx" class="new-chckbx" />
-                        <label for="test-chkbx">Trial</label>
-                    </div>*@
+                <input type="checkbox" id="test-chkbx" class="new-chckbx" />
+                <label for="test-chkbx">Trial</label>
+            </div>*@
                         </div>
                         <br />
+                        @if (Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+                        {
+                            <div class="row">
+                                <div class="col-md-3 ">
+                                    <label asp-for="Request.Batch" class="control-label"></label>
+                                    <input asp-for="Request.Batch" class="form-control-plaintext border-bottom " type="text" />
+                                    <span asp-validation-for="Request.Batch" class="text-danger-centarix"></span>
+                                </div>
+
+                                <div class="col-md-3 reusables equipment  ">
+                                    <label asp-for="Request.BatchExpiration" class="control-label"></label>
+                                    <input type="text" asp-for="Request.BatchExpiration" class="form-control-plaintext border-bottom datepicker" />
+                                </div>
+                            </div>
+                        }
+
                         @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
                             <div class="row">
@@ -232,13 +248,13 @@
                             </div>
 
                             @*<div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="control-label">Location Details</label>
-                                <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
-                            </div>
-                        </div>
-                    </div>*@}
+                <div class="col-12">
+                    <div class="form-group">
+                        <label class="control-label">Location Details</label>
+                        <input class="form-control-plaintext border-bottom" placeholder="Notes..." disabled />
+                    </div>
+                </div>
+            </div>*@}
                     </div>
                     @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     {

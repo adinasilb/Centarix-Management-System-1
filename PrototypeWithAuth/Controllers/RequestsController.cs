@@ -3278,7 +3278,7 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-             .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).FirstOrDefault();
                     bool hasLocationInstances = false;
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
@@ -3331,6 +3331,11 @@ namespace PrototypeWithAuth.Controllers
                     requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
+                    if(requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+                    {
+                        requestReceived.Batch = receivedLocationViewModel.Request.Batch;
+                        requestReceived.BatchExpiration = receivedLocationViewModel.Request.BatchExpiration;
+                    }
                     if (requestReceived.PaymentStatusID == 4)
                     {
                         requestReceived.PaymentStatusID = 3;

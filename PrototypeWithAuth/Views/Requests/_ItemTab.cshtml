@@ -60,6 +60,10 @@
         + " d-none";
     var batchCategories = AppUtility.ParentCategoryEnum.Cells
         + " d-none";
+    if(modalType != AppUtility.RequestModalType.Create)
+    {
+        batchCategories += " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals;
+    }
     var warrantyCategories = AppUtility.ParentCategoryEnum.Reusables
 + " " + AppUtility.ParentCategoryEnum.Equipment
         + " d-none";
