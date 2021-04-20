@@ -1728,6 +1728,7 @@ namespace PrototypeWithAuth.Controllers
             return new EmptyResult();
         }
 
+        
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ShareRequest(int requestID)
         {
@@ -1744,6 +1745,12 @@ namespace PrototypeWithAuth.Controllers
                               ).ToList()
             };
             return PartialView(shareRequestViewModel);
+        }
+
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ShareRequest(ShareRequestViewModel shareRequestViewModel)
+        {
+            return new EmptyResult();
         }
 
         [Authorize(Roles = "Requests")]
