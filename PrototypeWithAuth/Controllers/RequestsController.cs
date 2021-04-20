@@ -420,7 +420,7 @@ namespace PrototypeWithAuth.Controllers
                             //iconList.Add(resendIcon);
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
                             {
                                 TotalCost = (r.Cost ?? 0) + r.VAT,
                                 ExchangeRate = r.ExchangeRate,
