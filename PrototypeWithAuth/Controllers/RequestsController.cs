@@ -438,7 +438,7 @@ namespace PrototypeWithAuth.Controllers
                                      new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                      new RequestIndexPartialColumnViewModel()
                                      {
-                                         Title = "", Width=10, Icons = GetIconListWithFavorites(r, iconList, null, null), AjaxID = r.RequestID
+                                         Title = "", Width=15, Icons = GetIconListWithFavorites(r, iconList, null, null), AjaxID = r.RequestID
                                      }
                                 }
                             }).ToLookup(c => c.Vendor);
@@ -832,8 +832,8 @@ namespace PrototypeWithAuth.Controllers
         {
             var newIconList = AppUtility.DeepClone(iconList);
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
-            var favoriteRequest = favoriteRequests.Where(fr => fr.RequestID == request.RequestID).Where(fr => fr.ApplicationUserID ==userID).FirstOrDefault();
-            if (favIconIndex != null && favoriteRequest != null) //check these checks
+            var favoriteRequest = favoriteRequests?.Where(fr => fr.RequestID == request.RequestID).Where(fr => fr.ApplicationUserID ==userID).FirstOrDefault();
+            if (favIconIndex != -1 && favoriteRequests != null) //check these checks
             {
                 var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "black", "request-favorite request-unlike", "Unlike");
                 newIconList[favIconIndex] = unLikeIcon;
@@ -841,7 +841,7 @@ namespace PrototypeWithAuth.Controllers
             var resendIcon = new IconColumnViewModel("Resend");
             if (request.ParentQuote.QuoteStatusID == 2)
             {
-                newIconList.Add(resendIcon);
+                newIconList.Insert(0, resendIcon);
             }
             return newIconList;
         }
