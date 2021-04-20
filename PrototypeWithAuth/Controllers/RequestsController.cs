@@ -438,7 +438,7 @@ namespace PrototypeWithAuth.Controllers
                                      new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                      new RequestIndexPartialColumnViewModel()
                                      {
-                                         Title = "", Width=10, Icons = GetIconListWithFavorites(r, iconList), AjaxID = r.RequestID
+                                         Title = "", Width=10, Icons = GetIconListWithFavorites(r, iconList, null, null), AjaxID = r.RequestID
                                      }
                                 }
                             }).ToLookup(c => c.Vendor);
@@ -828,7 +828,7 @@ namespace PrototypeWithAuth.Controllers
             return onePageOfProducts;
         }
 
-        private static List<IconColumnViewModel> GetIconListWithFavorites(Request request, List<IconColumnViewModel> iconList, List<FavoriteRequest> favoriteRequests =null, string userID =null)
+        private static List<IconColumnViewModel> GetIconListWithFavorites(Request request, List<IconColumnViewModel> iconList, List<FavoriteRequest> favoriteRequests, string userID)
         {
             var newIconList = AppUtility.DeepClone(iconList);
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
