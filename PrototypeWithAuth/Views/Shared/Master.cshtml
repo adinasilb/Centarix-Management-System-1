@@ -1148,9 +1148,10 @@
         });
 
         $.fn.ClearFilter = function (sectionType, isProprietary) {
+            //alert(sectionType);
             $.ajax({
                 async: true,
-                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&&sectionType=" + sectionType + "isProprietary=" + isProprietary,
+                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
                 type: 'POST',
                 cache: false,
                 success: function (newData) {

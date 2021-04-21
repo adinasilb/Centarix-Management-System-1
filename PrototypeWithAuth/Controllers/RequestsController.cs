@@ -103,7 +103,7 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
-        private void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedFilters selectedFilters = null)
+        private void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedFilters selectedFilters = null, string searchText = "")
         {
             int categoryID = 0;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
@@ -116,22 +116,50 @@ namespace PrototypeWithAuth.Controllers
             }
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
               .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
+            IQueryable<Request> changingList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText ?? "")).Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
+              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
+            changingList = filterListBySelectFilters(selectedFilters, changingList);
 
-            fullRequestsList = filterListBySelectFilters(selectedFilters, fullRequestsList);
+            int[] requestStatusIds = { 1, 2, 3, 6 };
+            foreach(int statusId in requestStatusIds)
+            {
+                SetCountByStatusId(requestIndexObject, viewmodel, fullRequestsList, statusId);
+            }
+          
+            SetCountByStatusId(requestIndexObject, viewmodel, changingList, requestIndexObject.RequestStatusID);
+            
 
-            int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            /*int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             int approvedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 6, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             viewmodel.NewCount = newCount;
             viewmodel.ApprovedCount = approvedCount;
             viewmodel.OrderedCount = orderedCount;
-            viewmodel.ReceivedCount = receivedCount;
+            viewmodel.ReceivedCount = receivedCount;*/
         }
 
-        private void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedFilters selectedFilters = null)
+        private static void SetCountByStatusId(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, IQueryable<Request> requestsList, int statusId)
+        {
+            int count = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(requestsList, statusId, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            switch (statusId)
+            {
+                case 1:
+                    viewmodel.NewCount += count;
+                    break;
+                case 2:
+                    viewmodel.OrderedCount = count;
+                    break;
+                case 3:
+                    viewmodel.ReceivedCount = count;
+                    break;
+                case 6:
+                    viewmodel.ApprovedCount = count;
+                    break;
+            }
+        }
+
+        private void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedFilters selectedFilters = null, string searchText = "")
         {
             int categoryID = 0;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
@@ -149,10 +177,12 @@ namespace PrototypeWithAuth.Controllers
             if (requestIndexObject.RequestStatusID == 7)
             {
                 fullRequestsListProprietary = filterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.Product.ProductName.Contains(searchText ?? ""));
             }
             else
             {
                 fullRequestsList = filterListBySelectFilters(selectedFilters, fullRequestsList);
+                fullRequestsList = fullRequestsList.Where(r => r.Product.ProductName.Contains(searchText ?? ""));
             }
 
             int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
@@ -1010,19 +1040,19 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableWithProprietaryTabs(RequestIndexObject requestIndexObject, List<int> months, List<int> years, SelectedFilters selectedFilters = null)
+        public async Task<IActionResult> _IndexTableWithProprietaryTabs(RequestIndexObject requestIndexObject, List<int> months, List<int> years, SelectedFilters selectedFilters = null, string searchText = "")
         {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters);
-            SetViewModelProprietaryCounts(requestIndexObject, viewModel, selectedFilters);
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, searchText);
+            SetViewModelProprietaryCounts(requestIndexObject, viewModel, selectedFilters, searchText);
             return PartialView(viewModel);
         }
 
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years, string searchText = "")
+        public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years)
         {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, searchText: searchText);
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years);
 
             return PartialView(viewModel);
         }
@@ -1030,10 +1060,10 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject, SelectedFilters selectedFilters = null)
+        public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject, SelectedFilters selectedFilters = null, string searchText = "")
         {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters);
-            SetViewModelCounts(requestIndexObject, viewModel, selectedFilters);
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters, searchText: searchText);
+            SetViewModelCounts(requestIndexObject, viewModel, selectedFilters, searchText);
             if (TempData["RequestStatus"]?.ToString() == "1")
             {
                 Response.StatusCode = 210;
@@ -1044,9 +1074,9 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject, SelectedFilters selectedFilters = null)
+        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject, SelectedFilters selectedFilters = null, string searchText = "")
         {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters);
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters, searchText: searchText);
             return PartialView(viewModel);
         }
 

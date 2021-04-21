@@ -52,19 +52,39 @@ $('body').off('click').on('click', '.btn-filter', function () {
 
 });
 $('.body').on('change', '.search-requests', function () {
-
+	//change it to change input
 	var searchText = $(this).val().toLowerCase();
+	console.log(searchText);
+	if (searchText.length < 3 && searchText != "") {
+		return;
+    }
+	var url;
+	switch ($('#masterPageType').val()) {
+		case 'RequestSummary':
+			url = "_IndexTableWithProprietaryTabs";
+			break;
+		case 'RequestRequest':
+		case 'OperationsRequest':
+			url = "_IndexTableWithCounts"
+			break;
+		case 'OperationsInventory':
+			url = "_IndexTable";
+			break;
+	}
+	//console.log(url);
 	$.ajax({
 		//processData: false,
 		//contentType: false,
 		//data: data,
 		traditional: true,
 		async: true,
-		url: "/Requests/_IndexTableData?" + $.fn.getRequestIndexString() + "&searchText=" + searchText,
+		url: "/Requests/"+url+"?" + $.fn.getRequestIndexString() + "&searchText=" + searchText,
 		type: 'GET',
 		cache: false,
 		success: function (data) {
-			$("._IndexTableData").html(data);
+			$("." + url).html(data);
+			$('.search-requests').val(searchText);
+			$('.search-requests').focus();
 		}
 	});
 
