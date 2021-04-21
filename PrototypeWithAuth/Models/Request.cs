@@ -87,7 +87,7 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Expiration Date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? BatchExpiration { get; set; }
-
+        public DateTime? BatchExpiration_submit { get { return BatchExpiration; } set { BatchExpiration = value; } }
         //proprietary
         public int? Passage { get; set; }
         public int? Amount { get; set; }

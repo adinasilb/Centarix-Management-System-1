@@ -189,7 +189,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests, LabManagement, Operations")]
-        private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null, SelectedFilters selectedFilters = null)
+        private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null, SelectedFilters selectedFilters = null, string searchText = "")
         {
             int categoryID = 1;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
@@ -197,7 +197,7 @@ namespace PrototypeWithAuth.Controllers
                 categoryID = 2;
             }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
+            IQueryable<Request> fullRequestsList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText??"")).Include(r => r.ApplicationUserCreator)
          .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
          .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Include(x => x.ParentRequest);
 
@@ -375,7 +375,6 @@ namespace PrototypeWithAuth.Controllers
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
-            var resendIcon = new IconColumnViewModel("Resend");
             var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
             string checkboxString = "Checkbox";
             string buttonText = "";
@@ -419,10 +418,10 @@ namespace PrototypeWithAuth.Controllers
             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
             .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
             .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
-                            iconList.Add(resendIcon);
+                            //iconList.Add(resendIcon);
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
                             {
                                 TotalCost = (r.Cost ?? 0) + r.VAT,
                                 ExchangeRate = r.ExchangeRate,
@@ -440,7 +439,7 @@ namespace PrototypeWithAuth.Controllers
                                      new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                      new RequestIndexPartialColumnViewModel()
                                      {
-                                         Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
+                                         Title = "", Width=15, Icons = GetIconListWithFavorites(r.RequestID, iconList, true), AjaxID = r.RequestID
                                      }
                                 }
                             }).ToLookup(c => c.Vendor);
@@ -829,7 +828,7 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
                              {
-                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, iconList), AjaxID = r.RequestID
+                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, iconList, false), AjaxID = r.RequestID
                              }
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
@@ -854,22 +853,33 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
                              {
-                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, newIconList), AjaxID = r.RequestID
+                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, newIconList, false), AjaxID = r.RequestID
                              }
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
             return onePageOfProducts;
         }
 
-        private List<IconColumnViewModel> GetIconListWithFavorites(int RequestID, List<IconColumnViewModel> iconList)
+        private  List<IconColumnViewModel> GetIconListWithFavorites(int RequestID, List<IconColumnViewModel> iconList, bool isLabManQuotes)
         {
             var newIconList = AppUtility.DeepClone(iconList);
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
-            var favoriteRequest = (_context.FavoriteRequests.Where(fr => fr.RequestID == RequestID).Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault());
-            if (favIconIndex != null && favoriteRequest != null) //check these checks
+            var favoriteRequest = _context.FavoriteRequests.Where(fr => fr.RequestID == RequestID).Where(fr => fr.ApplicationUserID ==_userManager.GetUserId(User)).FirstOrDefault();
+            if (favIconIndex != -1 && favoriteRequest != null) //check these checks
             {
                 var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "black", "request-favorite request-unlike", "Unlike");
                 newIconList[favIconIndex] = unLikeIcon;
+            }
+            var resendIcon = new IconColumnViewModel("Resend");
+            var resendPlaceholder = new IconColumnViewModel("ResendPlaceholder");
+            var request = _context.Requests.Where(r=> r.RequestID == RequestID).Include(r => r.ParentQuote).FirstOrDefault();
+            if (request.ParentQuote.QuoteStatusID == 2)
+            {
+                newIconList.Insert(0, resendIcon);
+            }
+            else if(isLabManQuotes)
+            {
+                newIconList.Insert(0, resendPlaceholder);
             }
             return newIconList;
         }
@@ -1044,9 +1054,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years)
+        public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years, string searchText = "")
         {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years);
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, searchText: searchText);
 
             return PartialView(viewModel);
         }
@@ -3314,7 +3324,7 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-             .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).FirstOrDefault();
                     bool hasLocationInstances = false;
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
@@ -3367,6 +3377,11 @@ namespace PrototypeWithAuth.Controllers
                     requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
+                    if(requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+                    {
+                        requestReceived.Batch = receivedLocationViewModel.Request.Batch;
+                        requestReceived.BatchExpiration = receivedLocationViewModel.Request.BatchExpiration;
+                    }
                     if (requestReceived.PaymentStatusID == 4)
                     {
                         requestReceived.PaymentStatusID = 3;
