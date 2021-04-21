@@ -1375,7 +1375,7 @@ namespace PrototypeWithAuth.Controllers
 
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p => p.ProductCreationDate).LastOrDefault().SerialNumber ?? "L0").Substring(1));
+                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? serialLetter+"0").Substring(1));
 
                 var RequestNum = 1;
                 var i = 1;
