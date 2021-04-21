@@ -2336,6 +2336,95 @@ namespace PrototypeWithAuth.Data
                 }
          );
 
+            modelBuilder.Entity<ProtocolType>().HasData(
+               new ProtocolType
+               {
+                   ProtocolTypeID = 1,
+                   ProtocolTypeDescription = "Research"
+               },
+               new ProtocolType
+               {
+                   ProtocolTypeID = 2,
+                   ProtocolTypeDescription = "Kit"
+               },
+               new ProtocolType
+               {
+                   ProtocolTypeID = 3,
+                   ProtocolTypeDescription = "SOP"
+               },
+               new ProtocolType
+               {
+                   ProtocolTypeID = 4,
+                   ProtocolTypeDescription = "Buffer"
+               }
+               ,
+               new ProtocolType
+               {
+                   ProtocolTypeID = 5,
+                   ProtocolTypeDescription = "Robiotic"
+               },
+               new ProtocolType
+               {
+                   ProtocolTypeID = 6,
+                   ProtocolTypeDescription = "Maintenance"
+               }
+        );
+            modelBuilder.Entity<ProtocolCategory>().HasData(
+            new ProtocolCategory
+            {
+                ProtocolCategoryTypeID = 1,
+                ProtocolDescription = "Rejuvenation"
+            },
+            new ProtocolCategory
+            {
+                ProtocolCategoryTypeID = 2,
+                ProtocolDescription = "Biomarkers"
+            },
+            new ProtocolCategory
+            {
+                ProtocolCategoryTypeID = 3,
+                ProtocolDescription = "Delivery Systems"
+            }
+        );
+
+         modelBuilder.Entity<ProtocolSubCategory>().HasData(
+          new ProtocolSubCategory
+          {
+              ProtocolSubCategoryTypeID = 1,
+              ProtocolCategoryTypeID = 1,
+              ProtocolSubCategoryTypeDescription = "Telomeres "
+          },
+          new ProtocolSubCategory
+          {
+              ProtocolSubCategoryTypeID = 2,
+              ProtocolCategoryTypeID = 1,
+              ProtocolSubCategoryTypeDescription = "Epigenetics"
+          },
+         new ProtocolSubCategory
+         {
+            ProtocolSubCategoryTypeID = 3,
+            ProtocolCategoryTypeID = 2,
+            ProtocolSubCategoryTypeDescription = "Telomeres "
+         },
+          new ProtocolSubCategory
+          {
+              ProtocolSubCategoryTypeID = 4,
+              ProtocolCategoryTypeID = 2,
+              ProtocolSubCategoryTypeDescription = "Transcription"
+          },
+           new ProtocolSubCategory
+           {
+               ProtocolSubCategoryTypeID = 5,
+               ProtocolCategoryTypeID = 2,
+               ProtocolSubCategoryTypeDescription = "Methylation"
+           },
+              new ProtocolSubCategory
+              {
+                  ProtocolSubCategoryTypeID = 6,
+                  ProtocolCategoryTypeID = 3,
+                  ProtocolSubCategoryTypeDescription = "AAV"
+              }
+       );
         }
     }
 }
