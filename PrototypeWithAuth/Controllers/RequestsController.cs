@@ -873,7 +873,7 @@ namespace PrototypeWithAuth.Controllers
             var resendIcon = new IconColumnViewModel("Resend");
             var resendPlaceholder = new IconColumnViewModel("ResendPlaceholder");
             var request = _context.Requests.Where(r=> r.RequestID == RequestID).Include(r => r.ParentQuote).FirstOrDefault();
-            if (request.ParentQuote.QuoteStatusID == 2)
+            if (request.ParentQuote?.QuoteStatusID == 2)
             {
                 newIconList.Insert(0, resendIcon);
             }
@@ -4744,7 +4744,6 @@ namespace PrototypeWithAuth.Controllers
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
                     HttpContext.Session.SetObject(requestName, request);
                     RequestNum++;
-
                 }
                 string action;
                 if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)

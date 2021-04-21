@@ -132,7 +132,7 @@ namespace PrototypeWithAuth.Models
         {
             get
             {
-                if (IncludeVAT)
+                if (IncludeVAT == true)
                 {
                     return Math.Round(.17m * Cost ?? 0, 2);
                 }
@@ -208,10 +208,10 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
         public bool IsReceived { get; set; }
-        private bool _IncludeVAT = true;
-        public bool IncludeVAT { get
+        private bool? _IncludeVAT;
+        public bool? IncludeVAT { get
             {
-                return _IncludeVAT;
+                return _IncludeVAT!=null && _IncludeVAT==true;
             }
             set {
                 _IncludeVAT = value;
