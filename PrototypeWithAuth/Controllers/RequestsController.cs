@@ -1247,7 +1247,7 @@ namespace PrototypeWithAuth.Controllers
 
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p => p.ProductCreationDate).LastOrDefault().SerialNumber ?? "L0").Substring(1));
+                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? "L0").Substring(1));
 
                 var RequestNum = 1;
                 var i = 1;
@@ -4828,10 +4828,7 @@ namespace PrototypeWithAuth.Controllers
                         Request prevRequest = null;
                         foreach (var req in requests)
                         {
-                            if (req.Product == null)
-                            {
-                                req.Product = _context.Products.Where(p => p.ProductID == req.ProductID).FirstOrDefault();
-                            }
+                            //else check if product exists and save here?
                             //else
                             //{
                             //    req.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == req.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefault();
@@ -4853,6 +4850,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             if (SaveUsingSessions)
                             {
+                                req.Product = _context.Products.Where(p => p.ProductID == req.ProductID).FirstOrDefault();
                                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
                                 HttpContext.Session.SetObject(requestName, req);
                             }
@@ -4871,18 +4869,31 @@ namespace PrototypeWithAuth.Controllers
                                     req.RequestStatusID = 3;
                                     req.ApplicationUserReceiverID = _userManager.GetUserId(User);
                                     req.ArrivalDate = DateTime.Now;
+
+                                    var payment = new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) };
+                                    if (SaveUsingSessions)
+                                    {
+                                        var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + PaymentNum;
+                                        HttpContext.Session.SetObject(paymentName, new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) });
+                                    }
+                                    else
+                                    {
+                                        payment.Request = req;
+                                        _context.Add(payment);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                    PaymentNum++;
                                 }
-                                var tracker =_context.ChangeTracker.Entries();
-                               if(req.ProductID ==0)
-                                {
-                                    _context.Add(req);
-                                }
-                                else
-                                {
-                                    _context.Update(req.Product);
-                                }
-                        
-                                prevRequest = req;
+                                //var tracker =_context.ChangeTracker.Entries();
+                                //if(req.ProductID ==0)
+                                // {
+                                //     _context.upda(req);
+                                // }
+                                //else
+                                //{
+                                //    _context.Update(req.Product);
+                                //}
+                                _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }
                             if (req.PaymentStatusID == 5)
@@ -4904,23 +4915,6 @@ namespace PrototypeWithAuth.Controllers
                                     }
                                     PaymentNum++;
                                 }
-                            }
-                            if (req.PaymentStatusID == 7)
-                            {
-
-                                var payment = new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) };
-                                if (SaveUsingSessions)
-                                {
-                                    var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + PaymentNum;
-                                    HttpContext.Session.SetObject(paymentName, new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) });
-                                }
-                                else
-                                {
-                                    payment.Request = req;
-                                    _context.Add(payment);
-                                    await _context.SaveChangesAsync();
-                                }
-                                PaymentNum++;
                             }
 
                             RequestNum++;
