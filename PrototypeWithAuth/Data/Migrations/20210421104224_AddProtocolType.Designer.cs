@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210421104224_AddProtocolType")]
+    partial class AddProtocolType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2636,15 +2638,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("CreditCardID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("HasInvoice")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("InstallmentNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("InvoiceID")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -2677,8 +2670,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("CompanyAccountID");
 
                     b.HasIndex("CreditCardID");
-
-                    b.HasIndex("InvoiceID");
 
                     b.HasIndex("ParentRequestID");
 
@@ -3399,23 +3390,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ProtocolCategoryTypeID");
 
                     b.ToTable("ProtocolCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            ProtocolCategoryTypeID = 1,
-                            ProtocolDescription = "Rejuvenation"
-                        },
-                        new
-                        {
-                            ProtocolCategoryTypeID = 2,
-                            ProtocolDescription = "Biomarkers"
-                        },
-                        new
-                        {
-                            ProtocolCategoryTypeID = 3,
-                            ProtocolDescription = "Delivery Systems"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolComment", b =>
@@ -3515,44 +3489,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ProtocolCategoryTypeID");
 
                     b.ToTable("ProtocolSubCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 1,
-                            ProtocolCategoryTypeID = 1,
-                            ProtocolSubCategoryTypeDescription = "Telomeres "
-                        },
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 2,
-                            ProtocolCategoryTypeID = 1,
-                            ProtocolSubCategoryTypeDescription = "Epigenetics"
-                        },
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 3,
-                            ProtocolCategoryTypeID = 2,
-                            ProtocolSubCategoryTypeDescription = "Telomeres "
-                        },
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 4,
-                            ProtocolCategoryTypeID = 2,
-                            ProtocolSubCategoryTypeDescription = "Transcription"
-                        },
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 5,
-                            ProtocolCategoryTypeID = 2,
-                            ProtocolSubCategoryTypeDescription = "Methylation"
-                        },
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 6,
-                            ProtocolCategoryTypeID = 3,
-                            ProtocolSubCategoryTypeDescription = "AAV"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolType", b =>
@@ -3708,6 +3644,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<byte?>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
 
+                    b.Property<bool>("HasInvoice")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IncludeVAT")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -3739,6 +3678,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("OrderType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Paid")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("ParentQuoteID")
                         .HasColumnType("int");
@@ -5315,11 +5257,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("CreditCardID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Invoice", "Invoice")
-                        .WithMany()
-                        .HasForeignKey("InvoiceID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("PrototypeWithAuth.Models.ParentRequest", null)
                         .WithMany("Payments")
                         .HasForeignKey("ParentRequestID")
@@ -5446,7 +5383,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserReceiverID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Invoice", null)
+                    b.HasOne("PrototypeWithAuth.Models.Invoice", "Invoice")
                         .WithMany("Requests")
                         .HasForeignKey("InvoiceID")
                         .OnDelete(DeleteBehavior.Restrict);
