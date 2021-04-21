@@ -51,13 +51,12 @@ $('body').off('click').on('click', '.btn-filter', function () {
      });
 
 });
-$('.body').on('change', '.search-requests', function () {
-	//change it to change input
+$('.search-requests').on('change', function () {
 	var searchText = $(this).val().toLowerCase();
 	console.log(searchText);
-	if (searchText.length < 3 && searchText != "") {
+	/*if (searchText.length < 3 && searchText != "") {
 		return;
-    }
+    }*/
 	var url;
 	switch ($('#masterPageType').val()) {
 		case 'RequestSummary':
