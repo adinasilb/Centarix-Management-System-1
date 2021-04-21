@@ -103,7 +103,7 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
-        private void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel)
+        private void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedFilters selectedFilters = null)
         {
             int categoryID = 0;
             if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
@@ -116,6 +116,8 @@ namespace PrototypeWithAuth.Controllers
             }
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
               .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
+
+            fullRequestsList = filterListBySelectFilters(selectedFilters, fullRequestsList);
 
             int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
@@ -236,7 +238,7 @@ namespace PrototypeWithAuth.Controllers
                  * you only need the separate union variable in order for the union to work
                  * and the original queries are on separate lists because each is querying the full database with a separate where
                  */
-
+                //var filteredRequests = fullRequestsList;
                 IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
                 if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 1)
                 {
@@ -360,7 +362,7 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             bool isProprietary = requestIndexObject.RequestStatusID == 7 ? true : false;
-            requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, isProprietary: isProprietary);
+            requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, sectionType: requestIndexObject.SectionType, isProprietary: isProprietary);
             return requestIndexViewModel;
         }
         [Authorize(Roles = "Requests, LabManagement, Operations")]
@@ -1026,11 +1028,12 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject, SelectedFilters selectedFilters = null)
         {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
-            SetViewModelCounts(requestIndexObject, viewModel);
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters);
+            SetViewModelCounts(requestIndexObject, viewModel, selectedFilters);
             if (TempData["RequestStatus"]?.ToString() == "1")
             {
                 Response.StatusCode = 210;
@@ -1039,10 +1042,11 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject, SelectedFilters selectedFilters = null)
         {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters);
             return PartialView(viewModel);
         }
 
@@ -5151,9 +5155,9 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters, int numFilters, bool isProprietary)
+        public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters, int numFilters, AppUtility.MenuItems sectionType, bool isProprietary)
         {
-            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, isProprietary: isProprietary);
+            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, sectionType, isProprietary);
             return PartialView(inventoryFilterViewModel);
         }
         private InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, bool isProprietary = false)
@@ -5178,7 +5182,8 @@ namespace PrototypeWithAuth.Controllers
                     SelectedSubcategories = _context.ProductSubcategories.Distinct().Where(v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
-                    NumFilters = numFilters
+                    NumFilters = numFilters,
+                    SectionType= sectionType
                 };
                 if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
                 {
@@ -5206,7 +5211,8 @@ namespace PrototypeWithAuth.Controllers
                     SelectedSubcategories = new List<ProductSubcategory>(),
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
-                    NumFilters = numFilters
+                    NumFilters = numFilters,
+                    SectionType = sectionType
                 };
             }
         }

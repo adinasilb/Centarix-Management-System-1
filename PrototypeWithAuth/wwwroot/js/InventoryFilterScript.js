@@ -11,6 +11,7 @@ $('body').off('click').on('click', '.btn-filter', function () {
 	var data = $.fn.BindSelectedFilters();
 	var id = $(this).val();
 	var col = $(this).parent().parent();
+	var sectionType = $('#masterSectionType').val();
 	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
 	console.log('status ' + $(".request-status-id").attr("value"));
 	var arr;
@@ -40,7 +41,7 @@ $('body').off('click').on('click', '.btn-filter', function () {
 		data: data,
 		traditional:true,
 		async: true,
-		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&isProprietary="+ isProprietary,
+		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType + "&isProprietary="+ isProprietary,
 		type: 'POST',
 		cache: false,
 		success: function (newData) {
@@ -126,7 +127,8 @@ $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) 
 
 $('body').on('click', '.clear-filters', function () {
 	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
-	$.fn.ClearFilter(isProprietary);
+	var sectionType = $('#masterSectionType').val();
+	$.fn.ClearFilter(sectionType, isProprietary);
 });
 
 
