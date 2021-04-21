@@ -32,9 +32,13 @@ namespace PrototypeWithAuth.Models
         public CreditCard CreditCard { get; set; }
         public int? PaymentTypeID { get; set; }
         public PaymentType PaymentType { get; set; }
+        public int? InvoiceID { get; set; }
+        [ForeignKey("InvoiceID")]
+        public Invoice Invoice { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsPaid { get; set; }
         public bool HasInvoice { get; set; }
+        public int InstallmentNumber { get; set; }
     }
 }
 

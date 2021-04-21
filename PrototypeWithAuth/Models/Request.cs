@@ -112,7 +112,7 @@ namespace PrototypeWithAuth.Models
 
         //payment info
         public uint? Installments { get; set; } //number of installments
-        public IEnumerable<Payment> Payments { get; set; }
+        public List<Payment> Payments { get; set; }
 
         public int? PaymentStatusID { get; set; }
         [ForeignKey("PaymentStatusID")]
@@ -121,12 +121,7 @@ namespace PrototypeWithAuth.Models
         public string NoteForPartialDelivery { get; set; }
         public bool IsClarify { get; set; }
         public string NoteForClarifyDelivery { get; set; }
-        public int? InvoiceID { get; set; }
-        [ForeignKey("InvoiceID")]
-        public Invoice Invoice { get; set; }
-
-
-
+        
         //price info
         public string Currency { get; set; }
         [Range(1,  (double)Decimal.MaxValue, ErrorMessage = "Field must be more than 0")]

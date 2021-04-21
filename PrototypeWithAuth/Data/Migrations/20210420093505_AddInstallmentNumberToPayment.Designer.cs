@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210420093505_AddInstallmentNumberToPayment")]
+    partial class AddInstallmentNumberToPayment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2642,9 +2644,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("InstallmentNumber")
                         .HasColumnType("int");
 
-                    b.Property<int?>("InvoiceID")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -2677,8 +2676,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("CompanyAccountID");
 
                     b.HasIndex("CreditCardID");
-
-                    b.HasIndex("InvoiceID");
 
                     b.HasIndex("ParentRequestID");
 
@@ -5228,11 +5225,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("CreditCardID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Invoice", "Invoice")
-                        .WithMany()
-                        .HasForeignKey("InvoiceID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("PrototypeWithAuth.Models.ParentRequest", null)
                         .WithMany("Payments")
                         .HasForeignKey("ParentRequestID")
@@ -5359,7 +5351,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserReceiverID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Invoice", null)
+                    b.HasOne("PrototypeWithAuth.Models.Invoice", "Invoice")
                         .WithMany("Requests")
                         .HasForeignKey("InvoiceID")
                         .OnDelete(DeleteBehavior.Restrict);
