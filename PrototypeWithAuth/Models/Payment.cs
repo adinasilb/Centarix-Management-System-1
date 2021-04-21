@@ -34,6 +34,7 @@ namespace PrototypeWithAuth.Models
         public PaymentType PaymentType { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsPaid { get; set; }
+        public bool HasInvoice { get; set; }
     }
 }
 

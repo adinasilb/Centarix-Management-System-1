@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 
     Layout = "~/Views/Shared/RequestNavView.cshtml";
-    if(AppUtility.IsAjaxRequest(this.Context.Request))
+    if (AppUtility.IsAjaxRequest(this.Context.Request))
     {
         Layout = null;
     }
@@ -52,7 +52,7 @@
                         <td>
                         </td>
                         <td class="text-right mr-3">
-                            <button class="btn order-late no-box-shadow danger-color rounded-pill text-white text-capitalize font-weight-normal" data-title="Ask" style="padding: .34rem 1.25rem !important;" value="@item.RequestID">Ask</button>
+                            <button class=" order-late btn-icon danger-color" data-title="Ask" value="@item.RequestID">Ask</button>
                         </td>
                     }
                     else
@@ -69,3 +69,4 @@
     </table>
 </div>
 <script src="~/js/IndexTablePartial.js"></script>
+

@@ -931,7 +931,13 @@
             $.getJSON("/Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
                     var timestamp = new Date(notification.timeStamp)
-                    var link = '/-1/-2?requestID=-3';
+                    var link = '/-1/-2?requestID=-3&didntArrive=-4';
+                    var isOrderLate = false;
+                    if(notification.status=="1")
+                    {
+                        isOrderLate = true;
+                    }
+                    link = link.replace("-4", isOrderLate);
                     link = link.replace("-3", notification.id);
                     link = link.replace("-2", notification.action);
                     link = link.replace("-1", notification.controller);

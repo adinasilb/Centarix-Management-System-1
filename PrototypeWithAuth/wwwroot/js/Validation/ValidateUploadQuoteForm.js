@@ -18,9 +18,9 @@
 			required: true,
 			maxDate: new Date()
 		},
-		OrdersInput :{
-			fileRequired : true			
-		}
+		//OrdersInput :{
+		//	fileRequired : true			
+		//}
 	}
 });
 
