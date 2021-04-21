@@ -497,42 +497,66 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.AccountingPayments:
 
                     var paymentList = GetPaymentRequests(requestIndexObject.SidebarType);
-                    var buttonClasses = " payments-pay-now accounting-background-color ";
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Installments:
                             payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
-                            buttonText = "";
                             checkboxString = "";
+                            iconList.Add(payNowIcon);
+                            iconList.Add(popoverMoreIcon);
+                            var usedPaymentsList = new List<Payment>();
+                            var currentPayment = new Payment();
+                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                            {
+                                TotalCost = (r.Cost ?? 0) + r.VAT,
+                                ExchangeRate = r.ExchangeRate,
+                                Vendor = r.Product.Vendor,
+                                ButtonText = "",
+                                Columns = new List<RequestIndexPartialColumnViewModel>()
+                                {
+                                    new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() {checkboxString} , AjaxID = r.RequestID},
+                                    new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Payment Date", Width = 12, Value = new List<string>() { AppUtility.GetCurrentInstallment(usedPaymentsList, r, out currentPayment).PaymentDate.ToString("dd'/'MM'/'yyyy") } },
+                                    new RequestIndexPartialColumnViewModel()
+                                    {
+                                        Title = "", Width = 10, Icons = iconList, AjaxID = currentPayment.PaymentID
+                                    }
+                                }
+                            }).ToLookup(c => c.Vendor);
                             break;
                         default:
+                            iconList.Add(payNowIcon);
+                            iconList.Add(popoverMoreIcon);
+                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                            {
+                                TotalCost = (r.Cost ?? 0) + r.VAT,
+                                ExchangeRate = r.ExchangeRate,
+                                Vendor = r.Product.Vendor,
+                                ButtonClasses = " payments-pay-now accounting-background-color ",
+                                ButtonText = "Pay All",
+                                Columns = new List<RequestIndexPartialColumnViewModel>()
+                                {
+                                    new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() {checkboxString} , AjaxID = r.RequestID},
+                                    new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
+                                    new RequestIndexPartialColumnViewModel()
+                                    {
+                                        Title = "", Width = 10, Icons = iconList, AjaxID = r.RequestID
+                                    }
+                                }
+                            }).ToLookup(c => c.Vendor);
                             buttonText = "Pay All";
                             break;
                     }
-                    iconList.Add(payNowIcon);
-                    iconList.Add(popoverMoreIcon);
-                    viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
-                    {
-                        TotalCost = (r.Cost ?? 0) + r.VAT,
-                        ExchangeRate = r.ExchangeRate,
-                        Vendor = r.Product.Vendor,
-                        ButtonClasses = buttonClasses,
-                        ButtonText = buttonText,
-                        Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() {checkboxString} , AjaxID = r.RequestID},
-                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
-                            new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID },
-                            new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } },
-                            new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
-                            new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
-                            new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
-                            new RequestIndexPartialColumnViewModel()
-                            {
-                                Title = "", Width = 10, Icons = iconList, AjaxID = r.RequestID
-                            }
-                        }
-                    }).ToLookup(c => c.Vendor);
+                    
 
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
@@ -4045,7 +4069,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
-                .Where(r => r.RequestStatusID != 7 && r.Payments.FirstOrDefault().IsPaid == false);
+                .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count()>0);
 
             switch (accountingPaymentsEnum)
             {
@@ -4064,7 +4088,21 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                        .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                    foreach (var request in requestsList)
+                    {
+                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5));
+                        if(currentInstallments.Count() > 0)
+                        {
+                            var requests = requestsList.ToList();
+                            for (var i=1; i<currentInstallments.Count(); i++)
+                            {
+                                requests.Add(request);
+                            }
+                            requestsList = requests.AsQueryable();
+                        }
+                    }
+                    
                     break;
                 //case AppUtility.SidebarEnum.StandingOrders:
                 //    requestsList = requestsList
@@ -4261,41 +4299,22 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Accounting")]
-        public async Task<IActionResult> PaymentsInvoiceModal(int? vendorid, int? requestid, int[] requestIds, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
+        public async Task<IActionResult> PaymentsInvoiceModal(int? vendorid, int? paymentid, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
-            List<Request> requestsToPay = new List<Request>();
-            var requestsList = GetPaymentRequests(accountingPaymentsEnum);
-
-            if (vendorid != null)
+            var payment = _context.Payments.Where(p => p.PaymentID == paymentid).FirstOrDefault();
+            var requestToPay = _context.Requests.Where(r => r.RequestID == payment.RequestID).Include(r => r.ParentRequest)
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.Payments).ToList();
+            if (payment.InstallmentNumber == requestToPay.FirstOrDefault().Installments)
             {
-                requestsToPay = await requestsList.Where(r => r.Product.VendorID == vendorid).ToListAsync();
-            }
-            else if (requestid != null)
-            {
-                requestsToPay = await requestsList.Where(r => r.RequestID == requestid).ToListAsync();
-            }
-            else if (requestIds != null)
-            {
-                foreach (int rId in requestIds)
-                {
-                    requestsToPay.Add(requestsList.Where(r => r.RequestID == rId).FirstOrDefault());
-                }
-            }
-            foreach(var request in requestsToPay)
-            {
-                var currentInstallment = request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault();
-                if (currentInstallment.InstallmentNumber == request.Installments)
-                {
-                    var paidSum = request.Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
-                    request.Payments[currentInstallment.InstallmentNumber - 1].Sum = (decimal)request.Cost - paidSum;
-                }
-                
+                var paidSum = requestToPay.FirstOrDefault().Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
+                payment.Sum = (decimal)requestToPay.FirstOrDefault().Cost - paidSum;
             }
             PaymentsInvoiceViewModel paymentsInvoiceViewModel = new PaymentsInvoiceViewModel()
             {
-                Requests = requestsToPay,
+                Requests = requestToPay,
                 AccountingEnum = accountingPaymentsEnum,
-                Payment = new Payment(),
+                Payment = payment,
                 PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
                 CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList(),
                 Invoice = new Invoice()
@@ -4317,17 +4336,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var paymentsList = _context.Payments.Where(p => p.IsPaid == false);
+                    var payment = _context.Payments.Where(p => p.PaymentID == paymentsInvoiceViewModel.Payment.PaymentID).FirstOrDefault(); ;
                     foreach (Request request in paymentsInvoiceViewModel.Requests)
                     {
-                        Payment payment = new Payment();
                         var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
                         if (requestToUpdate.PaymentStatusID == 5)
                         {
-                            var payments = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID);
-                            var count = payments.Count();
-
-                            payment = payments.Where(p=>!p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault();
                             payment.Sum = request.Payments.FirstOrDefault().Sum;
                         }
                         //else

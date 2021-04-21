@@ -1,21 +1,18 @@
 ﻿@model PrototypeWithAuth.ViewModels.PaymentsInvoiceViewModel
 @using PrototypeWithAuth.AppData
-<script src="~/js/InitializeDatePicker.js"></script>
-<script src="~/js/Validation/PayModalValidation.js"></script>
-<script src="~/js/validate.js"></script>
-
 
 
 <div class="modal modal-view fader on-form-modal" id="myModal" data-backdrop="false">
     <div class="modal-dialog-centered mx-auto modal-xl" style="min-width:1000PX !important; top: 20%;">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('payments-pay')">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('payments-invoice')">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm accounting-form" id="myForm">
                 <input type="hidden" asp-for="AccountingEnum" />
-                <input type="hidden" id="currency" value="@Model.Requests[0].Currency" />
+                <input type="text" class="d-none" id="currency" value="@Model.Requests[0].Currency.ToString()" />
                 <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate" />
+                <input type="hidden" asp-for="Payment.PaymentID" class="exchange-rate" />
                 @for (int i = 0; i < Model.Requests.Count; i++)
                 {
                     <input type="hidden" asp-for="Requests[i].RequestID" />
@@ -83,7 +80,7 @@
                                     @foreach (var Request in Model.Requests)
                                     {
                                         x++;
-                                        var PaymentIndex = Request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault().InstallmentNumber - 1;
+                                        var PaymentIndex = Request.Payments.FindIndex(p => p.PaymentID == Model.Payment.PaymentID);
                                         <tr class="invoice-request">
                                             <td style="width:15%;">
                                                 @{
@@ -117,7 +114,7 @@
                                                     else
                                                     {
                                                         <span class="input-group-text border-bottom pr-2">&#36;</span>
-                                                        <input class="form-control-plaintext border-bottom cost-validation" id="price-in-dollars" index="@x"
+                                                        <input class="form-control-plaintext border-bottom" id="price-in-dollars" index="@x"
                                                                value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round(Model.Requests[x].Payments[PaymentIndex].Sum / Model.Requests[0].ExchangeRate, 2))" />
                                                         <input type="hidden" asp-for="Requests[x].Payments[PaymentIndex].Sum" class="installment-sum @x" vat-val="@Request.IncludeVAT" />
                                                     }
@@ -284,6 +281,11 @@
     </div>
 </div>
 <script>$(".mdb-select").materialSelect()</script>
+
+<script src="~/js/Validation/PayModalValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>
+
 <script>
     $('#price-in-dollars').change(function (e) {
         console.log("change price")
