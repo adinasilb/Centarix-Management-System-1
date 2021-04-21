@@ -471,7 +471,7 @@ namespace PrototypeWithAuth.Controllers
 
 
             var AllProjects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product)
-                .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
+                .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Payments.FirstOrDefault().Invoice)
                 .ToList();
 
             return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Now.Year }));
@@ -481,7 +481,7 @@ namespace PrototypeWithAuth.Controllers
         public IActionResult _StatisticsProjects(List<int> Months, List<int> Years)
         {
             var AllProjects = _context.Projects.Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Product)
-                .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Invoice)
+                .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Payments.FirstOrDefault().Invoice)
                 .ToList();
 
             return PartialView(GetStatisticsProjectViewModel(AllProjects, Months, Years));
@@ -501,8 +501,8 @@ namespace PrototypeWithAuth.Controllers
                 var MonthlyRequestsInProject = project.SubProjects.SelectMany(
                     sp => sp.Requests
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
-                    .Where(r => Months.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Month)))
-                    .Where(r => Years.Contains(Convert.ToInt32(r.Invoice?.InvoiceDate.Year)))
+                    .Where(r => Months.Contains(Convert.ToInt32(r.Payments.FirstOrDefault().Invoice?.InvoiceDate.Month)))
+                    .Where(r => Years.Contains(Convert.ToInt32(r.Payments.FirstOrDefault().Invoice?.InvoiceDate.Year)))
                     ).ToList();
                 Projects.Add(project, MonthlyRequestsInProject);
             }
@@ -527,12 +527,12 @@ namespace PrototypeWithAuth.Controllers
             foreach (var subproject in subprojects)
             {
                 var requests = _context.Requests
-                    .Include(r => r.Invoice)
+                    .Include(r => r.Payments.FirstOrDefault().Invoice)
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => r.SubProjectID == subproject.SubProjectID)
-                    .Where(r => r.InvoiceID != null)
-                    .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month))
-                    .Where(r => Years.Contains(r.Invoice.InvoiceDate.Year)).ToList();
+                    .Where(r => r.Payments.FirstOrDefault().InvoiceID != null)
+                    .Where(r => Months.Contains(r.Payments.FirstOrDefault().Invoice.InvoiceDate.Month))
+                    .Where(r => Years.Contains(r.Payments.FirstOrDefault().Invoice.InvoiceDate.Year)).ToList();
                 subProjectRequests.Add(subproject, requests);
             }
 
@@ -626,8 +626,8 @@ namespace PrototypeWithAuth.Controllers
                 var requests = _context.Requests.Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => r.ApplicationUserCreator.Id == employee.Id)
                     .Where(r => CategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryType))
-                    .Where(r => r.Invoice != null)
-                    .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => Years.Contains(r.Invoice.InvoiceDate.Year))
+                    .Where(r => r.Payments.FirstOrDefault().Invoice != null)
+                    .Where(r => Months.Contains(r.Payments.FirstOrDefault().Invoice.InvoiceDate.Month)).Where(r => Years.Contains(r.Payments.FirstOrDefault().Invoice.InvoiceDate.Year))
                     .ToList();
                 EmployeeRequests.Add(employee, requests);
             }
@@ -677,8 +677,8 @@ namespace PrototypeWithAuth.Controllers
                 var pcRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategoryID == pc.ParentCategoryID)
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
-                    .Where(r => r.Invoice != null)
-                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => years.Contains(r.Invoice.InvoiceDate.Year))
+                    .Where(r => r.Payments.FirstOrDefault().Invoice != null)
+                    .Where(r => months.Contains(r.Payments.FirstOrDefault().Invoice.InvoiceDate.Month)).Where(r => years.Contains(r.Payments.FirstOrDefault().Invoice.InvoiceDate.Year))
                     .ToList();
                 ParentCategories.Add(pc, pcRequests);
             }
@@ -704,8 +704,8 @@ namespace PrototypeWithAuth.Controllers
                 var scRequests = _context.Requests.Where(r => r.Product.ProductSubcategoryID == sc.ProductSubcategoryID)
                     .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                     .Where(r => categoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID))
-                    .Where(r => r.Invoice != null)
-                    .Where(r => months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => years.Contains(r.Invoice.InvoiceDate.Year))
+                    .Where(r => r.Payments.FirstOrDefault().Invoice != null)
+                    .Where(r => months.Contains(r.Payments.FirstOrDefault().Invoice.InvoiceDate.Month)).Where(r => years.Contains(r.Payments.FirstOrDefault().Invoice.InvoiceDate.Year))
                     .ToList();
                 productSubs.Add(sc, scRequests);
             }
@@ -751,8 +751,8 @@ namespace PrototypeWithAuth.Controllers
                 .Where(r => r.RequestStatusID == 3 && r.PaymentStatusID == 6)
                 .Where(r => r.Product.Vendor.VendorID == vendor.VendorID)
                 .Where(r => CategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryType))
-                .Where(r => r.Invoice != null)
-                .Where(r => Months.Contains(r.Invoice.InvoiceDate.Month)).Where(r => Years.Contains(r.Invoice.InvoiceDate.Year))
+                .Where(r => r.Payments.FirstOrDefault().Invoice != null)
+                .Where(r => Months.Contains(r.Payments.FirstOrDefault().Invoice.InvoiceDate.Month)).Where(r => Years.Contains(r.Payments.FirstOrDefault().Invoice.InvoiceDate.Year))
                    .ToList();
                 VendorRequests.Add(vendor, requests);
             }

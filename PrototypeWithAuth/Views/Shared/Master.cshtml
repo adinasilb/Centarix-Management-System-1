@@ -1108,9 +1108,11 @@
 
         //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
+            console.log("open modal")
             var backdrop = "static";
             if ($('.modal-backdrop').length > 0) {
                 backdrop = false;
+                console.log("no backdrop")
             }
             $('.' + modalClass).replaceWith('');
             $('.' + modalDivClass).html('');

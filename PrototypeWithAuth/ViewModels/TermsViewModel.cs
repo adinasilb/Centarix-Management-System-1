@@ -15,6 +15,8 @@ namespace PrototypeWithAuth.ViewModels
         public int SelectedTerm { get; set; }
         public List<SelectListItem> TermsList { get; set; }
         public int Installments { get; set; }
+        public DateTime InstallmentDate { get; set; }
+        public DateTime InstallmentDate_submit { get { return InstallmentDate; } set { InstallmentDate = value; } }
         public AppUtility.MenuItems SectionType { get; set; }
         public RequestIndexObject RequestIndexObject { get; set; }
     }

@@ -9,7 +9,14 @@
     }
     else
     {
-        <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" type="@Model.SidebarType" id="pay-selected">Pay Selected</button>
+        if (Model.SidebarType == AppUtility.SidebarEnum.Installments)
+        {
+            <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" type="@Model.SidebarType" id="pay-invoice-selected">Pay Selected</button>
+        }
+        else
+        {
+            <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" type="@Model.SidebarType" id="pay-selected">Pay Selected</button>
+        }
     }
 
     <table class="table table-headerspaced table-noheaderlines table-hover ">

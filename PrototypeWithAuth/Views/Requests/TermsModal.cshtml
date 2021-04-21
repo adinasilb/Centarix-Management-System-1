@@ -26,6 +26,7 @@
 <script src="~/js/site.js"></script>
 <script src="~/js/Validation/TermsModalFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>
 
 <div class="modal modal-view termsModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
     <div class="modal-dialog-centered modal-xl mx-auto on-form-modal @form" role="document" style="max-height:100%; max-width:60rem; ">
@@ -60,7 +61,7 @@
                                     "Select",
                                     new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @id = "Terms", @searchable = "default value" }
                                 )
-                  
+
                             </div>
 
                             <div class="col-3">
@@ -85,14 +86,28 @@
                                 <label asp-for="Installments" class="control-label"></label>
                                 @if (disabled)
                                 {
-                                    <input asp-for="Installments" disabled class="form-control-plaintext border-bottom" />
+                                <input asp-for="Installments" disabled class="form-control-plaintext border-bottom" />
                                 }
                                 else
                                 {
-                                    <input asp-for="Installments" class="form-control-plaintext border-bottom" />
+                                <input asp-for="Installments" class="form-control-plaintext border-bottom" />
                                 }
 
                                 <span asp-validation-for="Installments" class="text-danger-centarix"></span>
+                            </div>
+                            <div class="col-3 @dNone installments-amount-block">
+                                <div class="form-group ">
+                                    <label asp-for="@Model.InstallmentDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                    @if (disabled)
+                                    {
+                                        <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" disabled asp-format="{0:dd/MM/yyyy}" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" asp-format="{0:dd/MM/yyyy}" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
+                                    }
+                                    <span asp-validation-for="@Model.InstallmentDate" class="text-danger-centarix"></span>
+                                </div>
                             </div>
 
                         </div>

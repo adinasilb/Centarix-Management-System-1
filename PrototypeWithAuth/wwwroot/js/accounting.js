@@ -97,6 +97,27 @@
 		$.fn.CallModal(itemurl, "payments-pay");
 	});
 
+	$(".payments-invoice-pay").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var vendorid = $(this).attr("value");
+		var paymentstatusid = $(this).attr("paymentstatus");
+		var typeEnum = $("#masterSidebarType").val();
+		console.log("vendor: " + vendorid);
+		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
+		var itemurl = "/Requests/PaymentsInvoiceModal/?vendorid=" + vendorid + "&paymentstatusid=" + paymentstatusid + "&accountingPaymentsEnum=" + typeEnum;
+		$("#loading").show();
+		$.fn.CallModal(itemurl, "payments-invoice");
+	});
+	$(".pay-invoice-one").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var typeEnum = $("#masterSidebarType").val();
+		var requestid = $(this).attr("value");
+		var itemUrl = "/Requests/PaymentsInvoiceModal/?requestid=" + requestid + "&accountingPaymentsEnum=" + typeEnum;
+		$("#loading").show();
+		$.fn.CallModal(itemUrl, "payments-invoice");
+	});
 	$(".pay-one").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -106,7 +127,25 @@
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "payments-pay");
 	});
-
+	$("#pay-invoice-selected").off("click").on("click", function (e) {
+		var typeEnum = $(this).attr("type");
+		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+			return $(this).attr("id")
+		}).get()
+		console.log("arrayOfSelected: " + arrayOfSelected);
+		$("#loading").show();
+		$.ajax({
+			type: "GET",
+			url: "/Requests/PaymentsInvoiceModal/?" + "accountingPaymentsEnum=" + typeEnum,
+			traditional: true,
+			data: { 'requestIds': arrayOfSelected },
+			cache: true,
+			success: function (data) {
+				$.fn.OpenModal("modal", "payments-invoice", data)
+				$("#loading").hide();
+			}
+		});
+	});
 	$("#pay-selected").off("click").on("click", function (e) {
 		var typeEnum = $(this).attr("type");
 		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {

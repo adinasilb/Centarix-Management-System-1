@@ -286,7 +286,7 @@ namespace PrototypeWithAuth.Controllers
                 //we need both categories
                 RequestsPassedIn = _context.Requests.Include(r => r.ApplicationUserCreator)
                      .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                     .Include(r => r.ParentRequest).Where(r => Years.Contains(r.ParentRequest.OrderDate.Year)).Where(r => !r.IsClarify && !r.IsPartial && r.Payments.Where(p=>p.HasInvoice && p.IsPaid).Count() == r.Payments.Count());
+                     .Include(r => r.ParentRequest).Where(r => Years.Contains(r.ParentRequest.OrderDate.Year)).Where(r => !r.IsClarify && !r.IsPartial && r.Payments.Where(p=> p.IsPaid).Count() == r.Payments.Count());
                 if (Months != null)
                 {
                     RequestsPassedIn = RequestsPassedIn.Where(r => Months.Contains(r.ParentRequest.OrderDate.Month));
@@ -378,6 +378,7 @@ namespace PrototypeWithAuth.Controllers
             var resendIcon = new IconColumnViewModel("Resend");
             var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
             string checkboxString = "Checkbox";
+            string buttonText = "";
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
@@ -451,7 +452,6 @@ namespace PrototypeWithAuth.Controllers
                     var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
                     iconList.Add(popoverPartialClarifyIcon);
                     string value = "";
-                    string buttonText = "";
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
@@ -497,6 +497,18 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.AccountingPayments:
 
                     var paymentList = GetPaymentRequests(requestIndexObject.SidebarType);
+                    var buttonClasses = " payments-pay-now accounting-background-color ";
+                    switch (requestIndexObject.SidebarType)
+                    {
+                        case AppUtility.SidebarEnum.Installments:
+                            payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
+                            buttonText = "";
+                            checkboxString = "";
+                            break;
+                        default:
+                            buttonText = "Pay All";
+                            break;
+                    }
                     iconList.Add(payNowIcon);
                     iconList.Add(popoverMoreIcon);
                     viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
@@ -504,8 +516,8 @@ namespace PrototypeWithAuth.Controllers
                         TotalCost = (r.Cost ?? 0) + r.VAT,
                         ExchangeRate = r.ExchangeRate,
                         Vendor = r.Product.Vendor,
-                        ButtonClasses = " payments-pay-now accounting-background-color ",
-                        ButtonText = "Pay All",
+                        ButtonClasses = buttonClasses,
+                        ButtonText = buttonText,
                         Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
                             new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() {checkboxString} , AjaxID = r.RequestID},
@@ -1774,9 +1786,11 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.Product.ProductSubcategory.ParentCategory)
                 .Include(r => r.Product.Vendor)
-                .Include(r => r.Invoice)
                 .Include(r => r.RequestStatus)
-                .Include(r => r.ApplicationUserCreator).Include(r => r.PaymentStatus).Include(r => r.Payments).ThenInclude(p => p.CompanyAccount).Include(r => r.ApplicationUserReceiver)
+                .Include(r => r.ApplicationUserCreator).Include(r => r.PaymentStatus)
+                .Include(r => r.Payments).ThenInclude(p => p.CompanyAccount)
+                .Include(r => r.Payments).ThenInclude(p => p.Invoice)
+                .Include(r => r.ApplicationUserReceiver)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
 
@@ -2409,6 +2423,7 @@ namespace PrototypeWithAuth.Controllers
 
                 var isRequests = true;
                 var RequestNum = 1;
+                var PaymentNum = 1;
                 var requests = new List<Request>();
                 var payments = new List<Payment>();
                 while (isRequests)
@@ -2419,24 +2434,21 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var request = HttpContext.Session.GetObject<Request>(requestName);
                         requests.Add(request);
-                        if (request.PaymentStatusID == 5)
+                        for (int i = 0; i < request.Installments; i++)
                         {
-                            for (int i = 0; i < request.Installments; i++)
-                            {
-                                var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (i + 1);
-                                var payment = HttpContext.Session.GetObject<Payment>(paymentName);
-                                payment.Request = request;
-                                payments.Add(payment);
-                            }
-                        }
-
-                        if (request.PaymentStatusID == 7)
-                        {
-                            var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + 1;
+                            var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
                             var payment = HttpContext.Session.GetObject<Payment>(paymentName);
                             payment.Request = request;
                             payments.Add(payment);
+                            PaymentNum++;
                         }
+                        //if (request.PaymentStatusID == 7)
+                        //{
+                        //    var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + 1;
+                        //    var payment = HttpContext.Session.GetObject<Payment>(paymentName);
+                        //    payment.Request = request;
+                        //    payments.Add(payment);
+                        //}
                     }
                     else
                     {
@@ -2944,162 +2956,162 @@ namespace PrototypeWithAuth.Controllers
             return View(requestsSearchViewModel);
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Admin, Requests, Operations")]
-        public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)
-        {
-            var categoryType = requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operations ? 2 : 1;
-            int RSRecieved = 0;
-            int RSOrdered = 0;
-            int RSNew = 0;
-            IQueryable<Request> requestsSearched = _context.Requests.AsQueryable().Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType);
+        //[HttpPost]
+        //[Authorize(Roles = "Admin, Requests, Operations")]
+        //public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)
+        //{
+        //    var categoryType = requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operations ? 2 : 1;
+        //    int RSRecieved = 0;
+        //    int RSOrdered = 0;
+        //    int RSNew = 0;
+        //    IQueryable<Request> requestsSearched = _context.Requests.AsQueryable().Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType);
 
-            //convert the bools into their corresponding IDs
-            if (requestsSearchViewModel.Inventory)
-            {
-                RSRecieved = 3;
-            }
-            if (requestsSearchViewModel.Ordered)
-            {
-                RSOrdered = 2;
-            }
-            if (requestsSearchViewModel.ForApproval)
-            {
-                RSNew = 1;
-            }
-            if (requestsSearchViewModel.Inventory || requestsSearchViewModel.Ordered || requestsSearchViewModel.ForApproval) //if any of the checkboxes were selected then filter accordingly
-            {
-                requestsSearched = requestsSearched.Where(rs => rs.RequestStatusID == RSRecieved || rs.RequestStatusID == RSOrdered || rs.RequestStatusID == RSNew);
-            }
-
-
-            requestsSearchViewModel.Request.Product.ProductSubcategory = await _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID).FirstOrDefaultAsync();
-            if (requestsSearchViewModel.Request.Product.ProductName != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.Product.ProductName.Contains(requestsSearchViewModel.Request.Product.ProductName));
-            }
-            if (requestsSearchViewModel.Request.Product?.ProductSubcategory?.ParentCategoryID != 0 && requestsSearchViewModel.Request.Product?.ProductSubcategory?.ParentCategoryID != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategory.ParentCategoryID == requestsSearchViewModel.Request.Product.ProductSubcategory.ParentCategoryID);
-            }
-            if (requestsSearchViewModel.Request.Product?.ProductSubcategoryID != 0 && requestsSearchViewModel.Request.Product?.ProductSubcategoryID != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID);
-            }
-            //check for project
-            //check for sub project
-            if (requestsSearchViewModel.Request.Product?.VendorID != 0 && requestsSearchViewModel.Request.Product?.VendorID != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.Product.VendorID == requestsSearchViewModel.Request.Product.VendorID);
-            }
-            if (requestsSearchViewModel.Request.ParentRequest?.OrderNumber != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderNumber.ToString().Contains(requestsSearchViewModel.Request.ParentRequest.OrderNumber.ToString()));
-            }
-            if (requestsSearchViewModel.Request.ParentRequest.OrderDate != DateTime.MinValue) //should this be datetime.min?
-            {
-                requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderDate == requestsSearchViewModel.Request.ParentRequest.OrderDate);
-            }
-            if (requestsSearchViewModel.Request.Invoice.InvoiceNumber != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.Invoice.InvoiceNumber.Contains(requestsSearchViewModel.Request.Invoice.InvoiceNumber));
-            }
-            if (requestsSearchViewModel.Request.Invoice.InvoiceDate != DateTime.MinValue) //should this be datetime.min?
-            {
-                requestsSearched = requestsSearched.Where(r => r.Invoice.InvoiceDate == requestsSearchViewModel.Request.Invoice.InvoiceDate);
-            }
-            if (requestsSearchViewModel.Request.ExpectedSupplyDays != null)//should this be on the parent request
-            {
-                requestsSearched = requestsSearched.Where(r => r.ExpectedSupplyDays == requestsSearchViewModel.Request.ExpectedSupplyDays);
-            }
-
-            //not sure what the to date and the from date are on????
-
-            bool IsRequest = true;
-            bool IsInventory = false;
-            bool IsAll = false;
-            if (requestsSearchViewModel.Inventory)
-            {
-                IsRequest = false;
-                IsInventory = true;
-            }
-            else
-            {
-                foreach (Request r in requestsSearched)
-                {
-                    if (r.RequestStatusID != 6)
-                    {
-                        break;
-                    }
-                }
-                IsRequest = false;
-                IsInventory = true;
-            }
-
-            //also need to get the list smaller to just request or inventory
-
-            var PageType = AppUtility.PageTypeEnum.None;
-            if (IsRequest)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
-            }
-            else if (IsInventory)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestInventory;
-            }
-            else if (IsAll)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
-            }
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-
-            //ViewData["ReturnRequests"] = requestsSearched;
+        //    //convert the bools into their corresponding IDs
+        //    if (requestsSearchViewModel.Inventory)
+        //    {
+        //        RSRecieved = 3;
+        //    }
+        //    if (requestsSearchViewModel.Ordered)
+        //    {
+        //        RSOrdered = 2;
+        //    }
+        //    if (requestsSearchViewModel.ForApproval)
+        //    {
+        //        RSNew = 1;
+        //    }
+        //    if (requestsSearchViewModel.Inventory || requestsSearchViewModel.Ordered || requestsSearchViewModel.ForApproval) //if any of the checkboxes were selected then filter accordingly
+        //    {
+        //        requestsSearched = requestsSearched.Where(rs => rs.RequestStatusID == RSRecieved || rs.RequestStatusID == RSOrdered || rs.RequestStatusID == RSNew);
+        //    }
 
 
-            //Getting the page that is going to be seen (if no page was specified it will be one)
-            var pageNumber = page ?? 1;
-            var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
-            try
-            {
-                onePageOfProducts = await requestsSearched.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
-                //onePageOfProducts;
+        //    requestsSearchViewModel.Request.Product.ProductSubcategory = await _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID).FirstOrDefaultAsync();
+        //    if (requestsSearchViewModel.Request.Product.ProductName != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Product.ProductName.Contains(requestsSearchViewModel.Request.Product.ProductName));
+        //    }
+        //    if (requestsSearchViewModel.Request.Product?.ProductSubcategory?.ParentCategoryID != 0 && requestsSearchViewModel.Request.Product?.ProductSubcategory?.ParentCategoryID != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategory.ParentCategoryID == requestsSearchViewModel.Request.Product.ProductSubcategory.ParentCategoryID);
+        //    }
+        //    if (requestsSearchViewModel.Request.Product?.ProductSubcategoryID != 0 && requestsSearchViewModel.Request.Product?.ProductSubcategoryID != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID);
+        //    }
+        //    //check for project
+        //    //check for sub project
+        //    if (requestsSearchViewModel.Request.Product?.VendorID != 0 && requestsSearchViewModel.Request.Product?.VendorID != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Product.VendorID == requestsSearchViewModel.Request.Product.VendorID);
+        //    }
+        //    if (requestsSearchViewModel.Request.ParentRequest?.OrderNumber != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderNumber.ToString().Contains(requestsSearchViewModel.Request.ParentRequest.OrderNumber.ToString()));
+        //    }
+        //    if (requestsSearchViewModel.Request.ParentRequest.OrderDate != DateTime.MinValue) //should this be datetime.min?
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderDate == requestsSearchViewModel.Request.ParentRequest.OrderDate);
+        //    }
+        //    if (requestsSearchViewModel.Request.Invoice.InvoiceNumber != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Invoice.InvoiceNumber.Contains(requestsSearchViewModel.Request.Invoice.InvoiceNumber));
+        //    }
+        //    if (requestsSearchViewModel.Request.Invoice.InvoiceDate != DateTime.MinValue) //should this be datetime.min?
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Invoice.InvoiceDate == requestsSearchViewModel.Request.Invoice.InvoiceDate);
+        //    }
+        //    if (requestsSearchViewModel.Request.ExpectedSupplyDays != null)//should this be on the parent request
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.ExpectedSupplyDays == requestsSearchViewModel.Request.ExpectedSupplyDays);
+        //    }
+
+        //    //not sure what the to date and the from date are on????
+
+        //    bool IsRequest = true;
+        //    bool IsInventory = false;
+        //    bool IsAll = false;
+        //    if (requestsSearchViewModel.Inventory)
+        //    {
+        //        IsRequest = false;
+        //        IsInventory = true;
+        //    }
+        //    else
+        //    {
+        //        foreach (Request r in requestsSearched)
+        //        {
+        //            if (r.RequestStatusID != 6)
+        //            {
+        //                break;
+        //            }
+        //        }
+        //        IsRequest = false;
+        //        IsInventory = true;
+        //    }
+
+        //    //also need to get the list smaller to just request or inventory
+
+        //    var PageType = AppUtility.PageTypeEnum.None;
+        //    if (IsRequest)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
+        //    }
+        //    else if (IsInventory)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestInventory;
+        //    }
+        //    else if (IsAll)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
+        //    }
+        //    TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+
+        //    //ViewData["ReturnRequests"] = requestsSearched;
 
 
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
-            }
+        //    //Getting the page that is going to be seen (if no page was specified it will be one)
+        //    var pageNumber = page ?? 1;
+        //    var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
+        //    try
+        //    {
+        //        onePageOfProducts = await requestsSearched.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
+        //            .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
+        //        //onePageOfProducts;
 
-            TempData["Search"] = "True";
-            if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Requests)
-            {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
-                return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
-            }
-            else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
-            {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSearch;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
-                return RedirectToAction("IndexForLabManage", "Vendors", onePageOfProducts);
-            }
-            else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operations)
-            {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
-                return RedirectToAction("Index", "Operations", new { vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
-            }
 
-            return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        TempData["ErrorMessage"] = ex.Message;
+        //        TempData["InnerMessage"] = ex.InnerException;
+        //        return View("~/Views/Shared/RequestError.cshtml");
+        //    }
 
-        }
+        //    TempData["Search"] = "True";
+        //    if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Requests)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
+        //        TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
+        //        return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
+        //    }
+        //    else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSearch;
+        //        TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
+        //        return RedirectToAction("IndexForLabManage", "Vendors", onePageOfProducts);
+        //    }
+        //    else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operations)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory;
+        //        TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
+        //        return RedirectToAction("Index", "Operations", new { vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
+        //    }
+
+        //    return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
+
+        //}
 
 
         /*
@@ -4076,7 +4088,7 @@ namespace PrototypeWithAuth.Controllers
             switch (accountingNotificationsEnum)
             {
                 case AppUtility.SidebarEnum.NoInvoice:
-                    requestsList = requestsList.Where(r => r.Payments.LastOrDefault().HasInvoice == false).Where(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID==3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
+                    requestsList = requestsList.Where(r => r.Payments.FirstOrDefault().HasInvoice == false).Where(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID==3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
                     break;
                 case AppUtility.SidebarEnum.DidntArrive:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
@@ -4196,28 +4208,28 @@ namespace PrototypeWithAuth.Controllers
                     {
                         Payment payment = new Payment();
                         var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
-                        if (requestToUpdate.PaymentStatusID == 7)
-                        {
-                            payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
-                            _context.Add(new Payment() { PaymentDate = payment.PaymentDate.AddMonths(1), RequestID = requestToUpdate.RequestID });
-                        }
-                        else if (requestToUpdate.PaymentStatusID == 5)
-                        {
-                            var payments = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID);
-                            var count = payments.Count();
+                        //if (requestToUpdate.PaymentStatusID == 7)
+                        //{
+                        //    payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
+                        //    _context.Add(new Payment() { PaymentDate = payment.PaymentDate.AddMonths(1), RequestID = requestToUpdate.RequestID });
+                        //}
+                        //else if (requestToUpdate.PaymentStatusID == 5)
+                        //{
+                        //    var payments = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID);
+                        //    var count = payments.Count();
                             
-                            payment = payments.OrderBy(p => p.PaymentDate).FirstOrDefault();
-                            if (count <= 1)
-                            {
-                                payment.Sum = requestToUpdate.Cost ?? 0;
-                            }
-                        }
-                        else
-                        {
+                        //    payment = payments.OrderBy(p => p.PaymentDate).FirstOrDefault();
+                        //    if (count <= 1)
+                        //    {
+                        //        payment.Sum = requestToUpdate.Cost ?? 0;
+                        //    }
+                        //}
+                        //else
+                        //{
                             payment.Sum = request.Cost ?? 0;
                             payment.PaymentDate = DateTime.Now.Date;
                             payment.RequestID = requestToUpdate.RequestID;
-                        }
+                        //}
                         payment.Reference = paymentsPayModalViewModel.Payment.Reference;
                         payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;
                         payment.PaymentReferenceDate = paymentsPayModalViewModel.Payment.PaymentReferenceDate;
@@ -4247,7 +4259,140 @@ namespace PrototypeWithAuth.Controllers
 
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingEnum });
         }
+        [HttpGet]
+        [Authorize(Roles = "Accounting")]
+        public async Task<IActionResult> PaymentsInvoiceModal(int? vendorid, int? requestid, int[] requestIds, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
+        {
+            List<Request> requestsToPay = new List<Request>();
+            var requestsList = GetPaymentRequests(accountingPaymentsEnum);
 
+            if (vendorid != null)
+            {
+                requestsToPay = await requestsList.Where(r => r.Product.VendorID == vendorid).ToListAsync();
+            }
+            else if (requestid != null)
+            {
+                requestsToPay = await requestsList.Where(r => r.RequestID == requestid).ToListAsync();
+            }
+            else if (requestIds != null)
+            {
+                foreach (int rId in requestIds)
+                {
+                    requestsToPay.Add(requestsList.Where(r => r.RequestID == rId).FirstOrDefault());
+                }
+            }
+            foreach(var request in requestsToPay)
+            {
+                var currentInstallment = request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault();
+                if (currentInstallment.InstallmentNumber == request.Installments)
+                {
+                    var paidSum = request.Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
+                    request.Payments[currentInstallment.InstallmentNumber - 1].Sum = (decimal)request.Cost - paidSum;
+                }
+                
+            }
+            PaymentsInvoiceViewModel paymentsInvoiceViewModel = new PaymentsInvoiceViewModel()
+            {
+                Requests = requestsToPay,
+                AccountingEnum = accountingPaymentsEnum,
+                Payment = new Payment(),
+                PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
+                CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList(),
+                Invoice = new Invoice()
+                {
+                    InvoiceDate = DateTime.Today
+                }
+            };
+
+            //check if payment status type is installments to show the installments in the view model
+
+            return PartialView(paymentsInvoiceViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Accounting")]
+        public async Task<IActionResult> PaymentsInvoiceModal(PaymentsInvoiceViewModel paymentsInvoiceViewModel)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var paymentsList = _context.Payments.Where(p => p.IsPaid == false);
+                    foreach (Request request in paymentsInvoiceViewModel.Requests)
+                    {
+                        Payment payment = new Payment();
+                        var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
+                        if (requestToUpdate.PaymentStatusID == 5)
+                        {
+                            var payments = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID);
+                            var count = payments.Count();
+
+                            payment = payments.Where(p=>!p.IsPaid).OrderBy(p => p.PaymentDate).FirstOrDefault();
+                            payment.Sum = request.Payments.FirstOrDefault().Sum;
+                        }
+                        //else
+                        //{
+                        //    payment.Sum = request.Cost ?? 0;
+                        //    payment.PaymentDate = DateTime.Now.Date;
+                        //    payment.RequestID = requestToUpdate.RequestID;
+                        //}
+                        payment.Reference = paymentsInvoiceViewModel.Payment.Reference;
+                        payment.CompanyAccountID = paymentsInvoiceViewModel.Payment.CompanyAccountID;
+                        payment.PaymentReferenceDate = paymentsInvoiceViewModel.Payment.PaymentReferenceDate;
+                        payment.PaymentTypeID = paymentsInvoiceViewModel.Payment.PaymentTypeID;
+                        payment.CreditCardID = paymentsInvoiceViewModel.Payment.CreditCardID;
+                        payment.CheckNumber = paymentsInvoiceViewModel.Payment.CheckNumber;
+                        payment.IsPaid = true;
+                        payment.HasInvoice = true;
+                        payment.Invoice = paymentsInvoiceViewModel.Invoice;
+
+                        _context.Update(payment);
+                        _context.Update(requestToUpdate);
+                        await _context.SaveChangesAsync();
+
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                        string requestFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
+                        Directory.CreateDirectory(requestFolder);
+                        if (paymentsInvoiceViewModel.InvoiceImage != null)
+                        {
+                            int x = 1;
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+                            if (Directory.Exists(folderPath))
+                            {
+                                var filesInDirectory = Directory.GetFiles(folderPath);
+                                x = filesInDirectory.Length + 1;
+                            }
+                            else
+                            {
+                                Directory.CreateDirectory(folderPath);
+                            }
+                            string uniqueFileName = x + paymentsInvoiceViewModel.InvoiceImage.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            FileStream filestream = new FileStream(filePath, FileMode.Create);
+                            paymentsInvoiceViewModel.InvoiceImage.CopyTo(filestream);
+                            filestream.Close();
+                        }
+                    }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    Response.StatusCode = 500;
+                    for (int i = 0; i < paymentsInvoiceViewModel.Requests.Count; i++)
+                    {
+                        paymentsInvoiceViewModel.Requests[i] = _context.Requests.Where(r => r.RequestID == paymentsInvoiceViewModel.Requests[i].RequestID).Include(r => r.Product)
+                            .ThenInclude(p => p.Vendor).FirstOrDefault();
+                    }
+                    paymentsInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    return PartialView(paymentsInvoiceViewModel);
+                }
+            }
+
+            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsInvoiceViewModel.AccountingEnum });
+        }
         [HttpGet]
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AddInvoiceModal(int? vendorid, int? requestid, int[] requestIds)
@@ -4256,12 +4401,12 @@ namespace PrototypeWithAuth.Controllers
             var queryableRequests = _context.Requests
                 .Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Where(r => r.IsDeleted == false && r.Payments.LastOrDefault().HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3))).Where(r => r.RequestStatusID != 7);
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r=> r.Payments)
+                    .Where(r => r.IsDeleted == false && r.Payments.FirstOrDefault().HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3))).Where(r => r.RequestStatusID != 7);
             if (vendorid != null)
             {
                 Requests = queryableRequests
-                    .Where(r => r.Payments.LastOrDefault().HasInvoice == false)
+                    .Where(r => r.Payments.FirstOrDefault().HasInvoice == false)
                     .Where(r => r.Product.VendorID == vendorid).ToList();
             }
             else if (requestid != null)
@@ -4302,8 +4447,8 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.Payments).FirstOrDefault();
                         RequestToSave.Cost = request.Cost;
-                        RequestToSave.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
-                        request.Payments.LastOrDefault().HasInvoice = true;
+                        RequestToSave.Payments.FirstOrDefault().InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
+                        RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
 
                         _context.Update(RequestToSave);
 
@@ -4908,7 +5053,8 @@ namespace PrototypeWithAuth.Controllers
             TermsViewModel termsViewModel = new TermsViewModel()
             {
                 ParentRequest = new ParentRequest(),
-                TermsList = termsList
+                TermsList = termsList,
+                InstallmentDate = DateTime.Now
             };
             requestIndexObject.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), requests[0].Currency);
             termsViewModel.RequestIndexObject = requestIndexObject;
@@ -4985,55 +5131,42 @@ namespace PrototypeWithAuth.Controllers
                                         req.Product.ProductSubcategory = null;
                                     }
                                 }
-                                if (req.PaymentStatusID == 7)
-                                {
-                                    req.RequestStatusID = 3;
-                                    req.ApplicationUserReceiverID = _userManager.GetUserId(User);
-                                    req.ArrivalDate = DateTime.Now;
-                                }
+                                //if (req.PaymentStatusID == 7)
+                                //{
+                                //    req.RequestStatusID = 3;
+                                //    req.ApplicationUserReceiverID = _userManager.GetUserId(User);
+                                //    req.ArrivalDate = DateTime.Now;
+                                //}
 
                                 _context.Update(req);
                                 await _context.SaveChangesAsync();
                             }
-                            //if (req.PaymentStatusID == 5)
-                            //{
-                            //    for (int i = 0; i < req.Installments; i++)
-                            //    {
-
-                            //        var payment = new Payment() { PaymentDate = DateTime.Now.AddMonths(i), Sum = (req.Cost ?? 0 / req.Installments ?? 0) };
-                            //        if (SaveUsingSessions)
-                            //        {
-                            //            var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
-                            //            HttpContext.Session.SetObject(paymentName, payment);
-                            //        }
-                            //        else
-                            //        {
-                            //            payment.Request = req;
-                            //            _context.Update(payment);
-                            //            await _context.SaveChangesAsync();
-                            //        }
-                            //        PaymentNum++;
-                            //    }
-                            //}
-                            var payment = new Payment(){ PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1) };
-                            if (req.PaymentStatusID == 5)
+                            for (int i = 0; i < req.Installments; i++)
                             {
-
-                                payment.PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1);
+                                var payment = new Payment() { InstallmentNumber = i + 1 };
+                                if (req.PaymentStatusID == 5)
+                                {
+                                    payment.PaymentDate = termsViewModel.InstallmentDate.AddMonths(i);
+                                    payment.Sum = ((req.Cost ?? 0) / (req.Installments ?? 0));
+                                }
+                                else
+                                {
+                                    payment.PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                                    payment.Sum = req.Cost ?? 0;
+                                }
+                                if (SaveUsingSessions)
+                                {
+                                    var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
+                                    HttpContext.Session.SetObject(paymentName, payment);
+                                }
+                                else
+                                {
+                                    payment.Request = req;
+                                    _context.Update(payment);
+                                    await _context.SaveChangesAsync();
+                                }
+                                PaymentNum++;
                             }
-                            if (SaveUsingSessions)
-                            {
-                                var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + PaymentNum;
-                                HttpContext.Session.SetObject(paymentName, new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) });
-                            }
-                            else
-                            {
-                                payment.Request = req;
-                                _context.Add(payment);
-                                await _context.SaveChangesAsync();
-                            }
-                            PaymentNum++;
-
                             RequestNum++;
                         }
                         if (!SaveUsingSessions)
