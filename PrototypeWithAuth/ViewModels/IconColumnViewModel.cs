@@ -2,6 +2,7 @@
 using PrototypeWithAuth.AppData.UtilityModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,5 +21,6 @@ namespace PrototypeWithAuth.ViewModels
         public string Color { get; private set; }
         public string IconAjaxLink { get; private set; }
         public string TooltipTitle { get; private set; }
+        public List<IconPopoverViewModel> IconPopovers { get; set; }
     }
 }
