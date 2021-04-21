@@ -1,4 +1,40 @@
-﻿@{
+﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
+@{
     ViewData["Title"] = "Research Protocol";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+<div class="item-table">
+    <ul  class=" pl-0 nav" style="">
+        <li class="list-inline-item m-0 nav-item">
+            <a data-toggle="tab" href="#Theory" class="next-tab nav-link active new-button new-protocols-button">
+                <i class="new-icon icon-theory-tab-24px"></i>
+                <label class="new-button-text">Theory</label>
+            </a>
+        </li>
+        <li class="list-inline-item m-0 nav-item">
+            <a data-toggle="tab" href="#Materials" class="next-tab nav-link new-button  new-protocols-button">
+                <i class=" new-icon icon-centarix-icons-03"></i>
+                <label class="new-button-text">Material</label>
+            </a>
+        </li>
+        <li class="list-inline-item m-0 nav-item">
+            <a data-toggle="tab" href="#Protocol" class="next-tab nav-link new-button new-protocols-button">
+                <i class="new-icon icon-protocol-tab-24px"></i>
+                <label class="new-button-text">Protocols</label>
+            </a>
+        </li>
+
+    </ul>
+</div>
+<div class="tab-content">
+
+    <div id="Theory" class="tab-pane fade in ">
+        Theory
+    </div>
+    <div id="Materials" class="tab-pane fade in ">
+        Material
+    </div>
+    <div id="Protocol" class="tab-pane fade in ">
+        Protocol
+    </div>
+</div>

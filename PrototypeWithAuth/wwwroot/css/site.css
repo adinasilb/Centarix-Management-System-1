@@ -1189,6 +1189,14 @@ a.nav-link {
     border-bottom: 4px solid var(--operations-color);
 }
 
+.new-protocols-button.active {
+    color: var(--protocol-color) !important;
+    border-bottom: 4px solid var(--protocol-color);
+}
+.new-protocols-button:hover {
+    color: var(--protocol-color);
+}
+
 .zoom-in-btn {
     color: black;
     text-decoration: none;
