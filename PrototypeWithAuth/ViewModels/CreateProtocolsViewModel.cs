@@ -9,5 +9,6 @@ namespace PrototypeWithAuth.ViewModels
     public class CreateProtocolsViewModel
     {
         public Protocol Protocol { get; set; }
+        public List<String> Tags { get; set; }
     }
 }

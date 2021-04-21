@@ -1811,10 +1811,16 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     font-size: .63rem;
     color: #495057;
 } .supplier-form .form-control-plaintext:focus {
+    box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
+}
+.form-control-plaintext:focus {
     outline-width: 0px !important;
     outline-color: none !important;
-    box-shadow: 0 2px 0 0 var(--lab-man-color) !important;
-} .dropdown .select, .dropdown-multiple .select {
+}
+.protocol-form .form-control-plaintext:focus {
+    box-shadow: 0 2px 0 0 var(--protocol-color) !important;
+}
+  .dropdown .select, .dropdown-multiple .select {
     z-index: 2;
     display: block;
     width: 100%;

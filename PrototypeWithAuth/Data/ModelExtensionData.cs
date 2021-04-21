@@ -2336,6 +2336,40 @@ namespace PrototypeWithAuth.Data
                 }
          );
 
+            modelBuilder.Entity<ProtocolType>().HasData(
+               new ProtocolType
+               {
+                   ProtocolTypeID = 1,
+                   ProtocolTypeDescription = "Research"
+               },
+               new ProtocolType
+               {
+                   ProtocolTypeID = 2,
+                   ProtocolTypeDescription = "Kit"
+               },
+               new ProtocolType
+               {
+                   ProtocolTypeID = 3,
+                   ProtocolTypeDescription = "SOP"
+               },
+               new ProtocolType
+               {
+                   ProtocolTypeID = 4,
+                   ProtocolTypeDescription = "Buffer"
+               }
+               ,
+               new ProtocolType
+               {
+                   ProtocolTypeID = 4,
+                   ProtocolTypeDescription = "Robiotic"
+               },
+               new ProtocolType
+               {
+                   ProtocolTypeID = 4,
+                   ProtocolTypeDescription = "Maintenance"
+               }
+        );
+
         }
     }
 }
