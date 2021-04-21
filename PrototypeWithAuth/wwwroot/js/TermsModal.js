@@ -197,6 +197,7 @@ $(function () {
 		{
 			$(".installments-amount-block").removeClass("d-none");
 			$("#Installments").attr("disabled", false);
+			$("#InstallmentDate").attr("disabled", false);
 			$("#Installments").rules("add", {
 			required: true,
 				min:1

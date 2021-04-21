@@ -612,5 +612,27 @@ namespace PrototypeWithAuth.AppData
                 }
             }
         }
+
+        public static Payment GetCurrentInstallment(List<Payment> usedPayments, Request request, out Payment previousPayment)
+        {
+            var requestInstallments = request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).ToList();
+            var foundInstallment = false;
+            var currentInstallment = new Payment();
+            foreach (var installment in requestInstallments)
+            {
+                if (!usedPayments.Contains(installment))
+                {
+                    currentInstallment = installment;
+                    usedPayments.Add(installment);
+                    foundInstallment = true;
+                }
+                if (foundInstallment)
+                {
+                    break;
+                }
+            }
+            previousPayment = currentInstallment;
+            return currentInstallment;
+        }
     }
 }

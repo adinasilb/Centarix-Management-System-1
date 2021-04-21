@@ -231,7 +231,7 @@
         </div>
     }
     <div class="row">
-        @if (request.ExpectedSupplyDays != null || modalType == AppUtility.RequestModalType.Create)
+        @if (Model.Requests[0].ExpectedSupplyDays != null || modalType == AppUtility.RequestModalType.Create)
         {
             <div class="col-md-4 @supplyDaysCategories @hiddenSummaryClass requestPriceQuote">
                 <label asp-for="Requests[0].ExpectedSupplyDays" class="control-label"></label>
@@ -258,29 +258,29 @@
                     }
                 </div>
             </div>
-        }
-        <div class="col-md-4 @websiteCategories">
-            <label asp-for="Requests[0].URL" class="control-label"></label>
-            <input asp-for="Requests[0].URL" class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass" />
-            <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
+            }
+            <div class="col-md-4 @websiteCategories">
+                <label asp-for="Requests[0].URL" class="control-label"></label>
+                <input asp-for="Requests[0].URL" class="form-control-plaintext border-bottom @websiteCategories @markReadOnlyClass" />
+                <span asp-validation-for="Requests[0].URL" class="text-danger-centarix"></span>
+            </div>
         </div>
-    </div>
-    @if (request.HasInvoice || request.ParentRequest?.SupplierOrderNumber != null)
-    {<div class="row">
-            @if (request.HasInvoice)
+        @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null || Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
+        {<div class="row">
+            @if (Model.Requests[0].Payments[0].HasInvoice)
             {
                 <div class="col-md-3 ">
-                    <label asp-for="Requests[0].Invoice.InvoiceNumber" class="control-label"></label>
-                    <input asp-for="Requests[0].Invoice.InvoiceNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" />
-                    <span asp-validation-for="Requests[0].Invoice.InvoiceNumber" class="text-danger-centarix"></span>
+                    <label asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="control-label"></label>
+                    <input asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="form-control-plaintext border-bottom @markReadOnlyClass" />
+                    <span asp-validation-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-md-3 ">
-                    <label asp-for="Requests[0].Invoice.InvoiceDate" class="control-label"></label>
-                    <input asp-for="Requests[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" asp-format="{0:dd/MM/yyyy}" />
-                    <span asp-validation-for="Requests[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
+                    <label asp-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="control-label"></label>
+                    <input asp-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass" type="text" asp-format="{0:dd/MM/yyyy}" />
+                    <span asp-validation-for="Requests[0].Payments[0].Invoice.InvoiceDate" class="text-danger-centarix"></span>
                 </div>
             }
-            @if (request.ParentRequest?.SupplierOrderNumber != null)
+            @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null)
             {
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].ParentRequest.SupplierOrderNumber" class="control-label"></label>
@@ -296,7 +296,7 @@
 
         </div>
     }
-    @if (request.RequestStatusID == 3)
+    @if (Model.Requests[0].RequestStatusID == 3)
     {
         <div class="row">
             <div class="col-md-3 ">

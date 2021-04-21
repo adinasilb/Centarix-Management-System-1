@@ -2636,6 +2636,15 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("CreditCardID")
                         .HasColumnType("int");
 
+                    b.Property<bool>("HasInvoice")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("InstallmentNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("InvoiceID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -2668,6 +2677,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("CompanyAccountID");
 
                     b.HasIndex("CreditCardID");
+
+                    b.HasIndex("InvoiceID");
 
                     b.HasIndex("ParentRequestID");
 
@@ -3388,6 +3399,23 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ProtocolCategoryTypeID");
 
                     b.ToTable("ProtocolCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            ProtocolCategoryTypeID = 1,
+                            ProtocolDescription = "Rejuvenation"
+                        },
+                        new
+                        {
+                            ProtocolCategoryTypeID = 2,
+                            ProtocolDescription = "Biomarkers"
+                        },
+                        new
+                        {
+                            ProtocolCategoryTypeID = 3,
+                            ProtocolDescription = "Delivery Systems"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolComment", b =>
@@ -3487,6 +3515,44 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ProtocolCategoryTypeID");
 
                     b.ToTable("ProtocolSubCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            ProtocolSubCategoryTypeID = 1,
+                            ProtocolCategoryTypeID = 1,
+                            ProtocolSubCategoryTypeDescription = "Telomeres "
+                        },
+                        new
+                        {
+                            ProtocolSubCategoryTypeID = 2,
+                            ProtocolCategoryTypeID = 1,
+                            ProtocolSubCategoryTypeDescription = "Epigenetics"
+                        },
+                        new
+                        {
+                            ProtocolSubCategoryTypeID = 3,
+                            ProtocolCategoryTypeID = 2,
+                            ProtocolSubCategoryTypeDescription = "Telomeres "
+                        },
+                        new
+                        {
+                            ProtocolSubCategoryTypeID = 4,
+                            ProtocolCategoryTypeID = 2,
+                            ProtocolSubCategoryTypeDescription = "Transcription"
+                        },
+                        new
+                        {
+                            ProtocolSubCategoryTypeID = 5,
+                            ProtocolCategoryTypeID = 2,
+                            ProtocolSubCategoryTypeDescription = "Methylation"
+                        },
+                        new
+                        {
+                            ProtocolSubCategoryTypeID = 6,
+                            ProtocolCategoryTypeID = 3,
+                            ProtocolSubCategoryTypeDescription = "AAV"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolType", b =>
@@ -3502,6 +3568,38 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ProtocolTypeID");
 
                     b.ToTable("ProtocolTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            ProtocolTypeID = 1,
+                            ProtocolTypeDescription = "Research"
+                        },
+                        new
+                        {
+                            ProtocolTypeID = 2,
+                            ProtocolTypeDescription = "Kit"
+                        },
+                        new
+                        {
+                            ProtocolTypeID = 3,
+                            ProtocolTypeDescription = "SOP"
+                        },
+                        new
+                        {
+                            ProtocolTypeID = 4,
+                            ProtocolTypeDescription = "Buffer"
+                        },
+                        new
+                        {
+                            ProtocolTypeID = 5,
+                            ProtocolTypeDescription = "Robiotic"
+                        },
+                        new
+                        {
+                            ProtocolTypeID = 6,
+                            ProtocolTypeDescription = "Maintenance"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.QuoteStatus", b =>
@@ -3610,10 +3708,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<byte?>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
 
-                    b.Property<bool>("HasInvoice")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IncludeVAT")
+                    b.Property<bool?>("IncludeVAT")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
@@ -3644,9 +3739,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("OrderType")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Paid")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("ParentQuoteID")
                         .HasColumnType("int");
@@ -5223,6 +5315,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("CreditCardID")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("PrototypeWithAuth.Models.Invoice", "Invoice")
+                        .WithMany()
+                        .HasForeignKey("InvoiceID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("PrototypeWithAuth.Models.ParentRequest", null)
                         .WithMany("Payments")
                         .HasForeignKey("ParentRequestID")
@@ -5349,7 +5446,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserReceiverID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Invoice", "Invoice")
+                    b.HasOne("PrototypeWithAuth.Models.Invoice", null)
                         .WithMany("Requests")
                         .HasForeignKey("InvoiceID")
                         .OnDelete(DeleteBehavior.Restrict);

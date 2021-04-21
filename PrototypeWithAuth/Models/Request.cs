@@ -111,24 +111,17 @@ namespace PrototypeWithAuth.Models
 
 
         //payment info
-        public bool Paid { get; set; }
         public uint? Installments { get; set; } //number of installments
-        public IEnumerable<Payment> Payments { get; set; }
+        public List<Payment> Payments { get; set; }
 
         public int? PaymentStatusID { get; set; }
         [ForeignKey("PaymentStatusID")]
         public PaymentStatus PaymentStatus { get; set; }
-        public bool HasInvoice { get; set; }
         public bool IsPartial { get; set; }
         public string NoteForPartialDelivery { get; set; }
         public bool IsClarify { get; set; }
         public string NoteForClarifyDelivery { get; set; }
-        public int? InvoiceID { get; set; }
-        [ForeignKey("InvoiceID")]
-        public Invoice Invoice { get; set; }
-
-
-
+        
         //price info
         public string Currency { get; set; }
         [Range(1,  (double)Decimal.MaxValue, ErrorMessage = "Field must be more than 0")]
@@ -139,7 +132,7 @@ namespace PrototypeWithAuth.Models
         {
             get
             {
-                if (IncludeVAT)
+                if (IncludeVAT == true)
                 {
                     return Math.Round(.17m * Cost ?? 0, 2);
                 }
@@ -215,10 +208,10 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestLocationInstance> RequestLocationInstances { get; set; } //a request can go to many locations
         public bool Ignore { get; set; }
         public bool IsReceived { get; set; }
-        private bool _IncludeVAT = true;
-        public bool IncludeVAT { get
+        private bool? _IncludeVAT;
+        public bool? IncludeVAT { get
             {
-                return _IncludeVAT;
+                return _IncludeVAT!=null && _IncludeVAT==true;
             }
             set {
                 _IncludeVAT = value;

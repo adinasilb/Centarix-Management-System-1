@@ -210,14 +210,10 @@
         if (items > 1) {
             console.log("index " + index)
             var itemClass = '.partial-item-tab.' + index;
-            $(itemClass).hide();
-            $(itemClass + " input").each(function () {
-                if (!$(this).attr('type') == "hidden") {
-                    $(this).attr("disabled", "true");
-                }
+            $(itemClass).children(".row").each(function (e) {
+                $(this).replaceWith("");
             })
-            $.fn.DisableMaterialSelect("Requests_" + index +"__Product_ProductSubcategory_ParentCategoryID","select-options-Requests_"+index+"__Product_ProductSubcategory_ParentCategoryID")
-            $.fn.DisableMaterialSelect("Requests_" + index + "__Product_ProductSubcategory_ProductSubcategoryID", "select-options-Requests_" + index + "__Product_ProductSubcategory_ProductSubcategoryID")
+            
             var deletedid = "Requests_" + index + "__Ignore";
             console.log("deleted hidden id: " + deletedid);
             $("#" + deletedid).val("true");
