@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
@@ -240,7 +241,15 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            return View(new CreateProtocolsViewModel() { Protocol = new Protocol()});
+            var protocol = new Protocol();
+            protocol.ProtocolTypeID = 1;
+            var viewmodel = new CreateProtocolsViewModel()
+            {
+                Protocol = protocol,
+                ProtocolCategories = _context.ProtocolCategories,
+                ProtocolSubCategories = _context.ProtocolSubCategories
+            };
+            return View(viewmodel);
         }
 
         public async Task<IActionResult> KitProtocol()
@@ -371,6 +380,19 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
-       
+
+        [HttpGet] //send a json to that the subcategory list is filtered
+        [Authorize(Roles = "Protocols")]
+        public JsonResult GetSubCategoryList(int? ParentCategoryId)
+        {
+            var subCategoryList = _context.ProtocolSubCategories.ToList();
+            if (ParentCategoryId != null)
+            {
+                subCategoryList = _context.ProtocolSubCategories.Where(c => c.ProtocolCategoryTypeID == ParentCategoryId).ToList();
+            }
+            return Json(subCategoryList);
+        }
+
+
     }
 }
