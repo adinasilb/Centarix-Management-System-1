@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210422105730_RemoveLocationInstances")]
+    partial class RemoveLocationInstances
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1902,57 +1904,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LocationRoomTypeID");
 
                     b.ToTable("LocationRoomInstances");
-
-                    b.HasData(
-                        new
-                        {
-                            LocationRoomInstanceID = 1,
-                            LocationRoomInstanceAbbrev = "L1",
-                            LocationRoomInstanceName = "Laboratory 1",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 2,
-                            LocationRoomInstanceAbbrev = "L2",
-                            LocationRoomInstanceName = "Laboratory 2",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 3,
-                            LocationRoomInstanceAbbrev = "TC1",
-                            LocationRoomInstanceName = "Tissue Culture 1",
-                            LocationRoomTypeID = 2
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 4,
-                            LocationRoomInstanceAbbrev = "E1",
-                            LocationRoomInstanceName = "Equipment Room 1",
-                            LocationRoomTypeID = 3
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 5,
-                            LocationRoomInstanceAbbrev = "R1",
-                            LocationRoomInstanceName = "Refrigerator Room 1",
-                            LocationRoomTypeID = 4
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 6,
-                            LocationRoomInstanceAbbrev = "W1",
-                            LocationRoomInstanceName = "Washing Room 1",
-                            LocationRoomTypeID = 5
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 7,
-                            LocationRoomInstanceAbbrev = "S1",
-                            LocationRoomInstanceName = "Storage Room 1",
-                            LocationRoomTypeID = 6
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomType", b =>

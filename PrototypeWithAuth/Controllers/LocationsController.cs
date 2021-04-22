@@ -238,16 +238,16 @@ namespace PrototypeWithAuth.Controllers
                     subLocationViewModel.BoxTypes = boxList;
                     break;
                 case 500:
-                    subLocationViewModel.LabParts = await _context.LabParts.ToListAsync();
-                    var locationRooms = await _context.LocationInstances.Where(li => li.LocationRoomTypeID != null).Include(l => l.LocationRoomType).ToListAsync();
-                    var locationRoomTypes = await _context.LocationRoomTypes.ToListAsync();
-                    List<SelectListItem> locationRoomsSelectList = new List<SelectListItem>();
-                    foreach (var r in locationRooms)
-                    {
+                    //subLocationViewModel.LabParts = await _context.LabParts.ToListAsync();
+                    //var locationRooms = await _context.LocationInstances.Where(li => li.LocationRoomInstanceID != null).Include(l => l.LocationRoomInstance).ToListAsync();
+                    //var locationRoomTypes = await _context.LocationRoomTypes.ToListAsync();
+                    //List<SelectListItem> locationRoomsSelectList = new List<SelectListItem>();
+                    //foreach (var r in locationRooms)
+                    //{
 
-                        locationRoomsSelectList.Add(new SelectListItem() { Value = r.LocationInstanceID + "", Text = r.LocationInstanceName });
-                    }
-                    subLocationViewModel.LocationRoomInstances = locationRoomsSelectList;
+                    //    locationRoomsSelectList.Add(new SelectListItem() { Value = r.LocationInstanceID + "", Text = r.LocationInstanceName });
+                    //}
+                    //subLocationViewModel.LocationRoomInstances = locationRoomsSelectList;
                     break;
             }
             while (go)
@@ -603,15 +603,15 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 else if (i == 0)
                                 {
-                                    var room = _context.LocationInstances.Include(r => r.LocationRoomType).Where(l => l.LocationInstanceID == subLocationViewModel.LocationInstances[i].LocationInstanceID).FirstOrDefault();
-                                    if (room != null)
-                                    {
-                                        room.Height += 1;
-                                        subLocationViewModel.LocationInstances[i] = room;
+                                    //var room = _context.LocationInstances.Include(r => r.LocationRoomInstance).Where(l => l.LocationInstanceID == subLocationViewModel.LocationInstances[i].LocationInstanceID).FirstOrDefault();
+                                    //if (room != null)
+                                    //{
+                                    //    room.Height += 1;
+                                    //    subLocationViewModel.LocationInstances[i] = room;
 
-                                        _context.Update(subLocationViewModel.LocationInstances[i]);
-                                        await _context.SaveChangesAsync();
-                                    }
+                                    //    _context.Update(subLocationViewModel.LocationInstances[i]);
+                                    //    await _context.SaveChangesAsync();
+                                    //}
                                 }
                                 else if (i == 1)
                                 {
