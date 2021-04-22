@@ -2648,7 +2648,10 @@ namespace PrototypeWithAuth.Controllers
                                         r.RequestStatusID = 2;
                                         if(r.RequestID ==0)
                                         {
-                                            _context.Entry(r.Product).State = EntityState.Added;
+                                            if(r.Product.ProductID ==0)
+                                            {
+                                                _context.Entry(r.Product).State = EntityState.Added;
+                                            }                                        
                                             _context.Entry(r).State = EntityState.Added;
                                             _context.Entry(r.ParentRequest).State = EntityState.Added;
                                             _context.Entry(r.ParentQuote).State = EntityState.Added;
@@ -4661,7 +4664,10 @@ namespace PrototypeWithAuth.Controllers
                         try
                         {
                             _context.Entry(request.ParentQuote).State = EntityState.Added;
-                            _context.Entry(request.Product).State = EntityState.Added;
+                            if(request.Product.ProductID ==0)
+                            {
+                                _context.Entry(request.Product).State = EntityState.Added;
+                            }
                             _context.Entry(request).State = EntityState.Added;
                             await _context.SaveChangesAsync();
                             await SaveCommentsFromSession(request);
