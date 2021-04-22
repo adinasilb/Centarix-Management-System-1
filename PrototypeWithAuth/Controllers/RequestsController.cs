@@ -145,7 +145,7 @@ namespace PrototypeWithAuth.Controllers
             switch (statusId)
             {
                 case 1:
-                    viewmodel.NewCount += count;
+                    viewmodel.NewCount = count;
                     break;
                 case 2:
                     viewmodel.OrderedCount = count;
@@ -4759,9 +4759,10 @@ namespace PrototypeWithAuth.Controllers
                 while (isRequests)
                 {
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
+                    var req = HttpContext.Session.GetObject<Request>(requestName);
+                    if ( req != null)
                     {
-                        requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                        requests.Add(req);
                     }
                     else
                     {
@@ -4776,6 +4777,7 @@ namespace PrototypeWithAuth.Controllers
                     request.ParentQuote = null;
 
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                 
                     HttpContext.Session.SetObject(requestName, request);
                     RequestNum++;
                 }
@@ -5057,6 +5059,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(int vendorID, RequestIndexObject requestIndexObject) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
+            var requ = HttpContext.Session.GetObject<Request>("Request1");
             List<Request> requests = new List<Request>();
             if (vendorID != 0)
             {
