@@ -2646,14 +2646,7 @@ namespace PrototypeWithAuth.Controllers
                                     foreach (var r in requests)
                                     {
                                         r.RequestStatusID = 2;
-
-                                        if (r.OrderType != AppUtility.OrderTypeEnum.OrderNow.ToString())
-                                        {
-                                            r.Product = null;
-                                        }
-
-                                        _context.Entry(currentUser).State = EntityState.Detached;
-                                        _context.Update(r);
+                                        if(r.re)
                                         await _context.SaveChangesAsync();
                                     }
 
@@ -5160,10 +5153,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 req.Product = _context.Products.Where(p => p.ProductID == req.ProductID).Include(p => p.ProductSubcategory).FirstOrDefault();
                             }
-                            else
-                            {
-                                req.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == req.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefault();
-                            }
+                            
                             if (req.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
                             {
                                 SaveUsingSessions = false;
@@ -5186,14 +5176,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             else
                             {
-                                if (req.Product != null)
-                                {
-                                    req.Product.Vendor = null;
-                                    if (termsViewModel.SectionType == AppUtility.MenuItems.Operations) //TODO: better if
-                                    {
-                                        req.Product.ProductSubcategory = null;
-                                    }
-                                }
+
                                 //if (req.PaymentStatusID == 7)
                                 //{
                                 //    req.RequestStatusID = 3;
@@ -5201,7 +5184,11 @@ namespace PrototypeWithAuth.Controllers
                                 //    req.ArrivalDate = DateTime.Now;
                                 //}
 
-                                _context.Update(req);
+                                _context.Entry(req.Product).State = EntityState.Added;
+                                _context.Entry(req).State = EntityState.Added;
+                                _context.Entry(req.ParentRequest).State = EntityState.Added;
+
+ 
                                 await _context.SaveChangesAsync();
                             }
                             for (int i = 0; i < req.Installments; i++)
@@ -5224,8 +5211,8 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 else
                                 {
-                                    payment.Request = req;
-                                    _context.Update(payment);
+                                    payment.RequestID = req.RequestID;
+                                    _context.Add(payment);
                                     await _context.SaveChangesAsync();
                                 }
                                 PaymentNum++;
@@ -5281,7 +5268,7 @@ namespace PrototypeWithAuth.Controllers
                                 requestNotification.Action = "NotificationsView";
                                 requestNotification.OrderDate = DateTime.Now;
                                 requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                                _context.Update(requestNotification);
+                                _context.Add(requestNotification);
                                 i++;
                             }
                             await _context.SaveChangesAsync();
