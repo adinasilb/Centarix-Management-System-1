@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<ProductSubcategory> Subcategories { get; set; }
         public List<ProductSubcategory> SelectedSubcategories { get; set; }
         public int NumFilters { get; set; }
+        public AppUtility.MenuItems SectionType { get; set; }
         //public List<Project> Projects { get; set; }
         //public List<int> SelectedProjects { get; set; }
         //public List<SubProject> SubProjects { get; set; }

@@ -7,8 +7,10 @@
     $('.page-number').val(1);
     var requestStatusId = $(this).attr("value");
     var isProprietary = requestStatusId == 7 ? true : false;
-    $.fn.ClearFilter(isProprietary);
-    ajaxPartialIndexTable(requestStatusId, "/Requests/_IndexTable", "._IndexTable", "GET")
+    var sectionType = $('#masterSectionType').val();
+    //alert(sectionType);
+    $.fn.ClearFilter(sectionType, isProprietary);
+    ajaxPartialIndexTable(requestStatusId, "/Requests/_IndexTableWithCounts", "._IndexTableWithCounts", "GET")
 });
 
 

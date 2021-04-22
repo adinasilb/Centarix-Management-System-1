@@ -1149,10 +1149,11 @@
             $('body').removeClass('popover-open');
         });
 
-        $.fn.ClearFilter = function (isProprietary) {
+        $.fn.ClearFilter = function (sectionType, isProprietary) {
+            //alert(sectionType);
             $.ajax({
                 async: true,
-                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&isProprietary=" + isProprietary,
+                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
                 type: 'POST',
                 cache: false,
                 success: function (newData) {

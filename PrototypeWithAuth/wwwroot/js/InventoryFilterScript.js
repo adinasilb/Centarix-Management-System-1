@@ -11,6 +11,7 @@ $('body').off('click').on('click', '.btn-filter', function () {
 	var data = $.fn.BindSelectedFilters();
 	var id = $(this).val();
 	var col = $(this).parent().parent();
+	var sectionType = $('#masterSectionType').val();
 	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
 	console.log('status ' + $(".request-status-id").attr("value"));
 	var arr;
@@ -40,7 +41,7 @@ $('body').off('click').on('click', '.btn-filter', function () {
 		data: data,
 		traditional:true,
 		async: true,
-		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&isProprietary="+ isProprietary,
+		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType + "&isProprietary="+ isProprietary,
 		type: 'POST',
 		cache: false,
 		success: function (newData) {
@@ -50,20 +51,39 @@ $('body').off('click').on('click', '.btn-filter', function () {
      });
 
 });
-$('.body').on('change', '.search-requests', function () {
-
+$('.search-requests').on('change', function () {
 	var searchText = $(this).val().toLowerCase();
+	console.log(searchText);
+	/*if (searchText.length < 3 && searchText != "") {
+		return;
+    }*/
+	var url;
+	switch ($('#masterPageType').val()) {
+		case 'RequestSummary':
+			url = "_IndexTableWithProprietaryTabs";
+			break;
+		case 'RequestRequest':
+		case 'OperationsRequest':
+			url = "_IndexTableWithCounts"
+			break;
+		case 'OperationsInventory':
+			url = "_IndexTable";
+			break;
+	}
+	//console.log(url);
 	$.ajax({
 		//processData: false,
 		//contentType: false,
 		//data: data,
 		traditional: true,
 		async: true,
-		url: "/Requests/_IndexTableData?" + $.fn.getRequestIndexString() + "&searchText=" + searchText,
+		url: "/Requests/"+url+"?" + $.fn.getRequestIndexString() + "&searchText=" + searchText,
 		type: 'GET',
 		cache: false,
 		success: function (data) {
-			$("._IndexTableData").html(data);
+			$("." + url).html(data);
+			$('.search-requests').val(searchText);
+			$('.search-requests').focus();
 		}
 	});
 
@@ -126,7 +146,8 @@ $("body").on("click", "#inventoryFilterContentDiv .popover-close", function (e) 
 
 $('body').on('click', '.clear-filters', function () {
 	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
-	$.fn.ClearFilter(isProprietary);
+	var sectionType = $('#masterSectionType').val();
+	$.fn.ClearFilter(sectionType, isProprietary);
 });
 
 

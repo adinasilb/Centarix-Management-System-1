@@ -36,17 +36,31 @@
     $('body').on('click', "#applyFilter", function () {
        // alert('clicked!')
         var data = $.fn.BindSelectedFilters();
+        var url;
+        switch ($('#masterPageType').val()) {
+            case 'RequestSummary':
+                url = "_IndexTableWithProprietaryTabs";
+                break;
+            case 'RequestRequest':
+            case 'OperationsRequest':
+                url = "_IndexTableWithCounts"
+                break;
+            case 'OperationsInventory':
+                url = "_IndexTable";
+                break;
+        }
+        //console.log(data);
         $.ajax({
         //    processData: false,
         //    contentType: false,
             data: data,
             async: true,
             traditional: true,
-            url: "/Requests/_IndexTableWithProprietaryTabs?" + $.fn.getRequestIndexString(),
+            url: "/Requests/" + url +"?"+ $.fn.getRequestIndexString(),
             type: 'POST',
             cache: false,
             success: function (data) {
-                $("._IndexTableWithProprietaryTabs").html(data);
+                $('.'+url).html(data);
                 $('[data-toggle="popover"]').popover('dispose');
                 $('body').removeClass('popover-open');
                 $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
@@ -54,6 +68,7 @@
             }
         });
     });
+  
     $("#invFilterPopover").click(function () {
         $('[data-toggle="popover"]').popover('dispose');
         $('#invFilterPopover').popover({
