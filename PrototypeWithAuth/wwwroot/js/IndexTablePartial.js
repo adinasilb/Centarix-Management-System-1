@@ -145,11 +145,12 @@ $(".request-favorite").on("click", function (e) {
 	var title = "Like";
 	var requestFavorite = $(this);
 	var FavType = "favorite";
+	var sidebarType = $('#masterSidebarType').val();
 	if (requestFavorite.hasClass("request-unlike")) {
 		FavType = "unlike";
 		$.ajax({
 			async: true,
-			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType,
+			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
 			traditional: true,
 			type: "GET",
 			cache: false,
@@ -159,6 +160,10 @@ $(".request-favorite").on("click", function (e) {
 				requestFavorite.attr("data-original-title", title);
 				requestFavorite.removeClass(unfav);
 				$("#loading").hide();
+				if (sidebarType == 'Favorites') {
+					$('[data-toggle="tooltip"]').popover('dispose'); //is this the right syntax?
+					$('._IndexTable').html(data);
+				}
 			}
 		})
 	}
@@ -166,7 +171,7 @@ $(".request-favorite").on("click", function (e) {
 		title = "Unlike";
 		$.ajax({
 			async: true,
-			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType,
+			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
 			traditional: true,
 			type: "GET",
 			cache: false,
@@ -176,6 +181,7 @@ $(".request-favorite").on("click", function (e) {
 				requestFavorite.attr("data-original-title", title);
 				requestFavorite.addClass(unfav);
 				$("#loading").hide();
+				
 			}
 		})
 	}
