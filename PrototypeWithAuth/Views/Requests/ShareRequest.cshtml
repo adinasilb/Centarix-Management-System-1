@@ -6,6 +6,7 @@
 
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
             <form action="" method="post">
+                <input type="hidden" asp-for="Request.RequestID" />
                 <button type="button" class="close modal-close-padding modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('share-request');">
                     <span aria-hidden="true">&times;</span>
                 </button>

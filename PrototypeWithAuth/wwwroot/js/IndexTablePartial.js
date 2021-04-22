@@ -12,6 +12,7 @@
 	$(this).popover('toggle');
 	$(".popover").off("click").on("click", ".share-request-fx", function () {
 		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
+		alert("url: " + url);
 		$.ajax({
 			async: true,
 			url: url,
@@ -19,6 +20,7 @@
 			type: "GET",
 			cache: false,
 			success: function (data) {
+				alert("in open modal");
 				$.fn.OpenModal("share-request-modal", "share-request", data)
 				$.fn.EnableMaterialSelect('#userlist', 'select-options-userlist')
 				$("#loading").hide();
@@ -46,7 +48,7 @@
 //	})
 //});
 
-});
+//});
 
 //$(document).off("click", ".popover .share-request").on("click", ".popover .share-request", function () {
 //	alert('it works!');

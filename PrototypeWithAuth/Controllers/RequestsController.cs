@@ -122,13 +122,13 @@ namespace PrototypeWithAuth.Controllers
             changingList = filterListBySelectFilters(selectedFilters, changingList);
 
             int[] requestStatusIds = { 1, 2, 3, 6 };
-            foreach(int statusId in requestStatusIds)
+            foreach (int statusId in requestStatusIds)
             {
                 SetCountByStatusId(requestIndexObject, viewmodel, fullRequestsList, statusId);
             }
-          
+
             SetCountByStatusId(requestIndexObject, viewmodel, changingList, requestIndexObject.RequestStatusID);
-            
+
 
             /*int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
@@ -230,7 +230,7 @@ namespace PrototypeWithAuth.Controllers
                 categoryID = 2;
             }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-            IQueryable<Request> fullRequestsList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText??"")).Include(r => r.ApplicationUserCreator)
+            IQueryable<Request> fullRequestsList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText ?? "")).Include(r => r.ApplicationUserCreator)
          .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
          .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Include(x => x.ParentRequest);
 
@@ -319,7 +319,7 @@ namespace PrototypeWithAuth.Controllers
                 //we need both categories
                 RequestsPassedIn = _context.Requests.Include(r => r.ApplicationUserCreator)
                      .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                     .Include(r => r.ParentRequest).Where(r => Years.Contains(r.ParentRequest.OrderDate.Year)).Where(r => !r.IsClarify && !r.IsPartial && r.Payments.Where(p=> p.IsPaid).Count() == r.Payments.Count());
+                     .Include(r => r.ParentRequest).Where(r => Years.Contains(r.ParentRequest.OrderDate.Year)).Where(r => !r.IsClarify && !r.IsPartial && r.Payments.Where(p => p.IsPaid).Count() == r.Payments.Count());
                 if (Months != null)
                 {
                     RequestsPassedIn = RequestsPassedIn.Where(r => Months.Contains(r.ParentRequest.OrderDate.Month));
@@ -330,6 +330,16 @@ namespace PrototypeWithAuth.Controllers
                 var usersFavoriteRequests = _context.FavoriteRequests.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
                     .Select(fr => fr.RequestID).ToList();
                 RequestsPassedIn = fullRequestsList.Where(frl => usersFavoriteRequests.Contains(frl.RequestID));
+                //RequestsPassedIn = fullRequestsList.Where(frl =>
+                //_context.FavoriteRequests.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).Select(fr => fr.RequestID)
+                //.Contains(frl.RequestID));
+
+            }
+            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart && requestIndexObject.SidebarType == AppUtility.SidebarEnum.SharedRequests)
+            {
+                var sharedWithMe = _context.ShareRequests.Where(fr => fr.ToApplicationUserID == _userManager.GetUserId(User))
+                    .Select(sr => sr.RequestID).ToList();
+                RequestsPassedIn = fullRequestsList.Where(frl => sharedWithMe.Contains(frl.RequestID));
                 //RequestsPassedIn = fullRequestsList.Where(frl =>
                 //_context.FavoriteRequests.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).Select(fr => fr.RequestID)
                 //.Contains(frl.RequestID));
@@ -441,7 +451,7 @@ namespace PrototypeWithAuth.Controllers
                                      new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                      new RequestIndexPartialColumnViewModel()
                                      {
-                                         Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, iconList), AjaxID = r.RequestID
+                                         Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, iconList, false), AjaxID = r.RequestID
                                      }
                                 }
                             }).ToLookup(c => c.Vendor);
@@ -588,7 +598,7 @@ namespace PrototypeWithAuth.Controllers
                             buttonText = "Pay All";
                             break;
                     }
-                    
+
 
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
@@ -755,6 +765,11 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(favoriteIcon);
                             onePageOfProducts = await GetReceivedInventoryFavoriteRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
+                        case AppUtility.SidebarEnum.SharedRequests:
+                            iconList.Add(reorderIcon);
+                            iconList.Add(favoriteIcon);
+                            onePageOfProducts = await GetReceivedInventoryFavoriteRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
+                            break;
                     }
                     break;
             }
@@ -893,11 +908,11 @@ namespace PrototypeWithAuth.Controllers
             return onePageOfProducts;
         }
 
-        private  List<IconColumnViewModel> GetIconListWithFavorites(int RequestID, List<IconColumnViewModel> iconList, bool isLabManQuotes)
+        private List<IconColumnViewModel> GetIconListWithFavorites(int RequestID, List<IconColumnViewModel> iconList, bool isLabManQuotes)
         {
             var newIconList = AppUtility.DeepClone(iconList);
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
-            var favoriteRequest = _context.FavoriteRequests.Where(fr => fr.RequestID == RequestID).Where(fr => fr.ApplicationUserID ==_userManager.GetUserId(User)).FirstOrDefault();
+            var favoriteRequest = _context.FavoriteRequests.Where(fr => fr.RequestID == RequestID).Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
             if (favIconIndex != -1 && favoriteRequest != null) //check these checks
             {
                 var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "black", "request-favorite request-unlike", "Unlike");
@@ -905,12 +920,12 @@ namespace PrototypeWithAuth.Controllers
             }
             var resendIcon = new IconColumnViewModel("Resend");
             var resendPlaceholder = new IconColumnViewModel("ResendPlaceholder");
-            var request = _context.Requests.Where(r=> r.RequestID == RequestID).Include(r => r.ParentQuote).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.ParentQuote).FirstOrDefault();
             if (request.ParentQuote?.QuoteStatusID == 2)
             {
                 newIconList.Insert(0, resendIcon);
             }
-            else if(isLabManQuotes)
+            else if (isLabManQuotes)
             {
                 newIconList.Insert(0, resendPlaceholder);
             }
@@ -1154,6 +1169,22 @@ namespace PrototypeWithAuth.Controllers
             {
                 PageType = AppUtility.PageTypeEnum.RequestCart,
                 SidebarType = AppUtility.SidebarEnum.Favorites
+            };
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> IndexShared()
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedRequests;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            RequestIndexObject requestIndexObject = new RequestIndexObject()
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.SharedRequests
             };
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             return View(viewModel);
@@ -1410,7 +1441,7 @@ namespace PrototypeWithAuth.Controllers
 
                 //declared outside the if b/c it's used farther down too 
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? serialLetter+"0").Substring(1));
+                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? serialLetter + "0").Substring(1));
 
                 var RequestNum = 1;
                 var i = 1;
@@ -1810,7 +1841,7 @@ namespace PrototypeWithAuth.Controllers
             return new EmptyResult();
         }
 
-        
+        [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ShareRequest(int requestID)
         {
@@ -1829,10 +1860,21 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(shareRequestViewModel);
         }
 
+
+        [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ShareRequest(ShareRequestViewModel shareRequestViewModel)
         {
-            return new EmptyResult();
+            var sharerequest = new ShareRequest()
+            {
+                RequestID = shareRequestViewModel.Request.RequestID,
+                FromApplicationUserID = _userManager.GetUserId(User),
+                ToApplicationUserID = shareRequestViewModel.ApplicationUserID
+            };
+            _context.Update(sharerequest);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Requests")]
@@ -2083,7 +2125,7 @@ namespace PrototypeWithAuth.Controllers
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, uploadFolder);
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, uploadFolder);
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Shipments, uploadFolder);
-            
+
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, uploadFolder);
                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Pictures, uploadFolder);
                 //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, uploadFolder);
@@ -3378,7 +3420,7 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory).FirstOrDefault();
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
                     bool hasLocationInstances = false;
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
@@ -3431,7 +3473,7 @@ namespace PrototypeWithAuth.Controllers
                     requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
-                    if(requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+                    if (requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
                     {
                         requestReceived.Batch = receivedLocationViewModel.Request.Batch;
                         requestReceived.BatchExpiration = receivedLocationViewModel.Request.BatchExpiration;
@@ -3877,7 +3919,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> NotificationsView(int requestID = 0, bool DidntArrive = false)
         {
             IEnumerable<RequestNotification> requestNotifications = null;
-            if(DidntArrive)
+            if (DidntArrive)
             {
                 requestNotifications = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(rn => rn.NotificationStatusID == 1);
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.DidntArrive;
@@ -4138,7 +4180,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
-                .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count()>0);
+                .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
 
             switch (accountingPaymentsEnum)
             {
@@ -4161,17 +4203,17 @@ namespace PrototypeWithAuth.Controllers
                     foreach (var request in requestsList)
                     {
                         var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5));
-                        if(currentInstallments.Count() > 0)
+                        if (currentInstallments.Count() > 0)
                         {
                             var requests = requestsList.ToList();
-                            for (var i=1; i<currentInstallments.Count(); i++)
+                            for (var i = 1; i < currentInstallments.Count(); i++)
                             {
                                 requests.Add(request);
                             }
                             requestsList = requests.AsQueryable();
                         }
                     }
-                    
+
                     break;
                 //case AppUtility.SidebarEnum.StandingOrders:
                 //    requestsList = requestsList
@@ -4195,7 +4237,7 @@ namespace PrototypeWithAuth.Controllers
             switch (accountingNotificationsEnum)
             {
                 case AppUtility.SidebarEnum.NoInvoice:
-                    requestsList = requestsList.Where(r => r.Payments.FirstOrDefault().HasInvoice == false).Where(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID==3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
+                    requestsList = requestsList.Where(r => r.Payments.FirstOrDefault().HasInvoice == false).Where(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
                     break;
                 case AppUtility.SidebarEnum.DidntArrive:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
@@ -4324,7 +4366,7 @@ namespace PrototypeWithAuth.Controllers
                         //{
                         //    var payments = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID);
                         //    var count = payments.Count();
-                            
+
                         //    payment = payments.OrderBy(p => p.PaymentDate).FirstOrDefault();
                         //    if (count <= 1)
                         //    {
@@ -4333,9 +4375,9 @@ namespace PrototypeWithAuth.Controllers
                         //}
                         //else
                         //{
-                            payment.Sum = request.Cost ?? 0;
-                            payment.PaymentDate = DateTime.Now.Date;
-                            payment.RequestID = requestToUpdate.RequestID;
+                        payment.Sum = request.Cost ?? 0;
+                        payment.PaymentDate = DateTime.Now.Date;
+                        payment.RequestID = requestToUpdate.RequestID;
                         //}
                         payment.Reference = paymentsPayModalViewModel.Payment.Reference;
                         payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;
@@ -4484,7 +4526,7 @@ namespace PrototypeWithAuth.Controllers
             var queryableRequests = _context.Requests
                 .Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r=> r.Payments)
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.Payments)
                     .Where(r => r.IsDeleted == false && r.Payments.FirstOrDefault().HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3))).Where(r => r.RequestStatusID != 7);
             if (vendorid != null)
             {
@@ -5127,11 +5169,12 @@ namespace PrototypeWithAuth.Controllers
                 requestNum++;
             }
             var termsList = new List<SelectListItem>() { };
-            await _context.PaymentStatuses.ForEachAsync(ps => {
+            await _context.PaymentStatuses.ForEachAsync(ps =>
+            {
                 if (ps.PaymentStatusID != 7)//don't have standing orders as an option
-                { 
-                    termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }); 
-                } 
+                {
+                    termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription });
+                }
             });
             TermsViewModel termsViewModel = new TermsViewModel()
             {
@@ -5375,7 +5418,7 @@ namespace PrototypeWithAuth.Controllers
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
-                    SectionType= sectionType
+                    SectionType = sectionType
                 };
                 if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
                 {
