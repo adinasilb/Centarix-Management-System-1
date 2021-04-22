@@ -768,7 +768,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.SharedRequests:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            onePageOfProducts = await GetReceivedInventoryFavoriteRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
+                            onePageOfProducts = await GetReceivedInventorySharedRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;
                     }
                     break;
@@ -906,6 +906,41 @@ namespace PrototypeWithAuth.Controllers
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
             return onePageOfProducts;
+        }
+
+        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventorySharedRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
+        {
+            var newIconList = iconList;
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            {
+                Columns = new List<RequestIndexPartialColumnViewModel>()
+                        {
+                             new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
+                             new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
+                             new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
+                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
+                             new RequestIndexPartialColumnViewModel() { Title = "Shared By", Width=10, Value = new List<string>(){ GetSharedBy(r) } },
+                             new RequestIndexPartialColumnViewModel()
+                             {
+                                 Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, newIconList, false), AjaxID = r.RequestID
+                             }
+                        }
+            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+            return onePageOfProducts;
+        }
+
+        private String GetSharedBy(Request request)
+        {
+            var applicationUser = _context.ShareRequests
+                .Where(sr => sr.RequestID == request.RequestID).Where(sr => sr.ToApplicationUserID == _userManager.GetUserId(User))
+                .Include(sr => sr.FromApplicationUser)
+                .FirstOrDefault().FromApplicationUser;
+            return applicationUser.FirstName + " " + applicationUser.LastName;
+            //return "";
         }
 
         private List<IconColumnViewModel> GetIconListWithFavorites(int RequestID, List<IconColumnViewModel> iconList, bool isLabManQuotes)
