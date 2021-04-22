@@ -51,7 +51,7 @@
                                                         <div style="display:none;" id="@(col.AjaxID + "more")">
                                                             @foreach (var iconpopover in icon.IconPopovers)
                                                             {
-                                                                <div class="row px-3 accounting-popover">
+                                                                <div class="row px-3 icon-more-popover accounting-popover">
                                                                     @*<a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
                                                                            asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
                                                                             <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
@@ -140,3 +140,9 @@
 {
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
 }
+
+@*<script>
+    $(".share-request").on('click', function (e) {
+        alert("hi");
+    });
+</script>*@

@@ -36,6 +36,7 @@ using System.Text.Json;
 using Newtonsoft.Json;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.AppData.Exceptions;
+using System.Drawing;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -440,7 +441,7 @@ namespace PrototypeWithAuth.Controllers
                                      new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                      new RequestIndexPartialColumnViewModel()
                                      {
-                                         Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
+                                         Title = "", Width=10, Icons = GetIconListWithFavorites(r.RequestID, iconList), AjaxID = r.RequestID
                                      }
                                 }
                             }).ToLookup(c => c.Vendor);
@@ -650,7 +651,7 @@ namespace PrototypeWithAuth.Controllers
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "black", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
 
-            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request");
+            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
@@ -1809,8 +1810,27 @@ namespace PrototypeWithAuth.Controllers
             return new EmptyResult();
         }
 
+        
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ShareRequest(int requestID)
+        {
+            var shareRequestViewModel = new ShareRequestViewModel()
+            {
+                Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
+                ApplicationUsers = _context.Users
+                              .Select(
+                                  u => new SelectListItem
+                                  {
+                                      Text = u.FirstName + " " + u.LastName,
+                                      Value = u.Id
+                                  }
+                              ).ToList()
+            };
+            return PartialView(shareRequestViewModel);
+        }
+
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ShareRequest(ShareRequestViewModel shareRequestViewModel)
         {
             return new EmptyResult();
         }
@@ -2578,7 +2598,7 @@ namespace PrototypeWithAuth.Controllers
                     message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
                     // add a "To" Email
-                    
+
                     message.To.Add(new MailboxAddress(vendorName, vendorEmail));
                     if (emails.Count >= 2)
                     {
@@ -5388,7 +5408,7 @@ namespace PrototypeWithAuth.Controllers
                 };
             }
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _CartTotalModal(int requestID, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)

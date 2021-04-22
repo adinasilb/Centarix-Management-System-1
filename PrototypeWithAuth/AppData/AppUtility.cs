@@ -73,7 +73,7 @@ namespace PrototypeWithAuth.AppData
             SpecifyPayment,
             CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
-            Library, Personal, SharedWithMe, Favorites, Active, Done, LastProtocol
+            Library, Personal, SharedWithMe, Active, Done, LastProtocol
         }
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
