@@ -2646,13 +2646,24 @@ namespace PrototypeWithAuth.Controllers
                                     foreach (var r in requests)
                                     {
                                         r.RequestStatusID = 2;
-                                        if(r.re)
+                                        if(r.RequestID ==0)
+                                        {
+                                            _context.Entry(r.Product).State = EntityState.Added;
+                                            _context.Entry(r).State = EntityState.Added;
+                                            _context.Entry(r.ParentRequest).State = EntityState.Added;
+                                            _context.Entry(r.ParentQuote).State = EntityState.Added;
+                                        }
+                                        else
+                                        {                                            
+                                            _context.Entry(r).State = EntityState.Modified;
+                                            _context.Entry(r.ParentRequest).State = EntityState.Added;
+                                        }
                                         await _context.SaveChangesAsync();
                                     }
 
                                     foreach (var p in payments)
                                     {
-                                        _context.Add(p);
+                                        _context.Entry(p).State = EntityState.Added;
                                         await _context.SaveChangesAsync();
                                     }
 
@@ -2711,7 +2722,7 @@ namespace PrototypeWithAuth.Controllers
                                         requestNotification.Action = "NotificationsView";
                                         requestNotification.OrderDate = DateTime.Now;
                                         requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                                        _context.Update(requestNotification);
+                                        _context.Add(requestNotification);
                                     }
                                     await _context.SaveChangesAsync();
                                 }
@@ -5183,8 +5194,14 @@ namespace PrototypeWithAuth.Controllers
                                 //    req.ApplicationUserReceiverID = _userManager.GetUserId(User);
                                 //    req.ArrivalDate = DateTime.Now;
                                 //}
-
-                                _context.Entry(req.Product).State = EntityState.Added;
+                                if(req.Product.ProductID ==0)
+                                {
+                                    _context.Entry(req.Product).State = EntityState.Added;
+                                }
+                                else
+                                {
+                                    _context.Entry(req.Product).State = EntityState.Unchanged;
+                                }
                                 _context.Entry(req).State = EntityState.Added;
                                 _context.Entry(req.ParentRequest).State = EntityState.Added;
 
