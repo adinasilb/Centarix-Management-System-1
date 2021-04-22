@@ -36,7 +36,7 @@ namespace PrototypeWithAuth.AppData
                 }
                 else if (_RequestStatusID == 0)
                 {
-                    return 1;
+                    return 6;
                 }
                 else
                 {

@@ -132,6 +132,7 @@ namespace PrototypeWithAuth.Controllers
                  requestName = n.RequestName,
                  icon = n.NotificationStatus.Icon,
                  color = n.NotificationStatus.Color,
+                 status = n.NotificationStatusID,
                  controller = n.Controller,
                  action = n.Action,
                  isRead = n.IsRead
@@ -147,6 +148,7 @@ namespace PrototypeWithAuth.Controllers
                    requestName = "",
                    icon = n.NotificationStatus.Icon,
                    color = n.NotificationStatus.Color,
+                   status= n.NotificationStatusID,
                    controller = n.Controller,
                    action = n.Action,
                    isRead = n.IsRead

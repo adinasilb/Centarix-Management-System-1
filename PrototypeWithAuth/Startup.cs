@@ -109,7 +109,7 @@ namespace PrototypeWithAuth
             {
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromHours(4);
+                options.ExpireTimeSpan = TimeSpan.FromHours(10);
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
