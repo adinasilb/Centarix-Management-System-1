@@ -10,6 +10,6 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int ProtocolCategoryTypeID { get; set; }
-        public string ProtocolDescription { get; set; }
+        public string ProtocolCategoryDescription { get; set; }
     }
 }
