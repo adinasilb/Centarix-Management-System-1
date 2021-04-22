@@ -161,7 +161,7 @@ $(".request-favorite").on("click", function (e) {
 				requestFavorite.removeClass(unfav);
 				$("#loading").hide();
 				if (sidebarType == 'Favorites') {
-					$('[data-toggle="tooltip"]').popover('dispose'); //is this the right syntax?
+					$('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
 					$('._IndexTable').html(data);
 				}
 			}
