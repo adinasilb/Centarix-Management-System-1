@@ -13,22 +13,22 @@
 
 });
 
-$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
-	alert("share request");
-	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-	alert("share request: " + url);
-	$.ajax({
-		async: true,
-		url: "/Requests/ShareRequest/?id=" + val,
-		traditional: true,
-		type: "GET",
-		cache: false,
-		success: function (data) {
-			$.fn.OpenModal("share-request", "share-request", data)
-			$("#loading").hide();
-		}
-	})
-});
+//$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
+//	alert("share request");
+//	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
+//	alert("share request: " + url);
+//	$.ajax({
+//		async: true,
+//		url: "/Requests/ShareRequest/?id=" + val,
+//		traditional: true,
+//		type: "GET",
+//		cache: false,
+//		success: function (data) {
+//			$.fn.OpenModal("share-request", "share-request", data)
+//			$("#loading").hide();
+//		}
+//	})
+//});
 
 $(".load-quote-details").on("click", function (e) {
 	console.log("in order details");
