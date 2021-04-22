@@ -4656,8 +4656,9 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
-
-                            _context.Update(request);
+                            _context.Entry(request.ParentQuote).State = EntityState.Added;
+                            _context.Entry(request.Product).State = EntityState.Added;
+                            _context.Entry(request).State = EntityState.Added;
                             await _context.SaveChangesAsync();
                             await SaveCommentsFromSession(request);
                             //rename temp folder to the request id

@@ -45,13 +45,13 @@
             <div class="inventory-filter-col not-selected">
                 @foreach (var type in Model.ProtocolCategories)
                 {
-                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left" labelName="@type.ProtocolDescription" value="@type.ProtocolCategoryTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProtocolDescription</span></button>
+                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left" labelName="@type.ProtocolCategoryDescription" value="@type.ProtocolCategoryTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProtocolCategoryDescription</span></button>
                 }
             </div>
             <div class="inventory-filter-col selected">
                 @foreach (var type in Model.SelectedProtocolCategories)
                 {
-                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left filter-btn-select" value="@type.ProtocolCategoryTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProtocolDescription</span></button>
+                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left filter-btn-select" value="@type.ProtocolCategoryTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProtocolCategoryDescription</span></button>
                 }
             </div>
         </div>

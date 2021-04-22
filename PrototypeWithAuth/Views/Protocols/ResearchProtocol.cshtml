@@ -3,7 +3,8 @@
     ViewData["Title"] = "Research Protocol";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<form action="" id="myForm" class=" on-form-modal protocol-form"  method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+<form action="" id="myForm" class=" on-form-modal protocol-form" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+    <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
     <div class="item-table">
         <ul class=" pl-0 nav" style="">
             <li class="list-inline-item m-0 nav-item">
@@ -31,7 +32,7 @@
 
         <div id="Theory" class="tab-pane fade in ">
             <div class="container-fluid">
-                <div class="row ">
+                <div class="row under-row-margin">
                     <div class="col-4">
                         <label asp-for="Protocol.Name" class="control-label"></label>
                         <input asp-for="Protocol.Name" class="form-control-plaintext border-bottom" />
@@ -49,12 +50,26 @@
                     </div>
                 </div>
 
-                <div class="row ">
+                <div class="row under-row-margin">
                     <div class="col-4">
-                        drop down list of catgories go here
+                        <label class="control-label">Category</label>
+                        @Html.DropDownListFor(vm => vm.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID,
+            new SelectList(
+            Model.ProtocolCategories,
+            "ProtocolCategoryTypeID",
+            "ProtocolCategoryDescription"
+            ), "Select Category",
+            new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolParentList", @searchable = "Select Category" })
                     </div>
                     <div class="col-4">
-                        drop down list of sub cat goes here
+                        <label class="control-label">Sub Category</label>
+                        @Html.DropDownListFor(vm => vm.Protocol.ProtocolSubCategoryID,
+          new SelectList(
+          Model.ProtocolSubCategories,
+          "ProtocolSubCategoryTypeID",
+          "ProtocolSubCategoryTypeDescription"
+          ), "Select Category",
+          new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolSubList", @searchable = "Select Category" })
                     </div>
                     <div class="col-4">
                         <label asp-for="Tags" class="control-label"></label>
@@ -78,4 +93,5 @@
             Protocol
         </div>
     </div>
-   </form>
+</form>
+<script src="~/js/CreateProtocol.js"></script>

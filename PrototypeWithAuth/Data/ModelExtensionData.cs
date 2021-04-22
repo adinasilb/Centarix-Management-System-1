@@ -2373,17 +2373,17 @@ namespace PrototypeWithAuth.Data
             new ProtocolCategory
             {
                 ProtocolCategoryTypeID = 1,
-                ProtocolDescription = "Rejuvenation"
+                ProtocolCategoryDescription = "Rejuvenation"
             },
             new ProtocolCategory
             {
                 ProtocolCategoryTypeID = 2,
-                ProtocolDescription = "Biomarkers"
+                ProtocolCategoryDescription = "Biomarkers"
             },
             new ProtocolCategory
             {
                 ProtocolCategoryTypeID = 3,
-                ProtocolDescription = "Delivery Systems"
+                ProtocolCategoryDescription = "Delivery Systems"
             }
         );
 

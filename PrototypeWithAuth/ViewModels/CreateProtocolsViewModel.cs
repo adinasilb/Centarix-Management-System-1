@@ -10,5 +10,8 @@ namespace PrototypeWithAuth.ViewModels
     {
         public Protocol Protocol { get; set; }
         public List<String> Tags { get; set; }
+        public IEnumerable<ProtocolCategory> ProtocolCategories {get; set;}
+        public IEnumerable<ProtocolSubCategory> ProtocolSubCategories { get; set; }
+
     }
 }
