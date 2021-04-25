@@ -223,6 +223,8 @@
     <Compile Remove="Data\Migrations\20210421114930_FixIncludeVatDefault.Designer.cs" />
     <Compile Remove="Data\Migrations\20210422075132_sjkldfjs.cs" />
     <Compile Remove="Data\Migrations\20210422075132_sjkldfjs.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210425052237_fixedManyToManyShareFavorites.cs" />
+    <Compile Remove="Data\Migrations\20210425052237_fixedManyToManyShareFavorites.Designer.cs" />
   </ItemGroup>
 
 
