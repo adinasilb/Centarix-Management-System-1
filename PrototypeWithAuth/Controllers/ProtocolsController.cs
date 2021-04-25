@@ -245,14 +245,14 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            var protocol = new Protocol();
+            var protocol = new Protocol() { Urls = new List<Link>() { new Link(), new Link()} };
             protocol.ProtocolTypeID = 1;
 
             var viewmodel = new CreateProtocolsViewModel()
             {
                 Protocol = protocol,
                 ProtocolCategories = _context.ProtocolCategories,
-                ProtocolSubCategories = _context.ProtocolSubCategories,
+                ProtocolSubCategories = _context.ProtocolSubCategories,               
                
             };
             FillDocumentsInfo(viewmodel, "");
