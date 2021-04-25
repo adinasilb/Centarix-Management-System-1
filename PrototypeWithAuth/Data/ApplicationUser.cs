@@ -52,6 +52,9 @@ namespace PrototypeWithAuth.Data
         public DateTime LastLogin { get; set; }
         public IEnumerable<Request> RequestsReceived { get; set; }
         public IEnumerable<Request> RequestsCreated { get; set; }
+        public IEnumerable<ShareRequest> ShareRequestsCreated { get; set; }
+        public IEnumerable<ShareRequest> ShareRequestsReceived { get; set; }
+        public IEnumerable<FavoriteRequest> FavoriteRequests { get; set; }
 
         // public string URLPic { get; set; }
 

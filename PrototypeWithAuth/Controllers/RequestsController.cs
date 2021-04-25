@@ -340,9 +340,6 @@ namespace PrototypeWithAuth.Controllers
                 var sharedWithMe = _context.ShareRequests.Where(fr => fr.ToApplicationUserID == _userManager.GetUserId(User))
                     .Select(sr => sr.RequestID).ToList();
                 RequestsPassedIn = fullRequestsList.Where(frl => sharedWithMe.Contains(frl.RequestID));
-                //RequestsPassedIn = fullRequestsList.Where(frl =>
-                //_context.FavoriteRequests.Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).Select(fr => fr.RequestID)
-                //.Contains(frl.RequestID));
 
             }
             else //we just want what is in inventory
@@ -385,7 +382,8 @@ namespace PrototypeWithAuth.Controllers
             requestIndexViewModel.ErrorMessage = requestIndexObject.ErrorMessage;
             var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
 
-            var RequestPassedInWithInclude = RequestsPassedIn.Include(r => r.Product.ProductSubcategory)
+            var RequestPassedInWithInclude = RequestsPassedIn
+                .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
                 .Include(r => r.ParentRequest).Include(r => r.ApplicationUserCreator)
                 .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
@@ -911,7 +909,7 @@ namespace PrototypeWithAuth.Controllers
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventorySharedRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
             var newIconList = iconList;
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            onePageOfProducts = await RequestPassedInWithInclude.Include(sr => sr.ShareRequests).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
@@ -1884,6 +1882,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
                 ApplicationUsers = _context.Users
+                              .Where(u => u.Id != _userManager.GetUserId(User))
                               .Select(
                                   u => new SelectListItem
                                   {
@@ -1900,13 +1899,25 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ShareRequest(ShareRequestViewModel shareRequestViewModel)
         {
-            var sharerequest = new ShareRequest()
+            var sharedRequest = _context.ShareRequests.Where(sr => sr.RequestID == shareRequestViewModel.Request.RequestID)
+                .Where(sr => sr.FromApplicationUserID == _userManager.GetUserId(User))
+                .Where(sr => sr.ToApplicationUserID == shareRequestViewModel.ApplicationUserID).FirstOrDefault();
+            if (sharedRequest == null)
             {
-                RequestID = shareRequestViewModel.Request.RequestID,
-                FromApplicationUserID = _userManager.GetUserId(User),
-                ToApplicationUserID = shareRequestViewModel.ApplicationUserID
-            };
-            _context.Update(sharerequest);
+                sharedRequest = new ShareRequest()
+                {
+                    RequestID = shareRequestViewModel.Request.RequestID,
+                    FromApplicationUserID = _userManager.GetUserId(User),
+                    ToApplicationUserID = shareRequestViewModel.ApplicationUserID,
+                    TimeStamp = DateTime.Now
+                };
+            }
+            else
+            {
+                sharedRequest.TimeStamp = DateTime.Now;
+            }
+
+            _context.Update(sharedRequest);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");

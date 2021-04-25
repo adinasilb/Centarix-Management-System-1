@@ -20,7 +20,6 @@
 			type: "GET",
 			cache: false,
 			success: function (data) {
-				alert("in open modal");
 				$.fn.OpenModal("share-request-modal", "share-request", data)
 				$.fn.EnableMaterialSelect('#userlist', 'select-options-userlist')
 				$("#loading").hide();

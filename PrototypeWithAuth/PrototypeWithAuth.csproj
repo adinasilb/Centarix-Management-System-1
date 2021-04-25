@@ -221,6 +221,8 @@
     <Compile Remove="Data\Migrations\20210420050920_CheckShareRequest.Designer.cs" />
     <Compile Remove="Data\Migrations\20210421114930_FixIncludeVatDefault.cs" />
     <Compile Remove="Data\Migrations\20210421114930_FixIncludeVatDefault.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210425052237_fixedManyToManyShareFavorites.cs" />
+    <Compile Remove="Data\Migrations\20210425052237_fixedManyToManyShareFavorites.Designer.cs" />
   </ItemGroup>
 
 
