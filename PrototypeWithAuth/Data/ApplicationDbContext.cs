@@ -18,7 +18,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-       
+        public DbSet<ResourceCategory> ResourceCategories { get; set; }
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
         public DbSet<ProtocolInstanceResult> ProtocolInstanceResults { get; set; }
@@ -307,7 +307,7 @@ namespace PrototypeWithAuth.Data
 
             //set up many to many relationshipw
             modelBuilder.Entity<LineType>()
-                .HasOne(l=>l.LineTypeParent)
+                .HasOne(l => l.LineTypeParent)
                 .WithMany()
                 .HasForeignKey(ltp => ltp.LineTypeParentID);
 
