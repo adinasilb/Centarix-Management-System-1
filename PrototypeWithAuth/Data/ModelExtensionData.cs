@@ -2547,6 +2547,30 @@ namespace PrototypeWithAuth.Data
                     IsResourceType = true
                 }
                 );
+
+
+            modelBuilder.Entity<MaterialCategory>().HasData(
+                new MaterialCategory
+                {
+                    MaterialCategoryID = 1,
+                    MaterialCategoryDescription = "Reagents",
+                },
+                new MaterialCategory
+                {
+                    MaterialCategoryID = 2,
+                    MaterialCategoryDescription = "Plastics",
+                },
+                new MaterialCategory
+                {
+                    MaterialCategoryID = 3,
+                    MaterialCategoryDescription = "Equipment",
+                },
+                new MaterialCategory
+                {
+                    MaterialCategoryID = 4,
+                    MaterialCategoryDescription = "Buffers",
+                }
+           );
         }
     }
 }
