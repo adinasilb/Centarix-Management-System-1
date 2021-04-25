@@ -1758,7 +1758,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(operationsItemViewModel);
         }
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> RequestFavorite(int requestID, string FavType)
+        public async Task<IActionResult> RequestFavorite(int requestID, string FavType, AppUtility.SidebarEnum sidebarType)
         {
             var userID = _userManager.GetUserId(User);
             if (FavType == "favorite")
@@ -1804,8 +1804,16 @@ namespace PrototypeWithAuth.Controllers
                         await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
                     }
                 }
+                if(sidebarType == AppUtility.SidebarEnum.Favorites)
+                {
+                    RequestIndexObject requestIndexObject = new RequestIndexObject()
+                    {
+                        PageType = AppUtility.PageTypeEnum.RequestCart,
+                        SidebarType = sidebarType
+                    };
+                    return RedirectToAction("_IndexTable", requestIndexObject);
+                }
             }
-
             return new EmptyResult();
         }
 

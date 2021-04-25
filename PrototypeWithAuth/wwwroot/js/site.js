@@ -1524,7 +1524,7 @@ $(function () {
 	
 
 	$("#home-btn").click(function () {
-			$('[data-toggle="popover"]').popover('dispose');
+			$('[data-toggle="tooltip"]').popover('dispose');
 			$("#home-btn").popover({
 				sanitize: false,
 				placement: 'bottom',
