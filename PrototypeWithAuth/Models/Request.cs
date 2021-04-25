@@ -76,7 +76,7 @@ namespace PrototypeWithAuth.Models
 
         ///[DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = true)]
 
-        [Display(Name = "Website")]
+        [Display(Name = "URL")]
         public string URL { get; set; }
         [Range(0, 255, ErrorMessage = "Field must be positive")]
         [Display(Name = "Warranty (Months)")]
