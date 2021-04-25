@@ -3515,44 +3515,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ProtocolCategoryTypeID");
 
                     b.ToTable("ProtocolSubCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 1,
-                            ProtocolCategoryTypeID = 1,
-                            ProtocolSubCategoryTypeDescription = "Telomeres "
-                        },
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 2,
-                            ProtocolCategoryTypeID = 1,
-                            ProtocolSubCategoryTypeDescription = "Epigenetics"
-                        },
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 3,
-                            ProtocolCategoryTypeID = 2,
-                            ProtocolSubCategoryTypeDescription = "Telomeres "
-                        },
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 4,
-                            ProtocolCategoryTypeID = 2,
-                            ProtocolSubCategoryTypeDescription = "Transcription"
-                        },
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 5,
-                            ProtocolCategoryTypeID = 2,
-                            ProtocolSubCategoryTypeDescription = "Methylation"
-                        },
-                        new
-                        {
-                            ProtocolSubCategoryTypeID = 6,
-                            ProtocolCategoryTypeID = 3,
-                            ProtocolSubCategoryTypeDescription = "AAV"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolType", b =>
@@ -3568,38 +3530,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ProtocolTypeID");
 
                     b.ToTable("ProtocolTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            ProtocolTypeID = 1,
-                            ProtocolTypeDescription = "Research"
-                        },
-                        new
-                        {
-                            ProtocolTypeID = 2,
-                            ProtocolTypeDescription = "Kit"
-                        },
-                        new
-                        {
-                            ProtocolTypeID = 3,
-                            ProtocolTypeDescription = "SOP"
-                        },
-                        new
-                        {
-                            ProtocolTypeID = 4,
-                            ProtocolTypeDescription = "Buffer"
-                        },
-                        new
-                        {
-                            ProtocolTypeID = 5,
-                            ProtocolTypeDescription = "Robiotic"
-                        },
-                        new
-                        {
-                            ProtocolTypeID = 6,
-                            ProtocolTypeDescription = "Maintenance"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.QuoteStatus", b =>
