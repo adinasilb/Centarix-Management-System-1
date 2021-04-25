@@ -19,6 +19,11 @@
         "Payment.CheckNumber": {
             required: true,
             number: true
+        },
+        "Requests[0].Payments[0].Sum":{
+            required: true,
+            number: true,
+            min: 1
         }
 	}
 });

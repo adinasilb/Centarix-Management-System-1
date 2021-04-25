@@ -1043,7 +1043,7 @@
                 selectedPriceSort.push($(this).attr("enum"));
             })
             return(
-            "PageNumber=" + $('.page-number').val() +
+                "PageNumber=" + $('.page-number').val() +
                 "&RequestStatusID=" + $(".request-status-id").val() +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +
@@ -1108,9 +1108,11 @@
 
         //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
+            console.log("open modal")
             var backdrop = "static";
             if ($('.modal-backdrop').length > 0) {
                 backdrop = false;
+                console.log("no backdrop")
             }
             $('.' + modalClass).replaceWith('');
             $('.' + modalDivClass).html('');
@@ -1147,10 +1149,11 @@
             $('body').removeClass('popover-open');
         });
 
-        $.fn.ClearFilter = function (isProprietary) {
+        $.fn.ClearFilter = function (sectionType, isProprietary) {
+            //alert(sectionType);
             $.ajax({
                 async: true,
-                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&isProprietary=" + isProprietary,
+                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
                 type: 'POST',
                 cache: false,
                 success: function (newData) {

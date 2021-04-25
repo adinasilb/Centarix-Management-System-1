@@ -74,6 +74,10 @@
             <li class="list-inline-item ">
                 <a class="@receivedActiveClass countStatus" value="3" href="#"> <i class="icon-done-24px new-icon"></i><label class="new-button-text">@receivedButtonText</label> </a>
             </li>
+
+            <li class="list-inline-item m-0">
+                @{ await Html.RenderPartialAsync("_IndexFilter", Model.InventoryFilterViewModel);}
+            </li>
         </ul>
     </div>
 </div>

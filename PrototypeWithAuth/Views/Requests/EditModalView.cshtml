@@ -70,11 +70,11 @@
                 @Html.HiddenFor(model => model.Requests[0].CreationDate)
                 <input type="hidden" asp-for="Requests[0].RequestID" />
                 <input type="hidden" asp-for="Requests[0].ProductID" />
-                <input type="hidden" asp-for="Requests[0].HasInvoice" />
+                <input type="hidden" asp-for="Requests[0].Payments.FirstOrDefault().HasInvoice" />
                 <input type="hidden" asp-for="Requests[0].NoteForClarifyDelivery" />
                 <input type="hidden" asp-for="Requests[0].NoteForPartialDelivery" />
                 <input type="hidden" asp-for="Requests[0].NoteToSupplier" />
-                <input type="hidden" asp-for="Requests[0].InvoiceID" />
+                <input type="hidden" asp-for="Requests[0].Payments.FirstOrDefault().InvoiceID" />
                 <input type="hidden" asp-for="Requests[0].OrderType" />
                 <input type="hidden" asp-for="Requests[0].ArrivalDate" />
                 <input type="hidden" value="@Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />

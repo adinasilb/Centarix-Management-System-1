@@ -21,7 +21,7 @@
         shekelDisabledText = "disabled-text";
         shekelReadOnly = "readonly";
     }
-    if(!Model.RequestItemViewModel.Requests[0].IncludeVAT)
+    if(Model.RequestItemViewModel.Requests[0].IncludeVAT == false)
     {
         hideVat = "d-none";
     }

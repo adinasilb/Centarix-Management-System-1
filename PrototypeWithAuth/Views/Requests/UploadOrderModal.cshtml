@@ -138,6 +138,7 @@
             $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($(".uploadQuoteForm")[0]);
+            //alert(...formData);
             $.ajax({
                 contentType: false,
                 processData: false,

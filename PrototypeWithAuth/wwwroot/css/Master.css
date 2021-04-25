@@ -700,3 +700,13 @@ body.modal-open, body.popover-open {
     /* background shouldn't scroll when a modal is open*/
     overflow: hidden !important;
 }
+.filter-and-search ::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
+    color: var(--order-inv-color) !important;
+    opacity: 1;
+}
+.filter-and-search ::-ms-input-placeholder { /*works for Edge*/
+    color: var(--order-inv-color) !important;
+}
+.filter-and-search :focus {
+    outline: none;
+}

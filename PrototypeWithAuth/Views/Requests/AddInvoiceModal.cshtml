@@ -101,9 +101,9 @@
                                                 else
                                                 {
                                                     <span class="input-group-text border-bottom pr-2">&#36;</span>
-                                                    <input class="form-control-plaintext border-bottom cost-validation" id="price-in-dollars"
+                                                    <input class="form-control-plaintext border-bottom cost-validation price-in-dollars" index="@x"
                                                            value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[x].Cost ?? 0) / Model.Requests[0].ExchangeRate, 2))" />
-                                                    <input type="hidden" asp-for="Requests[x].Cost" class="cost" />
+                                                    <input type="hidden" asp-for="Requests[x].Cost" class="cost @x" />
                                                 }
                                             </div>
                                         </td>
@@ -146,8 +146,10 @@
     </div>
 </div>
 <script>
-    $('#price-in-dollars').change(function (e) {
+    $('.price-in-dollars').change(function (e) {
         var cost = $(this).val() * $('.exchange-rate').val();
-        $('.cost').val(cost)
+        var index = $(this).attr("index");
+        console.log(index)
+        $('.cost.'+index).val(cost)
     });
 </script>

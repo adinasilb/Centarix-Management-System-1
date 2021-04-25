@@ -56,7 +56,7 @@ $(function () {
 	
 	$.fn.AppendAsteriskToRequired();
 
-	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
+	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled], #-error';
 	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {
 		if (element.hasClass('select-dropdown')) {
 			error.insertAfter(element);

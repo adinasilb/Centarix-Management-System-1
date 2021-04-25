@@ -12,8 +12,8 @@
 <div class="container-fluid order-inv-form">
     <div class="row">
         <ul class="list-unstyled mb-0 ">
-            <li>
-                @*<input type="text" value="Search" class="text  custom-order-inv custom-button mb-4 mx-3" />*@
+            <li class="filter-and-search">
+                <input type="text" placeholder="Search" class="text custom-order-inv custom-button mb-4 mx-3 search-requests"  />
                 <button type="button" id="invFilterPopover" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body"
                         class="text custom-button custom-order-inv mb-5" value="Filter">
                     Filter
@@ -36,17 +36,31 @@
     $('body').on('click', "#applyFilter", function () {
        // alert('clicked!')
         var data = $.fn.BindSelectedFilters();
+        var url;
+        switch ($('#masterPageType').val()) {
+            case 'RequestSummary':
+                url = "_IndexTableWithProprietaryTabs";
+                break;
+            case 'RequestRequest':
+            case 'OperationsRequest':
+                url = "_IndexTableWithCounts"
+                break;
+            case 'OperationsInventory':
+                url = "_IndexTable";
+                break;
+        }
+        //console.log(data);
         $.ajax({
         //    processData: false,
         //    contentType: false,
             data: data,
             async: true,
             traditional: true,
-            url: "/Requests/_IndexTableWithProprietaryTabs?" + $.fn.getRequestIndexString(),
+            url: "/Requests/" + url +"?"+ $.fn.getRequestIndexString(),
             type: 'POST',
             cache: false,
             success: function (data) {
-                $("._IndexTableWithProprietaryTabs").html(data);
+                $('.'+url).html(data);
                 $('[data-toggle="popover"]').popover('dispose');
                 $('body').removeClass('popover-open');
                 $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
@@ -54,6 +68,7 @@
             }
         });
     });
+  
     $("#invFilterPopover").click(function () {
         $('[data-toggle="popover"]').popover('dispose');
         $('#invFilterPopover').popover({
