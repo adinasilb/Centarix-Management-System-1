@@ -224,6 +224,27 @@ namespace PrototypeWithAuth.Controllers
             }
             Directory.CreateDirectory(requestFolder);
         }
+        public void FillDocumentsViewModel(DocumentsModalViewModel documentsModalViewModel)
+        {
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder1, documentsModalViewModel.ObjectID.ToString());
+            string uploadFolder3 = Path.Combine(uploadFolder2, documentsModalViewModel.FolderName.ToString());
 
+            if (Directory.Exists(uploadFolder3))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
+                //searching for the partial file name in the directory
+                FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
+                documentsModalViewModel.FileStrings = new List<String>();
+                documentsModalViewModel.FileStrings = new List<String>();
+                foreach (var docfile in docfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);
+                    documentsModalViewModel.FileStrings.Add(newFileString);
+                    //documentsModalViewModel.Files.Add(docfile);
+                }
+            }
+
+        }
     }
 }
