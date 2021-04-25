@@ -204,5 +204,26 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
+        public void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, int ObjectID = 0)
+        {
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
+            string requestFolder = Path.Combine(uploadFolder, ObjectID.ToString());
+
+            if (Directory.Exists(requestFolder))
+            {
+                System.IO.DirectoryInfo di = new DirectoryInfo(requestFolder);
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in di.EnumerateDirectories())
+                {
+                    dir.Delete(true);
+                }
+                Directory.Delete(requestFolder);
+            }
+            Directory.CreateDirectory(requestFolder);
+        }
+
     }
 }

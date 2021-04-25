@@ -52,7 +52,7 @@ namespace PrototypeWithAuth.Controllers
         private ICompositeViewEngine _viewEngine;
 
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context, hostingEnvironment)
         {
             //_Context = Context;
             _context = context;
@@ -1729,7 +1729,7 @@ namespace PrototypeWithAuth.Controllers
              GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Credits, "");
          }
     */
-            DeleteTemporaryDocuments();
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
             return requestItemViewModel;
         }
 
@@ -1897,7 +1897,7 @@ namespace PrototypeWithAuth.Controllers
             //    .ToListAsync();
             //requestItemViewModel.SubProjects = subprojects;
             //may be able to do this together - combining the path for the orders folders
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Requests.FirstOrDefault().RequestID.ToString());
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
@@ -2237,7 +2237,7 @@ namespace PrototypeWithAuth.Controllers
                     var categoryTypeId = requestItemViewModel.SectionType == AppUtility.MenuItems.Requests ? 1 : 2;
                     var productSubcategory = requestItemViewModel.Requests[0].Product.ProductSubcategory;
                     requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId);
-                    string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                     string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Requests[0].RequestID.ToString());
                     FillDocumentsInfo(requestItemViewModel, uploadFolder2, productSubcategory);
                     requestItemViewModel.Comments = await _context.Comments.Include(r => r.ApplicationUser).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
@@ -2251,7 +2251,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, bool NewRequestFromProduct = false, String SectionType = "")
         {
-            DeleteTemporaryDocuments();
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
             base.RemoveRequestWithCommentsAndEmailSessions();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
@@ -2278,7 +2278,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (isCancel)
             {
-                DeleteTemporaryDocuments();
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
                 return PartialView("Default");
             }
             else
@@ -2471,7 +2471,7 @@ namespace PrototypeWithAuth.Controllers
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
             //save this as orderform
-            string path1 = Path.Combine("wwwroot", "files");
+            string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
             string fileName = Path.Combine(path1, "OrderForm.pdf");
             doc.Save(fileName);
             doc.Close();
@@ -2486,7 +2486,7 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                string uploadFolder = Path.Combine("wwwroot", "files");
+                string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
                 string uploadFile = Path.Combine(uploadFolder, "OrderForm.pdf");
 
                 var isRequests = true;
@@ -2820,7 +2820,7 @@ namespace PrototypeWithAuth.Controllers
             foreach (var request in requests)
             {
                 //creating the path for the file to be saved
-                string path1 = Path.Combine("wwwroot", "files");
+                string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
                 string uniqueFileName = "QuotePDF.pdf";
                 string filePath = Path.Combine(path1, uniqueFileName);
                 // save pdf document
@@ -2829,8 +2829,8 @@ namespace PrototypeWithAuth.Controllers
             // close pdf document
             doc.Close();
 
-            string uploadFolder1 = Path.Combine("~", "files");
-            string uploadFolder = Path.Combine("wwwroot", "files");
+          
+            string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
             string uploadFile = Path.Combine(uploadFolder, "QuotePDF.pdf");
 
             if (System.IO.File.Exists(uploadFile))
@@ -3572,6 +3572,7 @@ namespace PrototypeWithAuth.Controllers
                 //searching for the partial file name in the directory
                 FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
                 documentsModalViewModel.FileStrings = new List<String>();
+                documentsModalViewModel.FileStrings = new List<String>();
                 foreach (var docfile in docfilesfound)
                 {
                     string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);
@@ -3587,7 +3588,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public override void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
-            DocumentsModal(documentsModalViewModel);
+            base.DocumentsModal(documentsModalViewModel);
         }
 
         [HttpGet]
@@ -3806,7 +3807,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(request);
                             _context.SaveChanges();
                             //save file
-                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                             string requestFolder = Path.Combine(uploadFolder, quote.RequestID.ToString());
                             string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Quotes.ToString());
                             Directory.CreateDirectory(folderPath);
@@ -3819,7 +3820,7 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception ex)
                     {
                         transaction.RollbackAsync();
-                        editQuoteDetailsViewModel.Requests.ForEach(r => DeleteTemporaryDocuments(r.RequestID));
+                        editQuoteDetailsViewModel.Requests.ForEach(r => DeleteTemporaryDocuments( AppUtility.ParentFolderName.Requests, r.RequestID));
                         throw ex;
                     }
                 }
@@ -3906,7 +3907,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Users, Biomarkers, Accounting, Admin, Reports, Timekeeper, Operations, Protocols, Income, Operation, Expenses, LabManagement")]
         public async Task<IActionResult> ConfirmExit(ConfirmExitViewModel confirmExit)
         {
-            DeleteTemporaryDocuments();
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
             RemoveRequestWithCommentsAndEmailSessions();
 
             if (confirmExit.URL.IsEmpty())
@@ -3924,27 +3925,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        private void DeleteTemporaryDocuments(int requestID = 0)
-        {
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string requestFolder = Path.Combine(uploadFolder, requestID.ToString());
-
-            if (Directory.Exists(requestFolder))
-            {
-                System.IO.DirectoryInfo di = new DirectoryInfo(requestFolder);
-                foreach (FileInfo file in di.GetFiles())
-                {
-                    file.Delete();
-                }
-                foreach (DirectoryInfo dir in di.EnumerateDirectories())
-                {
-                    dir.Delete(true);
-                }
-                Directory.Delete(requestFolder);
-            }
-            Directory.CreateDirectory(requestFolder);
-        }
-
+        
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> CommentInfoPartialView(String type, int index)
@@ -4404,14 +4385,14 @@ namespace PrototypeWithAuth.Controllers
                         _context.Update(requestToUpdate);
                         await _context.SaveChangesAsync();
 
-                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                         string requestFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
                         Directory.CreateDirectory(requestFolder);
                         if (paymentsInvoiceViewModel.InvoiceImage != null)
                         {
                             int x = 1;
                             //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+                            string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Invoices.ToString());
                             if (Directory.Exists(folderPath))
                             {
                                 var filesInDirectory = Directory.GetFiles(folderPath);
@@ -4506,7 +4487,7 @@ namespace PrototypeWithAuth.Controllers
 
                         _context.Update(RequestToSave);
 
-                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                         string requestFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
                         Directory.CreateDirectory(requestFolder);
                         if (addInvoiceViewModel.InvoiceImage != null)
@@ -4553,7 +4534,7 @@ namespace PrototypeWithAuth.Controllers
 
             var UploadQuoteViewModel = new UploadQuoteViewModel();
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
             string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
 
@@ -4594,7 +4575,7 @@ namespace PrototypeWithAuth.Controllers
             };
             var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject };
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
             string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
 
@@ -4620,7 +4601,7 @@ namespace PrototypeWithAuth.Controllers
             if (isCancel)
             {
                 RemoveRequestWithCommentsAndEmailSessions();
-                DeleteTemporaryDocuments();
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
                 return PartialView("Default");
             }
             try
@@ -4656,7 +4637,7 @@ namespace PrototypeWithAuth.Controllers
                             await _context.SaveChangesAsync();
                             await SaveCommentsFromSession(request);
                             //rename temp folder to the request id
-                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                             string requestFolderFrom = Path.Combine(uploadFolder, "0");
                             string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
                             if (Directory.Exists(requestFolderTo))
@@ -4743,7 +4724,7 @@ namespace PrototypeWithAuth.Controllers
             if (isCancel)
             {
                 RemoveRequestWithCommentsAndEmailSessions();
-                DeleteTemporaryDocuments();
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
                 return PartialView("Default");
             }
             try
@@ -5030,7 +5011,7 @@ namespace PrototypeWithAuth.Controllers
         private void MoveDocumentsOutOfTempFolder(Request request, bool additionalRequests = false)
         {
             //rename temp folder to the request id
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string requestFolderFrom = Path.Combine(uploadFolder, "0");
             string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
             if (Directory.Exists(requestFolderFrom))
