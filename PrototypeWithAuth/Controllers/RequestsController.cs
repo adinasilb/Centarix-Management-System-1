@@ -431,7 +431,7 @@ namespace PrototypeWithAuth.Controllers
                                      .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);
 
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
                             {
                                 TotalCost = (r.Cost ?? 0) + r.VAT,
                                 ExchangeRate = r.ExchangeRate,
@@ -3917,7 +3917,7 @@ namespace PrototypeWithAuth.Controllers
 
                             request.ParentQuote.QuoteStatusID = 4;
                             //request.ParentQuote.QuoteDate = quoteDate;
-                            request.ParentQuote.QuoteNumber = quoteNumber.ToString(); ;
+                            request.ParentQuote.QuoteNumber = quoteNumber.ToString();
                             request.Cost = quote.Cost;
                             request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
                             _context.Update(request);
