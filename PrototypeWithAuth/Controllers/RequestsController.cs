@@ -4308,8 +4308,8 @@ namespace PrototypeWithAuth.Controllers
                     var paymentsList = _context.Payments.Where(p => p.IsPaid == false);
                     foreach (Request request in paymentsPayModalViewModel.Requests)
                     {
-                        Payment payment = new Payment();
                         var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
+                        Payment payment = _context.Payments.Where(p => p.RequestID == request.RequestID).FirstOrDefault();
                         //if (requestToUpdate.PaymentStatusID == 7)
                         //{
                         //    payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
