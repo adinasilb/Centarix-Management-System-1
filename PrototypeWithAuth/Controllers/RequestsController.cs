@@ -3455,12 +3455,14 @@ namespace PrototypeWithAuth.Controllers
         public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
-            DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+            RequestDocumentsViewModel documentsModalViewModel = new RequestDocumentsViewModel()
             {
                 Requests = new List<Request>(),
                 //Request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault(),
-                RequestFolderName = RequestFolderNameEnum,
+                FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
+                ParentFolderName = AppUtility.ParentFolderName.Requests,
+                ObjectID = id??0,
                 //Files = new List<FileInfo>(),
                 SectionType = SectionType,
                 ShowSwitch = showSwitch
@@ -3478,7 +3480,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, id.ToString());
             string uploadFolder3 = Path.Combine(uploadFolder2, RequestFolderNameEnum.ToString());
 
@@ -3501,27 +3503,9 @@ namespace PrototypeWithAuth.Controllers
 
 
         [HttpPost]
-        public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
+        public override void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string requestFolder = Path.Combine(uploadFolder, documentsModalViewModel.Requests[0].RequestID.ToString());
-            Directory.CreateDirectory(requestFolder);
-            if (documentsModalViewModel.FilesToSave != null) //test for more than one???
-            {
-                var x = 1;
-                foreach (IFormFile file in documentsModalViewModel.FilesToSave)
-                {
-                    //create file
-                    string folderPath = Path.Combine(requestFolder, documentsModalViewModel.RequestFolderName.ToString());
-                    Directory.CreateDirectory(folderPath);
-                    string uniqueFileName = x + file.FileName;
-                    string filePath = Path.Combine(folderPath, uniqueFileName);
-                    FileStream filestream = new FileStream(filePath, FileMode.Create);
-                    file.CopyTo(filestream);
-                    filestream.Close();
-                    x++;
-                }
-            }
+            DocumentsModal(documentsModalViewModel);
         }
 
         [HttpGet]

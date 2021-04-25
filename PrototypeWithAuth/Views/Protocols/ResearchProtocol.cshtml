@@ -84,50 +84,50 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                         <span asp-validation-for="Protocol.ShortDescription" class="text-danger-centarix"></span>
                     </div>
                 </div>
-            </div>
 
-
-            @{
-                var urlAction = Url.Action("DocumentsModal", "Requests");
-                var fontSize = "2rem";
-            }
-            <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-            <div class="row document-margin-bottom">
 
                 @{
-                    var hasFileClass = "";
-                    var color = "protocols-filter";
-
+                    var urlAction = Url.Action("DocumentsModal", "Protocols");
+                    var fontSize = "2rem";
                 }
-                @for (int i = 4; i < Model.DocumentsInfo.Count; i++)
-                {
-                  
-                    if (i < Model.DocumentsInfo?.Count)
-                    {
-                        var folder = Model.DocumentsInfo[i];
-                        <div class=" @(i == 7 ? "" : "document-margin")">
-                            @{
-                                var filterClass = "opac87";
-                                if (folder.FileStrings != null && folder.FileStrings.Count > 0)
-                                {
-                                    hasFileClass = "hasFile";
-                                    filterClass = color;
+                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+                <div class="col-6">
+                    <div class="row ">
+
+                        @{
+                            var hasFileClass = "";
+                            var color = "protocols-filter";
+
+                        }
+
+                        @foreach (var folder in Model.DocumentsInfo)
+                        {
+
+                            <div class="document-margin ">
+                                @{
+                                    var filterClass = "opac87";
+                                    if (folder.FileStrings != null && folder.FileStrings.Count > 0)
+                                    {
+                                        hasFileClass = "hasFile";
+                                        filterClass = color;
+                                    }
                                 }
-                            }
-                            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Protocol" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false">
-                                <div class="card document-border ">
-                                    <div class="document-card text-center">
-                                        <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
-                                    </div>
+                                <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Protocol.ProtocolID" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false">
+                                    <div class="card document-border ">
+                                        <div class="document-card text-center">
+                                            <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                        </div>
 
-                                </div>
-                            </a>
-                            <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
-                        </div>
-                    }
-                }
+                                    </div>
+                                </a>
+                                <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
+
         <div id="Materials" class="tab-pane fade in ">
             Material
         </div>

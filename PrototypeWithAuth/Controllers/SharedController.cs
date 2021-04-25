@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
@@ -17,10 +19,11 @@ namespace PrototypeWithAuth.Controllers
     public class SharedController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public SharedController(ApplicationDbContext context)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public SharedController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment =null)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(DateTime monthDate, Employee user)
@@ -179,5 +182,27 @@ namespace PrototypeWithAuth.Controllers
             DocumentsInfo.Add(folder);
         }
 
+        public virtual void DocumentsModal(DocumentsModalViewModel documentsModalViewModel)
+        {
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
+            string folder = Path.Combine(uploadFolder, documentsModalViewModel.ObjectID.ToString());
+            Directory.CreateDirectory(folder);
+            if (documentsModalViewModel.FilesToSave != null) //test for more than one???
+            {
+                var x = 1;
+                foreach (IFormFile file in documentsModalViewModel.FilesToSave)
+                {
+                    //create file
+                    string folderPath = Path.Combine(folder, documentsModalViewModel.FolderName.ToString());
+                    Directory.CreateDirectory(folderPath);
+                    string uniqueFileName = x + file.FileName;
+                    string filePath = Path.Combine(folderPath, uniqueFileName);
+                    FileStream filestream = new FileStream(filePath, FileMode.Create);
+                    file.CopyTo(filestream);
+                    filestream.Close();
+                    x++;
+                }
+            }
+        }
     }
 }
