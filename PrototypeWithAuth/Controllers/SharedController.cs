@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
@@ -17,10 +19,11 @@ namespace PrototypeWithAuth.Controllers
     public class SharedController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public SharedController(ApplicationDbContext context)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public SharedController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment =null)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(DateTime monthDate, Employee user)
@@ -136,7 +139,26 @@ namespace PrototypeWithAuth.Controllers
             return offDaysLeft;
         }
 
-        public void GetExistingFileStrings(RequestItemViewModel requestItem, AppUtility.RequestFolderNamesEnum folderName, string uploadFolderParent)
+
+        public void RemoveRequestWithCommentsAndEmailSessions()
+        {
+            var requiredKeys = HttpContext.Session.Keys.Where(x => x.StartsWith(AppData.SessionExtensions.SessionNames.Request.ToString()) ||
+                x.StartsWith(AppData.SessionExtensions.SessionNames.Comment.ToString()) ||
+                 x.StartsWith(AppData.SessionExtensions.SessionNames.Email.ToString()));
+            foreach (var k in requiredKeys)
+            {
+                HttpContext.Session.Remove(k); //will clear the session for the future
+            }
+
+        }
+
+        public decimal GetExchangeRateIfNull()
+        {
+            return _context.ExchangeRates.Select(er => er.LatestExchangeRate).FirstOrDefault();
+        }
+
+
+        public void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, string uploadFolderParent)
         {
             string uploadFolder = Path.Combine(uploadFolderParent, folderName.ToString());
             DocumentFolder folder = new DocumentFolder()
@@ -156,25 +178,51 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             folder.Icon = AppUtility.GetDocumentIcon(folderName);
-            
-            requestItem.DocumentsInfo.Add(folder);
+
+            DocumentsInfo.Add(folder);
         }
 
-        public void RemoveRequestWithCommentsAndEmailSessions()
+        public virtual void DocumentsModal(DocumentsModalViewModel documentsModalViewModel)
         {
-            var requiredKeys = HttpContext.Session.Keys.Where(x => x.StartsWith(AppData.SessionExtensions.SessionNames.Request.ToString()) ||
-                x.StartsWith(AppData.SessionExtensions.SessionNames.Comment.ToString()) ||
-                 x.StartsWith(AppData.SessionExtensions.SessionNames.Email.ToString()));
-            foreach (var k in requiredKeys)
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
+            string folder = Path.Combine(uploadFolder, documentsModalViewModel.ObjectID.ToString());
+            Directory.CreateDirectory(folder);
+            if (documentsModalViewModel.FilesToSave != null) //test for more than one???
             {
-                HttpContext.Session.Remove(k); //will clear the session for the future
+                var x = 1;
+                foreach (IFormFile file in documentsModalViewModel.FilesToSave)
+                {
+                    //create file
+                    string folderPath = Path.Combine(folder, documentsModalViewModel.FolderName.ToString());
+                    Directory.CreateDirectory(folderPath);
+                    string uniqueFileName = x + file.FileName;
+                    string filePath = Path.Combine(folderPath, uniqueFileName);
+                    FileStream filestream = new FileStream(filePath, FileMode.Create);
+                    file.CopyTo(filestream);
+                    filestream.Close();
+                    x++;
+                }
             }
-
         }
-
-        public decimal GetExchangeRateIfNull()
+        public void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, int ObjectID = 0)
         {
-            return _context.ExchangeRates.Select(er => er.LatestExchangeRate).FirstOrDefault();
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
+            string requestFolder = Path.Combine(uploadFolder, ObjectID.ToString());
+
+            if (Directory.Exists(requestFolder))
+            {
+                System.IO.DirectoryInfo di = new DirectoryInfo(requestFolder);
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in di.EnumerateDirectories())
+                {
+                    dir.Delete(true);
+                }
+                Directory.Delete(requestFolder);
+            }
+            Directory.CreateDirectory(requestFolder);
         }
 
     }

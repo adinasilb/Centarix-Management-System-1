@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.ViewModels
     public class DocumentsTabViewModel : ViewModelBase
     {
         public Request Request { get; set; }
-        public Dictionary<AppUtility.RequestFolderNamesEnum, List<string>> DocumentInfo { get; set; }
+        public Dictionary<AppUtility.FolderNamesEnum, List<string>> DocumentInfo { get; set; }
     }
     
 

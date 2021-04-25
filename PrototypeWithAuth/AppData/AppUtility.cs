@@ -80,7 +80,8 @@ namespace PrototypeWithAuth.AppData
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
+        public enum FolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
+        public enum ParentFolderName { Protocols, Requests}
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
@@ -439,39 +440,39 @@ namespace PrototypeWithAuth.AppData
             }
         }
 
-        public static string GetDocumentIcon(RequestFolderNamesEnum folderName)
+        public static string GetDocumentIcon(FolderNamesEnum folderName)
         {
             var iconClass = "";
             switch (folderName)
             {
-                case RequestFolderNamesEnum.Quotes:
+                case FolderNamesEnum.Quotes:
                     iconClass = "icon-centarix-icons-03";
                     break;
-                case RequestFolderNamesEnum.Orders:
+                case FolderNamesEnum.Orders:
                     iconClass = "icon-chrome_reader_mode-24px";
                     break;
-                case RequestFolderNamesEnum.Invoices:
+                case FolderNamesEnum.Invoices:
                     iconClass = "icon-book-24px";
                     break;
-                case RequestFolderNamesEnum.Shipments:
+                case FolderNamesEnum.Shipments:
                     iconClass = "icon-local_shipping-24px";
                     break;
-                case RequestFolderNamesEnum.Info:
+                case FolderNamesEnum.Info:
                     iconClass = "icon-info-24px-2";
                     break;
-                case RequestFolderNamesEnum.Pictures:
+                case FolderNamesEnum.Pictures:
                     iconClass = "icon-camera_alt-24px";
                     break;
-                case RequestFolderNamesEnum.Returns:
+                case FolderNamesEnum.Returns:
                     iconClass = "icon-remove_shopping_cart-24px";
                     break;
-                case RequestFolderNamesEnum.Credits:
+                case FolderNamesEnum.Credits:
                     iconClass = "icon-insert_drive_file-24px-1";
                     break;
-                case RequestFolderNamesEnum.S:
+                case FolderNamesEnum.S:
                     iconClass = "icon-chrome_reader_mode-24px";
                     break;
-                case RequestFolderNamesEnum.Map:
+                case FolderNamesEnum.Map:
                     iconClass = "icon-chrome_reader_mode-24px";
                     break;
             }
