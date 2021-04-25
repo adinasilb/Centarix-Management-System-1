@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class DocumentsModalViewModel : ViewModelBase
     {
-        public AppUtility.RequestFolderNamesEnum RequestFolderName { get; set; }
+        public AppUtility.FolderNamesEnum RequestFolderName { get; set; }
         public List<Request> Requests { get; set; }
         public List<string> FileStrings { get; set; }
         public List<FileInfo> Files { get; set; }

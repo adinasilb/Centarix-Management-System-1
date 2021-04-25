@@ -7,7 +7,8 @@ using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
@@ -92,10 +93,10 @@ namespace PrototypeWithAuth.Controllers
 
             protocolsIndexViewModel.PagedList = onePageOfProducts;
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            protocolsIndexViewModel.ProtocolsInventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters);
+            protocolsIndexViewModel.ProtocolsFilterViewModel = GetProtocolFilterViewModel(selectedFilters);
             return protocolsIndexViewModel;
         }
-        private ProtocolsInventoryFilterViewModel GetInventoryFilterViewModel(SelectedProtocolsFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
+        private ProtocolsInventoryFilterViewModel GetProtocolFilterViewModel(SelectedProtocolsFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
         {
             if (selectedFilters != null)
             {
@@ -243,12 +244,15 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             var protocol = new Protocol();
             protocol.ProtocolTypeID = 1;
+
             var viewmodel = new CreateProtocolsViewModel()
             {
                 Protocol = protocol,
                 ProtocolCategories = _context.ProtocolCategories,
-                ProtocolSubCategories = _context.ProtocolSubCategories
+                ProtocolSubCategories = _context.ProtocolSubCategories,
+               
             };
+            FillDocumentsInfo(viewmodel, "");
             return View(viewmodel);
         }
 
@@ -393,6 +397,14 @@ namespace PrototypeWithAuth.Controllers
             return Json(subCategoryList);
         }
 
+        private void FillDocumentsInfo(CreateProtocolsViewModel createProtoclsViewModel, string uploadFolder)
+        {
+            createProtoclsViewModel.DocumentsInfo = new List<DocumentFolder>();
+
+            GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
+            GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
+        }
+       
 
     }
 }

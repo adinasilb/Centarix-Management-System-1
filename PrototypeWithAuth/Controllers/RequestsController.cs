@@ -1619,39 +1619,39 @@ namespace PrototypeWithAuth.Controllers
             FillDocumentsInfo(requestItemViewModel, "", productSubcategory);
             /* if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
              {
-                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.S, "");
+                 GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.S, "");
 
              }
              if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                  && productSubcategory.ProductSubcategoryDescription != "Cells")
              {
-                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, "");
+                 GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Info, "");
 
              }
              if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                  && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
              {
-                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Map, "");
+                 GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Map, "");
 
              }
          }
          else if(requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID==2)
          {
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Details, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Orders, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Invoices, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Details, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Quotes, "");
          }
          else
          {
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Shipments, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Pictures, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Orders, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Invoices, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Shipments, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Quotes, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Info, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Pictures, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Returns, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Credits, "");
          }
     */
             DeleteTemporaryDocuments();
@@ -1957,40 +1957,40 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
                 {
-                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.S, uploadFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, uploadFolder);
 
                 }
                 if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                     && productSubcategory.ProductSubcategoryDescription != "Cells")
                 {
-                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, uploadFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
 
                 }
                 if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                     && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
                 {
-                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Map, uploadFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, uploadFolder);
 
                 }
             }
             else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
             {
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Details, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Details, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, uploadFolder);
             }
             else
             {
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Shipments, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Shipments, uploadFolder);
             
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Pictures, uploadFolder);
-                //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, uploadFolder);
-                //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
+                //GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Returns, uploadFolder);
+                //GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Credits, uploadFolder);
             }
         }
 
@@ -2618,7 +2618,7 @@ namespace PrototypeWithAuth.Controllers
                                     {
 
                                         string NewFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
-                                        string folderPath = Path.Combine(NewFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+                                        string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
                                         Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
 
                                         string uniqueFileName = 1 + "OrderEmail.pdf";
@@ -3452,7 +3452,7 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -3525,7 +3525,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
@@ -3742,7 +3742,7 @@ namespace PrototypeWithAuth.Controllers
                             //save file
                             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
                             string requestFolder = Path.Combine(uploadFolder, quote.RequestID.ToString());
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                            string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Quotes.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = 1 + editQuoteDetailsViewModel.QuoteFileUpload.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -4335,7 +4335,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             int x = 1;
                             //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+                            string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Invoices.ToString());
                             if (Directory.Exists(folderPath))
                             {
                                 var filesInDirectory = Directory.GetFiles(folderPath);
@@ -4377,7 +4377,7 @@ namespace PrototypeWithAuth.Controllers
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
-            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
 
             if (Directory.Exists(uploadFolderQuotes))
             {
@@ -4418,7 +4418,7 @@ namespace PrototypeWithAuth.Controllers
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
-            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
 
             if (Directory.Exists(uploadFolderOrders))
             {

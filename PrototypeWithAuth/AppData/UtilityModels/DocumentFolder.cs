@@ -7,7 +7,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
 {
     public class DocumentFolder
     {
-        public AppUtility.RequestFolderNamesEnum FolderName { get; set; }
+        public AppUtility.FolderNamesEnum FolderName { get; set; }
         public List<string> FileStrings { get; set; }
         public string Icon { get; set; }
     }

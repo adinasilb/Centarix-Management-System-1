@@ -136,7 +136,26 @@ namespace PrototypeWithAuth.Controllers
             return offDaysLeft;
         }
 
-        public void GetExistingFileStrings(RequestItemViewModel requestItem, AppUtility.RequestFolderNamesEnum folderName, string uploadFolderParent)
+
+        public void RemoveRequestWithCommentsAndEmailSessions()
+        {
+            var requiredKeys = HttpContext.Session.Keys.Where(x => x.StartsWith(AppData.SessionExtensions.SessionNames.Request.ToString()) ||
+                x.StartsWith(AppData.SessionExtensions.SessionNames.Comment.ToString()) ||
+                 x.StartsWith(AppData.SessionExtensions.SessionNames.Email.ToString()));
+            foreach (var k in requiredKeys)
+            {
+                HttpContext.Session.Remove(k); //will clear the session for the future
+            }
+
+        }
+
+        public decimal GetExchangeRateIfNull()
+        {
+            return _context.ExchangeRates.Select(er => er.LatestExchangeRate).FirstOrDefault();
+        }
+
+
+        public void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, string uploadFolderParent)
         {
             string uploadFolder = Path.Combine(uploadFolderParent, folderName.ToString());
             DocumentFolder folder = new DocumentFolder()
@@ -156,25 +175,8 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             folder.Icon = AppUtility.GetDocumentIcon(folderName);
-            
-            requestItem.DocumentsInfo.Add(folder);
-        }
 
-        public void RemoveRequestWithCommentsAndEmailSessions()
-        {
-            var requiredKeys = HttpContext.Session.Keys.Where(x => x.StartsWith(AppData.SessionExtensions.SessionNames.Request.ToString()) ||
-                x.StartsWith(AppData.SessionExtensions.SessionNames.Comment.ToString()) ||
-                 x.StartsWith(AppData.SessionExtensions.SessionNames.Email.ToString()));
-            foreach (var k in requiredKeys)
-            {
-                HttpContext.Session.Remove(k); //will clear the session for the future
-            }
-
-        }
-
-        public decimal GetExchangeRateIfNull()
-        {
-            return _context.ExchangeRates.Select(er => er.LatestExchangeRate).FirstOrDefault();
+            DocumentsInfo.Add(folder);
         }
 
     }

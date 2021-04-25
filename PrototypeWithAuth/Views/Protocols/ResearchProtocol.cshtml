@@ -54,22 +54,22 @@
                     <div class="col-4">
                         <label class="control-label">Category</label>
                         @Html.DropDownListFor(vm => vm.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID,
-            new SelectList(
-            Model.ProtocolCategories,
-            "ProtocolCategoryTypeID",
-            "ProtocolCategoryDescription"
-            ), "Select Category",
-            new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolParentList", @searchable = "Select Category" })
+new SelectList(
+Model.ProtocolCategories,
+"ProtocolCategoryTypeID",
+"ProtocolCategoryDescription"
+), "Select Category",
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolParentList", @searchable = "Select Category" })
                     </div>
                     <div class="col-4">
                         <label class="control-label">Sub Category</label>
                         @Html.DropDownListFor(vm => vm.Protocol.ProtocolSubCategoryID,
-          new SelectList(
-          Model.ProtocolSubCategories,
-          "ProtocolSubCategoryTypeID",
-          "ProtocolSubCategoryTypeDescription"
-          ), "Select Category",
-          new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolSubList", @searchable = "Select Category" })
+new SelectList(
+Model.ProtocolSubCategories,
+"ProtocolSubCategoryTypeID",
+"ProtocolSubCategoryTypeDescription"
+), "Select Category",
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolSubList", @searchable = "Select Category" })
                     </div>
                     <div class="col-4">
                         <label asp-for="Tags" class="control-label"></label>
@@ -80,10 +80,52 @@
                 <div class="row ">
                     <div class="col-12">
                         <label asp-for="Protocol.ShortDescription" class="control-label"></label>
-                        <input asp-for="Protocol.ShortDescription" class="form-control-plaintext border-bottom" />
+                        <textarea asp-for="Protocol.ShortDescription" class="form-control-plaintext border-bottom border" rows="10"></textarea>
                         <span asp-validation-for="Protocol.ShortDescription" class="text-danger-centarix"></span>
                     </div>
                 </div>
+            </div>
+
+
+            @{
+                var urlAction = Url.Action("DocumentsModal", "Requests");
+                var fontSize = "2rem";
+            }
+            <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+            <div class="row document-margin-bottom">
+
+                @{
+                    var hasFileClass = "";
+                    var color = "protocols-filter";
+
+                }
+                @for (int i = 4; i < Model.DocumentsInfo.Count; i++)
+                {
+                  
+                    if (i < Model.DocumentsInfo?.Count)
+                    {
+                        var folder = Model.DocumentsInfo[i];
+                        <div class=" @(i == 7 ? "" : "document-margin")">
+                            @{
+                                var filterClass = "opac87";
+                                if (folder.FileStrings != null && folder.FileStrings.Count > 0)
+                                {
+                                    hasFileClass = "hasFile";
+                                    filterClass = color;
+                                }
+                            }
+                            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Protocol" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false">
+                                <div class="card document-border ">
+                                    <div class="document-card text-center">
+                                        <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                    </div>
+
+                                </div>
+                            </a>
+                            <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
+                        </div>
+                    }
+                }
             </div>
         </div>
         <div id="Materials" class="tab-pane fade in ">
