@@ -28,10 +28,10 @@
 
         </ul>
     </div>
-    <div class="tab-content" style="width:55%">
+    <div class="tab-content" >
 
         <div id="Theory" class="tab-pane fade in active show">
-            <div class="container-fluid new-modal-body ">
+            <div class="container-fluid new-modal-body m-0" style="width:55%">
                 <div class="row under-row-margin">
                     <div class="col-4">
                         <label asp-for="Protocol.Name" class="control-label"></label>
@@ -170,7 +170,26 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
         </div>
 
         <div id="Materials" class="tab-pane fade in ">
-            Material
+            <div class="container-fluid new-modal-body m-0 " style="width:70%">
+                <div class="row">
+                    @foreach (var material in Model.MaterialCategories)
+                    {
+                        <div class="col heading-1">
+                            @material.MaterialCategoryDescription
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    @foreach (var material in Model.MaterialCategories)
+                    {
+                    <div class="col text-center">
+                        <button value="@material.MaterialCategoryID" id="addMaterial" type="button"  class="no-box-shadow btn p-0 m-0 ">
+                            <i class="@color icon-add_circle_outline-24px1" style="font-size: 3rem;"></i>
+                                                    </button>
+                    </div>
+                    }
+                </div>
+            </div>
         </div>
         <div id="Protocol" class="tab-pane fade in ">
             Protocol

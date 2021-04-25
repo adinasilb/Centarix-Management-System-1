@@ -252,7 +252,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 Protocol = protocol,
                 ProtocolCategories = _context.ProtocolCategories,
-                ProtocolSubCategories = _context.ProtocolSubCategories,               
+                ProtocolSubCategories = _context.ProtocolSubCategories,     
+                MaterialCategories = _context.MaterialCategories
                
             };
             FillDocumentsInfo(viewmodel, "");
