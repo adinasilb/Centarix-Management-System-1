@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210425102032_addedResourceCategories")]
+    partial class addedResourceCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3952,127 +3954,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ResourceCategoryID");
 
                     b.ToTable("ResourceCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            ResourceCategoryID = 1,
-                            IsMain = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Rejuvenation"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 2,
-                            IsMain = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Biomarkers"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 3,
-                            IsMain = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Delivery Systems"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 4,
-                            IsMain = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Clinical Trials"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 5,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "AAV"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 6,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Telomere Rejuvenation"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 7,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Telomere Measurement"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 8,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Methylation Biomarker"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 9,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Transcriptome"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 10,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Serum Rejuvenation"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 11,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Reprogramming"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 12,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Methylation Rejuvenation"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 13,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "New Methods"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 14,
-                            IsMain = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "Softwares"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 15,
-                            IsMain = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "Learning"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 16,
-                            IsMain = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "Companies"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 17,
-                            IsMain = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "News"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ResourceType", b =>
