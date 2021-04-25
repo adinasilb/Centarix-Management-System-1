@@ -1,4 +1,44 @@
-﻿@{
+﻿@model PrototypeWithAuth.ViewModels.ResourceLibraryViewModel;
+@{
     ViewData["Title"] = "Library";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
+
+
+
 }
+<div class="item-table">
+    <ul class=" pl-0 nav" style="">
+        <li class="list-inline-item m-0 nav-item">
+            <a data-toggle="tab" href="#Articles" class="next-tab nav-link active new-button new-protocols-button">
+                <i class="new-icon icon-theory-tab-24px"></i>
+                <label class="new-button-text">Articles and Links</label>
+            </a>
+        </li>
+        <li class="list-inline-item m-0 nav-item">
+            <a data-toggle="tab" href="#Resources" class="next-tab nav-link new-button  new-protocols-button">
+                <i class=" new-icon icon-resources-tab-24px"></i>
+                <label class="new-button-text">Resources</label>
+            </a>
+        </li>
+
+    </ul>
+</div>
+<div class="tab-content">
+
+    <div id="Articles" class="tab-pane fade in active">
+        <div class="container-fluid">
+            <div class="under-row-margin row">
+                @foreach(var maincategory in Model.ResourceCategories.Where(rc => rc.IsMain))
+                {
+                    <div class="col-3">
+                        @maincategory.ResourceCategoryDescription
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div id="Resources" class="tab-pane fade in ">
+        Resources
+    </div>
+</div>
