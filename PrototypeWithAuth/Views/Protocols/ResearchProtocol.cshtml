@@ -30,8 +30,8 @@
     </div>
     <div class="tab-content" style="width:55%">
 
-        <div id="Theory" class="tab-pane fade in ">
-            <div class="container-fluid">
+        <div id="Theory" class="tab-pane fade in active show">
+            <div class="container-fluid new-modal-body ">
                 <div class="row under-row-margin">
                     <div class="col-4">
                         <label asp-for="Protocol.Name" class="control-label"></label>
@@ -80,11 +80,17 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 <div class="row ">
                     <div class="col-12">
                         <label asp-for="Protocol.ShortDescription" class="control-label"></label>
-                        <textarea asp-for="Protocol.ShortDescription" class="form-control-plaintext border-bottom border" rows="10"></textarea>
+                        <input asp-for="Protocol.ShortDescription" class="form-control-plaintext border-bottom " />
                         <span asp-validation-for="Protocol.ShortDescription" class="text-danger-centarix"></span>
                     </div>
                 </div>
-
+                <div class="row ">
+                    <div class="col-12">
+                        <label asp-for="Protocol.Theory" class="control-label"></label>
+                        <textarea asp-for="Protocol.Theory" class="form-control-plaintext border-bottom border" rows="15"></textarea>
+                        <span asp-validation-for="Protocol.Theory" class="text-danger-centarix"></span>
+                    </div>
+                </div>
 
                 @{
                     var urlAction = Url.Action("DocumentsModal", "Protocols");

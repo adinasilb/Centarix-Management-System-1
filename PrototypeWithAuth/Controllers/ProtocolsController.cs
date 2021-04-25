@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PrototypeWithAuth.AppData;
@@ -19,10 +20,12 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, hostingEnvironment)
         {
             _context = context;
-            _userManager = userManager;        
+            _userManager = userManager;
+            _hostingEnvironment = hostingEnvironment;
         }
         public async Task<IActionResult> Index()
         {
@@ -338,7 +341,6 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
-
         public async Task<IActionResult> ResourcesSharedWithMe()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -371,11 +373,27 @@ namespace PrototypeWithAuth.Controllers
             return View();
 
         }
-      
 
-  
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public ActionResult DocumentsModal(int? id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+    AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols)
+        {
+            DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+            {
+                FolderName = RequestFolderNameEnum,
+                ParentFolderName = AppUtility.ParentFolderName.Protocols,
+                ObjectID = id ?? 0,
+                SectionType = SectionType,
+                IsEdittable = true
+            };
 
-       
+            FillDocumentsViewModel(documentsModalViewModel);
+            return PartialView(documentsModalViewModel);
+        }
+
+
+
         public async Task<IActionResult> Search()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -396,6 +414,13 @@ namespace PrototypeWithAuth.Controllers
             }
             return Json(subCategoryList);
         }
+
+        [HttpPost]
+        public override void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
+        {
+            base.DocumentsModal(documentsModalViewModel);
+        }
+
 
         private void FillDocumentsInfo(CreateProtocolsViewModel createProtoclsViewModel, string uploadFolder)
         {

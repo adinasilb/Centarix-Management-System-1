@@ -3534,56 +3534,23 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult DocumentsModal(int? id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
-            RequestDocumentsViewModel documentsModalViewModel = new RequestDocumentsViewModel()
+            DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
-                Requests = new List<Request>(),
-                //Request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault(),
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 ParentFolderName = AppUtility.ParentFolderName.Requests,
                 ObjectID = id??0,
-                //Files = new List<FileInfo>(),
                 SectionType = SectionType,
                 ShowSwitch = showSwitch
             };
 
-            if (id != null)
-            {
-                documentsModalViewModel.Requests.Add(_context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault());
-            }
-            else if (ids != null)
-            {
-                foreach (int requestID in ids)
-                {
-                    documentsModalViewModel.Requests.Add(_context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault());
-                }
-            }
-
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, id.ToString());
-            string uploadFolder3 = Path.Combine(uploadFolder2, RequestFolderNameEnum.ToString());
-
-            if (Directory.Exists(uploadFolder3))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
-                //searching for the partial file name in the directory
-                FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
-                documentsModalViewModel.FileStrings = new List<String>();
-                documentsModalViewModel.FileStrings = new List<String>();
-                foreach (var docfile in docfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);
-                    documentsModalViewModel.FileStrings.Add(newFileString);
-                    //documentsModalViewModel.Files.Add(docfile);
-                }
-            }
-
-            return View(documentsModalViewModel);
+            FillDocumentsViewModel(documentsModalViewModel);
+            return PartialView(documentsModalViewModel);
         }
-
+      
 
         [HttpPost]
         public override void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
