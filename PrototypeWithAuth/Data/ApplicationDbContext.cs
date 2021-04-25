@@ -163,6 +163,15 @@ namespace PrototypeWithAuth.Data
                 .WithMany(au => au.RequestsReceived)
                 .HasForeignKey(r => r.ApplicationUserReceiverID);
 
+            modelBuilder.Entity<ShareRequest>()
+                .HasOne(sr => sr.FromApplicationUser)
+                .WithMany(au => au.ShareRequestsCreated)
+                .HasForeignKey(sr => sr.FromApplicationUserID);
+
+            modelBuilder.Entity<ShareRequest>()
+                .HasOne(sr => sr.ToApplicationUser)
+                .WithMany(au => au.ShareRequestsReceived)
+                .HasForeignKey(sr => sr.ToApplicationUserID);
 
 
             // configures one-to-many relationship between Inventory and InventorySubcategories

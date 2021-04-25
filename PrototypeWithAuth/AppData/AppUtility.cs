@@ -48,7 +48,7 @@ namespace PrototypeWithAuth.AppData
         public enum SidebarEnum
         {
             None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List, Calibrate, Location, Cart, /*Favorites,*/ Notifications,
+            Quotes, List, Calibrate, Location, Cart, Favorites, Notifications,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker,
             Category, Details, Hours, Salary,
@@ -73,7 +73,7 @@ namespace PrototypeWithAuth.AppData
             SpecifyPayment,
             CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
-            Library, Personal, SharedWithMe, Favorites, Active, Done, LastProtocol
+            Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests
         }
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }

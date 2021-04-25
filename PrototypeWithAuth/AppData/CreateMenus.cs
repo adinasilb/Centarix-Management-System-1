@@ -671,6 +671,15 @@ namespace PrototypeWithAuth.AppData
                 //Classes = menuClass,
                 //IconName = "icon-favorite_border-24px"
             });
+            if (SidebarTitle == AppUtility.SidebarEnum.SharedRequests) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Shared",
+                Controller = "Requests",
+                Action = "IndexShared",
+                Classes = menuClass,
+                IconName = "icon-notification_shared-24px"
+            });
             if (SidebarTitle == AppUtility.SidebarEnum.Notifications) { menuClass += ActiveClasses; } else { menuClass = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
             {

@@ -10,6 +10,7 @@ namespace PrototypeWithAuth.Models
 {
     public class ShareRequest
     {
+        private DateTime _timestamp { get; set; }
         [Key]
         public int ShareRequestID { get; set; }
         public int RequestID { get; set; }
@@ -20,5 +21,12 @@ namespace PrototypeWithAuth.Models
         public string ToApplicationUserID { get; set; }
         [ForeignKey("ToApplicationUserID")]
         public ApplicationUser ToApplicationUser { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime TimeStamp
+        {
+            get => _timestamp == new DateTime() ? DateTime.Now : _timestamp;
+            set { _timestamp = value; }
+        }
     }
 }

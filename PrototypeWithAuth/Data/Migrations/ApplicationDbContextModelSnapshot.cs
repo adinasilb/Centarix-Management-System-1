@@ -3913,6 +3913,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
