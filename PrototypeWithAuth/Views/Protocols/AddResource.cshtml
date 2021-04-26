@@ -76,6 +76,16 @@
                         Select Tags
                     </div>
                 </div>
+                <div class="row under-row-margin">
+                    @foreach(var mainCategory in Model.ResourceCategories.Where(rc => rc.IsMain))
+                    {
+                        <div class="col-3">
+                            <span class="resources-tags-big protocols-background-color text-white">
+                                @mainCategory.ResourceCategoryDescription
+                            </span>
+                        </div>
+                    }
+                </div>
             </form>
 
         </div>
