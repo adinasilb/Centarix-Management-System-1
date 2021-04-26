@@ -239,6 +239,8 @@
     <Compile Remove="Data\Migrations\20210426081438_addedResources.Designer.cs" />
     <Compile Remove="Data\Migrations\20210426081817_removeTagArticles.cs" />
     <Compile Remove="Data\Migrations\20210426081817_removeTagArticles.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210426103811_sdfsdfs.cs" />
+    <Compile Remove="Data\Migrations\20210426103811_sdfsdfs.Designer.cs" />
   </ItemGroup>
 
 
