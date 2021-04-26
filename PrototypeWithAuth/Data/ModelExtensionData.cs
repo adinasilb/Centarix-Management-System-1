@@ -1495,31 +1495,22 @@ namespace PrototypeWithAuth.Data
                     LocationTypeChildID = 501,
                     Depth = 0
                 },
-                new LocationType
-                {
-                    LocationTypeID = 501,
-                    LocationTypeName = "Location",
-                    LocationTypePluralName = "Locations",
-                    LocationTypeParentID = 500,
-                    LocationTypeChildID = 502,
-                    Depth = 1
-                },
                  new LocationType
                  {
-                     LocationTypeID = 502,
+                     LocationTypeID = 501,
                      LocationTypeName = "Lab Part",
                      LocationTypePluralName = "Lab Parts",
-                     LocationTypeParentID = 501,
-                     LocationTypeChildID = 503,
+                     LocationTypeParentID = 500,
+                     LocationTypeChildID = 502,
                      Depth = 2
                  },
                 new LocationType
                 {
-                    LocationTypeID = 503,
+                    LocationTypeID = 502,
                     LocationTypeName = "Section",
                     LocationTypePluralName = "Sections",
                     LocationTypeNameAbbre = "S",
-                    LocationTypeParentID = 502,
+                    LocationTypeParentID = 501,
                     Depth = 3
                 }
             );
