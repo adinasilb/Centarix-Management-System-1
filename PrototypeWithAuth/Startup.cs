@@ -95,7 +95,11 @@ namespace PrototypeWithAuth
                 config.Filters.Add(new AuthorizeFilter(policy));
                 // config.AllowValidatingTopLevelNodes = true;
             });
-            services.AddSession();
+            services.AddSession(/*opts =>
+            {
+                opts.Cookie.IsEssential = true;
+
+            }*/);
 
             ////allow for data anotations validations
             //services.AddMvcCore()
@@ -144,6 +148,7 @@ namespace PrototypeWithAuth
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
+
 
             app.UseEndpoints(endpoints =>
             {

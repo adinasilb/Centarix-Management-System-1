@@ -217,5 +217,8 @@ namespace PrototypeWithAuth.Models
                 _IncludeVAT = value;
             } 
         }
+
+        public IEnumerable<ShareRequest> ShareRequests { get; set; }
+        public IEnumerable<FavoriteRequest> FavoriteRequests { get; set; }
     }
 }

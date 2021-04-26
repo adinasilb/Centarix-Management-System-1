@@ -25,7 +25,7 @@
                         @foreach (var col in row.Columns)
                         {
                             <td width="@col.Width%" class="@(col.Width == 0 ? "p-0" : "")">
-                                @if (col.Image != null)
+                                @if (col.Image != "")
                                 {
                                     <img src="@col.Image" alt="Image" width="75" class="category-image" />
                                 }

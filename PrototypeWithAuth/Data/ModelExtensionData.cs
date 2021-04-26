@@ -139,18 +139,18 @@ namespace PrototypeWithAuth.Data
                     CardNumber = "7972"
                 }
            );
-           modelBuilder.Entity<CategoryType>().HasData(
-                new CategoryType
-                {
-                    CategoryTypeID = 1,
-                    CategoryTypeDescription = "Lab"
-                },
-                new CategoryType
-                {
-                    CategoryTypeID = 2,
-                    CategoryTypeDescription = "Operational"
-                }
-            );
+            modelBuilder.Entity<CategoryType>().HasData(
+                 new CategoryType
+                 {
+                     CategoryTypeID = 1,
+                     CategoryTypeDescription = "Lab"
+                 },
+                 new CategoryType
+                 {
+                     CategoryTypeID = 2,
+                     CategoryTypeDescription = "Operational"
+                 }
+             );
             //if any data is changed in parent categories - must edit parentRequestController monthly view models - had to hard code categories so if add any more have to adjust
             modelBuilder.Entity<ParentCategory>().HasData
            (
@@ -821,7 +821,7 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryID = 8,
                     ProductSubcategoryDescription = "General",
                     ImageURL = "/images/css/CategoryImages/general.png"
-                 },
+                },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 1203,
@@ -830,19 +830,19 @@ namespace PrototypeWithAuth.Data
                     ImageURL = "/images/css/CategoryImages/general.png"
                 },
                 new ProductSubcategory
-                 {
-                     ProductSubcategoryID = 1005,
-                     ParentCategoryID = 10,
-                     ProductSubcategoryDescription = "General",
-                     ImageURL = "/images/css/CategoryImages/general.png"
-                 },
+                {
+                    ProductSubcategoryID = 1005,
+                    ParentCategoryID = 10,
+                    ProductSubcategoryDescription = "General",
+                    ImageURL = "/images/css/CategoryImages/general.png"
+                },
                 new ProductSubcategory
-                 {
-                     ProductSubcategoryID = 905,
-                     ParentCategoryID = 9,
-                     ProductSubcategoryDescription = "General",
-                     ImageURL = "/images/css/CategoryImages/general.png"
-                 },
+                {
+                    ProductSubcategoryID = 905,
+                    ParentCategoryID = 9,
+                    ProductSubcategoryDescription = "General",
+                    ImageURL = "/images/css/CategoryImages/general.png"
+                },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 601,
@@ -851,12 +851,12 @@ namespace PrototypeWithAuth.Data
                     ImageURL = "/images/css/CategoryImages/software.png"
                 },
                 new ProductSubcategory
-                 {
-                     ProductSubcategoryID = 603,
-                     ParentCategoryID = 6,
-                     ProductSubcategoryDescription = "Cybersecurity",
-                     ImageURL = "/images/css/CategoryImages/software.png"
-                 },
+                {
+                    ProductSubcategoryID = 603,
+                    ParentCategoryID = 6,
+                    ProductSubcategoryDescription = "Cybersecurity",
+                    ImageURL = "/images/css/CategoryImages/software.png"
+                },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 903,
@@ -884,7 +884,7 @@ namespace PrototypeWithAuth.Data
                     ParentCategoryID = 10,
                     ProductSubcategoryDescription = "Business",
                     ImageURL = "/images/css/CategoryImages/business_advice.png"
-                },                
+                },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 1101,
@@ -940,12 +940,12 @@ namespace PrototypeWithAuth.Data
                         ImageURL = "/images/css/CategoryImages/furniture.png"
                     },
                 new ProductSubcategory
-                 {
-                     ProductSubcategoryID = 701,
-                     ParentCategoryID = 7,
-                     ProductSubcategoryDescription = "Virus",
-                     ImageURL = "/images/css/CategoryImages/virus.png"
-                 },
+                {
+                    ProductSubcategoryID = 701,
+                    ParentCategoryID = 7,
+                    ProductSubcategoryDescription = "Virus",
+                    ImageURL = "/images/css/CategoryImages/virus.png"
+                },
                 new ProductSubcategory
                 {
                     ProductSubcategoryID = 702,
@@ -1002,16 +1002,16 @@ namespace PrototypeWithAuth.Data
                   RequestStatusID = 3,
                   RequestStatusDescription = "RecievedAndIsInventory"  // request page, under recieved (only pass in the first 50) and under Inventory
               },
-              // new RequestStatus
-              // {
-              //     RequestStatusID = 4,
-              //     RequestStatusDescription = "Partial" // request page, under order
-              // },
-              //  new RequestStatus
-              //  {
-              //      RequestStatusID = 5,
-              //      RequestStatusDescription = "Clarify" // request page, under order
-              //  },
+                // new RequestStatus
+                // {
+                //     RequestStatusID = 4,
+                //     RequestStatusDescription = "Partial" // request page, under order
+                // },
+                //  new RequestStatus
+                //  {
+                //      RequestStatusID = 5,
+                //      RequestStatusDescription = "Clarify" // request page, under order
+                //  },
                 new RequestStatus
                 {
                     RequestStatusID = 6,
@@ -1020,7 +1020,7 @@ namespace PrototypeWithAuth.Data
                 new RequestStatus
                 {
                     RequestStatusID = 7,
-                    RequestStatusDescription = "Saved To Inventory" 
+                    RequestStatusDescription = "Saved To Inventory"
                 }
              );
             modelBuilder.Entity<UnitParentType>().HasData
@@ -1518,7 +1518,7 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 503,
                     LocationTypeName = "Section",
                     LocationTypePluralName = "Sections",
-                    LocationTypeNameAbbre ="S",
+                    LocationTypeNameAbbre = "S",
                     LocationTypeParentID = 502,
                     Depth = 3
                 }
@@ -1565,8 +1565,8 @@ namespace PrototypeWithAuth.Data
                     new LabPart
                     {
                         LabPartID = 1,
-                        LabPartName = "Closet" ,
-                        LabPartNameAbbrev ="C",
+                        LabPartName = "Closet",
+                        LabPartNameAbbrev = "C",
                         HasShelves = true
                     },
                     new LabPart
@@ -2120,7 +2120,7 @@ namespace PrototypeWithAuth.Data
                     JobCategoryTypeID = 10,
                     Description = "Bioinformatics Researcher"
                 },
-              
+
                 new JobSubcategoryType
                 {
                     JobSubcategoryTypeID = 501,
@@ -2356,44 +2356,190 @@ namespace PrototypeWithAuth.Data
             }
         );
 
-         modelBuilder.Entity<ProtocolSubCategory>().HasData(
-          new ProtocolSubCategory
-          {
-              ProtocolSubCategoryTypeID = 1,
-              ProtocolCategoryTypeID = 1,
-              ProtocolSubCategoryTypeDescription = "Telomeres "
-          },
-          new ProtocolSubCategory
-          {
-              ProtocolSubCategoryTypeID = 2,
-              ProtocolCategoryTypeID = 1,
-              ProtocolSubCategoryTypeDescription = "Epigenetics"
-          },
-         new ProtocolSubCategory
-         {
-            ProtocolSubCategoryTypeID = 3,
-            ProtocolCategoryTypeID = 2,
-            ProtocolSubCategoryTypeDescription = "Telomeres "
-         },
-          new ProtocolSubCategory
-          {
-              ProtocolSubCategoryTypeID = 4,
-              ProtocolCategoryTypeID = 2,
-              ProtocolSubCategoryTypeDescription = "Transcription"
-          },
-           new ProtocolSubCategory
-           {
-               ProtocolSubCategoryTypeID = 5,
-               ProtocolCategoryTypeID = 2,
-               ProtocolSubCategoryTypeDescription = "Methylation"
-           },
+            modelBuilder.Entity<ProtocolSubCategory>().HasData(
+             new ProtocolSubCategory
+             {
+                 ProtocolSubCategoryTypeID = 1,
+                 ProtocolCategoryTypeID = 1,
+                 ProtocolSubCategoryTypeDescription = "Telomeres "
+             },
+             new ProtocolSubCategory
+             {
+                 ProtocolSubCategoryTypeID = 2,
+                 ProtocolCategoryTypeID = 1,
+                 ProtocolSubCategoryTypeDescription = "Epigenetics"
+             },
+            new ProtocolSubCategory
+            {
+                ProtocolSubCategoryTypeID = 3,
+                ProtocolCategoryTypeID = 2,
+                ProtocolSubCategoryTypeDescription = "Telomeres "
+            },
+             new ProtocolSubCategory
+             {
+                 ProtocolSubCategoryTypeID = 4,
+                 ProtocolCategoryTypeID = 2,
+                 ProtocolSubCategoryTypeDescription = "Transcription"
+             },
               new ProtocolSubCategory
               {
-                  ProtocolSubCategoryTypeID = 6,
-                  ProtocolCategoryTypeID = 3,
-                  ProtocolSubCategoryTypeDescription = "AAV"
-              }
-       );
+                  ProtocolSubCategoryTypeID = 5,
+                  ProtocolCategoryTypeID = 2,
+                  ProtocolSubCategoryTypeDescription = "Methylation"
+              },
+                 new ProtocolSubCategory
+                 {
+                     ProtocolSubCategoryTypeID = 6,
+                     ProtocolCategoryTypeID = 3,
+                     ProtocolSubCategoryTypeDescription = "AAV"
+                 }
+          );
+
+            modelBuilder.Entity<ResourceCategory>().HasData(
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 1,
+                    ResourceCategoryDescription = "Rejuvenation",
+                    IsMain = true,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 2,
+                    ResourceCategoryDescription = "Biomarkers",
+                    IsMain = true,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 3,
+                    ResourceCategoryDescription = "Delivery Systems",
+                    IsMain = true,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 4,
+                    ResourceCategoryDescription = "Clinical Trials",
+                    IsMain = true,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 5,
+                    ResourceCategoryDescription = "AAV",
+                    IsMain = false,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 6,
+                    ResourceCategoryDescription = "Telomere Rejuvenation",
+                    IsMain = false,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 7,
+                    ResourceCategoryDescription = "Telomere Measurement",
+                    IsMain = false,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 8,
+                    ResourceCategoryDescription = "Methylation Biomarker",
+                    IsMain = false,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 9,
+                    ResourceCategoryDescription = "Transcriptome",
+                    IsMain = false,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 10,
+                    ResourceCategoryDescription = "Serum Rejuvenation",
+                    IsMain = false,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 11,
+                    ResourceCategoryDescription = "Reprogramming",
+                    IsMain = false,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 12,
+                    ResourceCategoryDescription = "Methylation Rejuvenation",
+                    IsMain = false,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 13,
+                    ResourceCategoryDescription = "New Methods",
+                    IsMain = false,
+                    IsResourceType = false
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 14,
+                    ResourceCategoryDescription = "Softwares",
+                    IsMain = false,
+                    IsResourceType = true
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 15,
+                    ResourceCategoryDescription = "Learning",
+                    IsMain = false,
+                    IsResourceType = true
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 16,
+                    ResourceCategoryDescription = "Companies",
+                    IsMain = false,
+                    IsResourceType = true
+                },
+                new ResourceCategory
+                {
+                    ResourceCategoryID = 17,
+                    ResourceCategoryDescription = "News",
+                    IsMain = false,
+                    IsResourceType = true
+                }
+                );
+
+
+            modelBuilder.Entity<MaterialCategory>().HasData(
+                new MaterialCategory
+                {
+                    MaterialCategoryID = 1,
+                    MaterialCategoryDescription = "Reagents",
+                },
+                new MaterialCategory
+                {
+                    MaterialCategoryID = 2,
+                    MaterialCategoryDescription = "Plastics",
+                },
+                new MaterialCategory
+                {
+                    MaterialCategoryID = 3,
+                    MaterialCategoryDescription = "Equipment",
+                },
+                new MaterialCategory
+                {
+                    MaterialCategoryID = 4,
+                    MaterialCategoryDescription = "Buffers",
+                }
+           );
         }
     }
 }

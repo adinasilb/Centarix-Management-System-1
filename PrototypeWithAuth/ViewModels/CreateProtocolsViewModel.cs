@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Models;
+﻿using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<String> Tags { get; set; }
         public IEnumerable<ProtocolCategory> ProtocolCategories {get; set;}
         public IEnumerable<ProtocolSubCategory> ProtocolSubCategories { get; set; }
-
+        public IEnumerable<MaterialCategory> MaterialCategories { get; set; }
+        public List<DocumentFolder> DocumentsInfo { get;  set; }
     }
 }

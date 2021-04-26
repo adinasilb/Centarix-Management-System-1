@@ -19,7 +19,7 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<TagProtocol> TagProtocols {get; set;}
         public string ShortDescription { get; set; }
         public string Theory { get; set; }
-        public IEnumerable<Link> Urls { get; set; }
+        public List<Link> Urls { get; set; }
         public IEnumerable<MaterialProtocol> MaterialProtocols { get; set; }
         public IEnumerable<Line> Line { get; set; }        
         public string ApplicationUserCreatorID { get; set; }

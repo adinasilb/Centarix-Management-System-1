@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PrototypeWithAuth.AppData;
@@ -7,7 +8,8 @@ using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
@@ -18,10 +20,12 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, hostingEnvironment)
         {
             _context = context;
-            _userManager = userManager;        
+            _userManager = userManager;
+            _hostingEnvironment = hostingEnvironment;
         }
         public async Task<IActionResult> Index()
         {
@@ -92,10 +96,10 @@ namespace PrototypeWithAuth.Controllers
 
             protocolsIndexViewModel.PagedList = onePageOfProducts;
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            protocolsIndexViewModel.ProtocolsInventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters);
+            protocolsIndexViewModel.ProtocolsFilterViewModel = GetProtocolFilterViewModel(selectedFilters);
             return protocolsIndexViewModel;
         }
-        private ProtocolsInventoryFilterViewModel GetInventoryFilterViewModel(SelectedProtocolsFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
+        private ProtocolsInventoryFilterViewModel GetProtocolFilterViewModel(SelectedProtocolsFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
         {
             if (selectedFilters != null)
             {
@@ -241,17 +245,29 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            var protocol = new Protocol();
+            var protocol = new Protocol() { Urls = new List<Link>() { new Link(), new Link()} };
             protocol.ProtocolTypeID = 1;
+
             var viewmodel = new CreateProtocolsViewModel()
             {
                 Protocol = protocol,
                 ProtocolCategories = _context.ProtocolCategories,
-                ProtocolSubCategories = _context.ProtocolSubCategories
+                ProtocolSubCategories = _context.ProtocolSubCategories,     
+                MaterialCategories = _context.MaterialCategories
+               
             };
+            FillDocumentsInfo(viewmodel, "");
             return View(viewmodel);
         }
-
+        public async Task<IActionResult> AddMaterialModal(int materialTypeID)
+        {
+            var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
+            var viewModel = new AddMaterialViewModel() 
+            {
+                Material = new Material { MaterialCategoryID = materialTypeID, MaterialCategory = MaterialCategory}
+            };
+            return PartialView(viewModel);
+        }
         public async Task<IActionResult> KitProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -334,7 +350,6 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
-
         public async Task<IActionResult> ResourcesSharedWithMe()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -367,11 +382,27 @@ namespace PrototypeWithAuth.Controllers
             return View();
 
         }
-      
 
-  
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public ActionResult DocumentsModal(int? id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+    AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols)
+        {
+            DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+            {
+                FolderName = RequestFolderNameEnum,
+                ParentFolderName = AppUtility.ParentFolderName.Protocols,
+                ObjectID = id ?? 0,
+                SectionType = SectionType,
+                IsEdittable = true
+            };
 
-       
+            FillDocumentsViewModel(documentsModalViewModel);
+            return PartialView(documentsModalViewModel);
+        }
+
+
+
         public async Task<IActionResult> Search()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -392,6 +423,22 @@ namespace PrototypeWithAuth.Controllers
             }
             return Json(subCategoryList);
         }
+
+        [HttpPost]
+        public override void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
+        {
+            base.DocumentsModal(documentsModalViewModel);
+        }
+
+
+        private void FillDocumentsInfo(CreateProtocolsViewModel createProtoclsViewModel, string uploadFolder)
+        {
+            createProtoclsViewModel.DocumentsInfo = new List<DocumentFolder>();
+
+            GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
+            GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
+        }
+       
 
 
     }

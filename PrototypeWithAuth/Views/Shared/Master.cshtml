@@ -522,6 +522,9 @@
                         case "locations": case "addlocation":
                             $.fn.OpenModal('modal', 'add-location', modal)
                             break;
+                        case "addMaterial": 
+                            $.fn.OpenModal('modal', 'add-material', modal)
+                            break;
                     }
 
                 },
@@ -1112,7 +1115,6 @@
             var backdrop = "static";
             if ($('.modal-backdrop').length > 0) {
                 backdrop = false;
-                console.log("no backdrop")
             }
             $('.' + modalClass).replaceWith('');
             $('.' + modalDivClass).html('');

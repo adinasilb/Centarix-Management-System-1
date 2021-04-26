@@ -18,7 +18,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-       
+        public DbSet<ResourceCategory> ResourceCategories { get; set; }
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
         public DbSet<ProtocolInstanceResult> ProtocolInstanceResults { get; set; }
@@ -164,6 +164,15 @@ namespace PrototypeWithAuth.Data
                 .WithMany(au => au.RequestsReceived)
                 .HasForeignKey(r => r.ApplicationUserReceiverID);
 
+            modelBuilder.Entity<ShareRequest>()
+                .HasOne(sr => sr.FromApplicationUser)
+                .WithMany(au => au.ShareRequestsCreated)
+                .HasForeignKey(sr => sr.FromApplicationUserID);
+
+            modelBuilder.Entity<ShareRequest>()
+                .HasOne(sr => sr.ToApplicationUser)
+                .WithMany(au => au.ShareRequestsReceived)
+                .HasForeignKey(sr => sr.ToApplicationUserID);
 
 
             // configures one-to-many relationship between Inventory and InventorySubcategories
@@ -299,7 +308,7 @@ namespace PrototypeWithAuth.Data
 
             //set up many to many relationshipw
             modelBuilder.Entity<LineType>()
-                .HasOne(l=>l.LineTypeParent)
+                .HasOne(l => l.LineTypeParent)
                 .WithMany()
                 .HasForeignKey(ltp => ltp.LineTypeParentID);
 

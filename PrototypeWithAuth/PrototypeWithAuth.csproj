@@ -221,6 +221,14 @@
     <Compile Remove="Data\Migrations\20210420050920_CheckShareRequest.Designer.cs" />
     <Compile Remove="Data\Migrations\20210421114930_FixIncludeVatDefault.cs" />
     <Compile Remove="Data\Migrations\20210421114930_FixIncludeVatDefault.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210422075132_sjkldfjs.cs" />
+    <Compile Remove="Data\Migrations\20210422075132_sjkldfjs.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210425052237_fixedManyToManyShareFavorites.cs" />
+    <Compile Remove="Data\Migrations\20210425052237_fixedManyToManyShareFavorites.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210425101548_addedResourceCategories.cs" />
+    <Compile Remove="Data\Migrations\20210425101548_addedResourceCategories.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210425101845_addedResourceCategories.cs" />
+    <Compile Remove="Data\Migrations\20210425101845_addedResourceCategories.Designer.cs" />
   </ItemGroup>
 
 
@@ -268,6 +276,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
+    <Folder Include="wwwroot\Protocols\" />
   </ItemGroup>
 
 

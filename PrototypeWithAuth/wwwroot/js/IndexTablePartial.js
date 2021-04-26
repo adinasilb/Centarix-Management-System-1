@@ -10,25 +10,70 @@
 		}
 	});
 	$(this).popover('toggle');
+	$(".popover").off("click").on("click", ".share-request-fx", function () {
+		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
+		alert("url: " + url);
+		$.ajax({
+			async: true,
+			url: url,
+			traditional: true,
+			type: "GET",
+			cache: false,
+			success: function (data) {
+				$.fn.OpenModal("share-request-modal", "share-request", data)
+				$.fn.EnableMaterialSelect('#userlist', 'select-options-userlist')
+				$("#loading").hide();
+				return false;
+			}
+		})
+	});
 
 });
 
-$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
-	alert("share request");
-	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-	alert("share request: " + url);
-	$.ajax({
-		async: true,
-		url: "/Requests/ShareRequest/?id=" + val,
-		traditional: true,
-		type: "GET",
-		cache: false,
-		success: function (data) {
-			$.fn.OpenModal("share-request", "share-request", data)
-			$("#loading").hide();
-		}
-	})
-});
+//$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
+//	alert("share request");
+//	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
+//	alert("share request: " + url);
+//	$.ajax({
+//		async: true,
+//		url: "/Requests/ShareRequest/?id=" + val,
+//		traditional: true,
+//		type: "GET",
+//		cache: false,
+//		success: function (data) {
+//			$.fn.OpenModal("share-request", "share-request", data)
+//			$("#loading").hide();
+//		}
+//	})
+//});
+
+//});
+
+//$(document).off("click", ".popover .share-request").on("click", ".popover .share-request", function () {
+//	alert('it works!');
+//});
+
+//$(".popover").on("click", function (e) {
+//	alert("popover clicked!");
+//});
+
+//$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
+//	var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
+//	alert("share request: " + url);
+//	$.ajax({
+//		async: true,
+//		url: url,
+//		traditional: true,
+//		type: "GET",
+//		cache: false,
+//		success: function (data) {
+//			$.fn.OpenModal("share-request", "share-request", data)
+//			alert(data);
+//			$("#loading").hide();
+//			return false;
+//		}
+//	})
+//});
 
 $(".load-quote-details").on("click", function (e) {
 	console.log("in order details");
@@ -145,11 +190,12 @@ $(".request-favorite").on("click", function (e) {
 	var title = "Like";
 	var requestFavorite = $(this);
 	var FavType = "favorite";
+	var sidebarType = $('#masterSidebarType').val();
 	if (requestFavorite.hasClass("request-unlike")) {
 		FavType = "unlike";
 		$.ajax({
 			async: true,
-			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType,
+			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
 			traditional: true,
 			type: "GET",
 			cache: false,
@@ -159,6 +205,10 @@ $(".request-favorite").on("click", function (e) {
 				requestFavorite.attr("data-original-title", title);
 				requestFavorite.removeClass(unfav);
 				$("#loading").hide();
+				if (sidebarType == 'Favorites') {
+					$('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
+					$('._IndexTable').html(data);
+				}
 			}
 		})
 	}
@@ -166,7 +216,7 @@ $(".request-favorite").on("click", function (e) {
 		title = "Unlike";
 		$.ajax({
 			async: true,
-			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType,
+			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
 			traditional: true,
 			type: "GET",
 			cache: false,
@@ -176,6 +226,7 @@ $(".request-favorite").on("click", function (e) {
 				requestFavorite.attr("data-original-title", title);
 				requestFavorite.addClass(unfav);
 				$("#loading").hide();
+				
 			}
 		})
 	}
