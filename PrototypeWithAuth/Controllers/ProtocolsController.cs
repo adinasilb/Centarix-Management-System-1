@@ -349,7 +349,11 @@ namespace PrototypeWithAuth.Controllers
 
         public async Task<IActionResult> AddResource(int? ResourceType = 1)
         {
-            var addResourceViewModel = new AddResourceViewModel() { ResourceType =  Convert.ToInt32(ResourceType) };
+            var addResourceViewModel = new AddResourceViewModel()
+            {
+                ResourceType = Convert.ToInt32(ResourceType),
+                ResourceCategories = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList()
+            };
             return PartialView(addResourceViewModel);
         }
 
