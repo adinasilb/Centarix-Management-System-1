@@ -346,6 +346,13 @@ namespace PrototypeWithAuth.Controllers
 
             return View(resourceLibraryViewModel);
         }
+
+        public async Task<IActionResult> AddResource(int? ResourceType = 1)
+        {
+            var addResourceViewModel = new AddResourceViewModel() { ResourceType =  Convert.ToInt32(ResourceType) };
+            return PartialView(addResourceViewModel);
+        }
+
         public async Task<IActionResult> Personal()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;

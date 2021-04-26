@@ -1,0 +1,32 @@
+﻿@model PrototypeWithAuth.ViewModels.AddResourceViewModel;
+
+@{
+    var Heading = "";
+    switch (Model.ResourceType)
+    {
+        case 1:
+            Heading = "Add Article or Link";
+            break;
+        case 2:
+            Heading = "Add Resource";
+            break;
+    }
+
+}
+
+<div class="modal modal-view fader on-form-modal add-resource-modal" id="myModal" data-backdrop="false">
+    <div class=" modal-dialog-centered mx-auto" style="width:54.625rem;">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+
+                <form action="" method="post" id="myForm" class="modal-padding">
+                    <div class="row top-menu">
+                        @Heading
+                    </div>
+                    <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('add-resource-modal')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </form>
+
+        </div>
+    </div>
+</div>
