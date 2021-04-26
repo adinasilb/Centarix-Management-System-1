@@ -295,7 +295,7 @@ namespace PrototypeWithAuth.Controllers
         //            return PartialView("AddMaterialModal", addMaterialViewModel);
         //        }
         //    }
-        //    return
+        //    return 
         //}
 
         [HttpPost]

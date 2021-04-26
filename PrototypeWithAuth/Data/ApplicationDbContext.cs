@@ -37,6 +37,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<ProtocolSubCategory> ProtocolSubCategories { get; set; }
         public DbSet<LineType> LineTypes { get; set; }
         public DbSet<FunctionLine> FunctionLines { get; set; }
+        public DbSet<MaterialProtocol> MaterialProtocols { get; set; }
         public DbSet<ProtocolComment> ProtocolComments { get; set; }
         public DbSet<Line> Lines { get; set; }
         public DbSet<ProtocolInstance> ProtocolInstances { get; set; }
@@ -293,6 +294,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TagProtocol>()
               .HasKey(t => new { t.TagID, t.ProtocolID });
 
+            modelBuilder.Entity<MaterialProtocol>()
+              .HasKey(m => new { m.MaterialID, m.ProtocolID });
 
             modelBuilder.Entity<FunctionLine>()
               .HasKey(f => new { f.FunctionTypeID, f.LineID });

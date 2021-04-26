@@ -20,7 +20,7 @@ namespace PrototypeWithAuth.Models
         public string ShortDescription { get; set; }
         public string Theory { get; set; }
         public List<Link> Urls { get; set; }
-        public IEnumerable<Material> Materials { get; set; }
+        public IEnumerable<MaterialProtocol> MaterialProtocols { get; set; }
         public IEnumerable<Line> Line { get; set; }        
         public string ApplicationUserCreatorID { get; set; }
         public ApplicationUser ApplicationUserCreator { get; set; }

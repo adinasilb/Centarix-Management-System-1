@@ -14,8 +14,7 @@ namespace PrototypeWithAuth.Models
         public string Name { get; set; }
         public int ProductID { get; set; }
         public Product Product { get; set; }
-        public int ProtocolID { get; set; }
-        public Protocol Protocol { get; set; }
+        public IEnumerable<MaterialProtocol> MaterialProtocols { get; set; }
         public int MaterialCategoryID { get; set; }
         public MaterialCategory MaterialCategory { get; set; }
     }
