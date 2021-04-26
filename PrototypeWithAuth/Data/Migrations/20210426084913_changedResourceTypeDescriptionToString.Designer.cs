@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210426084913_changedResourceTypeDescriptionToString")]
+    partial class changedResourceTypeDescriptionToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1785,6 +1787,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CompanyLocationNo")
+                        .HasColumnType("int");
+
                     b.Property<bool>("ContainsItems")
                         .HasColumnType("bit");
 
@@ -1812,11 +1817,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("LocationNumber")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LocationRoomInstanceID")
+                    b.Property<int?>("LocationRoomTypeID")
                         .HasColumnType("int");
 
                     b.Property<int>("LocationTypeID")
                         .HasColumnType("int");
+
+                    b.Property<string>("Place")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Width")
                         .HasColumnType("int");
@@ -1827,34 +1835,138 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("LocationInstanceParentID");
 
-                    b.HasIndex("LocationRoomInstanceID");
+                    b.HasIndex("LocationRoomTypeID");
 
                     b.HasIndex("LocationTypeID");
 
                     b.ToTable("LocationInstances");
-                });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomInstance", b =>
-                {
-                    b.Property<int>("LocationRoomInstanceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("LocationRoomInstanceAbbrev")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LocationRoomInstanceName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocationRoomTypeID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationRoomInstanceID");
-
-                    b.HasIndex("LocationRoomTypeID");
-
-                    b.ToTable("LocationRoomInstances");
+                    b.HasData(
+                        new
+                        {
+                            LocationInstanceID = 1,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 7,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceName = "25°C",
+                            LocationNumber = 0,
+                            LocationTypeID = 500,
+                            Width = 1
+                        },
+                        new
+                        {
+                            LocationInstanceID = 2,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "L1",
+                            LocationInstanceName = "Laboratory 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 1,
+                            LocationTypeID = 501,
+                            Width = 1
+                        },
+                        new
+                        {
+                            LocationInstanceID = 3,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "L2",
+                            LocationInstanceName = "Laboratory 2",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 1,
+                            LocationTypeID = 501,
+                            Width = 1
+                        },
+                        new
+                        {
+                            LocationInstanceID = 4,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "TC1",
+                            LocationInstanceName = "Tissue Culture 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 2,
+                            LocationTypeID = 501,
+                            Width = 1
+                        },
+                        new
+                        {
+                            LocationInstanceID = 5,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "E1",
+                            LocationInstanceName = "Equipment Room 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 3,
+                            LocationTypeID = 501,
+                            Width = 1
+                        },
+                        new
+                        {
+                            LocationInstanceID = 6,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "R1",
+                            LocationInstanceName = "Refrigerator Room 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 4,
+                            LocationTypeID = 501,
+                            Width = 1
+                        },
+                        new
+                        {
+                            LocationInstanceID = 7,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "W1",
+                            LocationInstanceName = "Washing Room 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 5,
+                            LocationTypeID = 501,
+                            Width = 1
+                        },
+                        new
+                        {
+                            LocationInstanceID = 8,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "S1",
+                            LocationInstanceName = "Storage Room 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 6,
+                            LocationTypeID = 501,
+                            Width = 1
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomType", b =>
@@ -2104,21 +2216,31 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             LocationTypeID = 501,
-                            Depth = 2,
+                            Depth = 1,
                             Limit = 0,
                             LocationTypeChildID = 502,
-                            LocationTypeName = "Lab Part",
+                            LocationTypeName = "Location",
                             LocationTypeParentID = 500,
-                            LocationTypePluralName = "Lab Parts"
+                            LocationTypePluralName = "Locations"
                         },
                         new
                         {
                             LocationTypeID = 502,
+                            Depth = 2,
+                            Limit = 0,
+                            LocationTypeChildID = 503,
+                            LocationTypeName = "Lab Part",
+                            LocationTypeParentID = 501,
+                            LocationTypePluralName = "Lab Parts"
+                        },
+                        new
+                        {
+                            LocationTypeID = 503,
                             Depth = 3,
                             Limit = 0,
                             LocationTypeName = "Section",
                             LocationTypeNameAbbre = "S",
-                            LocationTypeParentID = 501,
+                            LocationTypeParentID = 502,
                             LocationTypePluralName = "Sections"
                         });
                 });
@@ -2196,28 +2318,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("MaterialCategoryID");
 
                     b.ToTable("MaterialCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            MaterialCategoryID = 1,
-                            MaterialCategoryDescription = "Reagents"
-                        },
-                        new
-                        {
-                            MaterialCategoryID = 2,
-                            MaterialCategoryDescription = "Plastics"
-                        },
-                        new
-                        {
-                            MaterialCategoryID = 3,
-                            MaterialCategoryDescription = "Equipment"
-                        },
-                        new
-                        {
-                            MaterialCategoryID = 4,
-                            MaterialCategoryDescription = "Buffers"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.MaterialProtocol", b =>
@@ -5240,23 +5340,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("LocationInstanceParentID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.LocationRoomInstance", "LocationRoomInstance")
+                    b.HasOne("PrototypeWithAuth.Models.LocationRoomType", "LocationRoomType")
                         .WithMany()
-                        .HasForeignKey("LocationRoomInstanceID")
+                        .HasForeignKey("LocationRoomTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.LocationType", "LocationType")
                         .WithMany()
                         .HasForeignKey("LocationTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomInstance", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationRoomType", "LocationRoomType")
-                        .WithMany()
-                        .HasForeignKey("LocationRoomTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

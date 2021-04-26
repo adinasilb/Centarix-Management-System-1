@@ -1957,18 +1957,50 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     height: 10.938rem;
     width: 10.938rem;
     box-shadow: inset 0px 0px .313rem #00000029;
-} .type-img {
+}
+.main-type-fieldset {
+    border-radius: .75rem;
+    height: 19.188rem;
+    width: 18.625rem;
+    box-shadow: .5px .5px 0.323rem #707070;
+}
+.small-type-fieldset {
+    border-radius: .75rem;
+    height: 5.875rem;
+    width: 18.625rem;
+    box-shadow: .5px .5px 0.323rem #707070;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}.type-img {
     margin-top: .938rem;
     margin-bottom: .5rem;
     height: 6.25rem;
     margin-right: 2.313rem;
     margin-left: 2.313rem;
-} .type-div {
+}
+.main-type-img {
+    margin-top: .938rem;
+    margin-bottom: .5rem;
+    height: 14rem;
+    margin-right: 2.313rem;
+    margin-left: 2.313rem;
+}.type-div {
     margin-right: 3rem;
     margin-bottom: 3rem;
 } .type-label {
     min-width: 6.25rem;
-} .entry-exit-button {
+}
+.main-type-label {
+    min-width: 6.25rem;
+}
+.small-type-label {
+    min-width: 6.25rem;
+    padding-top: .313rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    line-height: 1.2;
+}.entry-exit-button {
     padding: .563rem 2.625rem;
     font-size: 3rem;
     font-weight: var(--bold-medium)
@@ -2052,6 +2084,9 @@ input[type=checkbox].css-checkbox:checked ~ label.css-label {
     box-shadow: 6px 0px 10px #0000008C;
 } .add-invoice-modal {
     width: 93.31rem;
+}
+.add-resource-modal .modal-dialog{
+    width: 50rem;
 }
 .select-wrapper.mdb-select-sublist.mdb-select.custom.select-dropdown.form-control-plaintext, .select-wrapper.mdb-select-subProject.mdb-select.custom.select-dropdown.form-control-plaintext, .remove-extra-border {
     border: none !important;

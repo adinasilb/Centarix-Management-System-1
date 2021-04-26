@@ -32,7 +32,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-           // var viewmodel = await GetIndexViewModel(requestIndexObject);
+            // var viewmodel = await GetIndexViewModel(requestIndexObject);
 
             return View(/*viewmodel*/);
         }
@@ -60,12 +60,12 @@ namespace PrototypeWithAuth.Controllers
         private async Task<ProtocolsIndexViewModel> GetIndexViewModel(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedFilters = null)
         {
             IQueryable<Protocol> ProtocolsPassedIn = Enumerable.Empty<Protocol>().AsQueryable();
-            IQueryable<Protocol> fullProtocolsList = _context.Protocols;     
-            
-            switch(protocolsIndexObject.PageType)
+            IQueryable<Protocol> fullProtocolsList = _context.Protocols;
+
+            switch (protocolsIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.ProtocolsProtocols:
-                    switch(protocolsIndexObject.SidebarType)
+                    switch (protocolsIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.List:
                             break;
@@ -259,14 +259,70 @@ namespace PrototypeWithAuth.Controllers
             FillDocumentsInfo(viewmodel, "");
             return View(viewmodel);
         }
-        public async Task<IActionResult> AddMaterialModal(int materialTypeID)
+        public async Task<IActionResult> AddMaterialModal(int materialTypeID, int ProtocolID)
         {
             var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
+            var Protocol = _context.Protocols.Where(p => p.ProtocolID == ProtocolID).FirstOrDefault();
             var viewModel = new AddMaterialViewModel() 
             {
-                Material = new Material { MaterialCategoryID = materialTypeID, MaterialCategory = MaterialCategory}
+                Material = new Material()
+                { 
+                    MaterialCategoryID = materialTypeID,
+                    MaterialCategory = MaterialCategory, 
+                    MaterialProtocols = new List<MaterialProtocol>() { new MaterialProtocol() { ProtocolID = ProtocolID } }
+                 }
             };
             return PartialView(viewModel);
+        }
+        //[HttpPost]
+        //public async Task<IActionResult> AddMaterialModal(AddMaterialViewModel addMaterialViewModel)
+        //{
+        //    var Protocol = _context.Protocols.Where(p => p.ProtocolID == addMaterialViewModel.Material.MaterialProtocols.FirstOrDefault().ProtocolID).FirstOrDefault();
+        //    var product = _context.Products.Where(p => p.SerialNumber.Equals(addMaterialViewModel.Material.Product.SerialNumber)).FirstOrDefault();
+        //    using (var transaction = _context.Database.BeginTransaction())
+        //    {
+        //        try
+        //        {
+        //            addMaterialViewModel.Material.ProductID = product.ProductID;
+        //            addMaterialViewModel.Material.MaterialProtocols.FirstOrDefault().Material = addMaterialViewModel.Material;
+        //            _context.Add(addMaterialViewModel.Material);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            addMaterialViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+        //            Response.StatusCode = 500;
+        //            return PartialView("AddMaterialModal", addMaterialViewModel);
+        //        }
+        //    }
+        //    return 
+        //}
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel)
+        {
+            //refill view model to send ba
+            createProtocolsViewModel.ProtocolCategories = _context.ProtocolCategories;
+            createProtocolsViewModel.ProtocolSubCategories = _context.ProtocolSubCategories;
+            createProtocolsViewModel.MaterialCategories = _context.MaterialCategories;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Add(createProtocolsViewModel.Protocol);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    MoveDocumentsOutOfTempFolder(createProtocolsViewModel.Protocol.ProtocolID, AppUtility.ParentFolderName.Protocols);               
+                }
+                catch (Exception ex)
+                {
+                    createProtocolsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                }
+                return PartialView("_CreateProtocol", createProtocolsViewModel);
+            }           
+
         }
         public async Task<IActionResult> KitProtocol()
         {
@@ -335,13 +391,40 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Library()
+        public async Task<IActionResult> Library(int? CategoryType = 1)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+
+            var resourceLibraryViewModel = new ResourceLibraryViewModel();
+
+            switch (CategoryType)
+            {
+                case 2:
+                    resourceLibraryViewModel.PageType = 2;
+                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType == true);
+                    break;
+                case 1:
+                default:
+                    resourceLibraryViewModel.PageType = 1;
+                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType != true);
+                    break;
+            }
+
+            return View(resourceLibraryViewModel);
         }
+
+        public async Task<IActionResult> AddResource(int? ResourceType = 1)
+        {
+            var addResourceViewModel = new AddResourceViewModel()
+            {
+                ResourceType = Convert.ToInt32(ResourceType),
+                ResourceCategories = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList()
+            };
+            return PartialView(addResourceViewModel);
+        }
+
         public async Task<IActionResult> Personal()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -372,7 +455,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsTask;
             return View();
         }
-      
+
 
         public async Task<IActionResult> Done()
         {
@@ -438,7 +521,7 @@ namespace PrototypeWithAuth.Controllers
             GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
             GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
         }
-       
+
 
 
     }

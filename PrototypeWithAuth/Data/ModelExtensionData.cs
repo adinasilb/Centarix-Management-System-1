@@ -1492,9 +1492,10 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 500,
                     LocationTypeName = "25°C",
                     LocationTypePluralName = "25°C",
-                    LocationTypeChildID = 501,
+                    LocationTypeChildID =501,
                     Depth = 0
                 },
+               
                  new LocationType
                  {
                      LocationTypeID = 501,
@@ -1502,16 +1503,17 @@ namespace PrototypeWithAuth.Data
                      LocationTypePluralName = "Lab Parts",
                      LocationTypeParentID = 500,
                      LocationTypeChildID = 502,
-                     Depth = 1
-                 },
-                 new LocationType
-                 {
-                     LocationTypeID = 502,
-                     LocationTypeName = "Section",
-                     LocationTypePluralName = "Sections",
-                     LocationTypeParentID = 501,
                      Depth = 2
-                 }
+                 },
+                new LocationType
+                {
+                    LocationTypeID = 502,
+                    LocationTypeName = "Section",
+                    LocationTypePluralName = "Sections",
+                    LocationTypeNameAbbre = "S",
+                    LocationTypeParentID = 501,
+                    Depth = 3
+                }
             );
             modelBuilder.Entity<LocationRoomType>().HasData(
                     new LocationRoomType
@@ -1551,6 +1553,7 @@ namespace PrototypeWithAuth.Data
                         LocationAbbreviation = "S"
                     }
                 );
+
             modelBuilder.Entity<LabPart>().HasData(
                     new LabPart
                     {
@@ -1591,60 +1594,6 @@ namespace PrototypeWithAuth.Data
                         LabPartName = "Bench"
                     }
                );
-            modelBuilder.Entity<LocationRoomInstance>().HasData(
-                       new LocationRoomInstance
-                       {
-                           LocationRoomInstanceID = 1,
-                           LocationRoomTypeID = 1,
-                           LocationRoomInstanceName = "Laboratory 1",
-                           LocationRoomInstanceAbbrev = "L1",
-                       },
-                       new LocationRoomInstance
-                       {
-                           LocationRoomInstanceID = 2,
-                           LocationRoomTypeID = 1,
-                           LocationRoomInstanceName = "Laboratory 2",
-                           LocationRoomInstanceAbbrev = "L2",
-                       },
-                       new LocationRoomInstance
-                       {
-                           LocationRoomInstanceID = 3,
-                           LocationRoomInstanceName = "Tissue Culture 1",
-                           LocationRoomInstanceAbbrev = "TC1",
-                           LocationRoomTypeID = 2
-                       },
-                        new LocationRoomInstance
-                        {
-                            LocationRoomInstanceID = 4,
-                            LocationRoomTypeID = 3,
-                            LocationRoomInstanceName = "Equipment Room 1",
-                            LocationRoomInstanceAbbrev = "E1"
-
-                        },
-                        new LocationRoomInstance
-                        {
-                            LocationRoomInstanceID = 5,
-                            LocationRoomTypeID = 4,
-                            LocationRoomInstanceName = "Refrigerator Room 1",
-                            LocationRoomInstanceAbbrev = "R1"
-
-                        },
-                        new LocationRoomInstance
-                        {
-                            LocationRoomInstanceID = 6,
-                            LocationRoomTypeID = 5,
-                            LocationRoomInstanceName = "Washing Room 1",
-                            LocationRoomInstanceAbbrev = "W1"
-                        },
-                        new LocationRoomInstance
-                        {
-                            LocationRoomInstanceID = 7,
-                            LocationRoomTypeID = 6,
-                            LocationRoomInstanceName = "Storage Room 1",
-                            LocationRoomInstanceAbbrev = "S1"
-
-                        }
-                 );
             modelBuilder.Entity<OffDayType>().HasData(
                         new OffDayType
                         {
