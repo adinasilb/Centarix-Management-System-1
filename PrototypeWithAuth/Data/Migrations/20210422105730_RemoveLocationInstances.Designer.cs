@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210422105730_RemoveLocationInstances")]
+    partial class RemoveLocationInstances
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1826,6 +1828,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CompanyLocationNo")
+                        .HasColumnType("int");
+
                     b.Property<bool>("ContainsItems")
                         .HasColumnType("bit");
 
@@ -1858,6 +1863,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("LocationTypeID")
                         .HasColumnType("int");
+
+                    b.Property<string>("Place")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Width")
                         .HasColumnType("int");
@@ -1896,57 +1904,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LocationRoomTypeID");
 
                     b.ToTable("LocationRoomInstances");
-
-                    b.HasData(
-                        new
-                        {
-                            LocationRoomInstanceID = 1,
-                            LocationRoomInstanceAbbrev = "L1",
-                            LocationRoomInstanceName = "Laboratory 1",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 2,
-                            LocationRoomInstanceAbbrev = "L2",
-                            LocationRoomInstanceName = "Laboratory 2",
-                            LocationRoomTypeID = 1
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 3,
-                            LocationRoomInstanceAbbrev = "TC1",
-                            LocationRoomInstanceName = "Tissue Culture 1",
-                            LocationRoomTypeID = 2
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 4,
-                            LocationRoomInstanceAbbrev = "E1",
-                            LocationRoomInstanceName = "Equipment Room 1",
-                            LocationRoomTypeID = 3
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 5,
-                            LocationRoomInstanceAbbrev = "R1",
-                            LocationRoomInstanceName = "Refrigerator Room 1",
-                            LocationRoomTypeID = 4
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 6,
-                            LocationRoomInstanceAbbrev = "W1",
-                            LocationRoomInstanceName = "Washing Room 1",
-                            LocationRoomTypeID = 5
-                        },
-                        new
-                        {
-                            LocationRoomInstanceID = 7,
-                            LocationRoomInstanceAbbrev = "S1",
-                            LocationRoomInstanceName = "Storage Room 1",
-                            LocationRoomTypeID = 6
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomType", b =>
@@ -2298,28 +2255,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("MaterialCategoryID");
 
                     b.ToTable("MaterialCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            MaterialCategoryID = 1,
-                            MaterialCategoryDescription = "Reagents"
-                        },
-                        new
-                        {
-                            MaterialCategoryID = 2,
-                            MaterialCategoryDescription = "Plastics"
-                        },
-                        new
-                        {
-                            MaterialCategoryID = 3,
-                            MaterialCategoryDescription = "Equipment"
-                        },
-                        new
-                        {
-                            MaterialCategoryID = 4,
-                            MaterialCategoryDescription = "Buffers"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.MaterialProtocol", b =>
@@ -3896,148 +3831,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ResourceCategory", b =>
-                {
-                    b.Property<int>("ResourceCategoryID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsMain")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsResourceType")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ResourceCategoryDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ResourceCategoryID");
-
-                    b.ToTable("ResourceCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            ResourceCategoryID = 1,
-                            IsMain = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Rejuvenation"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 2,
-                            IsMain = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Biomarkers"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 3,
-                            IsMain = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Delivery Systems"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 4,
-                            IsMain = true,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Clinical Trials"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 5,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "AAV"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 6,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Telomere Rejuvenation"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 7,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Telomere Measurement"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 8,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Methylation Biomarker"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 9,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Transcriptome"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 10,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Serum Rejuvenation"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 11,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Reprogramming"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 12,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "Methylation Rejuvenation"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 13,
-                            IsMain = false,
-                            IsResourceType = false,
-                            ResourceCategoryDescription = "New Methods"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 14,
-                            IsMain = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "Softwares"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 15,
-                            IsMain = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "Learning"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 16,
-                            IsMain = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "Companies"
-                        },
-                        new
-                        {
-                            ResourceCategoryID = 17,
-                            IsMain = false,
-                            IsResourceType = true,
-                            ResourceCategoryDescription = "News"
-                        });
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ResourceType", b =>
                 {
                     b.Property<int>("ResourceTypeId")
@@ -4087,9 +3880,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");
@@ -5225,12 +5015,12 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteRequest", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany("FavoriteRequests")
+                        .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany("FavoriteRequests")
+                        .WithMany()
                         .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5668,18 +5458,18 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
-                        .WithMany("ShareRequestsCreated")
+                        .WithMany()
                         .HasForeignKey("FromApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany("ShareRequests")
+                        .WithMany()
                         .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
-                        .WithMany("ShareRequestsReceived")
+                        .WithMany()
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

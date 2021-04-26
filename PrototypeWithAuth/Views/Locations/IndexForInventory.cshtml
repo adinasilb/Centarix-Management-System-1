@@ -12,9 +12,9 @@
     <table class="table table-headerspaced table-noheaderlines text-center table-hover">
         <thead>
             <tr>
-                <th>
+                @*<th>
                     @Html.DisplayNameFor(model => model.FirstOrDefault().CompanyLocationNo)
-                </th>
+                </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.FirstOrDefault().LocationInstanceName)
 
@@ -39,9 +39,9 @@
             @foreach (var item in Model)
             {
                 <tr class="table">
-                    <td>
+                    @*<td>
                         @Html.DisplayFor(modelItem => item.CompanyLocationNo)
-                    </td>
+                    </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.LocationInstanceName)
                     </td>

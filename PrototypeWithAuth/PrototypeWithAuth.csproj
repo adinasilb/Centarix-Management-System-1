@@ -225,6 +225,10 @@
     <Compile Remove="Data\Migrations\20210422075132_sjkldfjs.Designer.cs" />
     <Compile Remove="Data\Migrations\20210425052237_fixedManyToManyShareFavorites.cs" />
     <Compile Remove="Data\Migrations\20210425052237_fixedManyToManyShareFavorites.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210425101548_addedResourceCategories.cs" />
+    <Compile Remove="Data\Migrations\20210425101548_addedResourceCategories.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210425101845_addedResourceCategories.cs" />
+    <Compile Remove="Data\Migrations\20210425101845_addedResourceCategories.Designer.cs" />
   </ItemGroup>
 
 

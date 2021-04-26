@@ -18,7 +18,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
-       
+        public DbSet<ResourceCategory> ResourceCategories { get; set; }
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
         public DbSet<ProtocolInstanceResult> ProtocolInstanceResults { get; set; }
@@ -102,6 +102,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<IpRange> IpRanges { get; set; }
         public DbSet<PhysicalAddress> PhysicalAddresses { get; set; }
         public DbSet<CreditCard> CreditCards { get; set; }
+        public DbSet<LocationRoomInstance> LocationRoomInstances { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -307,7 +308,7 @@ namespace PrototypeWithAuth.Data
 
             //set up many to many relationshipw
             modelBuilder.Entity<LineType>()
-                .HasOne(l=>l.LineTypeParent)
+                .HasOne(l => l.LineTypeParent)
                 .WithMany()
                 .HasForeignKey(ltp => ltp.LineTypeParentID);
 
