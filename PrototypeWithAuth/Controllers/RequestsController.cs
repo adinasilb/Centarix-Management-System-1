@@ -3350,13 +3350,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult ReceivedModalSublocations(int LocationTypeID)
         {
-            if (LocationTypeID == 500)
-            {
-                LocationTypeID = 501;
-            }
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
             {
-                locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID),
+                locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID)
+                .Include(li => li.LocationRoomInstance).Include(li => li.LabPart),
                 locationTypeNames = new List<string>(),
                 locationInstancesSelected = new List<LocationInstance>()
             };
