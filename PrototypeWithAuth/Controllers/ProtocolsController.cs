@@ -269,7 +269,7 @@ namespace PrototypeWithAuth.Controllers
                 { 
                     MaterialCategoryID = materialTypeID,
                     MaterialCategory = MaterialCategory, 
-                    MaterialProtocols = new List<MaterialProtocol>() { new MaterialProtocol() { Protocol = Protocol, ProtocolID = ProtocolID } }
+                    MaterialProtocols = new List<MaterialProtocol>() { new MaterialProtocol() { ProtocolID = ProtocolID } }
                  }
             };
             return PartialView(viewModel);
@@ -277,7 +277,25 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<IActionResult> AddMaterialModal(AddMaterialViewModel addMaterialViewModel)
         {
-          
+            var Protocol = _context.Protocols.Where(p => p.ProtocolID == addMaterialViewModel.Material.MaterialProtocols.FirstOrDefault().ProtocolID).FirstOrDefault();
+            var product = _context.Products.Where(p => p.SerialNumber.Equals(addMaterialViewModel.Material.Product.SerialNumber)).FirstOrDefault();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    addMaterialViewModel.Material.ProductID = product.ProductID;
+                    addMaterialViewModel.Material.MaterialProtocols.FirstOrDefault().Material = addMaterialViewModel.Material;
+                    _context.Add(addMaterialViewModel.Material);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    addMaterialViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    Response.StatusCode = 500;
+                    return PartialView("AddMaterialModal", addMaterialViewModel);
+                }
+            }
+            return 
         }
 
         [HttpPost]
