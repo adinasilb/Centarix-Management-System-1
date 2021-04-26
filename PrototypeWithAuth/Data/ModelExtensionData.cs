@@ -1502,17 +1502,16 @@ namespace PrototypeWithAuth.Data
                      LocationTypePluralName = "Lab Parts",
                      LocationTypeParentID = 500,
                      LocationTypeChildID = 502,
-                     Depth = 2
+                     Depth = 1
                  },
-                new LocationType
-                {
-                    LocationTypeID = 502,
-                    LocationTypeName = "Section",
-                    LocationTypePluralName = "Sections",
-                    LocationTypeNameAbbre = "S",
-                    LocationTypeParentID = 501,
-                    Depth = 3
-                }
+                 new LocationType
+                 {
+                     LocationTypeID = 502,
+                     LocationTypeName = "Section",
+                     LocationTypePluralName = "Sections",
+                     LocationTypeParentID = 501,
+                     Depth = 2
+                 }
             );
             modelBuilder.Entity<LocationRoomType>().HasData(
                     new LocationRoomType
