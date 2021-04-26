@@ -13,7 +13,7 @@
     }
 
 }
-
+<script src="~/js/AddResource.js"></script>
 <div class="modal modal-view fader on-form-modal add-resource-modal" id="myModal" data-backdrop="false">
     <div class=" modal-dialog-centered mx-auto" style="width:54.625rem;">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
@@ -76,15 +76,25 @@
                         Select Tags
                     </div>
                 </div>
-                <div class="row under-row-margin">
-                    @foreach(var mainCategory in Model.ResourceCategories.Where(rc => rc.IsMain))
+                <div class="row mb-1 text-center">
+                    @foreach (var mainCategory in Model.ResourceCategories.Where(rc => rc.IsMain))
                     {
                         <div class="col-3">
-                            <span class="resources-tags-big protocols-background-color text-white">
+                            <span class="resources-tags-big light-gray-background-color add-padding w-100">
                                 @mainCategory.ResourceCategoryDescription
                             </span>
                         </div>
                     }
+                </div>
+                <div class="row under-row-margin">
+                    <div class="col-12">
+                        @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain))
+                        {
+                            <span class="resources-tags-big light-gray-background-color mx-2 my-1">
+                                @category.ResourceCategoryDescription
+                            </span>
+                        }
+                    </div>
                 </div>
             </form>
 

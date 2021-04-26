@@ -64,6 +64,7 @@
     --select-border-radius: .25rem;
     --timekeeper-alt-color: #009688;
     --disabled-filter: invert(69%) sepia(13%) saturate(0%) hue-rotate(166deg) brightness(100%) contrast(94%);
+    --light-gray: #E5E5E5;
 }
 
 .success-color {
@@ -76,6 +77,13 @@
 
 .text-danger-centarix, .on-form-modal label.error, .centarix-error-style label.error {
     color: var(--danger-color);
+}
+
+.light-gray-color {
+    color: var(--light-gray);
+}
+.light-gray-background-color {
+    background-color: var(--light-gray);
 }
 
 .danger-color {
@@ -144,6 +152,10 @@
 
 .disabled-filter {
     filter: var(--disabled-filter);
+}
+
+.disabled-background-color{
+    background-color: var(--disabled-color);
 }
 
 .order-inv-color {
@@ -727,17 +739,21 @@ body.modal-open, body.popover-open {
 
 span.resources-tags-big {
     float: left;
-    border: .0125rem solid #ccc;
-    margin-right: 5px;
+    border: .0125rem solid var(--light-gray);
     margin-bottom: 5px;
-    background: transparent;
     padding: 3px 10px;
     border-radius: 15px;
-    width: 100%;
+    
     text-align: center;
 }
 
-    span.resources-tags-big:hover {
-        background-color: var(--disabled-color) !important;
+    span.resources-tags-big:hover, span.resources-tags-big.selected {
+        background-color: var(--protocols-color) !important;
+        color: white;
         /*filter: var(--disabled-filter);*/
+    }
+
+    span.resources-tags-big.add-padding {
+        padding: 10px 15px;
+        border-radius: 30px;
     }
