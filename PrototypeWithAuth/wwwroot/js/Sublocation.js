@@ -63,7 +63,9 @@ $(".modal").off("change", "#labPartDDL").on("change", "#labPartDDL", function ()
 
 
 $(".locationRoom").off("change").on("change", function () {
-	if($(this).val()!="")
+	var locationType = $("#locationTypeDDL").val()
+	console.log(locationType)
+	if ($(this).val() != "" && locationType==500)
 	{
 	   $("#select-options-labPartDDL").find(".active").removeClass("active");
 	   $.fn.EnableMaterialSelect('#labPartDDL', 'select-options-labPartDDL');

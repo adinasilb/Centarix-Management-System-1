@@ -32,8 +32,13 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
 
         [Authorize(Roles = "Users")]
-        public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, int categoryType = 1)
+        public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
+            var categoryType = 1;
+            if (SectionType == AppUtility.MenuItems.Operations)
+            {
+                categoryType = 2;
+            }
             TempData["CategoryType"] = categoryType == 1 ? AppUtility.CategoryTypeEnum.Lab : AppUtility.CategoryTypeEnum.Operations;
             if (categoryType == 1)
             {

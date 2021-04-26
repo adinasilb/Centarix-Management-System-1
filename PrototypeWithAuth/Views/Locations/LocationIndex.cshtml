@@ -17,12 +17,19 @@
         <table class="table table-sm table-hover ">
             @foreach (var item in Model.LocationsDepthOfZero)
             {
-
+                var locationInstanceName = item.LocationInstanceName;
+                if(item.LocationTypeID >= 500)
+                {
+                    if (item.LocationRoomInstanceID != null)
+                    {
+                        locationInstanceName = item.LocationRoomInstance.LocationRoomInstanceName;
+                    }
+                }
                 <tr class="location-index-border">
                     <td class="">
                         <button class="btn btn-block load-sublocation-view parent-location clicked-outer-button clicked-button overflow-hidden location-font-size" value="@item.LocationInstanceID" name="@item.LocationInstanceName">
-                            @item.LocationInstanceName
-                            <i class="icon-back-24px ml-3 large-icon float-right" ></i>
+                            @locationInstanceName
+                            <i class="icon-back-24px ml-3 large-icon float-right"></i>
                         </button>
                     </td> @*Freezer names*@
                 </tr>

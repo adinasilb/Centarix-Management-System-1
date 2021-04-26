@@ -102,6 +102,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<IpRange> IpRanges { get; set; }
         public DbSet<PhysicalAddress> PhysicalAddresses { get; set; }
         public DbSet<CreditCard> CreditCards { get; set; }
+        public DbSet<LocationRoomInstance> LocationRoomInstances { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

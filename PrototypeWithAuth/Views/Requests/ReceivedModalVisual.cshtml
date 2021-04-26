@@ -41,7 +41,7 @@
 
                             @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceID)
                             @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID)
-                            @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].Place)
+                            @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceAbbrev)
                             @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
                             <input type="hidden" asp-for="ChildrenLocationInstances[z].LocationInstanceName" class="LocationInstanceName" />
 
@@ -118,22 +118,14 @@
                                         </div>
 
                                         <div class="row-2 text-left">
-                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].Place + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
+                                            @Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, Model.ChildrenLocationInstances[z].LocationInstanceAbbrev + " ", htmlAttributes: new { @class = labelClass, @value = "+" })
                                         </div>
                                     </div>
                                 </td>
                             }
                             else
                             {
-                                var description = "";
-                                if (Model.ChildrenLocationInstances[z].LocationTypeID == 503)
-                                {
-                                    description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
-                                }
-                                else
-                                {
-                                    description = Model.ChildrenLocationInstances[z].Place;
-                                }
+                                var description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
                                 <td class="@outerClass" style="padding:0px;">
                                     <div>
                                         @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @liid = liID, @class = @classes })
@@ -156,7 +148,7 @@
                         {
                             @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceID)
                             @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceParentID)
-                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.Place)
+                            @Html.HiddenFor(vm => vm.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceAbbrev)
                             @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
                             <input type="hidden" asp-for="RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceName" class="LocationInstanceName" />
 
@@ -179,7 +171,7 @@
                             else if(Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 205 || Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 104)
                             {
 
-                                description = Model.RequestChildrenLocationInstances[z].LocationInstance.Place;
+                                description = Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceAbbrev;
                             }
                             else
                             {
