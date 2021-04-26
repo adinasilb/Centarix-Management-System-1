@@ -18,3 +18,8 @@
 			return false;
 		});
   });
+
+$(".addMaterial").click(function(){
+	 var url="/Protocols/AddMaterialModal?materialTypeID="+$(this).val();
+	 $.fn.CallPageRequest(url, "addMaterial");
+});

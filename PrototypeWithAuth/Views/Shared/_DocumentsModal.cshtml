@@ -95,7 +95,15 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-2">
-                                <input type="text" class="form-control-plaintext heading-1" asp-for="FolderName" />
+                                @if (Model.FolderName == AppUtility.FolderNamesEnum.MaterialPictures)
+                                {
+                                    <input type="text" class="form-control-plaintext heading-1" disabled value="Pictures" />
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control-plaintext heading-1" disabled asp-for="FolderName" />
+                                }
+
                             </div>
                             <div class="col-3 offset-7">
                             </div>

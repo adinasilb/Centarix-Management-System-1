@@ -259,7 +259,15 @@ namespace PrototypeWithAuth.Controllers
             FillDocumentsInfo(viewmodel, "");
             return View(viewmodel);
         }
-
+        public async Task<IActionResult> AddMaterialModal(int materialTypeID)
+        {
+            var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
+            var viewModel = new AddMaterialViewModel() 
+            {
+                Material = new Material { MaterialCategoryID = materialTypeID, MaterialCategory = MaterialCategory}
+            };
+            return PartialView(viewModel);
+        }
         public async Task<IActionResult> KitProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
