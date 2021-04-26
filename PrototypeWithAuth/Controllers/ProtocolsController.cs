@@ -32,7 +32,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-           // var viewmodel = await GetIndexViewModel(requestIndexObject);
+            // var viewmodel = await GetIndexViewModel(requestIndexObject);
 
             return View(/*viewmodel*/);
         }
@@ -60,12 +60,12 @@ namespace PrototypeWithAuth.Controllers
         private async Task<ProtocolsIndexViewModel> GetIndexViewModel(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedFilters = null)
         {
             IQueryable<Protocol> ProtocolsPassedIn = Enumerable.Empty<Protocol>().AsQueryable();
-            IQueryable<Protocol> fullProtocolsList = _context.Protocols;     
-            
-            switch(protocolsIndexObject.PageType)
+            IQueryable<Protocol> fullProtocolsList = _context.Protocols;
+
+            switch (protocolsIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.ProtocolsProtocols:
-                    switch(protocolsIndexObject.SidebarType)
+                    switch (protocolsIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.List:
                             break;
@@ -391,13 +391,40 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Library()
+        public async Task<IActionResult> Library(int? CategoryType = 1)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+
+            var resourceLibraryViewModel = new ResourceLibraryViewModel();
+
+            switch (CategoryType)
+            {
+                case 2:
+                    resourceLibraryViewModel.PageType = 2;
+                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType == true);
+                    break;
+                case 1:
+                default:
+                    resourceLibraryViewModel.PageType = 1;
+                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType != true);
+                    break;
+            }
+
+            return View(resourceLibraryViewModel);
         }
+
+        public async Task<IActionResult> AddResource(int? ResourceType = 1)
+        {
+            var addResourceViewModel = new AddResourceViewModel()
+            {
+                ResourceType = Convert.ToInt32(ResourceType),
+                ResourceCategories = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList()
+            };
+            return PartialView(addResourceViewModel);
+        }
+
         public async Task<IActionResult> Personal()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -428,7 +455,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsTask;
             return View();
         }
-      
+
 
         public async Task<IActionResult> Done()
         {
@@ -494,7 +521,7 @@ namespace PrototypeWithAuth.Controllers
             GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
             GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
         }
-       
+
 
 
     }

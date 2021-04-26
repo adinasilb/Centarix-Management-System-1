@@ -4275,6 +4275,7 @@ namespace PrototypeWithAuth.Controllers
                 requestsToPay = await requestsList.Where(r => r.RequestID == requestid).ToListAsync();
             }
             else if (requestIds != null)
+
             {
                 foreach (int rId in requestIds)
                 {

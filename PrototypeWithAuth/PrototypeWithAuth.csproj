@@ -229,6 +229,16 @@
     <Compile Remove="Data\Migrations\20210425101548_addedResourceCategories.Designer.cs" />
     <Compile Remove="Data\Migrations\20210425101845_addedResourceCategories.cs" />
     <Compile Remove="Data\Migrations\20210425101845_addedResourceCategories.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210426075051_changedArticleToResource.cs" />
+    <Compile Remove="Data\Migrations\20210426075051_changedArticleToResource.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210426081038_addedResources.cs" />
+    <Compile Remove="Data\Migrations\20210426081038_addedResources.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210426081240_addedResources.cs" />
+    <Compile Remove="Data\Migrations\20210426081240_addedResources.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210426081438_addedResources.cs" />
+    <Compile Remove="Data\Migrations\20210426081438_addedResources.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210426081817_removeTagArticles.cs" />
+    <Compile Remove="Data\Migrations\20210426081817_removeTagArticles.Designer.cs" />
   </ItemGroup>
 
 

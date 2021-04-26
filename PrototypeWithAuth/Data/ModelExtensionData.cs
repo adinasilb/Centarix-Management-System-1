@@ -2507,6 +2507,19 @@ namespace PrototypeWithAuth.Data
                 }
                 );
 
+            modelBuilder.Entity<ResourceType>().HasData(
+                new ResourceType
+                {
+                    ResourceTypeId = 1,
+                    ResourceTypeDescription = "Articles and Links"
+                },
+                new ResourceType
+                {
+                    ResourceTypeId = 2,
+                    ResourceTypeDescription = "Resources"
+                }
+                );
+
 
             modelBuilder.Entity<MaterialCategory>().HasData(
                 new MaterialCategory

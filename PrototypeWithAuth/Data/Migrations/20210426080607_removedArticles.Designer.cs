@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210426080607_removedArticles")]
+    partial class removedArticles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -302,6 +304,47 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasFilter("[EmployeeID] IS NOT NULL");
 
                     b.ToTable("Advisors");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Article", b =>
+                {
+                    b.Property<int>("ArticleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstAuthor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Journal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastAuthor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PubMedID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ResourceTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Summary")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ArticleID");
+
+                    b.HasIndex("ResourceTypeID");
+
+                    b.ToTable("Article");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Author", b =>
@@ -1785,6 +1828,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CompanyLocationNo")
+                        .HasColumnType("int");
+
                     b.Property<bool>("ContainsItems")
                         .HasColumnType("bit");
 
@@ -1812,11 +1858,14 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("LocationNumber")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LocationRoomInstanceID")
+                    b.Property<int?>("LocationRoomTypeID")
                         .HasColumnType("int");
 
                     b.Property<int>("LocationTypeID")
                         .HasColumnType("int");
+
+                    b.Property<string>("Place")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Width")
                         .HasColumnType("int");
@@ -1827,84 +1876,137 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("LocationInstanceParentID");
 
-                    b.HasIndex("LocationRoomInstanceID");
+                    b.HasIndex("LocationRoomTypeID");
 
                     b.HasIndex("LocationTypeID");
 
                     b.ToTable("LocationInstances");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomInstance", b =>
-                {
-                    b.Property<int>("LocationRoomInstanceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("LocationRoomInstanceAbbrev")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LocationRoomInstanceName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocationRoomTypeID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationRoomInstanceID");
-
-                    b.HasIndex("LocationRoomTypeID");
-
-                    b.ToTable("LocationRoomInstances");
 
                     b.HasData(
                         new
                         {
-                            LocationRoomInstanceID = 1,
-                            LocationRoomInstanceAbbrev = "L1",
-                            LocationRoomInstanceName = "Laboratory 1",
-                            LocationRoomTypeID = 1
+                            LocationInstanceID = 1,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 7,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceName = "25°C",
+                            LocationNumber = 0,
+                            LocationTypeID = 500,
+                            Width = 1
                         },
                         new
                         {
-                            LocationRoomInstanceID = 2,
-                            LocationRoomInstanceAbbrev = "L2",
-                            LocationRoomInstanceName = "Laboratory 2",
-                            LocationRoomTypeID = 1
+                            LocationInstanceID = 2,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "L1",
+                            LocationInstanceName = "Laboratory 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 1,
+                            LocationTypeID = 501,
+                            Width = 1
                         },
                         new
                         {
-                            LocationRoomInstanceID = 3,
-                            LocationRoomInstanceAbbrev = "TC1",
-                            LocationRoomInstanceName = "Tissue Culture 1",
-                            LocationRoomTypeID = 2
+                            LocationInstanceID = 3,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "L2",
+                            LocationInstanceName = "Laboratory 2",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 1,
+                            LocationTypeID = 501,
+                            Width = 1
                         },
                         new
                         {
-                            LocationRoomInstanceID = 4,
-                            LocationRoomInstanceAbbrev = "E1",
-                            LocationRoomInstanceName = "Equipment Room 1",
-                            LocationRoomTypeID = 3
+                            LocationInstanceID = 4,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "TC1",
+                            LocationInstanceName = "Tissue Culture 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 2,
+                            LocationTypeID = 501,
+                            Width = 1
                         },
                         new
                         {
-                            LocationRoomInstanceID = 5,
-                            LocationRoomInstanceAbbrev = "R1",
-                            LocationRoomInstanceName = "Refrigerator Room 1",
-                            LocationRoomTypeID = 4
+                            LocationInstanceID = 5,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "E1",
+                            LocationInstanceName = "Equipment Room 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 3,
+                            LocationTypeID = 501,
+                            Width = 1
                         },
                         new
                         {
-                            LocationRoomInstanceID = 6,
-                            LocationRoomInstanceAbbrev = "W1",
-                            LocationRoomInstanceName = "Washing Room 1",
-                            LocationRoomTypeID = 5
+                            LocationInstanceID = 6,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "R1",
+                            LocationInstanceName = "Refrigerator Room 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 4,
+                            LocationTypeID = 501,
+                            Width = 1
                         },
                         new
                         {
-                            LocationRoomInstanceID = 7,
-                            LocationRoomInstanceAbbrev = "S1",
-                            LocationRoomInstanceName = "Storage Room 1",
-                            LocationRoomTypeID = 6
+                            LocationInstanceID = 7,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "W1",
+                            LocationInstanceName = "Washing Room 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 5,
+                            LocationTypeID = 501,
+                            Width = 1
+                        },
+                        new
+                        {
+                            LocationInstanceID = 8,
+                            CompanyLocationNo = 0,
+                            ContainsItems = false,
+                            Height = 0,
+                            IsEmptyShelf = false,
+                            IsFull = false,
+                            LocationInstanceAbbrev = "S1",
+                            LocationInstanceName = "Storage Room 1",
+                            LocationInstanceParentID = 1,
+                            LocationNumber = 0,
+                            LocationRoomTypeID = 6,
+                            LocationTypeID = 501,
+                            Width = 1
                         });
                 });
 
@@ -2158,17 +2260,28 @@ namespace PrototypeWithAuth.Data.Migrations
                             Depth = 1,
                             Limit = 0,
                             LocationTypeChildID = 502,
-                            LocationTypeName = "Lab Part",
+                            LocationTypeName = "Location",
                             LocationTypeParentID = 500,
-                            LocationTypePluralName = "Lab Parts"
+                            LocationTypePluralName = "Locations"
                         },
                         new
                         {
                             LocationTypeID = 502,
                             Depth = 2,
                             Limit = 0,
-                            LocationTypeName = "Section",
+                            LocationTypeChildID = 503,
+                            LocationTypeName = "Lab Part",
                             LocationTypeParentID = 501,
+                            LocationTypePluralName = "Lab Parts"
+                        },
+                        new
+                        {
+                            LocationTypeID = 503,
+                            Depth = 3,
+                            Limit = 0,
+                            LocationTypeName = "Section",
+                            LocationTypeNameAbbre = "S",
+                            LocationTypeParentID = 502,
                             LocationTypePluralName = "Sections"
                         });
                 });
@@ -2246,28 +2359,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("MaterialCategoryID");
 
                     b.ToTable("MaterialCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            MaterialCategoryID = 1,
-                            MaterialCategoryDescription = "Reagents"
-                        },
-                        new
-                        {
-                            MaterialCategoryID = 2,
-                            MaterialCategoryDescription = "Plastics"
-                        },
-                        new
-                        {
-                            MaterialCategoryID = 3,
-                            MaterialCategoryDescription = "Equipment"
-                        },
-                        new
-                        {
-                            MaterialCategoryID = 4,
-                            MaterialCategoryDescription = "Buffers"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.MaterialProtocol", b =>
@@ -3844,47 +3935,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Resource", b =>
-                {
-                    b.Property<int>("ResourceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstAuthor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Journal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastAuthor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PubMedID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ResourceTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ResourceID");
-
-                    b.HasIndex("ResourceTypeID");
-
-                    b.ToTable("Resources");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ResourceCategory", b =>
                 {
                     b.Property<int>("ResourceCategoryID")
@@ -4034,24 +4084,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ResourceTypeDescription")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ResourceTypeDescription")
+                        .HasColumnType("int");
 
                     b.HasKey("ResourceTypeId");
 
                     b.ToTable("ResourceTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            ResourceTypeId = 1,
-                            ResourceTypeDescription = "Articles and Links"
-                        },
-                        new
-                        {
-                            ResourceTypeId = 2,
-                            ResourceTypeDescription = "Resources"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SalariedEmployee", b =>
@@ -4207,6 +4245,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("TagID");
 
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TagArticle", b =>
+                {
+                    b.Property<int>("ArticleID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ArticleID", "TagID");
+
+                    b.HasIndex("TagID");
+
+                    b.ToTable("TagArticles");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TagProtocol", b =>
@@ -5057,6 +5110,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Article", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.ResourceType", "ResourceType")
+                        .WithMany()
+                        .HasForeignKey("ResourceTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.AuthorProtocol", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Author", "Author")
@@ -5302,23 +5364,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("LocationInstanceParentID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.LocationRoomInstance", "LocationRoomInstance")
+                    b.HasOne("PrototypeWithAuth.Models.LocationRoomType", "LocationRoomType")
                         .WithMany()
-                        .HasForeignKey("LocationRoomInstanceID")
+                        .HasForeignKey("LocationRoomTypeID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.LocationType", "LocationType")
                         .WithMany()
                         .HasForeignKey("LocationTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomInstance", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LocationRoomType", "LocationRoomType")
-                        .WithMany()
-                        .HasForeignKey("LocationRoomTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -5634,15 +5687,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Resource", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.ResourceType", "ResourceType")
-                        .WithMany()
-                        .HasForeignKey("ResourceTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.SalariedEmployee", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
@@ -5675,6 +5719,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Project", "Project")
                         .WithMany("SubProjects")
                         .HasForeignKey("ProjectID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TagArticle", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Article", "Article")
+                        .WithMany("TagArticles")
+                        .HasForeignKey("ArticleID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
