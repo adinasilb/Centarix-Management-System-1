@@ -37,6 +37,7 @@
        // alert('clicked!')
         var data = $.fn.BindSelectedFilters();
         var searchText = $('.popover .search-requests-in-filter').val();
+        var numFilters = $('.numFilters').attr("value");
         console.log('search text ' + searchText);
         var url;
         switch ($('#masterPageType').val()) {
@@ -58,7 +59,7 @@
             data: data,
             async: true,
             traditional: true,
-            url: "/Requests/" + url + "?" + $.fn.getRequestIndexString() + "&searchText=" + searchText,
+            url: "/Requests/" + url + "?" + $.fn.getRequestIndexString() + "&searchText=" + searchText + "&numFilters=" + numFilters,
             type: 'POST',
             cache: false,
             success: function (data) {
