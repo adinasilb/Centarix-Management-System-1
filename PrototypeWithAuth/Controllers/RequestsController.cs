@@ -694,7 +694,7 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.OperationsRequest:
                     switch (requestIndexObject.RequestStatusID)
                     {
-                        case 1:
+                        /*case 1:
                             iconList.Add(approveIcon);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetForApprovalOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
@@ -703,7 +703,7 @@ namespace PrototypeWithAuth.Controllers
                             iconList.Add(orderOperations);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetApprovedOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
+                            break;*/
                         case 2:
                             iconList.Add(receiveIcon);
                             iconList.Add(deleteIcon);
@@ -965,48 +965,8 @@ namespace PrototypeWithAuth.Controllers
             return newIconList;
         }
 
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetForApprovalOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel()
-                                 {
-                                     Title = "", Width=10, Icons = iconList,  AjaxID = r.RequestID
-                                 }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetApprovedOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel()
-                                 {
-                                     Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                                 }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
+        
+      
 
         private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetOrderedOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
