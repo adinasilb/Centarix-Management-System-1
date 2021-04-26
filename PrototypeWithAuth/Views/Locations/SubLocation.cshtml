@@ -10,16 +10,35 @@
 
     <input style="display: none;" asp-for="LocationTypeParentID" value="@parentType" />
     <div class="container p-0">
+        <div class="row">
+            <div class="form-group col-12 ">
+                <label class=" mb-0">Location Name </label> @*"Name"*@
+                @if (parentType == 500)
+                {
+                    <label class="form-control-plaintext border-bottom 25Name"><span class="roomName"></span><span class="labPartNameLabel"></span></label>
+                }
+                else
+                {
+                    <input name="LocationInstance.LocationInstanceName" id="LocationInstance_LocationInstanceName" type="text" class="form-control-plaintext border-bottom" />
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <input asp-for="LocationInstances[0].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" style="display: none;" />
+                @Html.DropDownListFor(
+
+                   m => m.LocationInstances[0].LocationRoomInstanceID,
+                        Model.LocationRoomInstances,
+                       "Room",
+              htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext  sub-select locationRoom" }
+               )
+            </div>
+        </div>
         @switch (parentType)
         {
             case 100: //-196 <input style="display: none;" asp-for="LocationTypeParentID" value="@parentType" />
-                <div class="row">
-                    <div class="form-group col-12 ">
-                        <label class=" mb-0">Location Name </label> @*"Name"*@
-                        <input name="LocationInstance.LocationInstanceName" id="LocationInstance_LocationInstanceName" type="text" class="form-control-plaintext border-bottom" />
 
-                    </div>
-                </div>
                 <div class="row mx-0 px-0">
                     <div class="col-4 pl-0 pr-2">
                         <span class="">@Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[0].LocationTypePluralName):</span>
@@ -46,13 +65,7 @@
                 </div>
                 break;
             case 200: //-80
-                <div class="row">
-                    <div class="form-group col-12 ">
-                        <label class=" mb-0">Location Name </label> @*"Name"*@
-                        <input name="LocationInstance.LocationInstanceName" id="LocationInstance_LocationInstanceName" type="text" class="form-control-plaintext border-bottom" />
 
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-6">
                         <span class="">
@@ -120,15 +133,8 @@
                 </div>
                 break;
             case 300: //-20
-            case 400: //-4 (for now this is the same as above)
+            case 400: //4 (for now this is the same as above)
 
-                <div class="row">
-                    <div class="form-group col-12 ">
-                        <label class=" mb-0">Location Name </label> @*"Name"*@
-                        <input name="LocationInstance.LocationInstanceName" id="LocationInstance_LocationInstanceName" type="text" class="form-control-plaintext border-bottom" />
-
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-4">
                         <span>
@@ -140,29 +146,11 @@
                 </div>
 
                 break;
-            case 500: //-25
-                <div class="row">
-                    <div class="form-group col-12 ">
-                        <label class=" mb-0">Location Name </label> @*"Name"*@
-                        <label class="form-control-plaintext border-bottom 25Name"><span class="roomName"></span><span class="labPartNameLabel"></span></label>
-
-                    </div>
-                </div>
+            case 500: //25
                 <div class="container p-0">
                     <div class="row">
                         <input type="hidden" asp-for="LocationInstances[0].Height" value="1" />
 
-                        <div class="col-6">
-
-                            <input asp-for="LocationInstances[0].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" style="display: none;" />
-                            @Html.DropDownListFor(
-
-                               m => m.LocationInstances[0].LocationInstanceID,
-                                    Model.LocationRoomInstances,
-                                   "Room",
-                          htmlAttributes: new { @class = "mdb-select custom select-dropdown form-control-plaintext  sub-select locationRoom" }
-                           )
-                        </div>
                         <div class="col-6 ">
                             <input type="hidden" asp-for="LocationInstances[1].Height" value="1" />
                             <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />
@@ -183,10 +171,10 @@
                     <div class="row">
                         <div class="col-4 p-0 hasShelfBlock">
                             @*<span class="">
-                                    @Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[1].LocationTypePluralName):
-                                </span>
-                                <input asp-for="LocationInstances[1].Height" min="0" class="form-control-plaintext border-bottom" />
-                                <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />*@
+                                @Html.DisplayFor(modelItem => Model.LocationTypes.ToList()[1].LocationTypePluralName):
+                            </span>
+                            <input asp-for="LocationInstances[1].Height" min="0" class="form-control-plaintext border-bottom" />
+                            <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />*@
                         </div>
                     </div>
                 </div>

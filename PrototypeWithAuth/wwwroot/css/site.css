@@ -1289,7 +1289,7 @@ padding:0 !important;
 }
 .colTwoSublocations .sublocation-index:not(:last-child):not(:last-of-type) {
     /*padding-right: 2.8125rem !important;*/
-    padding-left: 2.8125rem !important;
+    /*padding-left: 2.8125rem !important;*/
     border-right: 1px solid var(--black-87)
 } 
 .orders-and-inv .sublocation-index tr.filled-location-tr {

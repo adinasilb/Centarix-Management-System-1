@@ -45,7 +45,7 @@
     --operations-filter: brightness(0) saturate(100%) invert(25%) sepia(82%) saturate(1564%) hue-rotate(217deg) brightness(90%) contrast(84%);
     --timekeeper-filter: brightness(0) saturate(100%) invert(72%) sepia(32%) saturate(7497%) hue-rotate(1deg) brightness(106%) contrast(104%);
     --expense-filter: brightness(0) saturate(100%) invert(45%) sepia(67%) saturate(926%) hue-rotate(146deg) brightness(108%) contrast(101%);
-    --protocols-filter: brightness(0) invert(39%) sepia(20%) saturate(3905%) hue-rotate(142deg) brightness(98%) contrast(101%);
+    --protocol-filter: brightness(0) invert(39%) sepia(20%) saturate(3905%) hue-rotate(142deg) brightness(98%) contrast(101%);
     --notifications-orderlate-color: #DB2127;
     --notifications-ordered-color: #5F79E2;
     --notifications-approved-color: #00CA72;
@@ -207,15 +207,15 @@
 }
 
 .protocols-color {
-    color: var(--protocols-color) !important;
+    color: var(--protocol-color) !important;
 }
 
 .protocols-filter {
-    filter: var(--protocols-filter) !important;
+    filter: var(--protocol-filter) !important;
 }
 
 .protocols-background-color {
-    background-color: var(--protocols-color) !important;
+    background-color: var(--protocol-color) !important;
 }
 
 

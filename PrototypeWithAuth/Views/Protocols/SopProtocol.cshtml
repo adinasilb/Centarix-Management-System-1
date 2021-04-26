@@ -1,4 +1,8 @@
-﻿@{
+﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
+@{
     ViewData["Title"] = "SOP Protocol";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+<div class="_CreateProtocol">
+    @{ await Html.RenderPartialAsync("_CreateProtocol", Model);}
+</div>
