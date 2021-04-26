@@ -31,7 +31,7 @@ namespace PrototypeWithAuth.Controllers
         // GET: /<controller>/
         [HttpGet]
 
-        [Authorize(Roles = "Users")]
+        [Authorize(Roles = "Requests, Operations")]
         public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             var categoryType = 1;
