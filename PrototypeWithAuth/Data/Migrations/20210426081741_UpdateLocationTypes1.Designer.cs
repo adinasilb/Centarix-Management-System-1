@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210426081741_UpdateLocationTypes1")]
+    partial class UpdateLocationTypes1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2198,6 +2200,15 @@ namespace PrototypeWithAuth.Data.Migrations
                             LocationTypeID = 501,
                             Depth = 1,
                             Limit = 0,
+                            LocationTypeName = "Location",
+                            LocationTypeParentID = 500,
+                            LocationTypePluralName = "Locations"
+                        },
+                        new
+                        {
+                            LocationTypeID = 502,
+                            Depth = 2,
+                            Limit = 0,
                             LocationTypeChildID = 502,
                             LocationTypeName = "Lab Part",
                             LocationTypeParentID = 500,
@@ -2205,10 +2216,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         },
                         new
                         {
-                            LocationTypeID = 502,
-                            Depth = 2,
+                            LocationTypeID = 503,
+                            Depth = 3,
                             Limit = 0,
                             LocationTypeName = "Section",
+                            LocationTypeNameAbbre = "S",
                             LocationTypeParentID = 501,
                             LocationTypePluralName = "Sections"
                         });
