@@ -269,8 +269,7 @@ namespace PrototypeWithAuth.Controllers
                 { 
                     MaterialCategoryID = materialTypeID,
                     MaterialCategory = MaterialCategory, 
-                    MaterialProtocols = new List<MaterialProtocol>() { new MaterialProtocol() { ProtocolID = ProtocolID } }
-                 }
+                  }
             };
             return PartialView(viewModel);
         }
