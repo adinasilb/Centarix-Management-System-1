@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210426082925_addResources")]
+    partial class addResources
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4082,24 +4084,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ResourceTypeDescription")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ResourceTypeDescription")
+                        .HasColumnType("int");
 
                     b.HasKey("ResourceTypeId");
 
                     b.ToTable("ResourceTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            ResourceTypeId = 1,
-                            ResourceTypeDescription = "Articles and Links"
-                        },
-                        new
-                        {
-                            ResourceTypeId = 2,
-                            ResourceTypeDescription = "Resources"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SalariedEmployee", b =>

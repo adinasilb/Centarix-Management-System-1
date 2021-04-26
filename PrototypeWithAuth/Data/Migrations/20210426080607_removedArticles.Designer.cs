@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210426080607_removedArticles")]
+    partial class removedArticles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -302,6 +304,47 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasFilter("[EmployeeID] IS NOT NULL");
 
                     b.ToTable("Advisors");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.Article", b =>
+                {
+                    b.Property<int>("ArticleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstAuthor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Journal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastAuthor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PubMedID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ResourceTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Summary")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ArticleID");
+
+                    b.HasIndex("ResourceTypeID");
+
+                    b.ToTable("Article");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Author", b =>
@@ -3892,47 +3935,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Resource", b =>
-                {
-                    b.Property<int>("ResourceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstAuthor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Journal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastAuthor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PubMedID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ResourceTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ResourceID");
-
-                    b.HasIndex("ResourceTypeID");
-
-                    b.ToTable("Resources");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ResourceCategory", b =>
                 {
                     b.Property<int>("ResourceCategoryID")
@@ -4082,24 +4084,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ResourceTypeDescription")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ResourceTypeDescription")
+                        .HasColumnType("int");
 
                     b.HasKey("ResourceTypeId");
 
                     b.ToTable("ResourceTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            ResourceTypeId = 1,
-                            ResourceTypeDescription = "Articles and Links"
-                        },
-                        new
-                        {
-                            ResourceTypeId = 2,
-                            ResourceTypeDescription = "Resources"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SalariedEmployee", b =>
@@ -4255,6 +4245,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("TagID");
 
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TagArticle", b =>
+                {
+                    b.Property<int>("ArticleID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ArticleID", "TagID");
+
+                    b.HasIndex("TagID");
+
+                    b.ToTable("TagArticles");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TagProtocol", b =>
@@ -5105,6 +5110,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.Article", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.ResourceType", "ResourceType")
+                        .WithMany()
+                        .HasForeignKey("ResourceTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.AuthorProtocol", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Author", "Author")
@@ -5673,15 +5687,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Resource", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.ResourceType", "ResourceType")
-                        .WithMany()
-                        .HasForeignKey("ResourceTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.SalariedEmployee", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
@@ -5714,6 +5719,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Project", "Project")
                         .WithMany("SubProjects")
                         .HasForeignKey("ProjectID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TagArticle", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Article", "Article")
+                        .WithMany("TagArticles")
+                        .HasForeignKey("ArticleID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

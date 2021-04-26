@@ -25,12 +25,12 @@ namespace PrototypeWithAuth.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<AuthorProtocol> AuthorProtocols { get; set; }
         public DbSet<ProtocolType> ProtocolTypes { get; set; }
-        public DbSet<TagArticle> TagArticles { get; set; }
+        //public DbSet<TagArticle> TagArticles { get; set; }
         public DbSet<TagProtocol> TagProtocols { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<ResourceType> ResourceTypes { get; set; }
-        public DbSet<Article> Articles { get; set; }
+        public DbSet<Resource> Resources { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<MaterialCategory> MaterialCategories { get; set; }
         public DbSet<ProtocolCategory> ProtocolCategories { get; set; }
@@ -292,9 +292,6 @@ namespace PrototypeWithAuth.Data
 
             modelBuilder.Entity<TagProtocol>()
               .HasKey(t => new { t.TagID, t.ProtocolID });
-
-            modelBuilder.Entity<TagArticle>()
-              .HasKey(t => new { t.ArticleID, t.TagID });
 
             modelBuilder.Entity<MaterialProtocol>()
               .HasKey(m => new { m.MaterialID, m.ProtocolID });

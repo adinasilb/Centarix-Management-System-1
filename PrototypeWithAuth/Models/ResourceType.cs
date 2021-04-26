@@ -10,6 +10,6 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int ResourceTypeId { get; set; }
-        public int ResourceTypeDescription { get; set; }
+        public string ResourceTypeDescription { get; set; }
     }
 }

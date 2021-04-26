@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210426082242_removeTagArticlesAddResources")]
+    partial class removeTagArticlesAddResources
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3892,47 +3894,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Resource", b =>
-                {
-                    b.Property<int>("ResourceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstAuthor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Journal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastAuthor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PubMedID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ResourceTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ResourceID");
-
-                    b.HasIndex("ResourceTypeID");
-
-                    b.ToTable("Resources");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ResourceCategory", b =>
                 {
                     b.Property<int>("ResourceCategoryID")
@@ -4082,24 +4043,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ResourceTypeDescription")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ResourceTypeDescription")
+                        .HasColumnType("int");
 
                     b.HasKey("ResourceTypeId");
 
                     b.ToTable("ResourceTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            ResourceTypeId = 1,
-                            ResourceTypeDescription = "Articles and Links"
-                        },
-                        new
-                        {
-                            ResourceTypeId = 2,
-                            ResourceTypeDescription = "Resources"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SalariedEmployee", b =>
@@ -5669,15 +5618,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany("RequestNotifications")
                         .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Resource", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.ResourceType", "ResourceType")
-                        .WithMany()
-                        .HasForeignKey("ResourceTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
