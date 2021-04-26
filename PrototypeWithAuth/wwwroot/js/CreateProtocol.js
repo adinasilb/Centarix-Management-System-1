@@ -23,3 +23,21 @@ $(".addMaterial").click(function(){
 	 var url="/Protocols/AddMaterialModal?materialTypeID="+$(this).val();
 	 $.fn.CallPageRequest(url, "addMaterial");
 });
+$(".saveProtocol").click(function(){
+	var formData = $("#myForm")[0];
+	$.ajax({
+			async: true,
+			url: "/Protocols/CreateProtocol/?",
+			traditional: true,
+			data:formData,
+			contentType: true,
+			processData: true,
+			type: "POST",
+			cache: false,
+			success: function (data) {
+				$("_CreateProtocol").html(data)
+				$("ul.tabs li:eq(1)").addClass("active").show();
+				$(".tab-content:eq(1)").show();
+			}
+		});
+});

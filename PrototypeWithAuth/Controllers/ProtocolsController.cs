@@ -259,14 +259,52 @@ namespace PrototypeWithAuth.Controllers
             FillDocumentsInfo(viewmodel, "");
             return View(viewmodel);
         }
-        public async Task<IActionResult> AddMaterialModal(int materialTypeID)
+        public async Task<IActionResult> AddMaterialModal(int materialTypeID, int ProtocolID)
         {
             var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
+            var Protocol = _context.Protocols.Where(p => p.ProtocolID == ProtocolID).FirstOrDefault();
             var viewModel = new AddMaterialViewModel() 
             {
-                Material = new Material { MaterialCategoryID = materialTypeID, MaterialCategory = MaterialCategory}
+                Material = new Material()
+                { 
+                    MaterialCategoryID = materialTypeID,
+                    MaterialCategory = MaterialCategory, 
+                    MaterialProtocols = new List<MaterialProtocol>() { new MaterialProtocol() { Protocol = Protocol, ProtocolID = ProtocolID } }
+                 }
             };
             return PartialView(viewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddMaterialModal(AddMaterialViewModel addMaterialViewModel)
+        {
+          
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel)
+        {
+            //refill view model to send ba
+            createProtocolsViewModel.ProtocolCategories = _context.ProtocolCategories;
+            createProtocolsViewModel.ProtocolSubCategories = _context.ProtocolSubCategories;
+            createProtocolsViewModel.MaterialCategories = _context.MaterialCategories;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Add(createProtocolsViewModel.Protocol);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    MoveDocumentsOutOfTempFolder(createProtocolsViewModel.Protocol.ProtocolID, AppUtility.ParentFolderName.Protocols);               
+                }
+                catch (Exception ex)
+                {
+                    createProtocolsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                }
+                return PartialView("_CreateProtocol", createProtocolsViewModel);
+            }           
+
         }
         public async Task<IActionResult> KitProtocol()
         {

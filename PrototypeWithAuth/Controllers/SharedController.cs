@@ -246,5 +246,27 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
+        public void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false)
+        {
+            //rename temp folder to the request id
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
+            string requestFolderFrom = Path.Combine(uploadFolder, "0");
+            string requestFolderTo = Path.Combine(uploadFolder, id.ToString());
+            if (Directory.Exists(requestFolderFrom))
+            {
+                if (Directory.Exists(requestFolderTo))
+                {
+                    Directory.Delete(requestFolderTo);
+                }
+                if (additionalRequests)
+                {
+                    AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
+                }
+                else
+                {
+                    Directory.Move(requestFolderFrom, requestFolderTo);
+                }
+            }
+        }
     }
 }

@@ -1554,7 +1554,7 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         additionalRequests = false;
                                     }
-                                    MoveDocumentsOutOfTempFolder(request, additionalRequests);
+                                    MoveDocumentsOutOfTempFolder(request.RequestID,AppUtility.ParentFolderName.Requests, additionalRequests);
                                     await transaction.CommitAsync();
                                     base.RemoveRequestWithCommentsAndEmailSessions();
                                 }
@@ -2440,7 +2440,7 @@ namespace PrototypeWithAuth.Controllers
                             var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
                             if (!isSavedUsingSession)
                             {
-                                MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault());
+                                MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
                                 await transaction.CommitAsync();
                                 base.RemoveRequestWithCommentsAndEmailSessions();
                             }
@@ -2808,7 +2808,7 @@ namespace PrototypeWithAuth.Controllers
                                     await _context.SaveChangesAsync();
                                     if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
                                     {
-                                        MoveDocumentsOutOfTempFolder(requests.FirstOrDefault());
+                                        MoveDocumentsOutOfTempFolder(requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests );
                                     }
 
                                     //save the document
@@ -4972,7 +4972,7 @@ namespace PrototypeWithAuth.Controllers
                 //    n++;
                 //} while (commentExists);
                 //await _context.SaveChangesAsync();
-                MoveDocumentsOutOfTempFolder(newRequest);
+                MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests);
 
                 newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
                 RequestNotification requestNotification = new RequestNotification();
@@ -5091,28 +5091,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
-        private void MoveDocumentsOutOfTempFolder(Request request, bool additionalRequests = false)
-        {
-            //rename temp folder to the request id
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-            string requestFolderFrom = Path.Combine(uploadFolder, "0");
-            string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-            if (Directory.Exists(requestFolderFrom))
-            {
-                if (Directory.Exists(requestFolderTo))
-                {
-                    Directory.Delete(requestFolderTo);
-                }
-                if (additionalRequests)
-                {
-                    AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
-                }
-                else
-                {
-                    Directory.Move(requestFolderFrom, requestFolderTo);
-                }
-            }
-        }
+        
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
@@ -5329,7 +5308,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     additionalRequests = false;
                                 }
-                                MoveDocumentsOutOfTempFolder(request, additionalRequests);
+                                MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
                                 request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                                 RequestNotification requestNotification = new RequestNotification();
                                 requestNotification.RequestID = request.RequestID;

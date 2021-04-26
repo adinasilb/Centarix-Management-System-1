@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.ViewModels
     {
         public Material Material { get; set; }
         public List<String> FileStrings { get; set; }
+
     }
 }

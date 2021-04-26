@@ -1,0 +1,196 @@
+﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
+    <script src="~/js/CreateProtocol.js"></script>
+<form action="" id="myForm" class=" on-form-modal protocol-form" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+    <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
+    <input type="hidden" asp-for="Protocol.ProtocolID"/>
+    <div class="item-table">
+        <ul class=" pl-0 nav" style="">
+            <li class="list-inline-item m-0 nav-item">
+                <a data-toggle="tab" href="#Theory" class="next-tab nav-link active new-button new-protocols-button">
+                    <i class="new-icon icon-theory-tab-24px"></i>
+                    <label class="new-button-text">Theory</label>
+                </a>
+            </li>
+            <li class="list-inline-item m-0 nav-item">
+                <a data-toggle="tab" href="#Materials" class="next-tab nav-link new-button saveProtocol new-protocols-button">
+                    <i class=" new-icon icon-centarix-icons-03"></i>
+                    <label class="new-button-text">Material</label>
+                </a>
+            </li>
+            <li class="list-inline-item m-0 nav-item">
+                <a data-toggle="tab" href="#Protocol" class="next-tab nav-link new-button new-protocols-button">
+                    <i class="new-icon icon-protocol-tab-24px"></i>
+                    <label class="new-button-text">Protocols</label>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+    <div class="tab-content">
+
+        <div id="Theory" class="tab-pane fade in active show">
+            <div class="container-fluid new-modal-body m-0" style="width:55%">
+                <div class="row under-row-margin">
+                    <div class="col-4">
+                        <label asp-for="Protocol.Name" class="control-label"></label>
+                        <input asp-for="Protocol.Name" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Protocol.Name" class="text-danger-centarix"></span>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="Protocol.VersionNumber" class="control-label"></label>
+                        <input asp-for="Protocol.VersionNumber" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Protocol.VersionNumber" class="text-danger-centarix"></span>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="Protocol.UniqueCode" class="control-label"></label>
+                        <input asp-for="Protocol.UniqueCode" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Protocol.UniqueCode" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+
+                <div class="row under-row-margin">
+                    <div class="col-4">
+                        <label class="control-label">Category</label>
+                        @Html.DropDownListFor(vm => vm.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID,
+new SelectList(
+Model.ProtocolCategories,
+"ProtocolCategoryTypeID",
+"ProtocolCategoryDescription"
+), "Select Category",
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolParentList", @searchable = "Select Category" })
+                    </div>
+                    <div class="col-4">
+                        <label class="control-label">Sub Category</label>
+                        @Html.DropDownListFor(vm => vm.Protocol.ProtocolSubCategoryID,
+new SelectList(
+Model.ProtocolSubCategories,
+"ProtocolSubCategoryTypeID",
+"ProtocolSubCategoryTypeDescription"
+), "Select Category",
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolSubList", @searchable = "Select Category" })
+                    </div>
+                    @*<div class="col-4">
+                            <label asp-for="Tags" class="control-label"></label>
+                            <input asp-for="Tags" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Tags" class="text-danger-centarix"></span>
+                        </div>*@
+                </div>
+                <div class="row ">
+                    <div class="col-12">
+                        <label asp-for="Protocol.ShortDescription" class="control-label"></label>
+                        <input asp-for="Protocol.ShortDescription" class="form-control-plaintext border-bottom " />
+                        <span asp-validation-for="Protocol.ShortDescription" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-12">
+                        <label asp-for="Protocol.Theory" class="control-label"></label>
+                        <textarea asp-for="Protocol.Theory" class="form-control-plaintext border-bottom border" rows="15"></textarea>
+                        <span asp-validation-for="Protocol.Theory" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row mt-6">
+                    <div class="col-6 heading-1">
+                        Add Document
+                    </div>
+                    <div class="col-6 heading-1">
+                        Add Links
+
+                    </div>
+                </div>
+                @{
+                    var urlAction = Url.Action("DocumentsModal", "Protocols");
+                    var fontSize = "2rem";
+                }
+                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row ">
+
+                            @{
+                                var hasFileClass = "";
+                                var color = "protocols-filter";
+
+                            }
+
+                            @foreach (var folder in Model.DocumentsInfo)
+                            {
+
+                                <div class="document-margin ">
+                                    @{
+                                        var filterClass = "opac87";
+                                        if (folder.FileStrings != null && folder.FileStrings.Count > 0)
+                                        {
+                                            hasFileClass = "hasFile";
+                                            filterClass = color;
+                                        }
+                                    }
+                                    <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Protocol.ProtocolID" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false">
+                                        <div class="card document-border ">
+                                            <div class="document-card text-center">
+                                                <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                            </div>
+
+                                        </div>
+                                    </a>
+                                    <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-6 ">
+                        <div class="container ">
+
+                            @for (int i = 0; i < Model.Protocol.Urls.Count(); i++)
+                            {
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label asp-for="Protocol.Urls[i].LinkDescription" class="control-label">Link Description</label>
+                                        <input asp-for="Protocol.Urls[i].LinkDescription" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="Protocol.Urls[i].LinkDescription" class="text-danger-centarix"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <label asp-for="Protocol.Urls[i].Url" class="control-label"></label>
+                                        <input asp-for="Protocol.Urls[i].Url" class="form-control-plaintext border-bottom" />
+                                        <span asp-validation-for="Protocol.Urls[i].Url" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div id="Materials" class="tab-pane fade in ">
+            <div class="container-fluid new-modal-body m-0 " style="width:70%">
+                <div class="row">
+                    @foreach (var material in Model.MaterialCategories)
+                    {
+                        <div class="col heading-1">
+                            @material.MaterialCategoryDescription
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    @foreach (var material in Model.MaterialCategories)
+                    {
+                        <div class="col text-center">
+                            <button value="@material.MaterialCategoryID" type="button" class="no-box-shadow btn p-0 m-0 addMaterial ">
+                                <i class="@color icon-add_circle_outline-24px1" style="font-size: 3rem;"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div id="Protocol" class="tab-pane fade in ">
+            Protocol
+        </div>
+    </div>
+</form>
