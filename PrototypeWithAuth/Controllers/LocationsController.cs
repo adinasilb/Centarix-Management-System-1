@@ -592,7 +592,7 @@ namespace PrototypeWithAuth.Controllers
 
                                     subLocationViewModel.LocationInstances[i].LocationInstanceName = lastParent.LocationInstanceName + labPartNameAbrev;
                                     subLocationViewModel.LocationInstances[i].LocationInstanceAbbrev = labPartNameAbrev;
-                                    subLocationViewModel.LocationInstances[i].LocationNumber = labPartByTypeCount;
+                                    subLocationViewModel.LocationInstances[i].LocationNumber = labPartByTypeCount + 1;
 
                                     if (subLocationViewModel.LocationInstances.Count() > 2)
                                     {

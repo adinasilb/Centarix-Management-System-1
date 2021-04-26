@@ -3416,7 +3416,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
 
-            if (parentLocationInstance.LocationTypeID == 501) //check if it containes empty shelves ONLY IF 25
+            if (parentLocationInstance.LocationTypeID == 500) //check if it containes empty shelves ONLY IF 25
             {
                 Is25Freezer = true;
                 var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmptyShelf == true).ToList();
@@ -3424,10 +3424,6 @@ namespace PrototypeWithAuth.Controllers
                 {
                     hasEmptyShelves = true;
                 }
-            }
-            if (parentLocationInstance.LocationTypeID == 500)
-            {
-                receivedModalVisualViewModel.DeleteTable = true;
             }
             if (/*parentLocationInstance.IsEmptyShelf == true ||*/ (secondChildLi != null && !Is80Freezer) || (Is80Freezer && hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
             {
@@ -3448,7 +3444,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     receivedModalVisualViewModel.ChildrenLocationInstances =
                         _context.LocationInstances.Where(m => m.LocationInstanceParentID == LocationInstanceID)
-                        .Include(m => m.RequestLocationInstances).ToList();
+                        .Include(m => m.RequestLocationInstances).OrderBy(m => m.LocationNumber).ToList();
 
 
                     //add placeholders for new places
@@ -3759,7 +3755,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
         {
-            var locationInstanceList = _context.LocationInstances.Where(li => li.LocationInstanceParentID == locationInstanceParentId).ToList();
+            var locationInstanceList = _context.LocationInstances.Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).ToList();
             return Json(locationInstanceList);
         }
 

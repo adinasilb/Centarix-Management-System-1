@@ -49,6 +49,7 @@
                             var classes = "css-checkbox " + Model.ChildrenLocationInstances[z].LocationInstanceID;
                             var outerClass = "visual-shelf";
                             var iconClass = "icon-add_circle_outline-24px1 add-location";
+                            var description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
 
                             var liID = Model.ChildrenLocationInstances[z].LocationInstanceID;
                             if (Model.ChildrenLocationInstances[z].LocationTypeID == 103 || Model.ChildrenLocationInstances[z].LocationTypeID == 204)
@@ -59,15 +60,6 @@
 
                             if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && Model.ChildrenLocationInstances[z].IsEmptyShelf)
                             {
-                                var description = "";
-                                if (Model.ChildrenLocationInstances[z].LocationTypeID == 201)
-                                {
-                                    description = Model.ChildrenLocationInstances[z].LocationInstanceName;
-                                }
-                                else
-                                {
-                                    description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
-                                }
                                 classes += " open-new-visual";
                                 <td class="@outerClass" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
                                     <div>
@@ -79,17 +71,8 @@
                                     </div>
                                 </td>
                             }
-                            else if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 502) && !Model.ChildrenLocationInstances[z].IsEmptyShelf)
+                            else if ((Model.ChildrenLocationInstances[z].LocationTypeID == 201 || Model.ChildrenLocationInstances[z].LocationTypeID == 501) && !Model.ChildrenLocationInstances[z].IsEmptyShelf)
                             {
-                                var description = "";
-                                if(Model.ChildrenLocationInstances[z].LocationTypeID == 201)
-                                {
-                                    description = Model.ChildrenLocationInstances[z].LocationInstanceName;
-                                }
-                                else
-                                {
-                                    description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
-                                }
                                 classes += " open-new-visual";
 
                                 <td class="@outerClass not-clickable" style="padding:0px;" id="@Model.ChildrenLocationInstances[z].LocationInstanceID">
@@ -125,7 +108,6 @@
                             }
                             else
                             {
-                                var description = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
                                 <td class="@outerClass" style="padding:0px;">
                                     <div>
                                         @Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @liid = liID, @class = @classes })
@@ -156,6 +138,7 @@
                             var classes = "css-checkbox " + Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceID;
                             var outerClass = "visual-shelf";
                             var iconClass = "icon-add_circle_outline-24px1 add-location";
+                            var description  = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
 
                             var liID = Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceID;
                             if (Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 103 || Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 204)
@@ -163,20 +146,6 @@
                                 outerClass = "visual-box " + is12X12Class;
                             }
                             var labelClass = "tiny-label-font-size m-0";
-                            var description = "";
-                            if (Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 503)
-                            {
-                                description = Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceAbbrev;
-                            }
-                            else if(Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 205 || Model.RequestChildrenLocationInstances[z].LocationInstance.LocationTypeID == 104)
-                            {
-
-                                description = Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceAbbrev;
-                            }
-                            else
-                            {
-                                description = Model.RequestChildrenLocationInstances[z].LocationInstance.LocationInstanceName;
-                            }
 
                             if (Model.RequestChildrenLocationInstances[z].LocationInstance.IsFull || Model.RequestChildrenLocationInstances[z].LocationInstance.ContainsItems)
                             {
