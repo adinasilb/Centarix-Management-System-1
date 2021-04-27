@@ -113,6 +113,19 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<UnitTypeParentCategory>()
                 .HasKey(u => new { u.UnitTypeID, u.ParentCategoryID });
 
+            modelBuilder.Entity<ResourceResourceCategory>()
+                .HasKey(rrc => new { rrc.ResourceID, rrc.ResourceCategoryID });
+
+            modelBuilder.Entity<ResourceResourceCategory>()
+                .HasOne(rrc => rrc.ResourceCategory)
+                .WithMany(rc => rc.ResourceResourceCategories)
+                .HasForeignKey(rrc => rrc.ResourceCategoryID);
+
+            modelBuilder.Entity<ResourceResourceCategory>()
+                .HasOne(rrc => rrc.Resource)
+                .WithMany(r => r.ResourceResourceCategories)
+                .HasForeignKey(rrc => rrc.ResourceID);
+
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasQueryFilter(item => !item.IsDeleted)
                 .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
@@ -313,6 +326,8 @@ namespace PrototypeWithAuth.Data
                .HasOne(lt => lt.LineTypeChild)
                .WithMany()
                .HasForeignKey(ltc => ltc.LineTypeChildID);
+
+            
 
 
             modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
