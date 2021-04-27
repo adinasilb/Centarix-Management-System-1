@@ -245,16 +245,16 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            var protocol = new Protocol() { Urls = new List<Link>() { new Link(), new Link()} };
+            var protocol = new Protocol() { Urls = new List<Link>() { new Link(), new Link() } };
             protocol.ProtocolTypeID = 1;
 
             var viewmodel = new CreateProtocolsViewModel()
             {
                 Protocol = protocol,
                 ProtocolCategories = _context.ProtocolCategories,
-                ProtocolSubCategories = _context.ProtocolSubCategories,     
+                ProtocolSubCategories = _context.ProtocolSubCategories,
                 MaterialCategories = _context.MaterialCategories
-               
+
             };
             FillDocumentsInfo(viewmodel, "");
             return View(viewmodel);
@@ -263,13 +263,13 @@ namespace PrototypeWithAuth.Controllers
         {
             var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
             var Protocol = _context.Protocols.Where(p => p.ProtocolID == ProtocolID).FirstOrDefault();
-            var viewModel = new AddMaterialViewModel() 
+            var viewModel = new AddMaterialViewModel()
             {
                 Material = new Material()
-                { 
+                {
                     MaterialCategoryID = materialTypeID,
-                    MaterialCategory = MaterialCategory, 
-                  }
+                    MaterialCategory = MaterialCategory,
+                }
             };
             return PartialView(viewModel);
         }
@@ -311,7 +311,7 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(createProtocolsViewModel.Protocol);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    MoveDocumentsOutOfTempFolder(createProtocolsViewModel.Protocol.ProtocolID, AppUtility.ParentFolderName.Protocols);               
+                    MoveDocumentsOutOfTempFolder(createProtocolsViewModel.Protocol.ProtocolID, AppUtility.ParentFolderName.Protocols);
                 }
                 catch (Exception ex)
                 {
@@ -320,7 +320,7 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                 }
                 return PartialView("_CreateProtocol", createProtocolsViewModel);
-            }           
+            }
 
         }
         public async Task<IActionResult> KitProtocol()
@@ -414,17 +414,24 @@ namespace PrototypeWithAuth.Controllers
             return View(resourceLibraryViewModel);
         }
 
+        [HttpGet]
+
         public async Task<IActionResult> AddResource(int? ResourceType = 1)
         {
+            
+            var rc = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList();
+            ResourceCategoriesToAdd[] resourceCategoriesToAdds = new ResourceCategoriesToAdd[rc.Count];
             var addResourceViewModel = new AddResourceViewModel()
             {
                 ResourceType = Convert.ToInt32(ResourceType),
-                ResourceCategories = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList(),
-                Resource = new Resource()
+                ResourceCategories =rc,
+                ResourceCategoriesToAdd = resourceCategoriesToAdds
             };
-            //addResourceViewModel.Resource.ResourceResourceCategories = new List<ResourceResourceCategory>() { new ResourceResourceCategory() };
+
             return PartialView(addResourceViewModel);
         }
+
+        [HttpPost]
 
         public async Task<IActionResult> Personal()
         {

@@ -77,12 +77,18 @@
                     </div>
                 </div>
                 <div class="row mb-1 text-center">
+                    @{
+                        var counter = 0;
+                        //Model.ResourceCategoriesToAdd.Add(());
+                    }
                     @foreach (var mainCategory in Model.ResourceCategories.Where(rc => rc.IsMain))
                     {
                         <div class="col-3">
-                            <span class="resources-tags-big light-gray-background-color add-padding w-100">
+                            <span class="resources-tags-big light-gray-background-color add-padding w-100" id="@mainCategory.ResourceCategoryID">
                                 @mainCategory.ResourceCategoryDescription
                             </span>
+                            <input type="hidden" asp-for="ResourceCategoriesToAdd[0].ResourceCategoryID" value="@mainCategory.ResourceCategoryID" />
+                            <input type="hidden" asp-for="ResourceCategoriesToAdd[0].Added" />
                         </div>
                     }
                 </div>
@@ -90,10 +96,16 @@
                     <div class="col-12">
                         @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain))
                         {
-                            <span class="resources-tags-big light-gray-background-color mx-2 my-1">
+                            <span class="resources-tags-big light-gray-background-color mx-2 my-1" id="@category.ResourceCategoryID">
                                 @category.ResourceCategoryDescription
                             </span>
                         }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="modal-footer-mt mx-auto">
+                        <input type="submit" class="custom-button custom-cancel protocols-filter" />
+                        <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('add-resources')">Cancel</button>
                     </div>
                 </div>
                 @*<input class="form-control-plaintext border-bottom" id="ResourceID" name="ResourceID" value="0">*@
