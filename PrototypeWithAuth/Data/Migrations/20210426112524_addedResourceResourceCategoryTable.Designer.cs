@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210426112524_addedResourceResourceCategoryTable")]
+    partial class addedResourceResourceCategoryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1855,6 +1857,57 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LocationRoomTypeID");
 
                     b.ToTable("LocationRoomInstances");
+
+                    b.HasData(
+                        new
+                        {
+                            LocationRoomInstanceID = 1,
+                            LocationRoomInstanceAbbrev = "L1",
+                            LocationRoomInstanceName = "Laboratory 1",
+                            LocationRoomTypeID = 1
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 2,
+                            LocationRoomInstanceAbbrev = "L2",
+                            LocationRoomInstanceName = "Laboratory 2",
+                            LocationRoomTypeID = 1
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 3,
+                            LocationRoomInstanceAbbrev = "TC1",
+                            LocationRoomInstanceName = "Tissue Culture 1",
+                            LocationRoomTypeID = 2
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 4,
+                            LocationRoomInstanceAbbrev = "E1",
+                            LocationRoomInstanceName = "Equipment Room 1",
+                            LocationRoomTypeID = 3
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 5,
+                            LocationRoomInstanceAbbrev = "R1",
+                            LocationRoomInstanceName = "Refrigerator Room 1",
+                            LocationRoomTypeID = 4
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 6,
+                            LocationRoomInstanceAbbrev = "W1",
+                            LocationRoomInstanceName = "Washing Room 1",
+                            LocationRoomTypeID = 5
+                        },
+                        new
+                        {
+                            LocationRoomInstanceID = 7,
+                            LocationRoomInstanceAbbrev = "S1",
+                            LocationRoomInstanceName = "Storage Room 1",
+                            LocationRoomTypeID = 6
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomType", b =>
@@ -2104,7 +2157,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             LocationTypeID = 501,
-                            Depth = 2,
+                            Depth = 1,
                             Limit = 0,
                             LocationTypeChildID = 502,
                             LocationTypeName = "Lab Part",
@@ -2114,10 +2167,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             LocationTypeID = 502,
-                            Depth = 3,
+                            Depth = 2,
                             Limit = 0,
                             LocationTypeName = "Section",
-                            LocationTypeNameAbbre = "S",
                             LocationTypeParentID = 501,
                             LocationTypePluralName = "Sections"
                         });
@@ -2174,16 +2226,11 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProtocolID")
-                        .HasColumnType("int");
-
                     b.HasKey("MaterialID");
 
                     b.HasIndex("MaterialCategoryID");
 
                     b.HasIndex("ProductID");
-
-                    b.HasIndex("ProtocolID");
 
                     b.ToTable("Materials");
                 });
@@ -2223,6 +2270,21 @@ namespace PrototypeWithAuth.Data.Migrations
                             MaterialCategoryID = 4,
                             MaterialCategoryDescription = "Buffers"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.MaterialProtocol", b =>
+                {
+                    b.Property<int>("MaterialID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProtocolID")
+                        .HasColumnType("int");
+
+                    b.HasKey("MaterialID", "ProtocolID");
+
+                    b.HasIndex("ProtocolID");
+
+                    b.ToTable("MaterialProtocols");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.NotificationStatus", b =>
@@ -3995,6 +4057,18 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ResourceTypeId");
 
                     b.ToTable("ResourceTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            ResourceTypeId = 1,
+                            ResourceTypeDescription = "Articles and Links"
+                        },
+                        new
+                        {
+                            ResourceTypeId = 2,
+                            ResourceTypeDescription = "Resources"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SalariedEmployee", b =>
@@ -5292,9 +5366,18 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.MaterialProtocol", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Material", "Material")
+                        .WithMany("MaterialProtocols")
+                        .HasForeignKey("MaterialID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany("Materials")
+                        .WithMany("MaterialProtocols")
                         .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

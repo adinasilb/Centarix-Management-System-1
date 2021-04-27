@@ -37,7 +37,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<ProtocolSubCategory> ProtocolSubCategories { get; set; }
         public DbSet<LineType> LineTypes { get; set; }
         public DbSet<FunctionLine> FunctionLines { get; set; }
-        public DbSet<MaterialProtocol> MaterialProtocols { get; set; }
         public DbSet<ProtocolComment> ProtocolComments { get; set; }
         public DbSet<Line> Lines { get; set; }
         public DbSet<ProtocolInstance> ProtocolInstances { get; set; }
@@ -112,6 +111,19 @@ namespace PrototypeWithAuth.Data
 
             modelBuilder.Entity<UnitTypeParentCategory>()
                 .HasKey(u => new { u.UnitTypeID, u.ParentCategoryID });
+
+            modelBuilder.Entity<ResourceResourceCategory>()
+                .HasKey(rrc => new { rrc.ResourceID, rrc.ResourceCategoryID });
+
+            modelBuilder.Entity<ResourceResourceCategory>()
+                .HasOne(rrc => rrc.ResourceCategory)
+                .WithMany(rc => rc.ResourceResourceCategories)
+                .HasForeignKey(rrc => rrc.ResourceCategoryID);
+
+            modelBuilder.Entity<ResourceResourceCategory>()
+                .HasOne(rrc => rrc.Resource)
+                .WithMany(r => r.ResourceResourceCategories)
+                .HasForeignKey(rrc => rrc.ResourceID);
 
             modelBuilder.Entity<RequestLocationInstance>()
                 .HasQueryFilter(item => !item.IsDeleted)
@@ -294,9 +306,6 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TagProtocol>()
               .HasKey(t => new { t.TagID, t.ProtocolID });
 
-            modelBuilder.Entity<MaterialProtocol>()
-              .HasKey(m => new { m.MaterialID, m.ProtocolID });
-
             modelBuilder.Entity<FunctionLine>()
               .HasKey(f => new { f.FunctionTypeID, f.LineID });
 
@@ -313,6 +322,8 @@ namespace PrototypeWithAuth.Data
                .HasOne(lt => lt.LineTypeChild)
                .WithMany()
                .HasForeignKey(ltc => ltc.LineTypeChildID);
+
+            
 
 
             modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
