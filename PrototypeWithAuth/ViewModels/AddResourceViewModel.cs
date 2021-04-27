@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.ViewModels
         public int ResourceType { get; set; }
         public Resource Resource { get; set; }
         public List<ResourceCategory> ResourceCategories { get; set; }
+        public ResourceCategoriesToAdd[] ResourceCategoriesToAdd { get; set; }
     }
 }
