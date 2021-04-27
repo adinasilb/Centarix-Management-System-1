@@ -422,7 +422,7 @@ namespace PrototypeWithAuth.Controllers
                 ResourceCategories = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList(),
                 Resource = new Resource()
             };
-            addResourceViewModel.Resource.ResourceResourceCategories = new List<ResourceResourceCategory>() { new ResourceResourceCategory() };
+            //addResourceViewModel.Resource.ResourceResourceCategories = new List<ResourceResourceCategory>() { new ResourceResourceCategory() };
             return PartialView(addResourceViewModel);
         }
 
