@@ -1,0 +1,35 @@
+﻿@model PrototypeWithAuth.ViewModels.MaterialTabViewModel
+<div class="container-fluid new-modal-body m-0 " style="width:70%">
+    <div class="row">
+        @foreach (var material in Model.MaterialCategories)
+        {
+            <div class="col heading-1">
+                @material.MaterialCategoryDescription
+            </div>
+        }
+    </div>
+    <div class="row">
+        @foreach (var materialC in Model.MaterialCategories)
+        {
+            <div>
+                @{ var materialsPerCategory = Model.Materials.Where(m => m.MaterialCategoryID == materialC.MaterialCategoryID);
+                    foreach (var material in materialsPerCategory)
+                    {
+                        <div>@material.MaterialID</div>
+                    }
+                }
+            </div>
+
+        }
+    </div>
+    <div class="row">
+        @foreach (var material in Model.MaterialCategories)
+        {
+            <div class="col text-center">
+                <button value="@material.MaterialCategoryID" type="button" class="no-box-shadow btn p-0 m-0 addMaterial ">
+                    <i class="protocols-color icon-add_circle_outline-24px1" style="font-size: 3rem;"></i>
+                </button>
+            </div>
+        }
+    </div>
+</div>

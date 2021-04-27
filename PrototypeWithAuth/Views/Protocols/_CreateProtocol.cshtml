@@ -1,8 +1,9 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
+@using PrototypeWithAuth.ViewModels
     <script src="~/js/CreateProtocol.js"></script>
 <form action="" id="myForm" class=" on-form-modal protocol-form" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
     <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
-    <input type="hidden" asp-for="Protocol.ProtocolID"/>
+    <input type="hidden" class="createProtocolMasterProtocolID" asp-for="Protocol.ProtocolID"/>
     <div class="item-table">
         <ul class=" pl-0 nav" style="">
             <li class="list-inline-item m-0 nav-item">
@@ -135,7 +136,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                                     </a>
                                     <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
                                 </div>
-                            }
+                                        }
                         </div>
                     </div>
                     <div class="col-6 ">
@@ -168,26 +169,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
         </div>
 
         <div id="Materials" class="tab-pane fade in ">
-            <div class="container-fluid new-modal-body m-0 " style="width:70%">
-                <div class="row">
-                    @foreach (var material in Model.MaterialCategories)
-                    {
-                        <div class="col heading-1">
-                            @material.MaterialCategoryDescription
-                        </div>
-                    }
-                </div>
-                <div class="row">
-                    @foreach (var material in Model.MaterialCategories)
-                    {
-                        <div class="col text-center">
-                            <button value="@material.MaterialCategoryID" type="button" class="no-box-shadow btn p-0 m-0 addMaterial ">
-                                <i class="@color icon-add_circle_outline-24px1" style="font-size: 3rem;"></i>
-                            </button>
-                        </div>
-                    }
-                </div>
-            </div>
+           @{ await Html.RenderPartialAsync("_MaterialTab" , new MaterialTabViewModel { Materials = Model.Protocol.Materials, MaterialCategories = Model.MaterialCategories );}
         </div>
         <div id="Protocol" class="tab-pane fade in ">
             Protocol

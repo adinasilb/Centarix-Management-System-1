@@ -24,9 +24,9 @@ $(".addMaterial").click(function(){
 	 $.fn.CallPageRequest(url, "addMaterial");
 });
 $(".saveProtocol").click(function(){
+	e.preventDefault();
 	var formData = $("#myForm")[0];
 	$.ajax({
-			async: true,
 			url: "/Protocols/CreateProtocol/?",
 			traditional: true,
 			data:formData,
@@ -39,5 +39,23 @@ $(".saveProtocol").click(function(){
 				$("ul.tabs li:eq(1)").addClass("active").show();
 				$(".tab-content:eq(1)").show();
 			}
-		});
+			});
+	});
+
+$(".saveMaterial").click(function(e){
+	e.preventDefault();
+var formData = $(".materialForm")[0];
+	$.ajax({
+			url: "/Protocols/AddMaterialModal/?",
+			traditional: true,
+			data:formData,
+			contentType: true,
+			processData: true,
+			type: "POST",
+			cache: false,
+			success: function (data) {
+				$("#Materials").html(data);
+				$.fn.CloseModal('add-material');
+			}
+	});
 });
