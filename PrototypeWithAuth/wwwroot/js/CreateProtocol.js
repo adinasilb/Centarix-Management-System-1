@@ -23,36 +23,34 @@ $(".addMaterial").click(function(){
 	 var url="/Protocols/AddMaterialModal?materialTypeID="+$(this).val();
 	 $.fn.CallPageRequest(url, "addMaterial");
 });
-$(".saveProtocol").click(function(){
+$(".saveProtocol").click(function(e){
 	e.preventDefault();
-	var formData = $("#myForm")[0];
+	 var formData =new FormData($("#myForm")[0]);
 	$.ajax({
-			url: "/Protocols/CreateProtocol/?",
+			url: "/Protocols/CreateProtocol",
 			traditional: true,
 			data:formData,
-			contentType: true,
-			processData: true,
+			contentType: false,
+			processData: false,
 			type: "POST",
-			cache: false,
 			success: function (data) {
 				$("_CreateProtocol").html(data)
 				$("ul.tabs li:eq(1)").addClass("active").show();
 				$(".tab-content:eq(1)").show();
 			}
-			});
 	});
+});
 
 $(".saveMaterial").click(function(e){
 	e.preventDefault();
-var formData = $(".materialForm")[0];
+	var formData = new FormData($(".materialForm")[0]);
 	$.ajax({
-			url: "/Protocols/AddMaterialModal/?",
+			url: "/Protocols/AddMaterialModal",
 			traditional: true,
 			data:formData,
-			contentType: true,
-			processData: true,
+			contentType: false,
+			processData: false,
 			type: "POST",
-			cache: false,
 			success: function (data) {
 				$("#Materials").html(data);
 				$.fn.CloseModal('add-material');

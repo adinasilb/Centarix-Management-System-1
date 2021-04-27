@@ -1,9 +1,9 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
 @using PrototypeWithAuth.ViewModels
-    <script src="~/js/CreateProtocol.js"></script>
+
 <form action="" id="myForm" class=" on-form-modal protocol-form" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
     <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
-    <input type="hidden" class="createProtocolMasterProtocolID" asp-for="Protocol.ProtocolID"/>
+    <input type="hidden" class="createProtocolMasterProtocolID" asp-for="Protocol.ProtocolID" />
     <div class="item-table">
         <ul class=" pl-0 nav" style="">
             <li class="list-inline-item m-0 nav-item">
@@ -37,11 +37,11 @@
                         <input asp-for="Protocol.Name" class="form-control-plaintext border-bottom" />
                         <span asp-validation-for="Protocol.Name" class="text-danger-centarix"></span>
                     </div>
-                    <div class="col-4">
+                    @*<div class="col-4">
                         <label asp-for="Protocol.VersionNumber" class="control-label"></label>
                         <input asp-for="Protocol.VersionNumber" class="form-control-plaintext border-bottom" />
                         <span asp-validation-for="Protocol.VersionNumber" class="text-danger-centarix"></span>
-                    </div>
+                    </div>*@
                     <div class="col-4">
                         <label asp-for="Protocol.UniqueCode" class="control-label"></label>
                         <input asp-for="Protocol.UniqueCode" class="form-control-plaintext border-bottom" />
@@ -136,7 +136,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                                     </a>
                                     <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
                                 </div>
-                                        }
+                            }
                         </div>
                     </div>
                     <div class="col-6 ">
@@ -169,10 +169,12 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
         </div>
 
         <div id="Materials" class="tab-pane fade in ">
-           @{ await Html.RenderPartialAsync("_MaterialTab" , new MaterialTabViewModel { Materials = Model.Protocol.Materials, MaterialCategories = Model.MaterialCategories );}
+            @{ await Html.RenderPartialAsync("_MaterialTab", new MaterialTabViewModel { Materials = Model.Protocol.Materials, MaterialCategories = Model.MaterialCategories });
+            }
         </div>
         <div id="Protocol" class="tab-pane fade in ">
             Protocol
         </div>
     </div>
 </form>
+<script src="~/js/CreateProtocol.js"></script>

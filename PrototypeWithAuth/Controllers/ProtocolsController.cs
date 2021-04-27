@@ -245,20 +245,27 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            var protocol = new Protocol() { Urls = new List<Link>() { new Link(), new Link()} };
+            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            return View(viewmodel);
+        }
+
+        private CreateProtocolsViewModel FillCreateProtocolsViewModel()
+        {
+            var protocol = new Protocol() { Urls = new List<Link>() { new Link(), new Link() }, Materials = new List<Material>() };
             protocol.ProtocolTypeID = 1;
 
             var viewmodel = new CreateProtocolsViewModel()
             {
                 Protocol = protocol,
                 ProtocolCategories = _context.ProtocolCategories,
-                ProtocolSubCategories = _context.ProtocolSubCategories,     
+                ProtocolSubCategories = _context.ProtocolSubCategories,
                 MaterialCategories = _context.MaterialCategories
-               
+
             };
             FillDocumentsInfo(viewmodel, "");
-            return View(viewmodel);
+            return viewmodel;
         }
+
         public async Task<IActionResult> AddMaterialModal(int materialTypeID, int ProtocolID)
         {
             var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
@@ -303,6 +310,9 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel)
         {
+            createProtocolsViewModel.ProtocolCategories = _context.ProtocolCategories;
+            createProtocolsViewModel.ProtocolSubCategories = _context.ProtocolSubCategories;
+            createProtocolsViewModel.MaterialCategories = _context.MaterialCategories;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -335,7 +345,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.KitProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            return View();
+            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            return View(viewmodel);
         }
 
         public async Task<IActionResult> SopProtocol()
@@ -343,28 +354,32 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SOPProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            return View();
+            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            return View(viewmodel);
         }
         public async Task<IActionResult> BufferCreating()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.BufferCreating;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            return View();
+            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            return View(viewmodel);
         }
         public async Task<IActionResult> RobioticProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.RoboticProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            return View();
+            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            return View(viewmodel);
         }
         public async Task<IActionResult> MaintenanceProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MaintenanceProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            return View();
+            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            return View(viewmodel);
         }
 
         public async Task<IActionResult> DailyReports()
