@@ -419,8 +419,10 @@ namespace PrototypeWithAuth.Controllers
             var addResourceViewModel = new AddResourceViewModel()
             {
                 ResourceType = Convert.ToInt32(ResourceType),
-                ResourceCategories = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList()
+                ResourceCategories = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList(),
+                Resource = new Resource()
             };
+            addResourceViewModel.Resource.ResourceResourceCategories = new List<ResourceResourceCategory>() { new ResourceResourceCategory() };
             return PartialView(addResourceViewModel);
         }
 

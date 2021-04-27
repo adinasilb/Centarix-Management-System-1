@@ -19,8 +19,10 @@ namespace PrototypeWithAuth.Models
         public string PubMedID { get; set; }
         public string City { get; set; }
         public string Journal { get; set; }
+
         //public IEnumerable<TagArticle> TagArticles { get; set; }
         public int ResourceTypeID { get; set; }
         public ResourceType ResourceType { get; set; }
+        public IEnumerable<ResourceCategory> ResourceCategories { get; set; }
     }
 }
