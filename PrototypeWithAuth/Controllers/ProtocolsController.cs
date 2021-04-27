@@ -27,6 +27,8 @@ namespace PrototypeWithAuth.Controllers
             _userManager = userManager;
             _hostingEnvironment = hostingEnvironment;
         }
+
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Index()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -36,6 +38,8 @@ namespace PrototypeWithAuth.Controllers
 
             return View(/*viewmodel*/);
         }
+
+        [Authorize(Roles = "Protocols")]
         private static IQueryable<Protocol> filterListBySelectFilters(SelectedProtocolsFilters selectedFilters, IQueryable<Protocol> fullRequestsListProprietary)
         {
             if (selectedFilters != null)
@@ -57,6 +61,7 @@ namespace PrototypeWithAuth.Controllers
             return fullRequestsListProprietary;
         }
 
+        [Authorize(Roles = "Protocols")]
         private async Task<ProtocolsIndexViewModel> GetIndexViewModel(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedFilters = null)
         {
             IQueryable<Protocol> ProtocolsPassedIn = Enumerable.Empty<Protocol>().AsQueryable();
@@ -99,6 +104,8 @@ namespace PrototypeWithAuth.Controllers
             protocolsIndexViewModel.ProtocolsFilterViewModel = GetProtocolFilterViewModel(selectedFilters);
             return protocolsIndexViewModel;
         }
+
+        [Authorize(Roles = "Protocols")]
         private ProtocolsInventoryFilterViewModel GetProtocolFilterViewModel(SelectedProtocolsFilters selectedFilters = null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
         {
             if (selectedFilters != null)
@@ -135,6 +142,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        [Authorize(Roles = "Protocols")]
         private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRows(ProtocolsIndexObject protocolsIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProtocols, IQueryable<Protocol> ProtocolPassedInWithInclude)
         {
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
@@ -162,6 +170,7 @@ namespace PrototypeWithAuth.Controllers
             return onePageOfProtocols;
         }
 
+        [Authorize(Roles = "Protocols")]
         private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetListRows(ProtocolsIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProtocols, IQueryable<Protocol> ProtocolPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
             onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(p => new RequestIndexPartialRowViewModel()
@@ -182,6 +191,7 @@ namespace PrototypeWithAuth.Controllers
             return onePageOfProtocols;
         }
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> CurrentProtocols()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -189,6 +199,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsWorkflow;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Projects()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -196,6 +207,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsWorkflow;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> SharedProjects()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -203,6 +215,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsWorkflow;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Calendar()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -210,6 +223,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsWorkflow;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> MyProtocols()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -218,6 +232,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ProtocolsFavorites()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -226,6 +241,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ProtocolsSharedWithMe()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -233,6 +249,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> LastProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -240,6 +257,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ResearchProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -259,6 +277,7 @@ namespace PrototypeWithAuth.Controllers
             FillDocumentsInfo(viewmodel, "");
             return View(viewmodel);
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddMaterialModal(int materialTypeID, int ProtocolID)
         {
             var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
@@ -298,6 +317,7 @@ namespace PrototypeWithAuth.Controllers
         //}
 
         [HttpPost]
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel)
         {
             //refill view model to send ba
@@ -323,6 +343,7 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> KitProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -331,6 +352,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> SopProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -338,6 +360,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> BufferCreating()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -345,6 +368,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> RobioticProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -352,6 +376,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> MaintenanceProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -360,6 +385,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> DailyReports()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -367,6 +393,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> WeeklyReports()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -374,6 +401,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> MonthlyReports()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -382,6 +410,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ReportsSharedWithMe()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -390,6 +419,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Library(int? CategoryType = 1)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -415,6 +445,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Protocols")]
 
         public async Task<IActionResult> AddResource(int? ResourceType = 1)
         {
@@ -433,6 +464,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Personal()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -441,6 +473,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ResourcesSharedWithMe()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -448,6 +481,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
             return View();
         }
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ResourcesFavorites()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -456,6 +490,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Active()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -465,6 +500,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Done()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -475,7 +511,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Requests")]
+        [Authorize(Roles = "Protocols")]
         public ActionResult DocumentsModal(int? id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
     AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols)
         {
@@ -494,6 +530,7 @@ namespace PrototypeWithAuth.Controllers
 
 
 
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Search()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -516,12 +553,14 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Protocols")]
         public override void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
             base.DocumentsModal(documentsModalViewModel);
         }
 
 
+        [Authorize(Roles = "Protocols")]
         private void FillDocumentsInfo(CreateProtocolsViewModel createProtoclsViewModel, string uploadFolder)
         {
             createProtoclsViewModel.DocumentsInfo = new List<DocumentFolder>();
