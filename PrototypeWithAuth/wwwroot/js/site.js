@@ -1455,6 +1455,7 @@ $(function () {
 		}
 		else if (type == 'details') {
 			enableMarkReadonly($(this));
+			$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
 			$(".proprietryHidenCategory").attr("disabled", false);
 		}
 		//}

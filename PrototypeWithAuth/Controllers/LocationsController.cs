@@ -441,7 +441,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 for (int w = 0; w < amountOfParentLevels; w++)//until finished with names from the list before
                                 {
-                                    if (first)
+                                        if (first)
                                     {
                                         //if this is the first level - locations with no parents
                                         parentId = addLocationViewModel.LocationInstance.LocationInstanceID;
@@ -452,50 +452,54 @@ namespace PrototypeWithAuth.Controllers
                                         parentId = placeholderInstanceIds[b - 1][w]; //get the first id in the list in the depth before
                                     }
                                     lastParent = _context.LocationInstances.Where(li => li.LocationInstanceID == parentId).FirstOrDefault();
+                                    if(lastParent!= null && !lastParent.IsEmptyShelf)
+                                    { 
                                     locationNumber = 1;
                                     typeNumber = 1; //the number of this depth added to this name
                                                         //RESET THE HEIGHTS ANDS WIDTHS TO ACCOUNT FOR FIRSTS BEFORE RUNNIN OR ITLL CRASHs
                                     int sublocationHeight = subLocationViewModel.LocationInstances[b].Height;
-                                    for (int x = 0; x < sublocationHeight; x++)
-                                    {
-                                        int unicode = x + 65;
-                                        char character = (char)unicode;
-                                        int sublocationWidth = subLocationViewModel.LocationInstances[b].Width;
-                                        if (b == 4)
-                                        { 
-                                            sublocationWidth = sublocationHeight;
-                                            typeName = character.ToString();
-                                            typeNumber = 1;
-                                        }
-                                        else if (sublocationWidth == 0) 
-                                        { 
-                                            sublocationWidth = 1; 
-                                        }
-                                        for (int y = 0; y < sublocationWidth; y++)
+                                    
+                                        for (int x = 0; x < sublocationHeight; x++)
                                         {
-                                            currentAbbrev = typeName + (typeNumber).ToString();
-                                            typeNumber++; //increment this
-
-                                            LocationInstance newSublocationInstance = new LocationInstance()
+                                            int unicode = x + 65;
+                                            char character = (char)unicode;
+                                            int sublocationWidth = subLocationViewModel.LocationInstances[b].Width;
+                                            if (b == 4)
                                             {
-                                                LocationInstanceAbbrev = currentAbbrev,
-                                                LocationInstanceName = lastParent.LocationInstanceName + currentAbbrev,
-                                                LocationInstanceParentID = parentId,
-                                                Height = height,
-                                                Width = width,
-                                                LocationNumber = locationNumber,
-                                                LocationTypeID = typeId
-                                            };
-                                            locationNumber++;
-                                            if (b == 0) //Testing Shelves
-                                            {
-                                                if (subLocationViewModel.EmptyShelves80?.ContainsKey(x) == true && subLocationViewModel.EmptyShelves80[x])
-                                                {
-                                                    newSublocationInstance.IsEmptyShelf = true;
-                                                }
+                                                sublocationWidth = sublocationHeight;
+                                                typeName = character.ToString();
+                                                typeNumber = 1;
                                             }
-                                            _context.Add(newSublocationInstance);
-                                            waitingLocations.Add(newSublocationInstance);
+                                            else if (sublocationWidth == 0)
+                                            {
+                                                sublocationWidth = 1;
+                                            }
+                                            for (int y = 0; y < sublocationWidth; y++)
+                                            {
+                                                currentAbbrev = typeName + (typeNumber).ToString();
+                                                typeNumber++; //increment this
+
+                                                LocationInstance newSublocationInstance = new LocationInstance()
+                                                {
+                                                    LocationInstanceAbbrev = currentAbbrev,
+                                                    LocationInstanceName = lastParent.LocationInstanceName + currentAbbrev,
+                                                    LocationInstanceParentID = parentId,
+                                                    Height = height,
+                                                    Width = width,
+                                                    LocationNumber = locationNumber,
+                                                    LocationTypeID = typeId
+                                                };
+                                                locationNumber++;
+                                                if (b == 0) //Testing Shelves
+                                                {
+                                                    if (subLocationViewModel.EmptyShelves80?.ContainsKey(x) == true && subLocationViewModel.EmptyShelves80[x])
+                                                    {
+                                                        newSublocationInstance.IsEmptyShelf = true;
+                                                    }
+                                                }
+                                                _context.Add(newSublocationInstance);
+                                                waitingLocations.Add(newSublocationInstance);
+                                            }
                                         }
                                     }
                                 }
@@ -592,7 +596,7 @@ namespace PrototypeWithAuth.Controllers
 
                                     subLocationViewModel.LocationInstances[i].LocationInstanceName = lastParent.LocationInstanceName + labPartNameAbrev;
                                     subLocationViewModel.LocationInstances[i].LocationInstanceAbbrev = labPartNameAbrev;
-                                    subLocationViewModel.LocationInstances[i].LocationNumber = labPartByTypeCount;
+                                    subLocationViewModel.LocationInstances[i].LocationNumber = labPartByTypeCount + 1;
 
                                     if (subLocationViewModel.LocationInstances.Count() > 2)
                                     {
