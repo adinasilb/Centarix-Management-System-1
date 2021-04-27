@@ -35,8 +35,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            pro
-            var viewmodel = await GetIndexViewModel(requestIndexObject);
+            var viewmodel = await GetIndexViewModel(new ProtocolsIndexObject() { });
 
             return View(viewmodel);
         }
@@ -67,7 +66,8 @@ namespace PrototypeWithAuth.Controllers
         private async Task<ProtocolsIndexViewModel> GetIndexViewModel(ProtocolsIndexObject protocolsIndexObject, SelectedProtocolsFilters selectedFilters = null)
         {
             IQueryable<Protocol> ProtocolsPassedIn = Enumerable.Empty<Protocol>().AsQueryable();
-            IQueryable<Protocol> fullProtocolsList = _context.Protocols;
+            IQueryable<Protocol> fullProtocolsList = _context.Protocols.Include(p => p.ApplicationUserCreator).Include(p => p.ProtocolSubCategory)
+                .ThenInclude(p => p.ProtocolCategoryType).Include(p => p.ProtocolType);
 
             switch (protocolsIndexObject.PageType)
             {
@@ -345,6 +345,9 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     createProtocolsViewModel.Protocol.Urls = createProtocolsViewModel.Protocol.Urls.Where(u => u.LinkDescription != null && u.Url != null).ToList();
+
+                    createProtocolsViewModel.Protocol.CreationDate = DateTime.Now;
+                    createProtocolsViewModel.Protocol.ApplicationUserCreatorID =  _userManager.GetUserId(User);
                     if(createProtocolsViewModel.Protocol.ProtocolID ==0)
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Added;
