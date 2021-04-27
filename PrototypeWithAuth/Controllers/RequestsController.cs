@@ -2117,8 +2117,18 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 LocationInstance = li,
                                 IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == id).Any()
-                            }).ToList();
+                            }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
 
+                        List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
+                        foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
+                        {
+                            liPlaces.Add(new LocationInstancePlace()
+                            {
+                                LocationInstanceId = cli.LocationInstance.LocationInstanceID,
+                                Placed = cli.IsThisRequest
+                            }) ;
+                        }
+                        receivedModalVisualViewModel.LocationInstancePlaces = liPlaces;
                         //return NotFound();
                     }
                     requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
@@ -2190,7 +2200,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
+        public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -2273,7 +2283,6 @@ namespace PrototypeWithAuth.Controllers
                         }
                         _context.Update(request);
                         await _context.SaveChangesAsync();
-
 
 
                         if (requestItemViewModel.Comments != null)
@@ -3399,33 +3408,12 @@ namespace PrototypeWithAuth.Controllers
 
             var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
             LocationInstance secondChildLi = null;
-            bool Is80Freezer = false;
-            bool Is25Freezer = false;
-            var hasEmptyShelves = false;
             if (firstChildLI != null)
             {
                 secondChildLi = _context.LocationInstances.Where(li => li.LocationInstanceParentID == firstChildLI.LocationInstanceID).FirstOrDefault(); //second child is to ensure it doesn't have any box units
             }
-            if (parentLocationInstance.LocationTypeID == 200) //check if it containes empty shelves ONLY IF -80
-            {
-                Is80Freezer = true;
-                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmptyShelf == true).ToList();
-                if (shelves.Any())
-                {
-                    hasEmptyShelves = true;
-                }
-            }
-
-            if (parentLocationInstance.LocationTypeID == 500) //check if it containes empty shelves ONLY IF 25
-            {
-                Is25Freezer = true;
-                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmptyShelf == true).ToList();
-                if (shelves.Any())
-                {
-                    hasEmptyShelves = true;
-                }
-            }
-            if (/*parentLocationInstance.IsEmptyShelf == true ||*/ (secondChildLi != null && !Is80Freezer) || (Is80Freezer && hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
+            
+            if (secondChildLi != null)
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
@@ -3466,6 +3454,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(100_000_000)]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {

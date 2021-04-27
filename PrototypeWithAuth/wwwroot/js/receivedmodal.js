@@ -223,7 +223,8 @@
 	//	//now send a new visual
 	//});
 
-	$(".visual-locations td").on("click", function (e) {
+	$(".visual-locations td").off("click").on("click", function (e) {
+		console.log("clicked")
 		if (!$(this).hasClass("not-clickable")) {
 			
 			if ($(this).has("i").length) {
@@ -231,7 +232,7 @@
 				var lip = $(".liid." + locationInstanceId);
 				console.log("lip val: " + lip.val());
 				$(".complete-order").removeClass("disabled-submit")
-				if (lip.val() == "true") {
+				if (lip.val().toLowerCase() == "true") {
 					//console.log("TRUE!");
 					lip.val("false"); //IMPT: sending back the true value to controller to place it here
 
@@ -245,6 +246,7 @@
 
 				}
 				else {
+					console.log("empty")
 					$(this).children(".css-checkbox").addClass("first");
 					//console.log("FALSE!");
 					lip.val("true"); //IMPT: sending back the true value to controller to place it here
