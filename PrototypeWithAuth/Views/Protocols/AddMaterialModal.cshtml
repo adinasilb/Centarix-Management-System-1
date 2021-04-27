@@ -90,3 +90,29 @@
         </div>
     </div>
 </div>
+<script>
+
+    $(".saveMaterial").click(function (e) {
+        e.preventDefault();
+        var formData = new FormData($(".materialForm")[0]);
+        $.ajax({
+            url: "/Protocols/AddMaterialModal",
+            traditional: true,
+            data: formData,
+            contentType: false,
+            processData: false,
+            type: "POST",
+            success: function (data) {
+                $("#Materials").html(data);
+                $.fn.CloseModal('add-material');
+            },
+            error: function (jqxhr) {
+                if (jqxhr.status == 500) {
+                    $.fn.OpenModal('add-material');
+                }
+                return true;
+            }
+        });
+    });
+
+</script>

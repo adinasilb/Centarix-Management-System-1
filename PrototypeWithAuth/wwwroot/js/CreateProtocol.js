@@ -20,40 +20,6 @@
   });
 
 $(".addMaterial").click(function(){
-	 var url="/Protocols/AddMaterialModal?materialTypeID="+$(this).val();
+	 var url="/Protocols/AddMaterialModal?materialTypeID="+$(this).val()+"&ProtocolID="+$(".createProtocolMasterProtocolID").val();
 	 $.fn.CallPageRequest(url, "addMaterial");
-});
-$(".saveProtocol").click(function(e){
-	e.preventDefault();
-	 var formData =new FormData($("#myForm")[0]);
-	$.ajax({
-			url: "/Protocols/CreateProtocol",
-			traditional: true,
-			data:formData,
-			contentType: false,
-			processData: false,
-			type: "POST",
-			success: function (data) {
-				$("_CreateProtocol").html(data)
-				$("ul.tabs li:eq(1)").addClass("active").show();
-				$(".tab-content:eq(1)").show();
-			}
-	});
-});
-
-$(".saveMaterial").click(function(e){
-	e.preventDefault();
-	var formData = new FormData($(".materialForm")[0]);
-	$.ajax({
-			url: "/Protocols/AddMaterialModal",
-			traditional: true,
-			data:formData,
-			contentType: false,
-			processData: false,
-			type: "POST",
-			success: function (data) {
-				$("#Materials").html(data);
-				$.fn.CloseModal('add-material');
-			}
-	});
 });

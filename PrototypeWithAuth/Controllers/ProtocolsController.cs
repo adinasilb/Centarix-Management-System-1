@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
@@ -34,9 +35,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            // var viewmodel = await GetIndexViewModel(requestIndexObject);
+            pro
+            var viewmodel = await GetIndexViewModel(requestIndexObject);
 
-            return View(/*viewmodel*/);
+            return View(viewmodel);
         }
 
         [Authorize(Roles = "Protocols")]
@@ -263,14 +265,23 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(1);
             return View(viewmodel);
         }
 
-        private CreateProtocolsViewModel FillCreateProtocolsViewModel()
+        private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID =0 )
         {
-            var protocol = new Protocol() { Urls = new List<Link>() { new Link(), new Link() }, Materials = new List<Material>() };
-            protocol.ProtocolTypeID = 1;
+            var protocol =  _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault()?? new Protocol();
+            protocol.Urls = await _context.Links.Where(l => l.ProtocolID == protocolID).ToListAsync();
+            if(protocol.Urls.Count()<2)
+            {
+                while(protocol.Urls.Count()<2)
+                {
+                    protocol.Urls.Add(new Link());
+                }
+            }
+            protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).ToListAsync();
+            protocol.ProtocolTypeID = typeID;
 
             var viewmodel = new CreateProtocolsViewModel()
             {
@@ -278,7 +289,6 @@ namespace PrototypeWithAuth.Controllers
                 ProtocolCategories = _context.ProtocolCategories,
                 ProtocolSubCategories = _context.ProtocolSubCategories,
                 MaterialCategories = _context.MaterialCategories
-
             };
             FillDocumentsInfo(viewmodel, "");
             return viewmodel;
@@ -309,7 +319,7 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     addMaterialViewModel.Material.ProductID = product.ProductID;
-                    _context.Add(addMaterialViewModel.Material);
+                    _context.Entry(addMaterialViewModel.Material).State = EntityState.Added;
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
@@ -329,42 +339,57 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel)
         {
-            createProtocolsViewModel.ProtocolCategories = _context.ProtocolCategories;
-            createProtocolsViewModel.ProtocolSubCategories = _context.ProtocolSubCategories;
-            createProtocolsViewModel.MaterialCategories = _context.MaterialCategories;
+        
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    _context.Add(createProtocolsViewModel.Protocol);
+                    createProtocolsViewModel.Protocol.Urls = createProtocolsViewModel.Protocol.Urls.Where(u => u.LinkDescription != null && u.Url != null).ToList();
+                    if(createProtocolsViewModel.Protocol.ProtocolID ==0)
+                    {
+                        _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Added;
+                    }
+                    else
+                    {
+                        _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Modified;
+                    }
+                    foreach(var url in createProtocolsViewModel.Protocol.Urls)
+                    {
+                        if(url.LinkID ==0)
+                        {
+                            _context.Entry(url).State = EntityState.Added;
+                        }
+                        else
+                        {
+                            _context.Entry(url).State = EntityState.Modified;
+                        }
+                    }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     MoveDocumentsOutOfTempFolder(createProtocolsViewModel.Protocol.ProtocolID, AppUtility.ParentFolderName.Protocols);
+                    createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
+                    return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
                 }
                 catch (Exception ex)
                 {
+                    createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolID, createProtocolsViewModel.Protocol.ProtocolTypeID);
                     createProtocolsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;
                     await transaction.RollbackAsync();
+                    return PartialView("_CreateProtocol", createProtocolsViewModel);
                 }
-                return PartialView("_CreateProtocol", createProtocolsViewModel);
+
             }
 
         }
 
-        private void FillCreateProtocolsModel(CreateProtocolsViewModel createProtocolsViewModel)
-        {
-            createProtocolsViewModel.ProtocolCategories = _context.ProtocolCategories;
-            createProtocolsViewModel.ProtocolSubCategories = _context.ProtocolSubCategories;
-            createProtocolsViewModel.MaterialCategories = _context.MaterialCategories;
-        }
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> KitProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.KitProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            CreateProtocolsViewModel viewmodel =await FillCreateProtocolsViewModel(2);
             return View(viewmodel);
         }
 
@@ -374,7 +399,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SOPProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(3);
             return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
@@ -383,7 +408,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.BufferCreating;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(4);
             return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
@@ -392,7 +417,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.RoboticProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(5);
             return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
@@ -401,7 +426,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MaintenanceProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            CreateProtocolsViewModel viewmodel = FillCreateProtocolsViewModel();
+            CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(6);
             return View(viewmodel);
         }
 

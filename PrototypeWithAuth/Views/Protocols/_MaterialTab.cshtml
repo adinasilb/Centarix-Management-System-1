@@ -11,14 +11,18 @@
     <div class="row">
         @foreach (var materialC in Model.MaterialCategories)
         {
-            <div>
-                @{ var materialsPerCategory = Model.Materials.Where(m => m.MaterialCategoryID == materialC.MaterialCategoryID);
+        <div>
+            @{ var materialsPerCategory = Model.Materials.Where(m => m.MaterialCategoryID == materialC.MaterialCategoryID);
+                if (materialsPerCategory.Count() > 0)
+                {
                     foreach (var material in materialsPerCategory)
                     {
                         <div>@material.MaterialID</div>
                     }
                 }
-            </div>
+
+            }
+        </div>
 
         }
     </div>
