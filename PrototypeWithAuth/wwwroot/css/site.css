@@ -2404,10 +2404,15 @@ body.modal-open .popover{
 .form-element-border-right {
     border-right: .2rem solid #E5E5E5;
 }
-.material-cards {  
-    padding:1rem;
+.material-cards {
+    padding-top: 1rem;
+    padding-bottom: .5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    width: 100%;
 }
 .card-border {
     border: solid 2px #CBCBCB;
     border-radius: .75rem;
+
 }

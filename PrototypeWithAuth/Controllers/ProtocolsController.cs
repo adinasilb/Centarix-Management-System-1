@@ -323,7 +323,11 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    addMaterialViewModel.Material.ProductID = product.ProductID;
+                    if(product !=null)
+                    {
+                        addMaterialViewModel.Material.ProductID = product.ProductID;
+                    }
+                   
                     _context.Entry(addMaterialViewModel.Material).State = EntityState.Added;
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
@@ -337,7 +341,9 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("AddMaterialModal", addMaterialViewModel);
                 }
             }
-            return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = _context.Materials.Where(m => m.ProtocolID == addMaterialViewModel.Material.ProtocolID), MaterialCategories = _context.MaterialCategories });
+            var folders = new List<DocumentFolder>();
+            GetExistingFileStrings(folders, AppUtility.FolderNamesEnum.MaterialPictures, AppUtility.ParentFolderName.Protocols.ToString());
+            return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = _context.Materials.Include(m => m.Product).Where(m => m.ProtocolID == addMaterialViewModel.Material.ProtocolID), MaterialCategories = _context.MaterialCategories, Folders = folders });
         }
 
 
@@ -653,7 +659,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public override void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
+        public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
             base.DocumentsModal(documentsModalViewModel);
         }

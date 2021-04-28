@@ -3627,7 +3627,7 @@ namespace PrototypeWithAuth.Controllers
       
 
         [HttpPost]
-        public override void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
+        public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
             base.DocumentsModal(documentsModalViewModel);
         }
@@ -5410,12 +5410,12 @@ namespace PrototypeWithAuth.Controllers
         }
         //public async Task<bool> PopulateProductSerialNumber()
         //{
-        //    var products = _context.Products.Select(p => p).Include(p =>p.ProductSubcategory.ParentCategory).ToList();
+        //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();
         //    var operationSerialNumber = 0;
         //    var orderSerialNumber = 0;
         //    foreach (var product in products)
         //    {
-        //        if(product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+        //        if (product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
         //        {
         //            product.SerialNumber = "L" + orderSerialNumber;
         //            orderSerialNumber++;
