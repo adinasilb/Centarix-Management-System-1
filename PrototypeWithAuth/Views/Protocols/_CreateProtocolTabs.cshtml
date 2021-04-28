@@ -5,6 +5,7 @@
 <div id="Theory" class="tab-pane fade in active show">
     <div class="container-fluid new-modal-body m-0" style="width:55%">
         <input type="hidden" class="createProtocolMasterProtocolID" value="@Model.Protocol.ProtocolID" />
+        <input type="hidden" asp-for="Protocol.ProtocolID" />
         <div class="row under-row-margin">
             <div class="col-4">
                 <label asp-for="Protocol.Name" class="control-label"></label>

@@ -39,14 +39,14 @@ function ajaxPartialIndexTable(url, viewClass, type, formdata, modalClass = "") 
 	return false;
 }
 
-$(".load-protocol").click(function(){
+$(".load-protocol").click(function(e){
 	var val = $(this).val();
 	$.ajax({
 		url: "/Protocols/_IndexTableWithEditProtocol?protocolID="+val,
 		async: true,
 		type: "GET",
 		success: function (data) {
-			$("_IndexTable").html(data);
+			$("._IndexTable").html(data);
 			return true;
 		}
 	});

@@ -280,7 +280,7 @@ namespace PrototypeWithAuth.Controllers
                     protocol.Urls.Add(new Link());
                 }
             }
-            protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).ToListAsync();
+            protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).Include(m=>m.Product).ToListAsync();
             if(typeID!=0)
             {
                 protocol.ProtocolTypeID = typeID;

@@ -2385,6 +2385,10 @@ body.modal-open .popover{
     border: 1px solid transparent;
     margin: .375rem;
 }
+.material-cards {  
+    padding:1rem;
+}
 .card-border {
     border: solid 2px #CBCBCB;
+    border-radius: .75rem;
 }

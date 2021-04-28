@@ -11,17 +11,33 @@
     <div class="row">
         @foreach (var materialC in Model.MaterialCategories)
         {
-        <div>
-            @{ var materialsPerCategory = Model.Materials.Where(m => m.MaterialCategoryID == materialC.MaterialCategoryID);
-                if (materialsPerCategory.Count() > 0)
-                {
-                    foreach (var material in materialsPerCategory)
+        <div class="col">
+            <div class="container">
+                @{ var materialsPerCategory = Model.Materials.Where(m => m.MaterialCategoryID == materialC.MaterialCategoryID);
+                    if (materialsPerCategory.Count() > 0)
                     {
-                        <div class="card-border">@material.MaterialID</div>
-                    }
-                }
+                        foreach (var material in materialsPerCategory)
+                        {
+                            var materialName = material.Name ?? material.Product.ProductName;
+                            <div class="row">
+                                <div class="card-border material-cards">@materialName</div>
+                            </div>
+                            <div class="card-body d-flex text-center align-items-center justify-content-center">
 
-            }
+                                <a  target="_blank" class="mx-3  view-img">
+                                    <i class="icon-centarix-icons-09 order-inv-color " style="font-size:2rem"></i>
+                                </a>
+
+                                <a href="" class="delete-document  Requests mx-3" url="/Requests/DeleteDocumentModal/554?FileString=Requests%5C554%5COrders%5C1image%20(1).png&amp;RequestFolderNameEnum=Orders&amp;IsEdittable=True&amp;SectionType=Requests">
+                                    <i style="font-size:2rem;" class="icon-delete-24px documents-delete-icon hover-bold disabled-filter"></i>
+                                </a>
+                            </div>
+                        }
+                    }
+
+                }
+            </div>
+          
         </div>
 
         }
