@@ -1,6 +1,6 @@
 ﻿$(function () {
 	$(".add-resource").on("click", function (e) {
-		var url = "/Protocols/AddResource?ResourceType=";
+		var url = "/Protocols/AddResource?resourceType=";
 		if ($(".articles").hasClass("active")) {
 			url += "1";
 		}
