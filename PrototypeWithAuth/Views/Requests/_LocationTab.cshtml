@@ -4,9 +4,9 @@
 @using PrototypeWithAuth.Data
 @using PrototypeWithAuth.AppData
 @{
-    var disabled = "disable-custom-mdbselect";
+    var disabled = "mark-readonly disable-custom-mdbselect";
     var disable = "";
-    if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary )
+    if (Model.PageType == AppUtility.PageTypeEnum.RequestSummary)
     {
         disabled = "";
 
@@ -18,7 +18,19 @@
 }
 
 <div class="row modal-tab-name">
-    <span class="heading-1 col-12 modal-tab-name">Location</span>
+    <span class="heading-1 col-4">Location</span>
+    @{
+        if (Model.ModalType == AppUtility.RequestModalType.Summary)
+        {
+            <div class="switch col-4 offset-4 switch-margin text-right">
+                <label>
+                    <label class="edit-mode-switch-description">Edit Mode Off</label>
+                    <input type="checkbox" class="turn-edit-on-off  locations " value="@Model.Requests.FirstOrDefault().RequestID" productID="@Model.Requests.FirstOrDefault().ProductID" name="details">
+                    <span class="lever"></span>
+                </label>
+            </div>
+            }
+        }
 </div>
 <div class="row">
     @{
@@ -36,7 +48,7 @@
             <label class="control-label" asp-for="ReceivedLocationViewModel.locationTypesDepthZero">Location Type</label>
             <div class=" form-control-plaintext border-bottom p-0">
                 <span class="choose p-0"></span>
-                <div class="dropdown dropdown-main @disabled">
+                <div class="dropdown choose-location dropdown-main @disabled">
                     <div class="select d-inline-flex">
                         <span class="caret py-0">
                             ▼
@@ -82,7 +94,7 @@
                                 <div class="">
                                     <div class=" form-control-plaintext border-bottom p-0">
                                         <span class="choose p-0"></span>
-                                        <div class="dropdown dropdown-main @disabled ">
+                                        <div class="dropdown choose-location dropdown-main @disabled ">
                                             <div class="select d-inline-flex">
                                                 <span class="caret py-0">
                                                     ▼
@@ -120,7 +132,7 @@
                                 <div class="">
                                     <div class=" form-control-plaintext border-bottom p-0">
                                         <span class="choose p-0"></span>
-                                        <div class="dropdown dropdown-main @disabled">
+                                        <div class="dropdown choose-location dropdown-main @disabled">
                                             <div class="select d-inline-flex " style="padding-right:1.25rem;">
                                                 <span class="caret py-0">
                                                     ▼
