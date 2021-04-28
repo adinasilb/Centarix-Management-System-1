@@ -269,22 +269,22 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
-        private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID =0 )
+        private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID = 0)
         {
-            var protocol =  _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault()?? new Protocol();
+            var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
             protocol.Urls = await _context.Links.Where(l => l.ProtocolID == protocolID).ToListAsync();
-            if(protocol.Urls.Count()<2)
+            if (protocol.Urls.Count() < 2)
             {
-                while(protocol.Urls.Count()<2)
+                while (protocol.Urls.Count() < 2)
                 {
                     protocol.Urls.Add(new Link());
                 }
             }
-            protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).Include(m=>m.Product).ToListAsync();
-            if(typeID!=0)
+            protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).Include(m => m.Product).ToListAsync();
+            if (typeID != 0)
             {
                 protocol.ProtocolTypeID = typeID;
-            }          
+            }
 
             var viewmodel = new CreateProtocolsViewModel()
             {
@@ -301,13 +301,13 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddMaterialModal(int materialTypeID, int ProtocolID)
         {
             var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
-          
-            var viewModel = new AddMaterialViewModel() 
+
+            var viewModel = new AddMaterialViewModel()
             {
                 Material = new Material()
                 {
                     MaterialCategoryID = materialTypeID,
-                    MaterialCategory = MaterialCategory, 
+                    MaterialCategory = MaterialCategory,
                     ProtocolID = ProtocolID
                 }
             };
@@ -347,7 +347,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel)
         {
-        
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -355,8 +355,8 @@ namespace PrototypeWithAuth.Controllers
                     createProtocolsViewModel.Protocol.Urls = createProtocolsViewModel.Protocol.Urls.Where(u => u.LinkDescription != null && u.Url != null).ToList();
 
                     createProtocolsViewModel.Protocol.CreationDate = DateTime.Now;
-                    createProtocolsViewModel.Protocol.ApplicationUserCreatorID =  _userManager.GetUserId(User);
-                    if(createProtocolsViewModel.Protocol.ProtocolID ==0)
+                    createProtocolsViewModel.Protocol.ApplicationUserCreatorID = _userManager.GetUserId(User);
+                    if (createProtocolsViewModel.Protocol.ProtocolID == 0)
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Added;
                     }
@@ -364,9 +364,9 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Modified;
                     }
-                    foreach(var url in createProtocolsViewModel.Protocol.Urls)
+                    foreach (var url in createProtocolsViewModel.Protocol.Urls)
                     {
-                        if(url.LinkID ==0)
+                        if (url.LinkID == 0)
                         {
                             _context.Entry(url).State = EntityState.Added;
                         }
@@ -408,7 +408,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.KitProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            CreateProtocolsViewModel viewmodel =await FillCreateProtocolsViewModel(2);
+            CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(2);
             return View(viewmodel);
         }
 
@@ -551,12 +551,23 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await _context.SaveChangesAsync(); //adding join table instances
                     await transaction.CommitAsync();
-                    //save image
+
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ResourceImages");
+                    string folder = Path.Combine(uploadFolder, addResourceViewModel.Resource.ResourceID.ToString());
+                    Directory.CreateDirectory(folder);
+                    if (addResourceViewModel.ResourceImage != null) //test for more than one???
+                    {
+                        string uniqueFileName = addResourceViewModel.ResourceImage.FileName;
+                        string filePath = Path.Combine(folder, uniqueFileName);
+                        FileStream filestream = new FileStream(filePath, FileMode.Create);
+                        addResourceViewModel.ResourceImage.CopyTo(filestream);
+                        filestream.Close();
+                    }
                 }
                 catch (Exception e)
                 {
                     await transaction.RollbackAsync();
-                    //unsave file
+                    //unsave file -- I saved file last so won't crash after the file save
                 }
 
             }
