@@ -670,9 +670,25 @@ input.select-dropdown {
     /*text-transform: uppercase;*/
 }
 
+.protocol-form .form-control-file::-webkit-file-upload-button {
+    background-color: var(--protocols-color);
+    border: 1px solid var(--protocols-color);
+}
+
 .users-form .form-control-file::-webkit-file-upload-button {
     background-color: var(--user-color);
     border: 1px solid var(--user-color);
+}
+.protocol-form .form-control-file::-webkit-file-upload-button:hover {
+    background-color: var(--protocols-color);
+    border: 1px solid var(--protocols-color);
+    border-radius: 3rem;
+    color: white;
+    font-weight: 500;
+    padding: 0.16rem 0.5rem;
+    font-size: 1rem;
+    line-height: 1;
+    /*text-transform: uppercase;*/
 }
 
 .accounting-form .form-control-file::-webkit-file-upload-button {
@@ -2384,4 +2400,7 @@ body.modal-open .popover{
     padding: .34rem 1.25rem !important;
     border: 1px solid transparent;
     margin: .375rem;
+}
+.form-element-border-right {
+    border-right: .2rem solid #E5E5E5;
 }

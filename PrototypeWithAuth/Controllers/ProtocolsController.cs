@@ -447,22 +447,57 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Protocols")]
 
-        public async Task<IActionResult> AddResource(int? ResourceType = 1)
+        public async Task<IActionResult> AddResource(int? resourceType = 1)
         {
-            
+
             var rc = _context.ResourceCategories.Where(rc => !rc.IsResourceType).ToList();
             ResourceCategoriesToAdd[] resourceCategoriesToAdds = new ResourceCategoriesToAdd[rc.Count];
             var addResourceViewModel = new AddResourceViewModel()
             {
-                ResourceType = Convert.ToInt32(ResourceType),
-                ResourceCategories =rc,
-                ResourceCategoriesToAdd = resourceCategoriesToAdds
+                //ResourceType = Convert.ToInt32(resourceType),
+                ResourceCategories = rc,
+                ResourceCategoriesToAdd = resourceCategoriesToAdds,
+                Resource = new Resource() { ResourceTypeID = Convert.ToInt32(resourceType) }
             };
 
             return PartialView(addResourceViewModel);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddResource(AddResourceViewModel addResourceViewModel)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Update(addResourceViewModel.Resource);
+                    await _context.SaveChangesAsync();
+
+                    var resourceCategoriesToAdd = addResourceViewModel.ResourceCategoriesToAdd.Where(rc => rc.Added).Select(rc => rc.ResourceCategoryID).ToList();
+                    //var resourceCategoriesAdded = _context.ResourceCategories.Where(rc1 => resourceCategoriesToAdd.Contains(rc1.ResourceCategoryID)).ToList();
+                    foreach (var resourceCategoryID in resourceCategoriesToAdd)
+                    {
+                        var resourceResourceCategory = new ResourceResourceCategory()
+                        {
+                            ResourceID = addResourceViewModel.Resource.ResourceID,
+                            ResourceCategoryID = resourceCategoryID
+                        };
+                        _context.Add(resourceResourceCategory);
+                    }
+                    await _context.SaveChangesAsync(); //adding join table instances
+                    await transaction.CommitAsync();
+                    //save image
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    //unsave file
+                }
+
+            }
+            return RedirectToAction("Library");
+        }
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Personal()

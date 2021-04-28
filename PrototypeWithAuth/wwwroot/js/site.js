@@ -683,6 +683,7 @@ $(function () {
 
 	});
 
+
 	$.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
 		var tdate = new Date();
 		var dd = tdate.getDate(); //yields day
