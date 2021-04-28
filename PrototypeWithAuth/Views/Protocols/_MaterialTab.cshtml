@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.ViewModels.MaterialTabViewModel
+@using PrototypeWithAuth.AppData
 <div class="container-fluid new-modal-body m-0 " style="width:70%">
     <div class="row">
         @foreach (var material in Model.MaterialCategories)
@@ -19,8 +20,12 @@
                         foreach (var material in materialsPerCategory)
                         {
                             var color = " protocols-color";
-                           // var seeMaterialColor = color;
-                            var materialNameColor = ""; 
+                            var seeMaterialColor = "disabled-color";
+                            if (material.Info !=null)
+                            {
+                                seeMaterialColor = color;
+                            }
+                            var materialNameColor = "";
                             var seeProductDetailsColor = "disabled-color";
                             if(material.Product!=null)
                             {
@@ -41,9 +46,9 @@
                                     <div class="text @materialNameColor">@materialName</div>
                                     <hr class="mb-2 mt-2"/>
                                     <div class=" d-flex text-center   align-items-center justify-content-sm-around">
-                                        <button class="update-image btn btn-link no-box-shadow p-0 m-0">
-                                            <i class=" icon-camera_alt-24px   " style="font-size:1.55rem"></i>
-                                        </button>
+                                        <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.MaterialPictures" data-id="@material.ProtocolID" id="@AppUtility.FolderNamesEnum.MaterialPictures" data-val="@true" showSwitch="@false">
+                                            <i class=" icon-camera_alt-24px " style="font-size:1.55rem"></i>
+                                        </a>
                                         <button class=" see-material  btn btn-link no-box-shadow p-0 m-0">
                                             <i class=" icon-info-24px-2 " style="font-size:1.55rem"></i>
                                         </button>
