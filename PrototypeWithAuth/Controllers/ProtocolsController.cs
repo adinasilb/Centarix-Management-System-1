@@ -180,7 +180,7 @@ namespace PrototypeWithAuth.Controllers
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                             {
                                  new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = defaultImage},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Name", Width=15, Value = new List<string>(){ p.Name}},
+                                 new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink=" load-protocol ", AjaxID=p.ProtocolID, Width=15, Value = new List<string>(){ p.Name}},
                                  new RequestIndexPartialColumnViewModel() { Title = "Version", Width=10, Value = new List<string>(){ p.VersionNumber} },
                                  new RequestIndexPartialColumnViewModel() { Title = "Creator", Width=10, Value = new List<string>(){p.ApplicationUserCreator.FirstName + " " + p.ApplicationUserCreator.LastName}},
                                  new RequestIndexPartialColumnViewModel() { Title = "Time", Width=11, Value = new List<string>(){ } },
@@ -281,7 +281,10 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).ToListAsync();
-            protocol.ProtocolTypeID = typeID;
+            if(typeID!=0)
+            {
+                protocol.ProtocolTypeID = typeID;
+            }          
 
             var viewmodel = new CreateProtocolsViewModel()
             {
@@ -337,6 +340,9 @@ namespace PrototypeWithAuth.Controllers
             return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = _context.Materials.Where(m => m.ProtocolID == addMaterialViewModel.Material.ProtocolID), MaterialCategories = _context.MaterialCategories });
         }
 
+
+
+
         [HttpPost]
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel)
@@ -387,6 +393,14 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _IndexTableWithEditProtocol(int protocolID)
+        {
+            CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(0, protocolID);
+            return PartialView(viewmodel);
+        }
+
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> KitProtocol()
