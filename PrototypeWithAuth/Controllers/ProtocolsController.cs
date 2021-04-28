@@ -293,6 +293,7 @@ namespace PrototypeWithAuth.Controllers
             FillDocumentsInfo(viewmodel, "");
             return viewmodel;
         }
+
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddMaterialModal(int materialTypeID, int ProtocolID)
         {
@@ -309,6 +310,7 @@ namespace PrototypeWithAuth.Controllers
             };
             return PartialView(viewModel);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddMaterialModal(AddMaterialViewModel addMaterialViewModel)
         {
