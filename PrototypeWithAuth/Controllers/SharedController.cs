@@ -204,6 +204,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
+
         public void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, int ObjectID = 0)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
