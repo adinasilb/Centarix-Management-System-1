@@ -47,7 +47,7 @@ namespace PrototypeWithAuth.AppData
             {
                 if (_PageType == AppUtility.PageTypeEnum.None)
                 {
-                    return AppUtility.PageTypeEnum.RequestRequest;
+                    return AppUtility.PageTypeEnum.ProtocolsProtocols;
                 }
                 else
                 {
