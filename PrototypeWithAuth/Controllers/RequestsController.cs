@@ -2263,6 +2263,23 @@ namespace PrototypeWithAuth.Controllers
                             await _context.SaveChangesAsync();
                         }
 
+                        if(receivedModalVisualViewModel != null)
+                        {
+                            var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
+                            foreach(var location in requestLocations)
+                            {
+                                _context.Remove(location);
+                                var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                                if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                                {
+                                    locationInstance.IsFull = false;
+                                    _context.Update(locationInstance);
+                                }
+                                //If for containsItems?
+                            }
+                            await SaveLocations(receivedModalVisualViewModel, request);
+                        }
+
 
                         ////Saving the Payments - each one should come in with a 1) date 2) companyAccountID
                         //if (requestItemViewModel.NewPayments != null)
