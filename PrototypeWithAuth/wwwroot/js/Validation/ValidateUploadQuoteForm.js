@@ -1,6 +1,8 @@
 ﻿$('.uploadQuoteForm').validate({
 	rules: {
-		
+		 normalizer: function( value ) {
+    return $.trim( value );
+  },
 		"ParentQuote.QuoteNumber": {
 			required: true
 		},

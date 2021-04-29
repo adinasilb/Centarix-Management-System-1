@@ -2,6 +2,9 @@
 
 $('.resetPasswordForm').validate({
 	rules: {
+		 normalizer: function( value ) {
+    return $.trim( value );
+  },
 		"Input.Password": {
 			required: true,
 			nonAlphaNumeric: true,

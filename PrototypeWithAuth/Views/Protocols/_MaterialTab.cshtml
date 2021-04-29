@@ -12,65 +12,65 @@
     <div class="row">
         @foreach (var materialC in Model.MaterialCategories)
         {
-        <div class="col">
-            <div class="container">
-                @{ var materialsPerCategory = Model.Materials.Where(m => m.MaterialCategoryID == materialC.MaterialCategoryID);
-                    if (materialsPerCategory.Count() > 0)
-                    {
-                        foreach (var material in materialsPerCategory)
+            <div class="col">
+                <div class="container">
+                    @{ var materialsPerCategory = Model.Materials.Where(m => m.MaterialCategoryID == materialC.MaterialCategoryID);
+                        if (materialsPerCategory.Count() > 0)
                         {
-                            var color = " protocols-color";
-                            var seeMaterialColor = "disabled-color";
-                            if (material.Info !=null)
+                            foreach (var material in materialsPerCategory)
                             {
-                                seeMaterialColor = color;
-                            }
-                            var materialNameColor = "";
-                            var seeProductDetailsColor = "disabled-color";
-                            if(material.Product!=null)
-                            {
-                                seeProductDetailsColor = color;
-                                materialNameColor = "text-blue";
-                            }
+                                var color = " protocols-color";
+                                var seeMaterialColor = "disabled-color";
+                                if (material.Info != null)
+                                {
+                                    seeMaterialColor = color;
+                                }
+                                var materialNameColor = "";
+                                var seeProductDetailsColor = "disabled-color";
+                                if (material.Product != null)
+                                {
+                                    seeProductDetailsColor = color;
+                                    materialNameColor = "text-blue";
+                                }
 
-                            var updateImageColor = "";
+                                var updateImageColor = "";
 
-                            if (Model.Folders[0].FileStrings != null && Model.Folders[0].FileStrings.Count > 0)
-                            {
-                                updateImageColor= color;
-                            }
-                            //var deleteMaterialColor = color;
-                            var materialName = material.Name ?? material.Product.ProductName;
-                            <div class="row">
-                                <div class="card-border material-cards">
-                                    <div class="text @materialNameColor">@materialName</div>
-                                    <hr class="mb-2 mt-2"/>
-                                    <div class=" d-flex text-center   align-items-center justify-content-sm-around">
-                                        <a href="" class="open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.MaterialPictures" data-id="@material.ProtocolID" id="@AppUtility.FolderNamesEnum.MaterialPictures" data-val="@true" showSwitch="@false">
-                                            <i class=" icon-camera_alt-24px " style="font-size:1.55rem"></i>
-                                        </a>
-                                        <button class=" see-material  btn btn-link no-box-shadow p-0 m-0">
-                                            <i class=" icon-info-24px-2 " style="font-size:1.55rem"></i>
-                                        </button>
-                                        <button class=" open-material-product @seeProductDetailsColor btn btn-link no-box-shadow p-0 m-0">
-                                            <i class=" icon-broken-link " style="font-size:1.55rem"></i>
-                                        </button>
-                                        <button class=" delete-material  btn btn-link no-box-shadow p-0 m-0">
-                                            <i class=" icon-delete-24px1  " style="font-size:1.55rem"></i>
-                                        </button>
+                                if (Model.Folders[0].FileStrings != null && Model.Folders[0].FileStrings.Count > 0)
+                                {
+                                    updateImageColor = "disabled-color";
+                                }
+                                var deleteMaterialColor = color;
+                                var materialName = material.Name ?? material.Product.ProductName;
+                                <div class="row">
+                                    <div class="card-border material-cards">
+                                        <div class="text @materialNameColor">@materialName</div>
+                                        <hr class="mb-2 mt-2" />
+                                        <div class=" d-flex text-center   align-items-center justify-content-sm-around">
+                                            <a href="#" class="open-document-modal mark-edditable @updateImageColor" data-string="@AppUtility.FolderNamesEnum.MaterialPictures" data-id="@material.ProtocolID" id="@AppUtility.FolderNamesEnum.MaterialPictures" data-val="@true" showSwitch="@false">
+                                                <i class=" icon-camera_alt-24px " style="font-size:1.55rem"></i>
+                                            </a>
+                                            <button class=" see-material @seeMaterialColor btn btn-link no-box-shadow p-0 m-0">
+                                                <i class=" icon-info-24px-2 " style="font-size:1.55rem"></i>
+                                            </button>
+                                            <button class=" open-material-product @seeProductDetailsColor btn btn-link no-box-shadow p-0 m-0">
+                                                <i class=" icon-broken-link " style="font-size:1.55rem"></i>
+                                            </button>
+                                            <button class=" delete-material  btn btn-link no-box-shadow p-0 m-0">
+                                                <i class=" icon-delete-24px1  " style="font-size:1.55rem"></i>
+                                            </button>
+                                        </div>
+
                                     </div>
-                                
-                                </div>
-                                
-                            </div>
-                          
-                        }
-                    }
 
-                }
+                                </div>
+
+                            }
+                        }
+
+                    }
+                </div>
+
             </div>
-          
-        </div>
 
         }
     </div>
@@ -85,3 +85,4 @@
         }
     </div>
 </div>
+<script src="~/js/site.js"></script>

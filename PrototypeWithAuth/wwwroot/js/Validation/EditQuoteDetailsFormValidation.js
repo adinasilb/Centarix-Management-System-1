@@ -1,5 +1,8 @@
 ﻿
 $('.editQuoteDetails').validate({
+	 normalizer: function( value ) {
+    return $.trim( value );
+  },
 	rules: {
 		"Request.ParentQuote.QuoteNumber": {
 			required: true,
