@@ -138,23 +138,24 @@ namespace PrototypeWithAuth.Controllers
                  isRead = n.IsRead
              });
             //todo: figure out how to filter out - maybe only select those that are from less then 10 days ago
-            var tnotification = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == currentUser.Id).Include(n => n.NotificationStatus)
+            /* var tnotification = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == currentUser.Id).Include(n => n.NotificationStatus)
 
-               .Select(n => new
-               {
-                   id = n.NotificationID,
-                   timeStamp = n.TimeStamp,
-                   description = n.Description,
-                   requestName = "",
-                   icon = n.NotificationStatus.Icon,
-                   color = n.NotificationStatus.Color,
-                   status= n.NotificationStatusID,
-                   controller = n.Controller,
-                   action = n.Action,
-                   isRead = n.IsRead
-               });
+                .Select(n => new
+                {
+                    id = n.NotificationID,
+                    timeStamp = n.TimeStamp,
+                    description = n.Description,
+                    requestName = "",
+                    icon = n.NotificationStatus.Icon,
+                    color = n.NotificationStatus.Color,
+                    status= n.NotificationStatusID,
+                    controller = n.Controller,
+                    action = n.Action,
+                    isRead = n.IsRead
+                });*/
             //var notificationsCombined = notification.Concat(rnotification).OrderByDescending(n=>n.timeStamp).ToList();
-            return Json(tnotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList().Take(4));
+            //return Json(tnotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList().Take(4));
+            return Json(rnotification.OrderByDescending(n => n.timeStamp).ToList().Take(4));
         }
         [HttpPost]
 
