@@ -557,6 +557,14 @@ namespace PrototypeWithAuth.Controllers
                     int Year = ehaa.Date.Year;
                     _context.Update(ehaa);
                     await _context.SaveChangesAsync();
+
+                    var notifications = _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == updateHoursViewModel.EmployeeHour.EmployeeHoursID).ToList();
+                    foreach(var notification in notifications)
+                    {
+                        _context.Remove(notification);
+                        await _context.SaveChangesAsync();
+                    }
+                    
                     //throw new Exception();
                     await transaction.CommitAsync();
                     if(updateHoursViewModel.PageType == null || updateHoursViewModel.PageType == "ReportHours")
