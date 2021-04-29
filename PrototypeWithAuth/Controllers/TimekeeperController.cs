@@ -67,6 +67,8 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 550;
                 return PartialView(entryExitViewModel);
             }
+            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).ToList();
+            entryExitViewModel.TimekeeperNotifications = notifications;
             return View(entryExitViewModel);
         }
 
@@ -959,7 +961,7 @@ namespace PrototypeWithAuth.Controllers
                                     EmployeeHoursID = employeeHoursID,
                                     IsRead = false,
                                     ApplicationUserID = newEmployeeHour.EmployeeID,
-                                    Description = "update hours for " + newEmployeeHour.Date.ToString("dd/MM/yyyy"),
+                                    Description = "no hours reported for " + newEmployeeHour.Date.ToString("dd/MM/yyyy"),
                                     NotificationStatusID = 5,
                                     TimeStamp = DateTime.Now,
                                     Controller = "Timekeeper",

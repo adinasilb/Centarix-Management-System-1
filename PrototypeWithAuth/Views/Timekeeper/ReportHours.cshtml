@@ -161,6 +161,21 @@
                 </div>
             </div>
         </div>
+        @foreach(TimekeeperNotification tn in Model.TimekeeperNotifications)
+        {
+            <div class="row mb-3 py-4 vertical-center border rounded text-center" style="border-color: var(--danger-color) !important; border-width: 2px !important; width:92%">
+                <div class="col-1 pt-2">
+                    <i class="icon-priority_high-24px rounded-circle p-1" style="color: white; background-color: var(--danger-color); font-size: 1.5rem"></i>
+                </div>
+                <div class="col-8 text-left pt-2" style="font-size:large">
+                    @tn.Description
+                </div>
+                <div class="col-3 text-right pr-5">
+                    <button class="danger-color rounded-pill border-0 open-update-hours-modal text-white  ReportHours py-2 px-4 " style="font-size:large" value="@tn.EmployeeHours.Date.ToString("yyyy-MM-dd")" type="button">Update Now</button>
+
+                </div>
+            </div>
+        }
     </div>
 
 }

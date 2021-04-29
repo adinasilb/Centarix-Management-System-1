@@ -271,7 +271,7 @@ namespace PrototypeWithAuth.Controllers
                     timekeeperNotification.EmployeeHoursID = e.EmployeeHoursID;
                     timekeeperNotification.IsRead = false;
                     timekeeperNotification.ApplicationUserID = e.EmployeeID;
-                    timekeeperNotification.Description = "update hours for " + e.Date.ToString("dd/MM/yyyy");
+                    timekeeperNotification.Description = "no hours reported for " + e.Date.ToString("dd/MM/yyyy");
                     timekeeperNotification.NotificationStatusID = 5;
                     timekeeperNotification.TimeStamp = DateTime.Now;
                     timekeeperNotification.Controller = "Timekeeper";
