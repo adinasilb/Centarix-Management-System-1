@@ -57,7 +57,10 @@
                 <div class="row under-row-margin">
                     <div class="col-4">
                         <label asp-for="Resource.PubMedID" class="control-label"></label>
-                        <input asp-for="Resource.PubMedID" class="form-control-plaintext border-bottom" />
+                        <div class="input-group">
+                            <input asp-for="Resource.PubMedID" class="form-control-plaintext border-bottom" />
+                            <i class="icon-add_circle-24px protocols-filter get-pubmedinfo" style="font-size: 2.688rem;"></i>
+                        </div>
                         <span asp-validation-for="Resource.PubMedID" class="text-danger-centarix"></span>
                     </div>
                     <div class="col-4">
@@ -69,9 +72,10 @@
                         <label asp-for="Resource.Journal" class="control-label"></label>
                         <input asp-for="Resource.Journal" class="form-control-plaintext border-bottom" />
                         <span asp-validation-for="Resource.Journal" class="text-danger-centarix"></span>
+                        @*<div class="add-resource" style="padding-bottom: 2.25rem; padding-top: 2.25rem;">*@
+                        @*</div>*@
                     </div>
                 </div>
-                <input type="submit" asp-action="FindPubMedArticle" />
                 <hr style="box-shadow: 0px 0px .1rem #707070;" />
                 <div class="row under-row-margin top-menu">
                     <div class="col-12">

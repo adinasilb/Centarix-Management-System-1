@@ -575,10 +575,10 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<String> FindPubMedArticle(AddResourceViewModel addResourceViewModel)
+        public async Task<JsonResult> GetPubMedFromAPI(String PubMedID)
         {
-            var temp = AppUtility.GetResourceArticleFromNCBIPubMed(addResourceViewModel.Resource.PubMedID);
-            return null;
+            var Resource = AppUtility.GetResourceArticleFromNCBIPubMed(PubMedID);
+            return Json(Resource);
         }
 
         [Authorize(Roles = "Protocols")]
