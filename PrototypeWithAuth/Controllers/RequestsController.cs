@@ -231,7 +231,7 @@ namespace PrototypeWithAuth.Controllers
             }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             IQueryable<Request> fullRequestsList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText ?? "")).Include(r => r.ApplicationUserCreator)
-         .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
+         .Include(r => r.ParentQuote)
          .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Include(x => x.ParentRequest);
 
             int sideBarID = 0;
@@ -310,7 +310,9 @@ namespace PrototypeWithAuth.Controllers
                 else
                 {
                     RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product.ProductSubcategory)
-                   .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
+                   .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType);
+                    RequestsPassedIn = RequestsPassedIn.IgnoreQueryFilters().Include(r => r.RequestLocationInstances).ThenInclude(r => r.LocationInstance);
+                    RequestsPassedIn = RequestsPassedIn.ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
                 }
 
             }
@@ -386,9 +388,9 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
                 .Include(r => r.ParentRequest).Include(r => r.ApplicationUserCreator)
                 .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).AsQueryable();
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).AsQueryable();
 
+            RequestPassedInWithInclude = RequestPassedInWithInclude.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance).IgnoreQueryFilters();
 
             RequestPassedInWithInclude = filterListBySelectFilters(selectedFilters, RequestPassedInWithInclude);
 
@@ -1059,13 +1061,21 @@ namespace PrototypeWithAuth.Controllers
         }
         private string GetLocationInstanceNameBefore(LocationInstance locationInstance)
         {
-            var newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceAbbrev;
-            if (newLIName == null)
+            var newLIName = "";
+            if (locationInstance.LocationInstanceParentID == null)//is temporary location
             {
-                while (locationInstance.LocationInstanceParentID != null)
+                newLIName = _context.TemporaryLocationInstances.IgnoreQueryFilters().Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault().LocationInstanceAbbrev;
+            }
+            else
+            {
+                newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceAbbrev;
+                if (newLIName == null)
                 {
-                    newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).Include(li => li.LocationInstanceParent).FirstOrDefault().LocationInstanceName + newLIName;
-                    locationInstance = locationInstance.LocationInstanceParent;
+                    while (locationInstance.LocationInstanceParentID != null)
+                    {
+                        newLIName = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).Include(li => li.LocationInstanceParent).FirstOrDefault().LocationInstanceName + newLIName;
+                        locationInstance = locationInstance.LocationInstanceParent;
+                    }
                 }
             }
             return newLIName;
@@ -1301,7 +1311,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (var requestLocationInstance in request.RequestLocationInstances)
                         {
                             requestLocationInstance.IsDeleted = true;
-                            var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
+                            var locationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
                             locationInstance.IsFull = false;
 
                             _context.Update(requestLocationInstance);
@@ -1987,7 +1997,7 @@ namespace PrototypeWithAuth.Controllers
             //locations:
             //get the list of requestLocationInstances in this request
             //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
-            var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
+            var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).IgnoreQueryFilters().FirstOrDefault();
             var requestLocationInstances = request1.RequestLocationInstances.ToList();
             //if it has => (which it should once its in a details view)
             requestItemViewModel.LocationInstances = new List<LocationInstance>();
@@ -2007,92 +2017,114 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //get the parent location instances of the first one
                     //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
-                    //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
-                    LocationInstance parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).Include(li => li.LocationType).FirstOrDefault();
-                    //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    //int? locationInstanceParentID = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
+                    LocationInstance parentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).Include(li => li.LocationType).FirstOrDefault();
+                    //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
                     //need to test b/c the model is int? which is nullable
 
-                    var locationType = parentLocationInstance.LocationType;
-                    while (locationType.Depth != 0)
+                    if (parentLocationInstance == null)
                     {
-                        locationType = _context.LocationTypes.Where(l => l.LocationTypeID == locationType.LocationTypeParentID).FirstOrDefault();
+                        var locationType = _context.TemporaryLocationInstances.IgnoreQueryFilters().Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).Select(li => li.LocationType).FirstOrDefault();
+                        requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
+                        ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
+                        {
+                            locationInstancesDepthZero = new List<LocationInstance>(),
+                            locationTypeNames = new List<string>(),
+                            locationInstancesSelected = _context.LocationInstances.IgnoreQueryFilters().Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).ToList()
+
+                        };
+                        requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
+                        requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
+                        requestItemViewModel.ChildrenLocationInstances.Add(receivedModalSublocationsViewModel.locationInstancesSelected);
+
+                        requestItemViewModel.ParentDepthZeroOfSelected = locationType;
+                        //requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
                     }
-
-                    receivedLocationViewModel.locationInstancesSelected.Add(parentLocationInstance);
-                    requestItemViewModel.ParentDepthZeroOfSelected = locationType;
-                    requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
-
-                    ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
+                    else
                     {
-                        locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == locationType.LocationTypeID),
-                        locationTypeNames = new List<string>(),
-                        locationInstancesSelected = new List<LocationInstance>()
-                    };
-                    bool finished = false;
-                    int locationTypeIDLoop = locationType.LocationTypeID;
-                    var parent = parentLocationInstance;
-                    receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
-                    requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
-                    requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).ToList());
-                    while (parent.LocationInstanceParentID != null)
-                    {
-                        parent = _context.LocationInstances.Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
-                        requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).ToList());
+                        var locationType = parentLocationInstance.LocationType;
+                        while (locationType.Depth != 0)
+                        {
+                            locationType = _context.LocationTypes.Where(l => l.LocationTypeID == locationType.LocationTypeParentID).FirstOrDefault();
+                        }
+
+                        receivedLocationViewModel.locationInstancesSelected.Add(parentLocationInstance);
+                        requestItemViewModel.ParentDepthZeroOfSelected = locationType;
+                        requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
+
+                        ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
+                        {
+                            locationInstancesDepthZero = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationTypeID == locationType.LocationTypeID),
+                            locationTypeNames = new List<string>(),
+                            locationInstancesSelected = new List<LocationInstance>()
+                        };
+                        bool finished = false;
+                        int locationTypeIDLoop = locationType.LocationTypeID;
+                        var parent = parentLocationInstance;
                         receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
-                    }
-                    while (!finished)
-                    {
-                        //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
-                        var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
-                        string nextTYpeName = nextType.LocationTypeName;
-                        int? tryNewLocationType = nextType.LocationTypeChildID;
-                        //add it to the list in the viewmodel
-                        receivedModalSublocationsViewModel.locationTypeNames.Add(nextTYpeName);
-
-                        //while we're still looping through we'll instantiate the locationInstancesSelected so we can have dropdownlistfors on the view
-                        //receivedModalSublocationsViewModel.locationInstancesSelected.Add(new LocationInstance());
-
-                        if (tryNewLocationType == null)
+                        requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
+                        requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).ToList());
+                        while (parent.LocationInstanceParentID != null)
                         {
-                            //if its not null we can convert it and pass it in
-                            finished = true;
+                            parent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
+                            requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).ToList());
+                            receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                         }
-                        else
+                        while (!finished)
                         {
-                            locationTypeIDLoop = (Int32)tryNewLocationType;
-                        }
-                    }
-                    requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
-                    ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
-                    {
-                        IsEditModalTable = true,
-                        ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == parentLocationInstance.LocationInstanceID).FirstOrDefault()
-                    };
+                            //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
+                            var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
+                            string nextTYpeName = nextType.LocationTypeName;
+                            int? tryNewLocationType = nextType.LocationTypeChildID;
+                            //add it to the list in the viewmodel
+                            receivedModalSublocationsViewModel.locationTypeNames.Add(nextTYpeName);
 
-                    if (receivedModalVisualViewModel.ParentLocationInstance != null)
-                    {
-                        receivedModalVisualViewModel.RequestChildrenLocationInstances =
-                            _context.LocationInstances.Where(m => m.LocationInstanceParentID == parentLocationInstance.LocationInstanceID)
-                            .Include(m => m.RequestLocationInstances)
-                            .Select(li => new RequestChildrenLocationInstances()
+                            //while we're still looping through we'll instantiate the locationInstancesSelected so we can have dropdownlistfors on the view
+                            //receivedModalSublocationsViewModel.locationInstancesSelected.Add(new LocationInstance());
+
+                            if (tryNewLocationType == null)
                             {
-                                LocationInstance = li,
-                                IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == id).Any()
-                            }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
-
-                        List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
-                        foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
-                        {
-                            liPlaces.Add(new LocationInstancePlace()
+                                //if its not null we can convert it and pass it in
+                                finished = true;
+                            }
+                            else
                             {
-                                LocationInstanceId = cli.LocationInstance.LocationInstanceID,
-                                Placed = cli.IsThisRequest
-                            }) ;
+                                locationTypeIDLoop = (Int32)tryNewLocationType;
+                            }
                         }
-                        receivedModalVisualViewModel.LocationInstancePlaces = liPlaces;
-                        //return NotFound();
+                        requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
+                        ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
+                        {
+                            IsEditModalTable = true,
+                            ParentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceID == parentLocationInstance.LocationInstanceID).FirstOrDefault()
+                        };
+
+                        if (receivedModalVisualViewModel.ParentLocationInstance != null)
+                        {
+                            receivedModalVisualViewModel.RequestChildrenLocationInstances =
+                                _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceParentID == parentLocationInstance.LocationInstanceID)
+                                .Include(m => m.RequestLocationInstances)
+                                .Select(li => new RequestChildrenLocationInstances()
+                                {
+                                    LocationInstance = li,
+                                    IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == id).Any()
+                                }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
+
+                            List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
+                            foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
+                            {
+                                liPlaces.Add(new LocationInstancePlace()
+                                {
+                                    LocationInstanceId = cli.LocationInstance.LocationInstanceID,
+                                    Placed = cli.IsThisRequest
+                                });
+                            }
+                            receivedModalVisualViewModel.LocationInstancePlaces = liPlaces;
+                            //return NotFound();
+                        }
+                        requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
                     }
-                    requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
+                    
                 }
 
 
@@ -2266,18 +2298,38 @@ namespace PrototypeWithAuth.Controllers
                         if(receivedModalVisualViewModel != null)
                         {
                             var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
-                            foreach(var location in requestLocations)
-                            {
-                                _context.Remove(location);
-                                var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
-                                if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                            var isTemporary = false;
+                            foreach (var location in requestLocations)
+                            {   
+                                var locationInstance = _context.LocationInstances.IgnoreQueryFilters().Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                                if (locationInstance is TemporaryLocationInstance)
                                 {
-                                    locationInstance.IsFull = false;
-                                    _context.Update(locationInstance);
+                                    isTemporary = true;
                                 }
-                                //If for containsItems?
+                                else
+                                {
+                                    _context.Remove(location);
+                                    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                                    {
+                                        locationInstance.IsFull = false;
+                                        _context.Update(locationInstance);
+                                    }
+                                    else if (locationInstance.IsEmptyShelf)
+                                    {
+                                        var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+                                                                && rli.RequestID != request.RequestID).ToList();
+                                        if (duplicateLocations.Count() == 0)
+                                        {
+                                            locationInstance.ContainsItems = false;
+                                            _context.Update(locationInstance);
+                                        }
+                                    }
+                                }
                             }
-                            await SaveLocations(receivedModalVisualViewModel, request);
+                            if (!isTemporary)
+                            {
+                                await SaveLocations(receivedModalVisualViewModel, request);
+                            }
                         }
 
 
@@ -3339,7 +3391,7 @@ namespace PrototypeWithAuth.Controllers
         {
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
             {
-                locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID)
+                locationInstancesDepthZero = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationTypeID == LocationTypeID)
                 .Include(li => li.LocationRoomInstance).Include(li => li.LabPart),
                 locationTypeNames = new List<string>(),
                 locationInstancesSelected = new List<LocationInstance>()
@@ -3380,15 +3432,15 @@ namespace PrototypeWithAuth.Controllers
                 IsEditModalTable = false
             };
 
-            var parentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
+            var parentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
 
 
 
-            var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
+            var firstChildLI = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
             LocationInstance secondChildLi = null;
             if (firstChildLI != null)
             {
-                secondChildLi = _context.LocationInstances.Where(li => li.LocationInstanceParentID == firstChildLI.LocationInstanceID).FirstOrDefault(); //second child is to ensure it doesn't have any box units
+                secondChildLi = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == firstChildLI.LocationInstanceID).FirstOrDefault(); //second child is to ensure it doesn't have any box units
             }
             
             if (secondChildLi != null)
@@ -3400,7 +3452,7 @@ namespace PrototypeWithAuth.Controllers
                 //if it's an empty shelf- reset the location to the parent location instance id:
                 if (/*parentLocationInstance.LocationTypeID == 201 &&*/ parentLocationInstance.IsEmptyShelf)
                 {
-                    parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    parentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
                     LocationInstanceID = parentLocationInstance.LocationInstanceID;
                 }
 
@@ -3409,7 +3461,7 @@ namespace PrototypeWithAuth.Controllers
                 if (receivedModalVisualViewModel.ParentLocationInstance != null)
                 {
                     receivedModalVisualViewModel.ChildrenLocationInstances =
-                        _context.LocationInstances.Where(m => m.LocationInstanceParentID == LocationInstanceID)
+                        _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceParentID == LocationInstanceID)
                         .Include(m => m.RequestLocationInstances).OrderBy(m => m.LocationNumber).ToList();
 
 
@@ -3449,11 +3501,12 @@ namespace PrototypeWithAuth.Controllers
                             var tempLocationInstance = _context.TemporaryLocationInstances.Where(tli => tli.LocationTypeID == receivedLocationViewModel.LocationTypeID).FirstOrDefault();
                             if (tempLocationInstance == null)
                             {
+                                var locationTypeName = _context.LocationTypes.Where(lt => lt.LocationTypeID == receivedLocationViewModel.LocationTypeID).Select(lt => lt.LocationTypeName).FirstOrDefault();
                                 tempLocationInstance = new TemporaryLocationInstance()
                                 {
                                     LocationTypeID = receivedLocationViewModel.LocationTypeID,
-                                    LocationInstanceName = "Temporary",
-                                    LocationInstanceAbbrev = "Temporary"
+                                    LocationInstanceName = "Temporary"+locationTypeName,
+                                    LocationInstanceAbbrev = "Temporary" + locationTypeName
                                 };
                                 _context.Update(tempLocationInstance);
                                 await _context.SaveChangesAsync();
@@ -3547,13 +3600,13 @@ namespace PrototypeWithAuth.Controllers
                 if (place.Placed)
                 {
                     //getting the parentlocationinstanceid
-                    var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+                    var liParent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
                     var mayHaveParent = true;
                     while (mayHaveParent)
                     {
                         if (liParent.LocationInstanceParentID != null)
                         {
-                            liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
+                            liParent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
                         }
                         else
                         {
@@ -3579,7 +3632,7 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     //updating the locationinstance
-                    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
+                    var locationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
                     if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
                     {
                         locationInstance.IsFull = true;
@@ -3610,33 +3663,45 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     var request = Requests.FirstOrDefault();
-                    receivedModalVisualViewModel.ParentLocationInstance =
-                        _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+                    
                     var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
+                    var isTemporary = false;
                     foreach (var location in requestLocations)
                     {
-                        _context.Remove(location);
-                        var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
-                        if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                        var locationInstance = _context.LocationInstances.IgnoreQueryFilters().Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                        if (locationInstance is TemporaryLocationInstance)
                         {
-                            locationInstance.IsFull = false;
-                            _context.Update(locationInstance);
+                            isTemporary = true;
+                            receivedModalVisualViewModel.DeleteTable = true;
                         }
-                        else if (locationInstance.IsEmptyShelf)
+                        else
                         {
-                            var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
-                                                    && rli.RequestID != request.RequestID).ToList();
-                            if (duplicateLocations.Count() == 0)
+                            _context.Remove(location);
+                            receivedModalVisualViewModel.ParentLocationInstance =
+                        _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+                            if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
                             {
-                                locationInstance.ContainsItems = false;
+                                locationInstance.IsFull = false;
                                 _context.Update(locationInstance);
+                            }
+                            else if (locationInstance.IsEmptyShelf)
+                            {
+                                var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+                                                        && rli.RequestID != request.RequestID).ToList();
+                                if (duplicateLocations.Count() == 0)
+                                {
+                                    locationInstance.ContainsItems = false;
+                                    _context.Update(locationInstance);
+                                }
                             }
                         }
                     }
-                    await _context.SaveChangesAsync();
-                    await SaveLocations(receivedModalVisualViewModel, request);
-
-                    await transaction.CommitAsync();
+                    if (!isTemporary)
+                    {
+                        await SaveLocations(receivedModalVisualViewModel, request);
+                        await transaction.CommitAsync();
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -3763,7 +3828,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
         {
-            var locationInstanceList = _context.LocationInstances.Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).ToList();
+            var locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).ToList();
             return Json(locationInstanceList);
         }
 
