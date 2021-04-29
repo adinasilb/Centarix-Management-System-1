@@ -3432,7 +3432,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [RequestSizeLimit(100_000_000)]
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
