@@ -10,6 +10,7 @@ $('.receivedModalForm').validate({
 	rules: {
 		"Request.ArrivalDate": {
 			required: true,
+			maxDate: new Date()
 		},
 		"Request.ApplicationUserReceiverID": {
 			required: true,
