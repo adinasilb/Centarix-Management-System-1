@@ -45,4 +45,14 @@
 		//	}
 		//});
 	});
+
+
+	$(".AddFile").on("click", function (e) {
+		$("#ResourceImage").click();
+	});
+	$("#ResourceImage").on("change", function (e) {
+		var fileName = e.target.files[0].name;
+		$("#file-name").val(fileName);
+	});
+
 });

@@ -116,8 +116,10 @@
                 </div>
                 <div class="row under-row-margin">
                     <div class="col-4 form-element-border-right">
-                        <label asp-for="ResourceImage" class="control-label"></label>
-                        <input type="file" asp-for="ResourceImage" class="form-control-file  ta pt-1">
+                        @*<label asp-for="ResourceImage" class="control-label"></label>*@
+                        <input type="file" asp-for="ResourceImage" class="form-control-file hidden ta pt-1">
+                        <input type="button" class="AddFile full-file-btn custom-button custom-button-small-font protocols-background-color" value="Select File" />
+                        <input class="control-label text-center disabled border-0 w-100" style="font-size:.75rem;" id="file-name" />
                         <span asp-validation-for="ResourceImage" class="text-danger"></span>
                     </div>
                     <div class="col-8">

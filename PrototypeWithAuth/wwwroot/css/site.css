@@ -2411,3 +2411,7 @@ body.modal-open .popover{
     border: solid 2px #CBCBCB;
     border-radius: .75rem;
 }
+
+.full-file-btn {
+    width: 100%;
+}
