@@ -102,6 +102,8 @@ namespace PrototypeWithAuth.Data
         public DbSet<PhysicalAddress> PhysicalAddresses { get; set; }
         public DbSet<CreditCard> CreditCards { get; set; }
         public DbSet<LocationRoomInstance> LocationRoomInstances { get; set; }
+        public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; }
+        public DbSet<TemporaryLocationInstance> TemporaryLocationInstances { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -268,6 +270,9 @@ namespace PrototypeWithAuth.Data
 
             modelBuilder.Entity<Comment>()
                 .HasQueryFilter(item => !item.IsDeleted);
+
+            modelBuilder.Entity<LocationInstance>()
+                .HasQueryFilter(item => !(item is TemporaryLocationInstance));
 
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);

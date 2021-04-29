@@ -3604,6 +3604,50 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ReceivedModalVisual(ReceivedModalVisualViewModel receivedModalVisualViewModel, List<Request> Requests)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var request = Requests.FirstOrDefault();
+                    receivedModalVisualViewModel.ParentLocationInstance =
+                        _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+                    var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
+                    foreach (var location in requestLocations)
+                    {
+                        _context.Remove(location);
+                        var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                        if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                        {
+                            locationInstance.IsFull = false;
+                            _context.Update(locationInstance);
+                        }
+                        else if (locationInstance.IsEmptyShelf)
+                        {
+                            var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+                                                    && rli.RequestID != request.RequestID).ToList();
+                            if (duplicateLocations.Count() == 0)
+                            {
+                                locationInstance.ContainsItems = false;
+                                _context.Update(locationInstance);
+                            }
+                        }
+                    }
+                    await _context.SaveChangesAsync();
+                    await SaveLocations(receivedModalVisualViewModel, request);
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return PartialView(receivedModalVisualViewModel);
+        }
 
         /*
          * END RECEIVED MODAL
