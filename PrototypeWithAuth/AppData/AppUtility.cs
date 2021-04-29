@@ -19,6 +19,7 @@ using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+//using System.Web.Script.Serialization;
 
 namespace PrototypeWithAuth.AppData
 {
@@ -148,6 +149,38 @@ namespace PrototypeWithAuth.AppData
             return ReturnList;
         }
 
+        public static Resource GetResourceArticleFromNCBIPubMed(string PubMedID)
+        {
+            var clienturl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=" + PubMedID + "&retmode=json";
+            //add in &tool=my_tool&email=my_email@example.com after
+            var client = new RestClient(clienturl);
+            var request = new RestRequest(Method.GET);
+            IRestResponse response = client.Execute(request);
+            try
+            {
+                dynamic decodedResponse = JsonConvert.DeserializeObject(response.Content);
+
+                Resource resource = new Resource();
+                var innerJson = decodedResponse.result[PubMedID];
+                resource.Title = GetStringFromTemp(innerJson["title"]);
+                resource.FirstAuthor = GetStringFromTemp(innerJson["sortfirstauthor"]);
+                resource.LastAuthor = GetStringFromTemp(innerJson["lastauthor"]);
+                resource.Journal = GetStringFromTemp(innerJson["fulljournalname"]);
+                //resource.Summary = tmp.result[0].
+                //var 
+                return resource;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        private static string GetStringFromTemp(dynamic originalString)
+        {
+            return originalString.ToString().Replace("{", "").Replace("{", "");
+        }
+
         public static double ExchangeRateIfNull = 3.5;
         public static int YearStartedTimeKeeper = 2021;
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
@@ -157,7 +190,7 @@ namespace PrototypeWithAuth.AppData
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             decimal rate = 0.0m;
-            try
+            try //try is b/c sometimes the api is down
             {
                 dynamic tmp = JsonConvert.DeserializeObject(response.Content);
                 String stringRate = (string)tmp.quotes.USDILS;

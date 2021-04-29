@@ -575,6 +575,13 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
+        public async Task<String> FindPubMedArticle(AddResourceViewModel addResourceViewModel)
+        {
+            var temp = AppUtility.GetResourceArticleFromNCBIPubMed(addResourceViewModel.Resource.PubMedID);
+            return null;
+        }
+
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Personal()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
