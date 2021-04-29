@@ -36,5 +36,6 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.MenuItems SectionType { get; set; }
         public RequestIndexObject RequestIndexObject { get; set; }
         public ReceivedModalVisualViewModel ReceivedModalVisualViewModel { get; set; }
+        public bool TemporaryLocation { get; set; }
     }
 }

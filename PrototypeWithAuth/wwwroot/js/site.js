@@ -683,6 +683,7 @@ $(function () {
 
 	});
 
+
 	$.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
 		var tdate = new Date();
 		var dd = tdate.getDate(); //yields day
@@ -1427,6 +1428,10 @@ $(function () {
 			url = "/Requests/EditModalView";
 			section = "Requests";
 		}
+		else if ($(this).hasClass('locations')) {
+			url = "/Requests/ReceivedModalVisual";
+			section = "Requests";
+        }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
 			url = "/Requests/EditModalView";
 			section = "LabManagement";
@@ -1454,8 +1459,16 @@ $(function () {
 
 		}
 		else if (type == 'details') {
-			enableMarkReadonly($(this));
-			$(".proprietryHidenCategory").attr("disabled", false);
+			if ($(this).hasClass('locations')) {
+				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
+				$('#location .mark-readonly').removeClass("disabled")
+				$('.edit-mode-switch-description').text("Edit Mode On");
+				$('.turn-edit-on-off').attr('name', 'edit');
+			}
+			else {
+				enableMarkReadonly($(this));
+				$(".proprietryHidenCategory").attr("disabled", false);
+			}
 		}
 		//}
 	});

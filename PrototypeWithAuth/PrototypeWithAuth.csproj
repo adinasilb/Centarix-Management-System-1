@@ -241,6 +241,8 @@
     <Compile Remove="Data\Migrations\20210426081817_removeTagArticles.Designer.cs" />
     <Compile Remove="Data\Migrations\20210426103811_sdfsdfs.cs" />
     <Compile Remove="Data\Migrations\20210426103811_sdfsdfs.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210426123631_test.cs" />
+    <Compile Remove="Data\Migrations\20210426123631_test.Designer.cs" />
   </ItemGroup>
 
 

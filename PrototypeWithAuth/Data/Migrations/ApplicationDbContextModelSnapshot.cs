@@ -1788,6 +1788,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("ContainsItems")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Height")
                         .HasColumnType("int");
 
@@ -1832,6 +1836,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LocationTypeID");
 
                     b.ToTable("LocationInstances");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("LocationInstance");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomInstance", b =>
@@ -2171,7 +2177,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductID")
+                    b.Property<int?>("ProductID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
                     b.HasKey("MaterialID");
@@ -2179,6 +2188,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("MaterialCategoryID");
 
                     b.HasIndex("ProductID");
+
+                    b.HasIndex("ProtocolID");
 
                     b.ToTable("Materials");
                 });
@@ -2218,21 +2229,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             MaterialCategoryID = 4,
                             MaterialCategoryDescription = "Buffers"
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.MaterialProtocol", b =>
-                {
-                    b.Property<int>("MaterialID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProtocolID")
-                        .HasColumnType("int");
-
-                    b.HasKey("MaterialID", "ProtocolID");
-
-                    b.HasIndex("ProtocolID");
-
-                    b.ToTable("MaterialProtocols");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.NotificationStatus", b =>
@@ -3689,7 +3685,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ParentLocationInstanceID")
+                    b.Property<int?>("ParentLocationInstanceID")
                         .HasColumnType("int");
 
                     b.HasKey("RequestID", "LocationInstanceID");
@@ -3698,7 +3694,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ParentLocationInstanceID");
 
-                    b.ToTable("RequestLocationInstance");
+                    b.ToTable("RequestLocationInstances");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotification", b =>
@@ -3977,6 +3973,21 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.ResourceResourceCategory", b =>
+                {
+                    b.Property<int>("ResourceID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ResourceCategoryID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ResourceID", "ResourceCategoryID");
+
+                    b.HasIndex("ResourceCategoryID");
+
+                    b.ToTable("ResourceResourceCategory");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.ResourceType", b =>
                 {
                     b.Property<int>("ResourceTypeId")
@@ -4196,6 +4207,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("NotificationID");
 
                     b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("EmployeeHoursID");
 
                     b.HasIndex("NotificationStatusID");
 
@@ -4883,6 +4896,13 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasDiscriminator().HasValue("Repair");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.TemporaryLocationInstance", b =>
+                {
+                    b.HasBaseType("PrototypeWithAuth.Models.LocationInstance");
+
+                    b.HasDiscriminator().HasValue("TemporaryLocationInstance");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotificationStatus", b =>
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.NotificationStatus");
@@ -5285,20 +5305,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.MaterialProtocol", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Material", "Material")
-                        .WithMany("MaterialProtocols")
-                        .HasForeignKey("MaterialID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany("MaterialProtocols")
+                        .WithMany("Materials")
                         .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5542,8 +5552,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.LocationInstance", "ParentLocationInstance")
                         .WithMany("AllRequestLocationInstances")
                         .HasForeignKey("ParentLocationInstanceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany("RequestLocationInstances")
@@ -5577,6 +5586,21 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ResourceType", "ResourceType")
                         .WithMany()
                         .HasForeignKey("ResourceTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ResourceResourceCategory", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.ResourceCategory", "ResourceCategory")
+                        .WithMany("ResourceResourceCategories")
+                        .HasForeignKey("ResourceCategoryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
+                        .WithMany("ResourceResourceCategories")
+                        .HasForeignKey("ResourceID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -5638,6 +5662,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.EmployeeHours", "EmployeeHours")
+                        .WithMany()
+                        .HasForeignKey("EmployeeHoursID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.TimekeeperNotificationStatus", "NotificationStatus")
                         .WithMany("TimekeeperNotifications")

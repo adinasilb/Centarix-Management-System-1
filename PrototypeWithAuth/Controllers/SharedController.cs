@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +21,11 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public SharedController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment =null)
+        protected SharedController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment =null)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
         }
-
         private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(DateTime monthDate, Employee user)
         {
             var hours = _context.EmployeeHours.Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatusEntry1).Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType).Where(eh => eh.EmployeeID == user.Id).Where(eh => eh.Date.Month == monthDate.Month && eh.Date.Year == monthDate.Year && eh.Date.Date <= DateTime.Now.Date)
@@ -47,7 +47,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return hoursList;
         }
-        public SummaryHoursViewModel SummaryHoursFunction(int month, int year, Employee user, string errorMessage = null)
+        protected SummaryHoursViewModel SummaryHoursFunction(int month, int year, Employee user, string errorMessage = null)
         {
             var hours = GetHours(new DateTime(year, month, DateTime.Now.Day), user);
             var CurMonth = new DateTime(year, month, DateTime.Now.Day);
@@ -83,8 +83,7 @@ namespace PrototypeWithAuth.Controllers
             }
             return summaryHoursViewModel;
         }
-
-        public double GetUsersOffDaysLeft(Employee user, int offDayTypeID, int thisYear)
+        protected double GetUsersOffDaysLeft(Employee user, int offDayTypeID, int thisYear)
         {
             var year = AppUtility.YearStartedTimeKeeper;
             var offDaysLeft = 0.0;
@@ -140,8 +139,7 @@ namespace PrototypeWithAuth.Controllers
             return offDaysLeft;
         }
 
-
-        public void RemoveRequestWithCommentsAndEmailSessions()
+        protected void RemoveRequestWithCommentsAndEmailSessions()
         {
             var requiredKeys = HttpContext.Session.Keys.Where(x => x.StartsWith(AppData.SessionExtensions.SessionNames.Request.ToString()) ||
                 x.StartsWith(AppData.SessionExtensions.SessionNames.Comment.ToString()) ||
@@ -152,14 +150,12 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
-
-        public decimal GetExchangeRateIfNull()
+        protected decimal GetExchangeRateIfNull()
         {
             return _context.ExchangeRates.Select(er => er.LatestExchangeRate).FirstOrDefault();
         }
 
-
-        public void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, string uploadFolderParent)
+        protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, string uploadFolderParent)
         {
             string uploadFolder = Path.Combine(uploadFolderParent, folderName.ToString());
             DocumentFolder folder = new DocumentFolder()
@@ -182,8 +178,7 @@ namespace PrototypeWithAuth.Controllers
 
             DocumentsInfo.Add(folder);
         }
-
-        public virtual void DocumentsModal(DocumentsModalViewModel documentsModalViewModel)
+        protected virtual void DocumentsModal(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
             string folder = Path.Combine(uploadFolder, documentsModalViewModel.ObjectID.ToString());
@@ -205,7 +200,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
-        public void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, int ObjectID = 0)
+        protected void DeleteTemporaryDocuments(AppUtility.ParentFolderName parentFolderName, int ObjectID = 0)
         {
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());
             string requestFolder = Path.Combine(uploadFolder, ObjectID.ToString());
@@ -225,7 +220,7 @@ namespace PrototypeWithAuth.Controllers
             }
             Directory.CreateDirectory(requestFolder);
         }
-        public void FillDocumentsViewModel(DocumentsModalViewModel documentsModalViewModel)
+        protected void FillDocumentsViewModel(DocumentsModalViewModel documentsModalViewModel)
         {
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, documentsModalViewModel.ParentFolderName.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, documentsModalViewModel.ObjectID.ToString());
@@ -247,7 +242,8 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
-        public void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false)
+
+        protected void MoveDocumentsOutOfTempFolder(int id, AppUtility.ParentFolderName parentFolderName, bool additionalRequests = false)
         {
             //rename temp folder to the request id
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, parentFolderName.ToString());

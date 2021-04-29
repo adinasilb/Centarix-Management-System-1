@@ -153,7 +153,7 @@
 
                         <div class="col-6 ">
                             <input type="hidden" asp-for="LocationInstances[1].Height" value="1" />
-                            <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[1].LocationTypeID" style="display: none;" />
+                            <input asp-for="LocationInstances[1].LocationTypeID" value="@Model.LocationTypes.ToList()[0].LocationTypeID" style="display: none;" />
                             <select class=" mdb-select custom select-dropdown form-control-plaintext sub-select" asp-for="LocationInstances[1].LabPartID" id="labPartDDL" disabled>
                                 <option value="">lab part</option>
                                 @foreach (var lp in Model.LabParts)

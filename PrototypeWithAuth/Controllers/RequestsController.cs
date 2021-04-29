@@ -2078,8 +2078,18 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 LocationInstance = li,
                                 IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == id).Any()
-                            }).ToList();
+                            }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
 
+                        List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
+                        foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
+                        {
+                            liPlaces.Add(new LocationInstancePlace()
+                            {
+                                LocationInstanceId = cli.LocationInstance.LocationInstanceID,
+                                Placed = cli.IsThisRequest
+                            }) ;
+                        }
+                        receivedModalVisualViewModel.LocationInstancePlaces = liPlaces;
                         //return NotFound();
                     }
                     requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
@@ -2151,7 +2161,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
+        public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -2236,7 +2246,6 @@ namespace PrototypeWithAuth.Controllers
                         await _context.SaveChangesAsync();
 
 
-
                         if (requestItemViewModel.Comments != null)
                         {
 
@@ -2252,6 +2261,23 @@ namespace PrototypeWithAuth.Controllers
                                 }
                             }
                             await _context.SaveChangesAsync();
+                        }
+
+                        if(receivedModalVisualViewModel != null)
+                        {
+                            var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
+                            foreach(var location in requestLocations)
+                            {
+                                _context.Remove(location);
+                                var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                                if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                                {
+                                    locationInstance.IsFull = false;
+                                    _context.Update(locationInstance);
+                                }
+                                //If for containsItems?
+                            }
+                            await SaveLocations(receivedModalVisualViewModel, request);
                         }
 
 
@@ -3360,37 +3386,12 @@ namespace PrototypeWithAuth.Controllers
 
             var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
             LocationInstance secondChildLi = null;
-            bool Is80Freezer = false;
-            bool Is25Freezer = false;
-            var hasEmptyShelves = false;
             if (firstChildLI != null)
             {
                 secondChildLi = _context.LocationInstances.Where(li => li.LocationInstanceParentID == firstChildLI.LocationInstanceID).FirstOrDefault(); //second child is to ensure it doesn't have any box units
             }
-            if (parentLocationInstance.LocationTypeID == 200) //check if it containes empty shelves ONLY IF -80
-            {
-                Is80Freezer = true;
-                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmptyShelf == true).ToList();
-                if (shelves.Any())
-                {
-                    hasEmptyShelves = true;
-                }
-            }
-
-            if (parentLocationInstance.LocationTypeID == 501) //check if it containes empty shelves ONLY IF 25
-            {
-                Is25Freezer = true;
-                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmptyShelf == true).ToList();
-                if (shelves.Any())
-                {
-                    hasEmptyShelves = true;
-                }
-            }
-            if (parentLocationInstance.LocationTypeID == 500)
-            {
-                receivedModalVisualViewModel.DeleteTable = true;
-            }
-            if (/*parentLocationInstance.IsEmptyShelf == true ||*/ (secondChildLi != null && !Is80Freezer) || (Is80Freezer && hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
+            
+            if (secondChildLi != null)
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
@@ -3409,7 +3410,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     receivedModalVisualViewModel.ChildrenLocationInstances =
                         _context.LocationInstances.Where(m => m.LocationInstanceParentID == LocationInstanceID)
-                        .Include(m => m.RequestLocationInstances).ToList();
+                        .Include(m => m.RequestLocationInstances).OrderBy(m => m.LocationNumber).ToList();
 
 
                     //add placeholders for new places
@@ -3431,6 +3432,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
@@ -3440,49 +3442,46 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
-                    bool hasLocationInstances = false;
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
-                        foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
+                        if (receivedLocationViewModel.TemporaryLocation)
                         {
-                            if (place.Placed)
+                            var tempLocationInstance = _context.TemporaryLocationInstances.Where(tli => tli.LocationTypeID == receivedLocationViewModel.LocationTypeID).FirstOrDefault();
+                            if (tempLocationInstance == null)
                             {
-                                hasLocationInstances = true;
+                                tempLocationInstance = new TemporaryLocationInstance()
+                                {
+                                    LocationTypeID = receivedLocationViewModel.LocationTypeID,
+                                    LocationInstanceName = "Temporary",
+                                    LocationInstanceAbbrev = "Temporary"
+                                };
+                                _context.Update(tempLocationInstance);
+                                await _context.SaveChangesAsync();
                             }
-                        }
-                        await SaveLocations(receivedModalVisualViewModel, requestReceived);
-
-                        if (hasLocationInstances)
-                        {
-                            if (receivedLocationViewModel.Clarify)
+                            var rli = new RequestLocationInstance()
                             {
-                                requestReceived.RequestStatusID = 5;
-                            }
-                            else if (receivedLocationViewModel.PartialDelivery)
-                            {
-                                requestReceived.RequestStatusID = 4;
-                            }
-                            else
-                            {
-                                requestReceived.RequestStatusID = 3;
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        if (receivedLocationViewModel.Clarify)
-                        {
-                            requestReceived.RequestStatusID = 5;
-                        }
-                        else if (receivedLocationViewModel.PartialDelivery)
-                        {
-                            requestReceived.RequestStatusID = 4;
+                                LocationInstanceID = tempLocationInstance.LocationInstanceID,
+                                RequestID = requestReceived.RequestID,
+                            };
+                            _context.Add(rli);
+                            await _context.SaveChangesAsync();
                         }
                         else
                         {
-                            requestReceived.RequestStatusID = 3;
+                            await SaveLocations(receivedModalVisualViewModel, requestReceived);
                         }
+                    }
+                    if (receivedLocationViewModel.Clarify)
+                    {
+                        requestReceived.RequestStatusID = 5;
+                    }
+                    else if (receivedLocationViewModel.PartialDelivery)
+                    {
+                        requestReceived.RequestStatusID = 4;
+                    }
+                    else
+                    {
+                        requestReceived.RequestStatusID = 3;
                     }
 
                     requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
@@ -3602,6 +3601,50 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ReceivedModalVisual(ReceivedModalVisualViewModel receivedModalVisualViewModel, List<Request> Requests)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var request = Requests.FirstOrDefault();
+                    receivedModalVisualViewModel.ParentLocationInstance =
+                        _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+                    var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
+                    foreach (var location in requestLocations)
+                    {
+                        _context.Remove(location);
+                        var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                        if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                        {
+                            locationInstance.IsFull = false;
+                            _context.Update(locationInstance);
+                        }
+                        else if (locationInstance.IsEmptyShelf)
+                        {
+                            var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+                                                    && rli.RequestID != request.RequestID).ToList();
+                            if (duplicateLocations.Count() == 0)
+                            {
+                                locationInstance.ContainsItems = false;
+                                _context.Update(locationInstance);
+                            }
+                        }
+                    }
+                    await _context.SaveChangesAsync();
+                    await SaveLocations(receivedModalVisualViewModel, request);
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return PartialView(receivedModalVisualViewModel);
+        }
 
         /*
          * END RECEIVED MODAL
@@ -3627,7 +3670,7 @@ namespace PrototypeWithAuth.Controllers
       
 
         [HttpPost]
-        public override void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
+        public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
             base.DocumentsModal(documentsModalViewModel);
         }
@@ -3720,7 +3763,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
         {
-            var locationInstanceList = _context.LocationInstances.Where(li => li.LocationInstanceParentID == locationInstanceParentId).ToList();
+            var locationInstanceList = _context.LocationInstances.Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).ToList();
             return Json(locationInstanceList);
         }
 
@@ -5410,12 +5453,12 @@ namespace PrototypeWithAuth.Controllers
         }
         //public async Task<bool> PopulateProductSerialNumber()
         //{
-        //    var products = _context.Products.Select(p => p).Include(p =>p.ProductSubcategory.ParentCategory).ToList();
+        //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();
         //    var operationSerialNumber = 0;
         //    var orderSerialNumber = 0;
         //    foreach (var product in products)
         //    {
-        //        if(product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+        //        if (product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
         //        {
         //            product.SerialNumber = "L" + orderSerialNumber;
         //            orderSerialNumber++;

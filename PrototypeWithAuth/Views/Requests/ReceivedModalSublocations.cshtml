@@ -38,18 +38,12 @@
                                 {
                                     locationName = locationType.LocationRoomInstance.LocationRoomInstanceName;
                                 }
-                                else if(locationType.LocationTypeID == 501)
-                                {
-                                    locationName = locationType.LabPart.LabPartName + " " + locationType.LocationNumber;
-                                }
 
                                 var description = locationType.LocationInstanceAbbrev;
-
-                                if (description == null)
+                                if(locationType.LocationInstanceParent == null)
                                 {
                                     description = locationType.LocationInstanceName;
                                 }
-
                                 <li id="@locationType.LocationInstanceID" class="SLI-click" data-string="@description" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
                                     @locationName
                                 </li>
@@ -59,11 +53,7 @@
                     </div>
                 </div>
             </div>
-
-
-
         }
-
         else
         {
         <div class="">

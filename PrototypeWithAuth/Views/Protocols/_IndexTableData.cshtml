@@ -2,6 +2,10 @@
 @using PrototypeWithAuth.AppData
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Mvc.Core.Common
+
+
+
+
 @if (AppUtility.IsAjaxRequest(Context.Request))
 {
     <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text error-msg"></span></div>
@@ -54,7 +58,7 @@
                                     }
                                     if (col.AjaxLink != null)
                                     {
-                                        <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID" data-target="item" href="item">
+                                        <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID">
                                             <p class="m-0">@col.Value[val]</p>
                                         </button>
                                     }
@@ -83,3 +87,4 @@
 {
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
 }
+<script src="~/js/ProtocolsIndexTablePartial.js"></script>

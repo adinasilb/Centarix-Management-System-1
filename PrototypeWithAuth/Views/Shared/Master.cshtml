@@ -406,6 +406,8 @@
         function enableMarkReadonly(element) {
             console.log("in if details");
             $('.mark-readonly').attr("disabled", false);
+            $('.mark-readonly').removeClass("disabled");
+            $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
             //TODO: add in mark-readonly fields for subunits
             //$.fn.CheckUnitsFilled();
             //$.fn.CheckSubUnitsFilled();
@@ -539,8 +541,11 @@
             });
         }
         $.fn.TurnToDetails = function () {
+
             $('.mark-readonly').prop("disabled", true);
             $('.mark-readonly input').prop("disabled", true);
+            $('.choose-location').addClass("disable-custom-mdbselect");
+            $('.visual-locations td.mark-readonly').addClass("disabled");
             $('.mark-edditable').attr("data-val", false)
             $('.edit-mode-switch-description').text("Edit Mode Off");
             $('.turn-edit-on-off').attr('name', 'details')
