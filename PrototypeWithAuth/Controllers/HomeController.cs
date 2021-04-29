@@ -108,14 +108,15 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public int GetNotficationCount()
+        public int GetNotificationCount()
         {
             var currentUserID = _userManager.GetUserId(User);
             DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id == currentUserID).DateLastReadNotifications;
             int count1 = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID).Count();
-            var tk = _context.TimekeeperNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID);
+            /*var tk = _context.TimekeeperNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID);
             int count2 = tk.Count();
-            return count1 + count2;
+            return count1 + count2;*/
+            return count1;
         }
         [HttpGet]
         public JsonResult GetLatestNotifications()

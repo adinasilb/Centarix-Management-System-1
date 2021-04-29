@@ -695,7 +695,7 @@ namespace PrototypeWithAuth.Controllers
                     var offDayTypeID = _context.OffDayTypes.Where(odt => odt.Description == AppUtility.GetDisplayNameOfEnumValue(offDayType.ToString())).Select(odt => odt.OffDayTypeID).FirstOrDefault();
                     EmployeeHours employeeHour = null;
                     var user = _context.Employees.Include(eh => eh.SalariedEmployee).Where(e => e.Id == userID).FirstOrDefault();
-                    if (dateTo == new DateTime())
+                    if (dateTo == new DateTime()) //just one date
                     {
                         companyDaysOff = _context.CompanyDayOffs.Select(cdo => cdo.Date.Date).Where(d => d.Date == dateFrom).ToList();
                         if (dateFrom.DayOfWeek != DayOfWeek.Friday && dateFrom.DayOfWeek != DayOfWeek.Saturday && !companyDaysOff.Contains(dateFrom.Date))
@@ -732,6 +732,10 @@ namespace PrototypeWithAuth.Controllers
                                 else if (employeeHour.OffDayTypeID != null)
                                 {
                                     RemoveEmployeeBonusDay(employeeHour, user);
+                                }
+                                else
+                                {
+                                    RemoveNotifications(employeeHour.EmployeeHoursID);
                                 }
                                 employeeHour.OffDayTypeID = offDayTypeID;
                                 
@@ -812,6 +816,10 @@ namespace PrototypeWithAuth.Controllers
                                         {
                                             RemoveEmployeeBonusDay(employeeHour, user);
                                         }
+                                        else
+                                        {
+                                            RemoveNotifications(employeeHour.EmployeeHoursID);
+                                        }
                                         employeeHour.OffDayTypeID = offDayTypeID;
                                         employeeHour.IsBonus = false;
                                     }
@@ -850,6 +858,7 @@ namespace PrototypeWithAuth.Controllers
                                         _context.Update(employeeHour);
                                         _context.SaveChanges();
                                     }
+                                    
                                 }
                             }
                             dateFrom = dateFrom.AddDays(1);
@@ -867,6 +876,15 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        private void RemoveNotifications(int employeeHoursID)
+        {
+            var notifications = _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == employeeHoursID).ToList();
+            foreach (TimekeeperNotification n in notifications)
+            {
+                _context.Remove(n);
+                _context.SaveChanges();
+            }
+        }
         private void RemoveEmployeeBonusDay(EmployeeHours employeeHour, Employee user)
         {
             if (employeeHour.OffDayTypeID == 2 && employeeHour.IsBonus)
@@ -954,7 +972,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Entry(newEmployeeHour).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
 
-                            if(notifications.Count() != 0) //might need to change this if if notifications starts working differently
+                            if(notifications.Count() == 0) //might need to change this if if notifications starts working differently
                             {
                                 TimekeeperNotification newNotification = new TimekeeperNotification()
                                 {
