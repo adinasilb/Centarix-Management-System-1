@@ -905,11 +905,12 @@ namespace PrototypeWithAuth.Controllers
                 ViewBag.ErrorMessage = "Employee Hour not found. Unable to delete";
                 return NotFound();
             }
-
+            var ehaa = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursID == id).Include(ehaa => ehaa.PartialOffDayType).FirstOrDefaultAsync();
             DeleteHourViewModel deleteHourViewModel = new DeleteHourViewModel()
             {
                 EmployeeHour = employeeHour,
-                SectionType = sectionType
+                SectionType = sectionType,
+                Ehaa = ehaa
             };
 
             return PartialView(deleteHourViewModel);
@@ -921,8 +922,8 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-
-                var notifications = _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == deleteHourViewModel.EmployeeHour.EmployeeHoursID).ToList();
+                var employeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID;
+                var notifications = _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == employeeHoursID).ToList();
                 var dayoff = _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == deleteHourViewModel.EmployeeHour.Date).FirstOrDefault();
                 var anotherEmployeeHourWithSameDate = _context.EmployeeHours.Where(eh => eh.Date == deleteHourViewModel.EmployeeHour.Date && eh.EmployeeID == deleteHourViewModel.EmployeeHour.EmployeeID && eh.EmployeeHoursID != deleteHourViewModel.EmployeeHour.EmployeeHoursID).FirstOrDefault();
                 EmployeeHours newEmployeeHour = null;
@@ -933,7 +934,7 @@ namespace PrototypeWithAuth.Controllers
                         if (anotherEmployeeHourWithSameDate == null ) { 
                              newEmployeeHour = new EmployeeHours()
                             {
-                                EmployeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID,
+                                EmployeeHoursID = employeeHoursID,
                                 Date = deleteHourViewModel.EmployeeHour.Date,
                                 EmployeeID = deleteHourViewModel.EmployeeHour.EmployeeID,
                                 CompanyDayOffID = dayoff?.CompanyDayOffID
@@ -942,11 +943,12 @@ namespace PrototypeWithAuth.Controllers
 
                             _context.Entry(newEmployeeHour).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
-                            if(notifications.Count() != 0)
+
+                            if(notifications.Count() != 0) //might need to change this if if notifications starts working differently
                             {
                                 TimekeeperNotification newNotification = new TimekeeperNotification()
                                 {
-                                    EmployeeHoursID = newEmployeeHour.EmployeeHoursID,
+                                    EmployeeHoursID = employeeHoursID,
                                     IsRead = false,
                                     ApplicationUserID = newEmployeeHour.EmployeeID,
                                     Description = "update hours for " + newEmployeeHour.Date.ToString("dd/MM/yyyy"),
@@ -964,11 +966,18 @@ namespace PrototypeWithAuth.Controllers
                             var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == deleteHourViewModel.EmployeeHour.EmployeeHoursID).FirstOrDefault();
                             _context.Remove(employeeHour);
                             await _context.SaveChangesAsync();
+
                             foreach(TimekeeperNotification n in notifications)
                             {
                                 _context.Remove(n);
                                 await _context.SaveChangesAsync();
                             }
+                        }
+                        var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursID == employeeHoursID).FirstOrDefault();
+                        if (ehaa != null)
+                        {
+                            _context.Remove(ehaa);
+                            await _context.SaveChangesAsync();
                         }
                         //throw new Exception();
                         await transaction.CommitAsync();

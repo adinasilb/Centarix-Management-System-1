@@ -13,5 +13,6 @@ namespace PrototypeWithAuth.ViewModels
         
         public AppUtility.MenuItems SectionType { get; set; }
         public EmployeeHours EmployeeHour { get; set; }
+        public EmployeeHoursAwaitingApproval Ehaa { get; set; }
     }
 }
