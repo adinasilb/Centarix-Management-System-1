@@ -3442,49 +3442,46 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
-                    bool hasLocationInstances = false;
                     if (receivedLocationViewModel.CategoryType == 1)
                     {
-                        foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
+                        if (receivedLocationViewModel.TemporaryLocation)
                         {
-                            if (place.Placed)
+                            var tempLocationInstance = _context.TemporaryLocationInstances.Where(tli => tli.LocationTypeID == receivedLocationViewModel.LocationTypeID).FirstOrDefault();
+                            if (tempLocationInstance == null)
                             {
-                                hasLocationInstances = true;
+                                tempLocationInstance = new TemporaryLocationInstance()
+                                {
+                                    LocationTypeID = receivedLocationViewModel.LocationTypeID,
+                                    LocationInstanceName = "Temporary",
+                                    LocationInstanceAbbrev = "Temporary"
+                                };
+                                _context.Update(tempLocationInstance);
+                                await _context.SaveChangesAsync();
                             }
-                        }
-                        await SaveLocations(receivedModalVisualViewModel, requestReceived);
-
-                        if (hasLocationInstances)
-                        {
-                            if (receivedLocationViewModel.Clarify)
+                            var rli = new RequestLocationInstance()
                             {
-                                requestReceived.RequestStatusID = 5;
-                            }
-                            else if (receivedLocationViewModel.PartialDelivery)
-                            {
-                                requestReceived.RequestStatusID = 4;
-                            }
-                            else
-                            {
-                                requestReceived.RequestStatusID = 3;
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        if (receivedLocationViewModel.Clarify)
-                        {
-                            requestReceived.RequestStatusID = 5;
-                        }
-                        else if (receivedLocationViewModel.PartialDelivery)
-                        {
-                            requestReceived.RequestStatusID = 4;
+                                LocationInstanceID = tempLocationInstance.LocationInstanceID,
+                                RequestID = requestReceived.RequestID,
+                            };
+                            _context.Add(rli);
+                            await _context.SaveChangesAsync();
                         }
                         else
                         {
-                            requestReceived.RequestStatusID = 3;
+                            await SaveLocations(receivedModalVisualViewModel, requestReceived);
                         }
+                    }
+                    if (receivedLocationViewModel.Clarify)
+                    {
+                        requestReceived.RequestStatusID = 5;
+                    }
+                    else if (receivedLocationViewModel.PartialDelivery)
+                    {
+                        requestReceived.RequestStatusID = 4;
+                    }
+                    else
+                    {
+                        requestReceived.RequestStatusID = 3;
                     }
 
                     requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;

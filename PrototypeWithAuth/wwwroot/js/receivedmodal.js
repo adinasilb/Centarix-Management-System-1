@@ -24,10 +24,16 @@
 	});
 
 	$(".open-sublocations-types").on("click", function () {
-		console.log("select location")
-		var id = $(this).attr("id");
-		console.log(id)
-		loadReceivedModalSubLocations(id);
+		$("#LocationTypeID").val($(this).attr("id"))
+		if (!$(".temporary-check").is(":checked")) {
+			console.log("select location")
+			var id = $(this).attr("id");
+			console.log(id)
+			loadReceivedModalSubLocations(id);
+		}
+		else {
+			$("#locationSelected").val(true);
+        }
 	});
 
 	//AJAX load full partial view for modalview manage locations
@@ -287,7 +293,22 @@
 			element.children('div').first().children(".row-1").children("i").removeClass("icon-delete-24px");
 			lip.val("false")			
         }
-    }
+	}
+
+	$(".temporary-check").click(function (e) {
+		var checked = $(this).is(":checked");
+		if (checked) {
+			$(".divSublocations").html("")
+			console.log($("#LocationTypeID").val())
+			if ($("#LocationTypeID").val() != 0)
+			{
+				$("#locationSelected").val(true)
+            }
+		}
+		else {
+			$("#locationSelected").val("")
+		}
+    })
 
 
 });
