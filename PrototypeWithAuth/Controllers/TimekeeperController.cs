@@ -890,7 +890,107 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
+        [HttpGet]
+        [Authorize(Roles = "TimeKeeper")]
+        public async Task<IActionResult> DeleteHourModal(int? id, AppUtility.MenuItems sectionType)
+        {
+            if (id == null)
+            {
+                ViewBag.ErrorMessage = "Employee Hour not found (no id). Unable to delete.";
+                return NotFound();
+            }
+            var employeeHour = await _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == id).Include(eh => eh.OffDayType).FirstOrDefaultAsync();
+            if (employeeHour == null)
+            {
+                ViewBag.ErrorMessage = "Employee Hour not found. Unable to delete";
+                return NotFound();
+            }
 
+            DeleteHourViewModel deleteHourViewModel = new DeleteHourViewModel()
+            {
+                EmployeeHour = employeeHour,
+                SectionType = sectionType
+            };
+
+            return PartialView(deleteHourViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "TimeKeeper")]
+        public async Task<IActionResult> DeleteHourModal(DeleteHourViewModel deleteHourViewModel) //remove ehaa too
+        {
+            try
+            {
+
+                var notifications = _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == deleteHourViewModel.EmployeeHour.EmployeeHoursID).ToList();
+                var dayoff = _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == deleteHourViewModel.EmployeeHour.Date).FirstOrDefault();
+                var anotherEmployeeHourWithSameDate = _context.EmployeeHours.Where(eh => eh.Date == deleteHourViewModel.EmployeeHour.Date && eh.EmployeeID == deleteHourViewModel.EmployeeHour.EmployeeID && eh.EmployeeHoursID != deleteHourViewModel.EmployeeHour.EmployeeHoursID).FirstOrDefault();
+                EmployeeHours newEmployeeHour = null;
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    { 
+                        if (anotherEmployeeHourWithSameDate == null ) { 
+                             newEmployeeHour = new EmployeeHours()
+                            {
+                                EmployeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID,
+                                Date = deleteHourViewModel.EmployeeHour.Date,
+                                EmployeeID = deleteHourViewModel.EmployeeHour.EmployeeID,
+                                CompanyDayOffID = dayoff?.CompanyDayOffID
+                                                       
+                            };
+
+                            _context.Entry(newEmployeeHour).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
+                            if(notifications.Count() != 0)
+                            {
+                                TimekeeperNotification newNotification = new TimekeeperNotification()
+                                {
+                                    EmployeeHoursID = newEmployeeHour.EmployeeHoursID,
+                                    IsRead = false,
+                                    ApplicationUserID = newEmployeeHour.EmployeeID,
+                                    Description = "update hours for " + newEmployeeHour.Date.ToString("dd/MM/yyyy"),
+                                    NotificationStatusID = 5,
+                                    TimeStamp = DateTime.Now,
+                                    Controller = "Timekeeper",
+                                    Action = "SummaryHours"
+                                };
+                                _context.Add(newNotification);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+                        else
+                        {
+                            var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == deleteHourViewModel.EmployeeHour.EmployeeHoursID).FirstOrDefault();
+                            _context.Remove(employeeHour);
+                            await _context.SaveChangesAsync();
+                            foreach(TimekeeperNotification n in notifications)
+                            {
+                                _context.Remove(n);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+                        //throw new Exception();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw e;
+                    }
+                }
+                return RedirectToAction("SummaryHours", 
+                    new { Month = deleteHourViewModel.EmployeeHour.Date.Month, Year = deleteHourViewModel.EmployeeHour.Date.Year });
+            }
+            catch (Exception ex)
+            {
+                //deleteHourViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                Response.StatusCode = 500;
+                return RedirectToAction("SummaryHours", 
+                    new { Month = deleteHourViewModel.EmployeeHour.Date.Month, 
+                        Year = deleteHourViewModel.EmployeeHour.Date.Year, errorMessage = AppUtility.GetExceptionMessage(ex) });
+            }
+        }
     }
 }
 

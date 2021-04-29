@@ -1588,6 +1588,13 @@ $(function () {
 		});
 	})
 
+	$('.load-delete-hour-modal').click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		$itemurl = "/Timekeeper/DeleteHourModal/?id=" + $(this).attr('value') + "&sectionType=" + $('#masterSectionType').val();
+		$.fn.CallPageRequest($itemurl, "delete");
+    })
+
 });
 
 
