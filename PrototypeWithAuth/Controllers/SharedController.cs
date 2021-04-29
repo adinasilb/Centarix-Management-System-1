@@ -26,9 +26,11 @@ namespace PrototypeWithAuth.Controllers
             _context = context;
             _hostingEnvironment = hostingEnvironment;
         }
-        private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(DateTime monthDate, Employee user)
+        private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(int year, int month, Employee user)
         {
-            var hours = _context.EmployeeHours.Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatusEntry1).Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType).Where(eh => eh.EmployeeID == user.Id).Where(eh => eh.Date.Month == monthDate.Month && eh.Date.Year == monthDate.Year && eh.Date.Date <= DateTime.Now.Date)
+            var hours = _context.EmployeeHours.Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatusEntry1)
+                .Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType).Where(eh => eh.EmployeeID == user.Id)
+                .Where(eh => eh.Date.Month == month && eh.Date.Year == year && eh.Date.Date <= DateTime.Now.Date)
                 .OrderByDescending(eh => eh.Date).ToList();
 
             List<EmployeeHoursAndAwaitingApprovalViewModel> hoursList = new List<EmployeeHoursAndAwaitingApprovalViewModel>();
@@ -49,8 +51,8 @@ namespace PrototypeWithAuth.Controllers
         }
         protected SummaryHoursViewModel SummaryHoursFunction(int month, int year, Employee user, string errorMessage = null)
         {
-            var hours = GetHours(new DateTime(year, month, DateTime.Now.Day), user);
-            var CurMonth = new DateTime(year, month, DateTime.Now.Day);
+            var hours = GetHours(year, month, user);
+            var CurMonth = new DateTime(year, month, 1);
             double? totalhours;
             double vacationDaysTaken = 0;
             if (user.EmployeeStatusID != 1)
