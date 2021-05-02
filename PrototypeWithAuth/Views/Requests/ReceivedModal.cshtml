@@ -393,7 +393,7 @@
             $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
-            console.log(...formData)
+            //console.log(...formData)
             ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/", "._IndexTableWithCounts", "POST", formData, "received-item");
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
