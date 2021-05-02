@@ -78,7 +78,8 @@
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch);
+		var parentFolder = $(".active-document-modal").attr("parentFolder");
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
 		return true;
 	});
 
@@ -110,13 +111,17 @@
 			} else if ((section == "LabManagement")) {
 				div.addClass("lab-man-filter");
 			}
+			else if ((section == "Protocols")) {
+				div.addClass("protocols-filter");
+				$(".material-image-icon").addClass("protocols-filter");
+			}
 			else {
 				div.addClass("order-inv-filter");
 			}
 			var folderInput = "#" + $foldername + "Input";
 			$(folderInput).addClass("contains-file");
 			if ($(folderInput).rules()) {
-					$(folderInput).valid();
+				$(folderInput).valid();
 			}
 		}
 	};

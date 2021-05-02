@@ -2416,3 +2416,9 @@ body.modal-open .popover{
     border-radius: .75rem;
 
 }
+.link-color {
+    color:#0275d8 !important;
+}
+.link-underline {
+    border-bottom: solid 2px #0275d8;
+}

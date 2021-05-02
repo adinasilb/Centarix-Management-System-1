@@ -19,35 +19,36 @@
                         {
                             foreach (var material in materialsPerCategory)
                             {
-                                var color = " protocols-color";
-                                var seeMaterialColor = "disabled-color";
+                                var color = " protocols-color ";
+                                var disabledText= " disabled-text ";
+                                var seeMaterialColor = disabledText;
                                 if (material.Info != null)
                                 {
                                     seeMaterialColor = color;
                                 }
                                 var materialNameColor = "";
-                                var seeProductDetailsColor = "disabled-color";
+                                var seeProductDetailsColor = disabledText;
                                 if (material.Product != null)
                                 {
                                     seeProductDetailsColor = color;
-                                    materialNameColor = "text-blue";
+                                    materialNameColor = " link-color link-underline ";
                                 }
 
-                                var updateImageColor = "";
-
-                                if (Model.Folders[0].FileStrings != null && Model.Folders[0].FileStrings.Count > 0)
+                                var updateImageColor = disabledText;
+                                var folderPerMaterial = Model.Folders.Where(m => m.Key.MaterialID == material.MaterialID).SelectMany(f=>f).FirstOrDefault();
+                                if (folderPerMaterial[0].FileStrings != null &&folderPerMaterial[0].FileStrings.Count > 0)
                                 {
-                                    updateImageColor = "disabled-color";
+                                    updateImageColor =color;
                                 }
                                 var deleteMaterialColor = color;
                                 var materialName = material.Name ?? material.Product.ProductName;
                                 <div class="row">
                                     <div class="card-border material-cards">
-                                        <div class="text @materialNameColor">@materialName</div>
+                                        <div class="text @materialNameColor ">@materialName</div>
                                         <hr class="mb-2 mt-2" />
                                         <div class=" d-flex text-center   align-items-center justify-content-sm-around">
-                                            <a href="#" class="open-document-modal mark-edditable @updateImageColor" data-string="@AppUtility.FolderNamesEnum.MaterialPictures" data-id="@material.ProtocolID" id="@AppUtility.FolderNamesEnum.MaterialPictures" data-val="@true" showSwitch="@false">
-                                                <i class=" icon-camera_alt-24px " style="font-size:1.55rem"></i>
+                                            <a href="#" class="open-document-modal mark-edditable " data-string="@AppUtility.FolderNamesEnum.Pictures" data-id="@material.MaterialID" id="@AppUtility.FolderNamesEnum.Pictures" data-val="@true" showSwitch="@false" parentFolder="@AppUtility.ParentFolderName.Materials">
+                                                <i class="material-image-icon icon-camera_alt-24px @updateImageColor" style="font-size:1.55rem"></i>
                                             </a>
                                             <button class=" see-material @seeMaterialColor btn btn-link no-box-shadow p-0 m-0">
                                                 <i class=" icon-info-24px-2 " style="font-size:1.55rem"></i>
