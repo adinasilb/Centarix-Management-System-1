@@ -186,7 +186,7 @@
                                                             }*@
                                                                     @if (Model.ShowSwitch || Model.IsEdittable)
                                                                     {
-                                                                        <a href="" class="delete-document @deleteDocumentClass @Model.SectionType.ToString() mx-3" url="@Url.Action("DeleteDocumentModal", "Requests", new { FileString = Model.FileStrings[i], id = Model.ObjectID, RequestFolderNameEnum = Model.FolderName, IsEdittable = true, SectionType = Model.SectionType })">
+                                                                        <a href="" class="delete-document @deleteDocumentClass @Model.SectionType.ToString() mx-3" url="@Url.Action("DeleteDocumentModal", "Requests", new { FileString = Model.FileStrings[i], id = Model.ObjectID, RequestFolderNameEnum = Model.FolderName, IsEdittable = true, SectionType = Model.SectionType, ParentFolderName = Model.ParentFolderName })">
                                                                             <i style="font-size:2rem;" class="icon-delete-24px documents-delete-icon hover-bold @colorToUse"></i>
                                                                         </a>}
                                                                     @*<a href="@Model.FileStrings[i]" target="_blank" class="btn btn-block btn-secondary">open</a>*@

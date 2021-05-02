@@ -74,7 +74,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <label asp-for="Material.Info" class="control-label mb-2"></label>
-                                <textarea class="border form-control-plaintext rounded-reorder" rows="8" asp-for="Material.Info"></textarea>
+                                <textarea class="border form-control-plaintext " rows="8" asp-for="Material.Info"></textarea>
                             </div>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
             },
             error: function (jqxhr) {
                 if (jqxhr.status == 500) {
-                    $.fn.OpenModal('add-material');
+                    $.fn.OpenModal('modal', 'add-material', jqxhr.responseText);
                 }
                 return true;
             }

@@ -51,7 +51,8 @@
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch);
+				var parentFolder = $(".active-document-modal").attr("parentfolder");
+				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder);
 				return true;
 			},
 			processData: false,
@@ -101,7 +102,7 @@
 		var folder = "#" + $foldername + ".active-document-modal";
 		var div = $(folder + " i");
 		
-		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file")) {
+		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file" || $(".active-document-modal .material-image-icon").hasClass("protocols-filter"))) {
 			console.log("has class already");
 		} else {
 			console.log("does not class already");
@@ -113,7 +114,7 @@
 			}
 			else if ((section == "Protocols")) {
 				div.addClass("protocols-filter");
-				$(".material-image-icon").addClass("protocols-filter");
+				$(".active-document-modal .material-image-icon").addClass("protocols-filter");
 			}
 			else {
 				div.addClass("order-inv-filter");

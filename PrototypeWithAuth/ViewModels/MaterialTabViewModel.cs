@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class MaterialTabViewModel
+    public class MaterialTabViewModel:ViewModelBase
     {
         public IEnumerable<MaterialCategory> MaterialCategories { get; set; }
         public IEnumerable<Material> Materials { get; set; }

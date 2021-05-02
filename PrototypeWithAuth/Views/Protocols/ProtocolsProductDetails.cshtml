@@ -1,0 +1,15 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+<div class="modal modal-view fader on-form-modal add-resource-modal protocol-form" id="myModal" data-backdrop="false">
+    <div class=" modal-dialog-centered mx-auto" style="width:54.625rem;">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+
+            <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('add-resources')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" id="" class="modal-padding" enctype="multipart/form-data">
+                @{await Html.RenderPartialAsync("ItemData", Model); }
+            </form>
+
+        </div>
+    </div>
+</div>
