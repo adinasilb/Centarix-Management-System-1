@@ -360,10 +360,7 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     return PartialView("MaterialInfoModal", new AddMaterialViewModel { Material = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
                 }
-                string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
-                var materials = _context.Materials.Include(m => m.Product).Where(m => m.ProtocolID == materialDB.ProtocolID);
-                Dictionary<Material, List<DocumentFolder>> MaterialFolders = FillMaterialDocumentsModel(materials, uploadProtocolsFolder);
-                return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = materials, MaterialCategories = _context.MaterialCategories, Folders = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value) });
+                return redirectToMaterialTab(materialDB.ProtocolID);
             }
         }
 
@@ -397,13 +394,40 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     return PartialView("LinkMaterialToProductModal", new AddMaterialViewModel { Material = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
                 }
-                string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
-                var materials = _context.Materials.Include(m => m.Product).Where(m => m.ProtocolID == materialDB.ProtocolID);
-                Dictionary<Material, List<DocumentFolder>> MaterialFolders = FillMaterialDocumentsModel(materials, uploadProtocolsFolder);
-                return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = materials, MaterialCategories = _context.MaterialCategories, Folders = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value) });
+                return redirectToMaterialTab(materialDB.ProtocolID);
             }
         }
 
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> DeleteMaterial(int materialID)
+        {
+            var material = _context.Materials.Where(m => m.MaterialID == materialID).Include(m => m.Product).FirstOrDefault();
+            return PartialView(new AddMaterialViewModel { Material = material });
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> DeleteMaterial(AddMaterialViewModel addMaterialViewModel)
+        {
+            var materialDB = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {                 
+                    _context.Entry(materialDB).State = EntityState.Deleted;
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                    return PartialView("DeleteMaterial", new AddMaterialViewModel { Material = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                }
+                return redirectToMaterialTab(materialDB.ProtocolID);
+            }
+        }
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
@@ -415,12 +439,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    if(product !=null)
+                    if (product != null)
                     {
                         addMaterialViewModel.Material.ProductID = product.ProductID;
                     }
-                   
-                    _context.Entry(addMaterialViewModel.Material).State = EntityState.Added;           
+
+                    _context.Entry(addMaterialViewModel.Material).State = EntityState.Added;
                     await _context.SaveChangesAsync();
                     MoveDocumentsOutOfTempFolder(addMaterialViewModel.Material.MaterialID, AppUtility.ParentFolderName.Materials);
                     await transaction.CommitAsync();
@@ -434,12 +458,16 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("AddMaterialModal", addMaterialViewModel);
                 }
             }
-        string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
-        var materials = _context.Materials.Include(m => m.Product).Where(m => m.ProtocolID == addMaterialViewModel.Material.ProtocolID);
-        Dictionary<Material, List<DocumentFolder>> MaterialFolders = FillMaterialDocumentsModel(materials, uploadProtocolsFolder);
-        return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = materials, MaterialCategories = _context.MaterialCategories, Folders = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value) });
-    }
+            return redirectToMaterialTab(addMaterialViewModel.Material.ProtocolID);
+        }
 
+        private IActionResult redirectToMaterialTab(int protocolID)
+        {
+            string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
+            var materials = _context.Materials.Include(m => m.Product).Where(m => m.ProtocolID == protocolID);
+            Dictionary<Material, List<DocumentFolder>> MaterialFolders = FillMaterialDocumentsModel(materials, uploadProtocolsFolder);
+            return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = materials, MaterialCategories = _context.MaterialCategories, Folders = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value) });
+        }
 
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ProtocolsProductDetails(int? productID)

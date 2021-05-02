@@ -30,7 +30,7 @@
                                     }
                                     var materialNameColor = "";
                                     var seeProductDetailsClasses = disabledText+ " link-material-to-product ";
-                                    if (material.Product != null)
+                                    if (material.ProductID != null)
                                     {
                                         seeProductDetailsClasses = color+ " open-material-product ";
                                         materialNameColor = " link-color link-underline ";
@@ -57,7 +57,7 @@
                                                 </button>
                                                 <button class="  @seeProductDetailsClasses btn btn-link no-box-shadow p-0 m-0" value="@material.ProductID" materialID="@material.MaterialID">                                                    <i class=" icon-broken-link " style="font-size:1.55rem"></i>
                                                 </button>
-                                                <button class=" delete-material  btn btn-link no-box-shadow p-0 m-0">
+                                                <button class=" delete-material  btn btn-link no-box-shadow p-0 m-0" value="@material.MaterialID">
                                                     <i class=" icon-delete-24px1  " style="font-size:1.55rem"></i>
                                                 </button>
                                             </div>

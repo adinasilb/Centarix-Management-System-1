@@ -18,4 +18,9 @@ $(".link-material-to-product").click(function(e){
 		 var url="/Protocols/LinkMaterialToProductModal?materialID="+$(this).attr("materialID");
 	 $.fn.CallPageRequest(url, "materialInfo");
 });
+$(".delete-material").click(function(e){
+	 e.preventDefault();
+		 var url="/Protocols/DeleteMaterial?materialID="+$(this).val();
+	 $.fn.CallPageRequest(url, "materialInfo");
+});
 
