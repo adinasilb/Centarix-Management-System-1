@@ -305,7 +305,9 @@ namespace PrototypeWithAuth.Controllers
                 if (requestIndexObject.RequestStatusID == 7)
                 {
                     RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 7).Include(r => r.Product.ProductSubcategory)
-                 .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
+                 .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType);
+                    RequestsPassedIn = RequestsPassedIn.IgnoreQueryFilters().Include(r => r.RequestLocationInstances).ThenInclude(r => r.LocationInstance);
+                    RequestsPassedIn = RequestsPassedIn.ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
                 }
                 else
                 {
@@ -3505,8 +3507,8 @@ namespace PrototypeWithAuth.Controllers
                                 tempLocationInstance = new TemporaryLocationInstance()
                                 {
                                     LocationTypeID = receivedLocationViewModel.LocationTypeID,
-                                    LocationInstanceName = "Temporary"+locationTypeName,
-                                    LocationInstanceAbbrev = "Temporary" + locationTypeName
+                                    LocationInstanceName = "Temporary "+locationTypeName,
+                                    LocationInstanceAbbrev = "Temporary " + locationTypeName
                                 };
                                 _context.Update(tempLocationInstance);
                                 await _context.SaveChangesAsync();

@@ -33,6 +33,11 @@
 		}
 		else {
 			$("#locationSelected").val(true);
+			$("#myForm").data("validator").settings.ignore = "";
+			var valid = $("#myForm").valid();
+			if (valid) {
+				$('.activeSubmit').removeClass('disabled-submit')
+			}
         }
 	});
 
@@ -237,7 +242,7 @@
 				var locationInstanceId = $(this).children('div').first().children("input").first().attr("liid");
 				var lip = $(".liid." + locationInstanceId);
 				console.log("lip val: " + lip.val());
-				$(".complete-order").removeClass("disabled-submit")
+				$(".submit-received").removeClass("disabled-submit")
 				if (lip.val().toLowerCase() == "true") {
 					//console.log("TRUE!");
 					lip.val("false"); //IMPT: sending back the true value to controller to place it here
@@ -247,6 +252,7 @@
 					$(this).removeClass('location-selected')
 					var hasLocationSelected = $('.liid[value="true"]').length;
 					if (hasLocationSelected <= 0) {
+						$(".submit-received").addClass("disabled-submit")
 						$('#locationSelected').val('');
 					}
 
