@@ -13,4 +13,9 @@ $(".open-material-product").click(function(e){
 	 var url="/Protocols/ProtocolsProductDetails?productID="+$(this).val();
 	 $.fn.CallPageRequest(url, "summary");
 });
+$(".link-material-to-product").click(function(e){
+	 e.preventDefault();
+		 var url="/Protocols/LinkMaterialToProductModal?materialID="+$(this).attr("materialID");
+	 $.fn.CallPageRequest(url, "materialInfo");
+});
 
