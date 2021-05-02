@@ -1,0 +1,45 @@
+﻿@model PrototypeWithAuth.ViewModels.ResourcesListViewModel;
+@{
+    ViewData["Title"] = "ResourcesList";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+<script src="~/js/resourceslist.js"></script>
+<div class="row under-row-margin">
+    @foreach (var pagination in Model.PaginationTabs)
+    {
+        var paginationHref = ">" + pagination;
+        <a href="">@paginationHref</a>
+    }
+</div>
+<div class="row under-row-margin">
+    @foreach (var resource in Model.Resources)
+    {
+        <div class="type-div" style="width:22%;">
+            <fieldset class=" resource-fieldset px-3 pt-2">
+                <div class="resource-title heading-1">@resource.Title</div>
+                <div class="resource-tags protocols-color">
+                    Tags:
+                    @{var first = true; }
+                    @foreach (var resourceResourceCategory in resource.ResourceResourceCategories)
+                    {
+                        if (!first)
+                        {
+                            <span>,</span>
+                        }
+                        else
+                        {
+                            first = false;
+                        }
+                        <span>@resourceResourceCategory.ResourceCategory.ResourceCategoryDescription</span>
+                    }
+                </div>
+                <div class="resource-summary text under-row-margin ">@resource.Summary?.Substring(0, 246)</div>
+                <div class="list-buttons row m-2 py-4 form-element-border-top-small">
+                    <div class="">
+                        <input class="small-custom-button call-resource-notes" value="Notes" id="@resource.ResourceID" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    }
+</div>

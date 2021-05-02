@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -506,6 +507,33 @@ namespace PrototypeWithAuth.Controllers
             }
 
             return View(resourceLibraryViewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ResourcesList(int ResourceCategoryID = 1)
+        {
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
+
+            var resources = _context.Resources.Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID)).ToList();
+            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
+            {
+                Resources = resources,
+                //in the future send this in IF it's going to be updated- can be list<string> etc
+                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
+            };
+
+            return View(resourcesListViewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")] 
+        public async Task<IActionResult> ResourceNotesModal()
+        {
+            return PartialView();
         }
 
         [HttpGet]

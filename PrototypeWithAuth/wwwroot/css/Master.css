@@ -523,6 +523,16 @@ table td, table td .btn, .text, table th {
     border-radius: 1.438rem;
 }
 
+.small-custom-button {
+    height: 2.313rem;
+    width: 6.125rem;
+    padding-right: 1.125rem;
+    padding-left: 1.125rem;
+    border-radius: 1.438rem;
+    border-width: .1rem;
+    text-align: center !important;
+}
+
 .new-modal-body .row,
 .modal-body .row,
 .new-modal-body .comment-row,

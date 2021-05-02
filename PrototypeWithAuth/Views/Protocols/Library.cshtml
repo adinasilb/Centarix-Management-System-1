@@ -35,7 +35,7 @@
                 @foreach (var maincategory in Model.ResourceCategories.Where(rc => rc.IsMain))
                 {
                     <div class="type-div">
-                        <a href="" class="text text-dark">
+                        <a href='@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID=maincategory.ResourceCategoryID })' class="text text-dark">
                             <fieldset class=" main-type-fieldset">
                                 @*@if (Model.ElementAt(i).ImageURL != null)
                                     {
@@ -54,7 +54,7 @@
                 @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain && !rc.IsResourceType))
                 {
                     <div class="type-div">
-                        <a href="" class="text text-dark">
+                        <a href="@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID=category.ResourceCategoryID })" class="text text-dark">
                             <fieldset class="small-type-fieldset">
                                 <label class="small-type-label top-menu protocols-filter text-center">
                                     @category.ResourceCategoryDescription
