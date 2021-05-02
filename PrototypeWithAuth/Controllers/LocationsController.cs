@@ -84,7 +84,7 @@ namespace PrototypeWithAuth.Controllers
             SublocationIndexViewModel sublocationIndexViewModel = new SublocationIndexViewModel()
             {
                 SublocationInstances = _context.LocationInstances
-                .Where(li => li.LocationInstanceParentID == parentId && !(li is TemporaryLocationInstance)).Include(li => li.LocationInstanceParent).Include(li => li.LabPart).OrderBy(li => li.LocationNumber)
+                .Where(li => li.LocationInstanceParentID == parentId && !(li is TemporaryLocationInstance)).Include(li => li.LocationInstanceParent).Include(li => li.LocationRoomInstance).Include(li => li.LabPart).OrderBy(li => li.LocationNumber)
             };
             //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
             LocationInstance parentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentId).Include(li => li.LocationInstanceParent).Include(li => li.LocationType).FirstOrDefault();
