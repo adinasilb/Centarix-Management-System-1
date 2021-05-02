@@ -306,14 +306,14 @@ namespace PrototypeWithAuth.Controllers
                 {
                     RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 7).Include(r => r.Product.ProductSubcategory)
                  .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType);
-                    RequestsPassedIn = RequestsPassedIn.IgnoreQueryFilters().Include(r => r.RequestLocationInstances).ThenInclude(r => r.LocationInstance);
+                    RequestsPassedIn = RequestsPassedIn.Include(r => r.RequestLocationInstances).ThenInclude(r => r.LocationInstance);
                     RequestsPassedIn = RequestsPassedIn.ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
                 }
                 else
                 {
                     RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product.ProductSubcategory)
                    .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType);
-                    RequestsPassedIn = RequestsPassedIn.IgnoreQueryFilters().Include(r => r.RequestLocationInstances).ThenInclude(r => r.LocationInstance);
+                    RequestsPassedIn = RequestsPassedIn.Include(r => r.RequestLocationInstances).ThenInclude(r => r.LocationInstance);
                     RequestsPassedIn = RequestsPassedIn.ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
                 }
 
@@ -392,7 +392,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).AsQueryable();
 
-            RequestPassedInWithInclude = RequestPassedInWithInclude.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance).IgnoreQueryFilters();
+            RequestPassedInWithInclude = RequestPassedInWithInclude.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance);
 
             RequestPassedInWithInclude = filterListBySelectFilters(selectedFilters, RequestPassedInWithInclude);
 
@@ -1066,7 +1066,7 @@ namespace PrototypeWithAuth.Controllers
             var newLIName = "";
             if (locationInstance.LocationInstanceParentID == null)//is temporary location
             {
-                newLIName = _context.TemporaryLocationInstances.IgnoreQueryFilters().Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault().LocationInstanceAbbrev;
+                newLIName = _context.TemporaryLocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault().LocationInstanceAbbrev;
             }
             else
             {
@@ -1999,7 +1999,7 @@ namespace PrototypeWithAuth.Controllers
             //locations:
             //get the list of requestLocationInstances in this request
             //can't look for _context.RequestLocationInstances b/c it's a join table and doesn't have a dbset
-            var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).IgnoreQueryFilters().FirstOrDefault();
+            var request1 = _context.Requests.Where(r => r.RequestID == id).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
             var requestLocationInstances = request1.RequestLocationInstances.ToList();
             //if it has => (which it should once its in a details view)
             requestItemViewModel.LocationInstances = new List<LocationInstance>();
@@ -2026,13 +2026,13 @@ namespace PrototypeWithAuth.Controllers
 
                     if (parentLocationInstance == null)
                     {
-                        var locationType = _context.TemporaryLocationInstances.IgnoreQueryFilters().Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).Select(li => li.LocationType).FirstOrDefault();
+                        var locationType = _context.TemporaryLocationInstances.Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).Select(li => li.LocationType).FirstOrDefault();
                         requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
                         ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
                         {
                             locationInstancesDepthZero = new List<LocationInstance>(),
                             locationTypeNames = new List<string>(),
-                            locationInstancesSelected = _context.LocationInstances.IgnoreQueryFilters().Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).ToList()
+                            locationInstancesSelected = _context.LocationInstances.Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).ToList()
 
                         };
                         requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
@@ -2303,7 +2303,7 @@ namespace PrototypeWithAuth.Controllers
                             var isTemporary = false;
                             foreach (var location in requestLocations)
                             {   
-                                var locationInstance = _context.LocationInstances.IgnoreQueryFilters().Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                                var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
                                 if (locationInstance is TemporaryLocationInstance)
                                 {
                                     isTemporary = true;
@@ -3393,7 +3393,7 @@ namespace PrototypeWithAuth.Controllers
         {
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
             {
-                locationInstancesDepthZero = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationTypeID == LocationTypeID)
+                locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID && !(li is TemporaryLocationInstance))
                 .Include(li => li.LocationRoomInstance).Include(li => li.LabPart),
                 locationTypeNames = new List<string>(),
                 locationInstancesSelected = new List<LocationInstance>()
@@ -3434,15 +3434,15 @@ namespace PrototypeWithAuth.Controllers
                 IsEditModalTable = false
             };
 
-            var parentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
+            var parentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
 
 
 
-            var firstChildLI = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
+            var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
             LocationInstance secondChildLi = null;
             if (firstChildLI != null)
             {
-                secondChildLi = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == firstChildLI.LocationInstanceID).FirstOrDefault(); //second child is to ensure it doesn't have any box units
+                secondChildLi = _context.LocationInstances.Where(li => li.LocationInstanceParentID == firstChildLI.LocationInstanceID).FirstOrDefault(); //second child is to ensure it doesn't have any box units
             }
             
             if (secondChildLi != null)
@@ -3454,7 +3454,7 @@ namespace PrototypeWithAuth.Controllers
                 //if it's an empty shelf- reset the location to the parent location instance id:
                 if (/*parentLocationInstance.LocationTypeID == 201 &&*/ parentLocationInstance.IsEmptyShelf)
                 {
-                    parentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentLocationInstance.LocationInstanceParentID).FirstOrDefault();
                     LocationInstanceID = parentLocationInstance.LocationInstanceID;
                 }
 
@@ -3463,7 +3463,7 @@ namespace PrototypeWithAuth.Controllers
                 if (receivedModalVisualViewModel.ParentLocationInstance != null)
                 {
                     receivedModalVisualViewModel.ChildrenLocationInstances =
-                        _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceParentID == LocationInstanceID)
+                        _context.LocationInstances.Where(m => m.LocationInstanceParentID == LocationInstanceID)
                         .Include(m => m.RequestLocationInstances).OrderBy(m => m.LocationNumber).ToList();
 
 
@@ -3602,13 +3602,13 @@ namespace PrototypeWithAuth.Controllers
                 if (place.Placed)
                 {
                     //getting the parentlocationinstanceid
-                    var liParent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+                    var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
                     var mayHaveParent = true;
                     while (mayHaveParent)
                     {
                         if (liParent.LocationInstanceParentID != null)
                         {
-                            liParent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
+                            liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
                         }
                         else
                         {
@@ -3634,7 +3634,7 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     //updating the locationinstance
-                    var locationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
+                    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
                     if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
                     {
                         locationInstance.IsFull = true;
@@ -3670,7 +3670,7 @@ namespace PrototypeWithAuth.Controllers
                     var isTemporary = false;
                     foreach (var location in requestLocations)
                     {
-                        var locationInstance = _context.LocationInstances.IgnoreQueryFilters().Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                        var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
                         if (locationInstance is TemporaryLocationInstance)
                         {
                             isTemporary = true;

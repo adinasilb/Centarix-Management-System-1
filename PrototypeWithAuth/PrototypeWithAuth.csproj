@@ -243,6 +243,8 @@
     <Compile Remove="Data\Migrations\20210426103811_sdfsdfs.Designer.cs" />
     <Compile Remove="Data\Migrations\20210426123631_test.cs" />
     <Compile Remove="Data\Migrations\20210426123631_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210502114527_ChangeProprietaryToSamples.cs" />
+    <Compile Remove="Data\Migrations\20210502114527_ChangeProprietaryToSamples.Designer.cs" />
   </ItemGroup>
 
 

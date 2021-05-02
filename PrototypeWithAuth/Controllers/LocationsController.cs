@@ -83,8 +83,8 @@ namespace PrototypeWithAuth.Controllers
         {
             SublocationIndexViewModel sublocationIndexViewModel = new SublocationIndexViewModel()
             {
-                SublocationInstances = _context.LocationInstances.OfType<LocationInstance>()
-                .Where(li => li.LocationInstanceParentID == parentId).Include(li => li.LocationInstanceParent).Include(li => li.LabPart).OrderBy(li => li.LocationNumber)
+                SublocationInstances = _context.LocationInstances
+                .Where(li => li.LocationInstanceParentID == parentId && !(li is TemporaryLocationInstance)).Include(li => li.LocationInstanceParent).Include(li => li.LabPart).OrderBy(li => li.LocationNumber)
             };
             //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
             LocationInstance parentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentId).Include(li => li.LocationInstanceParent).Include(li => li.LocationType).FirstOrDefault();
@@ -122,14 +122,14 @@ namespace PrototypeWithAuth.Controllers
         {
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
             {
-                ParentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceID == VisualContainerId).Include(m => m.LabPart).FirstOrDefault()
+                ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).Include(m => m.LabPart).FirstOrDefault()
             };
 
 
             if (!visualLocationsViewModel.ParentLocationInstance.IsEmptyShelf)
             {
                 visualLocationsViewModel.ChildrenLocationInstances =
-                    _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
+                    _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
                     .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).OrderBy(li=> li.LocationNumber).ToList();
 
                 LocationType locationType = new LocationType();
@@ -158,8 +158,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 var ParentID = visualLocationsViewModel.ParentLocationInstance.LocationInstanceParentID;
                 visualLocationsViewModel.CurrentEmptyChild = visualLocationsViewModel.ParentLocationInstance;
-                visualLocationsViewModel.ParentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == ParentID).FirstOrDefault();
-                visualLocationsViewModel.ChildrenLocationInstances = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == ParentID)
+                visualLocationsViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == ParentID).FirstOrDefault();
+                visualLocationsViewModel.ChildrenLocationInstances = _context.LocationInstances.Where(li => li.LocationInstanceParentID == ParentID)
                     .Include(li => li.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).ToList();
             }
 
@@ -172,8 +172,8 @@ namespace PrototypeWithAuth.Controllers
             LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
             {
                 //exclude the box and cell from locationsDepthOfZero
-                LocationsDepthOfZero = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationType.Depth == 0 && li.LocationTypeID == typeID).Include(li => li.LocationRoomInstance),
-                SubLocationInstances = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationType.Depth != 0 && li.LocationTypeID == typeID)
+                LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0 && li.LocationTypeID == typeID && !(li is TemporaryLocationInstance)).Include(li => li.LocationRoomInstance),
+                SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0 && li.LocationTypeID == typeID && !(li is TemporaryLocationInstance))
                 //LocationTypeParentID = typeID
             };
             return PartialView(locationIndexViewModel);
@@ -185,11 +185,11 @@ namespace PrototypeWithAuth.Controllers
         {
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
             {
-                ParentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault(),
+                ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == VisualContainerId).FirstOrDefault(),
                 SectionType = SectionType
             };
             visualLocationsViewModel.ChildrenLocationInstances =
-                _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
+                _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
                 .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).OrderBy(li => li.LocationNumber).ToList();
 
             return PartialView(visualLocationsViewModel);

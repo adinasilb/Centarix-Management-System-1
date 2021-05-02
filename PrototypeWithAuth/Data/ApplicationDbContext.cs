@@ -271,8 +271,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Comment>()
                 .HasQueryFilter(item => !item.IsDeleted);
 
-            modelBuilder.Entity<LocationInstance>()
-                .HasQueryFilter(item => !(item is TemporaryLocationInstance));
+            //modelBuilder.Entity<LocationInstance>()
+            //    .HasQueryFilter(item => !(item is TemporaryLocationInstance));
 
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
