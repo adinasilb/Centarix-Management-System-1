@@ -1100,6 +1100,7 @@ $(function () {
 		e.preventDefault();
 		var pageType;
 		var val = $(this).attr("value");
+		console.log(val);
 		if (val != '') {
 			var date = new Date(val).toISOString();
 			console.log(date)
@@ -1600,6 +1601,13 @@ $(function () {
 			}
 		});
 	})
+
+	$('.load-delete-hour-modal').click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		$itemurl = "/Timekeeper/DeleteHourModal/?id=" + $(this).attr('value') + "&sectionType=" + $('#masterSectionType').val();
+		$.fn.CallPageRequest($itemurl, "delete");
+    })
 
 });
 

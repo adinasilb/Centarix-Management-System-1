@@ -108,14 +108,15 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public int GetNotficationCount()
+        public int GetNotificationCount()
         {
             var currentUserID = _userManager.GetUserId(User);
             DateTime lastReadNotfication = _context.Users.FirstOrDefault(u => u.Id == currentUserID).DateLastReadNotifications;
             int count1 = _context.RequestNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID).Count();
-            var tk = _context.TimekeeperNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID);
+            /*var tk = _context.TimekeeperNotifications.Where(n => n.TimeStamp > lastReadNotfication && n.ApplicationUserID == currentUserID);
             int count2 = tk.Count();
-            return count1 + count2;
+            return count1 + count2;*/
+            return count1;
         }
         [HttpGet]
         public JsonResult GetLatestNotifications()
@@ -138,23 +139,24 @@ namespace PrototypeWithAuth.Controllers
                  isRead = n.IsRead
              });
             //todo: figure out how to filter out - maybe only select those that are from less then 10 days ago
-            var tnotification = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == currentUser.Id).Include(n => n.NotificationStatus)
+            /* var tnotification = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == currentUser.Id).Include(n => n.NotificationStatus)
 
-               .Select(n => new
-               {
-                   id = n.NotificationID,
-                   timeStamp = n.TimeStamp,
-                   description = n.Description,
-                   requestName = "",
-                   icon = n.NotificationStatus.Icon,
-                   color = n.NotificationStatus.Color,
-                   status= n.NotificationStatusID,
-                   controller = n.Controller,
-                   action = n.Action,
-                   isRead = n.IsRead
-               });
+                .Select(n => new
+                {
+                    id = n.NotificationID,
+                    timeStamp = n.TimeStamp,
+                    description = n.Description,
+                    requestName = "",
+                    icon = n.NotificationStatus.Icon,
+                    color = n.NotificationStatus.Color,
+                    status= n.NotificationStatusID,
+                    controller = n.Controller,
+                    action = n.Action,
+                    isRead = n.IsRead
+                });*/
             //var notificationsCombined = notification.Concat(rnotification).OrderByDescending(n=>n.timeStamp).ToList();
-            return Json(tnotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList().Take(4));
+            //return Json(tnotification.Concat(rnotification).OrderByDescending(n => n.timeStamp).ToList().Take(4));
+            return Json(rnotification.OrderByDescending(n => n.timeStamp).ToList().Take(4));
         }
         [HttpPost]
 
@@ -270,7 +272,7 @@ namespace PrototypeWithAuth.Controllers
                     timekeeperNotification.EmployeeHoursID = e.EmployeeHoursID;
                     timekeeperNotification.IsRead = false;
                     timekeeperNotification.ApplicationUserID = e.EmployeeID;
-                    timekeeperNotification.Description = "update hours for " + e.Date.ToString("dd/MM/yyyy");
+                    timekeeperNotification.Description = "no hours reported for " + e.Date.ToString("dd/MM/yyyy");
                     timekeeperNotification.NotificationStatusID = 5;
                     timekeeperNotification.TimeStamp = DateTime.Now;
                     timekeeperNotification.Controller = "Timekeeper";

@@ -490,8 +490,6 @@
                             //$.fn.OnOpenModalView();
                             $("#cost").trigger('change');
                             $(".reorderModal .mdb-select").materialSelect();
-
-
                             //$.fn.CheckCurrency();
                             break;
                         case "summary":
@@ -905,7 +903,7 @@
         }
        $.fn.GetNotifcationCount = function () {
            console.log("in call getNotofication function");
-           var link = '@Url.Action("GetNotficationCount", "Home")';
+           var link = '@Url.Action("GetNotificationCount", "Home")';
            $.ajax({
                async: true,
                url: link,
