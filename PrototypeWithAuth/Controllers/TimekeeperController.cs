@@ -139,7 +139,9 @@ namespace PrototypeWithAuth.Controllers
                     {
                         entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
                     }
-                   // throw new Exception();
+                    // throw new Exception();
+                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).ToList();
+                    entryExitViewModel.TimekeeperNotifications = notifications;
                     await transaction.CommitAsync();
                     return PartialView(entryExitViewModel);
                 }
@@ -148,6 +150,9 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     entryExitViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     entryExitViewModel.EntryExitEnum = currentClickButton;
+                    var userid = _userManager.GetUserId(User);
+                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).ToList();
+                    entryExitViewModel.TimekeeperNotifications = notifications;
                     return PartialView(entryExitViewModel);
 
                 }
