@@ -2273,7 +2273,7 @@ table.visual-locations-table td .visual-locations-div {
 } .is12X12 .row-1 {
     height: 20px;
     padding-top: .2rem;
-} .order-inv-form .location-selected {
+} .location-selected {
     background-color: var(--order-inv-color);
     
 } .visual-locations tr {
