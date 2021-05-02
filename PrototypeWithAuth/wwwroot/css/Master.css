@@ -146,6 +146,10 @@
     color: var(--user-color);
 }
 
+.disabled-color1{
+    color: var(--disabled-color);
+}
+
 .disabled-color {
     background-color: #B3B3B3;
 }

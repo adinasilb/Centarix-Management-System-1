@@ -82,7 +82,7 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details, MaterialPictures } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests}
+        public enum ParentFolderName { Protocols, Requests }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
@@ -149,36 +149,51 @@ namespace PrototypeWithAuth.AppData
             return ReturnList;
         }
 
-        public static Resource GetResourceArticleFromNCBIPubMed(string PubMedID)
+        public static ResourceAPIViewModel GetResourceArticleFromNCBIPubMed(string PubMedID)
         {
             var clienturl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=" + PubMedID + "&retmode=json";
             //add in &tool=my_tool&email=my_email@example.com after
             var client = new RestClient(clienturl);
             var request = new RestRequest(Method.GET);
+            ResourceAPIViewModel resourceVM = new ResourceAPIViewModel() { Resource = new Resource() };
             IRestResponse response = client.Execute(request);
             try
             {
                 dynamic decodedResponse = JsonConvert.DeserializeObject(response.Content);
 
-                Resource resource = new Resource();
+
                 var innerJson = decodedResponse.result[PubMedID];
-                resource.Title = GetStringFromTemp(innerJson["title"]);
-                resource.FirstAuthor = GetStringFromTemp(innerJson["sortfirstauthor"]);
-                resource.LastAuthor = GetStringFromTemp(innerJson["lastauthor"]);
-                resource.Journal = GetStringFromTemp(innerJson["fulljournalname"]);
-                //resource.Summary = tmp.result[0].
-                //var 
-                return resource;
+                var error = GetStringFromTemp(innerJson["error"]);
+                if (string.IsNullOrEmpty(error))
+                {
+                    resourceVM.Resource.Title = GetStringFromTemp(innerJson["title"]);
+                    resourceVM.Resource.FirstAuthor = GetStringFromTemp(innerJson["sortfirstauthor"]);
+                    resourceVM.Resource.LastAuthor = GetStringFromTemp(innerJson["lastauthor"]);
+                    resourceVM.Resource.Journal = GetStringFromTemp(innerJson["fulljournalname"]);
+                    //The URL is not gotten from the api- we are creating it ourselves
+                    resourceVM.Resource.Url = "https://pubmed.ncbi.nlm.nih.gov/" + PubMedID;
+                    resourceVM.Success = true;
+                }
+                else
+                {
+                    resourceVM.Success = false;
+                }
             }
             catch (Exception ex)
             {
-                return null;
+                resourceVM.Success = false;
             }
+            return resourceVM;
         }
 
         private static string GetStringFromTemp(dynamic originalString)
         {
-            return originalString.ToString().Replace("{", "").Replace("{", "");
+            var returnstring = "";
+            if (originalString != null)
+            {
+                returnstring = originalString.ToString().Replace("{", "").Replace("{", "");
+            }
+            return returnstring;
         }
 
         public static double ExchangeRateIfNull = 3.5;
@@ -435,7 +450,7 @@ namespace PrototypeWithAuth.AppData
         public static List<T> DeepClone<T>(List<T> obj)
         {
             var newCopy = new List<T>();
-            foreach(var x in obj)
+            foreach (var x in obj)
             {
                 newCopy.Add(x);
             }
@@ -463,7 +478,7 @@ namespace PrototypeWithAuth.AppData
         }
         public static string GetNote(SidebarEnum sidebarEnum, Request request)
         {
-           if(sidebarEnum == SidebarEnum.PartialDelivery)
+            if (sidebarEnum == SidebarEnum.PartialDelivery)
             {
                 return request.NoteForPartialDelivery;
             }
@@ -625,7 +640,7 @@ namespace PrototypeWithAuth.AppData
             }
 
             DirectoryInfo[] dirs = dir.GetDirectories();
-            
+
             // If the destination directory doesn't exist, create it.       
             Directory.CreateDirectory(destDirName);
 

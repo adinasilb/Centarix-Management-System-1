@@ -577,8 +577,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<JsonResult> GetPubMedFromAPI(String PubMedID)
         {
-            var Resource = AppUtility.GetResourceArticleFromNCBIPubMed(PubMedID);
-            return Json(Resource);
+            var ResourceVM = AppUtility.GetResourceArticleFromNCBIPubMed(PubMedID);
+            return Json(ResourceVM);
         }
 
         [Authorize(Roles = "Protocols")]

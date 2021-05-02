@@ -72,8 +72,6 @@
                         <label asp-for="Resource.Journal" class="control-label"></label>
                         <input asp-for="Resource.Journal" class="form-control-plaintext border-bottom" />
                         <span asp-validation-for="Resource.Journal" class="text-danger-centarix"></span>
-                        @*<div class="add-resource" style="padding-bottom: 2.25rem; padding-top: 2.25rem;">*@
-                        @*</div>*@
                     </div>
                 </div>
                 <hr style="box-shadow: 0px 0px .1rem #707070;" />
@@ -124,7 +122,12 @@
                     </div>
                     <div class="col-8">
                         <label asp-for="Resource.Url" class="control-label"></label>
-                        <input asp-for="Resource.Url" class="form-control-plaintext border-bottom" />
+                        <div class="input-group">
+                            <input asp-for="Resource.Url" class="form-control-plaintext border-bottom" />
+                            <a href="" target="_blank" class="add-url disabled">
+                                <i class="icon-back-24px disabled-color1" style="font-size: 2.688rem;"></i>
+                            </a>
+                        </div>
                         <span asp-validation-for="Resource.Url" class="text-danger-centarix"></span>
                     </div>
                 </div>
