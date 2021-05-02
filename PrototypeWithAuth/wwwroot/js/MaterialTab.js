@@ -8,3 +8,9 @@ $(".open-material-info").click(function(e){
 	 var url="/Protocols/MaterialInfoModal?materialID="+$(this).val();
 	 $.fn.CallPageRequest(url, "materialInfo");
 });
+$(".open-material-product").click(function(e){
+	 e.preventDefault();
+	 var url="/Protocols/ProtocolsProductDetails?productID="+$(this).val();
+	 $.fn.CallPageRequest(url, "summary");
+});
+

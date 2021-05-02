@@ -528,6 +528,7 @@
                         case "materialInfo":
                             $.fn.OpenModal('modal', 'material-info', modal)
                             break;
+                 
                     }
 
                 },
@@ -560,8 +561,8 @@
             console.log("in detilas of case")
             $.fn.TurnToDetails();
             $('.open-document-modal').attr("showSwitch", true);
-            $('.mdb-select').materialSelect();
-            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            $('.edits .mdb-select').materialSelect();
+            $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
         $.fn.LoadSummaryModal = function () {
@@ -571,8 +572,8 @@
             $("." + category).removeClass("d-none");
             console.log("in detilas of case")
             $.fn.TurnToDetails();
-            $('.mdb-select:not(.ignore-mdb)').materialSelect();
-            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            $('.edits .mdb-select:not(.ignore-mdb)').materialSelect();
+            $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
 

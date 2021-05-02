@@ -404,9 +404,11 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ProtocolsProductDetails(int? id)
+        public async Task<IActionResult> ProtocolsProductDetails(int? productID)
         {
-            var requestItemViewModel = await editModalViewFunction(id);
+            var requestID = _context.Requests.Where(r => r.ProductID == productID).OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => r.RequestID).FirstOrDefault();
+            var requestItemViewModel = await editModalViewFunction(requestID, isEditable: false);
+            requestItemViewModel.SectionType = AppUtility.MenuItems.Protocols;
             return PartialView(requestItemViewModel);
         }
 
