@@ -115,10 +115,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 categoryID = 2;
             }
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
-              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
-            IQueryable<Request> changingList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText ?? "")).Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
-              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
+            IQueryable<Request> fullRequestsList = _context.Requests
+              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
+              .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
+            IQueryable<Request> changingList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText ?? ""))
+                .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
+                .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
             changingList = filterListBySelectFilters(selectedFilters, changingList);
 
             int[] requestStatusIds = { 1, 2, 3, 6 };
