@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210502115749_ChangeProprietaryToSamples")]
+    partial class ChangeProprietaryToSamples
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2305,7 +2307,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("CategoryTypeID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsProprietary")
+                    b.Property<bool>("IsSample")
                         .HasColumnType("bit");
 
                     b.Property<string>("ParentCategoryDescription")
@@ -2323,85 +2325,85 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ParentCategoryID = 1,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "Plastics"
                         },
                         new
                         {
                             ParentCategoryID = 2,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "Reagents And Chemicals"
                         },
                         new
                         {
                             ParentCategoryID = 3,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "Cells"
                         },
                         new
                         {
                             ParentCategoryID = 4,
                             CategoryTypeID = 1,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "Reusables"
                         },
                         new
                         {
                             ParentCategoryID = 6,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "IT"
                         },
                         new
                         {
                             ParentCategoryID = 8,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "Day To Day"
                         },
                         new
                         {
                             ParentCategoryID = 9,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "Travel"
                         },
                         new
                         {
                             ParentCategoryID = 10,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "Advisment"
                         },
                         new
                         {
                             ParentCategoryID = 11,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "Regulations"
                         },
                         new
                         {
                             ParentCategoryID = 12,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "Governments"
                         },
                         new
                         {
                             ParentCategoryID = 13,
                             CategoryTypeID = 2,
-                            IsProprietary = false,
+                            IsSample = false,
                             ParentCategoryDescription = "General"
                         },
                         new
                         {
                             ParentCategoryID = 7,
                             CategoryTypeID = 1,
-                            IsProprietary = true,
-                            ParentCategoryDescription = "Samples"
+                            IsSample = true,
+                            ParentCategoryDescription = "Proprietary"
                         });
                 });
 
