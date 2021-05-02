@@ -229,9 +229,9 @@ namespace PrototypeWithAuth.Data
                 new ParentCategory
                 {
                     ParentCategoryID = 7,
-                    ParentCategoryDescription = "Proprietary",
+                    ParentCategoryDescription = "Samples",
                     CategoryTypeID = 1,
-                    isProprietary = true
+                    IsProprietary = true
                 }
             );
 

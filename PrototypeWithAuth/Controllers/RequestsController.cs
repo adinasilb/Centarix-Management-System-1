@@ -1465,7 +1465,7 @@ namespace PrototypeWithAuth.Controllers
                         request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
                         request.CreationDate = DateTime.Now;
                         var isInBudget = false;
-                        if (!request.Product.ProductSubcategory.ParentCategory.isProprietary)//is proprietry
+                        if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)//is proprietry
                         {
                             if (request.Currency == null)
                             {
@@ -1648,12 +1648,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (requestItemViewModel.IsProprietary)
                 {
-                    var proprietarycategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString()).FirstOrDefaultAsync();
+                    var proprietarycategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString()).FirstOrDefaultAsync();
                     productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == proprietarycategory.ParentCategoryID).ToListAsync();
                 }
                 else
                 {
-                    parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.isProprietary).ToListAsync();
+                    parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary).ToListAsync();
                 }
             }
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0).ToListAsync();
@@ -1687,7 +1687,7 @@ namespace PrototypeWithAuth.Controllers
                 ParentCategory parentCategory = new ParentCategory();
                 if (requestItemViewModel.IsProprietary)
                 {
-                    parentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString()).FirstOrDefaultAsync();
+                    parentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString()).FirstOrDefaultAsync();
                 }
 
                 productSubcategory = new ProductSubcategory()
@@ -1695,7 +1695,7 @@ namespace PrototypeWithAuth.Controllers
                     ParentCategory = parentCategory
                 };
             }
-            else if (productSubcategory.ParentCategory.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString())
+            else if (productSubcategory.ParentCategory.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString())
             {
                 requestItemViewModel.IsProprietary = true;
             }
@@ -1718,7 +1718,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests.FirstOrDefault().Cost = 0;
 
 
-            if (productSubcategory != null && productSubcategory.ParentCategory.isProprietary)
+            if (productSubcategory != null && productSubcategory.ParentCategory.IsProprietary)
             {
                 requestItemViewModel.ReceivedLocationViewModel = new ReceivedLocationViewModel()
                 {
@@ -2151,7 +2151,7 @@ namespace PrototypeWithAuth.Controllers
         {
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
-            if (productSubcategory.ParentCategory.isProprietary)
+            if (productSubcategory.ParentCategory.IsProprietary)
             {
                 if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
                 {
@@ -5452,8 +5452,8 @@ namespace PrototypeWithAuth.Controllers
                     //Types = _context.CategoryTypes.Where(ct => !selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
                     Owners = _context.Employees.Where(o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
                     Locations = _context.LocationTypes.Where(l => l.Depth == 0).Where(l => !selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID)).ToList(),
-                    Categories = _context.ParentCategories.Where(c => c.CategoryTypeID == categoryType && c.isProprietary == isProprietary).Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID)).ToList(),
-                    Subcategories = _context.ProductSubcategories.Distinct().Where(sc => sc.ParentCategory.CategoryTypeID == categoryType && sc.ParentCategory.isProprietary == isProprietary)
+                    Categories = _context.ParentCategories.Where(c => c.CategoryTypeID == categoryType && c.IsProprietary == isProprietary).Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID)).ToList(),
+                    Subcategories = _context.ProductSubcategories.Distinct().Where(sc => sc.ParentCategory.CategoryTypeID == categoryType && sc.ParentCategory.IsProprietary == isProprietary)
                         .Where(v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
                     Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType)).Where(v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
                     //SelectedTypes = _context.CategoryTypes.Where(ct => selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
@@ -5483,8 +5483,8 @@ namespace PrototypeWithAuth.Controllers
                     Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType)).ToList(),
                     Owners = _context.Employees.ToList(),
                     Locations = _context.LocationTypes.Where(r => r.Depth == 0).ToList(),
-                    Categories = _context.ParentCategories.Where(c => c.CategoryTypeID == categoryType && c.isProprietary == isProprietary).ToList(),
-                    Subcategories = _context.ProductSubcategories.Distinct().Where(sc => sc.ParentCategory.CategoryTypeID == categoryType && sc.ParentCategory.isProprietary == isProprietary).ToList(),
+                    Categories = _context.ParentCategories.Where(c => c.CategoryTypeID == categoryType && c.IsProprietary == isProprietary).ToList(),
+                    Subcategories = _context.ProductSubcategories.Distinct().Where(sc => sc.ParentCategory.CategoryTypeID == categoryType && sc.ParentCategory.IsProprietary == isProprietary).ToList(),
                     //SelectedTypes = new List<CategoryType>(),
                     SelectedVendors = new List<Vendor>(),
                     SelectedOwners = new List<Employee>(),
