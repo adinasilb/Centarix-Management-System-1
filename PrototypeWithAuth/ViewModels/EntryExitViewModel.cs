@@ -1,4 +1,5 @@
 ﻿using PrototypeWithAuth.AppData.UtilityModels;
+using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace PrototypeWithAuth.ViewModels
         public EntryExitEnum EntryExitEnum { get; set; }
         public DateTime? Entry { get; set; }
         public string OffDayRemoved { get; set; }
+        public List<TimekeeperNotification> TimekeeperNotifications { get; set; }
     }
 }

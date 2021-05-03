@@ -74,7 +74,7 @@
                 @{await Html.RenderPartialAsync("~/Views/Requests/_LocationTab.cshtml", Model); }
             </div>
         }
-        @if (!Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.isProprietary && Model.SectionType != AppUtility.MenuItems.Operations && requestCategoryType!=2)
+        @if (!Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.IsProprietary && Model.SectionType != AppUtility.MenuItems.Operations && requestCategoryType!=2)
         {
             <div id="price" class="tab-pane fade @showPrice" value="3">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_PriceTab.cshtml", Model); }

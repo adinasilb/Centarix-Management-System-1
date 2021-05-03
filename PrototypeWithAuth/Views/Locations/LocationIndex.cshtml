@@ -25,6 +25,10 @@
                         locationInstanceName = item.LocationRoomInstance.LocationRoomInstanceName;
                     }
                 }
+                else
+                {
+                    locationInstanceName = locationInstanceName + " (" + item.LocationRoomInstance.LocationRoomInstanceName + ")";
+                }
                 <tr class="location-index-border">
                     <td class="">
                         <button class="btn btn-block load-sublocation-view parent-location clicked-outer-button clicked-button overflow-hidden location-font-size" value="@item.LocationInstanceID" name="@item.LocationInstanceName">

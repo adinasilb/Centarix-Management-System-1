@@ -8,6 +8,7 @@ namespace PrototypeWithAuth.Models
 {
     public class LocationInstance
     {
+        //WHEN QUERY - NEED TO SPECIFY OfType<LocationInstance> TO NOT HAVE TEMPORARY LOCATIONS
         [Key]
         public int LocationInstanceID { get; set; }
         public int LocationTypeID { get; set; }

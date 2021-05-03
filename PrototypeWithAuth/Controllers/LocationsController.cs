@@ -38,7 +38,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Location;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
 
-            var locations = _context.LocationInstances
+            var locations = _context.LocationInstances.OfType<LocationInstance>()
                 .Include(li => li.AllRequestLocationInstances).Where(li => li.LocationInstanceParentID == null).Include(li => li.LocationType);
 
             LocationInventoryIndexViewModel locationInventoryIndexViewModel = new LocationInventoryIndexViewModel()
@@ -84,10 +84,10 @@ namespace PrototypeWithAuth.Controllers
             SublocationIndexViewModel sublocationIndexViewModel = new SublocationIndexViewModel()
             {
                 SublocationInstances = _context.LocationInstances
-                .Where(li => li.LocationInstanceParentID == parentId).Include(li => li.LocationInstanceParent).Include(li => li.LabPart).OrderBy(li => li.LocationNumber)
+                .Where(li => li.LocationInstanceParentID == parentId && !(li is TemporaryLocationInstance)).Include(li => li.LocationInstanceParent).Include(li => li.LocationRoomInstance).Include(li => li.LabPart).OrderBy(li => li.LocationNumber)
             };
             //need to load this up first because we can't check for the depth (using the locationtypes table) without getting the location type id of the parent id
-            LocationInstance parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == parentId).Include(li => li.LocationInstanceParent).Include(li => li.LocationType).FirstOrDefault();
+            LocationInstance parentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentId).Include(li => li.LocationInstanceParent).Include(li => li.LocationType).FirstOrDefault();
             int depth = _context.LocationTypes.Where(li => li.LocationTypeID == parentLocationInstance.LocationTypeID).FirstOrDefault().Depth;
             sublocationIndexViewModel.Depth = depth;
 
@@ -172,8 +172,8 @@ namespace PrototypeWithAuth.Controllers
             LocationIndexViewModel locationIndexViewModel = new LocationIndexViewModel()
             {
                 //exclude the box and cell from locationsDepthOfZero
-                LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0 && li.LocationTypeID == typeID).Include(li => li.LocationRoomInstance),
-                SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0 && li.LocationTypeID == typeID)
+                LocationsDepthOfZero = _context.LocationInstances.Where(li => li.LocationType.Depth == 0 && li.LocationTypeID == typeID && !(li is TemporaryLocationInstance)).Include(li => li.LocationRoomInstance),
+                SubLocationInstances = _context.LocationInstances.Where(li => li.LocationType.Depth != 0 && li.LocationTypeID == typeID && !(li is TemporaryLocationInstance))
                 //LocationTypeParentID = typeID
             };
             return PartialView(locationIndexViewModel);
@@ -349,7 +349,7 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         parentId = placeholderInstanceIds[a - 1][w]; //get the first id in the list in the depth before
                                     }
-                                    lastParent = _context.LocationInstances.Where(li => li.LocationInstanceID == parentId).FirstOrDefault();
+                                    lastParent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentId).FirstOrDefault();
                                     locationNumber = 1; //reset location number to order locations
                                     typeNumber = 1; //the number of this depth added to this name
                                                         //RESET THE HEIGHTS ANDS WIDTHS TO ACCOUNT FOR FIRSTS BEFORE RUNNIN OR ITLL CRASHs
@@ -451,7 +451,7 @@ namespace PrototypeWithAuth.Controllers
                                     {
                                         parentId = placeholderInstanceIds[b - 1][w]; //get the first id in the list in the depth before
                                     }
-                                    lastParent = _context.LocationInstances.Where(li => li.LocationInstanceID == parentId).FirstOrDefault();
+                                    lastParent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parentId).FirstOrDefault();
                                     if(lastParent!= null && !lastParent.IsEmptyShelf)
                                     { 
                                     locationNumber = 1;
@@ -560,7 +560,7 @@ namespace PrototypeWithAuth.Controllers
                                
                                 if (i == 0)
                                 {
-                                    var existingRoom = await _context.LocationInstances.Where(li => li.LocationTypeID == 500 && li.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefaultAsync();
+                                    var existingRoom = await _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationTypeID == 500 && li.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefaultAsync();
                                     if (existingRoom == null)
                                     {
                                         var room = await _context.LocationRoomInstances.Where(lp => lp.LocationRoomInstanceID == subLocationViewModel.LocationInstances[i].LocationRoomInstanceID).FirstOrDefaultAsync();
@@ -589,7 +589,7 @@ namespace PrototypeWithAuth.Controllers
                                     subLocationViewModel.LocationInstances[i].Width = 1;
                                     var labPart = await _context.LabParts.Where(lp => lp.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID).FirstOrDefaultAsync();
 
-                                    var labPartByTypeCount = _context.LocationInstances.Where(l => l.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID && l.LocationInstanceParentID == subLocationViewModel.LocationInstances[i].LocationInstanceParentID).Count();
+                                    var labPartByTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(l => l.LabPartID == subLocationViewModel.LocationInstances[i].LabPartID && l.LocationInstanceParentID == subLocationViewModel.LocationInstances[i].LocationInstanceParentID).Count();
 
                                     var labPartNameAbrev = labPart.LabPartNameAbbrev;
                                     labPartNameAbrev += (labPartByTypeCount + 1);
@@ -727,7 +727,7 @@ namespace PrototypeWithAuth.Controllers
 
         //private int GetLocationNumber(int typeID, bool isPart, bool isRoom)
         //{
-        //    _context.LocationInstances.Where(l=>l.LocationTypeID == typeID && l.loap)
+        //    _context.LocationInstances.OfType<LocationInstance>().Where(l=>l.LocationTypeID == typeID && l.loap)
         //}
 
 
@@ -736,7 +736,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> HasShelfBlock(int id, int roomID)
         {
             var part = await _context.LabParts.Where(lp => lp.LabPartID == id).FirstOrDefaultAsync();
-            var locationOfTypeCount = _context.LocationInstances.Where(li => li.LabPartID == id && roomID == li.LocationInstanceParentID).Count();
+            var locationOfTypeCount = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LabPartID == id && roomID == li.LocationInstanceParentID).Count();
             var viewModel = new HasShelfViewModel() { HasShelves = part.HasShelves, LocationName = part.LabPartNameAbbrev + (locationOfTypeCount + 1) };
             return PartialView(viewModel);
         }

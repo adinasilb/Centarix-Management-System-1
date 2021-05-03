@@ -1737,13 +1737,13 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LineTypeChildID")
+                    b.Property<int?>("LineTypeChildID")
                         .HasColumnType("int");
 
                     b.Property<string>("LineTypeDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LineTypeParentID")
+                    b.Property<int?>("LineTypeParentID")
                         .HasColumnType("int");
 
                     b.HasKey("LineTypeID");
@@ -1753,6 +1753,27 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LineTypeParentID");
 
                     b.ToTable("LineTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            LineTypeID = 1,
+                            LineTypeChildID = 2,
+                            LineTypeDescription = "Header"
+                        },
+                        new
+                        {
+                            LineTypeID = 2,
+                            LineTypeChildID = 3,
+                            LineTypeDescription = "Sub Header",
+                            LineTypeParentID = 1
+                        },
+                        new
+                        {
+                            LineTypeID = 3,
+                            LineTypeDescription = "Step",
+                            LineTypeParentID = 2
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Link", b =>
@@ -1787,6 +1808,10 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<bool>("ContainsItems")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Height")
                         .HasColumnType("int");
@@ -1832,6 +1857,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LocationTypeID");
 
                     b.ToTable("LocationInstances");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("LocationInstance");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LocationRoomInstance", b =>
@@ -2302,12 +2329,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("CategoryTypeID")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsProprietary")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ParentCategoryDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isProprietary")
-                        .HasColumnType("bit");
 
                     b.HasKey("ParentCategoryID");
 
@@ -2320,85 +2347,85 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ParentCategoryID = 1,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Plastics",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "Plastics"
                         },
                         new
                         {
                             ParentCategoryID = 2,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Reagents And Chemicals",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "Reagents And Chemicals"
                         },
                         new
                         {
                             ParentCategoryID = 3,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Cells",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "Cells"
                         },
                         new
                         {
                             ParentCategoryID = 4,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Reusables",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "Reusables"
                         },
                         new
                         {
                             ParentCategoryID = 6,
                             CategoryTypeID = 2,
-                            ParentCategoryDescription = "IT",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "IT"
                         },
                         new
                         {
                             ParentCategoryID = 8,
                             CategoryTypeID = 2,
-                            ParentCategoryDescription = "Day To Day",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "Day To Day"
                         },
                         new
                         {
                             ParentCategoryID = 9,
                             CategoryTypeID = 2,
-                            ParentCategoryDescription = "Travel",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "Travel"
                         },
                         new
                         {
                             ParentCategoryID = 10,
                             CategoryTypeID = 2,
-                            ParentCategoryDescription = "Advisment",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "Advisment"
                         },
                         new
                         {
                             ParentCategoryID = 11,
                             CategoryTypeID = 2,
-                            ParentCategoryDescription = "Regulations",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "Regulations"
                         },
                         new
                         {
                             ParentCategoryID = 12,
                             CategoryTypeID = 2,
-                            ParentCategoryDescription = "Governments",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "Governments"
                         },
                         new
                         {
                             ParentCategoryID = 13,
                             CategoryTypeID = 2,
-                            ParentCategoryDescription = "General",
-                            isProprietary = false
+                            IsProprietary = false,
+                            ParentCategoryDescription = "General"
                         },
                         new
                         {
                             ParentCategoryID = 7,
                             CategoryTypeID = 1,
-                            ParentCategoryDescription = "Proprietary",
-                            isProprietary = true
+                            IsProprietary = true,
+                            ParentCategoryDescription = "Samples"
                         });
                 });
 
@@ -3682,7 +3709,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ParentLocationInstanceID")
+                    b.Property<int?>("ParentLocationInstanceID")
                         .HasColumnType("int");
 
                     b.HasKey("RequestID", "LocationInstanceID");
@@ -3691,7 +3718,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ParentLocationInstanceID");
 
-                    b.ToTable("RequestLocationInstance");
+                    b.ToTable("RequestLocationInstances");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotification", b =>
@@ -3813,7 +3840,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("ntext");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -3968,6 +3995,26 @@ namespace PrototypeWithAuth.Data.Migrations
                             IsResourceType = true,
                             ResourceCategoryDescription = "News"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ResourceNote", b =>
+                {
+                    b.Property<int>("ResourceNoteID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Note")
+                        .HasColumnType("ntext");
+
+                    b.Property<int>("ResourceID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ResourceNoteID");
+
+                    b.HasIndex("ResourceID");
+
+                    b.ToTable("ResourceNotes");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ResourceResourceCategory", b =>
@@ -4204,6 +4251,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("NotificationID");
 
                     b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("EmployeeHoursID");
 
                     b.HasIndex("NotificationStatusID");
 
@@ -4891,6 +4940,13 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasDiscriminator().HasValue("Repair");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.TemporaryLocationInstance", b =>
+                {
+                    b.HasBaseType("PrototypeWithAuth.Models.LocationInstance");
+
+                    b.HasDiscriminator().HasValue("TemporaryLocationInstance");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.RequestNotificationStatus", b =>
                 {
                     b.HasBaseType("PrototypeWithAuth.Models.NotificationStatus");
@@ -5217,14 +5273,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.LineType", "LineTypeChild")
                         .WithMany()
                         .HasForeignKey("LineTypeChildID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.LineType", "LineTypeParent")
                         .WithMany()
                         .HasForeignKey("LineTypeParentID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Link", b =>
@@ -5540,8 +5594,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.LocationInstance", "ParentLocationInstance")
                         .WithMany("AllRequestLocationInstances")
                         .HasForeignKey("ParentLocationInstanceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany("RequestLocationInstances")
@@ -5575,6 +5628,15 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ResourceType", "ResourceType")
                         .WithMany()
                         .HasForeignKey("ResourceTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ResourceNote", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
+                        .WithMany()
+                        .HasForeignKey("ResourceID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -5651,6 +5713,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.EmployeeHours", "EmployeeHours")
+                        .WithMany()
+                        .HasForeignKey("EmployeeHoursID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.TimekeeperNotificationStatus", "NotificationStatus")
                         .WithMany("TimekeeperNotifications")

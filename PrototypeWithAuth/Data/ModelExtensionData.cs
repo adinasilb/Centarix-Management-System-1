@@ -229,9 +229,9 @@ namespace PrototypeWithAuth.Data
                 new ParentCategory
                 {
                     ParentCategoryID = 7,
-                    ParentCategoryDescription = "Proprietary",
+                    ParentCategoryDescription = "Samples",
                     CategoryTypeID = 1,
-                    isProprietary = true
+                    IsProprietary = true
                 }
             );
 
@@ -2479,6 +2479,28 @@ namespace PrototypeWithAuth.Data
                     MaterialCategoryDescription = "Buffers",
                 }
            );
+
+            modelBuilder.Entity<LineType>().HasData(
+                new LineType
+                {
+                    LineTypeID = 1,
+                    LineTypeDescription = "Header",
+                    LineTypeChildID = 2
+                },
+                new LineType
+                {
+                    LineTypeID = 2,
+                    LineTypeDescription = "Sub Header",
+                    LineTypeParentID = 1,
+                    LineTypeChildID = 3
+                },
+                new LineType
+                {
+                    LineTypeID = 3,
+                    LineTypeDescription = "Step",
+                    LineTypeParentID = 2
+                }
+                );
         }
     }
 }
