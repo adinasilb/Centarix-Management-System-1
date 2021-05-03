@@ -79,9 +79,9 @@
 + " " + AppUtility.ParentCategoryEnum.Reusables
 + " " + AppUtility.ParentCategoryEnum.Equipment
         + " d-none";
-    var passageCategories = AppUtility.ParentCategoryEnum.Proprietary;
-    var amountCategories = AppUtility.ParentCategoryEnum.Proprietary;
-    var dateCreatedCategories = AppUtility.ParentCategoryEnum.Proprietary;
+    var passageCategories = AppUtility.ParentCategoryEnum.Samples;
+    var amountCategories = AppUtility.ParentCategoryEnum.Samples;
+    var dateCreatedCategories = AppUtility.ParentCategoryEnum.Samples;
 }
 
 @{ var request = Model.Requests[0];}
@@ -148,7 +148,7 @@
                         </div>*@
 </div>
 
-@if (!Model.Requests[0].Product.ProductSubcategory.ParentCategory.isProprietary)
+@if (!Model.Requests[0].Product.ProductSubcategory.ParentCategory.IsProprietary)
 {
     <div class="row">
         <!--<div class="col-md-4 @subProjectCategories">

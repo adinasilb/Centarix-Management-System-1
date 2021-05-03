@@ -59,7 +59,12 @@ function callIndexWithNewFilter(val, id) {
         ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
     }
     else {
-        ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET");
+        if ($('#masterPageType').val() == "AccountingGeneral") {
+            var year = $("#Years").val();
+            var month = $("#Months").val();
+
+        }
+        ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET", undefined, "", month, year);
     }
     return false;
 }
@@ -114,8 +119,12 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
             ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
     }
     else {
-       
-        ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET");
+        if ($('#masterPageType').val() == "AccountingGeneral") {
+            var year = $("#Years").val();
+            var month = $("#Months").val();
+
+        }
+        ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET", undefined, "", month, year);
     }
     return false;
 

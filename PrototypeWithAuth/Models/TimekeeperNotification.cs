@@ -9,5 +9,6 @@ namespace PrototypeWithAuth.Models
     {
 
         public int EmployeeHoursID { get; set; }
+        public EmployeeHours EmployeeHours { get; set; }
     } 
 }

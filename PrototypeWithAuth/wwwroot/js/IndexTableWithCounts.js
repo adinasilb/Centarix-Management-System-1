@@ -10,7 +10,9 @@
     var sectionType = $('#masterSectionType').val();
     //alert(sectionType);
     $.fn.ClearFilter(sectionType, isProprietary);
-    ajaxPartialIndexTable(requestStatusId, "/Requests/_IndexTableWithCounts", "._IndexTableWithCounts", "GET")
+    var pageType = $('#masterPageType').val();
+    var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
+    ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, "GET")
 });
 
 

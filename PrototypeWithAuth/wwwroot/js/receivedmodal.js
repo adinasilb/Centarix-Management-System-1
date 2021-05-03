@@ -24,10 +24,21 @@
 	});
 
 	$(".open-sublocations-types").on("click", function () {
-		console.log("select location")
-		var id = $(this).attr("id");
-		console.log(id)
-		loadReceivedModalSubLocations(id);
+		$("#LocationTypeID").val($(this).attr("id"))
+		if (!$(".temporary-check").is(":checked")) {
+			console.log("select location")
+			var id = $(this).attr("id");
+			console.log(id)
+			loadReceivedModalSubLocations(id);
+		}
+		else {
+			$("#locationSelected").val(true);
+			$("#myForm").data("validator").settings.ignore = "";
+			var valid = $("#myForm").valid();
+			if (valid) {
+				$('.activeSubmit').removeClass('disabled-submit')
+			}
+        }
 	});
 
 	//AJAX load full partial view for modalview manage locations
@@ -231,7 +242,7 @@
 				var locationInstanceId = $(this).children('div').first().children("input").first().attr("liid");
 				var lip = $(".liid." + locationInstanceId);
 				console.log("lip val: " + lip.val());
-				$(".complete-order").removeClass("disabled-submit")
+				$(".submit-received").removeClass("disabled-submit")
 				if (lip.val().toLowerCase() == "true") {
 					//console.log("TRUE!");
 					lip.val("false"); //IMPT: sending back the true value to controller to place it here
@@ -241,6 +252,7 @@
 					$(this).removeClass('location-selected')
 					var hasLocationSelected = $('.liid[value="true"]').length;
 					if (hasLocationSelected <= 0) {
+						$(".submit-received").addClass("disabled-submit")
 						$('#locationSelected').val('');
 					}
 
@@ -287,7 +299,22 @@
 			element.children('div').first().children(".row-1").children("i").removeClass("icon-delete-24px");
 			lip.val("false")			
         }
-    }
+	}
+
+	$(".temporary-check").click(function (e) {
+		var checked = $(this).is(":checked");
+		if (checked) {
+			$(".divSublocations").html("")
+			console.log($("#LocationTypeID").val())
+			if ($("#LocationTypeID").val() != 0)
+			{
+				$("#locationSelected").val(true)
+            }
+		}
+		else {
+			$("#locationSelected").val("")
+		}
+    })
 
 
 });

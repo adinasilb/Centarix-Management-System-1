@@ -208,8 +208,18 @@
                             </div>
                         }
 
+
                         @if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                         {
+                            <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input filled-in temporary-check" asp-for="TemporaryLocation"/>
+                                    <label class="form-check-label" asp-for="TemporaryLocation">Temporary Location</label>
+                                </div>
+                                <input type="hidden" asp-for="TemporaryLocation" />
+                            </div>
+                        </div>
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-group">
@@ -221,7 +231,7 @@
                                                     <span class="caret py-0">
                                                         ▼
                                                     </span>
-                                                    <span class="overflow-hidden">Select Type:</span>
+                                                    <span class="overflow-hidden locationType">Select Type:</span>
 
                                                 </div>
 
@@ -234,6 +244,7 @@
                                                         </li>
                                                     }
                                                 </ul>
+                                                <input type="hidden" asp-for="LocationTypeID" />
 
                                             </div>
                                         </div>
@@ -382,7 +393,7 @@
             $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
             var formData = new FormData($("#myForm")[0]);
-            console.log(...formData)
+            //console.log(...formData)
             ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/ReceivedModal/", "._IndexTableWithCounts", "POST", formData, "received-item");
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
