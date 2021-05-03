@@ -118,6 +118,7 @@
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "payments-invoice");
 	});
+
 	$(".pay-one").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();

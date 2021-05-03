@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.ViewModels
         public int Index { get; set; }
         public Line Line { get; set; }
         public string LineNumber { get; set; }
+        public List<LineType> LineTypes { get; set; }
     }
 }

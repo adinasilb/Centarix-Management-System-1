@@ -150,24 +150,46 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
 </div>
 <div id="Protocol" class="tab-pane fade in ">
     @{ 
-        int lineCount = 0;
-        var headers = Model.Protocol.Lines.Where(l=>l.LineTypeID==1);
-        foreach (var header in headers)
-        {
-            await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = header, LineNumber = header.LineNumber+""  });
-            var subHeaders = Model.Protocol.Lines.Where(l => l.ParentLineID == header.ParentLineID);
-            foreach (var subHeader in subHeaders)
+        var headerCount = 0;
+        var subHeaderCount = 0;
+        var stepCount = 0; 
+    }
+    <div class="lines">
+        <div class="heading-1">@Model.Protocol.Name</div>
+        @{
+            int lineCount = 0;
+            if (Model.Protocol.Lines.Count() <= 0)
             {
-                await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = subHeader, LineNumber = header.LineNumber + "." + subHeader.LineNumber });
+                await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = null, LineNumber = 1 + "", LineTypes = Model.LineTypes });
+            }
+
+            var headers = Model.Protocol.Lines.Where(l => l.LineTypeID == 1);
+            foreach (var header in headers)
+            {
+                await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = header, LineNumber = header.LineNumber + "", LineTypes = Model.LineTypes });
+                headerCount++;
                 lineCount++;
-                var steps = Model.Protocol.Lines.Where(l => l.ParentLineID == subHeader.ParentLineID);
+                var subHeaders = Model.Protocol.Lines.Where(l => l.ParentLineID == header.ParentLineID);
+                foreach (var subHeader in subHeaders)
+                {
+                    await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = subHeader, LineNumber = header.LineNumber + "." + subHeader.LineNumber, LineTypes = Model.LineTypes });
+                    lineCount++;
+                    subHeaderCount++;
+                    var steps = Model.Protocol.Lines.Where(l => l.ParentLineID == subHeader.ParentLineID);
                     foreach (var step in steps)
                     {
-                        await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = subHeader, LineNumber = header.LineNumber + "." + subHeader.LineNumber + "." + step.LineNumber });
+                        await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = subHeader, LineNumber = header.LineNumber + "." + subHeader.LineNumber + "." + step.LineNumber, LineTypes = Model.LineTypes });
+                        lineCount++;
+                        stepCount++;
                     }
+                }
             }
+
         }
-     }
+        <input type="hidden" class="header-count" value="@headerCount" />
+        <input type="hidden" class="subHeader-count" value="@subHeaderCount" />
+        <input type="hidden" class="step-count" value="@stepCount" />
+    </div>
 </div>
 <script src="~/js/CreateProtocol.js"></script>
 <script>

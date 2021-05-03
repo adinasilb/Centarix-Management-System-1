@@ -272,10 +272,13 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID = 0)
         {
-            var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID)
-                .Include(p => p.Urls).Include(p => p.Line)
-                .Include(p => p.Materials).ThenInclude(m => m.Product).FirstOrDefault() ?? new Protocol();
-            if (protocol.Urls.Count() < 2)
+            var protocol = _context.Protocols
+                .Include(p => p.Urls).Include(p => p.Lines)
+                .Include(p => p.Materials).ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
+            protocol.Urls??= new List<Link>();
+            protocol.Materials ??= new List<Material>();
+            protocol.Lines ??= new List<Line>();
+            if (protocol.Urls.Count()< 2)
             {
                 while (protocol.Urls.Count() < 2)
                 {
@@ -292,7 +295,8 @@ namespace PrototypeWithAuth.Controllers
                 Protocol = protocol,
                 ProtocolCategories = _context.ProtocolCategories,
                 ProtocolSubCategories = _context.ProtocolSubCategories,
-                MaterialCategories = _context.MaterialCategories
+                MaterialCategories = _context.MaterialCategories,
+                LineTypes = _context.LineTypes.ToList()
             };
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
             string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, protocol.ProtocolID.ToString());
@@ -364,6 +368,14 @@ namespace PrototypeWithAuth.Controllers
                 return redirectToMaterialTab(materialDB.ProtocolID);
             }
         }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _Line(int index, int lineTypeID, string lineNumber, int parentLineID)
+        {
+            var lineTypes = _context.LineTypes.ToList();
+            return PartialView(new ProtocolsLineViewModel { Index = index, Line = new Line { LineTypeID = lineTypeID, ParentLineID = parentLineID}, LineNumber = lineNumber , LineTypes = lineTypes});
+        }
+
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> LinkMaterialToProductModal(int materialID)
