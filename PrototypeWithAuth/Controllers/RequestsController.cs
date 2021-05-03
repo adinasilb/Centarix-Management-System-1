@@ -3573,6 +3573,12 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.Action = "NotificationsView";
                     requestNotification.Vendor = requestReceived.Product.Vendor.VendorEnName;
                     _context.Update(requestNotification);
+
+                    var didntArriveNotification = _context.RequestNotifications.Where(r => r.RequestID == requestReceived.RequestID && r.NotificationStatusID == 1).FirstOrDefault();
+                    if (didntArriveNotification != null)
+                    {
+                        _context.Remove(didntArriveNotification);
+                    }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
 
@@ -3659,6 +3665,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReceivedModalVisual(ReceivedModalVisualViewModel receivedModalVisualViewModel, List<Request> Requests)
         {
@@ -4004,7 +4011,7 @@ namespace PrototypeWithAuth.Controllers
             IEnumerable<RequestNotification> requestNotifications = null;
             if (DidntArrive)
             {
-                requestNotifications = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(rn => rn.NotificationStatusID == 1);
+                requestNotifications = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(rn => rn.NotificationStatusID == 1).Include(r=> r.Request);
                 TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.DidntArrive;
             }
             else
