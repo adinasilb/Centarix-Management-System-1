@@ -18,5 +18,6 @@ namespace PrototypeWithAuth.Models
         public MaterialCategory MaterialCategory { get; set; }
         public Protocol Protocol { get; set; }
         public int ProtocolID { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

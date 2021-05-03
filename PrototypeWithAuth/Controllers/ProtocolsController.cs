@@ -414,8 +414,9 @@ namespace PrototypeWithAuth.Controllers
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
-                {                 
-                    _context.Entry(materialDB).State = EntityState.Deleted;
+                {
+                    materialDB.IsDeleted = true;
+                    _context.Update(materialDB);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
