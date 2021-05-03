@@ -19,6 +19,7 @@ using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+//using System.Web.Script.Serialization;
 
 namespace PrototypeWithAuth.AppData
 {
@@ -148,6 +149,53 @@ namespace PrototypeWithAuth.AppData
             return ReturnList;
         }
 
+        public static ResourceAPIViewModel GetResourceArticleFromNCBIPubMed(string PubMedID)
+        {
+            var clienturl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=" + PubMedID + "&retmode=json";
+            //add in &tool=my_tool&email=my_email@example.com after
+            var client = new RestClient(clienturl);
+            var request = new RestRequest(Method.GET);
+            ResourceAPIViewModel resourceVM = new ResourceAPIViewModel() { Resource = new Resource() };
+            IRestResponse response = client.Execute(request);
+            try
+            {
+                dynamic decodedResponse = JsonConvert.DeserializeObject(response.Content);
+
+
+                var innerJson = decodedResponse.result[PubMedID];
+                var error = GetStringFromTemp(innerJson["error"]);
+                if (string.IsNullOrEmpty(error))
+                {
+                    resourceVM.Resource.Title = GetStringFromTemp(innerJson["title"]);
+                    resourceVM.Resource.FirstAuthor = GetStringFromTemp(innerJson["sortfirstauthor"]);
+                    resourceVM.Resource.LastAuthor = GetStringFromTemp(innerJson["lastauthor"]);
+                    resourceVM.Resource.Journal = GetStringFromTemp(innerJson["fulljournalname"]);
+                    //The URL is not gotten from the api- we are creating it ourselves
+                    resourceVM.Resource.Url = "https://pubmed.ncbi.nlm.nih.gov/" + PubMedID;
+                    resourceVM.Success = true;
+                }
+                else
+                {
+                    resourceVM.Success = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                resourceVM.Success = false;
+            }
+            return resourceVM;
+        }
+
+        private static string GetStringFromTemp(dynamic originalString)
+        {
+            var returnstring = "";
+            if (originalString != null)
+            {
+                returnstring = originalString.ToString().Replace("{", "").Replace("{", "");
+            }
+            return returnstring;
+        }
+
         public static double ExchangeRateIfNull = 3.5;
         public static int YearStartedTimeKeeper = 2021;
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
@@ -157,7 +205,7 @@ namespace PrototypeWithAuth.AppData
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             decimal rate = 0.0m;
-            try
+            try //try is b/c sometimes the api is down
             {
                 dynamic tmp = JsonConvert.DeserializeObject(response.Content);
                 String stringRate = (string)tmp.quotes.USDILS;
@@ -402,7 +450,7 @@ namespace PrototypeWithAuth.AppData
         public static List<T> DeepClone<T>(List<T> obj)
         {
             var newCopy = new List<T>();
-            foreach(var x in obj)
+            foreach (var x in obj)
             {
                 newCopy.Add(x);
             }
@@ -430,7 +478,7 @@ namespace PrototypeWithAuth.AppData
         }
         public static string GetNote(SidebarEnum sidebarEnum, Request request)
         {
-           if(sidebarEnum == SidebarEnum.PartialDelivery)
+            if (sidebarEnum == SidebarEnum.PartialDelivery)
             {
                 return request.NoteForPartialDelivery;
             }
@@ -592,7 +640,7 @@ namespace PrototypeWithAuth.AppData
             }
 
             DirectoryInfo[] dirs = dir.GetDirectories();
-            
+
             // If the destination directory doesn't exist, create it.       
             Directory.CreateDirectory(destDirName);
 

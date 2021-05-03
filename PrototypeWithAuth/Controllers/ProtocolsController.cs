@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -269,7 +270,7 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
-        private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID =0 )
+        private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID = 0)
         {
             var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
             protocol.Urls = await _context.Links.Where(l => l.ProtocolID == protocolID).ToListAsync();
@@ -319,13 +320,13 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddMaterialModal(int materialTypeID, int ProtocolID)
         {
             var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
-          
-            var viewModel = new AddMaterialViewModel() 
+
+            var viewModel = new AddMaterialViewModel()
             {
                 Material = new Material()
                 {
                     MaterialCategoryID = materialTypeID,
-                    MaterialCategory = MaterialCategory, 
+                    MaterialCategory = MaterialCategory,
                     ProtocolID = ProtocolID
                 }
             };
@@ -483,7 +484,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel)
         {
-        
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -491,8 +492,8 @@ namespace PrototypeWithAuth.Controllers
                     createProtocolsViewModel.Protocol.Urls = createProtocolsViewModel.Protocol.Urls.Where(u => u.LinkDescription != null && u.Url != null).ToList();
 
                     createProtocolsViewModel.Protocol.CreationDate = DateTime.Now;
-                    createProtocolsViewModel.Protocol.ApplicationUserCreatorID =  _userManager.GetUserId(User);
-                    if(createProtocolsViewModel.Protocol.ProtocolID ==0)
+                    createProtocolsViewModel.Protocol.ApplicationUserCreatorID = _userManager.GetUserId(User);
+                    if (createProtocolsViewModel.Protocol.ProtocolID == 0)
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Added;
                     }
@@ -500,9 +501,9 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Modified;
                     }
-                    foreach(var url in createProtocolsViewModel.Protocol.Urls)
+                    foreach (var url in createProtocolsViewModel.Protocol.Urls)
                     {
-                        if(url.LinkID ==0)
+                        if (url.LinkID == 0)
                         {
                             _context.Entry(url).State = EntityState.Added;
                             await _context.SaveChangesAsync();
@@ -548,7 +549,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.KitProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            CreateProtocolsViewModel viewmodel =await FillCreateProtocolsViewModel(2);
+            CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(2);
             return View(viewmodel);
         }
 
@@ -650,6 +651,33 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ResourcesList(int ResourceCategoryID = 1)
+        {
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
+
+            var resources = _context.Resources.Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID)).ToList();
+            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
+            {
+                Resources = resources,
+                //in the future send this in IF it's going to be updated- can be list<string> etc
+                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
+            };
+
+            return View(resourcesListViewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")] 
+        public async Task<IActionResult> ResourceNotesModal()
+        {
+            return PartialView();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
 
         public async Task<IActionResult> AddResource(int? resourceType = 1)
         {
@@ -691,16 +719,34 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await _context.SaveChangesAsync(); //adding join table instances
                     await transaction.CommitAsync();
-                    //save image
+
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ResourceImages");
+                    string folder = Path.Combine(uploadFolder, addResourceViewModel.Resource.ResourceID.ToString());
+                    Directory.CreateDirectory(folder);
+                    if (addResourceViewModel.ResourceImage != null) //test for more than one???
+                    {
+                        string uniqueFileName = addResourceViewModel.ResourceImage.FileName;
+                        string filePath = Path.Combine(folder, uniqueFileName);
+                        FileStream filestream = new FileStream(filePath, FileMode.Create);
+                        addResourceViewModel.ResourceImage.CopyTo(filestream);
+                        filestream.Close();
+                    }
                 }
                 catch (Exception e)
                 {
                     await transaction.RollbackAsync();
-                    //unsave file
+                    //unsave file -- I saved file last so won't crash after the file save
                 }
 
             }
             return RedirectToAction("Library");
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<JsonResult> GetPubMedFromAPI(String PubMedID)
+        {
+            var ResourceVM = AppUtility.GetResourceArticleFromNCBIPubMed(PubMedID);
+            return Json(ResourceVM);
         }
 
         [Authorize(Roles = "Protocols")]

@@ -330,6 +330,7 @@ namespace PrototypeWithAuth.Data
 
 
             modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
+            modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
 
             modelBuilder.Seed();
