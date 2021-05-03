@@ -4171,7 +4171,7 @@ namespace PrototypeWithAuth.Controllers
                 client.Disconnect(true);
 
             }
-            return RedirectToAction("NotificationsView");
+            return RedirectToAction("NotificationsView", new { DidntArrive = true});
         }
 
         private bool checkIfInBudget(Request request, Product oldProduct = null)
