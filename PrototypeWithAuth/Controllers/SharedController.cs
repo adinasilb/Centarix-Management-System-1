@@ -456,7 +456,7 @@ namespace PrototypeWithAuth.Controllers
         {
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
-            if (productSubcategory.ParentCategory.isProprietary)
+            if (productSubcategory.ParentCategory.IsProprietary)
             {
                 if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
                 {
@@ -518,12 +518,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (requestItemViewModel.IsProprietary)
                 {
-                    var proprietarycategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString()).FirstOrDefaultAsync();
+                    var proprietarycategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString()).FirstOrDefaultAsync();
                     productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == proprietarycategory.ParentCategoryID).ToListAsync();
                 }
                 else
                 {
-                    parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.isProprietary).ToListAsync();
+                    parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary).ToListAsync();
                 }
             }
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0).ToListAsync();

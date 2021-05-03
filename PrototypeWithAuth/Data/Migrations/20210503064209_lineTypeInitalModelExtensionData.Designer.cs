@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210503064209_lineTypeInitalModelExtensionData")]
+    partial class lineTypeInitalModelExtensionData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1758,21 +1760,17 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             LineTypeID = 1,
-                            LineTypeChildID = 2,
                             LineTypeDescription = "Header"
                         },
                         new
                         {
                             LineTypeID = 2,
-                            LineTypeChildID = 3,
-                            LineTypeDescription = "Sub Header",
-                            LineTypeParentID = 1
+                            LineTypeDescription = "Sub Header"
                         },
                         new
                         {
                             LineTypeID = 3,
-                            LineTypeDescription = "Step",
-                            LineTypeParentID = 2
+                            LineTypeDescription = "Step"
                         });
                 });
 
