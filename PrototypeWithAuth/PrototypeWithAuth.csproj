@@ -245,6 +245,10 @@
     <Compile Remove="Data\Migrations\20210426123631_test.Designer.cs" />
     <Compile Remove="Data\Migrations\20210502114527_ChangeProprietaryToSamples.cs" />
     <Compile Remove="Data\Migrations\20210502114527_ChangeProprietaryToSamples.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210503061010_addLineTypes.cs" />
+    <Compile Remove="Data\Migrations\20210503061010_addLineTypes.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210503061253_linetypeChildAndParentIDsnullable.cs" />
+    <Compile Remove="Data\Migrations\20210503061253_linetypeChildAndParentIDsnullable.Designer.cs" />
   </ItemGroup>
 
 
@@ -274,6 +278,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.6" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="NCBI_localblast" Version="1.0.12" />
     <PackageReference Include="NETCore.MailKit" Version="2.0.3" />
     <PackageReference Include="OpenCvSharp3-AnyCPU" Version="4.0.0.20181129" />
     <PackageReference Include="RestSharp" Version="106.11.7" />
@@ -292,6 +297,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
+    <Folder Include="wwwroot\Materials\" />
     <Folder Include="wwwroot\Protocols\" />
   </ItemGroup>
 

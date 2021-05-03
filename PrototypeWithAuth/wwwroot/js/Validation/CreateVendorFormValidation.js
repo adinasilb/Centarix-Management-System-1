@@ -1,4 +1,7 @@
 ﻿$('.createVendorForm').validate({
+	 normalizer: function( value ) {
+    return $.trim( value );
+  },
 	rules: {
 		"Vendor.VendorEnName": "required",
 		"Vendor.VendorHeName": "required",

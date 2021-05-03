@@ -7,14 +7,17 @@
     {
         bcColor = "oper-background-color";
     }
+    else if (Model.SectionType == AppUtility.MenuItems.Protocols)
+    {
+        bcColor = "protocols-background-color";
+    }
     else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     {
-
         bcColor = "lab-man-background-color";
     }
 }
 <script src="~/js/DeleteDocModal.js"></script>
-<div class="modal modal-document-delete fader" id="DeleteDocumentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9999">
+<div class="modal modal-document-delete fader " id="DeleteDocumentsModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9999">
     <div class="sm-modal modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$('.documents-delete').html('');">
@@ -22,9 +25,10 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding DeleteDocumentModalForm">
                 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
-                <input asp-for="RequestID" type="hidden" />
+                <input asp-for="ObjectID" type="hidden" />
                 <input asp-for="FileName" type="hidden" />
                 <input asp-for="FolderName" type="hidden" />
+                <input asp-for="ParentFolderName" type="hidden" />
                 <input asp-for="IsEdittable" type="hidden" />
                 <input asp-for="SectionType" type="hidden" />
                 <div class="modal-header modal-header-padding">

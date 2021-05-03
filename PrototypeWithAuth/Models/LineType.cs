@@ -11,9 +11,9 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int LineTypeID { get; set; }
         public string LineTypeDescription { get; set; }
-        public int LineTypeParentID { get; set; }
+        public int? LineTypeParentID { get; set; }
         public LineType LineTypeParent { get; set; }
-        public int LineTypeChildID { get; set; }
+        public int? LineTypeChildID { get; set; }
         public LineType LineTypeChild { get; set; }
 
     }

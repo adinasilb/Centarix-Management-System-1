@@ -1427,7 +1427,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel? receivedModalVisualViewModel = null)
+        public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             try
             {
@@ -3752,12 +3752,13 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
                 FileName = FileString,
-                RequestID = id,
+                ObjectID = id,
+                ParentFolderName = parentFolderName,
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 SectionType = SectionType,

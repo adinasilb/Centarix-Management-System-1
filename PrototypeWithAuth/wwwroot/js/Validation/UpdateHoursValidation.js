@@ -44,6 +44,9 @@ $.validator.addMethod("validTime", function (value, element) {
 
 $('.UpdateHoursForm').validate({
 	rules: {
+		 normalizer: function( value ) {
+    return $.trim( value );
+  },
 		"EmployeeHour.Entry1": {
 			validTime: true,
 			eitherHoursOrTimeAndTimeRangeMakesSenseEntry1: true

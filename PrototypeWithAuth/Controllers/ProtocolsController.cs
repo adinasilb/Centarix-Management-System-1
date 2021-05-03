@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -269,22 +270,22 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
-        private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID =0 )
+        private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID = 0)
         {
-            var protocol =  _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault()?? new Protocol();
+            var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
             protocol.Urls = await _context.Links.Where(l => l.ProtocolID == protocolID).ToListAsync();
-            if(protocol.Urls.Count()<2)
+            if (protocol.Urls.Count() < 2)
             {
-                while(protocol.Urls.Count()<2)
+                while (protocol.Urls.Count() < 2)
                 {
                     protocol.Urls.Add(new Link());
                 }
             }
-            protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).Include(m=>m.Product).ToListAsync();
-            if(typeID!=0)
+            protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).Include(m => m.Product).ToListAsync();
+            if (typeID != 0)
             {
                 protocol.ProtocolTypeID = typeID;
-            }          
+            }
 
             var viewmodel = new CreateProtocolsViewModel()
             {
@@ -293,28 +294,145 @@ namespace PrototypeWithAuth.Controllers
                 ProtocolSubCategories = _context.ProtocolSubCategories,
                 MaterialCategories = _context.MaterialCategories
             };
-            FillDocumentsInfo(viewmodel, "");
+            string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
+            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, protocol.ProtocolID.ToString());
+            FillDocumentsInfo(viewmodel, uploadProtocolsFolder2);
+            Dictionary<Material, List<DocumentFolder>> MaterialFolders = FillMaterialDocumentsModel(protocol.Materials, uploadProtocolsFolder);
+            viewmodel.MaterialDocuments = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value);
             return viewmodel;
+        }
+
+        private Dictionary<Material, List<DocumentFolder>> FillMaterialDocumentsModel(IEnumerable<Material> Materials, string uploadProtocolsFolder)
+        {
+            Dictionary<Material, List<DocumentFolder>> MaterialFolders = new Dictionary<Material, List<DocumentFolder>>();
+            foreach (var material in Materials)
+            {
+                List<DocumentFolder> folders = new List<DocumentFolder>();
+                string uploadMaterialFolder2 = Path.Combine(uploadProtocolsFolder, material.MaterialID.ToString());
+                GetExistingFileStrings(folders, AppUtility.FolderNamesEnum.Pictures, uploadMaterialFolder2);
+                MaterialFolders.Add(material, folders);
+            }
+
+            return MaterialFolders;
         }
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddMaterialModal(int materialTypeID, int ProtocolID)
         {
             var MaterialCategory = _context.MaterialCategories.Where(mc => mc.MaterialCategoryID == materialTypeID).FirstOrDefault();
-          
-            var viewModel = new AddMaterialViewModel() 
+
+            var viewModel = new AddMaterialViewModel()
             {
                 Material = new Material()
                 {
                     MaterialCategoryID = materialTypeID,
-                    MaterialCategory = MaterialCategory, 
+                    MaterialCategory = MaterialCategory,
                     ProtocolID = ProtocolID
                 }
             };
             return PartialView(viewModel);
         }
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> MaterialInfoModal(int materialID)
+        {
+            var material = _context.Materials.Where(m => m.MaterialID == materialID).FirstOrDefault();
+            return PartialView(new AddMaterialViewModel { Material = material });
+        }
+
+
 
         [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> MaterialInfoModal(AddMaterialViewModel addMaterialViewModel)
+        {
+            var materialDB = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    materialDB.Info = addMaterialViewModel.Material.Info;
+                    _context.Update(materialDB);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                    return PartialView("MaterialInfoModal", new AddMaterialViewModel { Material = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                }
+                return redirectToMaterialTab(materialDB.ProtocolID);
+            }
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> LinkMaterialToProductModal(int materialID)
+        {
+            var material = _context.Materials.Where(m => m.MaterialID == materialID).FirstOrDefault();
+            return PartialView(new AddMaterialViewModel { Material = material });
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> LinkMaterialToProductModal(AddMaterialViewModel addMaterialViewModel)
+        {
+            var materialDB = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var product = _context.Products.Where(p => p.SerialNumber == addMaterialViewModel.Material.Product.SerialNumber).FirstOrDefault();
+                    materialDB.ProductID = product.ProductID;
+                    materialDB.Name = null;
+                    _context.Entry(materialDB).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                    return PartialView("LinkMaterialToProductModal", new AddMaterialViewModel { Material = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                }
+                return redirectToMaterialTab(materialDB.ProtocolID);
+            }
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> DeleteMaterial(int materialID)
+        {
+            var material = _context.Materials.Where(m => m.MaterialID == materialID).Include(m => m.Product).FirstOrDefault();
+            return PartialView(new AddMaterialViewModel { Material = material });
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> DeleteMaterial(AddMaterialViewModel addMaterialViewModel)
+        {
+            var materialDB = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    materialDB.IsDeleted = true;
+                    _context.Update(materialDB);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                    return PartialView("DeleteMaterial", new AddMaterialViewModel { Material = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                }
+                return redirectToMaterialTab(materialDB.ProtocolID);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddMaterialModal(AddMaterialViewModel addMaterialViewModel)
         {
             var Protocol = _context.Protocols.Where(p => p.ProtocolID == addMaterialViewModel.Material.ProtocolID).FirstOrDefault();
@@ -323,13 +441,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    if(product !=null)
+                    if (product != null)
                     {
                         addMaterialViewModel.Material.ProductID = product.ProductID;
                     }
-                   
+
                     _context.Entry(addMaterialViewModel.Material).State = EntityState.Added;
                     await _context.SaveChangesAsync();
+                    MoveDocumentsOutOfTempFolder(addMaterialViewModel.Material.MaterialID, AppUtility.ParentFolderName.Materials);
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -341,19 +460,31 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("AddMaterialModal", addMaterialViewModel);
                 }
             }
-            var folders = new List<DocumentFolder>();
-            GetExistingFileStrings(folders, AppUtility.FolderNamesEnum.MaterialPictures, AppUtility.ParentFolderName.Protocols.ToString());
-            return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = _context.Materials.Include(m => m.Product).Where(m => m.ProtocolID == addMaterialViewModel.Material.ProtocolID), MaterialCategories = _context.MaterialCategories, Folders = folders });
+            return redirectToMaterialTab(addMaterialViewModel.Material.ProtocolID);
         }
 
+        private IActionResult redirectToMaterialTab(int protocolID)
+        {
+            string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
+            var materials = _context.Materials.Include(m => m.Product).Where(m => m.ProtocolID == protocolID);
+            Dictionary<Material, List<DocumentFolder>> MaterialFolders = FillMaterialDocumentsModel(materials, uploadProtocolsFolder);
+            return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = materials, MaterialCategories = _context.MaterialCategories, Folders = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value) });
+        }
 
-
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ProtocolsProductDetails(int? productID)
+        {
+            var requestID = _context.Requests.Where(r => r.ProductID == productID).OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => r.RequestID).FirstOrDefault();
+            var requestItemViewModel = await editModalViewFunction(requestID, isEditable: false);
+            requestItemViewModel.SectionType = AppUtility.MenuItems.Protocols;
+            return PartialView(requestItemViewModel);
+        }
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> CreateProtocol(CreateProtocolsViewModel createProtocolsViewModel)
         {
-        
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -361,8 +492,8 @@ namespace PrototypeWithAuth.Controllers
                     createProtocolsViewModel.Protocol.Urls = createProtocolsViewModel.Protocol.Urls.Where(u => u.LinkDescription != null && u.Url != null).ToList();
 
                     createProtocolsViewModel.Protocol.CreationDate = DateTime.Now;
-                    createProtocolsViewModel.Protocol.ApplicationUserCreatorID =  _userManager.GetUserId(User);
-                    if(createProtocolsViewModel.Protocol.ProtocolID ==0)
+                    createProtocolsViewModel.Protocol.ApplicationUserCreatorID = _userManager.GetUserId(User);
+                    if (createProtocolsViewModel.Protocol.ProtocolID == 0)
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Added;
                     }
@@ -370,21 +501,24 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Modified;
                     }
-                    foreach(var url in createProtocolsViewModel.Protocol.Urls)
+                    foreach (var url in createProtocolsViewModel.Protocol.Urls)
                     {
-                        if(url.LinkID ==0)
+                        if (url.LinkID == 0)
                         {
                             _context.Entry(url).State = EntityState.Added;
+                            await _context.SaveChangesAsync();
+                            MoveDocumentsOutOfTempFolder(createProtocolsViewModel.Protocol.ProtocolID, AppUtility.ParentFolderName.Protocols);
+
                         }
                         else
                         {
                             _context.Entry(url).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
                         }
-                    }
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                    MoveDocumentsOutOfTempFolder(createProtocolsViewModel.Protocol.ProtocolID, AppUtility.ParentFolderName.Protocols);
+                    }          
+                
                     createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
+                    await transaction.CommitAsync();
                     return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
                 }
                 catch (Exception ex)
@@ -393,6 +527,7 @@ namespace PrototypeWithAuth.Controllers
                     createProtocolsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;
                     await transaction.RollbackAsync();
+                    //todo: delete the newly added documents
                     return PartialView("_CreateProtocol", createProtocolsViewModel);
                 }
 
@@ -414,7 +549,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.KitProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
-            CreateProtocolsViewModel viewmodel =await FillCreateProtocolsViewModel(2);
+            CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(2);
             return View(viewmodel);
         }
 
@@ -516,6 +651,33 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ResourcesList(int ResourceCategoryID = 1)
+        {
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
+
+            var resources = _context.Resources.Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID)).ToList();
+            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
+            {
+                Resources = resources,
+                //in the future send this in IF it's going to be updated- can be list<string> etc
+                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
+            };
+
+            return View(resourcesListViewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")] 
+        public async Task<IActionResult> ResourceNotesModal()
+        {
+            return PartialView();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
 
         public async Task<IActionResult> AddResource(int? resourceType = 1)
         {
@@ -557,16 +719,34 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await _context.SaveChangesAsync(); //adding join table instances
                     await transaction.CommitAsync();
-                    //save image
+
+                    string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ResourceImages");
+                    string folder = Path.Combine(uploadFolder, addResourceViewModel.Resource.ResourceID.ToString());
+                    Directory.CreateDirectory(folder);
+                    if (addResourceViewModel.ResourceImage != null) //test for more than one???
+                    {
+                        string uniqueFileName = addResourceViewModel.ResourceImage.FileName;
+                        string filePath = Path.Combine(folder, uniqueFileName);
+                        FileStream filestream = new FileStream(filePath, FileMode.Create);
+                        addResourceViewModel.ResourceImage.CopyTo(filestream);
+                        filestream.Close();
+                    }
                 }
                 catch (Exception e)
                 {
                     await transaction.RollbackAsync();
-                    //unsave file
+                    //unsave file -- I saved file last so won't crash after the file save
                 }
 
             }
             return RedirectToAction("Library");
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<JsonResult> GetPubMedFromAPI(String PubMedID)
+        {
+            var ResourceVM = AppUtility.GetResourceArticleFromNCBIPubMed(PubMedID);
+            return Json(ResourceVM);
         }
 
         [Authorize(Roles = "Protocols")]
@@ -618,12 +798,12 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Protocols")]
         public ActionResult DocumentsModal(int? id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
-    AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols)
+    AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 FolderName = RequestFolderNameEnum,
-                ParentFolderName = AppUtility.ParentFolderName.Protocols,
+                ParentFolderName = parentFolderName,
                 ObjectID = id ?? 0,
                 SectionType = SectionType,
                 IsEdittable = true
@@ -632,8 +812,6 @@ namespace PrototypeWithAuth.Controllers
             FillDocumentsViewModel(documentsModalViewModel);
             return PartialView(documentsModalViewModel);
         }
-
-
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Search()

@@ -18,6 +18,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<ResourceNote> ResourceNotes { get; set; }
         public DbSet<ResourceCategory> ResourceCategories { get; set; }
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
@@ -274,6 +275,9 @@ namespace PrototypeWithAuth.Data
             //modelBuilder.Entity<LocationInstance>()
             //    .HasQueryFilter(item => !(item is TemporaryLocationInstance));
 
+            modelBuilder.Entity<Material>()
+                .HasQueryFilter(item => !item.IsDeleted);
+
             modelBuilder.Entity<SalariedEmployee>().Ignore(e => e.WorkScope);
             modelBuilder.Entity<Employee>().Ignore(e => e.NetSalary);
             modelBuilder.Entity<Employee>().Ignore(e => e.TotalCost);
@@ -332,6 +336,8 @@ namespace PrototypeWithAuth.Data
 
 
             modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
+            modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
+            modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
             modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
 
             modelBuilder.Seed();

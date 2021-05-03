@@ -5,7 +5,7 @@
 @inject UserManager<ApplicationUser> _userManager
 @{
     var form = " order-inv-form ";
-    var tabClass = "";
+
     var summary = "";
     var disabled = "";
     var markReadOnlyClass = "";
@@ -28,7 +28,6 @@
         case AppUtility.MenuItems.Requests:
             color = "order-inv-background-color";
             form = "order-inv-form";
-            tabClass = "nav-link";
             break;
         case AppUtility.MenuItems.Operations:
             color = "oper-background-color";
@@ -37,12 +36,12 @@
         case AppUtility.MenuItems.Accounting:
             color = "accounting-background-color";
             form = "accounting-form";
-            tabClass = "supplier-nav-link";
+
             break;
         case AppUtility.MenuItems.LabManagement:
             color = "lab-man-background-color";
             form = " supplier-form ";
-            tabClass = "lab-man-nav-link";
+
             break;
     }
     var requestCategoryType = Model.Requests[0].Product?.ProductSubcategory.ParentCategory.CategoryTypeID;
@@ -146,34 +145,11 @@
                         }
                         <div class="row pt-2 d-flex justify-content-center">
                                 Serial: @Model.Requests[0].Product.SerialNumber
-                        </div>
-                    </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-12 px-0">
-                            <div class="container-fluid div-tabs text-center pl-0">
-                                <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
-                                    <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link @tabClass current-tab next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
-                                    @if (Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 7)
-                                    {
-                                        <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link @tabClass next-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
-                                    }
-                                    @if (Model.Requests[0].RequestStatusID != 7 && Model.SectionType != AppUtility.MenuItems.Operations && requestCategoryType!=2)
-                                    {
-                                        <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link @tabClass next-tab"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
-                                    }
-                                    <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link @tabClass documents-tab next-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
-                                    <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link @tabClass next-tab"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>
-                                    @if (Model.Requests[0].RequestStatusID != 7)
-                                    {
-                                        <li class="nav-item icon @summary"><a data-toggle="tab" href="#history" class="nav-link"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
-                                    }
-
-                                </ul>
                             </div>
                         </div>
+
                     </div>
+                    @{await Html.RenderPartialAsync("EditItemTabs", Model); }
                 </div>
 
                 <!-- Modal body -->

@@ -1737,13 +1737,13 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LineTypeChildID")
+                    b.Property<int?>("LineTypeChildID")
                         .HasColumnType("int");
 
                     b.Property<string>("LineTypeDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LineTypeParentID")
+                    b.Property<int?>("LineTypeParentID")
                         .HasColumnType("int");
 
                     b.HasKey("LineTypeID");
@@ -1753,6 +1753,27 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("LineTypeParentID");
 
                     b.ToTable("LineTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            LineTypeID = 1,
+                            LineTypeChildID = 2,
+                            LineTypeDescription = "Header"
+                        },
+                        new
+                        {
+                            LineTypeID = 2,
+                            LineTypeChildID = 3,
+                            LineTypeDescription = "Sub Header",
+                            LineTypeParentID = 1
+                        },
+                        new
+                        {
+                            LineTypeID = 3,
+                            LineTypeDescription = "Step",
+                            LineTypeParentID = 2
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Link", b =>
@@ -2170,6 +2191,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Info")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("MaterialCategoryID")
                         .HasColumnType("int");
@@ -3816,7 +3840,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("ntext");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -3971,6 +3995,26 @@ namespace PrototypeWithAuth.Data.Migrations
                             IsResourceType = true,
                             ResourceCategoryDescription = "News"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ResourceNote", b =>
+                {
+                    b.Property<int>("ResourceNoteID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Note")
+                        .HasColumnType("ntext");
+
+                    b.Property<int>("ResourceID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ResourceNoteID");
+
+                    b.HasIndex("ResourceID");
+
+                    b.ToTable("ResourceNotes");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ResourceResourceCategory", b =>
@@ -5229,14 +5273,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.LineType", "LineTypeChild")
                         .WithMany()
                         .HasForeignKey("LineTypeChildID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.LineType", "LineTypeParent")
                         .WithMany()
                         .HasForeignKey("LineTypeParentID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Link", b =>
@@ -5586,6 +5628,15 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ResourceType", "ResourceType")
                         .WithMany()
                         .HasForeignKey("ResourceTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ResourceNote", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
+                        .WithMany()
+                        .HasForeignKey("ResourceID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

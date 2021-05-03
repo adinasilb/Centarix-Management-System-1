@@ -1,4 +1,7 @@
 ﻿$('.addInvoiceForm').validate({
+	 normalizer: function( value ) {
+	  return $.trim( value );
+	},
 	rules: {
 		"InvoiceImage": {
 			required: true,

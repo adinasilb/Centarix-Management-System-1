@@ -67,9 +67,10 @@
 
                 <!-- Modal Header -->
                 <div class="new-modal-header no-box-shadow modal-header-padding " style="border-bottom:0 !important">
-                    @if (TempData["ErrorMessage"] != null)
+                    @if (Model.ErrorMessage != null)
                     {
-                        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
+                        <h6 class="text-danger-centarix">
+                        @Model.ErrorMessage</h6>
                         <br />
                     }
 
