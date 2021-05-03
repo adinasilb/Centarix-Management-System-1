@@ -429,6 +429,14 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--order-inv-color) !important;
 }
 
+.custom-oper {
+    border: .125rem solid var(--operations-color) !important;
+    background-color: transparent;
+    font-weight: var(--bold-light);
+    font-size: 1.438rem;
+    color: var(--operations-color) !important;
+}
+
 .custom-clear-button-table {
     background-color: transparent;
     font-weight: var(--bold-medium);
@@ -738,15 +746,22 @@ body.modal-open, body.popover-open {
     overflow: hidden !important;
 }
 
-.filter-and-search ::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
+.filter-and-search.orders ::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
     color: var(--order-inv-color) !important;
     opacity: 1;
 }
+.filter-and-search.operations ::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
+    color: var(--operations-color) !important;
+    opacity: 1;
+}
 
-.filter-and-search ::-ms-input-placeholder { /*works for Edge*/
+.filter-and-search.orders ::-ms-input-placeholder { /*works for Edge*/
     color: var(--order-inv-color) !important;
 }
 
+.filter-and-search.operations ::-ms-input-placeholder { /*works for Edge*/
+    color: var(--operations-color) !important;
+}
 .filter-and-search :focus {
     outline: none;
 }

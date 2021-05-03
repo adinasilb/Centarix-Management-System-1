@@ -8,7 +8,16 @@
 @using System.Globalization
 @using X.PagedList.Mvc.Core @* import this so we get our HTML Helper *@
 
-<div style="width:1200px; height:35.75rem; margin:0;" class="container-fluid overflow-hidden order-inv-form">
+@{ 
+    var formClass = "order-inv-form";
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    {
+        formClass = "oper-form";
+
+    }
+}
+
+<div style="width:1200px; height:35.75rem; margin:0;" class="container-fluid overflow-hidden @formClass">
 @*    <input type="hidden" id="sectionType" value="@Model.SectionType"/>*@
     <div class="row">
         <div class=" col-1 offset-11">
