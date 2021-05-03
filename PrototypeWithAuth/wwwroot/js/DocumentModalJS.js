@@ -51,7 +51,8 @@
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch);
+				var parentFolder = $(".active-document-modal").attr("parentfolder");
+				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder);
 				return true;
 			},
 			processData: false,
@@ -78,7 +79,8 @@
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch);
+		var parentFolder = $(".active-document-modal").attr("parentFolder");
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
 		return true;
 	});
 
@@ -100,7 +102,7 @@
 		var folder = "#" + $foldername + ".active-document-modal";
 		var div = $(folder + " i");
 		
-		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file")) {
+		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file" || $(".active-document-modal .material-image-icon").hasClass("protocols-filter"))) {
 			console.log("has class already");
 		} else {
 			console.log("does not class already");
@@ -110,13 +112,17 @@
 			} else if ((section == "LabManagement")) {
 				div.addClass("lab-man-filter");
 			}
+			else if ((section == "Protocols")) {
+				div.addClass("protocols-filter");
+				$(".active-document-modal .material-image-icon").addClass("protocols-filter");
+			}
 			else {
 				div.addClass("order-inv-filter");
 			}
 			var folderInput = "#" + $foldername + "Input";
 			$(folderInput).addClass("contains-file");
 			if ($(folderInput).rules()) {
-					$(folderInput).valid();
+				$(folderInput).valid();
 			}
 		}
 	};

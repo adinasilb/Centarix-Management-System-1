@@ -1,4 +1,7 @@
 ﻿$('.payModalForm').validate({
+     normalizer: function( value ) {
+    return $.trim( value );
+  },
 	rules: {
         "Payment.PaymentTypeID": {
             selectRequired: true

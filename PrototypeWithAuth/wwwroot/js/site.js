@@ -308,7 +308,8 @@ $(function () {
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch);
+		var parentFolder = $(".active-document-modal").attr("parentfolder");
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
 		return true;
 	});
 
@@ -1456,6 +1457,7 @@ $(function () {
 		}
 		else if (type == 'details') {
 			enableMarkReadonly($(this));
+			$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
 			$(".proprietryHidenCategory").attr("disabled", false);
 		}
 		//}

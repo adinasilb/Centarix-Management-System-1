@@ -1,5 +1,8 @@
 ﻿
 $('.addLocationForm').validate({
+	 normalizer: function( value ) {
+    return $.trim( value );
+  },
 	rules: {
 		"LocationInstance.LocationInstanceName": "required",
 		"LocationInstance.LocationTypeID": {
