@@ -9,13 +9,25 @@
 @using System.Globalization
 @using X.PagedList.Mvc.Core @* import this so we get our HTML Helper *@
 
-<div class="container-fluid order-inv-form">
+@{ 
+    var colorClass = "custom-order-inv";
+    var sectionClass = "orders";
+    var formClass = "order-inv-form";
+    if (Model.SectionType == AppUtility.MenuItems.Operations)
+    {
+        colorClass = "custom-oper";
+        sectionClass = "operations";
+        formClass = "oper-form";
+
+    }
+}
+<div class="container-fluid @formClass">
     <div class="row">
         <ul class="list-unstyled mb-0 ">
-            <li class="filter-and-search">
-                <input type="text" placeholder="Search" class="text custom-order-inv custom-button mb-4 mx-3 search-requests"  />
+            <li class="filter-and-search @sectionClass">
+                <input type="text" placeholder="Search" class="text @colorClass custom-button mb-4 mx-3 search-requests"  />
                 <button type="button" id="invFilterPopover" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body"
-                        class="text custom-button custom-order-inv mb-5" value="Filter">
+                        class="text custom-button @colorClass mb-5" value="Filter">
                     Filter
                 </button>
             </li>
