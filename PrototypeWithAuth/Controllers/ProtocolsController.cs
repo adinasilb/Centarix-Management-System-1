@@ -272,8 +272,9 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID = 0)
         {
-            var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
-            protocol.Urls = await _context.Links.Where(l => l.ProtocolID == protocolID).ToListAsync();
+            var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID)
+                .Include(p => p.Urls).Include(p => p.Line)
+                .Include(p => p.Materials).ThenInclude(m => m.Product).FirstOrDefault() ?? new Protocol();
             if (protocol.Urls.Count() < 2)
             {
                 while (protocol.Urls.Count() < 2)
@@ -281,7 +282,6 @@ namespace PrototypeWithAuth.Controllers
                     protocol.Urls.Add(new Link());
                 }
             }
-            protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).Include(m => m.Product).ToListAsync();
             if (typeID != 0)
             {
                 protocol.ProtocolTypeID = typeID;

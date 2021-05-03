@@ -1,0 +1,16 @@
+﻿@model PrototypeWithAuth.ViewModels.ProtocolsLineViewModel
+@{
+    var dynamicID = "Protocol_Lines" + Model.Index + "__";
+    var dynamicName = "Protocol.Lines[" + Model.Index + "].";
+}
+@switch (Model.Line.LineTypeID)
+{
+    case 1:
+    case 2:
+        <div class="heading-1">@Model.LineNumber<div name="@(dynamicName)Content" id="@(dynamicID)Content">@Model.Line.Content</div></div>
+        break;
+    case 3:
+        <div class="heading-1">@Model.LineNumber.<div name="@(dynamicName)Content" id="@(dynamicID)Content">@Model.Line.Content</div></div>
+        break;
+
+}
