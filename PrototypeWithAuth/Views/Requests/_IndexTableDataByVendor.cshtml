@@ -62,11 +62,8 @@
                                                                         <hr class="m-0" />
                                                                     }
                                                                 }
-
-
                                                             </div>
                                                         </li>
-
                                                     </ul>
                                                 </div>
                                             }
@@ -132,7 +129,6 @@
                                             }
                                             else if(icon.IconClass?.Equals("Resend") ?? false)
                                             {
-                                               
                                                     <div class="pr-2">
                                                         <button class="confirm-quote-resend btn-icon lab-man-background-color" data-title="Resend" value="@col.AjaxID">Resend</button>
                                                     </div>
@@ -150,10 +146,7 @@
                                                     </a>
                                                 </div>
                                             }
-
-
                                         }
-
                                     </div>
                                 }
                                 else
@@ -182,13 +175,11 @@
                                             <label class="m-0 p-0">@col.Value[val]</label>
                                         }
                                     }
-
                                 }
                             </td>
                         }
                     </tr>
                 }
-
                 <tr class="border-0 mb-5 no-hover">
                     @for (int i = 0; i < requests.FirstOrDefault().Columns.Count() - 4; i++)
                     {

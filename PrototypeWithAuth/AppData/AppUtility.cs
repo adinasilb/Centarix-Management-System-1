@@ -338,7 +338,8 @@ namespace PrototypeWithAuth.AppData
         public static List<AccountingPopoverLink> GetPaymentsPopoverLinks(AppUtility.SidebarEnum CurrentEnum)
         {
             List<AccountingPopoverLink> list = new List<AccountingPopoverLink>();
-            List<PaymentsPopoverEnum> enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
+            //List<PaymentsPopoverEnum> enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
+            List<PaymentsPopoverEnum> enums = new List<PaymentsPopoverEnum> { PaymentsPopoverEnum.PayLater };
             if (!CurrentEnum.Equals(AppUtility.SidebarEnum.StandingOrders.ToString()))
             {
                 foreach (PaymentsPopoverEnum e in enums)
@@ -363,30 +364,30 @@ namespace PrototypeWithAuth.AppData
                             //    accountingPopoverLink.Color = "#00CA72";
                             //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px1";
                             //    break;
-                            case PaymentsPopoverEnum.MonthlyPayment:
-                                accountingPopoverLink.Action = "ChangePaymentStatus";
-                                accountingPopoverLink.Controller = "Requests";
-                                accountingPopoverLink.Color = "#90C939";
-                                accountingPopoverLink.Icon = "icon-monetization_on-24px";
-                                break;
-                            case PaymentsPopoverEnum.PayNow:
-                                accountingPopoverLink.Action = "ChangePaymentStatus";
-                                accountingPopoverLink.Controller = "Requests";
-                                accountingPopoverLink.Color = "#D5A522";
-                                accountingPopoverLink.Icon = "icon-credit_card-24px";
-                                break;
+                            //case PaymentsPopoverEnum.MonthlyPayment:
+                            //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                            //    accountingPopoverLink.Controller = "Requests";
+                            //    accountingPopoverLink.Color = "#90C939";
+                            //    accountingPopoverLink.Icon = "icon-monetization_on-24px";
+                            //    break;
+                            //case PaymentsPopoverEnum.PayNow:
+                            //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                            //    accountingPopoverLink.Controller = "Requests";
+                            //    accountingPopoverLink.Color = "#D5A522";
+                            //    accountingPopoverLink.Icon = "icon-credit_card-24px";
+                            //    break;
                             case PaymentsPopoverEnum.PayLater:
                                 accountingPopoverLink.Action = "ChangePaymentStatus";
                                 accountingPopoverLink.Controller = "Requests";
                                 accountingPopoverLink.Color = "#5F79E2";
                                 accountingPopoverLink.Icon = "icon-centarix-icons-19";
                                 break;
-                            case PaymentsPopoverEnum.Installments:
-                                accountingPopoverLink.Action = "ChangePaymentStatus";
-                                accountingPopoverLink.Controller = "Requests";
-                                accountingPopoverLink.Color = "#7D9BAA";
-                                accountingPopoverLink.Icon = "icon-centarix-icons-20";
-                                break;
+                            //case PaymentsPopoverEnum.Installments:
+                            //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                            //    accountingPopoverLink.Controller = "Requests";
+                            //    accountingPopoverLink.Color = "#7D9BAA";
+                            //    accountingPopoverLink.Icon = "icon-centarix-icons-20";
+                            //    break;
                                 //case PaymentsPopoverEnum.Clarification:
                                 //    accountingPopoverLink.Action = "ChangePaymentStatus";
                                 //    accountingPopoverLink.Controller = "Requests";
