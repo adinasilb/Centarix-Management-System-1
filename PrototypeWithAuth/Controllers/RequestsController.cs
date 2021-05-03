@@ -5528,6 +5528,58 @@ namespace PrototypeWithAuth.Controllers
             };
             return PartialView(viewModel);
         }
+        [HttpGet]
+        [Authorize(Roles = "Accounting")]
+        public IActionResult InstallmentsModal(int id, AppUtility.SidebarEnum accountingPaymentsEnum)
+        {
+            InstallmentsModalViewModel installmentsViewModel = new InstallmentsModalViewModel();
+            installmentsViewModel.RequestID = id;
+            installmentsViewModel.AccountingPaymentsEnum = accountingPaymentsEnum;
+            return View(installmentsViewModel);
+        }
+        [HttpPost]
+        [Authorize(Roles = "Accounting")]
+        public async Task<IActionResult> InstallmentsModal(InstallmentsModalViewModel installmentsViewModel)
+        {
+            var request = _context.Requests.Where(r => r.RequestID == installmentsViewModel.RequestID).FirstOrDefault();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    request.PaymentStatusID = 5;
+                    request.Installments = (uint)installmentsViewModel.Installments;
+                    if (request.Product.ProductID == 0)
+                    {
+                        _context.Entry(request.Product).State = EntityState.Added;
+                    }
+                    else
+                    {
+                        _context.Entry(request.Product).State = EntityState.Unchanged;
+                    }
+                    _context.Entry(request).State = EntityState.Added;
+                    _context.Entry(request.ParentRequest).State = EntityState.Added;
+
+                    var oldPayment = _context.Payments.Where(p => p.RequestID == installmentsViewModel.RequestID).FirstOrDefault();
+                    _context.Remove(oldPayment);
+                    await _context.SaveChangesAsync();
+                    for (int i = 0; i < request.Installments; i++)
+                    {
+                        var payment = new Payment() { InstallmentNumber = i + 1 };
+                        payment.PaymentDate = installmentsViewModel.InstallmentDate.AddMonths(i);
+                        payment.Sum = ((request.Cost ?? 0) / (request.Installments ?? 0));
+                        payment.RequestID = request.RequestID;
+                        _context.Add(payment);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = installmentsViewModel.AccountingPaymentsEnum });
+            }
+        }
+
         //public async Task<bool> PopulateProductSerialNumber()
         //{
         //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();

@@ -1,0 +1,120 @@
+﻿@model PrototypeWithAuth.ViewModels.TermsViewModel;
+@using PrototypeWithAuth.AppData
+@{
+    Layout = null;
+}
+
+<script src="~/js/TermsModal.js"></script>
+<script src="~/js/site.js"></script>
+<script src="~/js/Validation/TermsModalFormValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>
+
+<div class="modal modal-view termsModal " id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index: 9100">
+    <div class="modal-dialog-centered modal-xl mx-auto on-form-modal" role="document" style="max-height:100%; max-width:60rem; ">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow " style="width:60rem;">
+            <button type="button" class="close modal-close-padding modal-close-style" onclick="$.fn.CloseModal('specify-installments');" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%;" id="myForm" class="modal-padding termsModalForm">
+                @*@Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                    @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                    @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                    @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)*@
+                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+                @*@Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                    @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                    @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+                    <input type="hidden" asp-for="ParentRequest.ParentRequestID" />*@
+                <div class="modal-header modal-header-padding">
+                    <div class="col-10 float-left">
+                        <span class="heading-1">Installments</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
+                        <div class="row">
+                            <div class="col-3  installments-amount-block">
+                                <label asp-for="Installments" class="control-label"></label>
+                                <input asp-for="Installments" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="Installments" class="text-danger-centarix"></span>
+                            </div>
+                            <div class="col-3 installments-amount-block">
+                                <div class="form-group ">
+                                    <label asp-for="@Model.InstallmentDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" asp-format="{0:dd/MM/yyyy}" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
+                                    <span asp-validation-for="@Model.InstallmentDate" class="text-danger-centarix"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-0">
+                    <div class="mx-auto modal-footer-mt">
+                        <input type="submit" asp value="Save" class="custom-button custom-button-font @*@bcColor*@ between-button-margin submitTerms" />
+                        <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('specify-installments');">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".submitTerms").off('click').on("click", function (e) {
+        e.preventDefault();
+        console.log("submit reorder");
+        //alert("validate form");
+        $(".termsModalForm").data("validator").settings.ignore = "";
+        var valid = $(".termsModalForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('.activeSubmit').removeClass('disabled-submit')
+            $("#loading").show();
+            var formData = new FormData($(".termsModalForm")[0]);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/TermsModal",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data) {
+
+                    if ($("#SectionType").val() == "Operations") {
+                        window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";
+                    }
+                    else if ($("#RequestIndexObject_OrderType").val() == "AlreadyPurchased")
+                    {
+                        window.location.href = "/Requests/Index?PageType=RequestRequest&SectionType=Requests&RequestStatusID=2&SidebarType=List";
+                    }
+                    else {
+                        $.fn.OpenModal('emailModal', 'confirm-email', data);
+                    }
+                    $("#loading").hide();
+                    return true;
+                },
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $.fn.OpenModal('termsModal', 'terms', jqxhr.responseText);
+                    }
+
+                    $("#loading").hide();
+                    return true;
+                }
+            });
+        }
+        $(".termsModalForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+        //return false;
+    });</script>
