@@ -75,7 +75,10 @@
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
 
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding documentModalForm" id="myForm">
-
+                
+                <button type="button" class="close modal-close-padding modal-close-style close-document-modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 @*@for (int x = 0; x < Model.Requests.Count; x++)
         {
             <input type="hidden" asp-for="Requests[x].RequestID" />
@@ -94,8 +97,8 @@
                 <div class="modal-header modal-header-padding">
                     <div class="container">
                         <div class="row">
-                            <div class="col-2">                 
-                                    <input type="text" class="form-control-plaintext heading-1" disabled asp-for="FolderName" />
+                            <div class="col-2">
+                                <input type="text" class="form-control-plaintext heading-1" disabled asp-for="FolderName" />
                             </div>
                             <div class="col-3 offset-7">
                             </div>
