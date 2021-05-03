@@ -67,7 +67,7 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 550;
                 return PartialView(entryExitViewModel);
             }
-            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).ToList();
+            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
             entryExitViewModel.TimekeeperNotifications = notifications;
             return View(entryExitViewModel);
         }
