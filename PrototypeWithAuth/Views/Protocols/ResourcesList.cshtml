@@ -33,7 +33,8 @@
                         <span>@resourceResourceCategory.ResourceCategory.ResourceCategoryDescription</span>
                     }
                 </div>
-                <div class="resource-summary text under-row-margin ">@resource.Summary?.Substring(0, 246)</div>
+                @{ int endCounter = Convert.ToInt32(resource.Summary?.Length < 246 ? resource.Summary?.Length : 246); }
+                <div class="resource-summary text under-row-margin ">@resource.Summary?.Substring(0, endCounter)</div>
                 <div class="list-buttons row m-2 py-4 form-element-border-top-small">
                     <div class="">
                         <input class="small-custom-button call-resource-notes" value="Notes" id="@resource.ResourceID" />

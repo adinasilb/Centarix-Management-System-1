@@ -515,8 +515,8 @@ namespace PrototypeWithAuth.Controllers
                             _context.Entry(url).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }
-                    }          
-                
+                    }
+
                     createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
                     await transaction.CommitAsync();
                     return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
@@ -670,10 +670,11 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Protocols")] 
-        public async Task<IActionResult> ResourceNotesModal()
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ResourceNotesModal(int ResourceID)
         {
-            return PartialView();
+            var resourceNote = new ResourceNote() { ResourceID = ResourceID };
+            return PartialView(resourceNote);
         }
 
         [HttpGet]
