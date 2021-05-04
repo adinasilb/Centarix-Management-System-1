@@ -105,6 +105,16 @@
                                     <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
                                 </div>
                             </div>
+                            @if (Model.IsReorder)
+                            {
+                                <div class="row">
+                                    <div class="form-group ">
+                                        <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" />
+                                        <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
