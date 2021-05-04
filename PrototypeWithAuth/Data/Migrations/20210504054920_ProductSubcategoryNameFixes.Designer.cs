@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210504054920_ProductSubcategoryNameFixes")]
+    partial class ProductSubcategoryNameFixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3117,245 +3119,252 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ProductSubcategoryID = 801,
-                            ImageURL = "/images/css/CategoryImages/it/communications.png",
+                            ImageURL = "/images/css/CategoryImages/branding.png",
                             ParentCategoryID = 8,
                             ProductSubcategoryDescription = "Communications"
                         },
                         new
                         {
                             ProductSubcategoryID = 802,
-                            ImageURL = "/images/css/CategoryImages/it/cybersecurity.png",
+                            ImageURL = "/images/css/CategoryImages/shippment.png",
                             ParentCategoryID = 8,
                             ProductSubcategoryDescription = "Cybersecurity"
                         },
                         new
                         {
                             ProductSubcategoryID = 803,
-                            ImageURL = "/images/css/CategoryImages/it/hardware3.png",
+                            ImageURL = "/images/css/CategoryImages/renovation.png",
                             ParentCategoryID = 8,
                             ProductSubcategoryDescription = "Hardware"
                         },
                         new
                         {
                             ProductSubcategoryID = 804,
-                            ImageURL = "/images/css/CategoryImages/it/general.png",
+                            ImageURL = "/images/css/CategoryImages/bookeeping.png",
                             ParentCategoryID = 8,
                             ProductSubcategoryDescription = "General"
                         },
                         new
                         {
                             ProductSubcategoryID = 901,
-                            ImageURL = "/images/css/CategoryImages/daytoday/taxes2.png",
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Bookeeping"
                         },
                         new
                         {
                             ProductSubcategoryID = 902,
-                            ImageURL = "/images/css/CategoryImages/daytoday/books.png",
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Books"
                         },
                         new
                         {
                             ProductSubcategoryID = 903,
-                            ImageURL = "/images/css/CategoryImages/daytoday/branding.png",
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Branding"
                         },
                         new
                         {
                             ProductSubcategoryID = 904,
-                            ImageURL = "/images/css/CategoryImages/daytoday/company_events.png",
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Company Events"
                         },
                         new
                         {
                             ProductSubcategoryID = 905,
-                            ImageURL = "/images/css/CategoryImages/daytoday/electricity2.png",
+                            ImageURL = "/images/css/CategoryImages/conference.png",
+                            ParentCategoryID = 9,
+                            ProductSubcategoryDescription = "Bookeeping"
+                        },
+                        new
+                        {
+                            ProductSubcategoryID = 906,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Electricity"
                         },
                         new
                         {
-                            ProductSubcategoryID = 906,
-                            ImageURL = "/images/css/CategoryImages/daytoday/fees.png",
+                            ProductSubcategoryID = 907,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Fees"
                         },
                         new
                         {
-                            ProductSubcategoryID = 907,
-                            ImageURL = "/images/css/CategoryImages/daytoday/food.png",
+                            ProductSubcategoryID = 908,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Food"
                         },
                         new
                         {
-                            ProductSubcategoryID = 908,
-                            ImageURL = "/images/css/CategoryImages/daytoday/furniture2.png",
+                            ProductSubcategoryID = 909,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Furniture"
                         },
                         new
                         {
-                            ProductSubcategoryID = 909,
-                            ImageURL = "/images/css/CategoryImages/daytoday/general.png",
+                            ProductSubcategoryID = 910,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "General"
                         },
                         new
                         {
-                            ProductSubcategoryID = 910,
-                            ImageURL = "/images/css/CategoryImages/daytoday/graphics.png",
+                            ProductSubcategoryID = 911,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Graphic"
                         },
                         new
                         {
-                            ProductSubcategoryID = 911,
-                            ImageURL = "/images/css/CategoryImages/daytoday/insurance.png",
+                            ProductSubcategoryID = 912,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Insurance"
                         },
                         new
                         {
-                            ProductSubcategoryID = 912,
-                            ImageURL = "/images/css/CategoryImages/daytoday/parking2.png",
+                            ProductSubcategoryID = 913,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Parking"
                         },
                         new
                         {
-                            ProductSubcategoryID = 913,
-                            ImageURL = "/images/css/CategoryImages/daytoday/renovation.png",
+                            ProductSubcategoryID = 914,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Renovation"
                         },
                         new
                         {
-                            ProductSubcategoryID = 914,
-                            ImageURL = "/images/css/CategoryImages/daytoday/rent2.png",
+                            ProductSubcategoryID = 915,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Rent"
                         },
                         new
                         {
-                            ProductSubcategoryID = 915,
-                            ImageURL = "/images/css/CategoryImages/daytoday/shippment.png",
+                            ProductSubcategoryID = 916,
+                            ImageURL = "/images/css/CategoryImages/conference.png",
                             ParentCategoryID = 9,
                             ProductSubcategoryDescription = "Shipment"
                         },
                         new
                         {
                             ProductSubcategoryID = 1001,
-                            ImageURL = "/images/css/CategoryImages/travel/conference3.png",
+                            ImageURL = "/images/css/CategoryImages/legal.png",
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "Conference"
                         },
                         new
                         {
                             ProductSubcategoryID = 1002,
-                            ImageURL = "/images/css/CategoryImages/travel/flight_tickets.png",
+                            ImageURL = "/images/css/CategoryImages/legal.png",
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "Flight Tickets"
                         },
                         new
                         {
                             ProductSubcategoryID = 1003,
-                            ImageURL = "/images/css/CategoryImages/travel/food.png",
+                            ImageURL = "/images/css/CategoryImages/legal.png",
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "Food"
                         },
                         new
                         {
                             ProductSubcategoryID = 1004,
-                            ImageURL = "/images/css/CategoryImages/travel/hotels3.png",
+                            ImageURL = "/images/css/CategoryImages/legal.png",
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "Hotels"
                         },
                         new
                         {
                             ProductSubcategoryID = 1005,
-                            ImageURL = "/images/css/CategoryImages/travel/travel.png",
+                            ImageURL = "/images/css/CategoryImages/legal.png",
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "Travel"
                         },
                         new
                         {
                             ProductSubcategoryID = 1006,
-                            ImageURL = "/images/css/CategoryImages/travel/general.png",
+                            ImageURL = "/images/css/CategoryImages/legal.png",
                             ParentCategoryID = 10,
                             ProductSubcategoryDescription = "General"
                         },
                         new
                         {
                             ProductSubcategoryID = 1101,
-                            ImageURL = "/images/css/CategoryImages/advice/business_advice.png",
+                            ImageURL = "/images/css/CategoryImages/general.png",
                             ParentCategoryID = 11,
                             ProductSubcategoryDescription = "Business Advice"
                         },
                         new
                         {
                             ProductSubcategoryID = 1102,
-                            ImageURL = "/images/css/CategoryImages/advice/clinical_regulation2.png",
+                            ImageURL = "/images/css/CategoryImages/general.png",
                             ParentCategoryID = 11,
                             ProductSubcategoryDescription = "Clinical Regulations"
                         },
                         new
                         {
                             ProductSubcategoryID = 1103,
-                            ImageURL = "/images/css/CategoryImages/advice/general.png",
+                            ImageURL = "/images/css/CategoryImages/general.png",
                             ParentCategoryID = 11,
                             ProductSubcategoryDescription = "General"
                         },
                         new
                         {
                             ProductSubcategoryID = 1104,
-                            ImageURL = "/images/css/CategoryImages/advice/legal.png",
+                            ImageURL = "/images/css/CategoryImages/general.png",
                             ParentCategoryID = 11,
                             ProductSubcategoryDescription = "Legal"
                         },
                         new
                         {
                             ProductSubcategoryID = 1105,
-                            ImageURL = "/images/css/CategoryImages/advice/scientific_advice3.png",
+                            ImageURL = "/images/css/CategoryImages/general.png",
                             ParentCategoryID = 11,
                             ProductSubcategoryDescription = "Scientific Advice"
                         },
                         new
                         {
                             ProductSubcategoryID = 1201,
-                            ImageURL = "/images/css/CategoryImages/regulations/regulations.png",
+                            ImageURL = "/images/css/CategoryImages/taxes.png",
                             ParentCategoryID = 12,
                             ProductSubcategoryDescription = "Regulations"
                         },
                         new
                         {
                             ProductSubcategoryID = 1202,
-                            ImageURL = "/images/css/CategoryImages/regulations/safety.png",
+                            ImageURL = "/images/css/CategoryImages/taxes.png",
                             ParentCategoryID = 12,
                             ProductSubcategoryDescription = "Safety"
                         },
                         new
                         {
                             ProductSubcategoryID = 1203,
-                            ImageURL = "/images/css/CategoryImages/regulations/general.png",
+                            ImageURL = "/images/css/CategoryImages/taxes.png",
                             ParentCategoryID = 12,
                             ProductSubcategoryDescription = "General"
                         },
                         new
                         {
                             ProductSubcategoryID = 1301,
-                            ImageURL = "/images/css/CategoryImages/government/taxes4.png",
+                            ImageURL = "/images/css/CategoryImages/general.png",
                             ParentCategoryID = 13,
                             ProductSubcategoryDescription = "Taxes"
                         },
                         new
                         {
                             ProductSubcategoryID = 1302,
-                            ImageURL = "/images/css/CategoryImages/government/general.png",
+                            ImageURL = "/images/css/CategoryImages/general.png",
                             ParentCategoryID = 13,
                             ProductSubcategoryDescription = "General"
                         },
