@@ -340,6 +340,12 @@ body {
     font-weight: var(--bold-medium);
 }
 
+.modal-control-label {
+    font-size: 1.25rem;
+    font-weight: var(--bold-regular);
+    margin-bottom: 0px;
+}
+
 .top-menu {
     font-size: 1.5rem;
     font-weight: var(--bold-regular);

@@ -2881,6 +2881,10 @@ body.modal-open .popover {
     border-bottom: .1rem solid #E5E5E5;
 }
 
+.form-element-border-bottom {
+    border-bottom: .2rem solid #E5E5E5;
+}
+
 .form-element-border-top-small {
     border-top: .1rem solid #E5E5E5;
 }
@@ -2910,4 +2914,8 @@ body.modal-open .popover {
 }
 .no-resize{
     resize: none;
+}
+
+.textarea-border-radius{
+    border-radius: .75rem;
 }

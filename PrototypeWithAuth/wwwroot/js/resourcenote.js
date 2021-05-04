@@ -15,6 +15,7 @@
 					$.fn.CloseModal('resource-notes-modal');
 				}
 				else {
+					//eventually show error here on the modal
 					alert(error);
 				}
 			}
