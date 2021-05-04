@@ -18,6 +18,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<FavoriteResource> FavoriteResources { get; set; }
         public DbSet<FavoriteProtocol> FavoriteProtocols { get; set; }
         public DbSet<ResourceNote> ResourceNotes { get; set; }
         public DbSet<ResourceCategory> ResourceCategories { get; set; }
