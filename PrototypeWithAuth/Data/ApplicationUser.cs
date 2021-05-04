@@ -55,6 +55,7 @@ namespace PrototypeWithAuth.Data
         public IEnumerable<ShareRequest> ShareRequestsCreated { get; set; }
         public IEnumerable<ShareRequest> ShareRequestsReceived { get; set; }
         public IEnumerable<FavoriteRequest> FavoriteRequests { get; set; }
+        public IEnumerable<FavoriteProtocol> FavoriteProtocols { get; set; }
 
         // public string URLPic { get; set; }
 
