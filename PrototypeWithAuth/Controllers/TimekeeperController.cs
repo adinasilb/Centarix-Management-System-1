@@ -67,7 +67,7 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 550;
                 return PartialView(entryExitViewModel);
             }
-            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).ToList();
+            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
             entryExitViewModel.TimekeeperNotifications = notifications;
             return View(entryExitViewModel);
         }
@@ -140,7 +140,7 @@ namespace PrototypeWithAuth.Controllers
                         entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
                     }
                     // throw new Exception();
-                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).ToList();
+                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
                     entryExitViewModel.TimekeeperNotifications = notifications;
                     await transaction.CommitAsync();
                     return PartialView(entryExitViewModel);
@@ -151,7 +151,7 @@ namespace PrototypeWithAuth.Controllers
                     entryExitViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     entryExitViewModel.EntryExitEnum = currentClickButton;
                     var userid = _userManager.GetUserId(User);
-                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).ToList();
+                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
                     entryExitViewModel.TimekeeperNotifications = notifications;
                     return PartialView(entryExitViewModel);
 

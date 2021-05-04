@@ -76,36 +76,21 @@
                                 </div>
                             </div>
                             @{var dNone = "d-none";
-                                var disabled = true;}
-                            @if (Model.SelectedTerm == 5)
+                                @*var disabled = true;*@}
+                            @*@if (Model.SelectedTerm == 5)
                             {
                                 dNone = "";
                                 disabled = false;
-                            }
+                            }*@
                             <div class="col-3 @dNone installments-amount-block">
                                 <label asp-for="Installments" class="control-label"></label>
-                                @if (disabled)
-                                {
                                 <input asp-for="Installments" disabled class="form-control-plaintext border-bottom" />
-                                }
-                                else
-                                {
-                                <input asp-for="Installments" class="form-control-plaintext border-bottom" />
-                                }
-
                                 <span asp-validation-for="Installments" class="text-danger-centarix"></span>
                             </div>
                             <div class="col-3 @dNone installments-amount-block">
                                 <div class="form-group ">
-                                    <label asp-for="@Model.InstallmentDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                    @if (disabled)
-                                    {
+                                    <label asp-for="@Model.InstallmentDate" class="control-label m-0 mt-2" style="width:100%;"></label>                                    
                                         <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" disabled asp-format="{0:dd/MM/yyyy}" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" asp-format="{0:dd/MM/yyyy}" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
-                                    }
                                     <span asp-validation-for="@Model.InstallmentDate" class="text-danger-centarix"></span>
                                 </div>
                             </div>
