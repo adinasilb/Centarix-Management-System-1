@@ -677,6 +677,26 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(resourceNote);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ResourceNotesModal(ResourceNote ResourceNote)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Update(ResourceNote);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch(Exception e)
+                {
+                    transaction.Rollback();
+                }
+            }
+            return new EmptyResult();
+        }
+
         [HttpGet]
         [Authorize(Roles = "Protocols")]
 
