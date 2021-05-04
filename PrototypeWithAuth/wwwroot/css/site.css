@@ -2854,7 +2854,7 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     border-color: var(--order-inv-color) !important;
 }
 
-.oper-form .custom-small-button {
+.oper-form .custom-small-filter-button {
     color: var(--operations-color);
     border-color: var(--operations-color) !important;
 }

@@ -22,62 +22,79 @@
         hiddenSummaryClass = "hidden";
         markReadOnlyClass = "mark-readonly";
     }
-    var projectCategories = AppUtility.ParentCategoryEnum.Plastics
+    var projectCategories = AppUtility.ParentCategoryEnum.Consumables
         + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-        + " " + AppUtility.ParentCategoryEnum.Cells
+        + " " + AppUtility.ParentCategoryEnum.Biological
         + " " + AppUtility.ParentCategoryEnum.Reusables
-        + " " + AppUtility.ParentCategoryEnum.Equipment
+        + " " + AppUtility.ParentCategoryEnum.Clinical
+        + " " + AppUtility.ParentCategoryEnum.Safety
+        + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
-    var subProjectCategories = AppUtility.ParentCategoryEnum.Plastics
+    var subProjectCategories = AppUtility.ParentCategoryEnum.Consumables
         + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-        + " " + AppUtility.ParentCategoryEnum.Cells
+        + " " + AppUtility.ParentCategoryEnum.Biological
         + " " + AppUtility.ParentCategoryEnum.Reusables
-        + " " + AppUtility.ParentCategoryEnum.Equipment
+        + " " + AppUtility.ParentCategoryEnum.Clinical
+        + " " + AppUtility.ParentCategoryEnum.Safety
+        + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
-    var vendorCategories = AppUtility.ParentCategoryEnum.Plastics
+    var vendorCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-+ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Biological
 + " " + AppUtility.ParentCategoryEnum.Reusables
-+ " " + AppUtility.ParentCategoryEnum.Equipment
++ " " + AppUtility.ParentCategoryEnum.Clinical
++ " " + AppUtility.ParentCategoryEnum.Safety
+        + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
-    var companyIDCategories = AppUtility.ParentCategoryEnum.Plastics
+    var companyIDCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-+ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Biological
 + " " + AppUtility.ParentCategoryEnum.Reusables
-+ " " + AppUtility.ParentCategoryEnum.Equipment
++ " " + AppUtility.ParentCategoryEnum.Clinical
++ " " + AppUtility.ParentCategoryEnum.Safety
+        + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
-    var quoteCategories = AppUtility.ParentCategoryEnum.Plastics
+    var quoteCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-+ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Biological
 + " " + AppUtility.ParentCategoryEnum.Reusables
-+ " " + AppUtility.ParentCategoryEnum.Equipment
++ " " + AppUtility.ParentCategoryEnum.Clinical
++ " " + AppUtility.ParentCategoryEnum.Safety
+        + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
-    var catalogCategories = AppUtility.ParentCategoryEnum.Plastics
+    var catalogCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-+ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Biological
 + " " + AppUtility.ParentCategoryEnum.Reusables
-+ " " + AppUtility.ParentCategoryEnum.Equipment
++ " " + AppUtility.ParentCategoryEnum.Clinical
++ " " + AppUtility.ParentCategoryEnum.Safety
+        + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
-    var batchCategories = AppUtility.ParentCategoryEnum.Cells
+    var batchCategories = AppUtility.ParentCategoryEnum.Biological
         + " d-none";
     if(modalType != AppUtility.RequestModalType.Create)
     {
         batchCategories += " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals;
     }
     var warrantyCategories = AppUtility.ParentCategoryEnum.Reusables
-+ " " + AppUtility.ParentCategoryEnum.Equipment
++ " " + AppUtility.ParentCategoryEnum.Safety
+        + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
-    var supplyDaysCategories = AppUtility.ParentCategoryEnum.Plastics
+    var supplyDaysCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-+ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Biological
 + " " + AppUtility.ParentCategoryEnum.Reusables
-+ " " + AppUtility.ParentCategoryEnum.Equipment
++ " " + AppUtility.ParentCategoryEnum.Clinical
++ " " + AppUtility.ParentCategoryEnum.Safety
+        + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
-    var websiteCategories = AppUtility.ParentCategoryEnum.Plastics
+    var websiteCategories = AppUtility.ParentCategoryEnum.Consumables
 + " " + AppUtility.ParentCategoryEnum.ReagentsAndChemicals
-+ " " + AppUtility.ParentCategoryEnum.Cells
++ " " + AppUtility.ParentCategoryEnum.Biological
 + " " + AppUtility.ParentCategoryEnum.Reusables
-+ " " + AppUtility.ParentCategoryEnum.Equipment
++ " " + AppUtility.ParentCategoryEnum.Clinical
++ " " + AppUtility.ParentCategoryEnum.Safety
+        + " " + AppUtility.ParentCategoryEnum.General
         + " d-none";
     var passageCategories = AppUtility.ParentCategoryEnum.Samples;
     var amountCategories = AppUtility.ParentCategoryEnum.Samples;
@@ -267,7 +284,7 @@
         </div>
         @if (Model.Requests[0].ParentRequest?.SupplierOrderNumber != null || Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
         {<div class="row">
-            @if (Model.Requests[0].Payments[0].HasInvoice)
+            @if (Model.Requests[0].Payments?.FirstOrDefault()?.HasInvoice == true)
             {
                 <div class="col-md-3 ">
                     <label asp-for="Requests[0].Payments[0].Invoice.InvoiceNumber" class="control-label"></label>

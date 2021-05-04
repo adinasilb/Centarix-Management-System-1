@@ -67,7 +67,7 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 550;
                 return PartialView(entryExitViewModel);
             }
-            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).ToList();
+            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
             entryExitViewModel.TimekeeperNotifications = notifications;
             return View(entryExitViewModel);
         }
@@ -140,7 +140,7 @@ namespace PrototypeWithAuth.Controllers
                         entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
                     }
                     // throw new Exception();
-                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).ToList();
+                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
                     entryExitViewModel.TimekeeperNotifications = notifications;
                     await transaction.CommitAsync();
                     return PartialView(entryExitViewModel);
@@ -151,7 +151,7 @@ namespace PrototypeWithAuth.Controllers
                     entryExitViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                     entryExitViewModel.EntryExitEnum = currentClickButton;
                     var userid = _userManager.GetUserId(User);
-                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).ToList();
+                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
                     entryExitViewModel.TimekeeperNotifications = notifications;
                     return PartialView(entryExitViewModel);
 
@@ -959,13 +959,21 @@ namespace PrototypeWithAuth.Controllers
                 var notifications = _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == employeeHoursID).ToList();
                 var dayoff = _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == deleteHourViewModel.EmployeeHour.Date).FirstOrDefault();
                 var anotherEmployeeHourWithSameDate = _context.EmployeeHours.Where(eh => eh.Date == deleteHourViewModel.EmployeeHour.Date && eh.EmployeeID == deleteHourViewModel.EmployeeHour.EmployeeID && eh.EmployeeHoursID != deleteHourViewModel.EmployeeHour.EmployeeHoursID).FirstOrDefault();
+                var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == deleteHourViewModel.EmployeeHour.EmployeeHoursID).AsNoTracking().FirstOrDefault();
                 EmployeeHours newEmployeeHour = null;
                 using (var transaction = _context.Database.BeginTransaction())
                 {
                     try
                     { 
-                        if (anotherEmployeeHourWithSameDate == null ) { 
-                             newEmployeeHour = new EmployeeHours()
+                        if (anotherEmployeeHourWithSameDate == null ) {
+                            if (employeeHour.OffDayTypeID == 4)
+                            {
+                                var employee = _context.Employees.Where(e => e.Id == employeeHour.EmployeeID).FirstOrDefault();
+                                employee.SpecialDays += 1;
+                                _context.Update(employee);
+                            }
+                            
+                            newEmployeeHour = new EmployeeHours()
                             {
                                 EmployeeHoursID = employeeHoursID,
                                 Date = deleteHourViewModel.EmployeeHour.Date,
@@ -996,7 +1004,6 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else
                         {
-                            var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == deleteHourViewModel.EmployeeHour.EmployeeHoursID).FirstOrDefault();
                             _context.Remove(employeeHour);
                             await _context.SaveChangesAsync();
 
@@ -1012,8 +1019,9 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(ehaa);
                             await _context.SaveChangesAsync();
                         }
-                        //throw new Exception();
-                        await transaction.CommitAsync();
+                        
+                            //throw new Exception();
+                            await transaction.CommitAsync();
                     }
                     catch (Exception e)
                     {

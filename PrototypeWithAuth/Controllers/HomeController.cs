@@ -236,7 +236,7 @@ namespace PrototypeWithAuth.Controllers
             if (user.LastLogin.Date != DateTime.Now.Date)
             {
 
-                var lateOrders = _context.Requests.Where(r => r.ApplicationUserCreatorID == user.Id).Where(r => r.RequestStatusID == 2)
+                var lateOrders = _context.Requests.Where(r => r.ApplicationUserCreatorID == user.Id).Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null)
                     .Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date >= user.LastLogin.Date && r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.ParentRequest);
                 foreach (var request in lateOrders)
