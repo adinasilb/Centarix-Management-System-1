@@ -11,4 +11,18 @@
 			}
 		});
 	});
+
+	$(".favorite-protocol").on("click", function (e) {
+		var fullIcon = "icon-favorite-24px";
+		var emptyIcon = "icon-favorite_border-24px";
+		var icon = $(this).children("i");
+		if (icon.hasClass(emptyIcon)) {
+			icon.removeClass(emptyIcon);
+			icon.addClass(fullIcon);
+		}
+		else {
+			icon.addClass(emptyIcon);
+			icon.removeClass(fullIcon);
+		}
+	});
 });
