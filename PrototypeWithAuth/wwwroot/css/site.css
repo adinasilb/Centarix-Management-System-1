@@ -2304,14 +2304,17 @@ span.caret {
 
 .resource-title {
     height: 5.25rem;
+    overflow: hidden;
 }
 
-.resource-tags{
+.resource-tags {
     height: 5.25rem;
+    overflow: hidden;
 }
 
 .resource-summary {
     height: 10.5rem;
+    overflow: hidden;
 }
 
 .small-type-fieldset {
