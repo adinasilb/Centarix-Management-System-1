@@ -466,6 +466,7 @@ $(function () {
 	});
 
 	$("#unit-type-select").on("change", function () {
+		alert('in id function');
 		$.fn.ChangeSubUnitDropdown();
 		$.fn.ChangeSubSubUnitDropdown();
 	});
@@ -595,5 +596,23 @@ $(function () {
 	$("#unit-price-shekel").change(function () {
 		$.fn.CalculatePriceShekels();
 	})
+	$('.unit-type-select').change(function () {
+		$.fn.UpdatePricePerUnitLabel('.price-per-unit-label', $('#select-options-unitTypeID li.active.selected span').text());
+	})
+	$('body').on('change', '.subunit-type-select', function (e) {
+		//alert('got here')
+		$.fn.UpdatePricePerUnitLabel('.price-per-subunit-label', $('#select-options-subUnitTypeID li.active.selected span').text())
+	})
+	$('body').on('change', '.sub-subunit-type-select', function (e) {
+		//alert('got here')
+		$.fn.UpdatePricePerUnitLabel('.price-per-sub-subunit-label', $('#select-options-subSubUnitTypeID li.active.selected span').text())
+	})
+	$.fn.UpdatePricePerUnitLabel = function (className, unitName) {
+		if (unitName != "") {
+			var newLabel = 'Price Per ' + unitName;
+			console.log(newLabel);
+			$(className).html(newLabel);
+		}
+    }
 });
 
