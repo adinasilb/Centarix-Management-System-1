@@ -178,9 +178,11 @@
                     }
                     else if ((eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null))
                     {
-                        <button type="button" class=" custom-button-table-font table-button @pageColor-color @disabled  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>
+                        <button type="button" class=" custom-button-table-font table-button @pageColor-color @disabled  open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
+                            Update Hours
+                        </button>
                     }
-                    else if ((eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2)))
+                    else if ((eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2 || eh.EmployeeHours.OffDayTypeID == 4)))
                     {
                         <a href="" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours @pageColor-font-color @disabled" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</a>
                         @*<button type="button" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>*@
@@ -222,6 +224,12 @@
                         }
                     }
                 </div>
+                <div class="table-icon-div pt-2">
+                <a class="@disabled btn p-0 m-0 no-box-shadow load-delete-hour-modal" data-toggle="tooltip" data-placement="top"
+                   title="More" value="@eh.EmployeeHours.EmployeeHoursID">
+                    <i style="font-size:2rem; color:black" class="icon-delete-24px hover-bold"></i>
+                </a>
+            </div>
 
             </div>
 
@@ -242,7 +250,7 @@
             <div class="col-2">
                 Work From Home
             </div>
-            <div class="col-2  ">
+            <div class="col-2">
                 Total Hours
             </div>
         </div>
@@ -276,6 +284,7 @@
                 }
                 @totalHours:@sum.ToString("mm")@totalInMonthString
             </div>
+            
         </div>
     </div>
 </div>

@@ -16,7 +16,7 @@
         <tbody>
             @for (int i = 0; i < Model.PagedList.Count; i++)
             {
-                <tr class="text-center ">
+                <tr class="text-center one-row">
                     @*<td width="7%">
                         <div class="form-check order-inv-form">
                             <input type="checkbox" class="form-check-input filled-in" id="@Model.PagedList[itemNum].RequestID">
@@ -26,7 +26,7 @@
                     @foreach (var col in Model.PagedList[i].Columns)
                     {
                         <td width="@col.Width%" class="@(col.Width==0 ? "p-0" :"")">
-                            @if (col.Image != null)
+                            @if (col.Image != "")
                             {
                                 <img src="@col.Image" alt="Image" width="75" class="category-image" />
                             }
@@ -36,14 +36,52 @@
 
                                     @foreach (var icon in col.Icons)
                                     {
-                                        <div class="table-icon-div">
-
-                                            <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
-                                               title="@icon.TooltipTitle" value="@col.AjaxID">
-                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
-                                            </a>
-
-                                        </div>
+                                        //if (icon. !col.Favorite)
+                                        if (icon.IconPopovers?.Count >= 1)
+                                        {
+                                            <div class="table-icon-div">
+                                                <ul class="list-unstyled p-0 m-0">
+                                                    <li>
+                                                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@(col.AjaxID + "more")">
+                                                            <i class="@icon.IconClass hover-bold px-1" style="font-size:2rem;">
+                                                            </i>
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <div style="display:none;" id="@(col.AjaxID + "more")">
+                                                            @foreach (var iconpopover in icon.IconPopovers)
+                                                            {
+                                                                <div class="row px-3 icon-more-popover accounting-popover">
+                                                                    @*<a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
+                                                                           asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
+                                                                            <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
+                                                                            <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                                        </a>*@
+                                                                    <a class="btn-link text no-hover @iconpopover.AjaxCall" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation"
+                                                                       data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description">
+                                                                        <i class="@iconpopover.Icon @iconpopover.AjaxCall" style="@iconpopover.Color"></i>
+                                                                        <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                                    </a>
+                                                                </div>
+                                                            }
+                                                            @*<a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                                                   title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                                    <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                                                </a>*@
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="table-icon-div">
+                                                <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                                   title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                    <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                                </a>
+                                            </div>
+                                        }
                                     }
                                 </div>
                             }
@@ -58,7 +96,7 @@
                                     if (col.AjaxLink != null)
                                     {
                                         <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID" data-target="item" href="item">
-                                            <p class="m-0">@col.Value[val]</p>
+                                            <p class="m-0 text-center">@col.Value[val]</p>
                                         </button>
                                     }
                                     else
@@ -102,3 +140,9 @@
 {
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
 }
+
+@*<script>
+    $(".share-request").on('click', function (e) {
+        alert("hi");
+    });
+</script>*@

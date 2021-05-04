@@ -308,7 +308,8 @@ $(function () {
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch);
+		var parentFolder = $(".active-document-modal").attr("parentfolder");
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
 		return true;
 	});
 
@@ -682,6 +683,7 @@ $(function () {
 		}
 
 	});
+
 
 	$.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
 		var tdate = new Date();
@@ -1099,6 +1101,7 @@ $(function () {
 		e.preventDefault();
 		var pageType;
 		var val = $(this).attr("value");
+		console.log(val);
 		if (val != '') {
 			var date = new Date(val).toISOString();
 			console.log(date)
@@ -1427,6 +1430,10 @@ $(function () {
 			url = "/Requests/EditModalView";
 			section = "Requests";
 		}
+		else if ($(this).hasClass('locations')) {
+			url = "/Requests/ReceivedModalVisual";
+			section = "Requests";
+        }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
 			url = "/Requests/EditModalView";
 			section = "LabManagement";
@@ -1454,8 +1461,16 @@ $(function () {
 
 		}
 		else if (type == 'details') {
-			enableMarkReadonly($(this));
-			$(".proprietryHidenCategory").attr("disabled", false);
+			if ($(this).hasClass('locations')) {
+				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
+				$('#location .mark-readonly').removeClass("disabled")
+				$('.edit-mode-switch-description').text("Edit Mode On");
+				$('.turn-edit-on-off').attr('name', 'edit');
+			}
+			else {
+				enableMarkReadonly($(this));
+				$(".proprietryHidenCategory").attr("disabled", false);
+			}
 		}
 		//}
 	});
@@ -1524,7 +1539,7 @@ $(function () {
 	
 
 	$("#home-btn").click(function () {
-			$('[data-toggle="popover"]').popover('dispose');
+			$('[data-toggle="tooltip"]').popover('dispose');
 			$("#home-btn").popover({
 				sanitize: false,
 				placement: 'bottom',
@@ -1587,6 +1602,13 @@ $(function () {
 			}
 		});
 	})
+
+	$('.load-delete-hour-modal').click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		$itemurl = "/Timekeeper/DeleteHourModal/?id=" + $(this).attr('value') + "&sectionType=" + $('#masterSectionType').val();
+		$.fn.CallPageRequest($itemurl, "delete");
+    })
 
 });
 

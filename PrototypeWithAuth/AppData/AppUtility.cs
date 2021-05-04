@@ -16,8 +16,10 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+//using System.Web.Script.Serialization;
 
 namespace PrototypeWithAuth.AppData
 {
@@ -34,19 +36,20 @@ namespace PrototypeWithAuth.AppData
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
         public enum PageTypeEnum
         {
-            None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary,
+            None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, RequestFavorite,
             AccountingNotifications, AccountingGeneral, AccountingExpenses, AccountingSuppliers, AccountingPayments,
             LabManagementSuppliers, LabManagementLocations, LabManagementEquipment, LabManagementQuotes, LabManagementSearch,
             TimeKeeperReport, TimekeeperSummary,
             UsersUser, UsersWorkers,
             OperationsRequest, OperationsInventory, OperationsSearch,
             ExpensesSummary, ExpensesStatistics, ExpensesCost, ExpensesWorkers,
+            ProtocolsWorkflow, ProtocolsProtocols, ProtocolsCreate, ProtocolsReports, ProtocolsResources, ProtocolsSearch, ProtocolsTask
 
         }
         public enum SidebarEnum
         {
             None, Type, Vendors, Owner, Search, General, AllSuppliers, NewSupplier, Orders,
-            Quotes, List, Calibrate, Location, Cart, Notifications,
+            Quotes, List, Calibrate, Location, Cart, Favorites, Notifications,
             ReportHours, SummaryHours, ReportDaysOff, SummaryDaysOff, Documents, CompanyAbsences,
             PieCharts, Tables, Graphs, Project, Item, Worker,
             Category, Details, Hours, Salary,
@@ -60,7 +63,7 @@ namespace PrototypeWithAuth.AppData
             StandingOrders,
             [Display(Name = "No Invoice")]
             NoInvoice,
-            [Display(Name = "Didnt Arrive")]
+            [Display(Name = "Didn't Arrive")]
             DidntArrive,
             [Display(Name = "Partial Delivery")]
             PartialDelivery,
@@ -68,14 +71,18 @@ namespace PrototypeWithAuth.AppData
             ForClarification,
             Add, AwaitingApproval,
             [Display(Name = "Specify Payment")]
-            SpecifyPayment
+            SpecifyPayment,
+            CurrentProtocols, Projects, SharedProjects, Calendar, MyProtocols, ResearchProtocol, KitProtocol,
+            SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
+            Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests
         }
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum RequestFolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
+        public enum FolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
+        public enum ParentFolderName { Protocols, Requests, Materials}
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
@@ -95,10 +102,12 @@ namespace PrototypeWithAuth.AppData
         public enum PaymentsEnum { ToPay, PayNow }
         public enum SuppliersEnum { All, NewSupplier, Search }
         public enum CategoryTypeEnum { Operations, Lab }
-        public enum ParentCategoryEnum { Plastics, ReagentsAndChemicals, Proprietary, Reusables, Equipment, Operation, Cells }
+        public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay }
+        public enum PopoverDescription { More, Share, Delete }
+        public enum PopoverEnum { None }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -140,6 +149,53 @@ namespace PrototypeWithAuth.AppData
             return ReturnList;
         }
 
+        public static ResourceAPIViewModel GetResourceArticleFromNCBIPubMed(string PubMedID)
+        {
+            var clienturl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=" + PubMedID + "&retmode=json";
+            //add in &tool=my_tool&email=my_email@example.com after
+            var client = new RestClient(clienturl);
+            var request = new RestRequest(Method.GET);
+            ResourceAPIViewModel resourceVM = new ResourceAPIViewModel() { Resource = new Resource() };
+            IRestResponse response = client.Execute(request);
+            try
+            {
+                dynamic decodedResponse = JsonConvert.DeserializeObject(response.Content);
+
+
+                var innerJson = decodedResponse.result[PubMedID];
+                var error = GetStringFromTemp(innerJson["error"]);
+                if (string.IsNullOrEmpty(error))
+                {
+                    resourceVM.Resource.Title = GetStringFromTemp(innerJson["title"]);
+                    resourceVM.Resource.FirstAuthor = GetStringFromTemp(innerJson["sortfirstauthor"]);
+                    resourceVM.Resource.LastAuthor = GetStringFromTemp(innerJson["lastauthor"]);
+                    resourceVM.Resource.Journal = GetStringFromTemp(innerJson["fulljournalname"]);
+                    //The URL is not gotten from the api- we are creating it ourselves
+                    resourceVM.Resource.Url = "https://pubmed.ncbi.nlm.nih.gov/" + PubMedID;
+                    resourceVM.Success = true;
+                }
+                else
+                {
+                    resourceVM.Success = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                resourceVM.Success = false;
+            }
+            return resourceVM;
+        }
+
+        private static string GetStringFromTemp(dynamic originalString)
+        {
+            var returnstring = "";
+            if (originalString != null)
+            {
+                returnstring = originalString.ToString().Replace("{", "").Replace("{", "");
+            }
+            return returnstring;
+        }
+
         public static double ExchangeRateIfNull = 3.5;
         public static int YearStartedTimeKeeper = 2021;
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
@@ -149,7 +205,7 @@ namespace PrototypeWithAuth.AppData
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             decimal rate = 0.0m;
-            try
+            try //try is b/c sometimes the api is down
             {
                 dynamic tmp = JsonConvert.DeserializeObject(response.Content);
                 String stringRate = (string)tmp.quotes.USDILS;
@@ -282,7 +338,8 @@ namespace PrototypeWithAuth.AppData
         public static List<AccountingPopoverLink> GetPaymentsPopoverLinks(AppUtility.SidebarEnum CurrentEnum)
         {
             List<AccountingPopoverLink> list = new List<AccountingPopoverLink>();
-            List<PaymentsPopoverEnum> enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
+            //List<PaymentsPopoverEnum> enums = Enum.GetValues(typeof(PaymentsPopoverEnum)).Cast<PaymentsPopoverEnum>().ToList();
+            List<PaymentsPopoverEnum> enums = new List<PaymentsPopoverEnum> { PaymentsPopoverEnum.PayLater };
             if (!CurrentEnum.Equals(AppUtility.SidebarEnum.StandingOrders.ToString()))
             {
                 foreach (PaymentsPopoverEnum e in enums)
@@ -307,30 +364,30 @@ namespace PrototypeWithAuth.AppData
                             //    accountingPopoverLink.Color = "#00CA72";
                             //    accountingPopoverLink.Icon = "icon-add_circle_outline-24px1";
                             //    break;
-                            case PaymentsPopoverEnum.MonthlyPayment:
-                                accountingPopoverLink.Action = "ChangePaymentStatus";
-                                accountingPopoverLink.Controller = "Requests";
-                                accountingPopoverLink.Color = "#90C939";
-                                accountingPopoverLink.Icon = "icon-monetization_on-24px";
-                                break;
-                            case PaymentsPopoverEnum.PayNow:
-                                accountingPopoverLink.Action = "ChangePaymentStatus";
-                                accountingPopoverLink.Controller = "Requests";
-                                accountingPopoverLink.Color = "#D5A522";
-                                accountingPopoverLink.Icon = "icon-credit_card-24px";
-                                break;
+                            //case PaymentsPopoverEnum.MonthlyPayment:
+                            //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                            //    accountingPopoverLink.Controller = "Requests";
+                            //    accountingPopoverLink.Color = "#90C939";
+                            //    accountingPopoverLink.Icon = "icon-monetization_on-24px";
+                            //    break;
+                            //case PaymentsPopoverEnum.PayNow:
+                            //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                            //    accountingPopoverLink.Controller = "Requests";
+                            //    accountingPopoverLink.Color = "#D5A522";
+                            //    accountingPopoverLink.Icon = "icon-credit_card-24px";
+                            //    break;
                             case PaymentsPopoverEnum.PayLater:
                                 accountingPopoverLink.Action = "ChangePaymentStatus";
                                 accountingPopoverLink.Controller = "Requests";
                                 accountingPopoverLink.Color = "#5F79E2";
                                 accountingPopoverLink.Icon = "icon-centarix-icons-19";
                                 break;
-                            case PaymentsPopoverEnum.Installments:
-                                accountingPopoverLink.Action = "ChangePaymentStatus";
-                                accountingPopoverLink.Controller = "Requests";
-                                accountingPopoverLink.Color = "#7D9BAA";
-                                accountingPopoverLink.Icon = "icon-centarix-icons-20";
-                                break;
+                            //case PaymentsPopoverEnum.Installments:
+                            //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                            //    accountingPopoverLink.Controller = "Requests";
+                            //    accountingPopoverLink.Color = "#7D9BAA";
+                            //    accountingPopoverLink.Icon = "icon-centarix-icons-20";
+                            //    break;
                                 //case PaymentsPopoverEnum.Clarification:
                                 //    accountingPopoverLink.Action = "ChangePaymentStatus";
                                 //    accountingPopoverLink.Controller = "Requests";
@@ -386,6 +443,21 @@ namespace PrototypeWithAuth.AppData
             return priceColumn;
         }
 
+        //public static List<T> CloneList<T>(T list)
+        //{
+        //    return new List<T>();
+        //}
+
+        public static List<T> DeepClone<T>(List<T> obj)
+        {
+            var newCopy = new List<T>();
+            foreach (var x in obj)
+            {
+                newCopy.Add(x);
+            }
+            return newCopy;
+        }
+
         public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)
         {
             List<String> amountColumn = new List<String>();
@@ -407,7 +479,7 @@ namespace PrototypeWithAuth.AppData
         }
         public static string GetNote(SidebarEnum sidebarEnum, Request request)
         {
-           if(sidebarEnum == SidebarEnum.PartialDelivery)
+            if (sidebarEnum == SidebarEnum.PartialDelivery)
             {
                 return request.NoteForPartialDelivery;
             }
@@ -417,39 +489,39 @@ namespace PrototypeWithAuth.AppData
             }
         }
 
-        public static string GetDocumentIcon(RequestFolderNamesEnum folderName)
+        public static string GetDocumentIcon(FolderNamesEnum folderName)
         {
             var iconClass = "";
             switch (folderName)
             {
-                case RequestFolderNamesEnum.Quotes:
+                case FolderNamesEnum.Quotes:
                     iconClass = "icon-centarix-icons-03";
                     break;
-                case RequestFolderNamesEnum.Orders:
+                case FolderNamesEnum.Orders:
                     iconClass = "icon-chrome_reader_mode-24px";
                     break;
-                case RequestFolderNamesEnum.Invoices:
+                case FolderNamesEnum.Invoices:
                     iconClass = "icon-book-24px";
                     break;
-                case RequestFolderNamesEnum.Shipments:
+                case FolderNamesEnum.Shipments:
                     iconClass = "icon-local_shipping-24px";
                     break;
-                case RequestFolderNamesEnum.Info:
+                case FolderNamesEnum.Info:
                     iconClass = "icon-info-24px-2";
                     break;
-                case RequestFolderNamesEnum.Pictures:
+                case FolderNamesEnum.Pictures:
                     iconClass = "icon-camera_alt-24px";
                     break;
-                case RequestFolderNamesEnum.Returns:
+                case FolderNamesEnum.Returns:
                     iconClass = "icon-remove_shopping_cart-24px";
                     break;
-                case RequestFolderNamesEnum.Credits:
+                case FolderNamesEnum.Credits:
                     iconClass = "icon-insert_drive_file-24px-1";
                     break;
-                case RequestFolderNamesEnum.S:
+                case FolderNamesEnum.S:
                     iconClass = "icon-chrome_reader_mode-24px";
                     break;
-                case RequestFolderNamesEnum.Map:
+                case FolderNamesEnum.Map:
                     iconClass = "icon-chrome_reader_mode-24px";
                     break;
             }
@@ -464,31 +536,24 @@ namespace PrototypeWithAuth.AppData
             }
             return centarixID;
         }
-        public static double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs, double vacationSickCount)
+        public static double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs)
         {
-            DateTime nextDay = firstOfTheMonth;
             DateTime endOfTheMonth = firstOfTheMonth.AddMonths(1);
-            int totalDays = 0;
-            int companyDaysOffCount = companyDayOffs.Where(d => d.Date.Year == firstOfTheMonth.Year && firstOfTheMonth.Month == d.Date.Month).Count();
-            while (nextDay.Date < endOfTheMonth)
-            {
-                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
-                {
-                    totalDays += 1;
-                }
-                nextDay = nextDay.AddDays(1);
-            }
-
-            return totalDays - vacationSickCount - companyDaysOffCount;
+            return GetTotalWorkingDaysByInterval(firstOfTheMonth, companyDayOffs, endOfTheMonth);
         }
 
-        public static int GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, IQueryable<CompanyDayOff> companyDayOffs, int vacationSickCount)
+        public static double GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, IQueryable<CompanyDayOff> companyDayOffs)
         {
-            DateTime nextDay = firstOfTheYear;
-            DateTime endofTheYear = firstOfTheYear.AddYears(1);
+            DateTime endOfTheYear = firstOfTheYear.AddYears(1);
+            return GetTotalWorkingDaysByInterval(firstOfTheYear, companyDayOffs, endOfTheYear);
+        }
+
+        public static double GetTotalWorkingDaysByInterval(DateTime startDate, IQueryable<CompanyDayOff> companyDayOffs, DateTime endDate)
+        {
+            int companyDaysOffCount = companyDayOffs.Where(d => d.Date.Date >= startDate.Date && d.Date.Date < endDate.Date).Count();
+            DateTime nextDay = startDate;
             int totalDays = 0;
-            int companyDaysOffCount = companyDayOffs.Where(d => d.Date.Year == firstOfTheYear.Year).Count();
-            while (nextDay.Date < endofTheYear)
+            while (nextDay.Date < endDate)
             {
                 if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
                 {
@@ -496,16 +561,15 @@ namespace PrototypeWithAuth.AppData
                 }
                 nextDay = nextDay.AddDays(1);
             }
-
-            return totalDays - vacationSickCount - companyDaysOffCount;
+            return totalDays - companyDaysOffCount;
         }
 
         public static List<String> GetChartColors()
         {
             return new List<string> { "#00BCD4", "#3F51B5", "#009688", "#607D8B",  "#FF9800", "#F44336", "#795548", "#673AB7", "#9E9E9E", "#4CAF50", "#2196F3",
- "#FFCDD2" , "#E91E63", "#9C27B0",
-           "#03A9F4", "#8BC34A", "#CDDC39",
-                "#FF5722",     "#FFEB3B", "#FFC107",};
+                "#FFCDD2" , "#E91E63", "#9C27B0",
+                "#03A9F4", "#8BC34A", "#CDDC39",
+                "#FF5722", "#FFEB3B", "#FFC107",};
         }
         public static string GetChartUnderZeroColor()
         {
@@ -569,7 +633,7 @@ namespace PrototypeWithAuth.AppData
             }
 
             DirectoryInfo[] dirs = dir.GetDirectories();
-            
+
             // If the destination directory doesn't exist, create it.       
             Directory.CreateDirectory(destDirName);
 
@@ -589,6 +653,28 @@ namespace PrototypeWithAuth.AppData
                     DirectoryCopy(subdir.FullName, tempPath, copySubDirs);
                 }
             }
+        }
+
+        public static Payment GetCurrentInstallment(List<Payment> usedPayments, Request request, out Payment previousPayment)
+        {
+            var requestInstallments = request.Payments.Where(p => !p.IsPaid).OrderBy(p => p.PaymentDate).ToList();
+            var foundInstallment = false;
+            var currentInstallment = new Payment();
+            foreach (var installment in requestInstallments)
+            {
+                if (!usedPayments.Contains(installment))
+                {
+                    currentInstallment = installment;
+                    usedPayments.Add(installment);
+                    foundInstallment = true;
+                }
+                if (foundInstallment)
+                {
+                    break;
+                }
+            }
+            previousPayment = currentInstallment;
+            return currentInstallment;
         }
     }
 }

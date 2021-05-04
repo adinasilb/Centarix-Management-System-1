@@ -1,0 +1,34 @@
+﻿@model PrototypeWithAuth.ViewModels.ProtocolsIndexViewModel
+@using PrototypeWithAuth.AppData
+<input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
+@if (Model.PagedList.Count() > 0)
+{
+
+    <table class="table table-headerspaced table-noheaderlines table-hover ">
+        <thead>
+            <tr class="text-center">
+                @foreach (var col in Model.PagedList[0].Columns)
+                {
+
+                    <th width="@col.Width%">                 
+                        <label>@col.Title</label>
+                    </th>
+
+                }
+            </tr>
+        </thead>
+    </table>
+    <div class="_IndexTableData">
+        @{
+            await Html.RenderPartialAsync("_IndexTableData", Model);
+        }
+    </div>
+}
+else
+{
+    <div>
+        @{
+            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPagePartial.cshtml", Model);
+        }
+    </div>
+}

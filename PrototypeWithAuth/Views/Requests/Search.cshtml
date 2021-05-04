@@ -13,7 +13,6 @@
     }
     else if (Model.SectionType == AppUtility.MenuItems.Requests)
     {
-
         form = "order-inv-form";
         buttonSubmitClass = "order-inv-background-color";
     }
@@ -175,14 +174,14 @@
                             <div class="row">
                                 <div class="col-6 ">
                                     <div class="form-group">
-                                        <label asp-for="Request.Invoice.InvoiceNumber" class="control-label"></label>
-                                        <input asp-for="Request.Invoice.InvoiceNumber" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="Request.Payments[0].Invoice.InvoiceNumber" class="control-label"></label>
+                                        <input asp-for="Request.Payments[0].Invoice.InvoiceNumber" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label asp-for="Request.Invoice.InvoiceDate" class="control-label"></label>
-                                        <input asp-for="Request.Invoice.InvoiceDate" class="form-control-plaintext border-bottom" />
+                                        <label asp-for="Request.Payments[0].Invoice.InvoiceDate" class="control-label"></label>
+                                        <input asp-for="Request.Payments[0].Invoice.InvoiceDate" class="form-control-plaintext border-bottom" />
                                     </div>
                                 </div>
                             </div>
@@ -204,7 +203,7 @@
                                     //adding the amount of months of the warranty to the invoice date
                                     var endWarrantyDate = Model.Request.ParentRequest.InvoiceDate.AddMonths(Model.Request.Warranty);
                                 }*@
-                                    <input value="@Model.Request.Invoice.InvoiceDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
+                                    <input value="@Model.Request.Payments[0].Invoice.InvoiceDate.AddMonths(Model.Request.Warranty??0)" name="WarrantyDate" class="form-control-plaintext border-bottom" disabled="disabled" />
                                 </div>
                             </div>
 
@@ -219,7 +218,7 @@
                                     @{
                                         //get this just to return the date (not the time)
                                         //adding the amount of months of the expected supply days to the invoice date
-                                        var endSupplyDate = Model.Request.Invoice.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0);
+                                        var endSupplyDate = Model.Request.Payments[0].Invoice.InvoiceDate.AddDays(Model.Request.ExpectedSupplyDays ?? 0);
                                     }
                                     <div class="form-group">
                                         <label class="control-label">Expected supply date</label>

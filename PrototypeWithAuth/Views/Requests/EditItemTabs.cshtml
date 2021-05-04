@@ -1,0 +1,54 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+@using PrototypeWithAuth.AppData
+@{var tabClass = "";
+    switch (Model.SectionType)
+    {
+        case AppUtility.MenuItems.Requests:
+            tabClass = "nav-link";
+            break;
+        case AppUtility.MenuItems.Operations:
+
+            break;
+        case AppUtility.MenuItems.Accounting:
+            tabClass = "supplier-nav-link";
+            break;
+        case AppUtility.MenuItems.LabManagement:
+            tabClass = "lab-man-nav-link";
+            break;
+        case AppUtility.MenuItems.Protocols:
+            tabClass = "protocol-nav-link";
+            break;
+    }
+    var requestCategoryType = Model.Requests[0].Product?.ProductSubcategory.ParentCategory.CategoryTypeID;
+    var summary = "";
+
+    if (Model.ModalType != AppUtility.RequestModalType.Summary)
+    {
+        summary = "hidden";
+    }
+}
+
+<div class="row">
+    <div class="col-12 px-0">
+        <div class="container-fluid div-tabs  text-center pl-0">
+            <ul class="nav nav-tabs container-fluid pr-0 border-bottom-0 pl-0 nav-tabs-icons">
+                <li class="nav-item icon"><a data-toggle="tab" href="#item" class="nav-link @tabClass current-tab next-tab"><i class="icon-centarix-icons-05" style="font-size: 2rem;"></i><br />Item</a></li>
+                @if (Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 7)
+                {
+                    <li class="nav-item icon"><a data-toggle="tab" href="#location" class="nav-link @tabClass next-tab"><i class="icon-place-24px" style="font-size: 2rem;"></i><br />Location</a></li>
+                }
+                @if (Model.Requests[0].RequestStatusID != 7 && Model.SectionType != AppUtility.MenuItems.Operations && requestCategoryType != 2)
+                {
+                    <li class="nav-item icon"><a data-toggle="tab" href="#price" class="nav-link @tabClass next-tab"><i class="icon-monetization_on-24px" style="font-size: 2rem;"></i><br />Price</a></li>
+                }
+                <li class="nav-item icon"><a data-toggle="tab" href="#documents" class="nav-link @tabClass documents-tab next-tab"><i class="icon-attach_file-24px" style="font-size: 2rem;"></i><br />Documents</a></li>
+                <li class="nav-item icon"><a data-toggle="tab" href="#comments" class="nav-link @tabClass next-tab"> <i style="font-size:2rem;" class="icon-centarix-icons-06"></i> <br />Comments</a></li>
+                @if (Model.Requests[0].RequestStatusID != 7)
+                {
+                    <li class="nav-item icon @summary "><a data-toggle="tab" href="#history" class="nav-link @tabClass"><i class="icon-history-24px" style="font-size: 2rem;"></i><br />History</a></li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</div>

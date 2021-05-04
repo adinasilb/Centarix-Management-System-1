@@ -1,0 +1,14 @@
+﻿@model PrototypeWithAuth.ViewModels.ProtocolsIndexViewModel
+@using PrototypeWithAuth.AppData;
+@using PrototypeWithAuth.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "List";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+
+<div class="_IndexTable">
+    @{ await Html.RenderPartialAsync("_IndexTable", Model);}
+</div>

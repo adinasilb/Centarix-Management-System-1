@@ -1,5 +1,8 @@
 ﻿$('.reorderForm').validate({
 	rules: {
+		 normalizer: function( value ) {
+    return $.trim( value );
+  },
 
 		"Request.Unit": {
 			required: true,

@@ -8,6 +8,7 @@ namespace PrototypeWithAuth.Models
 {
     public class LocationInstance
     {
+        //WHEN QUERY - NEED TO SPECIFY OfType<LocationInstance> TO NOT HAVE TEMPORARY LOCATIONS
         [Key]
         public int LocationInstanceID { get; set; }
         public int LocationTypeID { get; set; }
@@ -22,17 +23,14 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Location")]
         public string LocationInstanceName { get; set; }
         public string LocationInstanceAbbrev { get; set; }
-        public string Place { get; set; }
         public bool IsEmptyShelf { get; set; }
         public bool ContainsItems { get; set; }
         public bool IsFull { get; set; }
-        [Display(Name = "No")]
-        public int CompanyLocationNo { get; set; }
         public int? LabPartID { get; set; }
         public LabPart LabPart { get; set; }
         public int LocationNumber { get; set; }
-        public int? LocationRoomTypeID { get; set; }
-        public LocationRoomType LocationRoomType { get; set; }
+        public int? LocationRoomInstanceID { get; set; }
+        public LocationRoomInstance LocationRoomInstance { get; set; }
 
     }
 }

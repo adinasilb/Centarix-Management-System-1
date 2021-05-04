@@ -7,8 +7,8 @@
 
 <div class="modal modal-view fader on-form-modal accounting-form" id="myModal" data-backdrop="false">
     <div class="add-invoice-modal modal-dialog-centered mx-auto">
-        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('payments-invoice')">
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" id="myForm" class="modal-padding addInvoiceForm">
@@ -18,7 +18,7 @@
                     // var currency = Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString() ? "&#x20aa;" : "&#36;";
                 }
                 <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
-                <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate"/>
+                <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate" />
                 <div class="modal-body  m-0 p-0 ">
 
                     <div class="container-fluid p-0 m-0">
@@ -101,9 +101,9 @@
                                                 else
                                                 {
                                                     <span class="input-group-text border-bottom pr-2">&#36;</span>
-                                                    <input class="form-control-plaintext border-bottom cost-validation" id="price-in-dollars"
+                                                    <input class="form-control-plaintext border-bottom cost-validation price-in-dollars" index="@x"
                                                            value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[x].Cost ?? 0) / Model.Requests[0].ExchangeRate, 2))" />
-                                                    <input type="hidden" asp-for="Requests[x].Cost" class="cost" />
+                                                    <input type="hidden" asp-for="Requests[x].Cost" class="cost @x" />
                                                 }
                                             </div>
                                         </td>
@@ -126,11 +126,11 @@
                                 <input type="file" asp-for="InvoiceImage" class="form-control-file  ta pt-1">
                                 <span asp-validation-for="InvoiceImage" class="text-danger"></span>
                                 @*<div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
-                        <button class="accounting-background-color custom-button-font custom-button open-invoice-doc-modal" data-string="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()"
-                                data-ids="@Model.Request.RequestID"   ---> Get all the ids when in javascript
-                                id="@AppUtility.RequestFolderNamesEnum.Invoices.ToString()" data-val="@false">
-                            Select File
-                        </button>*@
+                            <button class="accounting-background-color custom-button-font custom-button open-invoice-doc-modal" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
+                                    data-ids="@Model.Request.RequestID"   ---> Get all the ids when in javascript
+                                    id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@false">
+                                Select File
+                            </button>*@
                             </div>
                             <div class="col-2 offset-5">
                                 <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" value="Save" />
@@ -146,8 +146,10 @@
     </div>
 </div>
 <script>
-    $('#price-in-dollars').change(function (e) {
+    $('.price-in-dollars').change(function (e) {
         var cost = $(this).val() * $('.exchange-rate').val();
-        $('.cost').val(cost)
+        var index = $(this).attr("index");
+        console.log(index)
+        $('.cost.'+index).val(cost)
     });
 </script>

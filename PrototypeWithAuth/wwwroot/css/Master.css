@@ -31,7 +31,7 @@
     --expenses-25: rgb(0, 188, 212, .25);
     --income-25: rgb(76, 175, 80, .25);
     --acc-color: #A26FF0;
-    --protocol-color: #009688;
+    --protocols-color: #009688;
     --expense-color: #00BCD4;
     --income-color: #4CAF50;
     --timekeeper-color: #FF9800;
@@ -45,6 +45,7 @@
     --operations-filter: brightness(0) saturate(100%) invert(25%) sepia(82%) saturate(1564%) hue-rotate(217deg) brightness(90%) contrast(84%);
     --timekeeper-filter: brightness(0) saturate(100%) invert(72%) sepia(32%) saturate(7497%) hue-rotate(1deg) brightness(106%) contrast(104%);
     --expense-filter: brightness(0) saturate(100%) invert(45%) sepia(67%) saturate(926%) hue-rotate(146deg) brightness(108%) contrast(101%);
+    --protocol-filter: brightness(0) invert(39%) sepia(20%) saturate(3905%) hue-rotate(142deg) brightness(98%) contrast(101%);
     --notifications-orderlate-color: #DB2127;
     --notifications-ordered-color: #5F79E2;
     --notifications-approved-color: #00CA72;
@@ -62,6 +63,8 @@
     --tiny-label-font-size: 0.469375rem;
     --select-border-radius: .25rem;
     --timekeeper-alt-color: #009688;
+    --disabled-filter: invert(69%) sepia(13%) saturate(0%) hue-rotate(166deg) brightness(100%) contrast(94%);
+    --light-gray: #E5E5E5;
 }
 
 .success-color {
@@ -72,8 +75,15 @@
     font-size: var(--small-text-font-size);
 }
 
-.text-danger-centarix, .on-form-modal label.error,  .centarix-error-style label.error {
+.text-danger-centarix, .on-form-modal label.error, .centarix-error-style label.error {
     color: var(--danger-color);
+}
+
+.light-gray-color {
+    color: var(--light-gray);
+}
+.light-gray-background-color {
+    background-color: var(--light-gray);
 }
 
 .danger-color {
@@ -131,8 +141,13 @@
 .users-font-color {
     color: var(--user-color);
 }
+
 .users-font-alt-color {
     color: var(--user-color);
+}
+
+.disabled-color1{
+    color: var(--disabled-color);
 }
 
 .disabled-color {
@@ -140,7 +155,11 @@
 }
 
 .disabled-filter {
-    filter: invert(69%) sepia(13%) saturate(0%) hue-rotate(166deg) brightness(100%) contrast(94%);
+    filter: var(--disabled-filter);
+}
+
+.disabled-background-color{
+    background-color: var(--disabled-color);
 }
 
 .order-inv-color {
@@ -170,9 +189,11 @@
 .lab-man-filter {
     filter: var(--lab-man-filter) !important;
 }
+
 .lab-man-color {
     color: var(--lab-man-color) !important;
 }
+
 .lab-man-background-color {
     background-color: var(--lab-man-color) !important;
 }
@@ -180,8 +201,9 @@
 .oper-background-color {
     background-color: var(--operations-color) !important;
 }
+
 .oper-color {
-   color: var(--operations-color) !important;
+    color: var(--operations-color) !important;
 }
 
 .expenses-color {
@@ -198,6 +220,18 @@
 
 .expenses-background-color {
     background-color: var(--expense-color) !important;
+}
+
+.protocols-color {
+    color: var(--protocol-color) !important;
+}
+
+.protocols-filter {
+    filter: var(--protocol-filter) !important;
+}
+
+.protocols-background-color {
+    background-color: var(--protocol-color) !important;
 }
 
 
@@ -239,7 +273,8 @@ a.yearly-monthly, input[type=button].yearly-monthly {
 .tiny-label-font-size {
     font-size: var(--tiny-label-font-size);
 }
-.visual-box{
+
+.visual-box {
     border: 1px solid var(--black-87);
 }
 
@@ -394,6 +429,14 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--order-inv-color) !important;
 }
 
+.custom-oper {
+    border: .125rem solid var(--operations-color) !important;
+    background-color: transparent;
+    font-weight: var(--bold-light);
+    font-size: 1.438rem;
+    color: var(--operations-color) !important;
+}
+
 .custom-clear-button-table {
     background-color: transparent;
     font-weight: var(--bold-medium);
@@ -488,6 +531,16 @@ table td, table td .btn, .text, table th {
     border-radius: 1.438rem;
 }
 
+.small-custom-button {
+    height: 2.313rem;
+    width: 6.125rem;
+    padding-right: 1.125rem;
+    padding-left: 1.125rem;
+    border-radius: 1.438rem;
+    border-width: .1rem;
+    text-align: center !important;
+}
+
 .new-modal-body .row,
 .modal-body .row,
 .new-modal-body .comment-row,
@@ -566,7 +619,7 @@ table td, table td .btn, .text, table th {
     width: 197px;
 }
 
-.circular-profile-img{
+.circular-profile-img {
     -webkit-border-radius: 50%;
     object-fit: cover;
     border: 1px solid rgba(0, 0, 0, .54) !important;
@@ -636,7 +689,7 @@ table td, table td .btn, .text, table th {
     }
 
         .second-graduated-div tr:first-child,
-        .second-graduated-div tr:first-child td{
+        .second-graduated-div tr:first-child td {
             border-top: 0 !important;
         }
 
@@ -659,16 +712,20 @@ table td, table td .btn, .text, table th {
 .accounting-form .document-border:hover, .accounting-form .document-border.hasFile {
     border: 1px solid var(--acc-color) !important;
 }
-.accounting-form .document-border:hover i{
-    color: var(--acc-color)
-}
+
+    .accounting-form .document-border:hover i {
+        color: var(--acc-color)
+    }
+
 .order-inv-form .document-border:hover i {
     color: var(--order-inv-color)
 }
-.oper-form .document-border:hover i{
+
+.oper-form .document-border:hover i {
     color: var(--operations-color)
 }
-.supplier-form .document-border:hover i{
+
+.supplier-form .document-border:hover i {
     color: var(--lab-man-color)
 }
 
@@ -676,14 +733,56 @@ table td, table td .btn, .text, table th {
     font-size: 22px !important;
 }
 
-.location-parent-name{
+.location-parent-name {
     font-size: 24px !important;
 }
-.location-visual-font{
-    font-size:11.59px !important;
+
+.location-visual-font {
+    font-size: 11.59px !important;
 }
 
 body.modal-open, body.popover-open {
     /* background shouldn't scroll when a modal is open*/
     overflow: hidden !important;
 }
+
+.filter-and-search.orders ::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
+    color: var(--order-inv-color) !important;
+    opacity: 1;
+}
+.filter-and-search.operations ::placeholder { /*works for Chrome, Firefox, Opera, Safari 10.1+*/
+    color: var(--operations-color) !important;
+    opacity: 1;
+}
+
+.filter-and-search.orders ::-ms-input-placeholder { /*works for Edge*/
+    color: var(--order-inv-color) !important;
+}
+
+.filter-and-search.operations ::-ms-input-placeholder { /*works for Edge*/
+    color: var(--operations-color) !important;
+}
+.filter-and-search :focus {
+    outline: none;
+}
+
+span.resources-tags-big {
+    float: left;
+    border: .0125rem solid var(--light-gray);
+    margin-bottom: 5px;
+    padding: 3px 10px;
+    border-radius: 15px;
+    
+    text-align: center;
+}
+
+    span.resources-tags-big:hover, span.resources-tags-big.selected {
+        background-color: var(--protocols-color) !important;
+        color: white;
+        /*filter: var(--disabled-filter);*/
+    }
+
+    span.resources-tags-big.add-padding {
+        padding: 10px 15px;
+        border-radius: 30px;
+    }

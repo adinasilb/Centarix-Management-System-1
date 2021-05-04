@@ -24,10 +24,21 @@
 	});
 
 	$(".open-sublocations-types").on("click", function () {
-		console.log("select location")
-		var id = $(this).attr("id");
-		console.log(id)
-		loadReceivedModalSubLocations(id);
+		$("#LocationTypeID").val($(this).attr("id"))
+		if (!$(".temporary-check").is(":checked")) {
+			console.log("select location")
+			var id = $(this).attr("id");
+			console.log(id)
+			loadReceivedModalSubLocations(id);
+		}
+		else {
+			$("#locationSelected").val(true);
+			$("#myForm").data("validator").settings.ignore = "";
+			var valid = $("#myForm").valid();
+			if (valid) {
+				$('.activeSubmit').removeClass('disabled-submit')
+			}
+        }
 	});
 
 	//AJAX load full partial view for modalview manage locations
@@ -47,15 +58,7 @@
 		});
 	};
 
-
-
-
-
 	//FROM THE RECEIVED MODAL SUBLOCATIONS
-	//$(".SLI-click").on("click", function () {
-	//    alert("sli clicked!");
-	//    SLI($(this));
-	//});
 	$("body").off("click",".SLI-click").on("click",".SLI-click", function (e) {
 		//alert("clicked SLI");
 		console.log("clicked SLI")
@@ -100,16 +103,11 @@
 		console.log(nextSelect)
 		console.log("selected")
 		var locationInstanceParentId = $(el).val();
-		var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
 
 		if (nextSelect != undefined) { //if there is another one
 			$(nextSelect).html('');
 			$(nextSelect).parents('.dropdown-main').find('span:not(.caret)').text('select');
 			FillNextSelect(nextSelect, locationInstanceParentId);
-			//alert("items: " + items);
-			//nextSelect.html(items);
-		
-		
 		}
 			
 		//TWO ---> FILL VISUAL VIEW
@@ -205,6 +203,10 @@
 					emptyText = " (nr)";
 					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
 				}
+				else if (field.locationTypeID == 501)
+				{
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" data-string="' + description + '" >' + field.labPart.labPartName + " " + field.locationNumber + emptyText + '</li>'
+                }
 				else
 				{
 					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
@@ -232,15 +234,16 @@
 	//	//now send a new visual
 	//});
 
-	$(".visual-locations td").on("click", function (e) {
+	$(".visual-locations td").off("click").on("click", function (e) {
+		console.log("clicked")
 		if (!$(this).hasClass("not-clickable")) {
 			
 			if ($(this).has("i").length) {
 				var locationInstanceId = $(this).children('div').first().children("input").first().attr("liid");
 				var lip = $(".liid." + locationInstanceId);
 				console.log("lip val: " + lip.val());
-				$(".complete-order").removeClass("disabled-submit")
-				if (lip.val() == "true") {
+				$(".submit-received").removeClass("disabled-submit")
+				if (lip.val().toLowerCase() == "true") {
 					//console.log("TRUE!");
 					lip.val("false"); //IMPT: sending back the true value to controller to place it here
 
@@ -249,11 +252,13 @@
 					$(this).removeClass('location-selected')
 					var hasLocationSelected = $('.liid[value="true"]').length;
 					if (hasLocationSelected <= 0) {
+						$(".submit-received").addClass("disabled-submit")
 						$('#locationSelected').val('');
 					}
 
 				}
 				else {
+					console.log("empty")
 					$(this).children(".css-checkbox").addClass("first");
 					//console.log("FALSE!");
 					lip.val("true"); //IMPT: sending back the true value to controller to place it here
@@ -294,7 +299,22 @@
 			element.children('div').first().children(".row-1").children("i").removeClass("icon-delete-24px");
 			lip.val("false")			
         }
-    }
+	}
+
+	$(".temporary-check").click(function (e) {
+		var checked = $(this).is(":checked");
+		if (checked) {
+			$(".divSublocations").html("")
+			console.log($("#LocationTypeID").val())
+			if ($("#LocationTypeID").val() != 0)
+			{
+				$("#locationSelected").val(true)
+            }
+		}
+		else {
+			$("#locationSelected").val("")
+		}
+    })
 
 
 });

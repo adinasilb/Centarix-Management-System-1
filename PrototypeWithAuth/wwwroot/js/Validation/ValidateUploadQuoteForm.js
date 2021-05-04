@@ -1,6 +1,8 @@
 ﻿$('.uploadQuoteForm').validate({
 	rules: {
-		
+		 normalizer: function( value ) {
+    return $.trim( value );
+  },
 		"ParentQuote.QuoteNumber": {
 			required: true
 		},
@@ -18,9 +20,9 @@
 			required: true,
 			maxDate: new Date()
 		},
-		OrdersInput :{
-			fileRequired : true			
-		}
+		//OrdersInput :{
+		//	fileRequired : true			
+		//}
 	}
 });
 

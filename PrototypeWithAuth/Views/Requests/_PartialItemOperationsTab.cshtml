@@ -281,7 +281,7 @@
                 </div>
             </div>
         </div>
-        @if (Model.Request?.RequestStatusID != 1 && Model.Request?.RequestStatusID != 6)
+        @if (Model.Request != null && Model.Request?.RequestStatusID != 1 && Model.Request?.RequestStatusID != 6)
         {
             <div class="col-3">
                 <label class="control-label" asp-for="Request.PaymentStatus.PaymentStatusDescription">Terms</label>
@@ -290,14 +290,14 @@
             </div>
         }
     </div>
-    @if (Model.Request?.RequestStatusID != 1 && Model.Request?.RequestStatusID != 6)
+    @if (Model.Request!=null && Model.Request?.RequestStatusID != 1 && Model.Request?.RequestStatusID != 6)
     {
         <div class="row">
 
             <div class="col-2">
-                <input type="checkbox" asp-for="Request.Paid" class="form-check-input filled-in " disabled />
-                <label class="form-check-label" asp-for="Request.Paid"></label>
-                <input type="hidden" asp-for="Request.Paid" />
+                <input type="checkbox" asp-for="Request.Payments.LastOrDefault().IsPaid" class="form-check-input filled-in " disabled />
+                <label class="form-check-label" asp-for="Request.Payments.LastOrDefault().IsPaid"></label>
+                <input type="hidden" asp-for="Request.Payments.LastOrDefault().IsPaid" />
             </div>
             <div class="col-2">
                 <input type="checkbox" asp-for="Request.IsPartial" class="form-check-input filled-in " disabled />

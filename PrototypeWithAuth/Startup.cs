@@ -95,7 +95,11 @@ namespace PrototypeWithAuth
                 config.Filters.Add(new AuthorizeFilter(policy));
                 // config.AllowValidatingTopLevelNodes = true;
             });
-            services.AddSession();
+            services.AddSession(/*opts =>
+            {
+                opts.Cookie.IsEssential = true;
+
+            }*/);
 
             ////allow for data anotations validations
             //services.AddMvcCore()
@@ -109,7 +113,7 @@ namespace PrototypeWithAuth
             {
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                options.ExpireTimeSpan = TimeSpan.FromHours(10);
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
@@ -144,6 +148,7 @@ namespace PrototypeWithAuth
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
+
 
             app.UseEndpoints(endpoints =>
             {

@@ -26,23 +26,26 @@
                             <span class="caret py-0">
                                 ▼
                             </span>
-                            <span class="overflow-hidden">Select Type:</span>
+                            <span class="overflow-hidden">Select Name:</span>
 
                         </div>
 
                         <ul class="p-0 locationinstance dropdown-menu ">
                             @foreach (var locationType in Model.locationInstancesDepthZero)
                             {
+                                var locationName = locationType.LocationInstanceName;
+                                if(locationType.LocationTypeID == 500)
+                                {
+                                    locationName = locationType.LocationRoomInstance.LocationRoomInstanceName;
+                                }
 
                                 var description = locationType.LocationInstanceAbbrev;
-
-                                    if (description == null)
-                                    {
-                                        description = locationType.LocationInstanceName;
-                                    }
-                                 
+                                if(locationType.LocationInstanceParent == null)
+                                {
+                                    description = locationType.LocationInstanceName;
+                                }
                                 <li id="@locationType.LocationInstanceID" class="SLI-click" data-string="@description" @*onclick="SLI(this.id)"*@ value="@locationType.LocationInstanceID">
-                                    @locationType.LocationInstanceName
+                                    @locationName
                                 </li>
                             }
                         </ul>
@@ -50,11 +53,7 @@
                     </div>
                 </div>
             </div>
-
-
-
         }
-
         else
         {
         <div class="">

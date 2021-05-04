@@ -1,4 +1,5 @@
 ﻿$(function () {
+
 	$(".product-name").each(function(){
 		$(this).rules("add", {
 			required: true,

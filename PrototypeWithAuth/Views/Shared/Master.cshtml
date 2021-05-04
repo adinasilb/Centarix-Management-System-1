@@ -377,7 +377,7 @@
             //dataType: "string",
             success: function (data) {
                 $('#loading').hide();
-                $.fn.OpenModal('modal','order-late', data)
+                $.fn.OpenModal('modal','late-order', data)
             }
 
         });
@@ -406,6 +406,8 @@
         function enableMarkReadonly(element) {
             console.log("in if details");
             $('.mark-readonly').attr("disabled", false);
+            $('.mark-readonly').removeClass("disabled");
+            $(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
             //TODO: add in mark-readonly fields for subunits
             //$.fn.CheckUnitsFilled();
             //$.fn.CheckSubUnitsFilled();
@@ -488,8 +490,6 @@
                             //$.fn.OnOpenModalView();
                             $("#cost").trigger('change');
                             $(".reorderModal .mdb-select").materialSelect();
-
-
                             //$.fn.CheckCurrency();
                             break;
                         case "summary":
@@ -522,6 +522,13 @@
                         case "locations": case "addlocation":
                             $.fn.OpenModal('modal', 'add-location', modal)
                             break;
+                        case "addMaterial": 
+                            $.fn.OpenModal('modal', 'add-material', modal)
+                            break;
+                        case "materialInfo":
+                            $.fn.OpenModal('modal', 'material-info', modal)
+                            break;
+                 
                     }
 
                 },
@@ -538,8 +545,11 @@
             });
         }
         $.fn.TurnToDetails = function () {
+
             $('.mark-readonly').prop("disabled", true);
             $('.mark-readonly input').prop("disabled", true);
+            $('.choose-location').addClass("disable-custom-mdbselect");
+            $('.visual-locations td.mark-readonly').addClass("disabled");
             $('.mark-edditable').attr("data-val", false)
             $('.edit-mode-switch-description').text("Edit Mode Off");
             $('.turn-edit-on-off').attr('name', 'details')
@@ -554,8 +564,8 @@
             console.log("in detilas of case")
             $.fn.TurnToDetails();
             $('.open-document-modal').attr("showSwitch", true);
-            $('.mdb-select').materialSelect();
-            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            $('.edits .mdb-select').materialSelect();
+            $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
         $.fn.LoadSummaryModal = function () {
@@ -565,8 +575,8 @@
             $("." + category).removeClass("d-none");
             console.log("in detilas of case")
             $.fn.TurnToDetails();
-            $('.mdb-select:not(.ignore-mdb)').materialSelect();
-            $('.mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            $('.edits .mdb-select:not(.ignore-mdb)').materialSelect();
+            $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
 
@@ -897,7 +907,7 @@
         }
        $.fn.GetNotifcationCount = function () {
            console.log("in call getNotofication function");
-           var link = '@Url.Action("GetNotficationCount", "Home")';
+           var link = '@Url.Action("GetNotificationCount", "Home")';
            $.ajax({
                async: true,
                url: link,
@@ -931,7 +941,13 @@
             $.getJSON("/Home/GetLatestNotifications", function (data) {
                 $.each(data, function (i, notification) {
                     var timestamp = new Date(notification.timeStamp)
-                    var link = '/-1/-2?requestID=-3';
+                    var link = '/-1/-2?requestID=-3&didntArrive=-4';
+                    var isOrderLate = false;
+                    if(notification.status=="1")
+                    {
+                        isOrderLate = true;
+                    }
+                    link = link.replace("-4", isOrderLate);
                     link = link.replace("-3", notification.id);
                     link = link.replace("-2", notification.action);
                     link = link.replace("-1", notification.controller);
@@ -1037,7 +1053,7 @@
                 selectedPriceSort.push($(this).attr("enum"));
             })
             return(
-            "PageNumber=" + $('.page-number').val() +
+                "PageNumber=" + $('.page-number').val() +
                 "&RequestStatusID=" + $(".request-status-id").val() +
                 "&PageType=" + $('#masterPageType').val() +
                 "&SectionType=" + $('#masterSectionType').val() +
@@ -1052,18 +1068,19 @@
         }
 
 
-        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch) {
+        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch, parentFolder) {
             $('#loading').show();
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
+            //alert(parentFolder)
             var urltogo = $("#documentSubmit").attr("url");
             if (urltogo == "") {
-                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch;
+                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName="+parentFolder;
 	        }
             else {
                 //var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
                 console.log("urltogo: " + urltogo);
-                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch;
+                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder;;
             }
 
             $.ajax({
@@ -1102,6 +1119,7 @@
 
         //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
+            console.log("open modal")
             var backdrop = "static";
             if ($('.modal-backdrop').length > 0) {
                 backdrop = false;
@@ -1141,10 +1159,11 @@
             $('body').removeClass('popover-open');
         });
 
-        $.fn.ClearFilter = function (isProprietary) {
+        $.fn.ClearFilter = function (sectionType, isProprietary) {
+            //alert(sectionType);
             $.ajax({
                 async: true,
-                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&isProprietary=" + isProprietary,
+                url: "/Requests/_InventoryFilterResults?selectedFilters=null&numFilters=0&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
                 type: 'POST',
                 cache: false,
                 success: function (newData) {

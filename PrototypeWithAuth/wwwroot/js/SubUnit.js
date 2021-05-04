@@ -34,9 +34,9 @@ $(function () {
 		//console.log("vatCalc: " + vatCalc);
 		//$("#Request_VAT").val(vatCalc)
 		//var vatInShekel = $("#Request_VAT").val();
-		if ($("#" + dollarId).prop("disabled")) {
+		if ($("#" + dollarId).prop("disabled") || $("#" + dollarId).hasClass("disabled")) {
 			$sumDollars = parseFloat($("#" + shekelId).val()) / $exchangeRate;
-			console.log($sumDollars)
+			console.log("sumDollars"+$sumDollars)
 			$iptBox = $('#'+dollarId);
 			$.fn.ShowResults($iptBox, $sumDollars);
 		}

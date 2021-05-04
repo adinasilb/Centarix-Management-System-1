@@ -30,13 +30,17 @@ namespace PrototypeWithAuth.AppData
         {
             get
             {
-                if (_RequestStatusID == 0 && PageType == AppUtility.PageTypeEnum.RequestSummary)
+                if (_RequestStatusID == 0 && (PageType == AppUtility.PageTypeEnum.RequestSummary || PageType == AppUtility.PageTypeEnum.OperationsInventory))
                 {
                     return 3;
                 }
+                else if (_RequestStatusID == 0 && PageType == AppUtility.PageTypeEnum.OperationsRequest)
+                {
+                    return 2;
+                }
                 else if (_RequestStatusID == 0)
                 {
-                    return 1;
+                    return 6;
                 }
                 else
                 {

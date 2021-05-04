@@ -67,7 +67,7 @@ else
                             {
                                 z++;
                                 var backgroundClass = "";
-                                var innerHtml = Model.ParentLocationInstance.Place;
+                                var innerHtml = Model.ParentLocationInstance.LocationInstanceAbbrev;
                                 var AddedBGClass = " location-box-selected  text-light";
                                 @if (Model.ChildrenLocationInstances.ToList().Count() >= z) //put this in an if statement so it won't run into an instance where it doesn't exist since it's not a foreach
                                 {
@@ -75,12 +75,12 @@ else
                                     {
                                         backgroundClass += AddedBGClass;
 
-                                        innerHtml = Model.ChildrenLocationInstances[z].Place;
+                                        innerHtml = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
                                     }
                                     else
                                     {
                                         backgroundClass = "";
-                                        innerHtml = Model.ChildrenLocationInstances[z].Place;
+                                        innerHtml = Model.ChildrenLocationInstances[z].LocationInstanceAbbrev;
                                     }
                                 }
 

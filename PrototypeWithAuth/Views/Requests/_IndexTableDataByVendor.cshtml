@@ -6,16 +6,16 @@
 <form method="post" enctype="multipart/form-data" style="height: 100%;">
     @foreach (var vendor in Model.RequestsByVendor)
     {
-        <table  class="table table-headerspaced  table-borderless table-hover mb-5 ">
-            <tr class="text-dark border-0 no-hover h-50" >
-                <td class="p-0"  rowspan="2" width="14%" ><span class="heading-1">@vendor.Key.VendorEnName.ToLower()</span></td>
+        <table class="table table-headerspaced  table-borderless table-hover mb-5 ">
+            <tr class="text-dark border-0 no-hover h-50">
+                <td class="p-0" rowspan="2" width="14%"><span class="heading-1">@vendor.Key.VendorEnName.ToLower()</span></td>
                 <td class="border-bottom"></td>
-        <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
-    </table>
+            <tr class="border-0 no-hover h-50" style="line-height:50%;"><td></td></tr>
+        </table>
         <table class="table table-headerspaced table-borderless table-hover mb-5 item-table">
 
-            
-       
+
+
             <tbody>
                 @{ var requests = vendor.Select(r => r).ToList();}
 
@@ -25,7 +25,7 @@
                         @foreach (var col in row.Columns)
                         {
                             <td width="@col.Width%" class="@(col.Width == 0 ? "p-0" : "")">
-                                @if (col.Image != null)
+                                @if (col.Image != "")
                                 {
                                     <img src="@col.Image" alt="Image" width="75" class="category-image" />
                                 }
@@ -62,11 +62,8 @@
                                                                         <hr class="m-0" />
                                                                     }
                                                                 }
-
-
                                                             </div>
                                                         </li>
-
                                                     </ul>
                                                 </div>
                                             }
@@ -110,10 +107,14 @@
                                                                 <div class="row mt-2 text-center">
 
                                                                     <div class="col-6 p-1">
-                                                                        <a asp-action="HandleNotifications" asp-controller="Requests" asp-route-requestID="@col.AjaxID" asp-route-type="@Model.SidebarType" class="rounded-pill small-text p-0 m-0 btn text-capitalize  handleNotification " style="        width: 100%;
-        border: 1px solid var(--acc-color);
-        background-color: transparent;
-        color: var(--acc-color);">Save</a>
+                                                                        <a asp-action="HandleNotifications" asp-controller="Requests" asp-route-requestID="@col.AjaxID" asp-route-type="@Model.SidebarType"
+                                                                           class="rounded-pill small-text p-0 m-0 btn text-capitalize  handleNotification" 
+                                                                               style="        
+                                                                                    width: 100%;
+                                                                                    border: 1px solid var(--acc-color);
+                                                                                    background-color: transparent;
+                                                                                    color: var(--acc-color);"
+                                                                           >Save</a>
                                                                     </div>
                                                                     <div class="col-6 p-1 ">
                                                                         <button class="rounded-pill p-0 m-0 small-text" style="background-color: transparent; border-width:1px !important; width: 100%;">
@@ -126,6 +127,16 @@
                                                     </ul>
                                                 </div>
                                             }
+                                            else if(icon.IconClass?.Equals("Resend") ?? false)
+                                            {
+                                                    <div class="pr-2">
+                                                        <button class="confirm-quote-resend btn-icon lab-man-background-color" data-title="Resend" value="@col.AjaxID">Resend</button>
+                                                    </div>
+                                            }   
+                                            else if(icon.IconClass?.Equals("ResendPlaceholder") ?? false)
+                                            {
+                                                <div class="px-5" style="min-width: 125px">&nbsp;</div>
+                                            }
                                             else
                                             {
                                                 <div class="table-icon-div">
@@ -135,10 +146,7 @@
                                                     </a>
                                                 </div>
                                             }
-
-
                                         }
-
                                     </div>
                                 }
                                 else
@@ -149,7 +157,7 @@
                                         {
                                             <br />
                                         }
-                                        if (col.AjaxLink != null)
+                                        if (col.AjaxLink != null && col.AjaxLink != "")
                                         {
                                             <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID" data-target="item" href="item">
                                                 <p class="m-0">@col.Value[val]</p>
@@ -167,13 +175,11 @@
                                             <label class="m-0 p-0">@col.Value[val]</label>
                                         }
                                     }
-
                                 }
                             </td>
                         }
                     </tr>
                 }
-
                 <tr class="border-0 mb-5 no-hover">
                     @for (int i = 0; i < requests.FirstOrDefault().Columns.Count() - 4; i++)
                     {
@@ -197,9 +203,9 @@
                     </td>
                     @if (requests.FirstOrDefault().ButtonText != "")
                     {
-                    <td colspan="2">
-                        <button class="custom-button-font custom-button @requests.FirstOrDefault().ButtonClasses float-right  cart" type="button" value="@vendor.Key.VendorID">@requests.FirstOrDefault().ButtonText</button>
-                    </td>
+                        <td colspan="2">
+                            <button class="custom-button-font custom-button @requests.FirstOrDefault().ButtonClasses float-right  cart" type="button" value="@vendor.Key.VendorID">@requests.FirstOrDefault().ButtonText</button>
+                        </td>
                     }
                 </tr>
 

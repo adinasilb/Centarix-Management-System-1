@@ -1,0 +1,62 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+@using PrototypeWithAuth.AppData
+<div class="modal modal-view fader on-form-modal add-resource-modal protocol-form" id="myModal" data-backdrop="false">
+    <div class=" modal-dialog-centered mx-auto" style="width:50%">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+
+            <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('edits')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" id="" class="modal-padding" enctype="multipart/form-data">
+                <div class="new-modal-header modal-line-1-header-with-back modal-sides">
+                    @*class needed here to override bootstraps modal limitations*@
+
+                    @if (Model.ErrorMessage != null)
+                    {
+                        <div class="row">
+                            <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+                        </div>
+                    }
+
+                    <div class="row modal-title-line justify-content-between">
+                        @*<div class="col-md-2 px-0">*@
+                        @if (Model.Requests[0].Product.ProductSubcategory.ImageURL != null)
+                        {
+                            <img src="@Model.Requests[0].Product.ProductSubcategory.ImageURL" class="top-modal-image" alt="Alternate Text" width="75" />
+                        }
+                        else
+                        {
+                            <img src="~/images/css/CategoryImages/placeholder.png" alt="Alternate Text" class="top-modal-image" width="75" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
+                        }
+                        @*</div>*@
+
+                        <div class="modal-product-title" @*style="width: 80%;"*@>
+                            <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name name mark-readonly" disabled placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
+                            <span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <div class="row pt-2">
+                                Serial: @Model.Requests[0].Product.SerialNumber
+                            </div>
+                        </div>
+
+                    </div>
+                    <input type="hidden" value="@Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
+                    @{await Html.RenderPartialAsync("~/Views/Requests/EditItemTabs.cshtml", Model); }
+                </div>
+         
+
+                <div class="new-modal-body edit-modal-outer-body ">
+                    <input type="hidden" class="old-name" value="@Model.Requests[0].Product.ProductName" />
+                    <div class="container-fluid edit-modal-body box-shadow orders partial-div" style="background: #FFF; border: 2px solid #EAEAEB;">
+                        @{await Html.RenderPartialAsync("~/Views/Requests/ItemData.cshtml", Model); }
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

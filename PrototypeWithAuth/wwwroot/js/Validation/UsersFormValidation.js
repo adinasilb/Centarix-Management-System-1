@@ -33,6 +33,9 @@ $.validator.addMethod("validHours", function (value, element) {
 }, "Invalid Hours");
 
 $('.usersForm').validate({
+	 normalizer: function( value ) {
+    return $.trim( value );
+  },
 	rules: {
 		"FirstName": "required",
 		"LastName": "required",

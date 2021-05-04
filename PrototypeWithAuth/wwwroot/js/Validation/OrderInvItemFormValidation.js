@@ -1,6 +1,9 @@
 ﻿
 $(function () {
 $('.ordersItemForm').validate({
+	 normalizer: function( value ) {
+    return $.trim( value );
+  },
 	rules: {
 		"Requests[0].Product.ProductName": "required",
 		"Requests[0].Product.CatalogNumber": {

@@ -1,0 +1,145 @@
+﻿@model PrototypeWithAuth.ViewModels.AddResourceViewModel;
+
+@{
+    var Heading = "";
+    switch (Model.Resource.ResourceTypeID)
+    {
+        case 1:
+            Heading = "Add Article or Link";
+            break;
+        case 2:
+            Heading = "Add Resource";
+            break;
+    }
+
+}
+<script src="~/js/AddResource.js"></script>
+<div class="modal modal-view fader on-form-modal add-resource-modal protocol-form" id="myModal" data-backdrop="false">
+    <div class=" modal-dialog-centered mx-auto" style="width:54.625rem;">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+
+            <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('add-resources')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" id="myForm" class="modal-padding" enctype="multipart/form-data">
+                <div class="row top-menu under-row-margin">
+                    <div class="col-12">
+                        @Heading
+                        <input type="hidden" asp-for="Resource.ResourceTypeID" />
+                    </div>
+                </div>
+                <div class="row under-row-margin">
+                    <div class="col-12">
+                        <label asp-for="Resource.Title" class="control-label"></label>
+                        <input asp-for="Resource.Title" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Resource.Title" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row under-row-margin">
+                    <div class="col-12">
+                        <label asp-for="Resource.Summary" class="control-label"></label>
+                        <input asp-for="Resource.Summary" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Resource.Summary" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row under-row-margin">
+                    <div class="col-6">
+                        <label asp-for="Resource.FirstAuthor" class="control-label"></label>
+                        <input asp-for="Resource.FirstAuthor" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Resource.FirstAuthor" class="text-danger-centarix"></span>
+                    </div>
+                    <div class="col-6">
+                        <label asp-for="Resource.LastAuthor" class="control-label"></label>
+                        <input asp-for="Resource.LastAuthor" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Resource.LastAuthor" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row under-row-margin">
+                    <div class="col-4">
+                        <label asp-for="Resource.PubMedID" class="control-label"></label>
+                        <div class="input-group">
+                            <input asp-for="Resource.PubMedID" class="form-control-plaintext border-bottom" />
+                            <i class="icon-add_circle-24px protocols-filter get-pubmedinfo" style="font-size: 2.688rem;"></i>
+                        </div>
+                        <span asp-validation-for="Resource.PubMedID" class="text-danger-centarix"></span>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="Resource.City" class="control-label"></label>
+                        <input asp-for="Resource.City" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Resource.City" class="text-danger-centarix"></span>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="Resource.Journal" class="control-label"></label>
+                        <input asp-for="Resource.Journal" class="form-control-plaintext border-bottom" />
+                        <span asp-validation-for="Resource.Journal" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <hr style="box-shadow: 0px 0px .1rem #707070;" />
+                <div class="row under-row-margin top-menu">
+                    <div class="col-12">
+                        Select Tags
+                    </div>
+                </div>
+                <div class="row mb-1 text-center">
+                    @{
+                        var counter = -1;
+                        //Model.ResourceCategoriesToAdd.Add(());
+                    }
+                    @foreach (var mainCategory in Model.ResourceCategories.Where(rc => rc.IsMain))
+                    {
+                        counter++;
+                        var hiddenElementClass = "HiddenCategoryBool" + mainCategory.ResourceCategoryID;
+                        <div class="col-3">
+                            <span class="resources-tags-big light-gray-background-color add-padding w-100" id="@mainCategory.ResourceCategoryID">
+                                @mainCategory.ResourceCategoryDescription
+                            </span>
+                            <input type="hidden" asp-for="ResourceCategoriesToAdd[counter].ResourceCategoryID" value="@mainCategory.ResourceCategoryID" />
+                            <input type="hidden" asp-for="ResourceCategoriesToAdd[counter].Added" class="@hiddenElementClass" value="false" />
+                        </div>
+                    }
+                </div>
+                <div class="row under-row-margin">
+                    <div class="col-12">
+                        @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain))
+                        {
+                            counter++;
+                            var hiddenElementClass = "HiddenCategoryBool" + category.ResourceCategoryID;
+                            <span class="resources-tags-big light-gray-background-color mx-2 my-1" id="@category.ResourceCategoryID">
+                                @category.ResourceCategoryDescription
+                            </span>
+                            <input type="hidden" asp-for="ResourceCategoriesToAdd[counter].ResourceCategoryID" class="resourceCategoryIDHidden" value="@category.ResourceCategoryID" />
+                            <input type="hidden" asp-for="ResourceCategoriesToAdd[counter].Added" class="@hiddenElementClass" value="false" />
+                        }
+                    </div>
+                </div>
+                <div class="row under-row-margin">
+                    <div class="col-4 form-element-border-right">
+                        @*<label asp-for="ResourceImage" class="control-label"></label>*@
+                        <input type="file" asp-for="ResourceImage" class="form-control-file hidden ta pt-1">
+                        <input type="button" class="AddFile full-file-btn custom-button custom-button-small-font protocols-background-color" value="Select File" />
+                        <input class="control-label text-center disabled border-0 w-100" style="font-size:.75rem;" id="file-name" />
+                        <span asp-validation-for="ResourceImage" class="text-danger"></span>
+                    </div>
+                    <div class="col-8">
+                        <label asp-for="Resource.Url" class="control-label"></label>
+                        <div class="input-group">
+                            <input asp-for="Resource.Url" class="form-control-plaintext border-bottom" />
+                            <a href="" target="_blank" class="add-url disabled">
+                                <i class="icon-back-24px disabled-color1" style="font-size: 2.688rem;"></i>
+                            </a>
+                        </div>
+                        <span asp-validation-for="Resource.Url" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="modal-footer-mt mx-auto">
+                        <input type="submit" class="custom-button custom-cancel protocols-filter" asp-action="AddResource" />
+                        <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('add-resources')">Cancel</button>
+                    </div>
+                </div>
+                @*<input class="form-control-plaintext border-bottom" id="ResourceID" name="ResourceID" value="0">*@
+            </form>
+
+        </div>
+    </div>
+</div>
