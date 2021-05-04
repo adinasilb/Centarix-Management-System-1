@@ -71,7 +71,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"));
+                    Configuration.GetConnectionString("ElixirVM"));
                 options.EnableSensitiveDataLogging(true);
             });
 
@@ -214,10 +214,10 @@ namespace PrototypeWithAuth
 
             var adminuser = new Employee()
             {
-                UserName = "adinasilberberg@gmail.com",
-                Email = "adinasilberberg@gmail.com",
-                FirstName = "Adina",
-                LastName = "Gayer",
+                UserName = "debbie@centarix.com",
+                Email = "debbie@centarix.com",
+                FirstName = "Debbie",
+                LastName = "Shulman",
                 EmailConfirmed = true,
                 TwoFactorEnabled = true,
                 EmployeeStatusID = 4,
