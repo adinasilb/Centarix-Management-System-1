@@ -1,6 +1,6 @@
 ﻿$(function (e) {
 	$(".call-resource-notes").on("click", function (e) {
-		var url = "/Protocols/ResourceNotesModal";
+		var url = "/Protocols/ResourceNotesModal?ResourceID=" + $(this).attr("id");
 		$.ajax({
 			async: true,
 			url: url,
