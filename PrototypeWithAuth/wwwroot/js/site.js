@@ -1539,16 +1539,18 @@ $(function () {
 	
 
 	$("#home-btn").click(function () {
-			$('[data-toggle="tooltip"]').popover('dispose');
-			$("#home-btn").popover({
-				sanitize: false,
-				placement: 'bottom',
-				html: true,
-				content: function () {
-					return $('#home-content').html();
-				}
-			});
-			$("#home-btn").popover('toggle');
+		$('[data-toggle="popover"]').popover('dispose');
+		$('body').removeClass('popover-open');
+		//$('[data-toggle="tooltip"]').popover('dispose');
+		$("#home-btn").popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#home-content').html();
+			}
+		});
+		$("#home-btn").popover('toggle');
 
 	});
 	
