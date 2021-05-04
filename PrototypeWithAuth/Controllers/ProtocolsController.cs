@@ -1,4 +1,5 @@
 ﻿using Abp.Extensions;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -690,13 +691,26 @@ namespace PrototypeWithAuth.Controllers
                     await _context.SaveChangesAsync();
                     transaction.Commit();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     error = true;
                     transaction.Rollback();
                 }
             }
             return error;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<string> FavoriteResources(int ResourceID)
+        {
+            string retString = null;
+            //FavoriteResource favoriteResource = new FavoriteResource()
+            //{
+            //    r
+            //};
+
+            return retString;
         }
 
         [HttpGet]
