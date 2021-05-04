@@ -679,8 +679,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> ResourceNotesModal(ResourceNote ResourceNote)
+        public async Task<bool> ResourceNotesModal(ResourceNote ResourceNote)
         {
+            bool error = false;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -691,10 +692,11 @@ namespace PrototypeWithAuth.Controllers
                 }
                 catch(Exception e)
                 {
+                    error = true;
                     transaction.Rollback();
                 }
             }
-            return new EmptyResult();
+            return error;
         }
 
         [HttpGet]

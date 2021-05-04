@@ -1,0 +1,23 @@
+﻿$(function () {
+	$(".ResourceNotesModal").on("click", function (e) {
+		alert("resource notes modal");
+		var url = "/Protocols/ResourceNotesModal";
+		$.ajax({
+			processData: false,
+			contentType: false,
+			data: new FormData($("#myForm")[0]),
+			async: true,
+			url: url,
+			type: 'POST',
+			cache: false,
+			success: function (error) {
+				if (!error) {
+					$.fn.CloseModal('resource-notes-modal');
+				}
+				else {
+					alert(error);
+				}
+			}
+		});
+	});
+});

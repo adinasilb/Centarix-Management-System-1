@@ -2908,3 +2908,6 @@ body.modal-open .popover {
 .full-file-btn {
     width: 100%;
 }
+.no-resize{
+    resize: none;
+}

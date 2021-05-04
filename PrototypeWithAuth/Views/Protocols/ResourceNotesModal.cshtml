@@ -1,4 +1,5 @@
 ﻿@model PrototypeWithAuth.Models.ResourceNote
+<script src="~/js/resourcenote.js"></script>
 <div class="modal modal-view fader res-notes-modal" id="myModal" data-backdrop="false">
     <div class="add-invoice-modal modal-dialog-centered mx-auto" style="width:54.625rem;">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
@@ -19,7 +20,7 @@
                 </div>
                 <div class="row">
                     <div class="mx-auto">
-                        <input type="submit" class="custom-button custom-cancel protocols-filter" asp-action="ResourceNotesModal" />
+                        <input @*type="submit"*@ class="custom-button custom-cancel protocols-filter ResourceNotesModal" />
                         <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('resource-notes-modal')">Cancel</button>
                     </div>
                 </div>
