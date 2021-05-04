@@ -370,10 +370,68 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _Line(int index, int lineTypeID, string lineNumber, int parentLineID)
+        public async Task<IActionResult> _Line(int index, int lineTypeID, int currentLineTypeID,string lineNumberString, string parentLineNumberString, int parentLineID, int currentLineNumber)
         {
+            var newLineNumberString = "";
+            var newLineNumber = 0;
+            switch(lineTypeID)
+            {
+                case 1:
+                    switch (currentLineTypeID)
+                    {
+                        case 1:
+                            //if current line type and new line type are same type
+                            newLineNumber = currentLineNumber + 1;
+                            newLineNumberString = parentLineNumberString +newLineNumber;
+                            break;
+                        case 2:
+                            //if current line is child of new line but not a direct child
+                            newLineNumberString = lineNumberString + 1;
+                            newLineNumber = 1;
+                            break;
+                        case 3:
+                            //if current line is child of new line but not a direct child
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (currentLineTypeID)
+                    {
+                        case 1:
+                           //current line is child of parent line
+
+                            break;
+                        case 2:
+                            //if current line type and new line type are same type
+                            newLineNumber = currentLineNumber + 1;
+                            newLineNumberString = parentLineNumberString +newLineNumber;
+                            break;
+                        case 3:
+                            //current line is parent of new line
+                            newLineNumberString = lineNumberString + 1;
+                            newLineNumber = 1;
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch (currentLineTypeID)
+                    {
+                        case 1:
+                            //new line is a greater type that current line but not parent
+                            break;
+                        case 2:
+                            //new line is parent of current line
+                            break;
+                        case 3:
+                            //if current line type and new line type are same type
+                            newLineNumber = currentLineNumber + 1;
+                            newLineNumberString = parentLineNumberString +newLineNumber;
+                            break;
+                    }
+                    break;
+            }
             var lineTypes = _context.LineTypes.ToList();
-            return PartialView(new ProtocolsLineViewModel { Index = index, Line = new Line { LineTypeID = lineTypeID, ParentLineID = parentLineID}, LineNumber = lineNumber , LineTypes = lineTypes});
+            return PartialView(new ProtocolsLineViewModel { Index = index, Line = new Line { LineTypeID = lineTypeID, LineNumber=newLineNumber}, LineNumberString = newLineNumberString , LineTypes = lineTypes});
         }
 
 

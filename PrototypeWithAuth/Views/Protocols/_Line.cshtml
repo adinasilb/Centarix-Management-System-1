@@ -6,22 +6,20 @@
 <div class="position-absolute" style="right:91%;">
     <ul class="list-unstyled m-0">
         <li>
-            <button type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 addLinePopover" lineNumber="@Model.LineNumber" value="line-content@(Model.LineNumber)" parentLineID="@Model.Line?.ParentLineID" lineCount="@Model.Index">
+            <button type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 addLinePopover" lineNumber="@Model.LineNumberString" value="line-content@(Model.LineNumberString)" parentLineID="@Model.Line?.ParentLineID" lineCount="@Model.Index">
                 <i class="protocols-color icon-add_circle-24px" style="  font-size: 3rem;"></i>
             </button>
         </li>
-
-        <div style="display:none; " id="line-content@(Model.LineNumber)">
+        <div style="display:none; " id="line-content@(Model.LineNumberString)">
             @foreach (var item in Model.LineTypes)
             {
                 <div class="row px-2 comment-btn">
-                    <button type="button" value="@item.LineTypeID" lineNumber="@Model.LineNumber" parentLineID="@Model.Line?.ParentLineID" lineCount="@(Model.Index+1)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine " style="font-size:1rem; font-weight:400;">
+                    <button type="button" value="@item.LineTypeID" currentLineTypeID ="@Model.Line?.LineTypeID" lineNumberString="@Model.LineNumberString" lineNumber="@Model.Line?.LineNumber"  lineCount="@(Model.Index)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine " style="font-size:1rem; font-weight:400;">
                         @item.LineTypeDescription
                     </button><hr class="m-0" />
                 </div>
             }
         </div>
-
     </ul>
 </div>
 
@@ -29,19 +27,19 @@
 {
     case 1:
         <div class="d-flex ">
-            <div class="text d-flex align-items-center ">@Model.LineNumber</div>
+            <div class="text d-flex align-items-center ">@Model.LineNumberString</div>
             <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.Line?.Content" class="text form-control-plaintext" />
         </div>
         break;
     case 2:
             <div class="d-flex ml-4">
-                <div class="text d-flex align-items-center ">@Model.LineNumber</div>
+                <div class="text d-flex align-items-center ">@Model.LineNumberString</div>
                 <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.Line?.Content" class="text form-control-plaintext" />
             </div>
             break;
         case 3:
             <div class="d-flex ml-6">
-                <div class="text">@Model.LineNumber</div>
+                <div class="text">@Model.LineNumberString</div>
                 <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.Line?.Content" class="text form-control-plaintext" />
             </div>
             break;
@@ -63,11 +61,12 @@
         $(this).popover('toggle');
         $(".popover").off("click").on("click", ".addLine", function () {
             var lineNumber = $(this).attr("lineNumber");
+            var lineNumberString = $(this).attr("lineNumberString");
             var lineTypeID = $(this).val();
+            var currentLineTypeID = $(this).attr("currentLineTypeID");
             var lineCount = $(this).attr("lineCount");
-            var parentLineID = $(this).attr("parentLineID");
             $.ajax({
-                url: "/Protocols/_Line?Index=" + lineCount + "&lineTypeID=" + lineTypeID + "&lineNumber=" + lineNumber + "&parentLineID=" + parentLineID,
+                url: "/Protocols/_Line?Index=" + lineCount + "&lineTypeID=" + lineTypeID + "&currentLineTypeID=" + currentLineTypeID + "&lineNumber=" + lineNumber + "&lineNumberString=" + lineNumberString ,
                 type: 'GET',
                 success: function (data) {
                     $(".addLinePopover").addClass("d-none");
