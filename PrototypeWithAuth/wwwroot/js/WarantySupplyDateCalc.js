@@ -21,7 +21,7 @@
 		val = val.split("/").reverse().join("-");
 		var date =moment(val);
 		date.set("time", 0)
-		if (date < moment()) {
+		if (date < moment() && !moment().isSame(date, 'day')) {
 			return;
 		}
 		var OrderDate; 

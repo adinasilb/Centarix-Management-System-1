@@ -515,8 +515,8 @@ namespace PrototypeWithAuth.Controllers
                             _context.Entry(url).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }
-                    }          
-                
+                    }
+
                     createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
                     await transaction.CommitAsync();
                     return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
@@ -670,10 +670,33 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Protocols")] 
-        public async Task<IActionResult> ResourceNotesModal()
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ResourceNotesModal(int ResourceID)
         {
-            return PartialView();
+            var resourceNote = new ResourceNote() { ResourceID = ResourceID };
+            return PartialView(resourceNote);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<bool> ResourceNotesModal(ResourceNote ResourceNote)
+        {
+            bool error = false;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Update(ResourceNote);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch(Exception e)
+                {
+                    error = true;
+                    transaction.Rollback();
+                }
+            }
+            return error;
         }
 
         [HttpGet]

@@ -72,7 +72,28 @@ $(function () {
 			}
 		});
 	});
-
+	$("#Resource_Url").on("change", function (e) {
+		var urlLink = $(".add-url");
+		if ($(this).val().length > 0) {
+			alert("has url");
+			urlLink.removeClass("disabled");
+			var url = $(this).val();
+			var startLink = url.substring(0, 8);
+			if (startLink != "https://") {
+				url = "https://" + url;
+			}
+			urlLink.attr("href", url);
+			urlLink.children("a").removeClass("disabled-color1");
+			urlLink.children("a").addClass("protocols-color");
+		}
+		else {
+			alert("no url");
+			urlLink.addClass("disabled");
+			urlLink.attr("href", "");
+			urlLink.children("a").addClass("disabled-color1");
+			urlLink.children("a").removeClass("protocols-color");
+		}
+	});
 
 	$(".AddFile").on("click", function (e) {
 		$("#ResourceImage").click();
