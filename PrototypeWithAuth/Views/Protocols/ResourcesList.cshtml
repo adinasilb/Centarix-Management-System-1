@@ -9,7 +9,7 @@
     {
         <a href="@Url.Action("Library", "Protocols")" class="black-text">
             @Model.PaginationTabs[i]
-            @if(i < Model.PaginationTabs.Count - 1)
+            @if (i < Model.PaginationTabs.Count - 1)
             {
                 <span>&nbsp;>&nbsp;</span>
             }
@@ -40,9 +40,23 @@
                 </div>
                 @{ int endCounter = Convert.ToInt32(resource.Summary?.Length < 246 ? resource.Summary?.Length : 246); }
                 <div class="resource-summary text under-row-margin ">@resource.Summary?.Substring(0, endCounter)</div>
-                <div class="list-buttons row m-2 py-4 form-element-border-top-small">
-                    <div class="">
+                <div class="list-buttons row m-2 py-4 form-element-border-top-small w-100">
+                    <div class="col-3">
                         <input class="small-custom-button call-resource-notes" value="Notes" id="@resource.ResourceID" />
+                    </div>
+                    <div class=" col-6 offset-3 float-right">
+                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more " value="1">
+                            <i class="icon-favorite_border-24px hover-bold px-1" style="font-size:2rem;">
+                            </i>
+                        </button>
+                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more " value="1">
+                            <i class="icon-share-24px1 hover-bold px-1" style="font-size:2rem;">
+                            </i>
+                        </button>
+                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more " value="1">
+                            <i class="icon-create-24px hover-bold px-1" style="font-size:2rem;">
+                            </i>
+                        </button>
                     </div>
                 </div>
             </fieldset>
