@@ -160,7 +160,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             int lineCount = 0;
             if (Model.Protocol.Lines.Count() <= 0)
             {
-                await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = null, LineNumberString = 1 + "", LineTypes = Model.LineTypes });
+                await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = new Line() { LineTypeID=1}, LineNumberString = 1 + "", LineTypes = Model.LineTypes });
             }
 
             var headers = Model.Protocol.Lines.Where(l => l.LineTypeID == 1);
@@ -186,11 +186,11 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                         lineCount++;
                         stepCount++;
                     }
-                    <input type="hidden" class="step-count" id="subHeader@(subHeader.ParentLineID)" value="@stepCount" />
+                    <input type="hidden" class="step-count count3" id="subHeader@(subHeader.ParentLineID)" value="@stepCount" />
                 }
-                <input type="hidden" class="subHeader-count" id="header@(header.ParentLineID)" value="@subHeaderCount" />
+                <input type="hidden" class="subHeader-count count2" id="header@(header.ParentLineID)" value="@subHeaderCount" />
             }
-            <input type="hidden" class="header-count" id="header" value="@headerCount" />
+            <input type="hidden" class="header-count count1" id="header" value="@headerCount" />
 
         }
 

@@ -382,15 +382,15 @@ namespace PrototypeWithAuth.Controllers
                         case 1:
                             //if current line type and new line type are same type
                             newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString +newLineNumber;
+                            newLineNumberString = parentLineNumberString +"."+newLineNumber;
                             break;
                         case 2:
-                            //if current line is child of new line but not a direct child
-                            newLineNumberString = lineNumberString + 1;
-                            newLineNumber = 1;
+                            //if current line is child of new line 
+                     
                             break;
                         case 3:
                             //if current line is child of new line but not a direct child
+
                             break;
                     }
                     break;
@@ -398,40 +398,39 @@ namespace PrototypeWithAuth.Controllers
                     switch (currentLineTypeID)
                     {
                         case 1:
-                           //current line is child of parent line
-
+                            //current line is parent of new line
+                            newLineNumberString = lineNumberString + "."+1;
+                            newLineNumber = 1;
                             break;
                         case 2:
                             //if current line type and new line type are same type
                             newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString +newLineNumber;
+                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
                             break;
                         case 3:
-                            //current line is parent of new line
-                            newLineNumberString = lineNumberString + 1;
-                            newLineNumber = 1;
+                            //current line is child of new line
+                          
                             break;
                     }
                     break;
                 case 3:
                     switch (currentLineTypeID)
                     {
-                        case 1:
-                            //new line is a greater type that current line but not parent
-                            break;
+                        case 1:   //current line is parent of new line                  
                         case 2:
-                            //new line is parent of current line
+                            newLineNumberString = lineNumberString + "." + 1;
+                            newLineNumber = 1;
                             break;
                         case 3:
                             //if current line type and new line type are same type
                             newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString +newLineNumber;
+                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
                             break;
                     }
                     break;
             }
             var lineTypes = _context.LineTypes.ToList();
-            return PartialView(new ProtocolsLineViewModel { Index = index, Line = new Line { LineTypeID = lineTypeID, LineNumber=newLineNumber}, LineNumberString = newLineNumberString , LineTypes = lineTypes});
+            return PartialView(new ProtocolsLineViewModel { Index = (index+1), Line = new Line { LineTypeID = lineTypeID, LineNumber=newLineNumber}, LineNumberString = newLineNumberString , LineTypes = lineTypes});
         }
 
 
