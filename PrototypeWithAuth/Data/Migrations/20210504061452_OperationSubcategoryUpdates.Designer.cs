@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210504061452_OperationSubcategoryUpdates")]
+    partial class OperationSubcategoryUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4879,227 +4881,47 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             UnitTypeID = 5,
-                            ParentCategoryID = 14
+                            ParentCategoryID = 7
                         },
                         new
                         {
                             UnitTypeID = 10,
-                            ParentCategoryID = 14
+                            ParentCategoryID = 7
                         },
                         new
                         {
                             UnitTypeID = 9,
-                            ParentCategoryID = 14
+                            ParentCategoryID = 7
                         },
                         new
                         {
                             UnitTypeID = 20,
-                            ParentCategoryID = 14
+                            ParentCategoryID = 7
                         },
                         new
                         {
                             UnitTypeID = 21,
-                            ParentCategoryID = 14
+                            ParentCategoryID = 7
                         },
                         new
                         {
                             UnitTypeID = 22,
-                            ParentCategoryID = 14
+                            ParentCategoryID = 7
                         },
                         new
                         {
                             UnitTypeID = 13,
-                            ParentCategoryID = 14
+                            ParentCategoryID = 7
                         },
                         new
                         {
                             UnitTypeID = 12,
-                            ParentCategoryID = 14
+                            ParentCategoryID = 7
                         },
                         new
                         {
                             UnitTypeID = 11,
-                            ParentCategoryID = 14
-                        },
-                        new
-                        {
-                            UnitTypeID = 1,
-                            ParentCategoryID = 5
-                        },
-                        new
-                        {
-                            UnitTypeID = 2,
-                            ParentCategoryID = 5
-                        },
-                        new
-                        {
-                            UnitTypeID = 19,
-                            ParentCategoryID = 5
-                        },
-                        new
-                        {
-                            UnitTypeID = 3,
-                            ParentCategoryID = 5
-                        },
-                        new
-                        {
-                            UnitTypeID = 5,
-                            ParentCategoryID = 5
-                        },
-                        new
-                        {
-                            UnitTypeID = 24,
-                            ParentCategoryID = 5
-                        },
-                        new
-                        {
-                            UnitTypeID = 1,
                             ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 2,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 19,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 3,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 5,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 24,
-                            ParentCategoryID = 7
-                        },
-                        new
-                        {
-                            UnitTypeID = 1,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 2,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 3,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 4,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 5,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 6,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 7,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 8,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 9,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 10,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 11,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 12,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 13,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 14,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 15,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 16,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 17,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 18,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 19,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 20,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 21,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 22,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 23,
-                            ParentCategoryID = 6
-                        },
-                        new
-                        {
-                            UnitTypeID = 24,
-                            ParentCategoryID = 6
                         });
                 });
 

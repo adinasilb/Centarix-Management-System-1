@@ -249,6 +249,12 @@
     <Compile Remove="Data\Migrations\20210503061010_addLineTypes.Designer.cs" />
     <Compile Remove="Data\Migrations\20210503061253_linetypeChildAndParentIDsnullable.cs" />
     <Compile Remove="Data\Migrations\20210503061253_linetypeChildAndParentIDsnullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210504045203_UpdateProductCategories.cs" />
+    <Compile Remove="Data\Migrations\20210504045203_UpdateProductCategories.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210504052448_NewUpdateProductSubcategories.cs" />
+    <Compile Remove="Data\Migrations\20210504052448_NewUpdateProductSubcategories.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210504052717_NewUpdateProductSubcategories.cs" />
+    <Compile Remove="Data\Migrations\20210504052717_NewUpdateProductSubcategories.Designer.cs" />
   </ItemGroup>
 
 
