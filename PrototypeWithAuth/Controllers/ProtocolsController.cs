@@ -662,14 +662,17 @@ namespace PrototypeWithAuth.Controllers
             switch (SidebarEnum)
             {
                 case AppUtility.SidebarEnum.Library:
-                    var resources = _context.Resources.Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                    resourcesListViewModel.Resources = _context.Resources.Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
                         .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID)).ToList();
-                    resourcesListViewModel.Resources = resources;
                     //in the future send this in IF it's going to be updated- can be list<string> etc
                     resourcesListViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
                     break;
                 case AppUtility.SidebarEnum.Favorites:
-                    //var resources = _context.Resources.Include(r => r.f)
+                    resourcesListViewModel.Resources = _context.FavoriteResources
+                        .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                        .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                    .Select(fr => fr.Resource).ToList();
+                    resourcesListViewModel.PaginationTabs = new List<string>() { };
                     break;
                 case AppUtility.SidebarEnum.SharedWithMe:
                     break;

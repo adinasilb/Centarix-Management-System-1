@@ -257,6 +257,8 @@
     <Compile Remove="Data\Migrations\20210504052717_NewUpdateProductSubcategories.Designer.cs" />
     <Compile Remove="Data\Migrations\20210504091617_addedFavoriteProtocols.cs" />
     <Compile Remove="Data\Migrations\20210504091617_addedFavoriteProtocols.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210505062129_fixedFavoriteResource2.cs" />
+    <Compile Remove="Data\Migrations\20210505062129_fixedFavoriteResource2.Designer.cs" />
   </ItemGroup>
 
 
