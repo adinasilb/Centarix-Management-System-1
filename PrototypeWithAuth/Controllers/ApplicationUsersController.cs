@@ -134,9 +134,8 @@ namespace PrototypeWithAuth.Controllers
               .Include(e => e.EmployeeStatus).Include(e => e.JobSubcategoryType).ThenInclude(js => js.JobCategoryType)
               .Include(e => e.EmployeeHours).Include(e => e.SalariedEmployee);
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
-            var companyDaysOff = _context.CompanyDayOffs;
-            var totalWorkingDaysInMonth = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
-            var totalWorkingDaysInYear = amountInYear == 0 ? AppUtility.GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1), companyDaysOff) : amountInYear;
+            var totalWorkingDaysInMonth = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1));
+            var totalWorkingDaysInYear = amountInYear == 0 ? GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1)) : amountInYear;
 
             foreach (Employee employee in employees)
             {
@@ -158,7 +157,7 @@ namespace PrototypeWithAuth.Controllers
                         totalVacationDays = Math.Round(wholeVacationDays + (vacationHours / employee.SalariedEmployee?.HoursPerDay??1), 2);
                         daysWorked = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null && eh.Date.Year == year && eh.Date.Month == month  && eh.Date.Date <= DateTime.Now.Date) || (eh.IsBonus && eh.OffDayTypeID!= null && eh.Date.Date <= DateTime.Now.Date)).Where(eh => eh.TotalHours != null).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
-                        daysLeftOfMonthOrYear = (int)GetTotalWorkingDaysByInterval(DateTime.Now.Date, companyDaysOff, new DateTime(year, month + 1, 1));
+                        daysLeftOfMonthOrYear = (int)GetTotalWorkingDaysByInterval(DateTime.Now.Date, new DateTime(year, month + 1, 1));
                         missingDays = (int)totalWorkingDaysInMonth - sickDays - wholeVacationDays - daysWorked - daysLeftOfMonthOrYear;
                         break;
                     case YearlyMonthlyEnum.Yearly:
@@ -168,7 +167,7 @@ namespace PrototypeWithAuth.Controllers
                         totalVacationDays = Math.Round(wholeVacationDays + (vacationHours / employee.SalariedEmployee?.HoursPerDay ?? 1), 2);
                         daysWorked = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null && eh.Date.Year == year && eh.Date.Date <= DateTime.Now.Date) || (eh.IsBonus && eh.OffDayTypeID != null && eh.Date.Date <= DateTime.Now.Date)).Where(eh => eh.TotalHours != null).Count();
                         hours = new TimeSpan(employee.EmployeeHours.Where(eh => eh.Date.Year == year).Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
-                        daysLeftOfMonthOrYear = (int)GetTotalWorkingDaysByInterval(DateTime.Now.Date, companyDaysOff, new DateTime(year + 1, 1, 1));
+                        daysLeftOfMonthOrYear = (int)GetTotalWorkingDaysByInterval(DateTime.Now.Date,  new DateTime(year + 1, 1, 1));
                         missingDays = (int)totalWorkingDaysInYear - sickDays - wholeVacationDays - daysWorked - daysLeftOfMonthOrYear;
                         break;
                 }

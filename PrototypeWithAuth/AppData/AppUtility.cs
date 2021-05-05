@@ -536,34 +536,7 @@ namespace PrototypeWithAuth.AppData
             }
             return centarixID;
         }
-        public static double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, IQueryable<CompanyDayOff> companyDayOffs)
-        {
-            DateTime endOfTheMonth = firstOfTheMonth.AddMonths(1);
-            return GetTotalWorkingDaysByInterval(firstOfTheMonth, companyDayOffs, endOfTheMonth);
-        }
-
-        public static double GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, IQueryable<CompanyDayOff> companyDayOffs)
-        {
-            DateTime endOfTheYear = firstOfTheYear.AddYears(1);
-            return GetTotalWorkingDaysByInterval(firstOfTheYear, companyDayOffs, endOfTheYear);
-        }
-
-        public static double GetTotalWorkingDaysByInterval(DateTime startDate, IQueryable<CompanyDayOff> companyDayOffs, DateTime endDate)
-        {
-            int companyDaysOffCount = companyDayOffs.Where(d => d.Date.Date >= startDate.Date && d.Date.Date < endDate.Date).Count();
-            DateTime nextDay = startDate;
-            int totalDays = 0;
-            while (nextDay.Date < endDate)
-            {
-                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
-                {
-                    totalDays += 1;
-                }
-                nextDay = nextDay.AddDays(1);
-            }
-            return totalDays - companyDaysOffCount;
-        }
-
+     
         public static List<String> GetChartColors()
         {
             return new List<string> { "#00BCD4", "#3F51B5", "#009688", "#607D8B",  "#FF9800", "#F44336", "#795548", "#673AB7", "#9E9E9E", "#4CAF50", "#2196F3",
