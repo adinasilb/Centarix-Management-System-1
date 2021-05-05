@@ -56,6 +56,7 @@ namespace PrototypeWithAuth.Controllers
             var CurMonth = new DateTime(year, month, 1);
             double? totalhours;
             double vacationDaysTaken = 0;
+            var companyDaysOff = _context.CompanyDayOffs.ToList();
             if (user.EmployeeStatusID != 1)
             {
                 totalhours = null;
@@ -66,7 +67,7 @@ namespace PrototypeWithAuth.Controllers
                 var sickCount = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year &&  eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
                 var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
-                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1)) - (vacationDaysTaken + sickCount);
+                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff) - (vacationDaysTaken + sickCount);
                 totalhours = totalhours * user.SalariedEmployee.HoursPerDay;
                
             }
@@ -76,7 +77,7 @@ namespace PrototypeWithAuth.Controllers
                 CurrentMonth = CurMonth,
                 TotalHoursInMonth = totalhours,
                 SelectedYear = year,
-                TotalHolidaysInMonth = _context.CompanyDayOffs.Where(cdo => cdo.Date.Year == year && cdo.Date.Month == month).Count(),
+                TotalHolidaysInMonth = companyDaysOff.Where(cdo => cdo.Date.Year == year && cdo.Date.Month == month).Count(),
                 VacationDayInThisMonth = vacationDaysTaken,
                 User = user
             };
@@ -571,22 +572,22 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        protected  double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth)
+        protected  double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, List<CompanyDayOff> companyDayOffs)
         {
             DateTime endOfTheMonth = firstOfTheMonth.AddMonths(1);
-            return GetTotalWorkingDaysByInterval(firstOfTheMonth,  endOfTheMonth);
+            return GetTotalWorkingDaysByInterval(firstOfTheMonth,  endOfTheMonth, companyDayOffs);
         }
 
-        protected  double GetTotalWorkingDaysThisYear(DateTime firstOfTheYear)
+        protected  double GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, List<CompanyDayOff> companyDayOffs)
         {
             DateTime endOfTheYear = firstOfTheYear.AddYears(1);
-            return GetTotalWorkingDaysByInterval(firstOfTheYear,  endOfTheYear);
+            return GetTotalWorkingDaysByInterval(firstOfTheYear,  endOfTheYear, companyDayOffs);
         }
 
-        protected  double GetTotalWorkingDaysByInterval(DateTime startDate, DateTime endDate)
+        protected  double GetTotalWorkingDaysByInterval(DateTime startDate, DateTime endDate, List<CompanyDayOff> companyDayOffs)
         {
                 
-                int companyDaysOffCount =  _context.CompanyDayOffs.Where(d => d.Date.Date >= startDate.Date && d.Date.Date < endDate.Date).Count();
+                int companyDaysOffCount =  companyDayOffs.Where(d => d.Date.Date >= startDate.Date && d.Date.Date < endDate.Date).Count();
                 DateTime nextDay = startDate;
                 int totalDays = 0;
                 while (nextDay.Date < endDate)
