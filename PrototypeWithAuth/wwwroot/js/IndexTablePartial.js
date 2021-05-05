@@ -299,6 +299,8 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
 			SelectedPriceSort: selectedPriceSort,
 			SelectedCurrency: $('#tempCurrency').val(),
 			SidebarFilterID: $('.sideBarFilterID').val(),
+			CategorySelected: $('#categorySortContent .select-category').is(":checked"),
+			SubCategorySelected: $('#categorySortContent .select-subcategory').is(":checked"),
 			months: months,
 			years: years
 		};

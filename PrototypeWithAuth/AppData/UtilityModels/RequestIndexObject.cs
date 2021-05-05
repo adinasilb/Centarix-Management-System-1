@@ -103,6 +103,8 @@ namespace PrototypeWithAuth.AppData
         }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
         public AppUtility.OrderTypeEnum OrderType { get; set; }
+        public bool CategorySelected { get; set; }
+        public bool SubcategorySelected { get; set; }
          //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
     }
 }

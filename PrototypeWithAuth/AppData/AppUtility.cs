@@ -443,6 +443,21 @@ namespace PrototypeWithAuth.AppData
             return priceColumn;
         }
 
+        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, ProductSubcategory ps)
+        {
+            List<string> categoryColumn = new List<String>();
+            var category = ps.ParentCategory.ParentCategoryDescription;
+            var subcategory = ps.ProductSubcategoryDescription;
+            if (categorySelected)
+            {
+                categoryColumn.Add(category);
+            }
+            if (subcategorySelected)
+            {
+                categoryColumn.Add(subcategory);
+            }
+            return categoryColumn;
+        }
         //public static List<T> CloneList<T>(T list)
         //{
         //    return new List<T>();
