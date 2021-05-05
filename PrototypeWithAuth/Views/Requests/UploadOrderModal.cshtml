@@ -29,6 +29,7 @@
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 <script src="~/js/site.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/WarantySupplyDateCalc.js"></script>
 <div class="modal modal-document fader on-form-modal modalStep1 @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index:9000">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
@@ -90,33 +91,46 @@
                             </a>
                             <label class="control-label text-center text document-text-margin" style="width:100%;">Order</label>
                         </div>
-                        <div class="col-3 offset-1">
+                        <div class="col-4 pl-5 pt-4">
                             <div class="row">
-                                <div class="form-group ">
-                                    <label asp-for="@Model.ParentRequest.SupplierOrderNumber" class=" control-label m-0 mt-2" style="width:100%;">Order Number</label>
-                                    <input asp-for="@Model.ParentRequest.SupplierOrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
-                                    <span asp-validation-for="@Model.ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
+                                <div class=" col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="@Model.ParentRequest.SupplierOrderNumber" class=" control-label m-0 mt-2" style="width:100%;">Order Number</label>
+                                        <input asp-for="@Model.ParentRequest.SupplierOrderNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
+                                        <span asp-validation-for="@Model.ParentRequest.SupplierOrderNumber" class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                    @if (Model.IsReorder)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="form-group ">
+                                                <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                                <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0 expected-supply-days" min="1" />
+                                                <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group ">
-                                    <label asp-for="@Model.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                    <input asp-for="@Model.ParentRequest.OrderDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" asp-format="{0:dd/MM/yyyy}" data-val="@Model.ParentRequest.OrderDate.ToString("yyyy-MM-dd")" />
-                                    <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
-                                </div>
-                            </div>
-                            @if (Model.IsReorder)
-                            {
                                 <div class="row">
-                                    <div class="form-group ">
-                                        <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
-                                        <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" />
-                                        <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                    <div class=" col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="@Model.ParentRequest.OrderDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                            <input asp-for="@Model.ParentRequest.OrderDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" asp-format="{0:dd/MM/yyyy}" data-val="@Model.ParentRequest.OrderDate.ToString("yyyy-MM-dd")" />
+                                            <span asp-validation-for="@Model.ParentRequest.OrderDate" class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                        @if (Model.IsReorder)
+                                        {
+                                            <div class=" col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Expected supply date</label>
+                                                    <input value="" class="form-control-plaintext border-bottom datepicker " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
+                                                </div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
-                            }
-                        </div>
-                    </div>
+                            </div>
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
