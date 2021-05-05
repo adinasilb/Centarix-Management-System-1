@@ -134,9 +134,9 @@ namespace PrototypeWithAuth.Controllers
               .Include(e => e.EmployeeStatus).Include(e => e.JobSubcategoryType).ThenInclude(js => js.JobCategoryType)
               .Include(e => e.EmployeeHours).Include(e => e.SalariedEmployee);
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
-            var companyDaysOff = _context.CompanyDayOffs;
-            var totalWorkingDaysInMonth = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
-            var totalWorkingDaysInYear = amountInYear == 0 ? AppUtility.GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1), companyDaysOff) : amountInYear;
+            var companyDaysOff = _context.CompanyDayOffs.ToList();
+            var totalWorkingDaysInMonth = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
+            var totalWorkingDaysInYear = amountInYear == 0 ? GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1), companyDaysOff) : amountInYear;
 
             foreach (Employee employee in employees)
             {

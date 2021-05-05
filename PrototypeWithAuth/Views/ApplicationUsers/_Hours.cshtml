@@ -133,7 +133,7 @@
                     @employee.Employee.EmployeeStatus.Description
                 </td>
                 <td width="11%">
-                    @{var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
+                    @{var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay??0;
                         var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
                         var totalHoursPercent = Math.Round((totalHours / totalHoursInRange) * 100, 2);
                      }
@@ -148,7 +148,7 @@
                     }
                     @if (employee.Employee.EmployeeStatusID == 1)
                     {
-                        totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
+                        totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay??0;
                         var totalInMonth = TimeSpan.FromHours(totalHoursInRange);
                         totalHoursString = totalHours + ":" + employee.Hours.ToString("mm") + "/" + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
                     }

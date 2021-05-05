@@ -66,7 +66,7 @@ namespace PrototypeWithAuth.Controllers
                 var sickCount = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year &&  eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
                 var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
-                totalhours = AppUtility.GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), _context.CompanyDayOffs) - (vacationDaysTaken + sickCount);
+                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), _context.CompanyDayOffs.ToList()) - (vacationDaysTaken + sickCount);
                 totalhours = totalhours * user.SalariedEmployee.HoursPerDay;
                
             }
@@ -575,5 +575,34 @@ namespace PrototypeWithAuth.Controllers
         {
             return true;
         }
+
+        public static double GetTotalWorkingDaysThisMonth(DateTime firstOfTheMonth, List<CompanyDayOff> companyDayOffs)
+        {
+            DateTime endOfTheMonth = firstOfTheMonth.AddMonths(1);
+            return GetTotalWorkingDaysByInterval(firstOfTheMonth, companyDayOffs, endOfTheMonth);
+        }
+
+        public static double GetTotalWorkingDaysThisYear(DateTime firstOfTheYear, List<CompanyDayOff> companyDayOffs)
+        {
+            DateTime endOfTheYear = firstOfTheYear.AddYears(1);
+            return GetTotalWorkingDaysByInterval(firstOfTheYear, companyDayOffs, endOfTheYear);
+        }
+
+        public static double GetTotalWorkingDaysByInterval(DateTime startDate, List<CompanyDayOff> companyDayOffs, DateTime endDate)
+        {
+            int companyDaysOffCount = companyDayOffs.Where(d => d.Date.Date >= startDate.Date && d.Date.Date < endDate.Date).Count();
+            DateTime nextDay = startDate;
+            int totalDays = 0;
+            while (nextDay.Date < endDate)
+            {
+                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    totalDays += 1;
+                }
+                nextDay = nextDay.AddDays(1);
+            }
+            return totalDays - companyDaysOffCount;
+        }
+
     }
 }
