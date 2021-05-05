@@ -585,18 +585,20 @@ namespace PrototypeWithAuth.Controllers
 
         protected  double GetTotalWorkingDaysByInterval(DateTime startDate, DateTime endDate)
         {
-            int companyDaysOffCount = _context.CompanyDayOffs.Where(d => d.Date.Date >= startDate.Date && d.Date.Date < endDate.Date).Count();
-            DateTime nextDay = startDate;
-            int totalDays = 0;
-            while (nextDay.Date < endDate)
-            {
-                if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
+                
+                int companyDaysOffCount =  _context.CompanyDayOffs.Where(d => d.Date.Date >= startDate.Date && d.Date.Date < endDate.Date).Count();
+                DateTime nextDay = startDate;
+                int totalDays = 0;
+                while (nextDay.Date < endDate)
                 {
-                    totalDays += 1;
+                    if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
+                    {
+                        totalDays += 1;
+                    }
+                    nextDay = nextDay.AddDays(1);
                 }
-                nextDay = nextDay.AddDays(1);
-            }
-            return totalDays - companyDaysOffCount;
+                return totalDays - companyDaysOffCount;
+
         }
 
     }
