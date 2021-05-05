@@ -25,23 +25,28 @@
                 @foreach (var col in Model.RequestsByVendor.First().First().Columns)
                 {
 
-                    <th width="@col.Width%">
-                        @switch (col.FilterEnum)
-                        {
-                            case AppUtility.FilterEnum.Price:
-                                <label>@col.Title</label>
-                                <div class="d-inline-block">
-                                    @{
-                                        await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
-                                    }
-                                </div>
-                                break;
-                            default:
-                                <label>@col.Title</label>
-                                break;
-                        }
-
-                    </th>
+                <th width="@col.Width%">
+                    <label>@col.Title</label>
+                    @switch (col.FilterEnum)
+                    {
+                        case AppUtility.FilterEnum.Price:
+                            <div class="d-inline-block">
+                                @{
+                                    await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
+                                }
+                            </div>
+                            break;
+                        case AppUtility.FilterEnum.Category:
+                            <div class="d-inline-block">
+                                @{
+                                    await Html.RenderPartialAsync("_CategoryPopover", Model.CategoryPopoverViewModel);
+                                }
+                            </div>
+                            break;
+                        default:
+                            break;
+                    }
+                </th>
 
                 }
 

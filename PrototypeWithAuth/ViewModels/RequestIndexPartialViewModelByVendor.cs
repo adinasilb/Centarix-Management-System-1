@@ -14,5 +14,6 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.PageTypeEnum PageType { get; set; }
         public AppUtility.SidebarEnum SidebarType { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
+        public CategoryPopoverViewModel CategoryPopoverViewModel { get; set; }
     }
 }
