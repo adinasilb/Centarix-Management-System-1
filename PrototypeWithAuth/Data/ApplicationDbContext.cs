@@ -7,6 +7,11 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using System.Linq;
 using Abp.Domain.Entities;
+using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace PrototypeWithAuth.Data
 {
@@ -39,6 +44,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<ProtocolCategory> ProtocolCategories { get; set; }
         public DbSet<ProtocolSubCategory> ProtocolSubCategories { get; set; }
         public DbSet<LineType> LineTypes { get; set; }
+        public IQueryable<Guid> TempLines => Set<TempLines>().Select(t => t.ID);
         public DbSet<FunctionLine> FunctionLines { get; set; }
         public DbSet<ProtocolComment> ProtocolComments { get; set; }
         public DbSet<Line> Lines { get; set; }
@@ -107,9 +113,55 @@ namespace PrototypeWithAuth.Data
         public DbSet<LocationRoomInstance> LocationRoomInstances { get; set; }
         public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; }
         public DbSet<TemporaryLocationInstance> TemporaryLocationInstances { get; set; }
+
+        private string GetCreateTableSql(bool createPk)
+        {
+            var sqlGenHelper = this.GetService<ISqlGenerationHelper>();
+
+            var entity = Model.FindEntityType(typeof(TempLines));
+            var tableName = entity.GetTableName();
+            var escapedTableName = sqlGenHelper.DelimitIdentifier(tableName);
+
+            var idProperty = entity.FindProperty(nameof(TempLines));
+            var columnName = idProperty.GetColumnName();
+            var escapedColumnName = sqlGenHelper.DelimitIdentifier(columnName);
+            var columnType = idProperty.GetColumnType();
+            var nullability = idProperty.IsNullable ? "NULL" : "NOT NULL";
+
+            var pkSql = createPk ? $", PRIMARY KEY ({escapedColumnName})" : null;
+
+            var sql = $@"
+                CREATE TABLE {escapedTableName}
+                (
+                   {escapedColumnName} {columnType} {nullability}
+                   {pkSql}
+                );";
+            return sql;
+        }
+
+        public async Task CreateMyTempTableAsync(bool createPk,  CancellationToken cancellationToken = default)
+        {
+            var sql = GetCreateTableSql(createPk);
+
+            await Database.OpenConnectionAsync(cancellationToken);
+
+            try
+            {
+                await Database.ExecuteSqlRawAsync(sql, cancellationToken);
+            }
+            catch (Exception)
+            {
+                Database.CloseConnection();
+                throw;
+            }
+        }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<TempLines>().HasNoKey().ToView("#TempLines");
 
             modelBuilder.Entity<VendorCategoryType>()
                 .HasKey(v => new { v.VendorID, v.CategoryTypeID });
@@ -334,7 +386,7 @@ namespace PrototypeWithAuth.Data
                .WithMany()
                .HasForeignKey(ltc => ltc.LineTypeChildID);
 
-            
+
 
 
             modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
