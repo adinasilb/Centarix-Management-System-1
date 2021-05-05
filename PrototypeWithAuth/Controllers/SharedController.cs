@@ -570,5 +570,10 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
+
+        protected bool SetFavorite<T1, T2>(T1 ModelInstanceID, T2 FavoriteTable, bool IsFavorite )
+        {
+            return true;
+        }
     }
 }

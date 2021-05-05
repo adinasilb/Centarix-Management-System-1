@@ -2497,15 +2497,6 @@ namespace PrototypeWithAuth.Controllers
                                 await transaction.CommitAsync();
                                 base.RemoveRequestWithCommentsAndEmailSessions();
                             }
-                            switch (OrderTypeEnum)
-                            {
-                                case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                                    break;
-                                case AppUtility.OrderTypeEnum.OrderNow:
-                                    break;
-                                case AppUtility.OrderTypeEnum.AddToCart:
-                                    break;
-                            }
                         }
                         catch (Exception ex)
                         {
@@ -2527,8 +2518,8 @@ namespace PrototypeWithAuth.Controllers
                             break;
                     }
                     reorderViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
-
-                    return RedirectToAction(action, "Requests", reorderViewModel.RequestIndexObject);
+                    bool isReorder = true;
+                    return RedirectToAction(action, "Requests", new { requestIndexObject = reorderViewModel.RequestIndexObject, isReorder = isReorder });
                 }
                 catch (Exception ex)
                 {
@@ -4701,9 +4692,8 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType)
+        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType, bool isReorder = false)
         {
-
             var UploadQuoteViewModel = new UploadQuoteViewModel();
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
@@ -4724,47 +4714,10 @@ namespace PrototypeWithAuth.Controllers
             }
             UploadQuoteViewModel.OrderTypeEnum = OrderType;
             UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
+            UploadQuoteViewModel.IsReorder = isReorder;
             return PartialView(UploadQuoteViewModel);
 
 
-        }
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject)
-        {
-
-            int lastParentRequestOrderNum = 0;
-            var prs = _context.ParentRequests;
-            if (_context.ParentRequests.Any())
-            {
-                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
-            }
-            ParentRequest pr = new ParentRequest()
-            {
-                ApplicationUserID = _userManager.GetUserId(User),
-                OrderNumber = lastParentRequestOrderNum + 1,
-                OrderDate = DateTime.Now
-            };
-            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject };
-
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
-            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
-
-            if (Directory.Exists(uploadFolderOrders))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
-                //searching for the partial file name in the directory
-                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                UploadQuoteViewModel.FileStrings = new List<String>();
-                foreach (var orderfile in orderfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    UploadQuoteViewModel.FileStrings.Add(newFileString);
-                }
-            }
-
-            return PartialView(UploadQuoteViewModel);
         }
         [HttpPost]
         [Authorize(Roles = "Requests")]
@@ -4783,6 +4736,7 @@ namespace PrototypeWithAuth.Controllers
                 var request = HttpContext.Session.GetObject<Request>(requestName);
                 uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
                 request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
+                request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
                 if (request.RequestStatusID == 1)
                 {
                     TempData["RequestStatus"] = 1;
@@ -4800,8 +4754,12 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
+                            if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
+                            {
+                                request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                            }
                             _context.Entry(request.ParentQuote).State = EntityState.Added;
-                            if(request.Product.ProductID ==0)
+                            if (request.Product.ProductID == 0)
                             {
                                 _context.Entry(request.Product).State = EntityState.Added;
                             }
@@ -4857,38 +4815,44 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        private async Task SaveCommentsFromSession(Request request)
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject, bool isReorder = false)
         {
-            try
+
+            int lastParentRequestOrderNum = 0;
+            var prs = _context.ParentRequests;
+            if (_context.ParentRequests.Any())
             {
-                var commentExists = true;
-                var n = 1;
-                do
+                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
+            }
+            ParentRequest pr = new ParentRequest()
+            {
+                ApplicationUserID = _userManager.GetUserId(User),
+                OrderNumber = lastParentRequestOrderNum + 1,
+                OrderDate = DateTime.Now
+            };
+            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject, IsReorder = isReorder};
+
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
+            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
+
+            if (Directory.Exists(uploadFolderOrders))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
+                //searching for the partial file name in the directory
+                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                UploadQuoteViewModel.FileStrings = new List<String>();
+                foreach (var orderfile in orderfilesfound)
                 {
-                    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
-                    if (comment != null)
-                    //will only go in here if there are comments so will only work if it's there
-                    //IMPT look how to clear the session information if it fails somewhere...
-                    {
-                        comment.RequestID = request.RequestID;
-                        _context.Add(comment);
-                        n++;
-                    }
-                    else
-                    {
-                        commentExists = false;
-                    }
-                } while (commentExists);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+                    UploadQuoteViewModel.FileStrings.Add(newFileString);
+                }
             }
 
+            return PartialView(UploadQuoteViewModel);
         }
-
         [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel, bool isCancel = false)
@@ -4908,8 +4872,9 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
                     var req = HttpContext.Session.GetObject<Request>(requestName);
-                    if ( req != null)
+                    if (req != null)
                     {
+                        req.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
                         requests.Add(req);
                     }
                     else
@@ -4925,7 +4890,7 @@ namespace PrototypeWithAuth.Controllers
                     request.ParentQuote = null;
 
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                 
+
                     HttpContext.Session.SetObject(requestName, request);
                     RequestNum++;
                 }
@@ -4957,6 +4922,38 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+       
+        private async Task SaveCommentsFromSession(Request request)
+        {
+            try
+            {
+                var commentExists = true;
+                var n = 1;
+                do
+                {
+                    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
+                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                    if (comment != null)
+                    //will only go in here if there are comments so will only work if it's there
+                    //IMPT look how to clear the session information if it fails somewhere...
+                    {
+                        comment.RequestID = request.RequestID;
+                        _context.Add(comment);
+                        n++;
+                    }
+                    else
+                    {
+                        commentExists = false;
+                    }
+                } while (commentExists);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
         private async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, int requestNum = 1)
         {
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210504092435_addedFavoriteProtocols")]
+    partial class addedFavoriteProtocols
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1116,28 +1118,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("RequestID");
 
                     b.ToTable("FavoriteRequests");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteResource", b =>
-                {
-                    b.Property<int>("FavoriteResourceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ResourceID")
-                        .HasColumnType("int");
-
-                    b.HasKey("FavoriteResourceID");
-
-                    b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("ResourceID");
-
-                    b.ToTable("FavoriteResources");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Freelancer", b =>
@@ -5685,20 +5665,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany("FavoriteRequests")
                         .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteResource", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany("FavoriteResources")
-                        .HasForeignKey("ApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Resource", null)
-                        .WithMany("FavoriteResources")
-                        .HasForeignKey("ResourceID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

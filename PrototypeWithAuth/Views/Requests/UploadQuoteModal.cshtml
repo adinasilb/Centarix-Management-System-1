@@ -90,7 +90,7 @@
                             </a>
                             <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
                         </div>
-                        <div class="col-3 offset-1 d-flex align-items-center">
+                        <div class="col-3 offset-1 pt-4">
                             <div class="row">
                                 <div class="form-group ">
                                     <label asp-for="@Model.ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
@@ -98,13 +98,23 @@
                                     <span asp-validation-for="@Model.ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
                                 </div>
                             </div>
+                            @if (Model.IsReorder)
+                            {
+                                <div class="row">
+                                    <div class="form-group ">
+                                        <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" />
+                                        <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                            }
                             @*<div class="row">
-                    <div class="form-group ">
-                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
-                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
-                    </div>
-                </div>*@
+                                <div class="form-group ">
+                                    <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                    <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
+                                    <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
+                                </div>
+                            </div>*@
                         </div>
                     </div>
                 </div>

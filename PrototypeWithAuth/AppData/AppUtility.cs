@@ -82,7 +82,7 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials}
+        public enum ParentFolderName { Protocols, Requests, Materials }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
@@ -108,6 +108,8 @@ namespace PrototypeWithAuth.AppData
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay }
         public enum PopoverDescription { More, Share, Delete }
         public enum PopoverEnum { None }
+        public enum FavoriteModels { Resources, Requests, Protocols }
+        public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -148,6 +150,7 @@ namespace PrototypeWithAuth.AppData
 
             return ReturnList;
         }
+
 
         public static ResourceAPIViewModel GetResourceArticleFromNCBIPubMed(string PubMedID)
         {
@@ -382,12 +385,12 @@ namespace PrototypeWithAuth.AppData
                                 accountingPopoverLink.Color = "#5F79E2";
                                 accountingPopoverLink.Icon = "icon-centarix-icons-19";
                                 break;
-                            //case PaymentsPopoverEnum.Installments:
-                            //    accountingPopoverLink.Action = "ChangePaymentStatus";
-                            //    accountingPopoverLink.Controller = "Requests";
-                            //    accountingPopoverLink.Color = "#7D9BAA";
-                            //    accountingPopoverLink.Icon = "icon-centarix-icons-20";
-                            //    break;
+                                //case PaymentsPopoverEnum.Installments:
+                                //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                                //    accountingPopoverLink.Controller = "Requests";
+                                //    accountingPopoverLink.Color = "#7D9BAA";
+                                //    accountingPopoverLink.Icon = "icon-centarix-icons-20";
+                                //    break;
                                 //case PaymentsPopoverEnum.Clarification:
                                 //    accountingPopoverLink.Action = "ChangePaymentStatus";
                                 //    accountingPopoverLink.Controller = "Requests";

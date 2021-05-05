@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210504103910_fixedFavoriteResources")]
+    partial class fixedFavoriteResources
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1134,8 +1136,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("FavoriteResourceID");
 
                     b.HasIndex("ApplicationUserID");
-
-                    b.HasIndex("ResourceID");
 
                     b.ToTable("FavoriteResources");
                 });
@@ -5695,12 +5695,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("FavoriteResources")
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Resource", null)
-                        .WithMany("FavoriteResources")
-                        .HasForeignKey("ResourceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Freelancer", b =>
