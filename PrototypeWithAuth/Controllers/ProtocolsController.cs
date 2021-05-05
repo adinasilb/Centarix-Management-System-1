@@ -702,13 +702,36 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<string> FavoriteResources(int ResourceID)
+        public async Task<string> FavoriteResources(int ResourceID, bool Favorite = true)
         {
             string retString = null;
-            //FavoriteResource favoriteResource = new FavoriteResource()
-            //{
-            //    r
-            //};
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (Favorite)
+                    {
+                        FavoriteResource favoriteResource = _context.FavoriteResources.Where(fr => fr.ResourceID == ResourceID && fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
+                        _context.Remove(favoriteResource);
+                    }
+                    else
+                    {
+                        //check for favorite
+                        FavoriteResource favoriteResource = new FavoriteResource()
+                        {
+                            ResourceID = ResourceID,
+                            ApplicationUserID = _userManager.GetUserId(User)
+                        };
+                        _context.Update(favoriteResource);
+                    }
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch(Exception e)
+                {
+                    transaction.Rollback();
+                }
+            }
 
             return retString;
         }
