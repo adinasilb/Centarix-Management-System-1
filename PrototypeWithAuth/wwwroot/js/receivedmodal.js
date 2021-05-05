@@ -327,64 +327,68 @@ function MultipleLocation(element, ToggleBoxUnitSelected) {
         var currentBox = element;
         var boxIsPrevious = false;
         var select = firstSelected.hasClass('location-selected');
-        if (!firstSelected.parent("tr").is(element.parent("tr"))) {
-            if (element.parent("tr").prevAll().filter(firstSelected.parent("tr")).length == 0) {
-                console.log("Earlier row");
-                boxIsPrevious = true;
-            }
-            var end = false;
-            if (boxIsPrevious) {
-                firstSelected.parent("tr").prevUntil(element.parent("tr").prev()).each(function() {
-                    var reversed = $(this).children("td").toArray().reverse();
-                    reversed.forEach(td => {
-						if (!end) {
-                            if ($(td).is(currentBox)) {
-                                end = true;
-                            }
-                            else {
-                                if (!$(td).hasClass("graduated-table-background-color")) {
-                                    ToggleBoxUnitSelected($(td), select);
-                                }
-                            }
-                        }
-                    });
-                });
-            }
-            else {
-                firstSelected.parent("tr").nextUntil(element.parent("tr").next()).each(function() {
-                    $(this).children("td").each(function() {
-                        if (!end) {
-                            if ($(this).is(currentBox)) {
-                                end = true;
-                            }
-                            else {
-                                if (!$(this).hasClass("graduated-table-background-color")) {
-                                    ToggleBoxUnitSelected($(this), select);
-                                }
-                            }
-                        }
-                    });
-                });
-            }
-        }
-        else {
-            if (element.prevAll().filter(firstSelected).length == 0) {
-                console.log("Earlier box");
-                boxIsPrevious = true;
-            }
-        }
-        if (boxIsPrevious) {
-			firstSelected.prevUntil(element, ".visual-box").each(function () {
-                if (!$(this).hasClass("graduated-table-background-color")) {
-                    ToggleBoxUnitSelected($(this), select);
-                }
-            });
-        }
-        else {
-            firstSelected.nextUntil(element, ".visual-box").each(function() {
-                if (!$(this).hasClass("graduated-table-background-color")) {
-                    ToggleBoxUnitSelected($(this), select);
-                }
-            });
-        }
+	if (!firstSelected.parent("tr").is(element.parent("tr"))) {
+		console.log("different row")
+		if (element.parent("tr").prevAll().filter(firstSelected.parent("tr")).length == 0) {
+			console.log("Earlier row");
+			boxIsPrevious = true;
+		}
+		var end = false;
+		if (boxIsPrevious) {
+			firstSelected.parent("tr").prevUntil(element.parent("tr").prev()).each(function () {
+				var reversed = $(this).children("td").toArray().reverse();
+				reversed.forEach(td => {
+					if (!end) {
+						if ($(td).is(currentBox)) {
+							end = true;
+						}
+						else {
+							if (!$(td).hasClass("graduated-table-background-color")) {
+								ToggleBoxUnitSelected($(td), select);
+							}
+						}
+					}
+				});
+			});
+		}
+		else {
+			firstSelected.parent("tr").nextUntil(element.parent("tr").next()).each(function () {
+				$(this).children("td").each(function () {
+					if (!end) {
+						if ($(this).is(currentBox)) {
+							end = true;
+						}
+						else {
+							if (!$(this).hasClass("graduated-table-background-color")) {
+								ToggleBoxUnitSelected($(this), select);
+							}
+						}
+					}
+				});
+			});
+		}
+	}
+	else {
+		console.log("same row")
+		if (element.prevAll().filter(firstSelected).length == 0) {
+			console.log("Earlier box");
+			boxIsPrevious = true;
+		}
+	}
+	if (boxIsPrevious) {
+		firstSelected.prevUntil(element).each(function () {
+			if (!$(this).hasClass("graduated-table-background-color")) {
+				ToggleBoxUnitSelected($(this), select);
+			}
+		});
+	}
+	else {
+		console.log("element" +$(element).html())
+		firstSelected.nextUntil(element).each(function () {
+			if (!$(this).hasClass("graduated-table-background-color")) {
+				console.log("this" + $(this))
+				ToggleBoxUnitSelected($(this), select);
+			}
+		});
+	}
 }
