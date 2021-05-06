@@ -178,7 +178,7 @@
     <div class="visualView col-6 m-auto text-center">
         @if (Model.ReceivedModalVisualViewModel != null)
         {
-            @if (Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 9 || Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 12)
+            @*@if (Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 9 || Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 12)
             {
                 <div class="row">
                     <div class="col-12">
@@ -188,7 +188,7 @@
                         </button>
                     </div>
                 </div>
-            }
+            }*@
             <div>
                 @{ await Html.RenderPartialAsync("ReceivedModalVisual", Model.ReceivedModalVisualViewModel); }
             </div>
