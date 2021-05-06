@@ -11,7 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public Employee Employee { get; set; }
         public TimeSpan Hours { get; set; }
-        public int WorkingDays { get; set; }
+        public double WorkingDays { get; set; }
         public double VacationDays { get; set; }
         public double SickDays { get; set; }
         public double VacationSickCount { get; set; }
