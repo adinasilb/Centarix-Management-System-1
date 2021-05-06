@@ -9,6 +9,6 @@ namespace PrototypeWithAuth.ViewModels
     public class ResourcesListViewModel
     {
         public List<String> PaginationTabs { get; set; }
-        public Dictionary<Resource, bool> ResourcesWithFavorites { get; set; }
+        public List<ResourceWithFavorite> ResourcesWithFavorites { get; set; } //used this instead of dictionary so it won't crash if doubles are accidentally inserted
     }
 }

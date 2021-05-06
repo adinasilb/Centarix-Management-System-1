@@ -666,15 +666,24 @@ namespace PrototypeWithAuth.Controllers
                         .Include(r => r.FavoriteResources)
                         .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
                         .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
-                        .ToDictionary(r => r, r =>r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User)));
-                    
+                        .Select(r => new ResourceWithFavorite
+                        {
+                            Resource = r,
+                            IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                        }).ToList();
+
                     resourcesListViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
                     break;
                 case AppUtility.SidebarEnum.Favorites:
                     resourcesListViewModel.ResourcesWithFavorites = _context.FavoriteResources
                         .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
                         .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
-                    .ToDictionary(fr => fr.Resource, fr => true);
+                        .Select(fr => new ResourceWithFavorite
+                        {
+                            Resource = fr.Resource,
+                            IsFavorite = true
+                        }).ToList();
+
                     resourcesListViewModel.PaginationTabs = new List<string>() { };
                     break;
                 case AppUtility.SidebarEnum.SharedWithMe:
@@ -721,6 +730,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<string> FavoriteResources(int ResourceID, bool Favorite = true)
         {
+            //The system for checks is strict b/c the calls are dependent upon icon names in code and jquery that can break or be changed one day
             string retString = null;
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -729,7 +739,7 @@ namespace PrototypeWithAuth.Controllers
                     if (Favorite)
                     {
                         FavoriteResource favoriteResource = _context.FavoriteResources.Where(fr => fr.ResourceID == ResourceID && fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
-                        _context.Remove(favoriteResource);
+                        if (favoriteResource != null) { _context.Remove(favoriteResource); } //check is here so it doesn't crash
                     }
                     else
                     {
