@@ -61,7 +61,6 @@
                             @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceParentID)
                             @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceAbbrev)
                             @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName)
-                            @Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName)
                         }
                         @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
                         @*<input type="hidden" asp-for="ChildrenLocationInstances[z].LocationInstanceName" class="LocationInstanceName" />*@
@@ -96,11 +95,9 @@
                             <td class="@outerClass @disabledEdit" style="padding:0px;" id="@locationsList[z].LocationInstanceID">
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
-                                    @*@Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID })*@
                                     <div class="row-1"><i class="@iconClass"></i></div>
                                     <div class="row-2 text-left">
                                         <label class="@labelClass">@locationsList[z].LocationInstanceAbbrev</label>
-                                        @*@Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, description + " ", htmlAttributes: new { @class = labelClass, @value = "+" })*@
                                     </div>
                                 </div>
                             </td>
@@ -110,13 +107,11 @@
                             <td class="@outerClass not-clickable" style="padding:0px;" id="@(id+".LocationInstanceID")">
                                 <div>
                                     <input class="@classes disabled" id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
-                                    @*@Html.CheckBoxFor(m => m.ChildrenLocationInstances[z].IsFull, htmlAttributes: new { @checked = false, @class = classes, @liid = liID, @disabled = "disabled" })*@
                                     <div class="row-1">
                                         <i></i>
                                     </div>
                                     <div class="row-2 text-left">
                                         <label class="@labelClass">@locationsList[z].LocationInstanceAbbrev</label>
-                                        @*@Html.LabelFor(m => m.ChildrenLocationInstances[z].IsFull, description + " ", htmlAttributes: new { @class = labelClass, @value = "+" })*@
                                     </div>
                                 </div>
                             </td>
