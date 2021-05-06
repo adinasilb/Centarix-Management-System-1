@@ -249,6 +249,18 @@
     <Compile Remove="Data\Migrations\20210503061010_addLineTypes.Designer.cs" />
     <Compile Remove="Data\Migrations\20210503061253_linetypeChildAndParentIDsnullable.cs" />
     <Compile Remove="Data\Migrations\20210503061253_linetypeChildAndParentIDsnullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506105827_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506105827_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506112350_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506112350_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506113349_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506113349_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506113829_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506113829_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506114848_AddFkParentLine.cs" />
+    <Compile Remove="Data\Migrations\20210506114848_AddFkParentLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506115752_TurnOffAutoIncrement.cs" />
+    <Compile Remove="Data\Migrations\20210506115752_TurnOffAutoIncrement.Designer.cs" />
   </ItemGroup>
 
 

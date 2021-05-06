@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    [Table("Lines")]
-    public class Line : LineBase
+    [Table("TempLines")]
+    public class TempLine : LineBase
     {
-        public  Line ParentLine { get; set; }
-        public TempLine TempLine { get; set; }
+        public TempLine ParentLine { get; set; }
+        public Line Line { get; set; }
+
     }
 }

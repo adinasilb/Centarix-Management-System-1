@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210506114300_AddTempLine")]
+    partial class AddTempLine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1710,9 +1712,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("LineTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParentLineID")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
@@ -1725,8 +1724,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("LineID");
 
                     b.HasIndex("LineTypeID");
-
-                    b.HasIndex("ParentLineID");
 
                     b.HasIndex("ProtocolID");
 
@@ -4236,9 +4233,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("LineTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParentLineID")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
@@ -4248,8 +4242,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("LineID");
 
                     b.HasIndex("LineTypeID");
-
-                    b.HasIndex("ParentLineID");
 
                     b.HasIndex("ProtocolID");
 
@@ -5294,12 +5286,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.Line", "ParentLine")
-                        .WithMany()
-                        .HasForeignKey("ParentLineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany("Lines")
                         .HasForeignKey("ProtocolID")
@@ -5762,12 +5748,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.LineType", "LineType")
                         .WithMany()
                         .HasForeignKey("LineTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.TempLine", "ParentLine")
-                        .WithMany()
-                        .HasForeignKey("ParentLineID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

@@ -169,7 +169,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = header, LineNumberString = header.LineNumber + "", LineTypes = Model.LineTypes });
                 headerCount++;
                 lineCount++;
-                var subHeaders = Model.Protocol.Lines.Where(l => l.ParentLineID == header.ParentLineID);
+                var subHeaders = Model.Protocol.Lines/*.Where(l => l.ParentLineID == header.ParentLineID)*/;
                 subHeaderCount = 0;
 
                 foreach (var subHeader in subHeaders)
@@ -177,7 +177,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                     await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = subHeader, LineNumberString = header.LineNumber + "." + subHeader.LineNumber, LineTypes = Model.LineTypes });
                     lineCount++;
                     subHeaderCount++;
-                    var steps = Model.Protocol.Lines.Where(l => l.ParentLineID == subHeader.ParentLineID);
+                    var steps = Model.Protocol.Lines/*.Where(l => l.ParentLineID == subHeader.ParentLineID)*/;
                     stepCount = 0;
 
                     foreach (var step in steps)
@@ -186,9 +186,9 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                         lineCount++;
                         stepCount++;
                     }
-                    <input type="hidden" class="step-count count3" id="subHeader@(subHeader.ParentLineID)" value="@stepCount" />
+                    <input type="hidden" class="step-count count3" id="subHeader@(subHeader@*.ParentLineID*@)" value="@stepCount" />
                 }
-                <input type="hidden" class="subHeader-count count2" id="header@(header.ParentLineID)" value="@subHeaderCount" />
+                <input type="hidden" class="subHeader-count count2" id="header@(header@*.ParentLineID*@)" value="@subHeaderCount" />
             }
             <input type="hidden" class="header-count count1" id="header" value="@headerCount" />
 
