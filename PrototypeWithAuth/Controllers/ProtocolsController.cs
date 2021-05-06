@@ -740,16 +740,21 @@ namespace PrototypeWithAuth.Controllers
                     {
                         FavoriteResource favoriteResource = _context.FavoriteResources.Where(fr => fr.ResourceID == ResourceID && fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
                         if (favoriteResource != null) { _context.Remove(favoriteResource); } //check is here so it doesn't crash
+                        //if it doesn't exist the jquery will then cont and leave an empty icon which is ok b/c its empty
                     }
                     else
                     {
                         //check for favorite
-                        FavoriteResource favoriteResource = new FavoriteResource()
+                        if (_context.FavoriteResources.Where(fr => fr.ResourceID == ResourceID && fr.ApplicationUserID == _userManager.GetUserId(User)) != null)
                         {
-                            ResourceID = ResourceID,
-                            ApplicationUserID = _userManager.GetUserId(User)
-                        };
-                        _context.Update(favoriteResource);
+                            FavoriteResource favoriteResource = new FavoriteResource()
+                            {
+                                ResourceID = ResourceID,
+                                ApplicationUserID = _userManager.GetUserId(User)
+                            };
+                            _context.Update(favoriteResource);
+                        }
+                        //if the favorite exists the jquery will then cont and leave a full icon which is ok b/c its full
                     }
                     await _context.SaveChangesAsync();
                     transaction.Commit();
