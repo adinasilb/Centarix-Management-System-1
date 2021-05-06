@@ -110,6 +110,15 @@ namespace PrototypeWithAuth.AppData
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
+        public enum FavoriteIconTitle { FilledIn, Empty }
+        public static List<StringWithName> FavoriteIcons()
+        {
+            var StringsWithName = new List<StringWithName>(){
+                new StringWithName() { StringName = FavoriteIconTitle.FilledIn.ToString(), StringDefinition = "icon-favorite-24px" },
+                new StringWithName() { StringName = FavoriteIconTitle.Empty.ToString(), StringDefinition = "icon-favorite_border-24px" }
+            };
+            return StringsWithName;
+        }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
