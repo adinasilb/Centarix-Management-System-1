@@ -17,15 +17,15 @@
     }
 </div>
 <div class="row under-row-margin">
-    @foreach (var resource in Model.Resources)
+    @foreach (var resource in Model.ResourcesWithFavorites)
     {
         <div class="type-div" style="width:22%;">
             <fieldset class=" resource-fieldset px-3 pt-2">
-                <div class="resource-title heading-1">@resource.Title</div>
+                <div class="resource-title heading-1">@resource.Key.Title</div>
                 <div class="resource-tags protocols-color">
                     Tags:
                     @{var first = true; }
-                    @foreach (var resourceResourceCategory in resource.ResourceResourceCategories)
+                    @foreach (var resourceResourceCategory in resource.Key.ResourceResourceCategories)
                     {
                         if (!first)
                         {
@@ -38,22 +38,31 @@
                         <span>@resourceResourceCategory.ResourceCategory.ResourceCategoryDescription</span>
                     }
                 </div>
-                @{ int endCounter = Convert.ToInt32(resource.Summary?.Length < 246 ? resource.Summary?.Length : 246); }
-                <div class="resource-summary text under-row-margin ">@resource.Summary?.Substring(0, endCounter)</div>
+                @{ int endCounter = Convert.ToInt32(resource.Key.Summary?.Length < 246 ? resource.Key.Summary?.Length : 246); }
+                <div class="resource-summary text under-row-margin ">@resource.Key.Summary?.Substring(0, endCounter)</div>
                 <div class="list-buttons row m-2 py-4 form-element-border-top-small w-100">
                     <div class="col-3">
-                        <input class="small-custom-button call-resource-notes" value="Notes" id="@resource.ResourceID" />
+                        <input class="small-custom-button call-resource-notes" value="Notes" id="@resource.Key.ResourceID" />
                     </div>
                     <div class=" col-6 offset-3 float-right">
-                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more favorite-protocol" value="@resource.ResourceID">
-                            <i class="icon-favorite_border-24px hover-bold px-1" style="font-size:2rem;">
+                        @{ 
+                            var filledFavIcon = "icon-favorite-24px";
+                            var emptyFavIcon = "icon-favorite_border-24px";
+                            var icon = emptyFavIcon;
+                            if (resource.Value)
+                            {
+                                icon = filledFavIcon;
+                            }
+                        }
+                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more favorite-protocol" value="@resource.Key.ResourceID">
+                            <i class="@icon hover-bold px-1" style="font-size:2rem;">
                             </i>
                         </button>
-                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more " value="@resource.ResourceID">
+                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more " value="@resource.Key.ResourceID">
                             <i class="icon-share-24px1 hover-bold px-1" style="font-size:2rem;">
                             </i>
                         </button>
-                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more " value="@resource.ResourceID">
+                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more " value="@resource.Key.ResourceID">
                             <i class="icon-create-24px hover-bold px-1" style="font-size:2rem;">
                             </i>
                         </button>

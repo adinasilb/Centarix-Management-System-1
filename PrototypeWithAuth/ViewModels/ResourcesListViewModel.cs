@@ -9,6 +9,6 @@ namespace PrototypeWithAuth.ViewModels
     public class ResourcesListViewModel
     {
         public List<String> PaginationTabs { get; set; }
-        public List<Resource> Resources { get; set; }
+        public Dictionary<Resource, bool> ResourcesWithFavorites { get; set; }
     }
 }
