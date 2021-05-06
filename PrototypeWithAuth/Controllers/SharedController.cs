@@ -24,8 +24,8 @@ namespace PrototypeWithAuth.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         protected SharedController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment =null)
         {
-            _context = context;
-            _hostingEnvironment = hostingEnvironment;
+                _context = context;
+                _hostingEnvironment = hostingEnvironment;
         }
         private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(int year, int month, Employee user)
         {

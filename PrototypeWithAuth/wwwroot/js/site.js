@@ -243,19 +243,18 @@ $(function () {
 
 
 	$(".visual-locations-zoom").off("click").on("click", function (e) {
+		e.preventDefault()
 		console.log("called visual locations zoom with an id of: " + $(this).val());
 		var myDiv = $(".location-modal-view");
-		var sectionType = $("#SectionType").val();
+		var sectionType = $("#masterSectionType").val();
 		console.log("myDiv: " + myDiv);
 		var parentId = $(this).val();
 		$("#visualZoomModal").replaceWith('');
 		$("#visualZoomModal").replaceWith('');
 		//console.log("about to call ajax with a parentid of: " + parentId);
 		$.ajax({
-			async: true,
 			url: "/Locations/VisualLocationsZoom/?VisualContainerId=" + parentId + "&SectionType=" + sectionType,
 			type: 'GET',
-			cache: false,
 			success: function (data) {
 				$.fn.OpenModal('visualZoomModal', 'visual-zoom', data)
 				

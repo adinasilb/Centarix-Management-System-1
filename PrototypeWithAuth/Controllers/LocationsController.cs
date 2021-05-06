@@ -181,7 +181,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public IActionResult VisualLocationsZoom(int VisualContainerId, AppUtility.MenuItems SectionType = AppUtility.MenuItems.LabManagement)
+        public async Task<IActionResult> VisualLocationsZoom(int VisualContainerId, AppUtility.MenuItems SectionType = AppUtility.MenuItems.LabManagement)
         {
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()
             {
@@ -189,8 +189,8 @@ namespace PrototypeWithAuth.Controllers
                 SectionType = SectionType
             };
             visualLocationsViewModel.ChildrenLocationInstances =
-                _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
-                .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).OrderBy(li => li.LocationNumber).ToList();
+            await  _context.LocationInstances.Where(m => m.LocationInstanceParentID == visualLocationsViewModel.ParentLocationInstance.LocationInstanceID)
+                .Include(m => m.RequestLocationInstances).ThenInclude(rli => rli.Request).ThenInclude(r => r.Product).OrderBy(li => li.LocationNumber).ToListAsync();
 
             return PartialView(visualLocationsViewModel);
         }
