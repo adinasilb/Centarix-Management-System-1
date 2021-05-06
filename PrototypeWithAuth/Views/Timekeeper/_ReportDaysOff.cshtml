@@ -48,18 +48,23 @@
                     <div style="display:none;" id="moreOffDaysPopover">
                         <div class="container ">
                             <div class="row moreOffDay-btn p-1">
-                                <a href="#" class=" text-black @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.MaternityLeave"  onclick="$.fn.reportOffDay(this)">
+                                <a href="#" class=" text-black @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.MaternityLeave" onclick="$.fn.reportOffDay(this)">
                                     Report Maternity Leave
                                 </a>
                             </div>
                             @{var disabled = "style=pointer-events:none;color:gray!important;";}
-                            @if(Model.Employee.SpecialDays>0)
+                            @if (Model.Employee.SpecialDays > 0)
                             {
                                 disabled = "";
                             }
                             <div class="row moreOffDay-btn p-1">
                                 <a href="#" class="text-black  @AppUtility.SidebarEnum.ReportDaysOff" @disabled value="@AppUtility.OffDayTypeEnum.SpecialDay" onclick="$.fn.reportOffDay(this)">
                                     Report Special Day
+                                </a>
+                            </div>
+                            <div class="row moreOffDay-btn p-1">
+                                <a href="#" class="text-black  @AppUtility.SidebarEnum.ReportDaysOff" value="@AppUtility.OffDayTypeEnum.UnpaidLeave" onclick="$.fn.reportOffDay(this)">
+                                    Report Unpaid Leave
                                 </a>
                             </div>
                         </div>
