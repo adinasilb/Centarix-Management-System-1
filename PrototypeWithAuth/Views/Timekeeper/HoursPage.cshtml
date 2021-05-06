@@ -126,18 +126,18 @@
                                 <option value="" selected disabled class="@pageColor-color">No hours reported</option>
                                 <option value="1" class="open-work-from-home-modal @AppUtility.SidebarEnum.SummaryHours">Worked from home</option>
                                 <option value="2" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours">Update hours</option>
-                                <option value="3" class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SickDay">Report sick day</option>
-                                <option value="4" class="confirm-report-offDay @AppUtility.OffDayTypeEnum.VacationDay">Report vacation day</option>
+                                <option value="3" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.SickDay">Report sick day</option>
+                                <option value="4" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.VacationDay">Report vacation day</option>
 
                                 @if (eh.EmployeeHours.Employee.SpecialDays > 0)
                                 {
-                                    <option value="5" class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SpecialDay">Report special day</option>
+                                    <option value="5" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.SpecialDay">Report special day</option>
                                 }
                                 else
                                 {
-                                    <option value="5" disabled class="confirm-report-offDay @AppUtility.OffDayTypeEnum.SpecialDay">Report special vacation day</option>
+                                    <option value="5" disabled class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.SpecialDay">Report special vacation day</option>
                                 }
-
+                                <option value="6" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.UnpaidLeave">Report unpaid leave</option>
                             </select>
                         </div>
                     }

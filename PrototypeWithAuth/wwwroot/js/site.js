@@ -1131,7 +1131,8 @@ $(function () {
 	$('.no-hours-reported').off('change').change(function (e) {
 		var selectedDate = $(this).attr("date");
 		var pageType = "SummaryHours";
-		switch ($(this).val()) {
+		var chosenID = $(this).val();
+		switch (chosenID) {
 			case "1":
 				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate + "&isWorkFromHome=" + true;
 				$("#loading").show();
@@ -1143,17 +1144,18 @@ $(function () {
 				$.fn.CallModal(itemurl, "update-time-worked");
 				break;
 			case "3":
-				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SickDay";
+			case "4":
+			case "5":
+			case "6":
+				var offDayEnum = ""
+				$(this).children(".confirm-report-offDay").each(function () {
+					if ($(this).val() == chosenID) {
+						offDayEnum = $(this).attr('data-val')
+                    }
+				})
+				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=" + offDayEnum;
 				$.fn.CallModal(itemurl, "off-day");
 				break;
-			case "4":
-				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=VacationDay";
-				$.fn.CallModal(itemurl,"off-day");
-				break;
-			case "5":
-				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SpecialDay";
-				$.fn.CallModal(itemurl,"off-day");
-			break;
 		}
 	});
 
