@@ -14,7 +14,6 @@
     var header = "";
     var col1 = "";
     var col2 = "";
-    var totalHoursYearOrMonth = 0;
     switch (Model.YearlyMonthlyEnum)
     {
         case AppUtility.YearlyMonthlyEnum.Monthly:
@@ -22,19 +21,17 @@
             header = date.ToString("MMMM") + " ";
             col1 = " col-2 ";
             col2 = " col-6 ";
-            totalHoursYearOrMonth = Model.TotalWorkingDaysInMonth;
             break;
         case AppUtility.YearlyMonthlyEnum.Yearly:
             yearStyle = "yearly-monthly ";
             col1 = " col-1 ";
             col2 = " col-7 ";
-            totalHoursYearOrMonth = Model.TotalWorkingDaysInYear;
             break;
     }
 
 }
 <script src="~/js/workerHours.js"></script>
-<input type="hidden" id="newYearAmount" value="@Model.TotalWorkingDaysInYear" />
+<input type="hidden" id="newYearAmount" value="@Model.TotalWorkingDaysInMonthOrYear" />
 <input type="hidden" id="currentYear" value="@Model.Year" />
 <div class="container-fluid m-0">
     <div class="row">
@@ -93,7 +90,7 @@
                         Percentage
                     </td>
                     <td width="11%">
-                        Missing Days
+                        Missing Report
                     </td>
                     <td width="10%">
                         Hours
@@ -133,7 +130,7 @@
                     @employee.Employee.EmployeeStatus.Description
                 </td>
                 <td width="11%">
-                    @{var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay??0;
+                    @{var totalHoursInRange = (Model.TotalWorkingDaysInMonthOrYear - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay??0;
                         var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
                         var totalHoursPercent = Math.Round((totalHours / totalHoursInRange) * 100, 2);
                      }
@@ -148,7 +145,7 @@
                     }
                     @if (employee.Employee.EmployeeStatusID == 1)
                     {
-                        totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay??0;
+                        //totalHoursInRange = (Model.TotalWorkingDaysInMonthOrYear - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay??0;
                         var totalInMonth = TimeSpan.FromHours(totalHoursInRange);
                         totalHoursString = totalHours + ":" + employee.Hours.ToString("mm") + "/" + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
                     }
@@ -164,8 +161,7 @@
                     }
                     @if (employee.Employee.EmployeeStatusID == 1)
                     {
-                        var totalDaysInRange = (totalHoursYearOrMonth - employee.VacationSickCount);
-                        totalDaysString = employee.WorkingDays + "/" + totalDaysInRange;
+                        totalDaysString = employee.WorkingDays + "/" + Model.TotalWorkingDaysInMonthOrYear;
                     }
                     else
                     {
