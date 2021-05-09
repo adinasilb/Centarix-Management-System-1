@@ -30,7 +30,8 @@ namespace PrototypeWithAuth.Controllers
         private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(int year, int month, Employee user)
         {
             var hours = _context.EmployeeHours.Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatusEntry1)
-                .Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType).Where(eh => eh.EmployeeID == user.Id)
+                .Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType)
+                .Include(eh => eh.PartialOffDayType).Where(eh => eh.EmployeeID == user.Id)
                 .Where(eh => eh.Date.Month == month && eh.Date.Year == year && eh.Date.Date <= DateTime.Now.Date)
                 .OrderByDescending(eh => eh.Date).ToList();
 

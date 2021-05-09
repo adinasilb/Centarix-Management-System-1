@@ -248,7 +248,8 @@ namespace PrototypeWithAuth.Controllers
         }
         private List<EmployeeHoursAwaitingApprovalViewModel> GetAwaitingApprovalModel()
         {
-            var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatusEntry1).Include(ehwa => ehwa.EmployeeHoursStatusEntry2).ToList()
+            var employeeHoursAwaitingApproval = _context.EmployeeHoursAwaitingApprovals.Include(ehwa => ehwa.Employee).Include(ehwa => ehwa.EmployeeHours).Include(ehwa => ehwa.EmployeeHoursStatusEntry1).Include(ehwa => ehwa.EmployeeHoursStatusEntry2)
+                .Include(ehwa => ehwa.PartialOffDayType).ToList()
                 .Where(ehwa=>!ehwa.IsDenied);
             List<EmployeeHoursAwaitingApprovalViewModel> awaitingApproval = new List<EmployeeHoursAwaitingApprovalViewModel>();
             foreach (EmployeeHoursAwaitingApproval ehaa in employeeHoursAwaitingApproval)
@@ -258,6 +259,7 @@ namespace PrototypeWithAuth.Controllers
                 bool exit1 = false;
                 bool exit2 = false;
                 bool totalHours = false;
+                bool partialHours = false;
                 if (ehaa.EmployeeHours?.Entry1?.ZeroSeconds().TimeOfDay != ehaa.Entry1?.TimeOfDay)
                 {
                     entry1 = true;
@@ -278,6 +280,10 @@ namespace PrototypeWithAuth.Controllers
                 {
                     totalHours = true;
                 }
+                if (ehaa.EmployeeHours?.PartialOffDayHours != ehaa.PartialOffDayHours)
+                {
+                    partialHours = true;
+                }
                 EmployeeHoursAwaitingApprovalViewModel viewModel = new EmployeeHoursAwaitingApprovalViewModel
                 {
                     Entry1 = entry1,
@@ -285,6 +291,7 @@ namespace PrototypeWithAuth.Controllers
                     Exit1 = exit1,
                     Exit2 = exit2,
                     TotalHours = totalHours,
+                    PartialHours = partialHours,
                     EmployeeHoursAwaitingApproval = ehaa
                 };
                 awaitingApproval.Add(viewModel);

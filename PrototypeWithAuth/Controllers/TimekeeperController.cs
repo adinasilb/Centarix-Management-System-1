@@ -311,7 +311,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _EmployeeHoursAwaitingApproval(int ehaaID)
         {
             var ehaa = _context.EmployeeHoursAwaitingApprovals
-                .Include(ehaa => ehaa.EmployeeHours)
+                .Include(ehaa => ehaa.EmployeeHours).Include(ehaa => ehaa.PartialOffDayType)
                 .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == ehaaID).FirstOrDefault();
             return PartialView(ehaa);
         }
