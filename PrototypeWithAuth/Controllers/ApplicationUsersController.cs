@@ -165,7 +165,7 @@ namespace PrototypeWithAuth.Controllers
                 if(yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly)
                 {
                     employeeHoursOfMonthOrYear = employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month && eh.Date.Date < DateTime.Now.Date).ToList();
-                    workingDays = employeeHoursOfMonthOrYear.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null )).Where(eh => (eh.Exit1 != null && eh.Entry2 == null)|| (eh.Entry2 != null && eh.Exit2 != null)).Count();
+                    workingDays = employeeHoursOfMonthOrYear.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null )).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Count();
                 }
                 else
                 {
@@ -176,6 +176,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     daysLeftOfMonthOrYear = yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly ? (int)GetTotalWorkingDaysByInterval(DateTime.Now.Date, companyDaysOff, new DateTime(year, month + 1, 1))
                     : (int)GetTotalWorkingDaysByInterval(DateTime.Now.Date, companyDaysOff, new DateTime(year + 1, 1, 1));
+
                     missingDays = employeeHoursOfMonthOrYear.Where(eh => (eh.Entry1 == null && eh.OffDayTypeID == null && eh.TotalHours == null) 
                     || (eh.Entry1!=null && eh.Exit1 == null)).Count();
 

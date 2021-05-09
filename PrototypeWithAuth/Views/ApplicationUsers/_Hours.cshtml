@@ -157,7 +157,7 @@
                     }
                     @if (employee.Employee.EmployeeStatusID == 1)
                     {
-                        totalDaysString = employee.WorkingDays + "/" + Model.TotalWorkingDaysInMonthOrYear;
+                        totalDaysString = Math.Round(employee.WorkingDays, 2) + "/" + Model.TotalWorkingDaysInMonthOrYear;
                     }
                     else
                     {

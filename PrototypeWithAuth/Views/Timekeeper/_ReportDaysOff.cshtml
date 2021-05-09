@@ -126,6 +126,9 @@
             <div class="col">
                 Sick Days Taken
             </div>
+            <div class="col">
+                Unpaid Leave Taken
+            </div>
         </div>
         @foreach (var year in Model.DaysOffs)
         {
@@ -135,7 +138,7 @@
             @year.Year
         </div>
         <div class="col">
-            @Math.Round(year.TotalVacationDays,2)
+            @Math.Round(year.TotalVacationDays, 2)
         </div>
         <div class="col">
             @year.VacationDaysTaken
@@ -145,6 +148,9 @@
         </div>
         <div class="col">
             @year.SickDaysTaken
+        </div>
+        <div class="col">
+            @year.UnpaidLeaveTaken
         </div>
 
     </div>
