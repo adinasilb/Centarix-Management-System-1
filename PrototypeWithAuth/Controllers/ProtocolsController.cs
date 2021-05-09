@@ -273,16 +273,19 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID = 0)
         {
-            var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
-            protocol.Urls = await _context.Links.Where(l => l.ProtocolID == protocolID).ToListAsync();
-            if (protocol.Urls.Count() < 2)
+            var protocol = _context.Protocols
+                .Include(p => p.Urls).Include(p => p.Lines)
+                .Include(p => p.Materials).ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
+            protocol.Urls??= new List<Link>();
+            protocol.Materials ??= new List<Material>();
+            protocol.Lines ??= new List<Line>();
+            if (protocol.Urls.Count()< 2)
             {
                 while (protocol.Urls.Count() < 2)
                 {
                     protocol.Urls.Add(new Link());
                 }
             }
-            protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).Include(m => m.Product).ToListAsync();
             if (typeID != 0)
             {
                 protocol.ProtocolTypeID = typeID;
@@ -293,7 +296,8 @@ namespace PrototypeWithAuth.Controllers
                 Protocol = protocol,
                 ProtocolCategories = _context.ProtocolCategories,
                 ProtocolSubCategories = _context.ProtocolSubCategories,
-                MaterialCategories = _context.MaterialCategories
+                MaterialCategories = _context.MaterialCategories,
+                LineTypes = _context.LineTypes.ToList()
             };
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
             string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, protocol.ProtocolID.ToString());
@@ -365,6 +369,71 @@ namespace PrototypeWithAuth.Controllers
                 return redirectToMaterialTab(materialDB.ProtocolID);
             }
         }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _Line(int index, int lineTypeID, int currentLineTypeID,string lineNumberString, string parentLineNumberString, int parentLineID, int currentLineNumber)
+        {
+            var newLineNumberString = "";
+            var newLineNumber = 0;
+            switch(lineTypeID)
+            {
+                case 1:
+                    switch (currentLineTypeID)
+                    {
+                        case 1:
+                            //if current line type and new line type are same type
+                            newLineNumber = currentLineNumber + 1;
+                            newLineNumberString = parentLineNumberString +"."+newLineNumber;
+                            break;
+                        case 2:
+                            //if current line is child of new line 
+                     
+                            break;
+                        case 3:
+                            //if current line is child of new line but not a direct child
+
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (currentLineTypeID)
+                    {
+                        case 1:
+                            //current line is parent of new line
+                            newLineNumberString = lineNumberString + "."+1;
+                            newLineNumber = 1;
+                            break;
+                        case 2:
+                            //if current line type and new line type are same type
+                            newLineNumber = currentLineNumber + 1;
+                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
+                            break;
+                        case 3:
+                            //current line is child of new line
+                          
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch (currentLineTypeID)
+                    {
+                        case 1:   //current line is parent of new line                  
+                        case 2:
+                            newLineNumberString = lineNumberString + "." + 1;
+                            newLineNumber = 1;
+                            break;
+                        case 3:
+                            //if current line type and new line type are same type
+                            newLineNumber = currentLineNumber + 1;
+                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
+                            break;
+                    }
+                    break;
+            }
+            var lineTypes = _context.LineTypes.ToList();
+            return PartialView(new ProtocolsLineViewModel { Index = (index+1), Line = new Line { LineTypeID = lineTypeID, LineNumber=newLineNumber}, LineNumberString = newLineNumberString , LineTypes = lineTypes});
+        }
+
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> LinkMaterialToProductModal(int materialID)
