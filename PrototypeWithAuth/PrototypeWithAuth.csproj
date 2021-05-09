@@ -261,6 +261,10 @@
     <Compile Remove="Data\Migrations\20210506114848_AddFkParentLine.Designer.cs" />
     <Compile Remove="Data\Migrations\20210506115752_TurnOffAutoIncrement.cs" />
     <Compile Remove="Data\Migrations\20210506115752_TurnOffAutoIncrement.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210509050711_removeIdentityFromTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210509050711_removeIdentityFromTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.Designer.cs" />
   </ItemGroup>
 
 

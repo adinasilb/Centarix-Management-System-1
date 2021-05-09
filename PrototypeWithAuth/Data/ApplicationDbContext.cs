@@ -178,13 +178,13 @@ namespace PrototypeWithAuth.Data
                 .HasForeignKey(r => r.ApplicationUserCreatorID);
 
             modelBuilder.Entity<TempLine>()
-               .HasOne(tl => tl.Line)
+               .HasOne(tl => tl.PermanentLine)
                .WithOne()
-               .HasForeignKey<TempLine>(tl => tl.LineID);
+               .HasForeignKey<TempLine>(tl => tl.PermanentLineID);
 
-            //modelBuilder.Entity<TempLine>()
-            //      .Property(e => e.LineID)
-            //      .ValueGeneratedNever();
+            modelBuilder.Entity<Line>()
+                  .Property(e => e.LineID)
+                  .ValueGeneratedNever();
 
             modelBuilder.Entity<Request>()
                 .HasOne(r => r.ApplicationUserReceiver)

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210509051421_AddIdentityToTempLine")]
+    partial class AddIdentityToTempLine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1696,7 +1698,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Line", b =>
                 {
-                    b.Property<int>("LineID")
+                    b.Property<int>("LineFID")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -1714,13 +1716,13 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TempLineLineID")
+                    b.Property<int?>("TempLineLineFID")
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("Timer")
                         .HasColumnType("time");
 
-                    b.HasKey("LineID");
+                    b.HasKey("LineFID");
 
                     b.HasIndex("LineTypeID");
 
@@ -1728,7 +1730,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("ProtocolID");
 
-                    b.HasIndex("TempLineLineID");
+                    b.HasIndex("TempLineLineFID");
 
                     b.ToTable("Lines");
                 });
@@ -4222,7 +4224,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TempLine", b =>
                 {
-                    b.Property<int>("LineID")
+                    b.Property<int>("LineFID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -4248,7 +4250,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<TimeSpan>("Timer")
                         .HasColumnType("time");
 
-                    b.HasKey("LineID");
+                    b.HasKey("LineFID");
 
                     b.HasIndex("LineTypeID");
 
@@ -5315,7 +5317,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasOne("PrototypeWithAuth.Models.TempLine", "TempLine")
                         .WithMany()
-                        .HasForeignKey("TempLineLineID")
+                        .HasForeignKey("TempLineLineFID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

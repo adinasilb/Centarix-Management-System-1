@@ -781,7 +781,9 @@
 
 
 
-        $("#openNotifications").click(function () {
+        $("#openNotifications").click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             $('[data-toggle="popover"]').popover('dispose');
             $('[data-toggle="popover"]').popover({
                 sanitize: false,

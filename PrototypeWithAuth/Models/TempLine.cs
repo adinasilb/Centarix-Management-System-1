@@ -10,7 +10,8 @@ namespace PrototypeWithAuth.Models
     public class TempLine : LineBase
     {
         public TempLine ParentLine { get; set; }
-        public Line Line { get; set; }
+        public int? PermanentLineID { get; set; }
+        public Line PermanentLine { get; set; }
 
     }
 }
