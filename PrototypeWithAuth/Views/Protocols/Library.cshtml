@@ -67,6 +67,27 @@
     </div>
 
     <div id="Resources" class="tab-pane fade in ">
-        Resources
+        <div class="container-fluid">
+            <div class="under-row-margin row text-center">
+                @foreach (var maincategory in Model.ResourceCategories.Where(rc => rc.IsResourceType))
+                {
+                    <div class="type-div">
+                        <a href='@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID = maincategory.ResourceCategoryID })' class="text text-dark">
+                            <fieldset class=" main-type-fieldset">
+                                @{
+                                    var imageUrl = "/images/protocol_images/" + maincategory.ImageUrl;
+                                    var altImage = maincategory.ResourceCategoryDescription;
+                                }
+
+                                @*<img class=" main-type-img" src="@imageUrl" alt="@altImage" />*@
+                                <img class=" main-type-img" src="@imageUrl" alt="@altImage" />
+                                @*  }*@
+                                <label class="main-type-label top-menu protocols-filter text-center"> @maincategory.ResourceCategoryDescription</label>
+                            </fieldset>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>

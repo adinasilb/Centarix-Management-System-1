@@ -276,10 +276,10 @@ namespace PrototypeWithAuth.Controllers
             var protocol = _context.Protocols
                 .Include(p => p.Urls).Include(p => p.Lines)
                 .Include(p => p.Materials).ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
-            protocol.Urls??= new List<Link>();
+            protocol.Urls ??= new List<Link>();
             protocol.Materials ??= new List<Material>();
             protocol.Lines ??= new List<Line>();
-            if (protocol.Urls.Count()< 2)
+            if (protocol.Urls.Count() < 2)
             {
                 while (protocol.Urls.Count() < 2)
                 {
@@ -371,11 +371,11 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _Line(int index, int lineTypeID, int currentLineTypeID,string lineNumberString, string parentLineNumberString, int parentLineID, int currentLineNumber)
+        public async Task<IActionResult> _Line(int index, int lineTypeID, int currentLineTypeID, string lineNumberString, string parentLineNumberString, int parentLineID, int currentLineNumber)
         {
             var newLineNumberString = "";
             var newLineNumber = 0;
-            switch(lineTypeID)
+            switch (lineTypeID)
             {
                 case 1:
                     switch (currentLineTypeID)
@@ -383,11 +383,11 @@ namespace PrototypeWithAuth.Controllers
                         case 1:
                             //if current line type and new line type are same type
                             newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString +"."+newLineNumber;
+                            newLineNumberString = parentLineNumberString + "." + newLineNumber;
                             break;
                         case 2:
                             //if current line is child of new line 
-                     
+
                             break;
                         case 3:
                             //if current line is child of new line but not a direct child
@@ -400,17 +400,17 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case 1:
                             //current line is parent of new line
-                            newLineNumberString = lineNumberString + "."+1;
+                            newLineNumberString = lineNumberString + "." + 1;
                             newLineNumber = 1;
                             break;
                         case 2:
                             //if current line type and new line type are same type
                             newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
+                            newLineNumberString = parentLineNumberString + "." + newLineNumber;
                             break;
                         case 3:
                             //current line is child of new line
-                          
+
                             break;
                     }
                     break;
@@ -425,13 +425,13 @@ namespace PrototypeWithAuth.Controllers
                         case 3:
                             //if current line type and new line type are same type
                             newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
+                            newLineNumberString = parentLineNumberString + "." + newLineNumber;
                             break;
                     }
                     break;
             }
             var lineTypes = _context.LineTypes.ToList();
-            return PartialView(new ProtocolsLineViewModel { Index = (index+1), Line = new Line { LineTypeID = lineTypeID, LineNumber=newLineNumber}, LineNumberString = newLineNumberString , LineTypes = lineTypes});
+            return PartialView(new ProtocolsLineViewModel { Index = (index + 1), Line = new Line { LineTypeID = lineTypeID, LineNumber = newLineNumber }, LineNumberString = newLineNumberString, LineTypes = lineTypes });
         }
 
 
@@ -703,19 +703,20 @@ namespace PrototypeWithAuth.Controllers
 
             var resourceLibraryViewModel = new ResourceLibraryViewModel();
 
-            switch (CategoryType)
-            {
-                case 2:
-                    resourceLibraryViewModel.PageType = 2;
-                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType == true);
-                    break;
-                case 1:
-                default:
-                    resourceLibraryViewModel.PageType = 1;
-                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType != true);
-                    break;
-            }
+            //switch (CategoryType)
+            //{
+            //    case 2:
+            //        resourceLibraryViewModel.PageType = 2;
+            //        resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType == true);
+            //        break;
+            //    case 1:
+            //    default:
+            //        resourceLibraryViewModel.PageType = 1;
+            //        resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType != true);
+            //        break;
+            //}
 
+            resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories;
             return View(resourceLibraryViewModel);
         }
 
