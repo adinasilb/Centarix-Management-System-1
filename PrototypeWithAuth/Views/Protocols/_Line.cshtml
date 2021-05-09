@@ -6,7 +6,7 @@
 <div class="position-absolute" style="right:91%;">
     <ul class="list-unstyled m-0">
         <li>
-            <button type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 addLinePopover" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.Line" lineCount="@Model.Index">
+            <button type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="no-box-shadow btn p-0 m-0 addLinePopover" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.TempLine.ParentLineID" lineCount="@Model.Index">
                 <i class="protocols-color icon-add_circle-24px" style="  font-size: 3rem;"></i>
             </button>
         </li>
@@ -14,7 +14,7 @@
             @foreach (var item in Model.LineTypes)
             {
                 <div class="row px-2 comment-btn">
-                    <button type="button" value="@item.LineTypeID" currentLineTypeID ="@Model.Line?.LineTypeID" lineNumberString="@Model.LineNumberString" currentLineNumber="@Model.Line?.LineNumber"  lineCount="@(Model.Index)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine " style="font-size:1rem; font-weight:400;">
+                    <button type="button" value="@item.LineTypeID" currentLineTypeID ="@Model.TempLine?.LineTypeID" lineNumberString="@Model.LineNumberString" currentLineNumber="@Model.TempLine?.LineNumber"  lineCount="@(Model.Index)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine " style="font-size:1rem; font-weight:400;">
                         @item.LineTypeDescription
                     </button><hr class="m-0" />
                 </div>
@@ -23,24 +23,24 @@
     </ul>
 </div>
 
-@switch (Model.Line?.LineTypeID)
+@switch (Model.TempLine?.LineTypeID)
 {
     case 1:
         <div class="d-flex 2parent">
             <div class="text d-flex align-items-center lineNumberString">@Model.LineNumberString</div>
-            <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.Line?.Content" class="text form-control-plaintext " />
+            <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine?.Content" class="text form-control-plaintext " />
         </div>
         break;
     case 2:
             <div class="d-flex ml-4 3parent">
                 <div class="text d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
-                <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.Line?.Content" class="text form-control-plaintext " />
+                <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine?.Content" class="text form-control-plaintext " />
             </div>
             break;
         case 3:
             <div class="d-flex ml-6">
                 <div class="text  d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
-                <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.Line?.Content" class="text form-control-plaintext" />
+                <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine?.Content" class="text form-control-plaintext" />
             </div>
             break;
     }

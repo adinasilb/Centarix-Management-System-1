@@ -18,5 +18,6 @@ namespace PrototypeWithAuth.ViewModels
         public IEnumerable<MaterialCategory> MaterialCategories { get; set; }
         public Lookup<Material, List<DocumentFolder>> MaterialDocuments { get; set; }
         public List<LineType> LineTypes { get; set; }
+        public IEnumerable<TempLine> TempLines { get; set; }
     }
 }

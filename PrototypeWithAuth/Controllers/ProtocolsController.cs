@@ -273,11 +273,11 @@ namespace PrototypeWithAuth.Controllers
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID = 0)
         {
             var protocol = _context.Protocols
-                .Include(p => p.Urls).Include(p => p.Lines)
-                .Include(p => p.Materials).ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
+                .Include(p => p.Urls).Include(p => p.Materials)
+                .ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
             protocol.Urls??= new List<Link>();
-            protocol.Materials ??= new List<Material>();
-            protocol.Lines ??= new List<Line>();
+            protocol.Materials ??= new List<Material>();        
+            
             if (protocol.Urls.Count()< 2)
             {
                 while (protocol.Urls.Count() < 2)
@@ -298,12 +298,66 @@ namespace PrototypeWithAuth.Controllers
                 MaterialCategories = _context.MaterialCategories,
                 LineTypes = _context.LineTypes.ToList()
             };
+            await CopySelectedLinesToTempLineTable(protocol.ProtocolID);
+            viewmodel.TempLines = _context.TempLines;
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
             string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, protocol.ProtocolID.ToString());
             FillDocumentsInfo(viewmodel, uploadProtocolsFolder2);
             Dictionary<Material, List<DocumentFolder>> MaterialFolders = FillMaterialDocumentsModel(protocol.Materials, uploadProtocolsFolder);
             viewmodel.MaterialDocuments = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value);
             return viewmodel;
+        }
+        private TempLine TurnLineIntoTempLine(Line line)
+        {
+            TempLine tempLine = new TempLine();
+            tempLine.PermanentLineID = line.LineID;
+            tempLine.Content = line.Content;
+            tempLine.LineNumber = line.LineNumber;
+            tempLine.LineTypeID = line.LineTypeID;
+            tempLine.ProtocolID = line.ProtocolID;
+            tempLine.Timer = line.Timer;
+            tempLine.ParentLineID = line.ParentLineID;
+            return tempLine;
+        }
+        private Line TurnTempLineToLine (TempLine tempLine)
+        {
+            Line line = new Line();
+            line.LineID = tempLine.PermanentLineID??tempLine.LineID;
+            line.Content = tempLine.Content;
+            line.LineNumber = tempLine.LineNumber;
+            line.LineTypeID = tempLine.LineTypeID;
+            line.ProtocolID = tempLine.ProtocolID;
+            line.Timer = tempLine.Timer;
+            line.ParentLineID = tempLine.ParentLineID;
+            return line;
+        }
+        private List<LineType> GetOrderLineTypeFromParentToChild()
+        {
+            List<LineType> orderedLineTypes = new List<LineType>();
+            var lineTypes = _context.LineTypes;
+            var parentLineType = lineTypes.Where(lt=>lt.LineTypeParentID==null).FirstOrDefault();
+            orderedLineTypes.Add(parentLineType);
+            while(parentLineType.LineTypeChildID!=null)
+            {
+                parentLineType = lineTypes.Where(lt => lt.LineTypeID == parentLineType.LineTypeChildID).FirstOrDefault();
+                orderedLineTypes.Add(parentLineType);
+            }
+            return orderedLineTypes;
+        }
+
+        private async Task CopySelectedLinesToTempLineTable(int protocolID)
+        {
+            var lines = _context.Lines.Where(l => l.ProtocolID == protocolID);
+            var lineTypes = GetOrderLineTypeFromParentToChild();
+            foreach(var lineType in lineTypes)
+            {
+                var linesByType = lines.Where(l => l.LineTypeID == lineType.LineTypeID);
+                foreach (var line in lines)
+                {
+                    _context.Add(TurnLineIntoTempLine(line));
+                }
+                await _context.SaveChangesAsync();
+            }
         }
 
         private Dictionary<Material, List<DocumentFolder>> FillMaterialDocumentsModel(IEnumerable<Material> Materials, string uploadProtocolsFolder)
@@ -370,67 +424,81 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _Line(int index, int lineTypeID, int currentLineTypeID,string lineNumberString, string parentLineNumberString, int parentLineID, int currentLineNumber)
+        public async Task<IActionResult> _Lines(List<TempLine> lines, int index, int lineTypeID, int currentLineID)
         {
-            var newLineNumberString = "";
-            var newLineNumber = 0;
-            switch(lineTypeID)
+            //save all temp line data 
+            lines.ForEach(l => {
+                _context.TempLines.Where(tl => tl.LineID == l.LineID).FirstOrDefault().Content = l.Content;
+                _context.Update(l);
+            });
+            await _context.SaveChangesAsync();
+            var currentLine = _context.TempLines.Where(l => l.PermanentLineID == currentLineID).FirstOrDefault();
+            var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
+            var orderedLineTypes = GetOrderLineTypeFromParentToChild();
+            var currentLineTypeIndex = orderedLineTypes.IndexOf(currentLine.LineType);
+            var newLineTypeIndex = orderedLineTypes.IndexOf(newLineType);
+            TempLine newLine = new TempLine();
+            newLine.LineTypeID = lineTypeID;
+            _context.Add(newLine);
+            await _context.SaveChangesAsync();
+            if (newLineTypeIndex >= currentLineTypeIndex)
             {
-                case 1:
-                    switch (currentLineTypeID)
-                    {
-                        case 1:
-                            //if current line type and new line type are same type
-                            newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString +"."+newLineNumber;
-                            break;
-                        case 2:
-                            //if current line is child of new line 
-                     
-                            break;
-                        case 3:
-                            //if current line is child of new line but not a direct child
+                //new line is parent of child
+                var parent = currentLine;
 
-                            break;
-                    }
-                    break;
-                case 2:
-                    switch (currentLineTypeID)
+                newLine.LineTypeID = newLineType.LineTypeID;
+                while (parent != null)
+                {
+                    if (parent.LineTypeID == newLineType.LineTypeID)
                     {
-                        case 1:
-                            //current line is parent of new line
-                            newLineNumberString = lineNumberString + "."+1;
-                            newLineNumber = 1;
-                            break;
-                        case 2:
-                            //if current line type and new line type are same type
-                            newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
-                            break;
-                        case 3:
-                            //current line is child of new line
-                          
-                            break;
+                        newLine.LineNumber = (parent.LineNumber + 1);
+                        newLine.ParentLineID = parent.ParentLineID;
+
+                        //we have to increment all the sibling parents
+                        var siblings = _context.TempLines.Where(tl => tl.LineNumber > parent.LineNumber);
+                        await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
+                        await _context.SaveChangesAsync();
+
+                        break;
                     }
-                    break;
-                case 3:
-                    switch (currentLineTypeID)
-                    {
-                        case 1:   //current line is parent of new line                  
-                        case 2:
-                            newLineNumberString = lineNumberString + "." + 1;
-                            newLineNumber = 1;
-                            break;
-                        case 3:
-                            //if current line type and new line type are same type
-                            newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
-                            break;
-                    }
-                    break;
+                    parent = _context.TempLines.Where(tl => tl.PermanentLineID == parent.ParentLineID).FirstOrDefault();
+                }
+
+
+                if (newLineTypeIndex > currentLineTypeIndex)
+                {
+                    //get currentline siblings and make their parent point to new line
+                    var currentLineSiblings = _context.TempLines.Where(lt => lt.ParentLineID == currentLine.PermanentLineID && lt.LineNumber > currentLine.LineNumber);
+                    await currentLineSiblings.ForEachAsync(tl => {
+                        tl.LineNumber -= currentLine.LineNumber;
+                        tl.ParentLineID = newLine.LineID;
+                        _context.Update(tl);
+                    });
+                    await _context.SaveChangesAsync();
+                }
             }
-            var lineTypes = _context.LineTypes.ToList();
-            return PartialView(new ProtocolsLineViewModel { Index = (index+1), Line = new Line { LineTypeID = lineTypeID, LineNumber=newLineNumber}, LineNumberString = newLineNumberString , LineTypes = lineTypes});
+            else
+            {
+                newLine.LineNumber = 1;
+                newLine.ParentLineID = currentLine.LineID;
+                var siblings = _context.TempLines.Where(tl => tl.ParentLineID == currentLine.ParentLineID);
+                await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
+                await _context.SaveChangesAsync();
+            }
+
+            List<ProtocolsLineViewModel> refreshedLines = new List<ProtocolsLineViewModel>();
+            Stack<TempLine> parentNodes = new Stack<TempLine>();
+            _context.TempLines.Where(tl => tl.ParentLineID == null).OrderBy(tl => tl.LineNumber).ToList().ForEach(tl => { parentNodes.Push(tl); });
+            int count = 0;
+            do
+            {
+                var node = parentNodes.Pop();
+                refreshedLines.Add(new ProtocolsLineViewModel() { TempLine = node, Index = count++, LineNumberString = refreshedLines.Where(rl => (rl.TempLine.PermanentLineID ?? rl.TempLine.LineID) == node.ParentLineID).FirstOrDefault().LineNumberString + "." + node.LineNumber});
+                _context.TempLines.Where(c => c.ParentLineID == (node.PermanentLineID??node.LineID) ).OrderBy(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
+            }
+            while (!parentNodes.IsEmpty());
+
+            return PartialView("_Lines", refreshedLines);
         }
 
 

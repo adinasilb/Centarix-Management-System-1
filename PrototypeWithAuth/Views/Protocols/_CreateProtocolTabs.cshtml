@@ -152,48 +152,11 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
     @{ 
         var headerCount = 0;
         var subHeaderCount = 0;
-        var stepCount = 0; 
+        var stepCount = 0;
     }
     <div class="lines">
         <div class="heading-1">@Model.Protocol.Name</div>
-        @{
-            int lineCount = 0;
-            if (Model.Protocol.Lines.Count() <= 0)
-            {
-                await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = new Line() { LineTypeID=1}, LineNumberString = 1 + "", LineTypes = Model.LineTypes });
-            }
-
-            var headers = Model.Protocol.Lines.Where(l => l.LineTypeID == 1);
-            foreach (var header in headers)
-            {
-                await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = header, LineNumberString = header.LineNumber + "", LineTypes = Model.LineTypes });
-                headerCount++;
-                lineCount++;
-                var subHeaders = Model.Protocol.Lines/*.Where(l => l.ParentLineID == header.ParentLineID)*/;
-                subHeaderCount = 0;
-
-                foreach (var subHeader in subHeaders)
-                {
-                    await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = subHeader, LineNumberString = header.LineNumber + "." + subHeader.LineNumber, LineTypes = Model.LineTypes });
-                    lineCount++;
-                    subHeaderCount++;
-                    var steps = Model.Protocol.Lines/*.Where(l => l.ParentLineID == subHeader.ParentLineID)*/;
-                    stepCount = 0;
-
-                    foreach (var step in steps)
-                    {
-                        await Html.RenderPartialAsync("_Line", new ProtocolsLineViewModel { Index = lineCount, Line = subHeader, LineNumberString = header.LineNumber + "." + subHeader.LineNumber + "." + step.LineNumber, LineTypes = Model.LineTypes });
-                        lineCount++;
-                        stepCount++;
-                    }
-                    <input type="hidden" class="step-count count3" id="subHeader@(subHeader@*.ParentLineID*@)" value="@stepCount" />
-                }
-                <input type="hidden" class="subHeader-count count2" id="header@(header@*.ParentLineID*@)" value="@subHeaderCount" />
-            }
-            <input type="hidden" class="header-count count1" id="header" value="@headerCount" />
-
-        }
-
+        @{await Html.RenderPartialAsync("_Lines", Model.TempLines);}
 
     </div>
 </div>
