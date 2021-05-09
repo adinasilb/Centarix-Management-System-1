@@ -50,7 +50,7 @@
                     </div>
                     <div class=" col-6 offset-3 float-right">
                         @*<input type="hidden" name="@PrototypeWithAuth.AppData.AppUtility.FavoriteIcons"*@
-                        @{ 
+                        @{
                             var filledFavIcon = AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.FilledIn.ToString()).FirstOrDefault().StringDefinition;
                             var emptyFavIcon = AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition;
                             //hidden input so jquery is seamless
@@ -62,7 +62,7 @@
                                 icon = filledFavIcon;
                             }
                         }
-                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more favorite-protocol" value="@resource.Resource.ResourceID">
+                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more favorite-protocol" value="@resource.Resource.ResourceID" reload="@Model.IsFavoritesPage">
                             <i class="@icon hover-bold px-1" style="font-size:2rem;">
                             </i>
                         </button>

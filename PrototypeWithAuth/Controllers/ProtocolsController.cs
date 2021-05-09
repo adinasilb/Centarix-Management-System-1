@@ -658,7 +658,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarEnum;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
-            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel();
+            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel() { IsFavoritesPage = false };
             switch (SidebarEnum)
             {
                 case AppUtility.SidebarEnum.Library:
@@ -683,7 +683,7 @@ namespace PrototypeWithAuth.Controllers
                             Resource = fr.Resource,
                             IsFavorite = true
                         }).ToList();
-
+                    resourcesListViewModel.IsFavoritesPage = true;
                     resourcesListViewModel.PaginationTabs = new List<string>() { };
                     break;
                 case AppUtility.SidebarEnum.SharedWithMe:
@@ -728,7 +728,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<string> FavoriteResources(int ResourceID, bool Favorite = true)
+        public async Task<IActionResult> FavoriteResources(int ResourceID, bool Favorite = true, bool ReloadFavoritesPage = false)
         {
             //The system for checks is strict b/c the calls are dependent upon icon names in code and jquery that can break or be changed one day
             string retString = null;
@@ -764,8 +764,14 @@ namespace PrototypeWithAuth.Controllers
                     transaction.Rollback();
                 }
             }
-
-            return retString;
+            if (ReloadFavoritesPage)
+            {
+                return RedirectToAction("ResourcesList", new { SidebarEnum = AppUtility.SidebarEnum.Favorites });
+            }
+            else
+            {
+                return new EmptyResult();
+            }
         }
 
         [HttpGet]
