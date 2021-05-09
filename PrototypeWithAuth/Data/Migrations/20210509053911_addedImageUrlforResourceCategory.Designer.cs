@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210509053911_addedImageUrlforResourceCategory")]
+    partial class addedImageUrlforResourceCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4171,7 +4173,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 1,
-                            ImageUrl = "rejuvenation_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Rejuvenation"
@@ -4179,7 +4180,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 2,
-                            ImageUrl = "biomarkers_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Biomarkers"
@@ -4187,7 +4187,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 3,
-                            ImageUrl = "delivery_systems_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Delivery Systems"
@@ -4195,7 +4194,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 4,
-                            ImageUrl = "clinical_trials_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Clinical Trials"
@@ -4266,15 +4264,13 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 14,
-                            ImageUrl = "software_image.svg",
                             IsMain = false,
                             IsResourceType = true,
-                            ResourceCategoryDescription = "Software"
+                            ResourceCategoryDescription = "Softwares"
                         },
                         new
                         {
                             ResourceCategoryID = 15,
-                            ImageUrl = "learning_image.svg",
                             IsMain = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Learning"
@@ -4282,7 +4278,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 16,
-                            ImageUrl = "companies_image.svg",
                             IsMain = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Companies"
@@ -4290,7 +4285,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 17,
-                            ImageUrl = "news_image.svg",
                             IsMain = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "News"

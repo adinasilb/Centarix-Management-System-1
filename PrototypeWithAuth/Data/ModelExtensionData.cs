@@ -2642,28 +2642,32 @@ namespace PrototypeWithAuth.Data
                     ResourceCategoryID = 1,
                     ResourceCategoryDescription = "Rejuvenation",
                     IsMain = true,
-                    IsResourceType = false
+                    IsResourceType = false,
+                    ImageUrl = "rejuvenation_image.svg"
                 },
                 new ResourceCategory
                 {
                     ResourceCategoryID = 2,
                     ResourceCategoryDescription = "Biomarkers",
                     IsMain = true,
-                    IsResourceType = false
+                    IsResourceType = false,
+                    ImageUrl = "biomarkers_image.svg"
                 },
                 new ResourceCategory
                 {
                     ResourceCategoryID = 3,
                     ResourceCategoryDescription = "Delivery Systems",
                     IsMain = true,
-                    IsResourceType = false
+                    IsResourceType = false,
+                    ImageUrl = "delivery_systems_image.svg"
                 },
                 new ResourceCategory
                 {
                     ResourceCategoryID = 4,
                     ResourceCategoryDescription = "Clinical Trials",
                     IsMain = true,
-                    IsResourceType = false
+                    IsResourceType = false,
+                    ImageUrl = "clinical_trials_image.svg"
                 },
                 new ResourceCategory
                 {
@@ -2731,30 +2735,34 @@ namespace PrototypeWithAuth.Data
                 new ResourceCategory
                 {
                     ResourceCategoryID = 14,
-                    ResourceCategoryDescription = "Softwares",
+                    ResourceCategoryDescription = "Software",
                     IsMain = false,
-                    IsResourceType = true
+                    IsResourceType = true,
+                    ImageUrl = "software_image.svg"
                 },
                 new ResourceCategory
                 {
                     ResourceCategoryID = 15,
                     ResourceCategoryDescription = "Learning",
                     IsMain = false,
-                    IsResourceType = true
+                    IsResourceType = true,
+                    ImageUrl = "learning_image.svg"
                 },
                 new ResourceCategory
                 {
                     ResourceCategoryID = 16,
                     ResourceCategoryDescription = "Companies",
                     IsMain = false,
-                    IsResourceType = true
+                    IsResourceType = true,
+                    ImageUrl = "companies_image.svg"
                 },
                 new ResourceCategory
                 {
                     ResourceCategoryID = 17,
                     ResourceCategoryDescription = "News",
                     IsMain = false,
-                    IsResourceType = true
+                    IsResourceType = true,
+                    ImageUrl = "news_image.svg"
                 }
                 );
 
