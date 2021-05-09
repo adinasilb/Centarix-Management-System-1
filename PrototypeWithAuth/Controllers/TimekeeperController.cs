@@ -466,7 +466,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 updateHoursViewModel.AutoFillEntry1Type = 1;
             }
-            updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes;
+            updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes.Where(od => od.OffDayTypeID == 1 /*Sick Day*/ || od.OffDayTypeID == 2 /*Vacation Day*/);
             return updateHoursViewModel;
         }
 
@@ -549,7 +549,6 @@ namespace PrototypeWithAuth.Controllers
                                 ehaa.EmployeeHoursStatusEntry1ID = 3;
                             }
                         }
-
                    }
                     if (eh == null)
                     {
@@ -584,7 +583,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await transaction.RollbackAsync();
                     updateHoursViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes;
+                    updateHoursViewModel.PartialOffDayTypes = _context.OffDayTypes.Where(od => od.OffDayTypeID == 1 /*Sick Day*/ || od.OffDayTypeID == 2 /*Vacation Day*/);
                     var userID = _userManager.GetUserId(User);
                     var user = await _context.Employees.Where(u => u.Id == userID).FirstOrDefaultAsync();
                     updateHoursViewModel.EmployeeHour.Employee = user;
