@@ -18,6 +18,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<ShareResource> ShareResources { get; set; }
         public DbSet<FavoriteResource> FavoriteResources { get; set; }
         public DbSet<FavoriteProtocol> FavoriteProtocols { get; set; }
         public DbSet<ResourceNote> ResourceNotes { get; set; }
@@ -42,6 +43,8 @@ namespace PrototypeWithAuth.Data
         public DbSet<FunctionLine> FunctionLines { get; set; }
         public DbSet<ProtocolComment> ProtocolComments { get; set; }
         public DbSet<Line> Lines { get; set; }
+        public DbSet<TempLine> TempLines { get; set; }
+        //public DbSet<LineBase> LineBases { get; set; }
         public DbSet<ProtocolInstance> ProtocolInstances { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<FunctionType> FunctionTypes { get; set; }
@@ -111,6 +114,7 @@ namespace PrototypeWithAuth.Data
         {
             base.OnModelCreating(modelBuilder);
 
+
             modelBuilder.Entity<VendorCategoryType>()
                 .HasKey(v => new { v.VendorID, v.CategoryTypeID });
 
@@ -176,6 +180,15 @@ namespace PrototypeWithAuth.Data
                 .WithMany(au => au.RequestsCreated)
                 .HasForeignKey(r => r.ApplicationUserCreatorID);
 
+            modelBuilder.Entity<TempLine>()
+               .HasOne(tl => tl.PermanentLine)
+               .WithOne()
+               .HasForeignKey<TempLine>(tl => tl.PermanentLineID);
+
+            modelBuilder.Entity<Line>()
+                  .Property(e => e.LineID)
+                  .ValueGeneratedNever();
+
             modelBuilder.Entity<Request>()
                 .HasOne(r => r.ApplicationUserReceiver)
                 .WithMany(au => au.RequestsReceived)
@@ -191,6 +204,15 @@ namespace PrototypeWithAuth.Data
                 .WithMany(au => au.ShareRequestsReceived)
                 .HasForeignKey(sr => sr.ToApplicationUserID);
 
+            modelBuilder.Entity<ShareResource>()
+                .HasOne(sr => sr.FromApplicationUser)
+                .WithMany(au => au.ShareResourcesCreated)
+                .HasForeignKey(sr => sr.FromApplicationUserID);
+
+            modelBuilder.Entity<ShareResource>()
+                .HasOne(sr => sr.ToApplicationUser)
+                .WithMany(au => au.ShareResourcesReceived)
+                .HasForeignKey(sr => sr.ToApplicationUserID);
 
             // configures one-to-many relationship between Inventory and InventorySubcategories
             modelBuilder.Entity<ProductSubcategory>()

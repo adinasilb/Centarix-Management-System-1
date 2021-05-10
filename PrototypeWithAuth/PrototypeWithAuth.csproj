@@ -257,6 +257,24 @@
     <Compile Remove="Data\Migrations\20210504052717_NewUpdateProductSubcategories.Designer.cs" />
     <Compile Remove="Data\Migrations\20210504091617_addedFavoriteProtocols.cs" />
     <Compile Remove="Data\Migrations\20210504091617_addedFavoriteProtocols.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210505062129_fixedFavoriteResource2.cs" />
+    <Compile Remove="Data\Migrations\20210505062129_fixedFavoriteResource2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506105827_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506105827_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506112350_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506112350_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506113349_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506113349_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506113829_AddTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210506113829_AddTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506114848_AddFkParentLine.cs" />
+    <Compile Remove="Data\Migrations\20210506114848_AddFkParentLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210506115752_TurnOffAutoIncrement.cs" />
+    <Compile Remove="Data\Migrations\20210506115752_TurnOffAutoIncrement.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210509050711_removeIdentityFromTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210509050711_removeIdentityFromTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.cs" />
+    <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.Designer.cs" />
   </ItemGroup>
 
 

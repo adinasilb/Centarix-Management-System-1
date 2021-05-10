@@ -273,16 +273,19 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID = 0)
         {
-            var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
-            protocol.Urls = await _context.Links.Where(l => l.ProtocolID == protocolID).ToListAsync();
-            if (protocol.Urls.Count() < 2)
+            var protocol = _context.Protocols
+                .Include(p => p.Urls).Include(p => p.Lines)
+                .Include(p => p.Materials).ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
+            protocol.Urls??= new List<Link>();
+            protocol.Materials ??= new List<Material>();
+            protocol.Lines ??= new List<Line>();
+            if (protocol.Urls.Count()< 2)
             {
                 while (protocol.Urls.Count() < 2)
                 {
                     protocol.Urls.Add(new Link());
                 }
             }
-            protocol.Materials = await _context.Materials.Where(m => m.ProtocolID == protocolID).Include(m => m.Product).ToListAsync();
             if (typeID != 0)
             {
                 protocol.ProtocolTypeID = typeID;
@@ -293,7 +296,8 @@ namespace PrototypeWithAuth.Controllers
                 Protocol = protocol,
                 ProtocolCategories = _context.ProtocolCategories,
                 ProtocolSubCategories = _context.ProtocolSubCategories,
-                MaterialCategories = _context.MaterialCategories
+                MaterialCategories = _context.MaterialCategories,
+                LineTypes = _context.LineTypes.ToList()
             };
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
             string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, protocol.ProtocolID.ToString());
@@ -365,6 +369,71 @@ namespace PrototypeWithAuth.Controllers
                 return redirectToMaterialTab(materialDB.ProtocolID);
             }
         }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _Line(int index, int lineTypeID, int currentLineTypeID,string lineNumberString, string parentLineNumberString, int parentLineID, int currentLineNumber)
+        {
+            var newLineNumberString = "";
+            var newLineNumber = 0;
+            switch(lineTypeID)
+            {
+                case 1:
+                    switch (currentLineTypeID)
+                    {
+                        case 1:
+                            //if current line type and new line type are same type
+                            newLineNumber = currentLineNumber + 1;
+                            newLineNumberString = parentLineNumberString +"."+newLineNumber;
+                            break;
+                        case 2:
+                            //if current line is child of new line 
+                     
+                            break;
+                        case 3:
+                            //if current line is child of new line but not a direct child
+
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (currentLineTypeID)
+                    {
+                        case 1:
+                            //current line is parent of new line
+                            newLineNumberString = lineNumberString + "."+1;
+                            newLineNumber = 1;
+                            break;
+                        case 2:
+                            //if current line type and new line type are same type
+                            newLineNumber = currentLineNumber + 1;
+                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
+                            break;
+                        case 3:
+                            //current line is child of new line
+                          
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch (currentLineTypeID)
+                    {
+                        case 1:   //current line is parent of new line                  
+                        case 2:
+                            newLineNumberString = lineNumberString + "." + 1;
+                            newLineNumber = 1;
+                            break;
+                        case 3:
+                            //if current line type and new line type are same type
+                            newLineNumber = currentLineNumber + 1;
+                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
+                            break;
+                    }
+                    break;
+            }
+            var lineTypes = _context.LineTypes.ToList();
+            return PartialView(new ProtocolsLineViewModel { Index = (index+1), Line = new Line { LineTypeID = lineTypeID, LineNumber=newLineNumber}, LineNumberString = newLineNumberString , LineTypes = lineTypes});
+        }
+
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> LinkMaterialToProductModal(int materialID)
@@ -658,18 +727,33 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarEnum;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
-            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel();
+            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel() { IsFavoritesPage = false };
             switch (SidebarEnum)
             {
                 case AppUtility.SidebarEnum.Library:
-                    var resources = _context.Resources.Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                        .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID)).ToList();
-                    resourcesListViewModel.Resources = resources;
-                    //in the future send this in IF it's going to be updated- can be list<string> etc
+                    resourcesListViewModel.ResourcesWithFavorites = _context.Resources
+                        .Include(r => r.FavoriteResources)
+                        .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                        .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
+                        .Select(r => new ResourceWithFavorite
+                        {
+                            Resource = r,
+                            IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                        }).ToList();
+
                     resourcesListViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
                     break;
                 case AppUtility.SidebarEnum.Favorites:
-                    //var resources = _context.Resources.Include(r => r.f)
+                    resourcesListViewModel.ResourcesWithFavorites = _context.FavoriteResources
+                        .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                        .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                        .Select(fr => new ResourceWithFavorite
+                        {
+                            Resource = fr.Resource,
+                            IsFavorite = true
+                        }).ToList();
+                    resourcesListViewModel.IsFavoritesPage = true;
+                    resourcesListViewModel.PaginationTabs = new List<string>() { };
                     break;
                 case AppUtility.SidebarEnum.SharedWithMe:
                     break;
@@ -713,8 +797,9 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<string> FavoriteResources(int ResourceID, bool Favorite = true)
+        public async Task<IActionResult> FavoriteResources(int ResourceID, bool Favorite = true, bool ReloadFavoritesPage = false)
         {
+            //The system for checks is strict b/c the calls are dependent upon icon names in code and jquery that can break or be changed one day
             string retString = null;
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -723,17 +808,22 @@ namespace PrototypeWithAuth.Controllers
                     if (Favorite)
                     {
                         FavoriteResource favoriteResource = _context.FavoriteResources.Where(fr => fr.ResourceID == ResourceID && fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
-                        _context.Remove(favoriteResource);
+                        if (favoriteResource != null) { _context.Remove(favoriteResource); } //check is here so it doesn't crash
+                        //if it doesn't exist the jquery will then cont and leave an empty icon which is ok b/c its empty
                     }
                     else
                     {
                         //check for favorite
-                        FavoriteResource favoriteResource = new FavoriteResource()
+                        if (_context.FavoriteResources.Where(fr => fr.ResourceID == ResourceID && fr.ApplicationUserID == _userManager.GetUserId(User)) != null)
                         {
-                            ResourceID = ResourceID,
-                            ApplicationUserID = _userManager.GetUserId(User)
-                        };
-                        _context.Update(favoriteResource);
+                            FavoriteResource favoriteResource = new FavoriteResource()
+                            {
+                                ResourceID = ResourceID,
+                                ApplicationUserID = _userManager.GetUserId(User)
+                            };
+                            _context.Update(favoriteResource);
+                        }
+                        //if the favorite exists the jquery will then cont and leave a full icon which is ok b/c its full
                     }
                     await _context.SaveChangesAsync();
                     transaction.Commit();
@@ -743,8 +833,14 @@ namespace PrototypeWithAuth.Controllers
                     transaction.Rollback();
                 }
             }
-
-            return retString;
+            if (ReloadFavoritesPage)
+            {
+                return RedirectToAction("ResourcesList", new { SidebarEnum = AppUtility.SidebarEnum.Favorites });
+            }
+            else
+            {
+                return new EmptyResult();
+            }
         }
 
         [HttpGet]

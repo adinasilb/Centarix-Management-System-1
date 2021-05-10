@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210509061539_addedImageUrls")]
+    partial class addedImageUrls
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3878,7 +3880,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<byte?>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
 
-                    b.Property<bool>("IncludeVAT")
+                    b.Property<bool?>("IncludeVAT")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
@@ -4397,36 +4399,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ToApplicationUserID");
 
                     b.ToTable("ShareRequests");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
-                {
-                    b.Property<int>("ShareResourceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FromApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ResourceID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ToApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ShareResourceID");
-
-                    b.HasIndex("FromApplicationUserID");
-
-                    b.HasIndex("ResourceID");
-
-                    b.HasIndex("ToApplicationUserID");
-
-                    b.ToTable("ShareResources");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
@@ -6259,25 +6231,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
                         .WithMany("ShareRequestsReceived")
-                        .HasForeignKey("ToApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
-                        .WithMany("ShareResourcesCreated")
-                        .HasForeignKey("FromApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
-                        .WithMany()
-                        .HasForeignKey("ResourceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
-                        .WithMany("ShareResourcesReceived")
                         .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

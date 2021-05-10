@@ -21,7 +21,7 @@ namespace PrototypeWithAuth.Models
         public string Theory { get; set; }
         public List<Link> Urls { get; set; }
         public IEnumerable<Material> Materials { get; set; }
-        public IEnumerable<Line> Line { get; set; }        
+        public IEnumerable<Line> Lines { get; set; }        
         public string ApplicationUserCreatorID { get; set; }
         public ApplicationUser ApplicationUserCreator { get; set; }
         public int ProtocolSubCategoryID { get; set; }
