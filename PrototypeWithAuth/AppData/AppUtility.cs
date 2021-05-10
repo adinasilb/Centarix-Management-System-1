@@ -82,7 +82,7 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials}
+        public enum ParentFolderName { Protocols, Requests, Materials }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
@@ -105,9 +105,11 @@ namespace PrototypeWithAuth.AppData
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
-        public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay }
+        public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
         public enum PopoverDescription { More, Share, Delete }
         public enum PopoverEnum { None }
+        public enum FavoriteModels { Resources, Requests, Protocols }
+        public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -148,6 +150,7 @@ namespace PrototypeWithAuth.AppData
 
             return ReturnList;
         }
+
 
         public static ResourceAPIViewModel GetResourceArticleFromNCBIPubMed(string PubMedID)
         {
@@ -382,12 +385,12 @@ namespace PrototypeWithAuth.AppData
                                 accountingPopoverLink.Color = "#5F79E2";
                                 accountingPopoverLink.Icon = "icon-centarix-icons-19";
                                 break;
-                            //case PaymentsPopoverEnum.Installments:
-                            //    accountingPopoverLink.Action = "ChangePaymentStatus";
-                            //    accountingPopoverLink.Controller = "Requests";
-                            //    accountingPopoverLink.Color = "#7D9BAA";
-                            //    accountingPopoverLink.Icon = "icon-centarix-icons-20";
-                            //    break;
+                                //case PaymentsPopoverEnum.Installments:
+                                //    accountingPopoverLink.Action = "ChangePaymentStatus";
+                                //    accountingPopoverLink.Controller = "Requests";
+                                //    accountingPopoverLink.Color = "#7D9BAA";
+                                //    accountingPopoverLink.Icon = "icon-centarix-icons-20";
+                                //    break;
                                 //case PaymentsPopoverEnum.Clarification:
                                 //    accountingPopoverLink.Action = "ChangePaymentStatus";
                                 //    accountingPopoverLink.Controller = "Requests";
@@ -443,6 +446,21 @@ namespace PrototypeWithAuth.AppData
             return priceColumn;
         }
 
+        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, ProductSubcategory ps)
+        {
+            List<string> categoryColumn = new List<String>();
+            var category = ps.ParentCategory.ParentCategoryDescription;
+            var subcategory = ps.ProductSubcategoryDescription;
+            if (categorySelected)
+            {
+                categoryColumn.Add(category);
+            }
+            if (subcategorySelected)
+            {
+                categoryColumn.Add(subcategory);
+            }
+            return categoryColumn;
+        }
         //public static List<T> CloneList<T>(T list)
         //{
         //    return new List<T>();
@@ -536,7 +554,7 @@ namespace PrototypeWithAuth.AppData
             }
             return centarixID;
         }
-     
+   
         public static List<String> GetChartColors()
         {
             return new List<string> { "#00BCD4", "#3F51B5", "#009688", "#607D8B",  "#FF9800", "#F44336", "#795548", "#673AB7", "#9E9E9E", "#4CAF50", "#2196F3",

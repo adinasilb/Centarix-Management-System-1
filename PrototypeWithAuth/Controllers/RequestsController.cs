@@ -306,14 +306,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (requestIndexObject.RequestStatusID == 7)
                 {
-                    RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 7).Include(r => r.Product.ProductSubcategory)
+                    RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 7).Include(r => r.Product.ProductSubcategory).ThenInclude(ps=>ps.ParentCategory)
                  .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType);
                     RequestsPassedIn = RequestsPassedIn.Include(r => r.RequestLocationInstances).ThenInclude(r => r.LocationInstance);
                     RequestsPassedIn = RequestsPassedIn.ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
                 }
                 else
                 {
-                    RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product.ProductSubcategory)
+                    RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                    .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType);
                     RequestsPassedIn = RequestsPassedIn.Include(r => r.RequestLocationInstances).ThenInclude(r => r.LocationInstance);
                     RequestsPassedIn = RequestsPassedIn.ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
@@ -381,6 +381,18 @@ namespace PrototypeWithAuth.Controllers
 
             RequestIndexPartialViewModel requestIndexViewModel = new RequestIndexPartialViewModel();
             requestIndexViewModel.PricePopoverViewModel = new PricePopoverViewModel();
+            if (!requestIndexObject.CategorySelected && !requestIndexObject.SubcategorySelected)
+            {
+                requestIndexObject.SubcategorySelected = true;
+            }
+            requestIndexViewModel.CategoryPopoverViewModel = new CategoryPopoverViewModel()
+            {
+                SelectedCategoryOption = new List<bool>()
+                {
+                    requestIndexObject.CategorySelected,
+                    requestIndexObject.SubcategorySelected
+                }
+            };
             requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
             requestIndexViewModel.RequestStatusID = requestIndexObject.RequestStatusID;
             requestIndexViewModel.PageType = requestIndexObject.PageType;
@@ -389,7 +401,7 @@ namespace PrototypeWithAuth.Controllers
             var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
 
             var RequestPassedInWithInclude = RequestsPassedIn
-                .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory)
+                .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                 .Include(r => r.ParentRequest).Include(r => r.ApplicationUserCreator)
                 .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).AsQueryable();
@@ -414,6 +426,18 @@ namespace PrototypeWithAuth.Controllers
         private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject)
         {
             RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
+            if (!requestIndexObject.CategorySelected && !requestIndexObject.SubcategorySelected)
+            {
+                requestIndexObject.SubcategorySelected = true;
+            }
+            viewModelByVendor.CategoryPopoverViewModel = new CategoryPopoverViewModel()
+            {
+                SelectedCategoryOption = new List<bool>()
+                {
+                    requestIndexObject.CategorySelected,
+                    requestIndexObject.SubcategorySelected
+                }
+            };
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
             var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
@@ -433,7 +457,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case AppUtility.SidebarEnum.Orders:
                             var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
-                                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                                      .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);
 
                             iconList.Add(deleteIcon);
@@ -449,7 +473,7 @@ namespace PrototypeWithAuth.Controllers
                                      new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                                      new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                                      new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                     new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                                     new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                                      new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
                                      new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                                      new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
@@ -462,7 +486,7 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case AppUtility.SidebarEnum.Quotes:
                             var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
-            .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+            .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
             .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
             .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
                             //iconList.Add(resendIcon);
@@ -480,7 +504,7 @@ namespace PrototypeWithAuth.Controllers
                                      new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                                      new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                                      new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                     new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                                     new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                                      new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
                                      new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                                      new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
@@ -528,7 +552,7 @@ namespace PrototypeWithAuth.Controllers
                             new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID },
                             new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
                             new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID },
-                            new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } },
+                            new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                             new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
                             new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
                             new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
@@ -563,7 +587,7 @@ namespace PrototypeWithAuth.Controllers
                                     new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() {checkboxString} , AjaxID = r.RequestID},
                                     new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
                                     new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                                     new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
                                     new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
                                     new RequestIndexPartialColumnViewModel() { Title = "Payment Date", Width = 12, Value = new List<string>() { AppUtility.GetCurrentInstallment(usedPaymentsList, r, out currentPayment).PaymentDate.ToString("dd'/'MM'/'yyyy") } },
@@ -589,7 +613,7 @@ namespace PrototypeWithAuth.Controllers
                                     new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() {checkboxString} , AjaxID = r.RequestID},
                                     new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
                                     new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } },
+                                    new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                                     new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
                                     new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
                                     new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
@@ -628,7 +652,7 @@ namespace PrototypeWithAuth.Controllers
                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                                new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                                 new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                                 new RequestIndexPartialColumnViewModel()
@@ -791,7 +815,7 @@ namespace PrototypeWithAuth.Controllers
                                  new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                                  new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                                  new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                                  new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                  new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                                  new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
@@ -812,8 +836,7 @@ namespace PrototypeWithAuth.Controllers
                                  new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                                  new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                                  new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
+                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                  new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                                  new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
                                  new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID }
@@ -832,7 +855,7 @@ namespace PrototypeWithAuth.Controllers
                                  new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                                  new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                                  new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },                                 
                                  new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                  new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                                  new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=12, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
@@ -874,7 +897,7 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
                              new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
@@ -899,7 +922,7 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
                              new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
@@ -924,7 +947,7 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
                              new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                              new RequestIndexPartialColumnViewModel() { Title = "Shared By", Width=10, Value = new List<string>(){ GetSharedBy(r) } },
@@ -1005,7 +1028,7 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                              new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=10, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
@@ -1028,7 +1051,7 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details-summary", AjaxID=r.RequestID},
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
                              new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=10, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
@@ -1051,7 +1074,7 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
                              new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                              new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=10, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
@@ -2487,15 +2510,6 @@ namespace PrototypeWithAuth.Controllers
                                 await transaction.CommitAsync();
                                 base.RemoveRequestWithCommentsAndEmailSessions();
                             }
-                            switch (OrderTypeEnum)
-                            {
-                                case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                                    break;
-                                case AppUtility.OrderTypeEnum.OrderNow:
-                                    break;
-                                case AppUtility.OrderTypeEnum.AddToCart:
-                                    break;
-                            }
                         }
                         catch (Exception ex)
                         {
@@ -2517,8 +2531,8 @@ namespace PrototypeWithAuth.Controllers
                             break;
                     }
                     reorderViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
-
-                    return RedirectToAction(action, "Requests", reorderViewModel.RequestIndexObject);
+                    bool isReorder = true;
+                    return RedirectToAction(action, "Requests", new { requestIndexObject = reorderViewModel.RequestIndexObject, isReorder = isReorder });
                 }
                 catch (Exception ex)
                 {
@@ -4691,9 +4705,8 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType)
+        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType, bool isReorder = false)
         {
-
             var UploadQuoteViewModel = new UploadQuoteViewModel();
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
@@ -4714,47 +4727,10 @@ namespace PrototypeWithAuth.Controllers
             }
             UploadQuoteViewModel.OrderTypeEnum = OrderType;
             UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
+            UploadQuoteViewModel.IsReorder = isReorder;
             return PartialView(UploadQuoteViewModel);
 
 
-        }
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject)
-        {
-
-            int lastParentRequestOrderNum = 0;
-            var prs = _context.ParentRequests;
-            if (_context.ParentRequests.Any())
-            {
-                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
-            }
-            ParentRequest pr = new ParentRequest()
-            {
-                ApplicationUserID = _userManager.GetUserId(User),
-                OrderNumber = lastParentRequestOrderNum + 1,
-                OrderDate = DateTime.Now
-            };
-            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject };
-
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
-            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
-
-            if (Directory.Exists(uploadFolderOrders))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
-                //searching for the partial file name in the directory
-                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                UploadQuoteViewModel.FileStrings = new List<String>();
-                foreach (var orderfile in orderfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    UploadQuoteViewModel.FileStrings.Add(newFileString);
-                }
-            }
-
-            return PartialView(UploadQuoteViewModel);
         }
         [HttpPost]
         [Authorize(Roles = "Requests")]
@@ -4773,6 +4749,7 @@ namespace PrototypeWithAuth.Controllers
                 var request = HttpContext.Session.GetObject<Request>(requestName);
                 uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
                 request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
+                request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
                 if (request.RequestStatusID == 1)
                 {
                     TempData["RequestStatus"] = 1;
@@ -4790,8 +4767,12 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
+                            if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
+                            {
+                                request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                            }
                             _context.Entry(request.ParentQuote).State = EntityState.Added;
-                            if(request.Product.ProductID ==0)
+                            if (request.Product.ProductID == 0)
                             {
                                 _context.Entry(request.Product).State = EntityState.Added;
                             }
@@ -4847,38 +4828,44 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        private async Task SaveCommentsFromSession(Request request)
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject, bool isReorder = false)
         {
-            try
+
+            int lastParentRequestOrderNum = 0;
+            var prs = _context.ParentRequests;
+            if (_context.ParentRequests.Any())
             {
-                var commentExists = true;
-                var n = 1;
-                do
+                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
+            }
+            ParentRequest pr = new ParentRequest()
+            {
+                ApplicationUserID = _userManager.GetUserId(User),
+                OrderNumber = lastParentRequestOrderNum + 1,
+                OrderDate = DateTime.Now
+            };
+            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject, IsReorder = isReorder};
+
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
+            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
+
+            if (Directory.Exists(uploadFolderOrders))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
+                //searching for the partial file name in the directory
+                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                UploadQuoteViewModel.FileStrings = new List<String>();
+                foreach (var orderfile in orderfilesfound)
                 {
-                    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
-                    if (comment != null)
-                    //will only go in here if there are comments so will only work if it's there
-                    //IMPT look how to clear the session information if it fails somewhere...
-                    {
-                        comment.RequestID = request.RequestID;
-                        _context.Add(comment);
-                        n++;
-                    }
-                    else
-                    {
-                        commentExists = false;
-                    }
-                } while (commentExists);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+                    UploadQuoteViewModel.FileStrings.Add(newFileString);
+                }
             }
 
+            return PartialView(UploadQuoteViewModel);
         }
-
         [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel, bool isCancel = false)
@@ -4898,8 +4885,9 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
                     var req = HttpContext.Session.GetObject<Request>(requestName);
-                    if ( req != null)
+                    if (req != null)
                     {
+                        req.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
                         requests.Add(req);
                     }
                     else
@@ -4915,7 +4903,7 @@ namespace PrototypeWithAuth.Controllers
                     request.ParentQuote = null;
 
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                 
+
                     HttpContext.Session.SetObject(requestName, request);
                     RequestNum++;
                 }
@@ -4947,6 +4935,38 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+       
+        private async Task SaveCommentsFromSession(Request request)
+        {
+            try
+            {
+                var commentExists = true;
+                var n = 1;
+                do
+                {
+                    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
+                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                    if (comment != null)
+                    //will only go in here if there are comments so will only work if it's there
+                    //IMPT look how to clear the session information if it fails somewhere...
+                    {
+                        comment.RequestID = request.RequestID;
+                        _context.Add(comment);
+                        n++;
+                    }
+                    else
+                    {
+                        commentExists = false;
+                    }
+                } while (commentExists);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
         private async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, int requestNum = 1)
         {
 

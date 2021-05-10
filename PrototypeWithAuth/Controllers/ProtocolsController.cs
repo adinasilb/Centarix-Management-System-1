@@ -1,4 +1,5 @@
 ﻿using Abp.Extensions;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -515,8 +516,8 @@ namespace PrototypeWithAuth.Controllers
                             _context.Entry(url).State = EntityState.Modified;
                             await _context.SaveChangesAsync();
                         }
-                    }          
-                
+                    }
+
                     createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
                     await transaction.CommitAsync();
                     return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
@@ -651,29 +652,99 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> ResourcesList(int ResourceCategoryID = 1)
+        public async Task<IActionResult> ResourcesList(int? ResourceCategoryID, AppUtility.SidebarEnum SidebarEnum = AppUtility.SidebarEnum.Library)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarEnum;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
-            var resources = _context.Resources.Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID)).ToList();
-            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
+            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel();
+            switch (SidebarEnum)
             {
-                Resources = resources,
-                //in the future send this in IF it's going to be updated- can be list<string> etc
-                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
-            };
+                case AppUtility.SidebarEnum.Library:
+                    var resources = _context.Resources.Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                        .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID)).ToList();
+                    resourcesListViewModel.Resources = resources;
+                    //in the future send this in IF it's going to be updated- can be list<string> etc
+                    resourcesListViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
+                    break;
+                case AppUtility.SidebarEnum.Favorites:
+                    //var resources = _context.Resources.Include(r => r.f)
+                    break;
+                case AppUtility.SidebarEnum.SharedWithMe:
+                    break;
+            }
+
+
+
 
             return View(resourcesListViewModel);
         }
 
         [HttpGet]
-        [Authorize(Roles = "Protocols")] 
-        public async Task<IActionResult> ResourceNotesModal()
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ResourceNotesModal(int ResourceID)
         {
-            return PartialView();
+            var resourceNote = new ResourceNote() { ResourceID = ResourceID };
+            return PartialView(resourceNote);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<bool> ResourceNotesModal(ResourceNote ResourceNote)
+        {
+            bool error = false;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Update(ResourceNote);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    error = true;
+                    transaction.Rollback();
+                }
+            }
+            return error;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<string> FavoriteResources(int ResourceID, bool Favorite = true)
+        {
+            string retString = null;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (Favorite)
+                    {
+                        FavoriteResource favoriteResource = _context.FavoriteResources.Where(fr => fr.ResourceID == ResourceID && fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
+                        _context.Remove(favoriteResource);
+                    }
+                    else
+                    {
+                        //check for favorite
+                        FavoriteResource favoriteResource = new FavoriteResource()
+                        {
+                            ResourceID = ResourceID,
+                            ApplicationUserID = _userManager.GetUserId(User)
+                        };
+                        _context.Update(favoriteResource);
+                    }
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return retString;
         }
 
         [HttpGet]

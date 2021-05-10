@@ -96,8 +96,11 @@ $(function () {
 	$.validator.addMethod('mindate', function (v, el, minDate) {
 	if (this.optional(el)) {
 		return true;
-	}
-	var selectedDate = new Date($(el).attr("data-val"));
+		}
+		
+	var val = $(el).val();
+	val = val.split("/").reverse().join("-");
+	var selectedDate = moment(val).toDate();
 	console.log("selected date"+selectedDate)
 	minDate = new Date(minDate.setHours(0));
 	minDate = new Date(minDate.setMinutes(0));
@@ -109,10 +112,12 @@ $(function () {
 		$.validator.addMethod('maxDate', function (v, el, minDate) {
 	if (this.optional(el)) {
 		return true;
-	}
-	var selectedDate = new Date($(el).attr("data-val"));
+			}
+	var val = $(el).val();
+	val = val.split("/").reverse().join("-");
+	var selectedDate = moment(val).toDate();
 	console.log("selected date"+selectedDate)
-		selectedDate = new Date(selectedDate.setHours(0));
+	selectedDate = new Date(selectedDate.setHours(0));
 	selectedDate = new Date(selectedDate.setMinutes(0));
 	selectedDate = new Date(selectedDate.setSeconds(0));
 	selectedDate = new Date(selectedDate.setMilliseconds(0));
@@ -120,7 +125,7 @@ $(function () {
 	minDate = new Date(minDate.setMinutes(0));
 	minDate = new Date(minDate.setSeconds(0));
 	minDate = new Date(minDate.setMilliseconds(0));
-				console.log("min date"+minDate)
+			console.log("min date" + minDate)
 	return selectedDate <= minDate;
 }, 'Please select a valid date');
 

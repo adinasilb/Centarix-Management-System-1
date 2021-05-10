@@ -23,6 +23,7 @@ namespace PrototypeWithAuth.Models
         //public IEnumerable<TagArticle> TagArticles { get; set; }
         public int ResourceTypeID { get; set; }
         public ResourceType ResourceType { get; set; }
+        public IEnumerable<FavoriteResource> FavoriteResources { get; set; }
         public IEnumerable<ResourceResourceCategory> ResourceResourceCategories { get; set; }
     }
 }

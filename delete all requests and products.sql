@@ -1,0 +1,10 @@
+﻿delete from RequestLocationInstances
+delete from RequestNotifications
+delete from Payments
+delete from ShareRequests
+delete from Comments
+delete from FavoriteRequests
+delete from Requests
+delete from Products
+delete from Invoices
+delete from ParentQuotes

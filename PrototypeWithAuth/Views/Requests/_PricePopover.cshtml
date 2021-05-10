@@ -12,9 +12,7 @@
         <div style="display:none;" id="priceSortContent" class="">
             @for (int i = 0; i < Model.PriceSortEnums.Count; i++)
             {
-                var val = (int)(Model.PriceSortEnums[i].PriceSortEnum);
-                var id = "PriceSortEnums_" + i + "__Selected";
-                <div class="custom-control custom-checkbox plain-form priceFilterDiv" onclick="callIndexWithNewFilter(@val, @id)">
+                <div class="custom-control custom-checkbox plain-form priceFilterDiv">
                     <input type="checkbox" class="custom-control-input priceSort" enum="@Model.PriceSortEnums[i].PriceSortEnum" asp-for="PriceSortEnums[i].Selected" />
                     <label class="custom-control-label text" asp-for="PriceSortEnums[i].Selected">@Html.DisplayFor(e => Model.PriceSortEnums[i].PriceSortEnum)</label>
                 </div>

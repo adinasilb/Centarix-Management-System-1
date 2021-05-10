@@ -13,6 +13,7 @@ namespace PrototypeWithAuth.ViewModels
         public IPagedList<RequestIndexPartialRowViewModel> PagedList { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
+        public CategoryPopoverViewModel CategoryPopoverViewModel{ get; set;}
         public int? PageNumber { get; set; }
         public int RequestStatusID { get; set; }
         public int NewCount { get; set; }

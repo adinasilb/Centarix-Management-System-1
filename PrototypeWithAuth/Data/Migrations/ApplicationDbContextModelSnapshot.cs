@@ -1076,6 +1076,26 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("ExchangeRates");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteProtocol", b =>
+                {
+                    b.Property<int>("FavoriteProtocolID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProtocolID")
+                        .HasColumnType("int");
+
+                    b.HasKey("FavoriteProtocolID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.ToTable("FavoriteProtocols");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteRequest", b =>
                 {
                     b.Property<int>("FavoriteRequestID")
@@ -1096,6 +1116,28 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("RequestID");
 
                     b.ToTable("FavoriteRequests");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteResource", b =>
+                {
+                    b.Property<int>("FavoriteResourceID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ResourceID")
+                        .HasColumnType("int");
+
+                    b.HasKey("FavoriteResourceID");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("ResourceID");
+
+                    b.ToTable("FavoriteResources");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Freelancer", b =>
@@ -2316,6 +2358,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             OffDayTypeID = 4,
                             Description = "Special Day"
+                        },
+                        new
+                        {
+                            OffDayTypeID = 5,
+                            Description = "Unpaid Leave"
                         });
                 });
 
@@ -5625,6 +5672,14 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteProtocol", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany("FavoriteProtocols")
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteRequest", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
@@ -5635,6 +5690,20 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Request", "Request")
                         .WithMany("FavoriteRequests")
                         .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteResource", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany("FavoriteResources")
+                        .HasForeignKey("ApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Resource", null)
+                        .WithMany("FavoriteResources")
+                        .HasForeignKey("ResourceID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

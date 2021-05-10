@@ -22,59 +22,61 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" id="myForm" class="modal-padding" enctype="multipart/form-data">
-                <div class="row top-menu under-row-margin">
-                    <div class="col-12">
-                        @Heading
-                        <input type="hidden" asp-for="Resource.ResourceTypeID" />
-                    </div>
-                </div>
-                <div class="row under-row-margin">
-                    <div class="col-12">
-                        <label asp-for="Resource.Title" class="control-label"></label>
-                        <input asp-for="Resource.Title" class="form-control-plaintext border-bottom" />
-                        <span asp-validation-for="Resource.Title" class="text-danger-centarix"></span>
-                    </div>
-                </div>
-                <div class="row under-row-margin">
-                    <div class="col-12">
-                        <label asp-for="Resource.Summary" class="control-label"></label>
-                        <input asp-for="Resource.Summary" class="form-control-plaintext border-bottom" />
-                        <span asp-validation-for="Resource.Summary" class="text-danger-centarix"></span>
-                    </div>
-                </div>
-                <div class="row under-row-margin">
-                    <div class="col-6">
-                        <label asp-for="Resource.FirstAuthor" class="control-label"></label>
-                        <input asp-for="Resource.FirstAuthor" class="form-control-plaintext border-bottom" />
-                        <span asp-validation-for="Resource.FirstAuthor" class="text-danger-centarix"></span>
-                    </div>
-                    <div class="col-6">
-                        <label asp-for="Resource.LastAuthor" class="control-label"></label>
-                        <input asp-for="Resource.LastAuthor" class="form-control-plaintext border-bottom" />
-                        <span asp-validation-for="Resource.LastAuthor" class="text-danger-centarix"></span>
-                    </div>
-                </div>
-                <div class="row under-row-margin">
-                    <div class="col-4">
-                        <label asp-for="Resource.PubMedID" class="control-label"></label>
-                        <div class="input-group">
-                            <input asp-for="Resource.PubMedID" class="form-control-plaintext border-bottom" />
-                            <i class="icon-add_circle-24px protocols-filter get-pubmedinfo" style="font-size: 2.688rem;"></i>
+                <div class="form-element-border-bottom under-row-margin">
+                    <div class="row top-menu under-row-margin">
+                        <div class="col-12 heading-1">
+                            @Heading
+                            <input type="hidden" asp-for="Resource.ResourceTypeID" />
                         </div>
-                        <span asp-validation-for="Resource.PubMedID" class="text-danger-centarix"></span>
                     </div>
-                    <div class="col-4">
-                        <label asp-for="Resource.City" class="control-label"></label>
-                        <input asp-for="Resource.City" class="form-control-plaintext border-bottom" />
-                        <span asp-validation-for="Resource.City" class="text-danger-centarix"></span>
+                    <div class="row under-row-margin">
+                        <div class="col-12">
+                            <label asp-for="Resource.Title" class="modal-control-label"></label>
+                            <input asp-for="Resource.Title" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Resource.Title" class="text-danger-centarix"></span>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <label asp-for="Resource.Journal" class="control-label"></label>
-                        <input asp-for="Resource.Journal" class="form-control-plaintext border-bottom" />
-                        <span asp-validation-for="Resource.Journal" class="text-danger-centarix"></span>
+                    <div class="row under-row-margin">
+                        <div class="col-12">
+                            <label asp-for="Resource.Summary" class="modal-control-label"></label>
+                            <textarea asp-for="Resource.Summary" rows="10" class="mt-3 form-control-plaintext border no-resize textarea-border-radius" /></textarea>
+                            <span asp-validation-for="Resource.Summary" class="text-danger-centarix"></span>
+                        </div>
+                    </div>
+                    <div class="row under-row-margin">
+                        <div class="col-6">
+                            <label asp-for="Resource.FirstAuthor" class="modal-control-label"></label>
+                            <input asp-for="Resource.FirstAuthor" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Resource.FirstAuthor" class="text-danger-centarix"></span>
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="Resource.LastAuthor" class="modal-control-label"></label>
+                            <input asp-for="Resource.LastAuthor" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Resource.LastAuthor" class="text-danger-centarix"></span>
+                        </div>
+                    </div>
+                    <div class="row under-row-margin ">
+                        <div class="col-4">
+                            <label asp-for="Resource.PubMedID" class="modal-control-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Resource.PubMedID" class="form-control-plaintext border-bottom" />
+                                <i class="icon-add_circle-24px protocols-filter get-pubmedinfo" style="font-size: 2.688rem;"></i>
+                            </div>
+                            <span asp-validation-for="Resource.PubMedID" class="text-danger-centarix"></span>
+                        </div>
+                        <div class="col-4">
+                            <label asp-for="Resource.City" class="modal-control-label"></label>
+                            <input asp-for="Resource.City" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Resource.City" class="text-danger-centarix"></span>
+                        </div>
+                        <div class="col-4">
+                            <label asp-for="Resource.Journal" class="modal-control-label"></label>
+                            <input asp-for="Resource.Journal" class="form-control-plaintext border-bottom" />
+                            <span asp-validation-for="Resource.Journal" class="text-danger-centarix"></span>
+                        </div>
                     </div>
                 </div>
-                <hr style="box-shadow: 0px 0px .1rem #707070;" />
+                @*<hr style="box-shadow: 0px 0px .1rem #707070;" />*@
                 <div class="row under-row-margin top-menu">
                     <div class="col-12">
                         Select Tags
@@ -121,7 +123,7 @@
                         <span asp-validation-for="ResourceImage" class="text-danger"></span>
                     </div>
                     <div class="col-8">
-                        <label asp-for="Resource.Url" class="control-label"></label>
+                        <label asp-for="Resource.Url" class="modal-control-label"></label>
                         <div class="input-group">
                             <input asp-for="Resource.Url" class="form-control-plaintext border-bottom" />
                             <a href="" target="_blank" class="add-url disabled">

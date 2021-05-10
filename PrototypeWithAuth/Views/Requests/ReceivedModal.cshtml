@@ -192,7 +192,9 @@
             </div>*@
                         </div>
                         <br />
-                        @if (Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+                        @if (Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString() ||
+                            Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Biological.ToString() ||
+                            Model.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.Clinical.ToString())
                         {
                             <div class="row">
                                 <div class="col-md-3 ">

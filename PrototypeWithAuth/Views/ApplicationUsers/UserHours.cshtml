@@ -15,7 +15,7 @@
     <div class="col-10">
         <div class="row mb-2">
             <div>
-                <a href="@Url.Action("Hours")" id="back-user-hours">
+                <a href="@Url.Action("Hours", new { month = Model.CurrentMonth.Month, year = Model.SelectedYear })" id="back-user-hours">
                     <i class="fas fa-long-arrow-alt-left"></i>
                 </a>
                 <label class="text pl-1">All User Hours</label>
