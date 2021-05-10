@@ -18,6 +18,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<ShareResource> ShareResources { get; set; }
         public DbSet<FavoriteResource> FavoriteResources { get; set; }
         public DbSet<FavoriteProtocol> FavoriteProtocols { get; set; }
         public DbSet<ResourceNote> ResourceNotes { get; set; }
@@ -203,6 +204,15 @@ namespace PrototypeWithAuth.Data
                 .WithMany(au => au.ShareRequestsReceived)
                 .HasForeignKey(sr => sr.ToApplicationUserID);
 
+            modelBuilder.Entity<ShareResource>()
+                .HasOne(sr => sr.FromApplicationUser)
+                .WithMany(au => au.ShareResourcesCreated)
+                .HasForeignKey(sr => sr.FromApplicationUserID);
+
+            modelBuilder.Entity<ShareResource>()
+                .HasOne(sr => sr.ToApplicationUser)
+                .WithMany(au => au.ShareResourcesReceived)
+                .HasForeignKey(sr => sr.ToApplicationUserID);
 
             // configures one-to-many relationship between Inventory and InventorySubcategories
             modelBuilder.Entity<ProductSubcategory>()
