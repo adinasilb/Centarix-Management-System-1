@@ -119,6 +119,8 @@ namespace PrototypeWithAuth.AppData
             };
             return StringsWithName;
         }
+        public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
+        { Request, Resource, Protocol }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -563,7 +565,7 @@ namespace PrototypeWithAuth.AppData
             }
             return centarixID;
         }
-   
+
         public static List<String> GetChartColors()
         {
             return new List<string> { "#00BCD4", "#3F51B5", "#009688", "#607D8B",  "#FF9800", "#F44336", "#795548", "#673AB7", "#9E9E9E", "#4CAF50", "#2196F3",
