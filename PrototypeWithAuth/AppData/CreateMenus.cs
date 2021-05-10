@@ -1815,7 +1815,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Shared With Me",
                 Controller = "Protocols",
-                Action = "ResourcesSharedWithMe",
+                Action = "ResourcesList",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-monetization_on-24px"
@@ -1825,7 +1825,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Favorites",
                 Controller = "Protocols",
-                Action = "ResourcesList",
+                Action = "ResourcesFavorites",
                 RouteValues = new RouteValueDictionary() {
                     { "SidebarEnum" , AppUtility.SidebarEnum.Favorites }
                 },

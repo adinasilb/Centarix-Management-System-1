@@ -730,42 +730,29 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarEnum;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
-            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel() { IsFavoritesPage = false };
-            switch (SidebarEnum)
-            {
-                case AppUtility.SidebarEnum.Library:
-                    resourcesListViewModel.ResourcesWithFavorites = _context.Resources
-                        .Include(r => r.FavoriteResources)
-                        .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                        .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
-                        .Select(r => new ResourceWithFavorite
-                        {
-                            Resource = r,
-                            IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
-                        }).ToList();
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
 
-                    resourcesListViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
-                    break;
-                case AppUtility.SidebarEnum.Favorites:
-                    resourcesListViewModel.ResourcesWithFavorites = _context.FavoriteResources
-                        .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                        .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
-                        .Select(fr => new ResourceWithFavorite
-                        {
-                            Resource = fr.Resource,
-                            IsFavorite = true
-                        }).ToList();
-                    resourcesListViewModel.IsFavoritesPage = true;
-                    resourcesListViewModel.PaginationTabs = new List<string>() { };
-                    break;
-                case AppUtility.SidebarEnum.SharedWithMe:
-                    break;
-            }
+            ResourcesListIndexViewModel.ResourcesWithFavorites = _context.Resources
+                .Include(r => r.FavoriteResources)
+                .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
+                .Select(r => new ResourceWithFavorite
+                {
+                    Resource = r,
+                    IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                }).ToList();
+
+            ResourcesListIndexViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
 
 
+            return View(ResourcesListIndexViewModel);
+        }
 
-
-            return View(resourcesListViewModel);
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel)
+        {
+            return View(ResourcesListIndexViewModel);
         }
 
         [HttpGet]
@@ -942,7 +929,20 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel();
+            ResourcesListIndexViewModel.ResourcesWithFavorites = _context.FavoriteResources
+                .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                .Select(fr => new ResourceWithFavorite
+                {
+                    Resource = fr.Resource,
+                    IsFavorite = true
+                }).ToList();
+            ResourcesListIndexViewModel.IsFavoritesPage = true;
+            ResourcesListIndexViewModel.PaginationTabs = new List<string>() { };
+
+            return View(ResourcesListIndexViewModel);
         }
 
         [Authorize(Roles = "Protocols")]
@@ -1075,9 +1075,7 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     error = true;
-
                 }
-
             }
             return error;
         }

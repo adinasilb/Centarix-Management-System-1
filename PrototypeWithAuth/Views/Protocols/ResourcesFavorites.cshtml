@@ -1,4 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Favorites";
+﻿@model PrototypeWithAuth.ViewModels.ResourcesListIndexViewModel;
+
+@{
+    ViewData["Title"] = "ResourcesFavorites";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+@{ await Html.RenderPartialAsync("_ResourcesListIndex", Model);}
