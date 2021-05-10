@@ -1353,7 +1353,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(comment);
                             await _context.SaveChangesAsync();
                         }
-                        var notifications = _context.RequestNotifications.Where(rn => rn.RequestID == request.RequestID);
+                        var notifications = _context.RequestNotifications.Where(rn => rn.RequestID == request.RequestID).ToList();
 
                         foreach (var notification in notifications)
                         {
@@ -1739,7 +1739,6 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory = productSubcategory.ParentCategory;
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategoryID = productSubcategory.ParentCategoryID;
             requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
-            requestItemViewModel.Requests.FirstOrDefault().IncludeVAT = true;
             requestItemViewModel.Requests.FirstOrDefault().Cost = 0;
 
 
@@ -3977,7 +3976,13 @@ namespace PrototypeWithAuth.Controllers
                             request.ParentQuote.QuoteStatusID = 4;
                             //request.ParentQuote.QuoteDate = quoteDate;
                             request.ParentQuote.QuoteNumber = quoteNumber.ToString();
+                            if(quote.IncludeVAT)
+                            {
+                                quote.Cost = quote.Cost / (decimal)1.17;
+                            }
                             request.Cost = quote.Cost;
+                            request.Currency = quote.Currency;
+                            request.IncludeVAT = quote.IncludeVAT;
                             request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
                             _context.Update(request);
                             _context.SaveChanges();
@@ -4660,6 +4665,10 @@ namespace PrototypeWithAuth.Controllers
                         RequestToSave.Cost = request.Cost;
                         RequestToSave.Payments.FirstOrDefault().InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
                         RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
+                        if (RequestToSave.IncludeVAT)
+                        {
+                            RequestToSave.Cost = RequestToSave.Cost / (decimal)1.17;
+                        }
 
                         _context.Update(RequestToSave);
 

@@ -37,7 +37,7 @@
                 }
                 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
                 <!-- Modal Header -->
-                <div class="new-modal-header no-box-shadow">
+                <div class=" no-box-shadow">
                     @if (Model.ErrorMessage != null)
                     {<h6 class="text-danger-centarix">@Model.ErrorMessage</h6>
                     <br />
@@ -156,7 +156,7 @@
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <span class="input-group-text request-cost-dollar-icon @dollarDisabled">&#36;</span>
-                                                    <input class="form-control-plaintext border-bottom @dollarDisabled" id="sum-dollars" name="sum-dollars" value="@(Math.Round((Model.Requests[i].Cost??0)/Model.Requests[i].ExchangeRate, 2))"  />
+                                                    <input class="form-control-plaintext border-bottom @dollarDisabled" id="sum-dollars" name="sum-dollars" value="@(Math.Round((Model.Requests[i].Cost ?? 0) / Model.Requests[i].ExchangeRate, 2))" />
                                                 </div>
                                                 <div class="input-group">
                                                     <span class="input-group-text request-cost-shekel-icon @shekelDisabledText">&#x20aa;</span>
@@ -170,6 +170,14 @@
 
                                                     }
                                                     <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
+                                                </div>
+                                                <div class="custom-control custom-checkbox plain-form pt-1">
+                                                    @{
+                                                        var name = "Requests[" + i + "].IncludeVAT";
+                                                        var id = "Requests_" + i + "__IncludeVAT";
+                                                    }
+                                                    <input type="checkbox" class="custom-control-input vat-check" asp-for="Requests[i].IncludeVAT"/>
+                                                    <label class="custom-control-label" asp-for="Requests[i].IncludeVAT">Include VAT</label>
                                                 </div>
                                             </div>
                                         </td>
@@ -250,5 +258,10 @@
         }
         $(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 
+    })
+    $(".vat-check").click(function (e) {
+        console.log($(this).attr("checked"))
+        $(this).attr("checked", !$(this).prop("checked"));
+        $(this).val($(this).prop("checked"))
     })
 </script>

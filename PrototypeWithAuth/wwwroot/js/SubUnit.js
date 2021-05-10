@@ -402,6 +402,7 @@ $(function () {
 				$(shekelSelector).prop("readonly", true);
 				$(shekelSelector).addClass('disabled-text');
 				$(dollarSelector).prop("disabled", false);
+				$(dollarSelector).removeClass("disabled");
 				$(dollarSelector).removeClass('disabled-text');
 				$(dollarSelector).addClass('requestPriceQuote');
 				$(shekelSelector).removeClass('requestPriceQuote');
