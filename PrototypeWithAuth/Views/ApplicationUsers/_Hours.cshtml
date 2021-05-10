@@ -121,7 +121,7 @@
                 </td>
                 <td width="11%">
                     <div>
-                        <a href="@Url.Action("UserHours", "ApplicationUsers", new { userId = @employee.Employee.Id })">
+                        <a href="@Url.Action("UserHours", "ApplicationUsers", new { userId = @employee.Employee.Id , month = Model.Month, year = Model.Year})">
                             @employee.Employee.FirstName  @employee.Employee.LastName
                         </a>
                     </div>
