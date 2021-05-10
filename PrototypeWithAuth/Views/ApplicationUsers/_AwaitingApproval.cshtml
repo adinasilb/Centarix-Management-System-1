@@ -51,6 +51,7 @@
                 string Exit1 = "";
                 string Exit2 = "";
                 string TotalHours = "";
+                string PartialHours = "";
                 if (hours.Entry1)
                 {
                     Entry1 = specialClass;
@@ -70,6 +71,10 @@
                 if (hours.TotalHours)
                 {
                     TotalHours = specialClass;
+                }
+                if (hours.PartialHours)
+                {
+                    PartialHours = specialClass;
                 }
 
                 <tr class="text-center users-tr ">
@@ -95,6 +100,10 @@
                         {
                             <br /> <label class="@Entry2 m-0">@hours.EmployeeHoursAwaitingApproval.EmployeeHoursStatusEntry2?.Description </label>
                         }
+                        @if (hours.EmployeeHoursAwaitingApproval.PartialOffDayTypeID != null)
+                        {
+                            <br /><label class="@PartialHours m-0">Partial @hours.EmployeeHoursAwaitingApproval.PartialOffDayType.Description</label>
+                        }
 
 
                     </td>
@@ -106,6 +115,11 @@
                             <br />
                         }
                         <label class="@Entry2 m-0">@hours.EmployeeHoursAwaitingApproval.Entry2?.ToString("HH:mm") </label>
+                        @if (hours.EmployeeHoursAwaitingApproval.PartialOffDayTypeID != null)
+                        {
+                            <br />
+                            <label class="@PartialHours m-0">N/A</label>
+                        }
                     </td>
                     <td width="9%">
                         <label class="@Exit1 m-0">@hours.EmployeeHoursAwaitingApproval.Exit1?.ToString("HH:mm") </label>
@@ -114,10 +128,24 @@
                             <br />
                         }
                         <label class="@Exit2 m-0">@hours.EmployeeHoursAwaitingApproval.Exit2?.ToString("HH:mm")</label>
+                        @if (hours.EmployeeHoursAwaitingApproval.PartialOffDayTypeID != null)
+                        {
+                            <br />
+                            <label class="@PartialHours m-0">N/A</label>
+                        }
                     </td>
-                    <td width="9%" class="@TotalHours">
-                        @hours.EmployeeHoursAwaitingApproval.TotalHours?.ToString(@"h\:mm")
-                    </td>
+                    <td width="9%">
+                        <label class="@TotalHours m-0">@hours.EmployeeHoursAwaitingApproval.TotalHours?.ToString(@"h\:mm")</label>
+                        @if (hours.EmployeeHoursAwaitingApproval.Exit2 != null)
+                        {
+                            <br />
+                        }
+                        @if (hours.EmployeeHoursAwaitingApproval.PartialOffDayTypeID != null)
+                        {
+                            <br />
+                            <label class="@PartialHours m-0">@hours.EmployeeHoursAwaitingApproval.PartialOffDayHours?.ToString(@"h\:mm")</label>
+                         }
+</td>
                     <td width="10%">
                         <div class="table-icon-div">
                             <button type="button" class="rounded-pill px-4 py-1 mx-2 text-white no-box-shadow border-0 approve-hours" style="background-color:var(--user-color)" value="@hours.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID">Approve</button>                           

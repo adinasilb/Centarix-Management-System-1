@@ -1540,7 +1540,8 @@ $(function () {
 
 	
 
-	$("#home-btn").click(function () {
+	$("#home-btn").off('click').on('click',function () {
+		console.log("clicked home")
 			$('[data-toggle="tooltip"]').popover('dispose');
 			$("#home-btn").popover({
 				sanitize: false,
@@ -1551,14 +1552,8 @@ $(function () {
 				}
 			});
 			$("#home-btn").popover('toggle');
-
 	});
 	
-
-
-
-
-
 	$('.isRepeat').off("click").on("click", function () {
 		//console.log('employee status')
 		var val = $(this).val();

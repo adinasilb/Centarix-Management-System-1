@@ -9,7 +9,7 @@
 
 
 }
-<input type="hidden" asp-for="TotalWorkingDaysInYear" year="@Model.Year" />
+@*<input type="hidden" asp-for="TotalWorkingDaysInYear" year="@Model.Year" />*@
 <div class="hours-partial">
     @{ await Html.RenderPartialAsync("_Hours", Model);
     }

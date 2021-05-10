@@ -84,25 +84,25 @@
                     <td width="11%"></td>
                     <td width="11%">Name</td>
                     <td width="11%">
-                        Job Type
-                    </td>
-                    <td width="11%">
                         Percentage
                     </td>
                     <td width="11%">
                         Missing Report
                     </td>
-                    <td width="10%">
+                    <td width="11%">
                         Hours
                     </td>
-                    <td width="8%">
+                    <td width="11%">
                         Working Days
                     </td>
-                    <td width="8%">
+                    <td width="11%">
                         Vacation Days
                     </td>
-                    <td width="8%">
+                    <td width="11%">
                         Sick Days
+                    </td>
+                    <td width="11%">
+                        Unpaid Leave
                     </td>
                 </tr>
 
@@ -127,25 +127,21 @@
                     </div>
                 </td>
                 <td width="11%">
-                    @employee.Employee.EmployeeStatus.Description
-                </td>
-                <td width="11%">
-                    @{var totalHoursInRange = (Model.TotalWorkingDaysInMonthOrYear - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay??0;
-                        var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
+                    @{var totalHoursInRange = (Model.TotalWorkingDaysInMonthOrYear - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay ?? 0;
+                        var totalHours = employee.Hours.TotalMinutes / 60;
                         var totalHoursPercent = Math.Round((totalHours / totalHoursInRange) * 100, 2);
-                     }
+                    }
                     @totalHoursPercent%
                 </td>
                 <td width="11%">
                     @employee.MissingDays
                 </td>
-                <td width="10%">
+                <td width="11%">
                     @{totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
                         var totalHoursString = "";
                     }
                     @if (employee.Employee.EmployeeStatusID == 1)
                     {
-                        //totalHoursInRange = (Model.TotalWorkingDaysInMonthOrYear - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay??0;
                         var totalInMonth = TimeSpan.FromHours(totalHoursInRange);
                         totalHoursString = totalHours + ":" + employee.Hours.ToString("mm") + "/" + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
                     }
@@ -155,26 +151,28 @@
                     }
                     @totalHoursString
                 </td>
-                <td width="8%">
+                <td width="11%">
                     @{
                         var totalDaysString = "";
                     }
                     @if (employee.Employee.EmployeeStatusID == 1)
                     {
-                        totalDaysString = employee.WorkingDays + "/" + Model.TotalWorkingDaysInMonthOrYear;
+                        totalDaysString = Math.Round(employee.WorkingDays, 2) + "/" + Model.TotalWorkingDaysInMonthOrYear;
                     }
                     else
                     {
-
                         totalDaysString = employee.WorkingDays + "";
                     }
                     @totalDaysString
                 </td>
-                <td width="8%">
+                <td width="11%">
                     @employee.VacationDays
                 </td>
-                <td width="8%">
+                <td width="11%">
                     @employee.SickDays
+                </td>
+                <td width="11%">
+                    @employee.UnpaidLeave
                 </td>
             </tr>
                 }
