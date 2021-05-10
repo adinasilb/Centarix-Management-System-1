@@ -187,7 +187,7 @@ $(".request-favorite").on("click", function (e) {
 	var fullHeartClass = "icon-favorite-24px";
 	var fav = "request-favorite";
 	var unfav = "request-unlike";
-	var title = "Like";
+	var title = "Favorite";
 	var requestFavorite = $(this);
 	var FavType = "favorite";
 	var sidebarType = $('#masterSidebarType').val();
@@ -213,7 +213,7 @@ $(".request-favorite").on("click", function (e) {
 		})
 	}
 	else {
-		title = "Unlike";
+		title = "Unfavorite";
 		$.ajax({
 			async: true,
 			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
