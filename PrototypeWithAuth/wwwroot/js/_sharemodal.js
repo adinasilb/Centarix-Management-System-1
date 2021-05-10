@@ -9,8 +9,10 @@
 			url: url,
 			method: 'POST',
 			data: formData,
-			success: (partialResult) => {
-				$.fn.CloseModal("shared-modal");
+			success: (e) => {
+				if (!e) {
+					$.fn.CloseModal("share-modal");
+				}
 				//find error here!
 			},
 			processData: false,
