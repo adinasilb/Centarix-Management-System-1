@@ -73,7 +73,7 @@ namespace PrototypeWithAuth.Controllers
                 var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                 vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Count();
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
-                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff) - (vacationDaysTaken + sickCount);
+                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff) - (vacationDaysTaken + sickDaysTaken);
                 totalhours = totalhours * user.SalariedEmployee.HoursPerDay;
                
             }

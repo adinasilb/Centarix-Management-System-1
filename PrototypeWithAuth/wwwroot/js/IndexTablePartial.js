@@ -12,7 +12,7 @@
 	$(this).popover('toggle');
 	$(".popover").off("click").on("click", ".share-request-fx", function () {
 		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-		alert("url: " + url);
+		//alert("url: " + url);
 		$.ajax({
 			async: true,
 			url: url,

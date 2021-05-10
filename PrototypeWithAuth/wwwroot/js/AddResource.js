@@ -75,7 +75,7 @@ $(function () {
 	$("#Resource_Url").on("change", function (e) {
 		var urlLink = $(".add-url");
 		if ($(this).val().length > 0) {
-			alert("has url");
+			//alert("has url");
 			urlLink.removeClass("disabled");
 			var url = $(this).val();
 			var startLink = url.substring(0, 8);
@@ -87,7 +87,7 @@ $(function () {
 			urlLink.children("a").addClass("protocols-color");
 		}
 		else {
-			alert("no url");
+			//alert("no url");
 			urlLink.addClass("disabled");
 			urlLink.attr("href", "");
 			urlLink.children("a").addClass("disabled-color1");
