@@ -1025,6 +1025,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ShareModal(int ID, AppUtility.ModelsEnum ModelsEnum)
         {
             ShareModalViewModel shareModalViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
+            shareModalViewModel.MenuItem = AppUtility.MenuItems.Protocols;
             switch (ModelsEnum)
             {
                 case AppUtility.ModelsEnum.Resource:
@@ -1038,6 +1039,12 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles ="Protocols")]
         public async Task<bool> ShareModal(ShareModalViewModel shareModalViewModel)
         {
+            switch (shareModalViewModel.ModelsEnum)
+            {
+                case AppUtility.ModelsEnum.Resource:
+                    
+                    break;
+            }
             bool error = false;
             return error;
         }

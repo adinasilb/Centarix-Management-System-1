@@ -2,11 +2,11 @@
 	$(".share-object").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		var modelsEnum = $("#ModelsEnum").val();
-		var url = "/" + modelsEnum + "/ShareModal";
+		var menuEnum = $("#MenuItem").val();
+		var url = "/" + menuEnum + "/ShareModal";
 		var formData = new FormData($(".sharemodal")[0]);
 		$.ajax({
-			url: link,
+			url: url,
 			method: 'POST',
 			data: formData,
 			success: (partialResult) => {

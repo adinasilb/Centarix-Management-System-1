@@ -14,5 +14,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<SelectListItem> ApplicationUsers { get; set; }
         public String ApplicationUserID { get; set; }
         public AppUtility.ModelsEnum ModelsEnum { get; set; }
+        public AppUtility.MenuItems MenuItem { get; set; }
     }
 }
