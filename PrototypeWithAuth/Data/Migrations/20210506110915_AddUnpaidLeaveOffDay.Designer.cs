@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210506110915_AddUnpaidLeaveOffDay")]
+    partial class AddUnpaidLeaveOffDay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1739,7 +1741,9 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.Line", b =>
                 {
                     b.Property<int>("LineID")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
@@ -1756,9 +1760,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TempLineLineID")
-                        .HasColumnType("int");
-
                     b.Property<TimeSpan>("Timer")
                         .HasColumnType("time");
 
@@ -1769,8 +1770,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ParentLineID");
 
                     b.HasIndex("ProtocolID");
-
-                    b.HasIndex("TempLineLineID");
 
                     b.ToTable("Lines");
                 });
@@ -3883,7 +3882,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<byte?>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
 
-                    b.Property<bool>("IncludeVAT")
+                    b.Property<bool?>("IncludeVAT")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
@@ -4156,9 +4155,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
@@ -4176,7 +4172,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 1,
-                            ImageUrl = "rejuvenation_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Rejuvenation"
@@ -4184,7 +4179,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 2,
-                            ImageUrl = "biomarkers_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Biomarkers"
@@ -4192,7 +4186,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 3,
-                            ImageUrl = "delivery_systems_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Delivery Systems"
@@ -4200,7 +4193,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 4,
-                            ImageUrl = "clinical_trials_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Clinical Trials"
@@ -4271,15 +4263,13 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 14,
-                            ImageUrl = "software_image.svg",
                             IsMain = false,
                             IsResourceType = true,
-                            ResourceCategoryDescription = "Software"
+                            ResourceCategoryDescription = "Softwares"
                         },
                         new
                         {
                             ResourceCategoryID = 15,
-                            ImageUrl = "learning_image.svg",
                             IsMain = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Learning"
@@ -4287,7 +4277,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 16,
-                            ImageUrl = "companies_image.svg",
                             IsMain = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Companies"
@@ -4295,7 +4284,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 17,
-                            ImageUrl = "news_image.svg",
                             IsMain = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "News"
@@ -4402,36 +4390,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ToApplicationUserID");
 
                     b.ToTable("ShareRequests");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
-                {
-                    b.Property<int>("ShareResourceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FromApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ResourceID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ToApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ShareResourceID");
-
-                    b.HasIndex("FromApplicationUserID");
-
-                    b.HasIndex("ResourceID");
-
-                    b.HasIndex("ToApplicationUserID");
-
-                    b.ToTable("ShareResources");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
@@ -4550,49 +4508,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ProtocolID");
 
                     b.ToTable("TagProtocols");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TempLine", b =>
-                {
-                    b.Property<int>("LineID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LineNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LineTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ParentLineID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PermanentLineID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProtocolID")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("Timer")
-                        .HasColumnType("time");
-
-                    b.HasKey("LineID");
-
-                    b.HasIndex("LineTypeID");
-
-                    b.HasIndex("ParentLineID");
-
-                    b.HasIndex("PermanentLineID")
-                        .IsUnique()
-                        .HasFilter("[PermanentLineID] IS NOT NULL");
-
-                    b.HasIndex("ProtocolID");
-
-                    b.ToTable("TempLines");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
@@ -5788,7 +5703,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
+                    b.HasOne("PrototypeWithAuth.Models.Resource", null)
                         .WithMany("FavoriteResources")
                         .HasForeignKey("ResourceID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5842,15 +5757,10 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany("Lines")
+                        .WithMany("Line")
                         .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.TempLine", "TempLine")
-                        .WithMany()
-                        .HasForeignKey("TempLineLineID")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LineType", b =>
@@ -6268,25 +6178,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
-                        .WithMany("ShareResourcesCreated")
-                        .HasForeignKey("FromApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
-                        .WithMany()
-                        .HasForeignKey("ResourceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
-                        .WithMany("ShareResourcesReceived")
-                        .HasForeignKey("ToApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Project", "Project")
@@ -6307,32 +6198,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Tag", "Tag")
                         .WithMany()
                         .HasForeignKey("TagID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.TempLine", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.LineType", "LineType")
-                        .WithMany()
-                        .HasForeignKey("LineTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.TempLine", "ParentLine")
-                        .WithMany()
-                        .HasForeignKey("ParentLineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Line", "PermanentLine")
-                        .WithOne()
-                        .HasForeignKey("PrototypeWithAuth.Models.TempLine", "PermanentLineID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
-                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
