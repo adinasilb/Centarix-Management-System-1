@@ -2778,7 +2778,8 @@ namespace PrototypeWithAuth.Controllers
                     message.Subject = "Order from Centarix to " + vendorName;
 
                     //body
-                    builder.TextBody = @"Please see attached order." + "\n" + "Thank you.";
+                    builder.TextBody = @"Hello,"+"\n\n"+ "Please see the attached order. \n\nThank you.\n"
+                        + ownerUsername + "\nCentarix";
                     builder.Attachments.Add(uploadFile);
 
                     message.Body = builder.ToMessageBody();
@@ -3031,7 +3032,8 @@ namespace PrototypeWithAuth.Controllers
                 message.Subject = "Order from Centarix to " + vendorName;
 
                 //body
-                builder.TextBody = @"Please see attached order." + "\n" + "Thank you.";
+                builder.TextBody = @"Hello," + "\n\n" + "Please send a price quote for the items listed in the attached pdf. \n\nThank you.\n"
+                        + ownerUsername + "\nCentarix"; ;
                 builder.Attachments.Add(uploadFile);
 
                 message.Body = builder.ToMessageBody();
@@ -4161,13 +4163,15 @@ namespace PrototypeWithAuth.Controllers
             message.To.Add(new MailboxAddress(vendorName, vendorEmail));
 
             //subject
-            message.Subject = "Message to " + vendorName;
+            message.Subject = "Please update on delayed supply for Centarix's Order #"+ request.ParentRequest.OrderNumber;
 
             //body
-            builder.TextBody = $"The order number {request.ParentRequest.OrderNumber} for {request.Product.ProductName} , has not arrived yet.\n" +
+            builder.TextBody = $"The order number {request.ParentRequest.OrderNumber} for {request.Product.ProductName}" +
+                $" which was scheduled to arrive at {request.ParentRequest.OrderDate.AddDays((double)request.ExpectedSupplyDays).Date}, " +
+                $"has not arrived yet. \n" +
                     $"Please update us on the matter.\n" +
                     $"Best regards,\n" +
-                    $"{request.ApplicationUserCreator.FirstName} { request.ApplicationUserCreator.LastName}\n" +
+                    $"{ownerUsername}\n" +
                     $"Centarix";
 
             message.Body = builder.ToMessageBody();
