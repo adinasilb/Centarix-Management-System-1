@@ -265,6 +265,8 @@
     <Compile Remove="Data\Migrations\20210509050711_removeIdentityFromTempLine.Designer.cs" />
     <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.cs" />
     <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210510114235_test.cs" />
+    <Compile Remove="Data\Migrations\20210510114235_test.Designer.cs" />
   </ItemGroup>
 
 

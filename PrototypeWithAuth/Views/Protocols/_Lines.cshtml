@@ -1,3 +1,40 @@
-﻿@using PrototypeWithAuth.Models; 
-@model List<TempLine>
+﻿@using PrototypeWithAuth.ViewModels;
+@model List<ProtocolsLineViewModel>
 
+@foreach (var line in Model)
+{
+    await Html.RenderPartialAsync("_Line", line);    
+}
+
+<script>
+    $(".addLinePopover").click(function () {
+        var val = $(this).val();
+        $('[data-toggle="popover"]').popover('dispose');
+        $(this).popover({
+            sanitize: false,
+            placement: 'bottom',
+            html: true,
+            content: function () {
+                return $('#' + val).html();
+            }
+        });
+        $(this).popover('toggle');
+        $(".popover").off("click").on("click", ".addLine", function () {
+            $.ajax({
+                processData: false,
+                contentType: false,
+                data: new FormData($("#myForm")[0]),
+                url: "/Protocols/_Lines?lineTypeID="+$(this).val()+
+                    "&currentLineID=" + $(this).attr("current-line-id") +"&protocolID="+ $(".createProtocolMasterProtocolID").val(),
+                type: 'POST',
+                success: function (data) {
+                    $("._Lines").html(data);
+                }
+            });
+        });
+    });
+    $(".line").click(function(){
+        $(".addLinePopover").addClass("d-none");
+        $("."+$(this).attr("id")+"LinePopoverButton").removeClass("d-none");
+    });
+</script>

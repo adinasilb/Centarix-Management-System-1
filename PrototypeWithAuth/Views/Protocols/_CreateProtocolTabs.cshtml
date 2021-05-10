@@ -156,7 +156,10 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
     }
     <div class="lines">
         <div class="heading-1">@Model.Protocol.Name</div>
-        @{await Html.RenderPartialAsync("_Lines", Model.TempLines);}
+        <div class="_Lines">
+            @{await Html.RenderPartialAsync("_Lines", Model.TempLines);}
+        </div>
+    
 
     </div>
 </div>
