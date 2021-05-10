@@ -134,7 +134,7 @@ else
             @Html.DropDownListFor(
                        vm => vm.EmployeeHour.PartialOffDayTypeID,
                        new SelectList(
-                       Model.PartialOffDayTypes.Where(p => p.OffDayTypeID == 2),
+                       Model.PartialOffDayTypes,
                        dataValueField: "OffDayTypeID",
                        dataTextField: "Description"),
                        optionLabel: "Select Option",
