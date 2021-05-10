@@ -131,12 +131,16 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                     total = total + (decimal)shipping;
                     decimal totalWithVat = total + vat;
                 }
-                <tr>
-                    <td colspan="@colspan" rowspan="4" class="borderless-cell">
-                        <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
-                    </td>
+                
+            <tr>
+                <td colspan="@colspan" rowspan="4" class="borderless-cell">
+                    <img src="~/images/css/centarix_logo_signature.png" alt="signature" width="250" class="mt-5">
+                </td>
+                @if (shipping != 0)
+                {
                     <td>Shipping</td>
                     <td>@currency @shipping.ToString("N2")</td>
+                }
                 </tr>
                 <tr>
                     <td>Total</td>
