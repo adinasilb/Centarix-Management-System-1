@@ -367,7 +367,7 @@ body {
 }
 
 input:not(input[type=button], input[type=submit], .heading-1) {
-    font-size: 1rem !important;
+    font-size: var(--text-font-size) !important;
     font-weight: var(--bold-regular) !important;
 }
 
