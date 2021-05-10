@@ -129,6 +129,10 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                     }
                     var shipping = Model.Requests[0].ParentRequest?.Shipping ?? 0;
                     total = total + (decimal)shipping;
+                    if(vat != 0)
+                    { 
+                        vat += (decimal)shipping * .17m;
+                    }
                     decimal totalWithVat = total + vat;
                 }
                 
