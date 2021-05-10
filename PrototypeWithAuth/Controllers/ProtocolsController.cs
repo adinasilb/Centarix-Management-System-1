@@ -11,6 +11,7 @@ using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
+using SQLitePCL;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +26,7 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, userManager: userManager, hostingEnvironment:hostingEnvironment)
+        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, userManager: userManager, hostingEnvironment: hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
@@ -1021,7 +1022,7 @@ namespace PrototypeWithAuth.Controllers
             GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
         }
 
-        [Authorize(Roles ="Protocols")]
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ShareModal(int ID, AppUtility.ModelsEnum ModelsEnum)
         {
             ShareModalViewModel shareModalViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
@@ -1036,16 +1037,48 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles ="Protocols")]
+        [Authorize(Roles = "Protocols")]
         public async Task<bool> ShareModal(ShareModalViewModel shareModalViewModel)
         {
-            switch (shareModalViewModel.ModelsEnum)
-            {
-                case AppUtility.ModelsEnum.Resource:
-                    
-                    break;
-            }
+            var currentUserID = _userManager.GetUserId(User);
             bool error = false;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    switch (shareModalViewModel.ModelsEnum)
+                    {
+                        case AppUtility.ModelsEnum.Resource:
+                            var PrevSharedResource = _context.ShareResources
+                                .Where(sr => sr.ResourceID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == shareModalViewModel.ApplicationUserID).FirstOrDefault();
+                            if (PrevSharedResource != null)
+                            {
+                                PrevSharedResource.TimeStamp = DateTime.Now;
+                                _context.Update(PrevSharedResource);
+                            }
+                            else
+                            {
+                                var shareResource = new ShareResource()
+                                {
+                                    ResourceID = shareModalViewModel.ID,
+                                    FromApplicationUserID = currentUserID,
+                                    ToApplicationUserID = shareModalViewModel.ApplicationUserID,
+                                    TimeStamp = DateTime.Now
+                                };
+                                _context.Update(shareResource);
+                            }
+                            break;
+                    }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    error = true;
+
+                }
+
+            }
             return error;
         }
 
