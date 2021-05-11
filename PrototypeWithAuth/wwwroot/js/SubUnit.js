@@ -10,6 +10,7 @@ $(function () {
 
 	$.fn.CalculateSumPlusVat = function (index = "0") {
 		var $exchangeRate = $("#exchangeRate").val();
+		var inverseExchangeRate = 1/$exchangeRate
 		if ($exchangeRate == "0") {
 			$exchangeRate = "1";
 		}
@@ -35,7 +36,7 @@ $(function () {
 		//$("#Request_VAT").val(vatCalc)
 		//var vatInShekel = $("#Request_VAT").val();
 		if ($("#" + dollarId).prop("disabled") || $("#" + dollarId).hasClass("disabled")) {
-			$sumDollars = parseFloat($("#" + shekelId).val()) / $exchangeRate;
+			$sumDollars = parseFloat($("#" + shekelId).val()) * inverseExchangeRate;
 			console.log("sumDollars"+$sumDollars)
 			$iptBox = $('#'+dollarId);
 			$.fn.ShowResults($iptBox, $sumDollars);
@@ -51,11 +52,11 @@ $(function () {
 		//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
 		$('#' + vatId).val(vatCalc.toFixed(2));
 		console.log("vat calc " + vatCalc)
-		$('#' + vatDollarId).val((vatCalc / $exchangeRate).toFixed(2));
+		$('#' + vatDollarId).val((vatCalc * inverseExchangeRate).toFixed(2));
 		$sumTotalVatShekel = $sumShekel + vatCalc;
 		$iptBox = $("#" + totalVatId);
 		$.fn.ShowResults($iptBox, $sumTotalVatShekel);
-		$sumTotalVatDollars = $sumTotalVatShekel / $exchangeRate;
+		$sumTotalVatDollars = $sumTotalVatShekel * inverseExchangeRate;
 		$iptBox = $("#" + totalVatDollarId);
 		$.fn.ShowResults($iptBox, $sumTotalVatDollars);
 	};
@@ -64,7 +65,8 @@ $(function () {
 		$iptBox = $("input[name='unit-price-shekel']");
 		$.fn.ShowResults($iptBox, $unitSumShekel);
 		var $exchangeRate = $("#exchangeRate").val();
-		$unitSumDollars = $unitSumShekel / $exchangeRate;
+		var inverseExchangeRate = 1 / $exchangeRate;
+		$unitSumDollars = $unitSumShekel * inverseExchangeRate;
 		$iptBox = $("input[name='unit-price-dollars']");
 		$.fn.ShowResults($iptBox, $unitSumDollars);
 	};
@@ -119,18 +121,19 @@ $(function () {
 		$.fn.CalculateSubSubUnitAmounts();
 	};
 	$.fn.CalculatePriceDollars = function () {
-		var $unitPrice = $("#unit-price-dollars").val();
-		var $priceDollars = $unitPrice * $("#unit").val();
-		var $iptBox = $("input[name='sum-dollars']");
-		$.fn.ShowResults($iptBox, $priceDollars);
-		var $exchangeRate = $("#exchangeRate").val();
-		
-		$priceShekels = $priceDollars * $exchangeRate;
+		var $unitPrice = $("#unit-price-shekel").val();
+		$priceShekels = $unitPrice * $("#unit").val();
 		$iptBox = $("#cost");
 		$.fn.ShowResults($iptBox, $priceShekels);
-		$unitPriceShekels = $unitPrice * $exchangeRate;
-		$iptBox = $("input[name='unit-price-shekel']");
-		$.fn.ShowResults($iptBox, $unitPriceShekels)
+		var $exchangeRate = $("#exchangeRate").val();
+		var inverseExchangeRate = 1 / $exchangeRate;
+		$unitPriceDollars = $unitPrice * inverseExchangeRate;
+		$iptBox = $("input[name='unit-price-dollars']");
+		var $priceDollars = $unitPriceDollars * $("#unit").val();
+		$.fn.ShowResults($iptBox, $unitPriceDollars);
+		var $iptBox = $("input[name='sum-dollars']");
+		$.fn.ShowResults($iptBox, $priceDollars);
+		
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
 		$.fn.CalculateSumPlusVat();
