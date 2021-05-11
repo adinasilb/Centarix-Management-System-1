@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210511072213_AddReportTypeTable")]
+    partial class AddReportTypeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3824,12 +3826,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ReportDescription")
                         .HasColumnType("ntext");
 
-                    b.Property<int>("ReportTypeID")
-                        .HasColumnType("int");
-
                     b.HasKey("ReportID");
-
-                    b.HasIndex("ReportTypeID");
 
                     b.ToTable("Reports");
                 });
@@ -3847,23 +3844,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("ReportTypeID");
 
                     b.ToTable("ReportTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            ReportTypeID = 1,
-                            ReportTypeDescription = "Daily"
-                        },
-                        new
-                        {
-                            ReportTypeID = 2,
-                            ReportTypeDescription = "Weekly"
-                        },
-                        new
-                        {
-                            ReportTypeID = 3,
-                            ReportTypeDescription = "Monthly"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Request", b =>
@@ -6131,15 +6111,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ProtocolCategory", "ProtocolCategoryType")
                         .WithMany()
                         .HasForeignKey("ProtocolCategoryTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Report", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.ReportType", "ReportType")
-                        .WithMany()
-                        .HasForeignKey("ReportTypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

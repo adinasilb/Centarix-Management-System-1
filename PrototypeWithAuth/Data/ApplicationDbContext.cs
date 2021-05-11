@@ -33,6 +33,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<TagProtocol> TagProtocols { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<ReportType> ReportTypes { get; set; }
         public DbSet<ResourceType> ResourceTypes { get; set; }
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Material> Materials { get; set; }
@@ -110,6 +111,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<LocationRoomInstance> LocationRoomInstances { get; set; }
         public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; }
         public DbSet<TemporaryLocationInstance> TemporaryLocationInstances { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

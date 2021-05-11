@@ -2766,7 +2766,23 @@ namespace PrototypeWithAuth.Data
                 }
                 );
 
-
+            modelBuilder.Entity<ReportType>().HasData(
+               new ReportType
+               {
+                   ReportTypeID = 1,
+                   ReportTypeDescription = "Daily"
+               },
+               new ReportType
+               {
+                   ReportTypeID = 2,
+                   ReportTypeDescription = "Weekly"
+               },
+               new ReportType
+               {
+                   ReportTypeID = 3,
+                   ReportTypeDescription = "Monthly"
+               }
+        );
             modelBuilder.Entity<MaterialCategory>().HasData(
                 new MaterialCategory
                 {
