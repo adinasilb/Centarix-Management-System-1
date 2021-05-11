@@ -669,13 +669,29 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> WeeklyReports()
+        public async Task<IActionResult> WeeklyReportsCategories()
+        {
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.WeeklyReports;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
+            ReportCategoriesViewModel viewModel = new ReportCategoriesViewModel
+            {
+                PageType = AppUtility.PageTypeEnum.ProtocolsReports.ToString(),
+                SidebarType = AppUtility.SidebarEnum.WeeklyReports.ToString(),
+                ReportCategories = _context.ResourceCategories.Where(rc => rc.IsMain).ToList()
+            };
+            return View(viewModel);
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> WeeklyReportsList()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.WeeklyReports;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
             return View();
         }
+
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> MonthlyReports()
         {

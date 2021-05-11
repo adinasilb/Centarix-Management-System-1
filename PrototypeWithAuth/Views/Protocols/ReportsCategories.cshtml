@@ -1,0 +1,54 @@
+﻿@model PrototypeWithAuth.ViewModels.ReportCategoriesViewModel;
+@using PrototypeWithAuth.AppData;
+@{
+    ViewData["Title"] = "Weekly Reports";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}
+@{ 
+    var heading = "Weekly";
+    if(Model.SidebarType == AppUtility.SidebarEnum.DailyReports.ToString())
+    {
+        heading = "Daily";
+    }
+    else if (Model.SidebarType == AppUtility.SidebarEnum.MonthlyReports.ToString())
+    {
+        heading = "Monthly";
+    }
+}
+<div class="container-fluid">
+    <label class="pl-2">@heading Reports</label>
+    <div class="under-row-margin row text-center">
+        @foreach (var maincategory in Model.ReportCategories)
+        {
+            <div class="type-div">
+                <a href='@Url.Action("WeeklyReportsList", "Protocols", new { ReportCategoryID = maincategory.ResourceCategoryID })' class="text text-dark">
+                    <fieldset class=" main-type-fieldset">
+                        @*@if (Model.ElementAt(i).ImageURL != null)
+                            {
+                                <img class=" type-img " src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
+                            }
+                            else
+                            {*@
+
+                        <img class=" main-type-img" src="~/images/protocol_images/biomarkers_image.svg" alt="Type Bottle" />
+                        @*  }*@
+                        <label class="main-type-label top-menu protocols-filter text-center"> @maincategory.ResourceCategoryDescription</label>
+                    </fieldset>
+                </a>
+            </div>
+        }
+        @*@foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain && !rc.IsResourceType))
+            {
+                <div class="type-div">
+                    <a href="@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID=category.ResourceCategoryID })" class="text text-dark">
+                        <fieldset class="small-type-fieldset">
+                            <label class="small-type-label top-menu protocols-filter text-center">
+                                @category.ResourceCategoryDescription
+                            </label>
+                        </fieldset>
+                    </a>
+                </div>
+            }*@
+    </div>
+</div>
+    </div>
