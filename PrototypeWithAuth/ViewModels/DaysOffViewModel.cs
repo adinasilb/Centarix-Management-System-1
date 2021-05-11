@@ -11,6 +11,8 @@ namespace PrototypeWithAuth.ViewModels
         public int Year { get; set; }
         public double TotalVacationDays { get; set; }
         public double VacationDaysTaken { get; set; }
+
+        public int UnpaidLeaveTaken{ get; set; }
         public double SickDaysTaken { get; set; }
         private double _TotalSickDays;
         public double TotalSickDays

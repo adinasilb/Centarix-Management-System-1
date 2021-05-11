@@ -1917,6 +1917,11 @@ namespace PrototypeWithAuth.Data
                          {
                              OffDayTypeID = 4,
                              Description = "Special Day"
+                         },
+                         new OffDayType
+                         {
+                             OffDayTypeID = 5,
+                             Description = "Unpaid Leave"
                          }
                   );
             modelBuilder.Entity<EmployeeHoursStatus>().HasData(
