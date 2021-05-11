@@ -24,20 +24,33 @@
 		else {
 			url += "True";
 		}
-		url += "&ReloadFavoritesPage=" + reloadPageBool;
 		$.ajax({
 			async: true,
 			url: url,
 			type: 'GET',
 			cache: true,
 			success: function (data) {
-				if (icon.hasClass(emptyIcon)) {
-					icon.removeClass(emptyIcon);
-					icon.addClass(fullIcon);
+				if (reloadPageBool == "True") {
+					$.ajax({
+						async: true,
+						url: "/Protocols/_ResourcesListIndex?IsReload=true",
+						type: 'GET',
+						cache: true,
+						success: function (results) {
+							alert(results);
+							$(".resources-favorites-partial").html(results);
+						}
+					});
 				}
 				else {
-					icon.addClass(emptyIcon);
-					icon.removeClass(fullIcon);
+					if (icon.hasClass(emptyIcon)) {
+						icon.removeClass(emptyIcon);
+						icon.addClass(fullIcon);
+					}
+					else {
+						icon.addClass(emptyIcon);
+						icon.removeClass(fullIcon);
+					}
 				}
 			}
 		});

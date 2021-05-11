@@ -1815,7 +1815,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Shared With Me",
                 Controller = "Protocols",
-                Action = "ResourcesList",
+                Action = "ResourcesSharedWithMe",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-monetization_on-24px"

@@ -4,4 +4,6 @@
     ViewData["Title"] = "ResourcesFavorites";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-@{ await Html.RenderPartialAsync("_ResourcesListIndex", Model);}
+    <div class="resources-favorites-partial">
+        @{ await Html.RenderPartialAsync("_ResourcesListIndex", Model);}
+    </div>
