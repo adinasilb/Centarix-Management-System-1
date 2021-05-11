@@ -13,5 +13,6 @@ namespace PrototypeWithAuth.Models
         public string ReportDescription { get; set; }
         public int ReportTypeID { get; set; }
         public ReportType ReportType { get; set; }
+        public DateTime DateCreated { get; set; }
     }
 }
