@@ -970,9 +970,10 @@ namespace PrototypeWithAuth.Controllers
             //return "";
         }
 
-        private List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool isLabManQuotes)
+        private List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder)
         {
             var newIconList = AppUtility.DeepClone(iconList);
+            //favorite icon
             var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
             var favoriteRequest = _context.FavoriteRequests.Where(fr => fr.RequestID == RequestID).Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
             if (favIconIndex != -1 && favoriteRequest != null) //check these checks
@@ -980,23 +981,26 @@ namespace PrototypeWithAuth.Controllers
                 var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
                 newIconList[favIconIndex] = unLikeIcon;
             }
-            var resendIcon = new IconColumnViewModel("Resend");
-            var resendPlaceholder = new IconColumnViewModel("ResendPlaceholder");
+            //for approval icon
+            var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("approve-order"));
             var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.ParentQuote).FirstOrDefault();
+            if (request.RequestStatusID != 1 && forApprovalIconIndex != -1)
+            {
+                newIconList.RemoveAt(forApprovalIconIndex);
+                needsPlaceholder = true;
+            }
+            //resend icon
+            var resendIcon = new IconColumnViewModel("Resend");
+            var placeholder = new IconColumnViewModel("Placeholder");
             if (request.ParentQuote?.QuoteStatusID == 2)
             {
                 newIconList.Insert(0, resendIcon);
             }
-            else if (isLabManQuotes)
+            else if (needsPlaceholder)
             {
-                newIconList.Insert(0, resendPlaceholder);
+                newIconList.Insert(0, placeholder);
             }
-            var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("approve-order"));
-            //var forApprovalRequest = _context.Requests.Where(r => r.RequestStatusID == 1)
-            if(request.RequestStatusID != 1 && forApprovalIconIndex != -1)
-            {
-                newIconList.RemoveAt(forApprovalIconIndex);
-            }
+            
             return newIconList;
         }
 
