@@ -345,9 +345,23 @@ namespace PrototypeWithAuth.Controllers
             }
             return orderedLineTypes;
         }
+        private List<LineType> GetOrderLineTypeFromChildToParent()
+        {
+            List<LineType> orderedLineTypes = new List<LineType>();
+            var lineTypes = _context.LineTypes;
+            var childLineType = lineTypes.Where(lt => lt.LineTypeChildID == null).FirstOrDefault();
+            orderedLineTypes.Add(childLineType);
+            while (childLineType.LineTypeParentID != null)
+            {
+                childLineType = lineTypes.Where(lt => lt.LineTypeID == childLineType.LineTypeParentID).FirstOrDefault();
+                orderedLineTypes.Add(childLineType);
+            }
+            return orderedLineTypes;
+        }
 
         private async Task CopySelectedLinesToTempLineTable(int protocolID)
         {
+            await ClearTempLinesTable();
             var lines = _context.Lines.Where(l => l.ProtocolID == protocolID);
             var lineTypes = GetOrderLineTypeFromParentToChild();
             foreach(var lineType in lineTypes)
@@ -360,7 +374,29 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
             }
         }
-
+        private async Task CopySelectedTempLinesToLineTable(int protocolID)
+        {
+            var tempLines = _context.TempLines;
+            foreach( var line in tempLines )
+            {
+                _context.Update(TurnTempLineToLine(line));
+            }
+            await _context.SaveChangesAsync();
+            await ClearTempLinesTable();
+        }
+        private async Task ClearTempLinesTable()
+        {
+            var lineTypes = GetOrderLineTypeFromChildToParent();
+            foreach (var lineType in lineTypes)
+            {
+                var linesByType = _context.TempLines.Where(l => l.LineTypeID == lineType.LineTypeID);
+                foreach (var line in linesByType)
+                {
+                    _context.Remove(line);
+                }               
+            }
+            await _context.SaveChangesAsync();
+        }
         private Dictionary<Material, List<DocumentFolder>> FillMaterialDocumentsModel(IEnumerable<Material> Materials, string uploadProtocolsFolder)
         {
             Dictionary<Material, List<DocumentFolder>> MaterialFolders = new Dictionary<Material, List<DocumentFolder>>();
@@ -432,7 +468,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    throw new Exception();
                     //save all temp line data 
                     foreach (var line in TempLines)
                     {

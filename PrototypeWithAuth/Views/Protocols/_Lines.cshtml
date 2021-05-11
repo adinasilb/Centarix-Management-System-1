@@ -10,7 +10,6 @@
     <br />
 }
 
-
 @foreach (var line in Model.Lines)
 {
     await Html.RenderPartialAsync("_Line", line);
@@ -40,8 +39,8 @@
                 success: function (data) {
                     $("._Lines").html(data);
                 },
-                error: function (data) {
-                    $("._Lines").html(data);
+                error: function (jqxhr) {
+                    $("._Lines").html(jqxhr.responseText);
                 }
             });
         });
