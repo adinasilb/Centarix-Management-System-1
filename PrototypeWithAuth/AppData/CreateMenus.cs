@@ -323,7 +323,7 @@ namespace PrototypeWithAuth.AppData
                     {
                         Description = "Report",
                         Controller = "Protocols",
-                        Action = "WeeklyReportsCategories",
+                        Action = "ReportsCategories",
                         RouteValues = new RouteValueDictionary()
                         {
                         {"PageType", AppUtility.PageTypeEnum.ProtocolsReports },
@@ -1758,7 +1758,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Weekly Reports",
                 Controller = "Protocols",
-                Action = "WeeklyReportsCategories",
+                Action = "ReportsCategories",
                 RouteValues = new RouteValueDictionary(),
                 Classes = CurrentClasses,
                 IconName = "icon-access_time-24px"

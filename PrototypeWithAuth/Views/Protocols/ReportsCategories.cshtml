@@ -5,32 +5,31 @@
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
 @{ 
-    var heading = "Weekly";
+    var reportType = "Weekly";
     if(Model.SidebarType == AppUtility.SidebarEnum.DailyReports.ToString())
     {
-        heading = "Daily";
+        reportType = "Daily";
     }
     else if (Model.SidebarType == AppUtility.SidebarEnum.MonthlyReports.ToString())
     {
-        heading = "Monthly";
+        reportType = "Monthly";
     }
 }
 <div class="container-fluid">
-    <label class="pl-2">@heading Reports</label>
+    <label class="m-2 heading-1">@reportType Reports</label>
     <div class="under-row-margin row text-center">
         @foreach (var maincategory in Model.ReportCategories)
         {
             <div class="type-div">
-                <a href='@Url.Action("WeeklyReportsList", "Protocols", new { ReportCategoryID = maincategory.ResourceCategoryID })' class="text text-dark">
+                <a href='@Url.Action("ReportsList", "Protocols", new { ReportCategoryID = maincategory.ResourceCategoryID, ReportType = reportType })' class="text text-dark">
                     <fieldset class=" main-type-fieldset">
-                        @*@if (Model.ElementAt(i).ImageURL != null)
-                            {
-                                <img class=" type-img " src="@Model.ElementAt(i).ImageURL" alt="Type Bottle" />
-                            }
-                            else
-                            {*@
+                        @{
+                            var imageUrl = "/images/protocol_images/" + maincategory.ImageUrl;
+                            var altImage = maincategory.ResourceCategoryDescription;
+                        }
 
-                        <img class=" main-type-img" src="~/images/protocol_images/biomarkers_image.svg" alt="Type Bottle" />
+                        @*<img class=" main-type-img" src="@imageUrl" alt="@altImage" />*@
+                        <img class=" main-type-img" src="@imageUrl" alt="@altImage" />
                         @*  }*@
                         <label class="main-type-label top-menu protocols-filter text-center"> @maincategory.ResourceCategoryDescription</label>
                     </fieldset>
@@ -38,17 +37,17 @@
             </div>
         }
         @*@foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain && !rc.IsResourceType))
-            {
-                <div class="type-div">
-                    <a href="@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID=category.ResourceCategoryID })" class="text text-dark">
-                        <fieldset class="small-type-fieldset">
-                            <label class="small-type-label top-menu protocols-filter text-center">
-                                @category.ResourceCategoryDescription
-                            </label>
-                        </fieldset>
-                    </a>
-                </div>
-            }*@
+        {
+            <div class="type-div">
+                <a href="@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID=category.ResourceCategoryID })" class="text text-dark">
+                    <fieldset class="small-type-fieldset">
+                        <label class="small-type-label top-menu protocols-filter text-center">
+                            @category.ResourceCategoryDescription
+                        </label>
+                    </fieldset>
+                </a>
+            </div>
+        }*@
     </div>
 </div>
     </div>

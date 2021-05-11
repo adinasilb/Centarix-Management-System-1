@@ -671,7 +671,7 @@ namespace PrototypeWithAuth.Controllers
             return View();
         }
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> WeeklyReportsCategories()
+        public async Task<IActionResult> ReportsCategories()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.WeeklyReports;
@@ -691,6 +691,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.WeeklyReports;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
+
             return View();
         }
 
