@@ -367,10 +367,14 @@ body {
 }
 
 input:not(input[type=button], input[type=submit], .heading-1) {
-    font-size: var(--text-font-size) !important;
+    font-size: 1rem !important;
     font-weight: var(--bold-regular) !important;
 }
 
+.filter-and-search input:not(input[type=button], input[type=submit], .heading-1) {
+    font-size: var(--text-font-size) !important;
+    font-weight: var(--bold-regular) !important;
+}
 .control-label {
     font-size: .75rem;
     font-weight: var(--bold-regular);
