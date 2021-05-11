@@ -310,7 +310,7 @@ namespace PrototypeWithAuth.Controllers
         private TempLine TurnLineIntoTempLine(Line line)
         {
             TempLine tempLine = new TempLine();
-            tempLine.PermanentLineID = line.LineID;
+          //  tempLine.PermanentLineID = line.LineID;
             tempLine.Content = line.Content;
             tempLine.LineNumber = line.LineNumber;
             tempLine.LineTypeID = line.LineTypeID;
@@ -430,10 +430,8 @@ namespace PrototypeWithAuth.Controllers
             //save all temp line data 
             foreach(var line in TempLines)
             {
-                var tmp = _context.TempLines.Select(a => a.PermanentLineID);
-                //var randomtmp1 = _context.TempLines.Where(tl => tl.RandomNum == 3);
-                //var randomtmp2 = _context.TempLines.Where(tl => tl.RandomNum == 4);
-                var temp = await _context.TempLines.Where(tl => tl.PermanentLineID == line.PermanentLineID).FirstOrDefaultAsync();
+                //Debbie: not sure why we have to put as enumerable but if i don't it does not go thorugh permanent line getter
+                var temp = _context.TempLines.AsEnumerable().Where(tl => tl.PermanentLineID == line.PermanentLineID).FirstOrDefault();
                 if (temp != null)
                 {
                     temp.Content = line.Content ?? "";
@@ -441,7 +439,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             await _context.SaveChangesAsync();
-            var currentLine = _context.TempLines.Where(l => l.PermanentLineID == currentLineID ).FirstOrDefault();
+            var currentLine = _context.TempLines.AsEnumerable().Where(l => l.PermanentLineID == currentLineID ).FirstOrDefault();
             var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
             var orderedLineTypes = GetOrderLineTypeFromParentToChild();
             TempLine newLine = new TempLine();
