@@ -8,7 +8,6 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class ResourcesListIndexViewModel
     {
-        public List<String> PaginationTabs { get; set; }
         public bool IsFavoritesPage { get; set; }
         public List<ResourceWithFavorite> ResourcesWithFavorites { get; set; } //used this instead of dictionary so it won't crash if doubles are accidentally inserted
     }

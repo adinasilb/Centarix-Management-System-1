@@ -1,4 +1,4 @@
-﻿@model PrototypeWithAuth.ViewModels.ResourcesListIndexViewModel;
+﻿@model PrototypeWithAuth.ViewModels.ResourcesListViewModel;
 
 @{
     ViewData["Title"] = "ResourcesList";
@@ -16,4 +16,4 @@
         </a>
     }
 </div>
-@{ await Html.RenderPartialAsync("_ResourcesListIndex", Model);}
+@{ await Html.RenderPartialAsync("_ResourcesListIndex", Model.ResourcesListIndexViewModel);}

@@ -759,17 +759,24 @@ namespace PrototypeWithAuth.Controllers
                     IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
                 }).ToList();
 
-            ResourcesListIndexViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
+            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
+            {
+                ResourcesListIndexViewModel = ResourcesListIndexViewModel,
+                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
+            };
 
-
-            return View(ResourcesListIndexViewModel);
+            return View(resourcesListViewModel);
         }
 
-        [HttpGet]
+        [HttpGet] [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel)
+        public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel = null, bool IsReload = false)
         {
-            return View(ResourcesListIndexViewModel);
+            if (IsReload)
+            {
+                ResourcesListIndexViewModel = GetFavoritesResourceListIndexViewModel();
+            }
+            return PartialView(ResourcesListIndexViewModel);
         }
 
         [HttpGet]
@@ -804,7 +811,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> FavoriteResources(int ResourceID, bool Favorite = true, bool ReloadFavoritesPage = false)
+        public async Task<IActionResult> FavoriteResources(int ResourceID, bool Favorite = true)
         {
             //The system for checks is strict b/c the calls are dependent upon icon names in code and jquery that can break or be changed one day
             string retString = null;
@@ -816,7 +823,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         FavoriteResource favoriteResource = _context.FavoriteResources.Where(fr => fr.ResourceID == ResourceID && fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
                         if (favoriteResource != null) { _context.Remove(favoriteResource); } //check is here so it doesn't crash
-                        //if it doesn't exist the jquery will then cont and leave an empty icon which is ok b/c its empty
+                                                                                             //if it doesn't exist the jquery will then cont and leave an empty icon which is ok b/c its empty
                     }
                     else
                     {
@@ -840,14 +847,7 @@ namespace PrototypeWithAuth.Controllers
                     transaction.Rollback();
                 }
             }
-            if (ReloadFavoritesPage)
-            {
-                return RedirectToAction("ResourcesList", new { SidebarEnum = AppUtility.SidebarEnum.Favorites });
-            }
-            else
-            {
-                return new EmptyResult();
-            }
+            return new EmptyResult();
         }
 
         [HttpGet]
@@ -947,6 +947,13 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
+            return View(GetFavoritesResourceListIndexViewModel());
+        }
+
+
+        [Authorize(Roles = "Protocols")]
+        public ResourcesListIndexViewModel GetFavoritesResourceListIndexViewModel()
+        {
             ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel();
             ResourcesListIndexViewModel.ResourcesWithFavorites = _context.FavoriteResources
                 .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
@@ -957,9 +964,7 @@ namespace PrototypeWithAuth.Controllers
                     IsFavorite = true
                 }).ToList();
             ResourcesListIndexViewModel.IsFavoritesPage = true;
-            ResourcesListIndexViewModel.PaginationTabs = new List<string>() { };
-
-            return View(ResourcesListIndexViewModel);
+            return ResourcesListIndexViewModel;
         }
 
         [Authorize(Roles = "Protocols")]
