@@ -10,9 +10,12 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int ReportID { get; set; }
+        public string ReportTitle { get; set; }
         public string ReportDescription { get; set; }
         public int ReportTypeID { get; set; }
         public ReportType ReportType { get; set; }
         public DateTime DateCreated { get; set; }
+        public int ReportNumber { get; set; }
+        public IEnumerable<ReportSection> ReportSections { get; set; }
     }
 }

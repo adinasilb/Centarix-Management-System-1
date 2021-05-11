@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210511105245_AddReportSectionModel")]
+    partial class AddReportSectionModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3843,35 +3845,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("Reports");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ReportSection", b =>
-                {
-                    b.Property<int>("ReportSectionID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReportID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReportSectionContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SectionNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReportSectionID");
-
-                    b.HasIndex("ReportID");
-
-                    b.ToTable("ReportSections");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("ReportSection");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ReportType", b =>
                 {
                     b.Property<int>("ReportTypeID")
@@ -5628,51 +5601,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Paragraph", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.ReportSection");
-
-                    b.HasDiscriminator().HasValue("Paragraph");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolLink", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.ReportSection");
-
-                    b.Property<int>("ProtocolID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("ProtocolID");
-
-                    b.HasDiscriminator().HasValue("ProtocolLink");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ReportFile", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.ReportSection");
-
-                    b.HasDiscriminator().HasValue("ReportFile");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ReportImage", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.ReportSection");
-
-                    b.HasDiscriminator().HasValue("ReportImage");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestLink", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.ReportSection");
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("RequestID");
-
-                    b.HasDiscriminator().HasValue("RequestLink");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -6227,15 +6155,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ReportSection", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Report", "Report")
-                        .WithMany()
-                        .HasForeignKey("ReportID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.Request", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
@@ -6579,24 +6498,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Employees")
                         .HasForeignKey("MaritalStatusID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolLink", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
-                        .HasForeignKey("ProtocolID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestLink", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany()
-                        .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

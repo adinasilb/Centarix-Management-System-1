@@ -275,6 +275,10 @@
     <Compile Remove="Data\Migrations\20210509050711_removeIdentityFromTempLine.Designer.cs" />
     <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.cs" />
     <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210511111106_AddReportSectionTypeModals.cs" />
+    <Compile Remove="Data\Migrations\20210511111106_AddReportSectionTypeModals.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210511112649_addReportSectionsToReport.cs" />
+    <Compile Remove="Data\Migrations\20210511112649_addReportSectionsToReport.Designer.cs" />
   </ItemGroup>
 
 
