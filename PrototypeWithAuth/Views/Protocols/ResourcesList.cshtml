@@ -1,13 +1,9 @@
-﻿@model PrototypeWithAuth.ViewModels.ResourcesListViewModel;
-
-@using PrototypeWithAuth.AppData;
-@using PrototypeWithAuth.AppData.UtilityModels; 
+﻿@model PrototypeWithAuth.ViewModels.ResourcesListIndexViewModel;
 
 @{
     ViewData["Title"] = "ResourcesList";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
-<script src="~/js/resourceslist.js"></script>
 <div class="row under-row-margin side-menu black-text">
     @for (int i = 0; i < Model.PaginationTabs.Count; i++)
     {
@@ -20,63 +16,4 @@
         </a>
     }
 </div>
-<div class="row under-row-margin">
-    @foreach (var resource in Model.ResourcesWithFavorites)
-    {
-        <div class="type-div" style="width:22%;">
-            <fieldset class=" resource-fieldset px-3 pt-2">
-                <div class="resource-title heading-1">@resource.Resource.Title</div>
-                <div class="resource-tags protocols-color">
-                    Tags:
-                    @{var first = true; }
-                    @foreach (var resourceResourceCategory in resource.Resource.ResourceResourceCategories)
-                    {
-                        if (!first)
-                        {
-                            <span>,</span>
-                        }
-                        else
-                        {
-                            first = false;
-                        }
-                        <span>@resourceResourceCategory.ResourceCategory.ResourceCategoryDescription</span>
-                    }
-                </div>
-                @{ int endCounter = Convert.ToInt32(resource.Resource.Summary?.Length < 246 ? resource.Resource.Summary?.Length : 246); }
-                <div class="resource-summary text under-row-margin ">@resource.Resource.Summary?.Substring(0, endCounter)</div>
-                <div class="list-buttons row m-2 py-4 form-element-border-top-small w-100">
-                    <div class="col-3">
-                        <input class="small-custom-button call-resource-notes" value="Notes" id="@resource.Resource.ResourceID" />
-                    </div>
-                    <div class=" col-6 offset-3 float-right">
-                        @*<input type="hidden" name="@PrototypeWithAuth.AppData.AppUtility.FavoriteIcons"*@
-                        @{
-                            var filledFavIcon = AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.FilledIn.ToString()).FirstOrDefault().StringDefinition;
-                            var emptyFavIcon = AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition;
-                            //hidden input so jquery is seamless
-                            <input type="hidden" class="@AppUtility.FavoriteIconTitle.FilledIn" filled-value="@filledFavIcon" />
-                            <input type="hidden" class="@AppUtility.FavoriteIconTitle.Empty" filled-value="@emptyFavIcon" />
-                            var icon = emptyFavIcon;
-                            if (resource.IsFavorite)
-                            {
-                                icon = filledFavIcon;
-                            }
-                        }
-                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more favorite-protocol" value="@resource.Resource.ResourceID" reload="@Model.IsFavoritesPage">
-                            <i class="@icon hover-bold px-1" style="font-size:2rem;">
-                            </i>
-                        </button>
-                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more " value="@resource.Resource.ResourceID">
-                            <i class="icon-share-24px1 hover-bold px-1" style="font-size:2rem;">
-                            </i>
-                        </button>
-                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" @*data-container="body" data-trigger="focus"*@ class="btn p-0 m-0 no-box-shadow more " value="@resource.Resource.ResourceID">
-                            <i class="icon-create-24px hover-bold px-1" style="font-size:2rem;">
-                            </i>
-                        </button>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-    }
-</div>
+@{ await Html.RenderPartialAsync("_ResourcesListIndex", Model);}

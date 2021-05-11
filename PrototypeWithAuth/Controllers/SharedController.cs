@@ -22,10 +22,12 @@ namespace PrototypeWithAuth.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
-        protected SharedController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment =null)
+        private readonly UserManager<ApplicationUser> _userManager;
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager = null, IHostingEnvironment hostingEnvironment = null)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
+            _userManager = userManager;
         }
         private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(int year, int month, Employee user)
         {
@@ -42,7 +44,7 @@ namespace PrototypeWithAuth.Controllers
                     EmployeeHours = hour
                 };
                 var eha = _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursID == hour.EmployeeHoursID).FirstOrDefault();
-                if (eha!=null)
+                if (eha != null)
                 {
                     ehaaavm.EmployeeHoursAwaitingApproval = eha;
                 }
@@ -63,12 +65,12 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Count();
-                var sickCount = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year &&  eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
+                var sickCount = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
                 var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
                 totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), _context.CompanyDayOffs.ToList()) - (vacationDaysTaken + sickCount);
                 totalhours = totalhours * user.SalariedEmployee.HoursPerDay;
-               
+
             }
             SummaryHoursViewModel summaryHoursViewModel = new SummaryHoursViewModel()
             {
@@ -80,7 +82,7 @@ namespace PrototypeWithAuth.Controllers
                 VacationDayInThisMonth = vacationDaysTaken,
                 User = user
             };
-            if(errorMessage != null)
+            if (errorMessage != null)
             {
                 summaryHoursViewModel.ErrorMessage += errorMessage;
             }
@@ -94,8 +96,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 double vacationDays = 0;
                 double sickDays = 0;
-                double offDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date &&eh.IsBonus==false).Count();
-                if (user.EmployeeStatusID == 1 && offDayTypeID==2)
+                double offDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Count();
+                if (user.EmployeeStatusID == 1 && offDayTypeID == 2)
                 {
                     var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                     offDaysTaken = Math.Round(offDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
@@ -131,12 +133,12 @@ namespace PrototypeWithAuth.Controllers
                 }
                 if (offDayTypeID == 2)
                 {
-                    offDaysLeft += vacationDays-offDaysTaken;
+                    offDaysLeft += vacationDays - offDaysTaken;
                 }
                 else
                 {
                     offDaysLeft += sickDays - offDaysTaken;
-                }               
+                }
                 year = year + 1;
             }
             return offDaysLeft;
@@ -571,7 +573,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        protected bool SetFavorite<T1, T2>(T1 ModelInstanceID, T2 FavoriteTable, bool IsFavorite )
+        protected bool SetFavorite<T1, T2>(T1 ModelInstanceID, T2 FavoriteTable, bool IsFavorite)
         {
             return true;
         }
@@ -602,6 +604,26 @@ namespace PrototypeWithAuth.Controllers
                 nextDay = nextDay.AddDays(1);
             }
             return totalDays - companyDaysOffCount;
+        }
+
+        public ShareModalViewModel GetShareModalViewModel(int ID, AppUtility.ModelsEnum ModelsEnum)
+        {
+            ShareModalViewModel shareModalViewModel = new ShareModalViewModel()
+            {
+                ID = ID,
+                ModelsEnum = ModelsEnum,
+                ApplicationUsers = _context.Users
+                              .Where(u => u.Id != _userManager.GetUserId(User))
+                              .Select(
+                                  u => new SelectListItem
+                                  {
+                                      Text = u.FirstName + " " + u.LastName,
+                                      Value = u.Id
+                                  }
+                              ).ToList()
+            };
+
+            return shareModalViewModel;
         }
 
     }

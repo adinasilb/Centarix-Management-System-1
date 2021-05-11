@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class ResourcesListViewModel
+    public class ResourcesListIndexViewModel
     {
         public List<String> PaginationTabs { get; set; }
         public bool IsFavoritesPage { get; set; }

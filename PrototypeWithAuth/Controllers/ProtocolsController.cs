@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
+using SQLitePCL;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +26,7 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, hostingEnvironment)
+        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, userManager: userManager, hostingEnvironment: hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
@@ -276,10 +278,10 @@ namespace PrototypeWithAuth.Controllers
             var protocol = _context.Protocols
                 .Include(p => p.Urls).Include(p => p.Lines)
                 .Include(p => p.Materials).ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
-            protocol.Urls??= new List<Link>();
+            protocol.Urls ??= new List<Link>();
             protocol.Materials ??= new List<Material>();
             protocol.Lines ??= new List<Line>();
-            if (protocol.Urls.Count()< 2)
+            if (protocol.Urls.Count() < 2)
             {
                 while (protocol.Urls.Count() < 2)
                 {
@@ -371,11 +373,11 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _Line(int index, int lineTypeID, int currentLineTypeID,string lineNumberString, string parentLineNumberString, int parentLineID, int currentLineNumber)
+        public async Task<IActionResult> _Line(int index, int lineTypeID, int currentLineTypeID, string lineNumberString, string parentLineNumberString, int parentLineID, int currentLineNumber)
         {
             var newLineNumberString = "";
             var newLineNumber = 0;
-            switch(lineTypeID)
+            switch (lineTypeID)
             {
                 case 1:
                     switch (currentLineTypeID)
@@ -383,11 +385,11 @@ namespace PrototypeWithAuth.Controllers
                         case 1:
                             //if current line type and new line type are same type
                             newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString +"."+newLineNumber;
+                            newLineNumberString = parentLineNumberString + "." + newLineNumber;
                             break;
                         case 2:
                             //if current line is child of new line 
-                     
+
                             break;
                         case 3:
                             //if current line is child of new line but not a direct child
@@ -400,17 +402,17 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case 1:
                             //current line is parent of new line
-                            newLineNumberString = lineNumberString + "."+1;
+                            newLineNumberString = lineNumberString + "." + 1;
                             newLineNumber = 1;
                             break;
                         case 2:
                             //if current line type and new line type are same type
                             newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
+                            newLineNumberString = parentLineNumberString + "." + newLineNumber;
                             break;
                         case 3:
                             //current line is child of new line
-                          
+
                             break;
                     }
                     break;
@@ -425,13 +427,13 @@ namespace PrototypeWithAuth.Controllers
                         case 3:
                             //if current line type and new line type are same type
                             newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
+                            newLineNumberString = parentLineNumberString + "." + newLineNumber;
                             break;
                     }
                     break;
             }
             var lineTypes = _context.LineTypes.ToList();
-            return PartialView(new ProtocolsLineViewModel { Index = (index+1), Line = new Line { LineTypeID = lineTypeID, LineNumber=newLineNumber}, LineNumberString = newLineNumberString , LineTypes = lineTypes});
+            return PartialView(new ProtocolsLineViewModel { Index = (index + 1), Line = new Line { LineTypeID = lineTypeID, LineNumber = newLineNumber }, LineNumberString = newLineNumberString, LineTypes = lineTypes });
         }
 
 
@@ -719,19 +721,20 @@ namespace PrototypeWithAuth.Controllers
 
             var resourceLibraryViewModel = new ResourceLibraryViewModel();
 
-            switch (CategoryType)
-            {
-                case 2:
-                    resourceLibraryViewModel.PageType = 2;
-                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType == true);
-                    break;
-                case 1:
-                default:
-                    resourceLibraryViewModel.PageType = 1;
-                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType != true);
-                    break;
-            }
+            //switch (CategoryType)
+            //{
+            //    case 2:
+            //        resourceLibraryViewModel.PageType = 2;
+            //        resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType == true);
+            //        break;
+            //    case 1:
+            //    default:
+            //        resourceLibraryViewModel.PageType = 1;
+            //        resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType != true);
+            //        break;
+            //}
 
+            resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories;
             return View(resourceLibraryViewModel);
         }
 
@@ -743,42 +746,29 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarEnum;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
-            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel() { IsFavoritesPage = false };
-            switch (SidebarEnum)
-            {
-                case AppUtility.SidebarEnum.Library:
-                    resourcesListViewModel.ResourcesWithFavorites = _context.Resources
-                        .Include(r => r.FavoriteResources)
-                        .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                        .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
-                        .Select(r => new ResourceWithFavorite
-                        {
-                            Resource = r,
-                            IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
-                        }).ToList();
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
 
-                    resourcesListViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
-                    break;
-                case AppUtility.SidebarEnum.Favorites:
-                    resourcesListViewModel.ResourcesWithFavorites = _context.FavoriteResources
-                        .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                        .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
-                        .Select(fr => new ResourceWithFavorite
-                        {
-                            Resource = fr.Resource,
-                            IsFavorite = true
-                        }).ToList();
-                    resourcesListViewModel.IsFavoritesPage = true;
-                    resourcesListViewModel.PaginationTabs = new List<string>() { };
-                    break;
-                case AppUtility.SidebarEnum.SharedWithMe:
-                    break;
-            }
+            ResourcesListIndexViewModel.ResourcesWithFavorites = _context.Resources
+                .Include(r => r.FavoriteResources)
+                .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
+                .Select(r => new ResourceWithFavorite
+                {
+                    Resource = r,
+                    IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                }).ToList();
+
+            ResourcesListIndexViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
 
 
+            return View(ResourcesListIndexViewModel);
+        }
 
-
-            return View(resourcesListViewModel);
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel)
+        {
+            return View(ResourcesListIndexViewModel);
         }
 
         [HttpGet]
@@ -955,7 +945,20 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel();
+            ResourcesListIndexViewModel.ResourcesWithFavorites = _context.FavoriteResources
+                .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                .Select(fr => new ResourceWithFavorite
+                {
+                    Resource = fr.Resource,
+                    IsFavorite = true
+                }).ToList();
+            ResourcesListIndexViewModel.IsFavoritesPage = true;
+            ResourcesListIndexViewModel.PaginationTabs = new List<string>() { };
+
+            return View(ResourcesListIndexViewModel);
         }
 
         [Authorize(Roles = "Protocols")]
@@ -1027,15 +1030,71 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Protocols")]
-        private void FillDocumentsInfo(CreateProtocolsViewModel createProtoclsViewModel, string uploadFolder)
+        private void FillDocumentsInfo(CreateProtocolsViewModel createProtocolsViewModel, string uploadFolder)
         {
-            createProtoclsViewModel.DocumentsInfo = new List<DocumentFolder>();
+            createProtocolsViewModel.DocumentsInfo = new List<DocumentFolder>();
 
-            GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
-            GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
+            GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
+            GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
         }
 
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ShareModal(int ID, AppUtility.ModelsEnum ModelsEnum)
+        {
+            ShareModalViewModel shareModalViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
+            shareModalViewModel.MenuItem = AppUtility.MenuItems.Protocols;
+            switch (ModelsEnum)
+            {
+                case AppUtility.ModelsEnum.Resource:
+                    shareModalViewModel.ObjectDescription = _context.Resources.Where(r => r.ResourceID == ID).FirstOrDefault().Title;
+                    break;
+            }
+            return PartialView(shareModalViewModel);
+        }
 
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<bool> ShareModal(ShareModalViewModel shareModalViewModel)
+        {
+            var currentUserID = _userManager.GetUserId(User);
+            bool error = false;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    switch (shareModalViewModel.ModelsEnum)
+                    {
+                        case AppUtility.ModelsEnum.Resource:
+                            var PrevSharedResource = _context.ShareResources
+                                .Where(sr => sr.ResourceID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == shareModalViewModel.ApplicationUserID).FirstOrDefault();
+                            if (PrevSharedResource != null)
+                            {
+                                PrevSharedResource.TimeStamp = DateTime.Now;
+                                _context.Update(PrevSharedResource);
+                            }
+                            else
+                            {
+                                var shareResource = new ShareResource()
+                                {
+                                    ResourceID = shareModalViewModel.ID,
+                                    FromApplicationUserID = currentUserID,
+                                    ToApplicationUserID = shareModalViewModel.ApplicationUserID,
+                                    TimeStamp = DateTime.Now
+                                };
+                                _context.Update(shareResource);
+                            }
+                            break;
+                    }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    error = true;
+                }
+            }
+            return error;
+        }
 
     }
 }
