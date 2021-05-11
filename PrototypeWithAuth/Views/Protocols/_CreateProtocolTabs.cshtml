@@ -149,15 +149,11 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
     }
 </div>
 <div id="Protocol" class="tab-pane fade in ">
-    @{ 
-        var headerCount = 0;
-        var subHeaderCount = 0;
-        var stepCount = 0;
-    }
+
     <div class="lines">
         <div class="heading-1">@Model.Protocol.Name</div>
         <div class="_Lines">
-            @{await Html.RenderPartialAsync("_Lines", Model.TempLines);}
+            @{await Html.RenderPartialAsync("_Lines", new ProtocolsLinesViewModel { Lines = Model.TempLines.ToList() });}
         </div>
     
 

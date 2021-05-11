@@ -271,6 +271,7 @@ namespace PrototypeWithAuth.Data
             //.WithMany(pc => pc.Vendors)
             //.HasForeignKey(v => v.ParentCategoryID)
             //.OnDelete(DeleteBehavior.Restrict);
+    
 
             modelBuilder.Entity<ParentQuote>()
                 .HasQueryFilter(item => !item.IsDeleted);
@@ -351,7 +352,6 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
             modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
-
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

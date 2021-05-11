@@ -1,9 +1,19 @@
 ﻿@using PrototypeWithAuth.ViewModels;
-@model List<ProtocolsLineViewModel>
+@model ProtocolsLinesViewModel
 
-@foreach (var line in Model)
+
+@if (Model.ErrorMessage != null)
 {
-    await Html.RenderPartialAsync("_Line", line);    
+    <h6 class="text-danger-centarix">
+        @Model.ErrorMessage
+    </h6>
+    <br />
+}
+
+
+@foreach (var line in Model.Lines)
+{
+    await Html.RenderPartialAsync("_Line", line);
 }
 
 <script>
@@ -24,17 +34,20 @@
                 processData: false,
                 contentType: false,
                 data: new FormData($("#myForm")[0]),
-                url: "/Protocols/_Lines?lineTypeID="+$(this).val()+
-                    "&currentLineID=" + $(this).attr("current-line-id") +"&protocolID="+ $(".createProtocolMasterProtocolID").val(),
+                url: "/Protocols/_Lines?lineTypeID=" + $(this).val() +
+                    "&currentLineID=" + $(this).attr("current-line-id") + "&protocolID=" + $(".createProtocolMasterProtocolID").val(),
                 type: 'POST',
                 success: function (data) {
+                    $("._Lines").html(data);
+                },
+                error: function (data) {
                     $("._Lines").html(data);
                 }
             });
         });
     });
-    $(".line").click(function(){
+    $(".line").click(function () {
         $(".addLinePopover").addClass("d-none");
-        $("."+$(this).attr("id")+"LinePopoverButton").removeClass("d-none");
+        $("." + $(this).attr("id") + "LinePopoverButton").removeClass("d-none");
     });
 </script>
