@@ -42,15 +42,18 @@ namespace PrototypeWithAuth.Controllers
             if (user.LastLogin.Date < DateTime.Today)
             {
                 fillInOrderLate(user);
-                foreach (Employee employee in users)
+                if(usersLoggedIn==0)
                 {
-                    var userRoles = await _userManager.GetRolesAsync(employee);
-                    if (userRoles.Contains("TimeKeeper") && employee.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
+                    foreach (Employee employee in users)
                     {
-                        fillInTimekeeperMissingDays(employee);
-                        fillInTimekeeperNotifications(employee);
+                        var userRoles = await _userManager.GetRolesAsync(employee);
+                        if (userRoles.Contains("TimeKeeper") && employee.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
+                        {
+                            fillInTimekeeperMissingDays(employee);
+                            fillInTimekeeperNotifications(employee);
+                        }
                     }
-                }
+                }            
                 user.LastLogin = DateTime.Now;
                 _context.Update(user);
                 _context.SaveChanges();
