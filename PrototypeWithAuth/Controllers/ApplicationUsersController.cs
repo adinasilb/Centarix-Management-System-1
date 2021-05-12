@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Abp.Threading.Extensions;
 using PrototypeWithAuth.ViewModels;
 using static PrototypeWithAuth.AppData.AppUtility;
+
 using Microsoft.EntityFrameworkCore.Query;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
