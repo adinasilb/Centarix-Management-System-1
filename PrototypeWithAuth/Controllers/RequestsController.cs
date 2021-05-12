@@ -1938,7 +1938,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ItemData(int? id, int? Tab = 0, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
+        public async Task<IActionResult> ItemData(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
         {
             var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable);
             return PartialView(requestItemViewModel);
@@ -1946,7 +1946,7 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
+        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
         {
             var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable);
             return PartialView(requestItemViewModel);
@@ -2440,7 +2440,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, bool NewRequestFromProduct = false, String SectionType = "")
+        public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, String SectionType = "")
         {
             DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
             base.RemoveRequestWithCommentsAndEmailSessions();
@@ -5573,11 +5573,12 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> HistoryItemModal(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
+        public async Task<IActionResult> HistoryItemModal(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
-            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable);
+            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false);
             return PartialView(requestItemViewModel);
         }
+
         //public async Task<bool> PopulateProductSerialNumber()
         //{
         //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();

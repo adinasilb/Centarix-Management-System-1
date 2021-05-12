@@ -264,12 +264,12 @@
 
     });
 
-    $('.open-history-item-modal').on('click', function (e) {
+    $('.open-history-item-modal').off('click').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        alert('here')
+        //alert('here')
         //highlight this
-        var $itemurl = "/Requests/HistoryItemModal/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val();
+        var $itemurl = "/Requests/HistoryItemModal/?id=" + $(this).attr("value") + "&SectionType=" + $("#masterSectionType").val();
         $.fn.CallPageRequest($itemurl, 'historyItem');
     });
 })

@@ -9,7 +9,6 @@
     ViewData["Title"] = "EditModalView";
 
     Layout = null;
-
 }
 @if (Model.ErrorMessage != null)
 {
@@ -18,6 +17,6 @@
     </div>
 }
 
-
+<div class="modal modal-view left fader on-form-modal historyModal" aria-labelledby="Request" data-backdrop="false" style="z-index: 6000">
     @{ await Html.RenderPartialAsync("_EditModalView", Model);}
-
+</div>

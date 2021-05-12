@@ -18,6 +18,6 @@
     </div>
 }
 
-<div class="" >
-     @{ await Html.RenderPartialAsync("_EditModalView", Model);}
+<div class="modal modal-view right fader on-form-modal editModal" aria-labelledby="Request" data-backdrop="false" style="z-index: 5000">
+    @{ await Html.RenderPartialAsync("_EditModalView", Model);}
 </div>

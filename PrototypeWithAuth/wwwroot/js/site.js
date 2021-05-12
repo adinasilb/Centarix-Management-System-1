@@ -1360,7 +1360,7 @@ $(function () {
 	$(".back-button").off("click").on("click", function () {
 		console.log('back button');
 		var type = $(".turn-edit-on-off").attr('name');
-		console.log('type' + type);
+		console.log('type ' + type);
 		if (type == 'edit') {
 			var section = "";
 			console.log($('#masterSectionType').val());
@@ -1396,6 +1396,9 @@ $(function () {
 				}
 
 			});
+		}
+		else if ($(this).parents("div.modal").hasClass('historyModal')) {
+			$.fn.CloseModal("history-item");
 		}
 		else {
 			console.log('close edit')

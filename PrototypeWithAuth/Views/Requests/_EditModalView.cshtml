@@ -46,9 +46,8 @@
     }
     var requestCategoryType = Model.Requests[0].Product?.ProductSubcategory.ParentCategory.CategoryTypeID;
 }
-<div class="modal modal-view right fader on-form-modal @form editModal" aria-labelledby="Request"  data-backdrop="false" style="z-index: 5000">
 
-    <div class="modal-dialog modal-lg" role="document" style="max-height:100%; width: 50%; max-width: 100%">
+    <div class="modal-dialog modal-lg @form" role="document" style="max-height:100%; width: 50%; max-width: 100%">
         @*style needed here to override bootstraps modal width limitations*@
 
         <div class="modal-content d-inline-block ">
@@ -61,7 +60,7 @@
                 @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
                 @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
                 @Html.HiddenFor(model => model.RequestStatusID)
-                @Html.HiddenFor(model => model.PageType) @*JS shoulde be taking this as a string *@
+                @Html.HiddenFor(model => model.PageType) @*JS should be taking this as a string *@
                 @Html.HiddenFor(model => model.SectionType)
                 @*Requests search view model*@
                 @Html.HiddenFor(model => model.Requests[0].ApplicationUserCreatorID)
@@ -173,7 +172,7 @@
 
         </div>
     </div>
-</div>
+
 
 <script>
     //AJAX load full partial view for modalview manage locations
