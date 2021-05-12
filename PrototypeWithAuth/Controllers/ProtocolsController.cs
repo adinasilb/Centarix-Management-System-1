@@ -172,16 +172,16 @@ namespace PrototypeWithAuth.Controllers
             }
             return onePageOfProtocols;
         }
-        private async Task<ProtocolsIndexViewModel> GetReportsIndexViewModel(ProtocolsIndexObject protocolsIndexObject, List<int> months, List<int> years)
+        private async Task<ReportsIndexViewModel> GetReportsIndexViewModel(ReportsIndexObject reportsIndexObject)
         {
             IQueryable<Report> ReportsPassedIn = Enumerable.Empty<Report>().AsQueryable();
-            IQueryable<Report> ReportsPassedInWithInclude = _context.Reports.Where(r => years.Contains(r.DateCreated.Year) && months.Contains(r.DateCreated.Month))
+            IQueryable<Report> ReportsPassedInWithInclude = _context.Reports
                 .Include(r => r.ReportType).Include(r => r.ReportSections);
 
-            switch (protocolsIndexObject.PageType)
+            switch (reportsIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.ProtocolsReports:
-                    switch (protocolsIndexObject.SidebarType)
+                    switch (reportsIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DailyReports:
                             break;
@@ -198,30 +198,30 @@ namespace PrototypeWithAuth.Controllers
                     break;
             }
 
-            ProtocolsIndexViewModel protocolsIndexViewModel = new ProtocolsIndexViewModel();
-            protocolsIndexViewModel.PageNumber = protocolsIndexObject.PageNumber;
-            protocolsIndexViewModel.PageType = protocolsIndexObject.PageType;
-            protocolsIndexViewModel.ErrorMessage = protocolsIndexObject.ErrorMessage;
+            ReportsIndexViewModel reportsIndexViewModel = new ReportsIndexViewModel();
+            reportsIndexViewModel.ReportsIndexObject = reportsIndexObject;
+            reportsIndexViewModel.ErrorMessage = reportsIndexObject.ErrorMessage;
+
             var onePageOfReports = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
 
-            onePageOfReports = await GetReportsColumnsAndRows(protocolsIndexObject, onePageOfReports, ReportsPassedInWithInclude);
+            onePageOfReports = await GetReportsColumnsAndRows(reportsIndexObject, onePageOfReports, ReportsPassedInWithInclude);
 
-            protocolsIndexViewModel.PagedList = onePageOfReports;
+            reportsIndexViewModel.PagedList = onePageOfReports;
 
-            return protocolsIndexViewModel;
+            return reportsIndexViewModel;
         }
         [Authorize(Roles = "Protocols")]
-        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReportsColumnsAndRows(ProtocolsIndexObject protocolsIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfReports, IQueryable<Report> ReportPassedInWithInclude)
+        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReportsColumnsAndRows(ReportsIndexObject reportsIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfReports, IQueryable<Report> ReportPassedInWithInclude)
         {
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
-            switch (protocolsIndexObject.PageType)
+            switch (reportsIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.ProtocolsReports:
-                    switch (protocolsIndexObject.SidebarType)
+                    switch (reportsIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.WeeklyReports:
-                            onePageOfReports = await GetReportListRows(protocolsIndexObject, onePageOfReports, ReportPassedInWithInclude, iconList, defaultImage);
+                            onePageOfReports = await GetReportListRows(reportsIndexObject, onePageOfReports, ReportPassedInWithInclude, iconList, defaultImage);
                             break;
                         case AppUtility.SidebarEnum.DailyReports:
                             break;
@@ -258,8 +258,9 @@ namespace PrototypeWithAuth.Controllers
             return onePageOfProtocols;
         }
 
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReportListRows(ProtocolsIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfReports, IQueryable<Report> ReportPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
+        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReportListRows(ReportsIndexObject reportsIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfReports, IQueryable<Report> ReportPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
+            var reports = ReportPassedInWithInclude.OrderByDescending(r => r.DateCreated).ToList();
             onePageOfReports = await ReportPassedInWithInclude.OrderByDescending(r => r.DateCreated).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
@@ -269,7 +270,7 @@ namespace PrototypeWithAuth.Controllers
                                  new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ GetDateRangeOfCurrentWeek(r.DateCreated)}},
                                  new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Icons = iconList, AjaxID = r.ReportID }
                             }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+            }).ToPagedListAsync(reportsIndexObject.PageNumber == 0 ? 1 : reportsIndexObject.PageNumber, 25);
             return onePageOfReports;
         }
         private static string GetDateRangeOfCurrentWeek(DateTime date)
@@ -771,16 +772,26 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> ReportsList(int ReportCategoryID, AppUtility.SidebarEnum SidebarType, 
-            List<int> months = null, List<int> years = null)
+        public async Task<IActionResult> IndexReports(int ReportCategoryID, AppUtility.SidebarEnum SidebarType)
         {
-            ProtocolsIndexObject indexObject = new ProtocolsIndexObject()
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.WeeklyReports;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
+            ReportsIndexObject reportsIndexObject = new ReportsIndexObject()
             {
                 PageType = AppUtility.PageTypeEnum.ProtocolsReports,
-                SidebarType = SidebarType
+                SidebarType = SidebarType,
+                ReportCategoryID = ReportCategoryID
+                
             };
-            var reportsIndexViewModel = GetReportsIndexViewModel(indexObject, months ?? new List<int>{ DateTime.Now.Month}, years ?? new List<int>{ DateTime.Now.Year });
+            var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndexObject);
             return View(reportsIndexViewModel);
+        }
+
+        public async Task<IActionResult> _ReportsIndexTable(ReportsIndexObject reportsIndex)
+        {
+            var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndex);
+            return PartialView(reportsIndexViewModel);
         }
 
         [Authorize(Roles = "Protocols")]

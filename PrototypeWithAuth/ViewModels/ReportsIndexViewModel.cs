@@ -11,8 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     public class ReportsIndexViewModel : ViewModelBase
     {
         public IPagedList<RequestIndexPartialRowViewModel> PagedList { get; set; }
-        public AppUtility.PageTypeEnum PageType { get; set; }
-        public int? PageNumber { get; set; }
-
+        
+        public ReportsIndexObject ReportsIndexObject { get; set; }
     }
 }

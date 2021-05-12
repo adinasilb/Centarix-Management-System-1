@@ -2248,7 +2248,7 @@ span.caret {
     border: 2px solid var(--expense-color) !important;
 }
 
-.expenses.reports-filters {
+.expenses.reports-filters, .protocols.reports-filters {
     width: 13rem;
 }
 /*end change to reports*/

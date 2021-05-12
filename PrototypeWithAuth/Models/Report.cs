@@ -16,6 +16,8 @@ namespace PrototypeWithAuth.Models
         public ReportType ReportType { get; set; }
         public DateTime DateCreated { get; set; }
         public int ReportNumber { get; set; }
+        public int ReportCategoryID { get; set; }
+        public ResourceCategory ReportCategory { get; set; }
         public IEnumerable<ReportSection> ReportSections { get; set; }
     }
 }

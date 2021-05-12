@@ -1,0 +1,67 @@
+﻿@model PrototypeWithAuth.ViewModels.ReportsIndexViewModel
+@using PrototypeWithAuth.AppData
+
+@{
+    var years = Enumerable.Range(2017, DateTime.Today.Year - 2016);
+    int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
+}
+
+@Html.HiddenFor(m => m.ReportsIndexObject.ReportCategoryID)
+
+@Html.DropDownListFor(vm => vm.ReportsIndexObject.Years, years.Select(x =>
+        new SelectListItem
+        {
+        Text = x.ToString(),
+        Value = x.ToString(),
+        Selected = (x == curYear)
+        }
+        ), htmlAttributes: new
+            {
+                @class = "protocols mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right change-year",
+            @multiple = "multiple",
+                @name = "SelectedYear",
+                @searchable = "Search here.."
+            })
+
+
+@{var months = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }; }
+@Html.DropDownListFor(vm => vm.ReportsIndexObject.Months, months.Select(m =>
+    new SelectListItem
+    {
+        Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
+        Value = m.ToString(),
+        Selected = (Model.ReportsIndexObject.Months.Contains(m))
+    }),
+    htmlAttributes: new { @class = "protocols mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
+
+@if (Model.PagedList.Count() > 0)
+{
+
+    <table class="table table-headerspaced table-noheaderlines table-hover ">
+        <thead>
+            <tr class="text-center">
+                @foreach (var col in Model.PagedList[0].Columns)
+                {
+
+                    <th width="@col.Width%">
+                        <label>@col.Title</label>
+                    </th>
+
+                }
+            </tr>
+        </thead>
+    </table>
+    <div class="_IndexTableData">
+        @{
+            await Html.RenderPartialAsync("_ReportsIndexTableData", Model);
+        }
+    </div>
+}
+else
+{
+    <div>
+        @{
+            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPagePartial.cshtml", Model);
+        }
+    </div>
+}
