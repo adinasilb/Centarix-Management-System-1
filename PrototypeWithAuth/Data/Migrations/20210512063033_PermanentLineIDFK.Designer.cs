@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210512063033_PermanentLineIDFK")]
+    partial class PermanentLineIDFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1701,9 +1703,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsTemporary")
-                        .HasColumnType("bit");
 
                     b.Property<int>("LineNumber")
                         .HasColumnType("int");
@@ -4243,7 +4242,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("PermanentLineID")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("ProtocolID")
@@ -4256,10 +4254,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasIndex("LineTypeID");
 
-                    b.HasIndex("ParentLineID");
-
                     b.HasIndex("PermanentLineID")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[PermanentLineID] IS NOT NULL");
 
                     b.HasIndex("ProtocolID");
 
@@ -5768,17 +5765,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PrototypeWithAuth.Models.TempLine", "ParentLine")
-                        .WithMany()
-                        .HasForeignKey("ParentLineID")
-                        .HasPrincipalKey("PermanentLineID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("PrototypeWithAuth.Models.Line", "PermanentLine")
                         .WithOne()
                         .HasForeignKey("PrototypeWithAuth.Models.TempLine", "PermanentLineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.TempLine", "ParentLine")
+                        .WithMany()
+                        .HasForeignKey("PermanentLineID")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany()

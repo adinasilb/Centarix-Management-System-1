@@ -269,6 +269,14 @@
     <Compile Remove="Data\Migrations\20210510114235_test.Designer.cs" />
     <Compile Remove="Data\Migrations\20210511052342_TemplineGetterProperty.cs" />
     <Compile Remove="Data\Migrations\20210511052342_TemplineGetterProperty.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512081048_PermanentLineIDNotNull.cs" />
+    <Compile Remove="Data\Migrations\20210512081048_PermanentLineIDNotNull.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512082448_PermanentLineIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210512082448_PermanentLineIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512083035_PermanentLineIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210512083035_PermanentLineIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512090000_PermanentLineIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210512090000_PermanentLineIDNullable.Designer.cs" />
   </ItemGroup>
 
 

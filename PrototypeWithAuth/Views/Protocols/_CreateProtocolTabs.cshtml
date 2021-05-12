@@ -152,6 +152,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
 
     <div class="lines">
         <div class="heading-1">@Model.Protocol.Name</div>
+        <div>  <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button></div>
         <div class="_Lines">
             @{await Html.RenderPartialAsync("_Lines", new ProtocolsLinesViewModel { Lines = Model.TempLines.ToList() });}
         </div>
@@ -188,5 +189,23 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             }
         });
     });
+
+    $(".saveLines").off("click").click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            processData: false,
+            contentType: false,
+            data: new FormData($("#myForm")[0]),
+            url: "/Protocols/SaveTempLines",
+            type: 'POST',
+            success: function (data) {
+                //$("._Lines").html(data);
+            },
+            error: function (jqxhr) {
+                //if(jqxhr.responst)
+            }
+        });
+    });
+
 
 </script>

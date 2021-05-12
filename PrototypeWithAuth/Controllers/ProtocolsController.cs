@@ -311,7 +311,7 @@ namespace PrototypeWithAuth.Controllers
         private TempLine TurnLineIntoTempLine(Line line)
         {
             TempLine tempLine = new TempLine();
-          //  tempLine.PermanentLineID = line.LineID;
+            tempLine.PermanentLineID = line.LineID;
             tempLine.Content = line.Content;
             tempLine.LineNumber = line.LineNumber;
             tempLine.LineTypeID = line.LineTypeID;
@@ -323,7 +323,7 @@ namespace PrototypeWithAuth.Controllers
         private Line TurnTempLineToLine (TempLine tempLine)
         {
             Line line = new Line();
-            line.LineID = tempLine.PermanentLineID??tempLine.LineID;
+            line.LineID = tempLine.PermanentLineID?? tempLine.LineID;
             line.Content = tempLine.Content;
             line.LineNumber = tempLine.LineNumber;
             line.LineTypeID = tempLine.LineTypeID;
@@ -367,22 +367,37 @@ namespace PrototypeWithAuth.Controllers
             foreach(var lineType in lineTypes)
             {
                 var linesByType = lines.Where(l => l.LineTypeID == lineType.LineTypeID);
-                foreach (var line in lines)
+                foreach (var line in linesByType)
                 {
                     _context.Add(TurnLineIntoTempLine(line));
                 }
                 await _context.SaveChangesAsync();
             }
         }
-        private async Task CopySelectedTempLinesToLineTable(int protocolID)
+        public async Task SaveTempLines(List<TempLine> TempLines)
         {
-            var tempLines = _context.TempLines;
-            foreach( var line in tempLines )
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                _context.Update(TurnTempLineToLine(line));
+                try
+                {
+                    await UpdateLineContentAsync(TempLines);
+                    var tempLines = _context.TempLines;
+                    var lines = _context.Lines.Where(l => l.ProtocolID == tempLines.FirstOrDefault().ProtocolID);
+                    foreach (var line in tempLines)
+                    {
+                        _context.Add(TurnTempLineToLine(line));
+                    }
+                    _context.SaveChanges();
+                    await ClearTempLinesTable();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                    //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
+                }
             }
-            await _context.SaveChangesAsync();
-            await ClearTempLinesTable();
         }
         private async Task ClearTempLinesTable()
         {
@@ -394,6 +409,12 @@ namespace PrototypeWithAuth.Controllers
                 {
                     _context.Remove(line);
                 }               
+            }
+            await _context.SaveChangesAsync();
+            var tempLines = _context.Lines.Where(tl => tl.IsTemporary);
+            foreach(var tempLine in tempLines)
+            {
+                _context.Remove(tempLine);
             }
             await _context.SaveChangesAsync();
         }
@@ -469,18 +490,9 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     //save all temp line data 
-                    foreach (var line in TempLines)
-                    {
-                        //Debbie: not sure why we have to put as enumerable but if i don't it does not go thorugh permanent line getter
-                        var temp = _context.TempLines.AsEnumerable().Where(tl => tl.PermanentLineID == line.PermanentLineID).FirstOrDefault();
-                        if (temp != null)
-                        {
-                            temp.Content = line.Content ?? "";
-                            _context.Update(temp);
-                        }
-                    }
-                    await _context.SaveChangesAsync();
-                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).AsEnumerable().Where(l => l.PermanentLineID == currentLineID).FirstOrDefault();
+                    await UpdateLineContentAsync(TempLines);
+                
+                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Where(l => l.PermanentLineID == currentLineID).FirstOrDefault();
                     var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
                     var orderedLineTypes = GetOrderLineTypeFromParentToChild();
                     TempLine newLine = new TempLine();
@@ -491,6 +503,11 @@ namespace PrototypeWithAuth.Controllers
                         newLine.LineNumber = 1;
                     }
                     _context.Add(newLine);
+                    await _context.SaveChangesAsync();
+                    _context.Add(new Line { LineID = newLine.LineID });
+                    await _context.SaveChangesAsync();
+                    newLine.PermanentLineID = newLine.LineID;
+                    _context.Update(newLine);
                     await _context.SaveChangesAsync();
                     if (currentLine != null)
                     {
@@ -517,7 +534,7 @@ namespace PrototypeWithAuth.Controllers
 
                                     break;
                                 }
-                                parent = _context.TempLines.AsEnumerable().Where(tl => tl.PermanentLineID == parent.ParentLineID).FirstOrDefault();
+                                parent = _context.TempLines.Where(tl => tl.PermanentLineID == parent.ParentLineID).FirstOrDefault();
                             }
 
 
@@ -555,7 +572,7 @@ namespace PrototypeWithAuth.Controllers
                         else
                         {
                             newLine.LineNumber = 1;
-                            newLine.ParentLineID = currentLine.PermanentLineID ?? currentLine.LineID;
+                            newLine.ParentLineID = currentLine.PermanentLineID;
                             _context.Update(newLine);
                             var siblings = _context.TempLines.Where(tl => tl.ParentLineID == newLine.ParentLineID);
                             await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
@@ -579,8 +596,20 @@ namespace PrototypeWithAuth.Controllers
             return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
         }
 
-
-
+        private async Task UpdateLineContentAsync(List<TempLine> TempLines)
+        {
+            foreach (var line in TempLines)
+            {
+                //Debbie: not sure why we have to put as enumerable but if i don't it does not go thorugh permanent line getter
+                var temp = _context.TempLines.Where(tl => tl.PermanentLineID == line.PermanentLineID).FirstOrDefault();
+                if (temp != null)
+                {
+                    temp.Content = line.Content ?? "";
+                    _context.Update(temp);
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
 
         private List<ProtocolsLineViewModel> OrderLinesForView()
         {
@@ -594,7 +623,7 @@ namespace PrototypeWithAuth.Controllers
                 var node = parentNodes.Pop();
                 refreshedLines.Add(new ProtocolsLineViewModel() { LineTypes = lineTypes,
                     TempLine = node, Index = count++, LineNumberString = refreshedLines.Where(rl => rl.TempLine.PermanentLineID == node.ParentLineID).FirstOrDefault()?.LineNumberString + "." + node.LineNumber }); 
-                _context.TempLines.Where(c => c.ParentLineID == (node.PermanentLineID ?? node.LineID)).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
+                _context.TempLines.Where(c => c.ParentLineID == (node.PermanentLineID)).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
             }
             if(refreshedLines.Count == 0)
             {
