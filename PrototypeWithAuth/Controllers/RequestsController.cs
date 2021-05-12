@@ -5577,6 +5577,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> HistoryItemModal(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false);
+            requestItemViewModel.IsHistory = true;
             return PartialView(requestItemViewModel);
         }
 

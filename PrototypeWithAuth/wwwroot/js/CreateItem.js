@@ -269,6 +269,7 @@
         e.stopPropagation();
         //alert('here')
         //highlight this
+        
         var $itemurl = "/Requests/HistoryItemModal/?id=" + $(this).attr("value") + "&SectionType=" + $("#masterSectionType").val();
         $.fn.CallPageRequest($itemurl, 'historyItem');
     });

@@ -54,7 +54,6 @@ namespace PrototypeWithAuth.ViewModels
         //public List<IFormFile> ReturnFiles { get; set; }
         //public List<IFormFile> CreditFiles { get; set; }
 
-
         public FileInfo[] OrderFilesFound { get; set; }
         public IEnumerable<Comment> OldComments { get; set; }
         public Comment NewComment { get; set; }
@@ -84,5 +83,6 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.RequestModalType ModalType { get; set; }
         public bool IsProprietary { get; set; }
         public bool IsRequestQuote { get; set; }
+        public bool IsHistory { get; set; }
     }
 }
