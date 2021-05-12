@@ -76,7 +76,7 @@
         </div>
         @foreach (var eh in Model.EmployeeHours)
         {
-            <div class="row border  text-center">
+            <div class="row border  text-center align-items-center">
                 <div class="py-3 " style="width:12%;">
                     @eh.EmployeeHours.Date.DayOfWeek
                 </div>
@@ -90,166 +90,168 @@
                     @if (eh.EmployeeHours.CompanyDayOffID != null)
                     {
                         hoursType = eh.EmployeeHours.CompanyDayOff.CompanyDayOffType.Name;
+                        <div class="py-3">
+                            <label class=" m-0">@hoursType</label>
+                            </div>
                     }
                     else
                     {
-                        @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null)
-                        {
-                            <div class="p-2">
-                                <select class="mdb-select @pageColor custom select-dropdown no-hours-reported mb-0 @disabled" date="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
-                                    <option value="" selected disabled class="@pageColor-color">No hours reported</option>
-                                    <option value="1" class="open-work-from-home-modal @AppUtility.SidebarEnum.SummaryHours">Worked from home</option>
-                                    <option value="2" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours">Update hours</option>
-                                    <option value="3" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.SickDay">Report sick day</option>
-                                    <option value="4" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.VacationDay">Report vacation day</option>
+                    @if (eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.TotalHours == null && eh.EmployeeHours.OffDayType == null)
+                    {
+                        <div class="p-2">
+                            <select class="mdb-select @pageColor custom select-dropdown no-hours-reported mb-0 @disabled" date="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
+                                <option value="" selected disabled class="@pageColor-color">No hours reported</option>
+                                <option value="1" class="open-work-from-home-modal @AppUtility.SidebarEnum.SummaryHours">Worked from home</option>
+                                <option value="2" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours">Update hours</option>
+                                <option value="3" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.SickDay">Report sick day</option>
+                                <option value="4" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.VacationDay">Report vacation day</option>
 
-                                    @if (eh.EmployeeHours.Employee.SpecialDays > 0)
-                                    {
-                                        <option value="5" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.SpecialDay">Report special day</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="5" disabled class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.SpecialDay">Report special vacation day</option>
-                                    }
-                                    <option value="6" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.UnpaidLeave">Report unpaid leave</option>
-                                </select>
-                            </div>
-                        }
-                        else
-                        {
-
-                            hoursType = eh.EmployeeHours.OffDayType?.Description;
-                            <div class="py-3">
-                                @if (eh.EmployeeHours.Entry1 != null || eh.EmployeeHours.TotalHours != null)
+                                @if (eh.EmployeeHours.Employee.SpecialDays > 0)
                                 {
-                                    if (eh.EmployeeHours.EmployeeHoursStatusEntry1ID != 1)
-                                    {
-                                        hoursType = "Worked from office";
-                                    }
-                                    else
-                                    {
-                                        hoursType = "Worked from home";
-                                    }
-                                    <label class=" m-0">@hoursType</label>
-                                    if (eh.EmployeeHours.EmployeeHoursStatusEntry2ID != null)
-                                    {
-                                        if (eh.EmployeeHours.EmployeeHoursStatusEntry2ID != 1)
-                                        {
-                                            hoursType2 = "Worked from office";
-                                        }
-                                        else
-                                        {
-                                            hoursType2 = "Worked from home";
-                                        }
-                                        <label class=" m-0">@hoursType2</label>
-                                    }
-                                    if (eh.EmployeeHours.PartialOffDayTypeID != null)
-                                    {
-                                        hoursType3 = "Partial " + eh.EmployeeHours.PartialOffDayType.Description;
-                                        <label class=" m-0">@hoursType3</label>
-                                    }
+                                    <option value="5" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.SpecialDay">Report special day</option>
                                 }
                                 else
                                 {
-                                    <label class=" m-0">@hoursType</label>
+                                    <option value="5" disabled class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.SpecialDay">Report special vacation day</option>
                                 }
-                            </div>
-                        }
+                                <option value="6" class="confirm-report-offDay" data-val="@AppUtility.OffDayTypeEnum.UnpaidLeave">Report unpaid leave</option>
+                            </select>
+                        </div>
+                    }
+                    else
+                    {
+
+                        hoursType = eh.EmployeeHours.OffDayType?.Description;
+                        <div class="py-3">
+                            @if (eh.EmployeeHours.Entry1 != null || eh.EmployeeHours.TotalHours != null)
+                            {
+                                if (eh.EmployeeHours.EmployeeHoursStatusEntry1ID != 1)
+                                {
+                                    hoursType = "Worked from office";
+                                }
+                                else
+                                {
+                                    hoursType = "Worked from home";
+                                }
+                                <label class=" m-0">@hoursType</label>
+                                if (eh.EmployeeHours.EmployeeHoursStatusEntry2ID != null)
+                                {
+                                    if (eh.EmployeeHours.EmployeeHoursStatusEntry2ID != 1)
+                                    {
+                                        hoursType2 = "Worked from office";
+                                    }
+                                    else
+                                    {
+                                        hoursType2 = "Worked from home";
+                                    }
+                                    <label class=" m-0">@hoursType2</label>
+                                }
+                                if (eh.EmployeeHours.PartialOffDayTypeID != null)
+                                {
+                                    hoursType3 = "Partial " + eh.EmployeeHours.PartialOffDayType.Description;
+                                    <label class=" m-0">@hoursType3</label>
+                                }
+                            }
+                            else
+                            {
+                                <label class=" m-0">@hoursType</label>
+                            }
+                        </div>
+                    }
                     }
 
-                </div>
-                <div class="py-3" style="width:15%;">
-                    @{ var entry = eh.EmployeeHours.Entry1?.ToString("HH:mm");}
-                    @if (eh.EmployeeHours.Entry1 == null)
-                    {
-                        entry = "n/a";
-                    }
-                    @entry
-                    @if (eh.EmployeeHours.Entry2 != null)
-                    {
-                        <br />
-                    }
-                    @eh.EmployeeHours.Entry2?.ToString("HH:mm")
-                    @if (eh.EmployeeHours.PartialOffDayTypeID != null)
-                    {
-                        <br />
-                        @Html.Raw("N/A");
-                    }
-                </div>
-                <div class="py-3" style="width:15%;">
-                    @{ var exit = "";}
-                    @eh.EmployeeHours.Exit1?.ToString("HH:mm")
-                    @if ((eh.EmployeeHours.Entry2 != null && eh.EmployeeHours.Exit2 == null) || (eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null))
-                    {
-                        <br />
-                        <button type="button" class="custom-button-table-font table-button @pageColor-color  open-update-hours-modal @disabled @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
-                            Update Hours
-                        </button>
-                    }
-                    else if ((eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2 || eh.EmployeeHours.OffDayTypeID == 4 || eh.EmployeeHours.OffDayTypeID == 5)))
-                    {
-                        <a href="" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours @pageColor-font-color @disabled" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</a>
-                        @*<button type="button" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>*@
-                    }
-                    else if (eh.EmployeeHours.Exit1 == null)
-                    {
-                        exit = "n/a";
-                    }
-                    @exit
-                    @if (eh.EmployeeHours.Exit2 != null)
-                    {
-                        <br />
-                    }
-                    @eh.EmployeeHours.Exit2?.ToString("HH:mm")
-                    @if (eh.EmployeeHours.PartialOffDayTypeID != null)
-                    {
-                        <br />
-                        @Html.Raw("N/A");
-                    }
-                </div>
+                        </div>
+                        <div class="py-3" style="width:15%;">
+                            @{ var entry = eh.EmployeeHours.Entry1?.ToString("HH:mm");}
+                            @if (eh.EmployeeHours.Entry1 == null)
+                            {
+                                entry = "n/a";
+                            }
+                            @entry
+                            @if (eh.EmployeeHours.Entry2 != null)
+                            {
+                                <br />
+                            }
+                            @eh.EmployeeHours.Entry2?.ToString("HH:mm")
+                            @if (eh.EmployeeHours.PartialOffDayTypeID != null)
+                            {
+                                <br />
+                                @Html.Raw("N/A");
+                            }
+                        </div>
+                        <div class="py-3" style="width:15%;">
+                            @{ var exit = "";}
+                            @eh.EmployeeHours.Exit1?.ToString("HH:mm")
+                            @if ((eh.EmployeeHours.Entry2 != null && eh.EmployeeHours.Exit2 == null) || (eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null))
+                            {
+                                <button type="button" class="custom-button-table-font table-button @pageColor-color  open-update-hours-modal @disabled @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
+                                    Update Hours
+                                </button>
+                            }
+                            else if ((eh.EmployeeHours.Entry1 == null && eh.EmployeeHours.Exit1 == null && (eh.EmployeeHours.OffDayTypeID == 1 || eh.EmployeeHours.OffDayTypeID == 2 || eh.EmployeeHours.OffDayTypeID == 4 || eh.EmployeeHours.OffDayTypeID == 5)))
+                            {
+                                <a href="" class="open-update-hours-modal @AppUtility.SidebarEnum.SummaryHours @pageColor-font-color @disabled" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</a>
+                                @*<button type="button" class="open-update-hours-modal @AppUtility.TimeKeeperSidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">Update Hours</button>*@
+                            }
+                            else if (eh.EmployeeHours.Exit1 == null)
+                            {
+                                exit = "n/a";
+                            }
+                            @exit
+                            @if (eh.EmployeeHours.Exit2 != null)
+                            {
+                                <br />
+                            }
+                            @eh.EmployeeHours.Exit2?.ToString("HH:mm")
+                            @if (eh.EmployeeHours.PartialOffDayTypeID != null)
+                            {
+                                <br />
+                                @Html.Raw("N/A");
+                            }
+                        </div>
 
-                <div class="py-3 @pageColor-font-color" style="width:12%;">
-                    @{
-                        var hours = eh.EmployeeHours.TotalHours == TimeSpan.Zero || eh.EmployeeHours.TotalHours == null ? "n/a" : eh.EmployeeHours.TotalHours?.ToString(@"h\:mm");
+                        <div class="py-3 @pageColor-font-color" style="width:12%;">
+                            @{
+                                var hours = eh.EmployeeHours.TotalHours == TimeSpan.Zero || eh.EmployeeHours.TotalHours == null ? "n/a" : eh.EmployeeHours.TotalHours?.ToString(@"h\:mm");
 
-                        @hours
-                        @if (eh.EmployeeHours.Exit2 != null)
-                        {
-                            <br />
-                        }
-                        @if (eh.EmployeeHours.PartialOffDayTypeID != null)
-                        {
-                            var partialHours = eh.EmployeeHours.PartialOffDayHours?.ToString(@"h\:mm");
-                            <br />
-                            @partialHours
-                        }
-                    }
-                </div>
+                                @hours
+                                @if (eh.EmployeeHours.Exit2 != null)
+                                {
+                                    <br />
+                                }
+                                @if (eh.EmployeeHours.PartialOffDayTypeID != null)
+                                {
+                                    var partialHours = eh.EmployeeHours.PartialOffDayHours?.ToString(@"h\:mm");
+                                    <br />
+                                    @partialHours
+                                }
+                            }
+                        </div>
 
-                <div class="py-3" style="width:10%;">
-                    @if (eh.EmployeeHoursAwaitingApproval != null)
-                    {
-                        if (eh.EmployeeHoursAwaitingApproval.IsDenied)
-                        {
-                            <div>
-                                <a href="" class="open-ehaa-modal @pageColor-font-alt-color @disabled" value="@eh.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID.ToString()">Request Denied</a>
-                            </div>
-                        }
-                        else
-                        {
-                            <button type="button" class="custom-button-table-font table-button @pageColor-alt-color  open-ehaa-modal @disabled" value="@eh.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID.ToString()">
-                                View
-                            </button>
-                        }
-                    }
-                </div>
-                <div class="table-icon-div pt-2">
-                    <a class="@disabled btn p-0 m-0 no-box-shadow load-delete-hour-modal" data-toggle="tooltip" data-placement="top"
-                       title="More" value="@eh.EmployeeHours.EmployeeHoursID">
-                        <i style="font-size:2rem; color:black" class="icon-delete-24px hover-bold"></i>
-                    </a>
-                </div>
-            </div>
+                        <div class="py-3" style="width:10%;">
+                            @if (eh.EmployeeHoursAwaitingApproval != null)
+                            {
+                                if (eh.EmployeeHoursAwaitingApproval.IsDenied)
+                                {
+                                    <div>
+                                        <a href="" class="open-ehaa-modal @pageColor-font-alt-color @disabled" value="@eh.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID.ToString()">Request Denied</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <button type="button" class="custom-button-table-font table-button @pageColor-alt-color  open-ehaa-modal @disabled" value="@eh.EmployeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID.ToString()">
+                                        View
+                                    </button>
+                                }
+                            }
+                        </div>
+                        <div class="table-icon-div pt-2">
+                            <a class="@disabled btn p-0 m-0 no-box-shadow load-delete-hour-modal" data-toggle="tooltip" data-placement="top"
+                               title="More" value="@eh.EmployeeHours.EmployeeHoursID">
+                                <i style="font-size:2rem; color:black" class="icon-delete-24px hover-bold"></i>
+                            </a>
+                        </div>
+                    </div>
 
         }
     <div class="row mt-6 py-4  text-center">

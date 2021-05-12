@@ -58,7 +58,7 @@ namespace PrototypeWithAuth.Controllers
             double? totalhours;
             double vacationDaysTaken = 0;
             double sickDaysTaken = 0;
-            var companyDaysOff = _context.CompanyDayOffs.ToList();
+            var companyDaysOff = _context.CompanyDayOffs.Include(co=>co.CompanyDayOffType).ToList();
             if (user.EmployeeStatusID != 1)
             {
                 totalhours = null;
