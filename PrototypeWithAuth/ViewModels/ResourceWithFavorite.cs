@@ -12,5 +12,6 @@ namespace PrototypeWithAuth.ViewModels
         public Resource Resource { get; set; }
         public bool IsFavorite { get; set; }
         public ApplicationUser SharedByApplicationUser { get; set; }
+        public List<IconColumnViewModel> IconColumnViewModels { get; set; }
     }
 }

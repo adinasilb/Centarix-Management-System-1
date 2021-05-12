@@ -1,5 +1,6 @@
 ﻿using Abp.Extensions;
 using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using JetBrains.Annotations;
 using Microsoft.ApplicationInsights.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Net.Http.Headers;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
@@ -29,6 +31,7 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
+        public enum ProtocolIconNamesEnum { Share, Favorite, MorePopover, Edit }
         public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, userManager: userManager, hostingEnvironment: hostingEnvironment)
         {
             _context = context;
@@ -752,6 +755,8 @@ namespace PrototypeWithAuth.Controllers
                 PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
             };
 
+            GetIconColumnViewModels<Resource>(new List<ProtocolIconNamesEnum>() { ProtocolIconNamesEnum.Favorite }, _context.Resources.FirstOrDefault());
+
             return View(resourcesListViewModel);
         }
 
@@ -946,11 +951,11 @@ namespace PrototypeWithAuth.Controllers
             }).ToList();
 
             var tempResourcesWithFavorites = from r in _context.Resources
-                           join sr in _context.ShareResources on r.ResourceID equals sr.ResourceID
-                           join fr in _context.FavoriteResources on r.ResourceID equals fr.ResourceID into g
-                           from fr in g.DefaultIfEmpty()
-                           where sr.ToApplicationUserID == _userManager.GetUserId(User)
-                           select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteResourceID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser };
+                                             join sr in _context.ShareResources on r.ResourceID equals sr.ResourceID
+                                             join fr in _context.FavoriteResources on r.ResourceID equals fr.ResourceID into g
+                                             from fr in g.DefaultIfEmpty()
+                                             where sr.ToApplicationUserID == _userManager.GetUserId(User)
+                                             select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteResourceID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser };
 
             ResourcesListIndexViewModel.ResourcesWithFavorites = tempResourcesWithFavorites.ToList();
 
@@ -1117,8 +1122,39 @@ namespace PrototypeWithAuth.Controllers
                     error = true;
                 }
             }
+
             return error;
         }
 
+        public List<IconColumnViewModel> GetIconColumnViewModels<T>(List<ProtocolIconNamesEnum> protocolIconNamesEnums, T tobject) //MUST USE THIS OVERRIDE WHEN FAVORITES ARE INCLUDED
+        {
+            var iconColumnViewModels = new List<IconColumnViewModel>();
+
+            foreach (var iconNameEnum in protocolIconNamesEnums)
+            {
+                switch (iconNameEnum)
+                {
+                    case ProtocolIconNamesEnum.Edit:
+                        break;
+                    case ProtocolIconNamesEnum.Favorite:
+                        var type = tobject.GetType();
+                        iconColumnViewModels.Add(new IconColumnViewModel(" icon-favorite_border-24px", "protocols-color", "", "Favorite"));
+                        break;
+                    case ProtocolIconNamesEnum.Share:
+                        iconColumnViewModels.Add(new IconColumnViewModel());
+                        break;
+                    case ProtocolIconNamesEnum.MorePopover:
+                        var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
+                        var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
+                        popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
+                        iconColumnViewModels.Add(popoverMoreIcon);
+                        break;
+                };
+            }
+
+            return iconColumnViewModels;
+        }
+
     }
+
 }
