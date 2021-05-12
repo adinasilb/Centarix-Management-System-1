@@ -1,4 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Shared With Me";
+﻿@model PrototypeWithAuth.ViewModels.ResourcesListIndexViewModel;
+
+@{
+    ViewData["Title"] = "ResourcesSharedWithMe";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+<div class="resources-favorites-partial">
+    @{ await Html.RenderPartialAsync("_ResourcesListIndex", Model);}
+</div>

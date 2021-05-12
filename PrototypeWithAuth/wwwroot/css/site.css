@@ -2297,7 +2297,7 @@ span.caret {
 
 .resource-fieldset {
     border-radius: .75rem;
-    height: 29.75rem;
+    /*height: 29.75rem;*/
     /*width: 18.625rem;*/
     border: .15rem solid #CBCBCB;
 }

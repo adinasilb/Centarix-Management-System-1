@@ -1,11 +1,13 @@
 ﻿using Abp.Extensions;
 using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using Microsoft.ApplicationInsights.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
@@ -16,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -724,10 +727,10 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> ResourcesList(int? ResourceCategoryID, AppUtility.SidebarEnum SidebarEnum = AppUtility.SidebarEnum.Library)
+        public async Task<IActionResult> ResourcesList(int? ResourceCategoryID)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarEnum;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
             ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
@@ -741,6 +744,7 @@ namespace PrototypeWithAuth.Controllers
                     Resource = r,
                     IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
                 }).ToList();
+            ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Library;
 
             ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
             {
@@ -751,7 +755,8 @@ namespace PrototypeWithAuth.Controllers
             return View(resourcesListViewModel);
         }
 
-        [HttpGet] [HttpPost]
+        [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel = null, bool IsReload = false)
         {
@@ -921,8 +926,37 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedWithMe;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
+
+            var shareresourcesreceivedResoureid = _context.Users.Include(u => u.ShareResourcesReceived)
+                .Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault()
+                .ShareResourcesReceived.Select(srr => srr.ResourceID).ToList();
+
+            var testNew = _context.Resources
+            .Include(r => r.FavoriteResources)
+            .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+            .Where(r => shareresourcesreceivedResoureid.Contains(r.ResourceID));
+
+            ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.SharedWithMe;
+            ResourcesListIndexViewModel.ResourcesWithFavorites = testNew.Select(r => new ResourceWithFavorite
+            {
+                Resource = r,
+                IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+            }).ToList();
+
+            var tempResourcesWithFavorites = from r in _context.Resources
+                           join sr in _context.ShareResources on r.ResourceID equals sr.ResourceID
+                           join fr in _context.FavoriteResources on r.ResourceID equals fr.ResourceID into g
+                           from fr in g.DefaultIfEmpty()
+                           where sr.ToApplicationUserID == _userManager.GetUserId(User)
+                           select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteResourceID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser };
+
+            ResourcesListIndexViewModel.ResourcesWithFavorites = tempResourcesWithFavorites.ToList();
+
+            return View(ResourcesListIndexViewModel);
         }
+
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ResourcesFavorites()
         {
@@ -947,6 +981,7 @@ namespace PrototypeWithAuth.Controllers
                     IsFavorite = true
                 }).ToList();
             ResourcesListIndexViewModel.IsFavoritesPage = true;
+            ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Favorites;
             return ResourcesListIndexViewModel;
         }
 

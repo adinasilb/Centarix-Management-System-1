@@ -1,4 +1,4 @@
-﻿@*@Model PrototypeWithAuth.ViewModels.ResourcesListIndexViewModel;*@
+﻿@model PrototypeWithAuth.ViewModels.ResourcesListIndexViewModel;
 @using PrototypeWithAuth.AppData;
 @using PrototypeWithAuth.AppData.UtilityModels;
 
@@ -13,6 +13,10 @@
             <div class="type-div" style="width:22%;">
                 <fieldset class=" resource-fieldset px-3 pt-2">
                     <div class="resource-title heading-1">@resource.Resource.Title</div>
+                    @if (Model.SidebarEnum.Equals(AppUtility.SidebarEnum.SharedWithMe))
+                    {
+                        <div class="resource-shared-from py-1">Shared By: @resource.SharedByApplicationUser.FirstName &nbsp; @resource.SharedByApplicationUser.LastName</div>
+                    }
                     <div class="resource-tags protocols-color">
                         Tags:
                         @{var first = true; }
