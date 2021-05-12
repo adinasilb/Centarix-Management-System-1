@@ -7,9 +7,9 @@
 @{
     TempData.Keep();
     ViewData["Title"] = "EditModalView";
-    
+
     Layout = null;
-    
+
 }
 @if (Model.ErrorMessage != null)
 {
@@ -18,6 +18,6 @@
     </div>
 }
 
-<div class="" >
-     @{ await Html.RenderPartialAsync("_EditModalView", Model);}
-</div>
+
+    @{ await Html.RenderPartialAsync("_EditModalView", Model);}
+

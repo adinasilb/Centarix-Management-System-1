@@ -263,4 +263,13 @@
         $('#addRequestComment').popover('toggle');
 
     });
+
+    $('.open-history-item-modal').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        alert('here')
+        //highlight this
+        var $itemurl = "/Requests/HistoryItemModal/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val();
+        $.fn.CallPageRequest($itemurl, 'historyItem');
+    });
 })

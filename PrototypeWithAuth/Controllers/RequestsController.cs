@@ -5571,6 +5571,13 @@ namespace PrototypeWithAuth.Controllers
             };
             return PartialView(viewModel);
         }
+
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> HistoryItemModal(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
+        {
+            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable);
+            return PartialView(requestItemViewModel);
+        }
         //public async Task<bool> PopulateProductSerialNumber()
         //{
         //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();

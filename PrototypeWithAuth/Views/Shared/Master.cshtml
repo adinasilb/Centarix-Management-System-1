@@ -464,6 +464,7 @@
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
             console.log("itemurl " + $itemurl);
+            console.log($type);
             //delete existing modals
             //$('.modal:not(#visualZoomModal)').replaceWith('');
             //$(".modal-backdrop").remove();
@@ -528,6 +529,9 @@
                         case "materialInfo":
                             $.fn.OpenModal('modal', 'material-info', modal)
                             break;
+                        case "historyItem":
+                            $.fn.OpenModal('historyModal', 'history-item', modal)
+                            break;
                  
                     }
 
@@ -573,7 +577,7 @@
             var category = $("#categoryDescription").val();
             console.log(category)
             $("." + category).removeClass("d-none");
-            console.log("in detilas of case")
+            console.log("in details of case")
             $.fn.TurnToDetails();
             $('.edits .mdb-select:not(.ignore-mdb)').materialSelect();
             $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
@@ -1122,6 +1126,9 @@
         //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
             console.log("open modal")
+            //console.log(modalClass);
+            //console.log(data.text());
+            //console.log(modalDivClass)
             var backdrop = "static";
             if ($('.modal-backdrop').length > 0) {
                 backdrop = false;

@@ -35,13 +35,15 @@
             {
                 <tr class="inv-list-item">
                     <td>
-                        @Html.DisplayFor(modelItem => item.Product.ProductName)
+                        <button class="open-history-item-modal btn p-0 m-0 inv-link-clr no-box-shadow" value="@item.RequestID">
+                            @Html.DisplayFor(modelItem => item.Product.ProductName)
+                        </button>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName) &nbsp;
+                        @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName)&nbsp;
                         @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName)
                     </td>
                     <td>
