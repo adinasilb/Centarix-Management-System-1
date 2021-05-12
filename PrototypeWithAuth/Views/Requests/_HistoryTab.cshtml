@@ -31,6 +31,9 @@
             </tr>
         </thead>
         <tbody>
+            @{ 
+                var currencySymbol = Model.RequestsByProduct[0].Currency == "NIS" ? "&#x20aa;" : "&#36;";
+            }
             @foreach (var item in Model.RequestsByProduct)
             {
                 <tr class="inv-list-item">
@@ -74,6 +77,7 @@
                         </ul>
                     </td>
                     <td>
+                        @Html.Raw(currencySymbol)
                         @Html.DisplayFor(modelItem => item.Cost)
                     </td>
                 </tr>
