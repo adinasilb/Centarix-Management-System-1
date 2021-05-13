@@ -748,14 +748,13 @@ namespace PrototypeWithAuth.Controllers
                     IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
                 }).ToList();
             ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Library;
-
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<ProtocolIconNamesEnum>() { ProtocolIconNamesEnum.Favorite, ProtocolIconNamesEnum.Share, ProtocolIconNamesEnum.Edit });
             ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
             {
                 ResourcesListIndexViewModel = ResourcesListIndexViewModel,
                 PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
             };
 
-            GetIconColumnViewModels<Resource>(new List<ProtocolIconNamesEnum>() { ProtocolIconNamesEnum.Favorite }, _context.Resources.FirstOrDefault());
 
             return View(resourcesListViewModel);
         }
@@ -1126,7 +1125,7 @@ namespace PrototypeWithAuth.Controllers
             return error;
         }
 
-        public List<IconColumnViewModel> GetIconColumnViewModels<T>(List<ProtocolIconNamesEnum> protocolIconNamesEnums, T tobject) //MUST USE THIS OVERRIDE WHEN FAVORITES ARE INCLUDED
+        public List<IconColumnViewModel> GetIconColumnViewModels(List<ProtocolIconNamesEnum> protocolIconNamesEnums) //MUST USE THIS OVERRIDE WHEN FAVORITES ARE INCLUDED
         {
             var iconColumnViewModels = new List<IconColumnViewModel>();
 
@@ -1135,16 +1134,16 @@ namespace PrototypeWithAuth.Controllers
                 switch (iconNameEnum)
                 {
                     case ProtocolIconNamesEnum.Edit:
+                        iconColumnViewModels.Add(new IconColumnViewModel("icon-create-24px", null, "edit-resource", "Edit"));
                         break;
                     case ProtocolIconNamesEnum.Favorite:
-                        var type = tobject.GetType();
-                        iconColumnViewModels.Add(new IconColumnViewModel(" icon-favorite_border-24px", "protocols-color", "", "Favorite"));
+                        iconColumnViewModels.Add(new IconColumnViewModel(AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition, null, null, "Favorite"));
                         break;
                     case ProtocolIconNamesEnum.Share:
-                        iconColumnViewModels.Add(new IconColumnViewModel());
+                        iconColumnViewModels.Add(new IconColumnViewModel("icon-share-24px1", null, "share-resource", "Share"));
                         break;
                     case ProtocolIconNamesEnum.MorePopover:
-                        var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
+                        var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", null, "popover-more", "More");
                         var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
                         popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
                         iconColumnViewModels.Add(popoverMoreIcon);
