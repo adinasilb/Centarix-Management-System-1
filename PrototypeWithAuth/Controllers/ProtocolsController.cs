@@ -408,9 +408,10 @@ namespace PrototypeWithAuth.Controllers
                 foreach (var line in linesByType)
                 {
                     _context.Remove(line);
-                }               
+                }
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
+           
             var tempLines = _context.Lines.Where(tl => tl.IsTemporary);
             foreach(var tempLine in tempLines)
             {
@@ -504,7 +505,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     _context.Add(newLine);
                     await _context.SaveChangesAsync();
-                    _context.Add(new Line { LineID = newLine.LineID });
+                    _context.Add(new Line { LineID = newLine.LineID, LineTypeID = lineTypeID, ProtocolID = protocolID, IsTemporary= true });
                     await _context.SaveChangesAsync();
                     newLine.PermanentLineID = newLine.LineID;
                     _context.Update(newLine);

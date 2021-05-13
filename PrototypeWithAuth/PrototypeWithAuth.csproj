@@ -295,6 +295,24 @@
     <Compile Remove="Data\Migrations\20210513073732_virtualPermanentLineID2.Designer.cs" />
     <Compile Remove="Data\Migrations\20210513075020_fkNotationParentLineID.cs" />
     <Compile Remove="Data\Migrations\20210513075020_fkNotationParentLineID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513080636_FKAnnotation.cs" />
+    <Compile Remove="Data\Migrations\20210513080636_FKAnnotation.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513102924_FKAnnotation.cs" />
+    <Compile Remove="Data\Migrations\20210513102924_FKAnnotation.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513115946_HasFilterNullPermanentID.cs" />
+    <Compile Remove="Data\Migrations\20210513115946_HasFilterNullPermanentID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513120854_HasFilterNullPermanentID2.cs" />
+    <Compile Remove="Data\Migrations\20210513120854_HasFilterNullPermanentID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121123_HasFilterNullPermanentID2.cs" />
+    <Compile Remove="Data\Migrations\20210513121123_HasFilterNullPermanentID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121302_HasFilterNullPermanentID3.cs" />
+    <Compile Remove="Data\Migrations\20210513121302_HasFilterNullPermanentID3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121717_HasFilterNullPermanentID3.cs" />
+    <Compile Remove="Data\Migrations\20210513121717_HasFilterNullPermanentID3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121932_HasFilterNullPermanentID3.cs" />
+    <Compile Remove="Data\Migrations\20210513121932_HasFilterNullPermanentID3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513122233_HasFilterNullPermanentID2.cs" />
+    <Compile Remove="Data\Migrations\20210513122233_HasFilterNullPermanentID2.Designer.cs" />
   </ItemGroup>
 
 

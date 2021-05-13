@@ -345,16 +345,19 @@ namespace PrototypeWithAuth.Data
                .WithMany()
                .HasForeignKey(ltc => ltc.LineTypeChildID);
 
+
+            modelBuilder.Entity<TempLine>().HasIndex(tl => tl.PermanentLineID).IsUnique().HasFilter(null);
+
             modelBuilder.Entity<TempLine>()
                .HasOne(tl => tl.ParentLine)
                .WithMany()
                .HasForeignKey(tl => tl.ParentLineID);
-
+               //.HasPrincipalKey(tl => tl.PermanentLineID).IsRequired(false);--edditted migration directly
 
             modelBuilder.Entity<TempLine>()
-           .HasOne(tl => tl.PermanentLine)
-           .WithOne()
-           .HasForeignKey<TempLine>(tl => tl.PermanentLineID);
+               .HasOne(tl => tl.PermanentLine)
+               .WithOne()
+               .HasForeignKey<TempLine>(tl => tl.PermanentLineID);
 
             modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
