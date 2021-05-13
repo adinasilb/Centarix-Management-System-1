@@ -192,7 +192,7 @@ namespace PrototypeWithAuth.Controllers
                         OperationMonthlyLimit = registerUserViewModel.OperationMonthlyLimit,
                         OperationUnitLimit = registerUserViewModel.OperationUnitLimit,
                         OperationOrderLimit = registerUserViewModel.OperaitonOrderLimit,
-                        DateCreated = DateTime.Now,
+                        DateCreated = AppUtility.ElixirDate(),
                         EmployeeStatusID = registerUserViewModel.NewEmployee.EmployeeStatusID,
                         JobSubcategoryTypeID = registerUserViewModel.NewEmployee.JobSubcategoryTypeID,
                         IsUser = true,
@@ -277,7 +277,7 @@ namespace PrototypeWithAuth.Controllers
                             EmployeeID = user.Id,
                             CentarixIDNumber = cID,
                             IsCurrent = true,
-                            TimeStamp = DateTime.Now,
+                            TimeStamp = AppUtility.ElixirDate(),
                             Employee = _context.Employees.Where(e => e.Id == user.Id).FirstOrDefault()
                         };
 
@@ -286,7 +286,7 @@ namespace PrototypeWithAuth.Controllers
 
                         //update last ID
                         employeeStatus.LastCentarixID = currentNum;
-                        employeeStatus.LastCentarixIDTimeStamp = DateTime.Now;
+                        employeeStatus.LastCentarixIDTimeStamp = AppUtility.ElixirDate();
                         _context.Update(employeeStatus);
                         await _context.SaveChangesAsync();
 
@@ -936,14 +936,14 @@ namespace PrototypeWithAuth.Controllers
                 EmployeeID = UserID,
                 CentarixIDNumber = newID,
                 IsCurrent = true,
-                TimeStamp = DateTime.Now,
+                TimeStamp = AppUtility.ElixirDate(),
                 Employee = _context.Employees.Where(e => e.Id == UserID).FirstOrDefault()
             };
             _context.Add(newCentarixID);
             await _context.SaveChangesAsync();
 
             lastStatus.LastCentarixID = newNum;
-            lastStatus.LastCentarixIDTimeStamp = DateTime.Now;
+            lastStatus.LastCentarixIDTimeStamp = AppUtility.ElixirDate();
             _context.Update(lastStatus);
             await _context.SaveChangesAsync();
 
@@ -979,11 +979,11 @@ namespace PrototypeWithAuth.Controllers
             try
             {
                 applicationUser = _context.Users.Where(u => u.Id == applicationUser.Id).FirstOrDefault();
-                if (applicationUser.LockoutEnabled == true && (applicationUser.LockoutEnd > DateTime.Now))
+                if (applicationUser.LockoutEnabled == true && (applicationUser.LockoutEnd > AppUtility.ElixirDate()))
                 {
                     applicationUser.IsSuspended = false;
                     applicationUser.LockoutEnabled = false;
-                    applicationUser.LockoutEnd = DateTime.Now;
+                    applicationUser.LockoutEnd = AppUtility.ElixirDate();
                 }
                 else
                 {
@@ -1042,7 +1042,7 @@ namespace PrototypeWithAuth.Controllers
 
                     var cookieOptions = new CookieOptions
                     {
-                        Expires = DateTime.Now.AddDays(30)
+                        Expires = AppUtility.ElixirDate().AddDays(30)
                     };
                     _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie" + cookieNum, appUser.Id, cookieOptions);
                 }

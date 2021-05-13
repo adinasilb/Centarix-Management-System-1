@@ -561,7 +561,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     createProtocolsViewModel.Protocol.Urls = createProtocolsViewModel.Protocol.Urls.Where(u => u.LinkDescription != null && u.Url != null).ToList();
 
-                    createProtocolsViewModel.Protocol.CreationDate = DateTime.Now;
+                    createProtocolsViewModel.Protocol.CreationDate = AppUtility.ElixirDate();
                     createProtocolsViewModel.Protocol.ApplicationUserCreatorID = _userManager.GetUserId(User);
                     if (createProtocolsViewModel.Protocol.ProtocolID == 0)
                     {

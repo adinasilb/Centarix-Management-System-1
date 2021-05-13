@@ -62,7 +62,7 @@
             </span>
         </div>
         <div class="col-2">
-            @if (Model.IsNew || Model.InternalCalibration.Date > DateTime.Now)
+            @if (Model.IsNew || Model.InternalCalibration.Date > AppUtility.ElixirDate())
             {
                 <button type="button" class="close modal-close-padding modal-close-style removeNewInternalCalibration" aria-label="Close"  index="@Model.InternalCalibrationIndex">
                     <span aria-hidden="true">&times;</span>

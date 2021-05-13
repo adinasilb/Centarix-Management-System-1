@@ -47,7 +47,7 @@
                         {
                             <div style="font-size:3.25rem;">@user.FirstName&nbsp;@user.LastName</div>
                             <div class="mt-3 timekeeper-font-color font-weight-bold">
-                                <label style="font-size:2.0625rem;">Entered @Model.Entry?.ToString("HH:mm"), Working <span id="working">@((DateTime.Now - Model.Entry)?.ToString(@"hh\:mm\:ss"))</span></label>
+                                <label style="font-size:2.0625rem;">Entered @Model.Entry?.ToString("HH:mm"), Working <span id="working">@((AppUtility.ElixirDate() - Model.Entry)?.ToString(@"hh\:mm\:ss"))</span></label>
                             </div>
                         }
                         else
@@ -63,11 +63,11 @@
                 </div>
             </div>
             <div class="col-4">
-                <div id="time" style="        font-size: 4.9375rem;" class="entry-exit-background pt-3 pb-3 text-center col-8">@DateTime.Now.ToShortTimeString()</div>
-                <div class="mt-4" style="font-size:2rem;">@DateTime.Now.ToLongDateString()</div>
+                <div id="time" style="        font-size: 4.9375rem;" class="entry-exit-background pt-3 pb-3 text-center col-8">@AppUtility.ElixirDate().ToShortTimeString()</div>
+                <div class="mt-4" style="font-size:2rem;">@AppUtility.ElixirDate().ToLongDateString()</div>
                 @{ var ci = CultureInfo.CreateSpecificCulture("he-IL");
                     ci.DateTimeFormat.Calendar = new HebrewCalendar();
-                    var hebrewDate = DateTime.Now.Date.ToString("dd MMM yyyy", ci); }
+                    var hebrewDate = AppUtility.ElixirDate().Date.ToString("dd MMM yyyy", ci); }
                 <div style="font-size:2rem;">@hebrewDate</div>
             </div>
         </div>
@@ -157,7 +157,7 @@
                     <button class="col-8 timekeeper-color rounded-pill border-0 open-work-from-home-modal text-white  ReportHours heading-1 pt-3 pb-3 pr-5 pl-5 " type="button">Work From Home</button>
                 </div>
                 <div class="row mt-5 text-left ">
-                    <button class=" col-8 timekeeper-color rounded-pill border-0 open-update-hours-modal text-white ReportHours heading-1 pt-3 pb-3 pr-5 pl-5" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" type="button">Update Hours</button>
+                    <button class=" col-8 timekeeper-color rounded-pill border-0 open-update-hours-modal text-white ReportHours heading-1 pt-3 pb-3 pr-5 pl-5" value="@AppUtility.ElixirDate().Date.ToString("yyyy-MM-dd")" type="button">Update Hours</button>
                 </div>
             </div>
         </div>

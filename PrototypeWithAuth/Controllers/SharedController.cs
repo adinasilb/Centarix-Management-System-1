@@ -32,7 +32,7 @@ namespace PrototypeWithAuth.Controllers
             var hours = _context.EmployeeHours.Include(eh => eh.OffDayType).Include(eh => eh.EmployeeHoursStatusEntry1)
                 .Include(eh => eh.CompanyDayOff).ThenInclude(cdo => cdo.CompanyDayOffType)
                 .Include(eh => eh.PartialOffDayType).Where(eh => eh.EmployeeID == user.Id)
-                .Where(eh => eh.Date.Month == month && eh.Date.Year == year && eh.Date.Date <= DateTime.Now.Date)
+                .Where(eh => eh.Date.Month == month && eh.Date.Year == year && eh.Date.Date <= AppUtility.ElixirDate().Date)
                 .OrderByDescending(eh => eh.Date).ToList();
 
             List<EmployeeHoursAndAwaitingApprovalViewModel> hoursList = new List<EmployeeHoursAndAwaitingApprovalViewModel>();
@@ -65,12 +65,12 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 
-                var sickHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 1 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                sickDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year &&  eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
+                var sickHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 1 && eh.Date <= AppUtility.ElixirDate().Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                sickDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year &&  eh.OffDayTypeID == 1 && eh.Date <= AppUtility.ElixirDate().Date).Count();
                 sickDaysTaken = Math.Round(sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay), 2);
                 
-                var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Count();
+                var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= AppUtility.ElixirDate().Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= AppUtility.ElixirDate().Date && eh.Date.Month == month).Count();
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
                 
                 totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), _context.CompanyDayOffs.ToList()) - (vacationDaysTaken + sickDaysTaken);
@@ -102,21 +102,21 @@ namespace PrototypeWithAuth.Controllers
             {
                 double vacationDays = 0;
                 double sickDays = 0;
-                double offDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == offDayTypeID && eh.Date <= DateTime.Now.Date &&eh.IsBonus==false).Count();
+                double offDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == offDayTypeID && eh.Date <= AppUtility.ElixirDate().Date &&eh.IsBonus==false).Count();
                 if (user.EmployeeStatusID == 1 && offDayTypeID==2)
                 {
-                    var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                    var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= AppUtility.ElixirDate().Date && eh.IsBonus == false).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                     offDaysTaken = Math.Round(offDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
                 }
-                if (year == AppUtility.YearStartedTimeKeeper && year == DateTime.Now.Year)
+                if (year == AppUtility.YearStartedTimeKeeper && year == AppUtility.ElixirDate().Year)
                 {
-                    int month = DateTime.Now.Month;
+                    int month = AppUtility.ElixirDate().Month;
                     vacationDays = (user.VacationDaysPerMonth * month) + user.RollOverVacationDays;
                     sickDays = (user.SickDaysPerMonth * month) + user.RollOverSickDays;
                 }
                 else if (year == AppUtility.YearStartedTimeKeeper)
                 {
-                    int month = DateTime.Now.Month;
+                    int month = AppUtility.ElixirDate().Month;
                     vacationDays = user.VacationDays + user.RollOverVacationDays;
                     sickDays = user.SickDays + user.RollOverSickDays;
                 }
@@ -126,9 +126,9 @@ namespace PrototypeWithAuth.Controllers
                     vacationDays = user.VacationDaysPerMonth * month;
                     sickDays = user.SickDays * month;
                 }
-                else if (year == DateTime.Now.Year)
+                else if (year == AppUtility.ElixirDate().Year)
                 {
-                    int month = DateTime.Now.Month;
+                    int month = AppUtility.ElixirDate().Month;
                     vacationDays = (user.VacationDaysPerMonth * month);
                     sickDays = (user.SickDaysPerMonth * month);
                 }

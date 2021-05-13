@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Data;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,7 +31,7 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         public DateTime CommentTimeStamp
         {
-            get => _CommentTimeStamp == new DateTime() ? DateTime.Now : _CommentTimeStamp;
+            get => _CommentTimeStamp == new DateTime() ? AppUtility.ElixirDate() : _CommentTimeStamp;
             set { _CommentTimeStamp = value; }
         }
     }

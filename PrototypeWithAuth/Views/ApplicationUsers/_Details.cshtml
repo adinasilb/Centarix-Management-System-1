@@ -73,7 +73,7 @@
             </td>
             <td width="10%">
                 @employee.Employee.StartedWorking.ToString("dd'/'MM'/'yyyy")<br/> 
-                @(DateTime.Now.Subtract(employee.Employee.StartedWorking).Days/365).@(((DateTime.Now.Year - employee.Employee.StartedWorking.Year) *12 + DateTime.Now.Month - employee.Employee.StartedWorking.Month)%12)
+                @(AppUtility.ElixirDate().Subtract(employee.Employee.StartedWorking).Days/365).@(((AppUtility.ElixirDate().Year - employee.Employee.StartedWorking.Year) *12 + AppUtility.ElixirDate().Month - employee.Employee.StartedWorking.Month)%12)
             </td>
             <td width="9%">
                 @{ var scope = Math.Round(employee.Employee.SalariedEmployee?.WorkScope ?? 0) == 0 ? "" : Math.Round(employee.Employee.SalariedEmployee?.WorkScope ?? 0) + "%";}

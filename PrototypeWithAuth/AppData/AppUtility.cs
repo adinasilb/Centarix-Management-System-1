@@ -676,5 +676,13 @@ namespace PrototypeWithAuth.AppData
             previousPayment = currentInstallment;
             return currentInstallment;
         }
+
+        public static DateTime ElixirDate()
+        {
+            DateTime utcTime = DateTime.UtcNow;
+            TimeZoneInfo myZone = TimeZoneInfo.FindSystemTimeZoneById("Israel Standard Time");
+            DateTime custDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, myZone);
+            return custDateTime;
+        }
     }
 }

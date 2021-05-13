@@ -1,4 +1,5 @@
 ﻿using Org.BouncyCastle.Asn1.Mozilla;
+using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.Data;
 using System;
 using System.Collections.Generic;
@@ -25,8 +26,8 @@ namespace PrototypeWithAuth.Models
                 int _age = 0;
                 if (DOB != null)
                 {
-                    _age = DateTime.Now.Year - DOB.Year;
-                    if (DateTime.Now.DayOfYear < DOB.DayOfYear)
+                    _age = AppUtility.ElixirDate().Year - DOB.Year;
+                    if (AppUtility.ElixirDate().DayOfYear < DOB.DayOfYear)
                     {
                         _age--;
                     }

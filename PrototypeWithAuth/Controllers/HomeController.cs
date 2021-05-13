@@ -51,7 +51,7 @@ namespace PrototypeWithAuth.Controllers
                         fillInTimekeeperNotifications(employee);
                     }
                 }
-                user.LastLogin = DateTime.Now;
+                user.LastLogin = AppUtility.ElixirDate();
                 _context.Update(user);
                 _context.SaveChanges();
             }
@@ -76,7 +76,7 @@ namespace PrototypeWithAuth.Controllers
             var updateDate = latestRate.LastUpdated;
             if (updateDate.Date != DateTime.Today)
             {
-                latestRate.LastUpdated = DateTime.Now;
+                latestRate.LastUpdated = AppUtility.ElixirDate();
                 latestRate.LatestExchangeRate = AppUtility.GetExchangeRateFromApi();
                 _context.Update(latestRate);
                 await _context.SaveChangesAsync();
@@ -169,7 +169,7 @@ namespace PrototypeWithAuth.Controllers
         {
             ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
             DateTime lastReadNotfication = currentUser.DateLastReadNotifications;
-            currentUser.DateLastReadNotifications = DateTime.Now;
+            currentUser.DateLastReadNotifications = AppUtility.ElixirDate();
             _context.Update(currentUser);
             _context.SaveChanges();
             return true;
@@ -238,7 +238,7 @@ namespace PrototypeWithAuth.Controllers
         private void fillInOrderLate(ApplicationUser user)
         
         {
-            if (user.LastLogin.Date != DateTime.Now.Date)
+            if (user.LastLogin.Date != AppUtility.ElixirDate().Date)
             {
 
                 var lateOrders = _context.Requests.Where(r => r.ApplicationUserCreatorID == user.Id).Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null)
@@ -253,7 +253,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
                     requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd/MM/yyyy");
                     requestNotification.NotificationStatusID = 1;
-                    requestNotification.TimeStamp = DateTime.Now;
+                    requestNotification.TimeStamp = AppUtility.ElixirDate();
                     requestNotification.Controller = "Requests";
                     requestNotification.Action = "NotificationsView";
                     requestNotification.OrderDate = request.ParentRequest.OrderDate;
@@ -267,7 +267,7 @@ namespace PrototypeWithAuth.Controllers
         private void fillInTimekeeperNotifications(ApplicationUser user)
         {
 
-            if (user.LastLogin.Date != DateTime.Now.Date)
+            if (user.LastLogin.Date != AppUtility.ElixirDate().Date)
             {
                 var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
                     .Where(r => r.Date.Date >= user.LastLogin.Date && r.Date.Date < DateTime.Today);
@@ -279,7 +279,7 @@ namespace PrototypeWithAuth.Controllers
                     timekeeperNotification.ApplicationUserID = e.EmployeeID;
                     timekeeperNotification.Description = "no hours reported for " + e.Date.ToString("dd/MM/yyyy");
                     timekeeperNotification.NotificationStatusID = 5;
-                    timekeeperNotification.TimeStamp = DateTime.Now;
+                    timekeeperNotification.TimeStamp = AppUtility.ElixirDate();
                     timekeeperNotification.Controller = "Timekeeper";
                     timekeeperNotification.Action = "SummaryHours";
                     _context.Update(timekeeperNotification);

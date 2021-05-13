@@ -317,7 +317,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
                                 vendorComment.ApplicationUserID = userid;
-                                vendorComment.CommentTimeStamp = DateTime.Now;
+                                vendorComment.CommentTimeStamp = AppUtility.ElixirDate();
                                 _context.Add(vendorComment);
 
                             }
@@ -476,7 +476,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 vendorComment.VendorID = createSupplierViewModel.Vendor.VendorID;
                                 vendorComment.ApplicationUserID = _userManager.GetUserId(User);
-                                vendorComment.CommentTimeStamp = DateTime.Now;
+                                vendorComment.CommentTimeStamp = AppUtility.ElixirDate();
                                 _context.Update(vendorComment);
 
                             }

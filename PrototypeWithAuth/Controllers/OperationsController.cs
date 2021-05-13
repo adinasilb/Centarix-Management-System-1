@@ -71,7 +71,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber.Value;
                 }
-                parentRequest.OrderDate = DateTime.Now;
+                parentRequest.OrderDate = AppUtility.ElixirDate();
                 parentRequest.OrderNumber = lastParentRequestOrderNum;
                 request.ParentRequest = parentRequest;
                 _context.Update(request);
@@ -89,7 +89,7 @@ namespace PrototypeWithAuth.Controllers
 
         private bool checkIfInBudget(Request request)
         {
-            DateTime firstOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            DateTime firstOfMonth = new DateTime(AppUtility.ElixirDate().Year, AppUtility.ElixirDate().Month, 1);
             if (request.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
             {//operational
                 var pricePerUnit = request.Cost;

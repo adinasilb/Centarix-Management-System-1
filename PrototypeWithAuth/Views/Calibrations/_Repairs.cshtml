@@ -65,7 +65,7 @@
             </span>
         </div>
         <div class="col-2">
-            @if (Model.IsNew || Model.Repair.Date > DateTime.Now)
+            @if (Model.IsNew || Model.Repair.Date > AppUtility.ElixirDate())
             {
                 <button type="button" class="close modal-close-padding modal-close-style removeNewRepair" aria-label="Close" index="@Model.RepairIndex">
                     <span aria-hidden="true">&times;</span>

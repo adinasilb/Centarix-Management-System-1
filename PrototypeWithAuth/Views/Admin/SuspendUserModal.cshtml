@@ -3,7 +3,7 @@
 @{
     bool Suspend = true;
     var suspendText = "suspend";
-    if (Model.LockoutEnabled && Model.LockoutEnd > DateTime.Now && Model.IsSuspended)
+    if (Model.LockoutEnabled && Model.LockoutEnd > AppUtility.ElixirDate() && Model.IsSuspended)
     {
         Suspend = false;
         suspendText = "unsuspend";

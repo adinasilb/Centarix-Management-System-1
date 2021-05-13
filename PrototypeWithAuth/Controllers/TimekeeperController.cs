@@ -99,12 +99,12 @@ namespace PrototypeWithAuth.Controllers
                     {
                         if (todaysEntry == null)
                         {
-                            EmployeeHours todaysHours = new EmployeeHours { EmployeeID = userid, Entry1 = DateTime.Now, Date = DateTime.Now };
+                            EmployeeHours todaysHours = new EmployeeHours { EmployeeID = userid, Entry1 = AppUtility.ElixirDate(), Date = AppUtility.ElixirDate() };
                             todaysEntry = todaysHours;
                         }
                         else
                         {
-                            todaysEntry.Entry1 = DateTime.Now;
+                            todaysEntry.Entry1 = AppUtility.ElixirDate();
 
                         }
                         _context.EmployeeHours.Update(todaysEntry);
@@ -114,14 +114,14 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit1)
                     {
-                        todaysEntry.Exit1 = DateTime.Now;
+                        todaysEntry.Exit1 = AppUtility.ElixirDate();
                         _context.EmployeeHours.Update(todaysEntry);
                         await _context.SaveChangesAsync();
                         entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
                     }
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry2)
                     {
-                        todaysEntry.Entry2 = DateTime.Now;
+                        todaysEntry.Entry2 = AppUtility.ElixirDate();
                         _context.EmployeeHours.Update(todaysEntry);
                         await _context.SaveChangesAsync();
                         entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
@@ -130,7 +130,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit2)
                     {
-                        todaysEntry.Exit2 = DateTime.Now;
+                        todaysEntry.Exit2 = AppUtility.ElixirDate();
                         _context.EmployeeHours.Update(todaysEntry);
                         await _context.SaveChangesAsync();
                         entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
@@ -169,7 +169,7 @@ namespace PrototypeWithAuth.Controllers
             var user = _context.Users.OfType<Employee>().Where(u => u.Id == userid).Include(u => u.SalariedEmployee).FirstOrDefault();
             if (user != null)
             {
-                ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, DateTime.Now.Year);
+                ReportDaysViewModel reportDaysViewModel = GetSummaryDaysOffModel(userid, user, AppUtility.ElixirDate().Year);
                 return View(reportDaysViewModel);
 
             }
@@ -196,14 +196,14 @@ namespace PrototypeWithAuth.Controllers
         }
         private ReportDaysViewModel GetSummaryDaysOffModel(string userid, Employee user, int year)
         {
-            int month = DateTime.Now.Month;
+            int month = AppUtility.ElixirDate().Month;
             double vacationDays =  user.VacationDaysPerMonth * month;
             double sickDays = user.SickDays * month;
             var daysOffViewModel = new ReportDaysViewModel
             {
-                VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).OrderByDescending(eh => eh.Date),
-                SickDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).OrderByDescending(eh => eh.Date),
-                SpecialDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 4 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).OrderByDescending(eh => eh.Date),
+                VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2 && eh.Date <= AppUtility.ElixirDate().Date && eh.IsBonus == false).OrderByDescending(eh => eh.Date),
+                SickDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 1 && eh.Date <= AppUtility.ElixirDate().Date && eh.IsBonus == false).OrderByDescending(eh => eh.Date),
+                SpecialDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 4 && eh.Date <= AppUtility.ElixirDate().Date && eh.IsBonus == false).OrderByDescending(eh => eh.Date),
                 SelectedYear = year
             };
             var sickDaysVacationDaysLeft = getVacationSickDaysLeft(user, year);
@@ -218,27 +218,27 @@ namespace PrototypeWithAuth.Controllers
         {
             double vacationDays = 0;
             double sickDays = 0;
-            double vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Count();
-            double sickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Count();
+            double vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= AppUtility.ElixirDate().Date && eh.IsBonus == false).Count();
+            double sickDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= AppUtility.ElixirDate().Date && eh.IsBonus == false).Count();
             if (user.EmployeeStatusID == 1)
             {
-                var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= AppUtility.ElixirDate().Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
 
-                var sickHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                var sickHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 1 && eh.Date <= AppUtility.ElixirDate().Date).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                 sickDaysTaken = Math.Round(sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay), 2);
             }
 
-            var unpaidLeaveTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 5 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Count();
+            var unpaidLeaveTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 5 && eh.Date <= AppUtility.ElixirDate().Date && eh.IsBonus == false).Count();
             if (year == AppUtility.YearStartedTimeKeeper & year == year)
             {
-                int month = DateTime.Now.Month;
+                int month = AppUtility.ElixirDate().Month;
                 vacationDays = (user.VacationDaysPerMonth * month) + user.RollOverVacationDays;
                 sickDays = (user.SickDaysPerMonth * month) + user.RollOverSickDays;
             }
             else if (year == AppUtility.YearStartedTimeKeeper)
             {
-                int month = DateTime.Now.Month;
+                int month = AppUtility.ElixirDate().Month;
                 vacationDays = user.VacationDays + user.RollOverVacationDays;
                 sickDays = user.SickDays + user.RollOverSickDays;
             }
@@ -248,9 +248,9 @@ namespace PrototypeWithAuth.Controllers
                 vacationDays = user.VacationDaysPerMonth * month;
                 sickDays = user.SickDays * month;
             }
-            else if (year == DateTime.Now.Year)
+            else if (year == AppUtility.ElixirDate().Year)
             {
-                int month = DateTime.Now.Month;
+                int month = AppUtility.ElixirDate().Month;
                 vacationDays = (user.VacationDaysPerMonth * month) + pastYearViewModel.VacationDaysLeft;
                 sickDays = (user.SickDaysPerMonth * month) + pastYearViewModel.SickDaysLeft;
             }
@@ -308,14 +308,14 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "TimeKeeper")]
         public async Task<IActionResult> SummaryHours(int? Month, int? Year, string errorMessage = null)
         {
-            var year = Year ?? DateTime.Now.Year;
-            var month = Month ?? DateTime.Now.Month;
+            var year = Year ?? AppUtility.ElixirDate().Year;
+            var month = Month ?? AppUtility.ElixirDate().Month;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.TimeKeeper;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.TimekeeperSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SummaryHours;
             var userid = _userManager.GetUserId(User);
             var user = _context.Employees.Where(u => u.Id == userid).Include(e => e.SalariedEmployee).FirstOrDefault();
-            //int month = Month?.Month ?? DateTime.Now.Month;
+            //int month = Month?.Month ?? AppUtility.ElixirDate().Month;
             return PartialView(base.SummaryHoursFunction(month, year, user, errorMessage));
         }     
 
@@ -361,14 +361,14 @@ namespace PrototypeWithAuth.Controllers
                 {
                     year = user.StartedWorking.Year;
                 }
-                var thisYear = DateTime.Now.Year;
+                var thisYear = AppUtility.ElixirDate().Year;
 
                 DaysOffViewModel pastYearViewModel = new DaysOffViewModel();
 
                 while (year <= thisYear)
                 {
                     var summaryOfDaysOff = getYearsVacationSickDays(user, year, pastYearViewModel);
-                    if (year == DateTime.Now.Year)
+                    if (year == AppUtility.ElixirDate().Year)
                     {
                         summaryOfDaysOffViewModel.VacationDaysLeft = summaryOfDaysOff.VacationDaysLeft;
                         summaryOfDaysOffViewModel.SickDaysLeft = summaryOfDaysOff.SickDaysLeft;
@@ -613,17 +613,17 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     var userID = _userManager.GetUserId(User);
-                    var todaysEntry = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == DateTime.Now.Date).FirstOrDefault();
+                    var todaysEntry = _context.EmployeeHours.Where(eh => eh.EmployeeID == userID && eh.Date.Date == AppUtility.ElixirDate().Date).FirstOrDefault();
                     if (todaysEntry.Exit1 == null)
                     {
-                        todaysEntry.Exit1 = DateTime.Now;
+                        todaysEntry.Exit1 = AppUtility.ElixirDate();
                         _context.EmployeeHours.Update(todaysEntry);
                         _context.SaveChanges();
                     }
 
                     else if (todaysEntry.Exit2 == null)
                     {
-                        todaysEntry.Exit2 = DateTime.Now;
+                        todaysEntry.Exit2 = AppUtility.ElixirDate();
                         _context.EmployeeHours.Update(todaysEntry);
                         _context.SaveChanges();
                     }
@@ -961,7 +961,7 @@ namespace PrototypeWithAuth.Controllers
                                     ApplicationUserID = newEmployeeHour.EmployeeID,
                                     Description = "no hours reported for " + newEmployeeHour.Date.ToString("dd/MM/yyyy"),
                                     NotificationStatusID = 5,
-                                    TimeStamp = DateTime.Now,
+                                    TimeStamp = AppUtility.ElixirDate(),
                                     Controller = "Timekeeper",
                                     Action = "SummaryHours"
                                 };

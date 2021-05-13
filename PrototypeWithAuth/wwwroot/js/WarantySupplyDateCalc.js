@@ -1,5 +1,6 @@
 ﻿
-	$(".expected-supply-days").change(function () {
+$(".expected-supply-days").change(function () {
+		console.log("date" +moment().toDate())
 		var OrderDate; 
 		if ($('.for-supply-date-calc').length > 0) {
 			OrderDate =moment($('.for-supply-date-calc').val().split("/").reverse().join("-"));

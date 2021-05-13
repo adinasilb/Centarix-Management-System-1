@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using PrototypeWithAuth.Data;
 using System.Diagnostics;
+using PrototypeWithAuth.AppData;
 
 namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 {
@@ -125,7 +126,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
                 if (!user.IsSuspended) //don't want to unlock them out if they are suspended
                 {
-                    user.LockoutEnd = DateTime.Now;
+                    user.LockoutEnd = AppUtility.ElixirDate();
                     user.LockoutEnabled = false;
                     _context.Update(user);
                     await _context.SaveChangesAsync();

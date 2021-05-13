@@ -65,7 +65,7 @@
                                     var expectedArrivalDate = orderDate.AddDays((double)item.Request.ExpectedSupplyDays);
 
                                 }
-                                @(DateTime.Now.Date.Subtract(expectedArrivalDate.Date).Days)
+                                @(AppUtility.ElixirDate().Date.Subtract(expectedArrivalDate.Date).Days)
                             </td>
                             <td class="text-right mr-3">
                                 <button class=" order-late btn-icon danger-color" data-title="Ask" value="@item.RequestID">Ask</button>

@@ -67,13 +67,13 @@ namespace PrototypeWithAuth.Controllers
             List<Calibration> calibrations = await _context.Calibrations.Where(c => c.RequestID == requestid).ToListAsync();
             List<ExternalCalibration> externalCalibrations = await _context.ExternalCalibrations
                 .Where(c => c.RequestID == requestid)
-                .Where(c => c.Date > DateTime.Now).ToListAsync();
+                .Where(c => c.Date > AppUtility.ElixirDate()).ToListAsync();
             List<InternalCalibration> internalCalibrations = await _context.InternalCalibrations
                 .Where(c => c.RequestID == requestid)
-                .Where(c => c.Date > DateTime.Now).ToListAsync();
+                .Where(c => c.Date > AppUtility.ElixirDate()).ToListAsync();
             List<Repair> repairs = await _context.Repairs
                 .Where(c => c.RequestID == requestid)
-                .Where(c => c.Date > DateTime.Now).ToListAsync();
+                .Where(c => c.Date > AppUtility.ElixirDate()).ToListAsync();
             //delete temp files that may not have been deleted
             string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string requestFolder = Path.Combine(uploadFolder, "0");
@@ -82,7 +82,7 @@ namespace PrototypeWithAuth.Controllers
             CreateCalibrationViewModel createCalibrationViewModel = new CreateCalibrationViewModel
             {
                 ProductDescription = request.Product.ProductName,
-                PastCalibrations = _context.Calibrations.Where(c => c.RequestID == requestid).Where(c => c.Date < DateTime.Now).Include(c => c.CalibrationType).ToList(),
+                PastCalibrations = _context.Calibrations.Where(c => c.RequestID == requestid).Where(c => c.Date < AppUtility.ElixirDate()).Include(c => c.CalibrationType).ToList(),
                 Repairs = repairs,
                 ExternalCalibrations = externalCalibrations,
                 InternalCalibration = internalCalibrations,
@@ -163,7 +163,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 Repair = new Repair()
                 {
-                    Date = DateTime.Now
+                    Date = AppUtility.ElixirDate()
                 },
                 RepairIndex = RepairIndex,
                 IsNew = true
@@ -181,7 +181,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 ExternalCalibration = new ExternalCalibration()
                 {
-                    Date = DateTime.Now
+                    Date = AppUtility.ElixirDate()
                 },
                 ExternalCalibrationIndex = ECIndex,
                 IsNew = true
@@ -198,7 +198,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 InternalCalibration = new InternalCalibration()
                 {
-                    Date = DateTime.Now
+                    Date = AppUtility.ElixirDate()
                 },
                 InternalCalibrationIndex = ICIndex,
                 IsNew = true
@@ -329,7 +329,7 @@ namespace PrototypeWithAuth.Controllers
             _RepairsViewModel repairsViewModel = new _RepairsViewModel()
             {
                 RequestID = requestId,
-                Repair = new Repair() { Date = DateTime.Now }
+                Repair = new Repair() { Date = AppUtility.ElixirDate() }
 
             };
             if (repair != null)

@@ -69,7 +69,7 @@ namespace PrototypeWithAuth.Controllers
 
             if (summaryChartsViewModel.SelectedYears == null)
             {
-                requests.Where(r => r.CreationDate.Year == DateTime.Now.Year);
+                requests.Where(r => r.CreationDate.Year == AppUtility.ElixirDate().Year);
             }
             else
             {
@@ -347,7 +347,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ExpensesSummary;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Tables;
 
-            SummaryTablesViewModel summaryTablesViewModel = GetSummaryTablesViewModel(AppUtility.CurrencyEnum.USD, DateTime.Now.Year);
+            SummaryTablesViewModel summaryTablesViewModel = GetSummaryTablesViewModel(AppUtility.CurrencyEnum.USD, AppUtility.ElixirDate().Year);
             return View(summaryTablesViewModel);
         }
 
@@ -474,7 +474,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(p => p.SubProjects).ThenInclude(sp => sp.Requests).ThenInclude(r => r.Payments.FirstOrDefault().Invoice)
                 .ToList();
 
-            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Now.Year }));
+            return View(GetStatisticsProjectViewModel(AllProjects, new List<int>() { AppUtility.ElixirDate().Month }, new List<int>() { AppUtility.ElixirDate().Year }));
         }
 
         [Authorize(Roles = "Reports")]
@@ -555,7 +555,7 @@ namespace PrototypeWithAuth.Controllers
 
             var categoryTypesSelected = _context.CategoryTypes.Select(ct => ct.CategoryTypeID).ToList();
 
-            return View(GetStatisticsItemViewModel(true, false, categoryTypesSelected, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Now.Year }));
+            return View(GetStatisticsItemViewModel(true, false, categoryTypesSelected, new List<int>() { AppUtility.ElixirDate().Month }, new List<int>() { AppUtility.ElixirDate().Year }));
         }
 
         [HttpGet]
@@ -656,7 +656,7 @@ namespace PrototypeWithAuth.Controllers
             var parentCategories = _context.ParentCategories.ToList();
             var catTypes = _context.CategoryTypes.Select(ct => ct.CategoryTypeID).ToList();
 
-            return View(GetStatisticsCategoryViewModel(parentCategories, catTypes, new List<int>() { DateTime.Now.Month }, new List<int>() { DateTime.Today.Year }));
+            return View(GetStatisticsCategoryViewModel(parentCategories, catTypes, new List<int>() { AppUtility.ElixirDate().Month }, new List<int>() { DateTime.Today.Year }));
         }
 
         [HttpGet]
@@ -728,7 +728,7 @@ namespace PrototypeWithAuth.Controllers
 
             var catTypes = _context.CategoryTypes.ToList();
 
-            return View(GetStatisticsVendorViewModel(catTypes, new List<int> { DateTime.Now.Month }, new List<int> { DateTime.Now.Year }));
+            return View(GetStatisticsVendorViewModel(catTypes, new List<int> { AppUtility.ElixirDate().Month }, new List<int> { AppUtility.ElixirDate().Year }));
         }
 
         [HttpGet]

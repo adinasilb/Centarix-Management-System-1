@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.Data;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,7 +26,7 @@ namespace PrototypeWithAuth.Models
         [DataType(DataType.Date)]
         public DateTime TimeStamp
         {
-            get => _timestamp == new DateTime() ? DateTime.Now : _timestamp;
+            get => _timestamp == new DateTime() ? AppUtility.ElixirDate() : _timestamp;
             set { _timestamp = value; }
         }
     }

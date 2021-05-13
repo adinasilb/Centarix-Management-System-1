@@ -53,9 +53,9 @@
                     <td>@item.Code</td>
                     <td>@item.CalibrationType.Description</td>
                     <td>@item.Date.ToLongDateString()</td>
-                    @{var days = (DateTime.Now - item.Date).Days;
+                    @{var days = (AppUtility.ElixirDate() - item.Date).Days;
                         var dangerColor = "";
-                        if (DateTime.Now >item.Date)
+                        if (AppUtility.ElixirDate() >item.Date)
                         {
                             days *= -1;
                             dangerColor = "color: var(--danger-color) !important;";

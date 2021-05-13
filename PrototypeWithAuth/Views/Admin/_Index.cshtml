@@ -56,13 +56,13 @@
 
                         if (userid != UserManager.GetUserId(User) && user.Employee.IsUser /*&& Model.IsCEO*/) //Viewing User is a CEO and the User to View is not the one signed in
                         {
-                            @*if (user.LockoutEnabled && user.LockoutEnd > DateTime.Now && !user.IsUser)
+                            @*if (user.LockoutEnabled && user.LockoutEnd > AppUtility.ElixirDate() && !user.IsUser)
                                 {
                                     <a href="" class="prevent-js-reload">
                                         <i class="icon-block-24px text-danger-centarix disabled-filter"></i>
                                     </a>
                                 }
-                                else*@ if (user.Employee.LockoutEnabled && user.Employee.LockoutEnd > DateTime.Now && user.Employee.IsSuspended)
+                                else*@ if (user.Employee.LockoutEnabled && user.Employee.LockoutEnd > AppUtility.ElixirDate() && user.Employee.IsSuspended)
                             {
                                 <a href="" data-userid=@userid class="suspend-user-modal-icon" data-toggle="tooltip" data-placement="top"
                                    title="Unuspend" @*class="prevent-js-reload"*@>

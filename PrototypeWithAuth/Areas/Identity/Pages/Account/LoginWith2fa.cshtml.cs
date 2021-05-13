@@ -120,7 +120,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
 
                         var cookieOptions = new CookieOptions
                         {
-                            Expires = DateTime.Now.AddDays(30)
+                            Expires = AppUtility.ElixirDate().AddDays(30)
                         };
                         _httpContextAccessor.HttpContext.Response.Cookies.Append("TwoFactorCookie" + cookieNum, user.Id, cookieOptions);
 
@@ -133,7 +133,7 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                                 Employee = _context.Employees.Where(e => e.Id == user.Id).FirstOrDefault(),
                                 EmployeeID = user.Id,
                                 Address = address,
-                                DateCreated = DateTime.Now
+                                DateCreated = AppUtility.ElixirDate()
                             };
                             _context.PhysicalAddresses.Add(physicalAddress);
                         }

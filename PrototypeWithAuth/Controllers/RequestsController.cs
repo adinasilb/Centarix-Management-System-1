@@ -1114,7 +1114,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
-            RequestIndexPartialViewModel requestIndexPartialViewModel = await GetIndexViewModel(requestIndexObject, Years: new List<int>() { DateTime.Now.Year });
+            RequestIndexPartialViewModel requestIndexPartialViewModel = await GetIndexViewModel(requestIndexObject, Years: new List<int>() { AppUtility.ElixirDate().Year });
             AccountingGeneralViewModel viewModel = new AccountingGeneralViewModel() { RequestIndexPartialViewModel = requestIndexPartialViewModel };
             return PartialView(viewModel);
         }
@@ -1488,7 +1488,7 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                         request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
-                        request.CreationDate = DateTime.Now;
+                        request.CreationDate = AppUtility.ElixirDate();
                         var isInBudget = false;
                         if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)//is proprietry
                         {
@@ -1738,7 +1738,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory = productSubcategory;
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory = productSubcategory.ParentCategory;
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategoryID = productSubcategory.ParentCategoryID;
-            requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
+            requestItemViewModel.Requests.FirstOrDefault().CreationDate = AppUtility.ElixirDate();
             requestItemViewModel.Requests.FirstOrDefault().Cost = 0;
 
 
@@ -1913,12 +1913,12 @@ namespace PrototypeWithAuth.Controllers
                     RequestID = shareRequestViewModel.Request.RequestID,
                     FromApplicationUserID = _userManager.GetUserId(User),
                     ToApplicationUserID = shareRequestViewModel.ApplicationUserID,
-                    TimeStamp = DateTime.Now
+                    TimeStamp = AppUtility.ElixirDate()
                 };
             }
             else
             {
-                sharedRequest.TimeStamp = DateTime.Now;
+                sharedRequest.TimeStamp = AppUtility.ElixirDate();
             }
 
             _context.Update(sharedRequest);
@@ -2313,7 +2313,7 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     //save the new comment
                                     comment.ApplicationUserID = currentUser.Id;
-                                    comment.CommentTimeStamp = DateTime.Now;
+                                    comment.CommentTimeStamp = AppUtility.ElixirDate();
                                     comment.RequestID = request.RequestID;
                                     _context.Update(comment);
                                 }
@@ -2480,7 +2480,7 @@ namespace PrototypeWithAuth.Controllers
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID = 0;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ProductID = oldRequest.ProductID;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
-                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
+                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().CreationDate = AppUtility.ElixirDate();
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubProjectID = oldRequest.SubProjectID;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SerialNumber = oldRequest.Product.SerialNumber;
@@ -2589,7 +2589,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 ApplicationUserID = _userManager.GetUserId(User),
                 OrderNumber = lastParentRequestOrderNum + 1,
-                OrderDate = DateTime.Now
+                OrderDate = AppUtility.ElixirDate()
             };
             while (isRequests)
             {
@@ -2893,10 +2893,10 @@ namespace PrototypeWithAuth.Controllers
                                         requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
                                         requestNotification.Description = "item ordered";
                                         requestNotification.NotificationStatusID = 2;
-                                        requestNotification.TimeStamp = DateTime.Now;
+                                        requestNotification.TimeStamp = AppUtility.ElixirDate();
                                         requestNotification.Controller = "Requests";
                                         requestNotification.Action = "NotificationsView";
-                                        requestNotification.OrderDate = DateTime.Now;
+                                        requestNotification.OrderDate = AppUtility.ElixirDate();
                                         requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                                         _context.Add(requestNotification);
                                     }
@@ -3391,7 +3391,7 @@ namespace PrototypeWithAuth.Controllers
                 Request = request,
                 locationTypesDepthZero = _context.LocationTypes.Where(lt => lt.Depth == 0),
                 locationInstancesSelected = new List<LocationInstance>(),
-                //ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= DateTime.Now || u.LockoutEnd == null).ToListAsync(),
+                //ApplicationUsers = await _context.Users.Where(u => !u.LockoutEnabled || u.LockoutEnd <= AppUtility.ElixirDate() || u.LockoutEnd == null).ToListAsync(),
                 RequestIndexObject = requestIndexObject,
                 PageRequestStatusID = request.RequestStatusID
             };
@@ -3583,7 +3583,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.NotificationStatusID = 4;
                     var FName = _context.Users.Where(u => u.Id == requestReceived.ApplicationUserReceiverID).FirstOrDefault().FirstName;
                     requestNotification.Description = "received by " + FName;
-                    requestNotification.TimeStamp = DateTime.Now;
+                    requestNotification.TimeStamp = AppUtility.ElixirDate();
                     requestNotification.Controller = "Requests";
                     requestNotification.Action = "NotificationsView";
                     requestNotification.Vendor = requestReceived.Product.Vendor.VendorEnName;
@@ -3891,7 +3891,7 @@ namespace PrototypeWithAuth.Controllers
                                 requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
                                 requestNotification.Description = "item approved";
                                 requestNotification.NotificationStatusID = 3;
-                                requestNotification.TimeStamp = DateTime.Now;
+                                requestNotification.TimeStamp = AppUtility.ElixirDate();
                                 requestNotification.Controller = "Requests";
                                 requestNotification.Action = "NotificationsView";
                                 requestNotification.Vendor = request.Product.Vendor.VendorEnName;
@@ -3938,7 +3938,7 @@ namespace PrototypeWithAuth.Controllers
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
                     Requests = requests,
-                    QuoteDate = DateTime.Now,
+                    QuoteDate = AppUtility.ElixirDate(),
                     ParentQuoteID = requests.FirstOrDefault().ParentQuoteID
                 };
 
@@ -4204,7 +4204,7 @@ namespace PrototypeWithAuth.Controllers
                 oldProduct = request.Product;
             }
             var user = _context.Users.Where(u => u.Id == request.ApplicationUserCreatorID).FirstOrDefault();
-            DateTime firstOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            DateTime firstOfMonth = new DateTime(AppUtility.ElixirDate().Year, AppUtility.ElixirDate().Month, 1);
             if (oldProduct.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
             { //lab
                 var pricePerUnit = request.Cost / request.Unit;
@@ -4293,10 +4293,10 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     requestsList = requestsList
-                        .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                        .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < AppUtility.ElixirDate().AddDays(5)).Count() > 0);
                     foreach (var request in requestsList)
                     {
-                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5));
+                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < AppUtility.ElixirDate().AddDays(5));
                         if (currentInstallments.Count() > 0)
                         {
                             var requests = requestsList.ToList();
@@ -4311,7 +4311,7 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 //case AppUtility.SidebarEnum.StandingOrders:
                 //    requestsList = requestsList
-                //.Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                //.Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < AppUtility.ElixirDate().AddDays(5)).Count() > 0);
                 //    break;
                 case AppUtility.SidebarEnum.SpecifyPayment:
                     requestsList = requestsList
@@ -4471,7 +4471,7 @@ namespace PrototypeWithAuth.Controllers
                         //else
                         //{
                         payment.Sum = request.Cost ?? 0;
-                        payment.PaymentDate = DateTime.Now.Date;
+                        payment.PaymentDate = AppUtility.ElixirDate().Date;
                         payment.RequestID = requestToUpdate.RequestID;
                         //}
                         payment.Reference = paymentsPayModalViewModel.Payment.Reference;
@@ -4553,7 +4553,7 @@ namespace PrototypeWithAuth.Controllers
                         //else
                         //{
                         //    payment.Sum = request.Cost ?? 0;
-                        //    payment.PaymentDate = DateTime.Now.Date;
+                        //    payment.PaymentDate = AppUtility.ElixirDate().Date;
                         //    payment.RequestID = requestToUpdate.RequestID;
                         //}
                         payment.Reference = paymentsInvoiceViewModel.Payment.Reference;
@@ -4856,7 +4856,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 ApplicationUserID = _userManager.GetUserId(User),
                 OrderNumber = lastParentRequestOrderNum + 1,
-                OrderDate = DateTime.Now
+                OrderDate = AppUtility.ElixirDate()
             };
             var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject, IsReorder = isReorder};
 
@@ -5094,10 +5094,10 @@ namespace PrototypeWithAuth.Controllers
                 requestNotification.ApplicationUserID = newRequest.ApplicationUserCreatorID;
                 requestNotification.Description = "item created";
                 requestNotification.NotificationStatusID = 2;
-                requestNotification.TimeStamp = DateTime.Now;
+                requestNotification.TimeStamp = AppUtility.ElixirDate();
                 requestNotification.Controller = "Requests";
                 requestNotification.Action = "NotificationsView";
-                requestNotification.OrderDate = DateTime.Now;
+                requestNotification.OrderDate = AppUtility.ElixirDate();
                 _context.Update(requestNotification);
                 await _context.SaveChangesAsync();
             }
@@ -5121,7 +5121,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     request.RequestStatusID = 3;
                     request.ApplicationUserReceiverID = _userManager.GetUserId(User);
-                    request.ArrivalDate = DateTime.Now;
+                    request.ArrivalDate = AppUtility.ElixirDate();
                 }
                 else
                 {
@@ -5270,7 +5270,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 ParentRequest = new ParentRequest(),
                 TermsList = termsList,
-                InstallmentDate = DateTime.Now
+                InstallmentDate = AppUtility.ElixirDate()
             };
             requestIndexObject.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), requests[0].Currency);
             termsViewModel.RequestIndexObject = requestIndexObject;
@@ -5341,7 +5341,7 @@ namespace PrototypeWithAuth.Controllers
                                 //{
                                 //    req.RequestStatusID = 3;
                                 //    req.ApplicationUserReceiverID = _userManager.GetUserId(User);
-                                //    req.ArrivalDate = DateTime.Now;
+                                //    req.ArrivalDate = AppUtility.ElixirDate();
                                 //}
                                 if(req.Product.ProductID ==0)
                                 {
@@ -5367,7 +5367,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 else
                                 {
-                                    payment.PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                                    payment.PaymentDate = new DateTime(AppUtility.ElixirDate().Year, AppUtility.ElixirDate().Month, AppUtility.ElixirDate().Day);
                                     payment.Sum = req.Cost ?? 0;
                                 }
                                 if (SaveUsingSessions)
@@ -5429,10 +5429,10 @@ namespace PrototypeWithAuth.Controllers
                                 requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
                                 requestNotification.Description = "item ordered";
                                 requestNotification.NotificationStatusID = 2;
-                                requestNotification.TimeStamp = DateTime.Now;
+                                requestNotification.TimeStamp = AppUtility.ElixirDate();
                                 requestNotification.Controller = "Requests";
                                 requestNotification.Action = "NotificationsView";
-                                requestNotification.OrderDate = DateTime.Now;
+                                requestNotification.OrderDate = AppUtility.ElixirDate();
                                 requestNotification.Vendor = request.Product.Vendor.VendorEnName;
                                 _context.Add(requestNotification);
                                 i++;
