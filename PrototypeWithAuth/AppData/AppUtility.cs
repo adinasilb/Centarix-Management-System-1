@@ -590,7 +590,10 @@ namespace PrototypeWithAuth.AppData
                         switch (ipAddress.AddressFamily)
                         {
                             case AddressFamily.InterNetwork:
-                                myIpAddress = address.ToString();
+                                if (myIpAddress.ToString().StartsWith("172.27.71"))
+                                {
+                                    myIpAddress = address.ToString();
+                                }
                                 break;
                             default:
                                 break;
