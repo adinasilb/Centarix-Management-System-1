@@ -269,7 +269,8 @@
         e.stopPropagation();
         //alert('here')
         //highlight this
-        
+        $(this).parents('tr').css({ 'background-color': 'rgba(0, 0, 0, .075)' });
+        $(this).parents('tr').addClass('current-item');
         var $itemurl = "/Requests/HistoryItemModal/?id=" + $(this).attr("value") + "&SectionType=" + $("#masterSectionType").val();
         $.fn.CallPageRequest($itemurl, 'historyItem');
     });
