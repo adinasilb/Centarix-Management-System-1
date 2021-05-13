@@ -1399,7 +1399,8 @@ $(function () {
 		}
 		else if ($(this).parents("div.modal").hasClass('historyModal')) {
 			$.fn.CloseModal("history-item");
-			$('div.editModal').find('tr.current-item').css({ 'background-color': 'white !important' });
+			$('div.editModal').find('tr.current-item').removeClass('gray-background');
+			console.log($('div.editModal').find('tr.current-item'))
 		}
 		else {
 			console.log('close edit')
