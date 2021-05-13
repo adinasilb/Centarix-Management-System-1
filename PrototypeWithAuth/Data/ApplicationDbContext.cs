@@ -348,7 +348,7 @@ namespace PrototypeWithAuth.Data
                .HasOne(tl => tl.ParentLine)
                .WithMany()
                .HasForeignKey(tl => tl.ParentLineID)
-               .HasPrincipalKey(tl => tl.PermanentLineID);
+               .HasPrincipalKey(tl => tl.PermanentLineID).IsRequired(false);
 
 
             modelBuilder.Entity<TempLine>()
@@ -360,7 +360,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
             modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
-            modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
+            //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

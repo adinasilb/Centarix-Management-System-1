@@ -600,7 +600,7 @@ namespace PrototypeWithAuth.Controllers
         {
             foreach (var line in TempLines)
             {
-                //Debbie: not sure why we have to put as enumerable but if i don't it does not go thorugh permanent line getter
+    
                 var temp = _context.TempLines.Where(tl => tl.PermanentLineID == line.PermanentLineID).FirstOrDefault();
                 if (temp != null)
                 {

@@ -283,6 +283,10 @@
     <Compile Remove="Data\Migrations\20210513063650_PermaneetIDNullable.Designer.cs" />
     <Compile Remove="Data\Migrations\20210513063806_PermanentIDNullable.cs" />
     <Compile Remove="Data\Migrations\20210513063806_PermanentIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513071025_PermanentIDNullable4.cs" />
+    <Compile Remove="Data\Migrations\20210513071025_PermanentIDNullable4.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513072330_PermanentFKNullable.cs" />
+    <Compile Remove="Data\Migrations\20210513072330_PermanentFKNullable.Designer.cs" />
   </ItemGroup>
 
 
