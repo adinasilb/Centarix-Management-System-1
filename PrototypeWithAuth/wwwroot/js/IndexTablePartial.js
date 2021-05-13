@@ -113,11 +113,12 @@ $(".load-product-details").off('click').on("click", function (e) {
 
 //$("body, .modal").off('click', ".load-product-details-summary").on("click", ".load-product-details-summary", function (e) {
 
-$(".load-product-details-summary").off('click').on("click", function (e) {
+$(".load-product-details-summary").off('click').on("click", function (e) { //why is it being called twice if there's an off click??
 
 	e.preventDefault();
 	e.stopPropagation();
 	$("#loading").show();
+	console.log('in load products details summary');
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
 	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val();
 	$.fn.CallPageRequest($itemurl, "summary");
