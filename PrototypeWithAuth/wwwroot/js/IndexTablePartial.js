@@ -147,7 +147,7 @@ $(".approve-order").off('click').on("click", function (e) {
 	var val = $(this).attr("value");
 	e.preventDefault();
 	$("#loading").show();
-	console.log(".order-type" + val)
+	console.log($(".order-type" + val).val())
 	if ($(".order-type" + val).val() == "1") {
 		console.log("terms")
 		$.ajax({
