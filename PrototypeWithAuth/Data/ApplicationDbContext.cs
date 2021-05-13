@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Entities;
 
 namespace PrototypeWithAuth.Data
@@ -347,8 +348,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TempLine>()
                .HasOne(tl => tl.ParentLine)
                .WithMany()
-               .HasForeignKey(tl => tl.ParentLineID)
-               .HasPrincipalKey(tl => tl.PermanentLineID).IsRequired(false);
+               .HasForeignKey(tl => tl.ParentLineID);
 
 
             modelBuilder.Entity<TempLine>()

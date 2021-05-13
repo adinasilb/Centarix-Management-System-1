@@ -287,6 +287,14 @@
     <Compile Remove="Data\Migrations\20210513071025_PermanentIDNullable4.Designer.cs" />
     <Compile Remove="Data\Migrations\20210513072330_PermanentFKNullable.cs" />
     <Compile Remove="Data\Migrations\20210513072330_PermanentFKNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513072858_test.cs" />
+    <Compile Remove="Data\Migrations\20210513072858_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513073120_virtualPermanentLineID.cs" />
+    <Compile Remove="Data\Migrations\20210513073120_virtualPermanentLineID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513073732_virtualPermanentLineID2.cs" />
+    <Compile Remove="Data\Migrations\20210513073732_virtualPermanentLineID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513075020_fkNotationParentLineID.cs" />
+    <Compile Remove="Data\Migrations\20210513075020_fkNotationParentLineID.Designer.cs" />
   </ItemGroup>
 
 
@@ -306,6 +314,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">

@@ -12,7 +12,8 @@ namespace PrototypeWithAuth.Models
         //public TempLine ParentLine { get; set; }
 
         public int? PermanentLineID{ get; set; }
-        public Line PermanentLine { get; set; }
+        public virtual Line PermanentLine { get; set; }
+        [ForeignKey("PermanentLineID")]
         public TempLine ParentLine { get; set; }
     }
 }
