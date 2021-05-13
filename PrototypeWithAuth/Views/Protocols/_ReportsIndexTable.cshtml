@@ -51,17 +51,18 @@
             </tr>
         </thead>
     </table>
-    <div class="_IndexTableData">
-        @{
-            await Html.RenderPartialAsync("_ReportsIndexTableData", Model);
-        }
-    </div>
+    
 }
-else
+<div class="_IndexTableData">
+    @{
+        await Html.RenderPartialAsync("_ReportsIndexTableData", Model);
+    }
+</div>
+@*else
 {
     <div>
         @{
             await Html.RenderPartialAsync("~/Views/Shared/_EmptyPagePartial.cshtml", Model);
         }
     </div>
-}
+}*@

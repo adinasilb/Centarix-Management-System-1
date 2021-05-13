@@ -57,8 +57,39 @@ namespace PrototypeWithAuth.AppData
             set { _PageType = value; }
         }
         public AppUtility.MenuItems SectionType { get; set; }
-        public List<int> Months { get; set; }
-        public List<int> Years { get; set; }
+
+        private List<int> _Months { get; set; }
+        public List<int> Months
+        {
+            get
+            {
+                if (_Months == null)
+                {
+                    return new List<int>();
+                }
+                else
+                {
+                    return _Months;
+                }
+            }
+            set { _Months = value; }
+        }
+        private List<int> _Years { get; set; }
+        public List<int> Years
+        {
+            get
+            {
+                if (_Years == null)
+                {
+                    return new List<int>();
+                }
+                else
+                {
+                    return _Years;
+                }
+            }
+            set { _Years = value; }
+        }
         public int ReportCategoryID { get; set; }
     }
 }

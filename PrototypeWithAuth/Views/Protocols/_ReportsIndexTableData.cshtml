@@ -11,8 +11,16 @@
 }
 <div class="">
     <input type="hidden" asp-for="ReportsIndexObject.PageNumber" class="page-number" />
-    <table class="table table-headerspaced table-noheaderlines table-hover ">
+    <table class="table table-headerspaced table-noheaderlines table-hover " style="height:100%">
         <tbody>
+            <tr>
+                <td class=" px-4 create-report">
+                    <button class=" btn p-0 m-0 no-box-shadow d-flex align-content-center">
+                        <div class=" heading-1">Open Weekly Report</div>
+                        <i class="icon-add_circle_outline-24px1 protocols-filter pl-3" style="font-size:40px;"></i>
+                    </button>
+                </td>
+            </tr>
             @for (int i = 0; i < Model.PagedList.Count; i++)
             {
                 <tr class="text-center ">
@@ -86,3 +94,4 @@
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
 }
 <script src="~/js/ProtocolsIndexTablePartial.js"></script>
+<script src="~/js/ReportsIndexTablePartial.js"></script>

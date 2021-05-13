@@ -175,7 +175,7 @@ namespace PrototypeWithAuth.Controllers
         private async Task<ReportsIndexViewModel> GetReportsIndexViewModel(ReportsIndexObject reportsIndexObject)
         {
             IQueryable<Report> ReportsPassedIn = Enumerable.Empty<Report>().AsQueryable();
-            IQueryable<Report> ReportsPassedInWithInclude = _context.Reports
+            IQueryable<Report> ReportsPassedInWithInclude = _context.Reports.Where(r => reportsIndexObject.Years.Contains(r.DateCreated.Year) && reportsIndexObject.Months.Contains(r.DateCreated.Month) && r.ReportCategoryID == reportsIndexObject.ReportCategoryID)
                 .Include(r => r.ReportType).Include(r => r.ReportSections);
 
             switch (reportsIndexObject.PageType)
@@ -1199,6 +1199,33 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             return error;
+        }
+
+        public async Task<IActionResult> NewReportModal(int reportCategoryId, AppUtility.SidebarEnum sidebarType)
+        {
+            var reportTypeID = 0;
+            switch(sidebarType)
+            {
+                case AppUtility.SidebarEnum.DailyReports:
+                    reportTypeID = 1;
+                    break;
+                case AppUtility.SidebarEnum.WeeklyReports:
+                    reportTypeID = 2;
+                    break;
+                case AppUtility.SidebarEnum.MonthlyReports:
+                    reportTypeID = 3;
+                    break;
+            }
+
+            var reportType = _context.ReportTypes.Where(rt => rt.ReportTypeID == reportTypeID).FirstOrDefault();
+            NewReportViewModel newReportViewModel = new NewReportViewModel()
+            {
+                ReportDate = DateTime.Now,
+                ReportType = reportType,
+                ReportCategoryID = reportCategoryId
+            };
+
+            return PartialView(newReportViewModel);
         }
 
     }

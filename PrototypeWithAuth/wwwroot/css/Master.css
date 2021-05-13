@@ -443,6 +443,14 @@ input:not(input[type=button], input[type=submit], .heading-1) {
     color: var(--operations-color) !important;
 }
 
+.custom-protocols {
+    border: .125rem solid var(--protocols-color) !important;
+    background-color: transparent;
+    font-weight: var(--bold-light);
+    font-size: 1.438rem;
+    color: var(--protocols-color) !important;
+}
+
 .custom-clear-button-table {
     background-color: transparent;
     font-weight: var(--bold-medium);

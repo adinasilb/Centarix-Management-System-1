@@ -1,0 +1,26 @@
+﻿@model PrototypeWithAuth.ViewModels.NewReportViewModel
+<script src="~/js/resourcenote.js"></script>
+<input type="hidden" asp-for="ReportDate" />
+<input type="hidden" asp-for="ReportType.ReportTypeID" />
+<input type="hidden" asp-for="ReportCategoryID" />
+<div class="modal modal-view fader new-report-modal" id="myModal" data-backdrop="false">
+    <div class="modal-dialog-centered mx-auto" style="width:33rem;">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
+            <form action="" method="post" id="myForm" class="modal-padding mt-4" enctype="multipart/form-data">
+                <div class="row justify-content-end">
+                    <button type="button" class="close  modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('new-report')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row heading-1 my-3 justify-content-center" >
+                    <span class="text-center" style="width:90%;">Are you sure you want to open a @Model.ReportType.ReportTypeDescription report?</span>
+                </div>
+                <br />
+                <div class="row justify-content-around">
+                        <button type="submit" class="custom-button custom-protocols open-new-report">Yes</button>
+                        <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('new-report')">Cancel</button>
+                </div>
+</form>
+        </div>
+    </div>
+</div>
