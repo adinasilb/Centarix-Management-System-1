@@ -11,8 +11,7 @@ namespace PrototypeWithAuth.Models
     {
         //public TempLine ParentLine { get; set; }
 
-        public int? PermanentLineID { get; set; }
-
+        public int? PermanentLineID{ get; set; }
         public Line PermanentLine { get; set; }
         public TempLine ParentLine { get; set; }
     }

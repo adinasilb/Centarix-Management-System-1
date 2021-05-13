@@ -277,6 +277,12 @@
     <Compile Remove="Data\Migrations\20210512083035_PermanentLineIDNullable.Designer.cs" />
     <Compile Remove="Data\Migrations\20210512090000_PermanentLineIDNullable.cs" />
     <Compile Remove="Data\Migrations\20210512090000_PermanentLineIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513063210_PermanentIDNullabl.cs" />
+    <Compile Remove="Data\Migrations\20210513063210_PermanentIDNullabl.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513063650_PermaneetIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210513063650_PermaneetIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513063806_PermanentIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210513063806_PermanentIDNullable.Designer.cs" />
   </ItemGroup>
 
 
