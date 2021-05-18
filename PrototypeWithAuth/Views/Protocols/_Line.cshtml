@@ -32,34 +32,24 @@
     </ul>
 </div>
 <input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine?.Content" />
+@{var typeClass = "";}
 @switch (Model.TempLine?.LineTypeID)
 {
     case 1:
-    <div class="d-flex line-div 2parent line-header">
-        <div class=" d-flex align-items-center lineNumberString">@Model.LineNumberString</div>
-
-        <span role="textbox"
-              contenteditable name="@(dynamicName)Content" id="@(dynamicID)Content" class="  line input line-input">
-            @Model.TempLine?.Content
-        </span>
-    </div>
-    break;
-case 2:
-    <div class="d-flex ml-4 line-div 3parent line-subheader ">
-        <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
-
-        <span role="textbox"
-              contenteditable name="@(dynamicName)Content" id="@(dynamicID)Content" class="  line input line-input">
-            @Model.TempLine?.Content 
-    </div>
-    break;
-case 3:
-    <div class="d-flex line-div ml-6 ">
-        <div class=" d-flex align-items-center lineNumberString line-step">@Model.LineNumberString</div>
-        <span role="textbox"
-              contenteditable name="@(dynamicName)Content" id="@(dynamicID)Content" class="  line input line-input">
-            @Model.TempLine?.Content
-        </span>
-    </div>
-    break;
+        typeClass = " line-header ";
+        break;
+    case 2:
+        typeClass = " line-subheader ml-4";
+        break;
+    case 3:
+        typeClass = " line-step ml-6 ";
+        break;
 }
+<div class="d-flex line-div  
+     @typeClass">
+    <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
+    <span role="textbox"
+          contenteditable name="@(dynamicName)Content" id="@(dynamicID)Content" class="  line input line-input">
+        @Model.TempLine?.Content
+    </span>
+</div>

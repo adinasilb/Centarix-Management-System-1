@@ -2939,17 +2939,27 @@ body.modal-open .popover {
     border-bottom: 2px solid var(--protocol-color) !important;
 }
 .line-header {
-    font-size: 1.5rem;
+    font-size: 1.40rem;
 }
 .line-subheader {
     font-size: 1.20rem;
 }
 .line-step{
-    font-size:.9rem
+    font-size:1rem
 }
-.line-input{
-    min-width: 10%;    
+.line-input {
+    min-width: 10%;
+    align-items: center;
+    display: flex;
 }
 .line-div{
-    margin-bottom:1.25rem;
+    margin-top:1.25rem;
 }
+
+    .line-div .line-function {
+        cursor: pointer;
+        font-size: 2rem;
+        justify-content: center;
+        align-items: center;
+        display:flex;
+    }

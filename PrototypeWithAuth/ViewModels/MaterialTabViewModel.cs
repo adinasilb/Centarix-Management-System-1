@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     public class MaterialTabViewModel:ViewModelBase
     {
         public IEnumerable<MaterialCategory> MaterialCategories { get; set; }
-        public IEnumerable<Material> Materials { get; set; }
+        public List<Material> Materials { get; set; }
         public Lookup<Material,List<DocumentFolder>> Folders { get; set; }
 
     }

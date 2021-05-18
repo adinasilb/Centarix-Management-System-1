@@ -24,12 +24,17 @@
                         <label class="new-button-text">Protocols</label>
                     </a>
                 </li>
-                <li>
-                    <div class="function-bar d-none">
+                <li class="only-protocol-tab  d-none">
+                    <div class=" function-bar">
                         @foreach (var type in Model.FunctionTypes)
                         {
-                            <button class="function" type="button" value="@type.FunctionTypeID"><i class="@type.Icon"></i></button>
+                        <button class="function" type="button" value="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
                         }
+                    </div>
+                </li>
+                <li class="only-protocol-tab  d-none" >
+                    <div class="h-100 d-flex ml-6" style=" align-items: center;"> 
+                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
                     </div>
                 </li>
 
@@ -45,10 +50,10 @@
     
         if ($(this).hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/)
         {
-            $(".function-bar").removeClass("d-none");
+            $(".only-protocol-tab").removeClass("d-none");
         }
         else {
-            $(".function-bar").addClass("d-none");
+            $(".only-protocol-tab").addClass("d-none");
         }
     })
 

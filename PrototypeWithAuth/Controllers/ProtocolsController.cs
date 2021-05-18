@@ -603,6 +603,10 @@ namespace PrototypeWithAuth.Controllers
         {
             return RedirectToAction("_Lines");
         }
+        public bool CheckIfSerialNumberExists(string serialNumber)
+        {
+            return _context.Products.Where(p => p.SerialNumber.Equals(serialNumber)).ToList().Any();
+        }
         private async Task UpdateLineContentAsync(List<TempLine> TempLines)
         {
             foreach (var line in TempLines)
@@ -745,7 +749,7 @@ namespace PrototypeWithAuth.Controllers
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
             var materials = _context.Materials.Include(m => m.Product).Where(m => m.ProtocolID == protocolID);
             Dictionary<Material, List<DocumentFolder>> MaterialFolders = FillMaterialDocumentsModel(materials, uploadProtocolsFolder);
-            return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = materials, MaterialCategories = _context.MaterialCategories, Folders = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value) });
+            return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = materials.ToList(), MaterialCategories = _context.MaterialCategories, Folders = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value) });
         }
 
         [Authorize(Roles = "Requests")]
