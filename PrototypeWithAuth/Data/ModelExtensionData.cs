@@ -1492,10 +1492,10 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 500,
                     LocationTypeName = "25°C",
                     LocationTypePluralName = "25°C",
-                    LocationTypeChildID =501,
+                    LocationTypeChildID = 501,
                     Depth = 0
                 },
-               
+
                  new LocationType
                  {
                      LocationTypeID = 501,
@@ -2504,44 +2504,44 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<FunctionType>().HasData(
                 new FunctionType
                 {
-                    FunctionTypeID =1,
+                    FunctionTypeID = 1,
                     FunctionDescription = "Add Image",
                     Icon = "",
-                    IconActionClass ="add-image-to-line"
+                    IconActionClass = "add-image-to-line"
                 },
                 new FunctionType
                 {
                     FunctionTypeID = 2,
                     FunctionDescription = "Add Timer",
-                    Icon = "",
+                    Icon = "icon-centarix-icons-19",
                     IconActionClass = "add-timer-to-line"
                 },
                 new FunctionType
                 {
                     FunctionTypeID = 3,
                     FunctionDescription = "Add Comment",
-                    Icon = "",
+                    Icon = "icon-comment-24px",
                     IconActionClass = "add-comment-to-line"
                 },
                 new FunctionType
                 {
                     FunctionTypeID = 4,
                     FunctionDescription = "Add Warning",
-                    Icon = "",
+                    Icon = "icon-report_problem-24px",
                     IconActionClass = "add-warning-to-line"
                 },
                 new FunctionType
                 {
                     FunctionTypeID = 5,
                     FunctionDescription = "Add Tip",
-                    Icon = "",
+                    Icon = "icon-tip-24px",
                     IconActionClass = "add-tip-to-line"
                 },
                 new FunctionType
                 {
                     FunctionTypeID = 6,
                     FunctionDescription = "Add Table",
-                    Icon = "",
+                    Icon = "icon-table_chart-24px1",
                     IconActionClass = "add-table-to-line"
                 },
                 new FunctionType
@@ -2554,43 +2554,29 @@ namespace PrototypeWithAuth.Data
                 new FunctionType
                 {
                     FunctionTypeID = 8,
-                    FunctionDescription = "Add Comment",
-                    Icon = "",
-                    IconActionClass = "add-comment-to-line"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 9,
                     FunctionDescription = "Add Stop",
-                    Icon = "",
+                    Icon = "icon-stop-24px",
                     IconActionClass = "add-stop-to-line"
                 },
                 new FunctionType
                 {
-                    FunctionTypeID = 10,
-                    FunctionDescription = "Add Comment",
-                    Icon = "",
-                    IconActionClass = "add-comment-to-line"
-                },
-                new FunctionType
-                {
-                    FunctionTypeID = 11,
+                    FunctionTypeID = 9,
                     FunctionDescription = "Add Link To Product",
-                    Icon = "",
+                    Icon = "icon-attach-item-24px",
                     IconActionClass = "add-product-to-line"
                 },
                 new FunctionType
                 {
-                    FunctionTypeID = 12,
+                    FunctionTypeID = 10,
                     FunctionDescription = "Add Link To Protocol",
-                    Icon = "",
+                    Icon = "icon-attach-protocol-24px",
                     IconActionClass = "add-protocol-to-line"
                 },
                 new FunctionType
                 {
-                    FunctionTypeID = 13,
+                    FunctionTypeID = 11,
                     FunctionDescription = "Add File",
-                    Icon = "",
+                    Icon = "icon-description-24px2",
                     IconActionClass = "add-file-to-line"
                 }
           );
