@@ -385,7 +385,7 @@ namespace PrototypeWithAuth.Controllers
                     var lines = _context.Lines.Where(l => l.ProtocolID == tempLines.FirstOrDefault().ProtocolID);
                     foreach (var line in tempLines)
                     {
-                        _context.Add(TurnTempLineToLine(line));
+                        _context.Update(TurnTempLineToLine(line));
                     }
                     _context.SaveChanges();
                     await ClearTempLinesTable();
