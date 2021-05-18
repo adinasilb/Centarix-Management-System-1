@@ -2933,3 +2933,23 @@ body.modal-open .popover {
     vertical-align: middle;
 
 }
+.line-input:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    border-bottom: 2px solid var(--protocol-color) !important;
+}
+.line-header {
+    font-size: 1.5rem;
+}
+.line-subheader {
+    font-size: 1.20rem;
+}
+.line-step{
+    font-size:.9rem
+}
+.line-input{
+    min-width: 10%;    
+}
+.line-div{
+    margin-bottom:1.25rem;
+}

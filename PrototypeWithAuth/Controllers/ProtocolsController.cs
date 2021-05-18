@@ -297,7 +297,8 @@ namespace PrototypeWithAuth.Controllers
                 ProtocolCategories = _context.ProtocolCategories,
                 ProtocolSubCategories = _context.ProtocolSubCategories,
                 MaterialCategories = _context.MaterialCategories,
-                LineTypes = _context.LineTypes.ToList()
+                LineTypes = _context.LineTypes.ToList(),
+                FunctionTypes = _context.FunctionTypes
             };
             await CopySelectedLinesToTempLineTable(protocol.ProtocolID);
             viewmodel.TempLines = OrderLinesForView(); 

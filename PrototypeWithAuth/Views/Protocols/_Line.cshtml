@@ -8,7 +8,7 @@
 <div class="position-absolute" style="right:91%;">
     <ul class="list-unstyled m-0">
         <li>
-            @{ 
+            @{
                 var dNone = "d-none";
                 if (Model.Index == 0)
                 {
@@ -31,26 +31,35 @@
         </div>
     </ul>
 </div>
-
+<input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine?.Content" />
 @switch (Model.TempLine?.LineTypeID)
 {
-
     case 1:
-        <div class="d-flex 2parent">
-            <div class="text d-flex align-items-center lineNumberString">@Model.LineNumberString</div>
-            <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine?.Content" class="text form-control-plaintext line" />
-        </div>
-        break;
-    case 2:
-        <div class="d-flex ml-4 3parent">
-            <div class="text d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
-            <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine?.Content" class="text form-control-plaintext line" />
-        </div>
-        break;
-    case 3:
-        <div class="d-flex ml-6">
-            <div class="text  d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
-            <input name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine?.Content" class="text form-control-plaintext line" />
-        </div>
-        break;
+    <div class="d-flex line-div 2parent line-header">
+        <div class=" d-flex align-items-center lineNumberString">@Model.LineNumberString</div>
+
+        <span role="textbox"
+              contenteditable name="@(dynamicName)Content" id="@(dynamicID)Content" class="  line input line-input">
+            @Model.TempLine?.Content
+        </span>
+    </div>
+    break;
+case 2:
+    <div class="d-flex ml-4 line-div 3parent line-subheader ">
+        <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
+
+        <span role="textbox"
+              contenteditable name="@(dynamicName)Content" id="@(dynamicID)Content" class="  line input line-input">
+            @Model.TempLine?.Content 
+    </div>
+    break;
+case 3:
+    <div class="d-flex line-div ml-6 ">
+        <div class=" d-flex align-items-center lineNumberString line-step">@Model.LineNumberString</div>
+        <span role="textbox"
+              contenteditable name="@(dynamicName)Content" id="@(dynamicID)Content" class="  line input line-input">
+            @Model.TempLine?.Content
+        </span>
+    </div>
+    break;
 }
