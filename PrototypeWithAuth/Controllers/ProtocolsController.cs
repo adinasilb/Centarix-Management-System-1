@@ -597,6 +597,11 @@ namespace PrototypeWithAuth.Controllers
             return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
         }
 
+
+        public async Task<IActionResult> AddFunctionToLine(int lineID, int functionID)
+        {
+            return RedirectToAction("_Lines");
+        }
         private async Task UpdateLineContentAsync(List<TempLine> TempLines)
         {
             foreach (var line in TempLines)
@@ -622,8 +627,11 @@ namespace PrototypeWithAuth.Controllers
             while (!parentNodes.IsEmpty())
             {
                 var node = parentNodes.Pop();
+
                 refreshedLines.Add(new ProtocolsLineViewModel() { LineTypes = lineTypes,
-                    TempLine = node, Index = count++, LineNumberString = refreshedLines.Where(rl => rl.TempLine.PermanentLineID == node.ParentLineID).FirstOrDefault()?.LineNumberString + "." + node.LineNumber }); 
+                    TempLine = node, Index = count++,
+                    LineNumberString = refreshedLines.Where(rl => rl.TempLine.PermanentLineID == node.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.LineNumber+"."
+                });
                 _context.TempLines.Where(c => c.ParentLineID == (node.PermanentLineID)).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
             }
             if(refreshedLines.Count == 0)

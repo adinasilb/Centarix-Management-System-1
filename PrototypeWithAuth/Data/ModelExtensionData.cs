@@ -2500,7 +2500,100 @@ namespace PrototypeWithAuth.Data
                     LineTypeDescription = "Step",
                     LineTypeParentID = 2
                 }
-                );
+             );
+            modelBuilder.Entity<FunctionType>().HasData(
+                new FunctionType
+                {
+                    FunctionTypeID =1,
+                    FunctionDescription = "Add Image",
+                    Icon = "",
+                    IconActionClass ="add-image-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 2,
+                    FunctionDescription = "Add Timer",
+                    Icon = "",
+                    IconActionClass = "add-timer-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 3,
+                    FunctionDescription = "Add Comment",
+                    Icon = "",
+                    IconActionClass = "add-comment-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 4,
+                    FunctionDescription = "Add Warning",
+                    Icon = "",
+                    IconActionClass = "add-warning-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 5,
+                    FunctionDescription = "Add Tip",
+                    Icon = "",
+                    IconActionClass = "add-tip-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 6,
+                    FunctionDescription = "Add Table",
+                    Icon = "",
+                    IconActionClass = "add-table-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 7,
+                    FunctionDescription = "Add Template",
+                    Icon = "",
+                    IconActionClass = "add-template-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 8,
+                    FunctionDescription = "Add Comment",
+                    Icon = "",
+                    IconActionClass = "add-comment-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 9,
+                    FunctionDescription = "Add Stop",
+                    Icon = "",
+                    IconActionClass = "add-stop-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 10,
+                    FunctionDescription = "Add Comment",
+                    Icon = "",
+                    IconActionClass = "add-comment-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 11,
+                    FunctionDescription = "Add Link To Product",
+                    Icon = "",
+                    IconActionClass = "add-product-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 12,
+                    FunctionDescription = "Add Link To Protocol",
+                    Icon = "",
+                    IconActionClass = "add-protocol-to-line"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 13,
+                    FunctionDescription = "Add File",
+                    Icon = "",
+                    IconActionClass = "add-file-to-line"
+                }
+          );
         }
     }
 }

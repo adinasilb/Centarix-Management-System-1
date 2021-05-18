@@ -48,5 +48,13 @@
     $(".line").click(function () {
         $(".addLinePopover").addClass("d-none");
         $("." + $(this).attr("id") + "LinePopoverButton").removeClass("d-none");
+        $(".line").removeClass("focused-line");
+        $(this).addClass("focused-line");
+
+    });
+    $(".function").click(function () {
+        $(".addLinePopover").addClass("d-none");
+        $("." + $(this).attr("id") + "LinePopoverButton").removeClass("d-none");
+        $(".focused-line").parent().append($(this).html());
     });
 </script>

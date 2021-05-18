@@ -2905,3 +2905,31 @@ body.modal-open .popover {
 .full-file-btn {
     width: 100%;
 }
+
+
+
+
+
+
+
+
+
+.function-bar {
+    background-color: #E8E8E8;
+    border-radius: 1.9375rem;
+    height: 3.875rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    display:flex;
+}
+.function-bar i{
+    font-size: 2rem;
+    vertical-align: middle;
+}
+.function-bar button {
+    border:none;
+    box-shadow:none;
+    background: none;
+    vertical-align: middle;
+
+}
