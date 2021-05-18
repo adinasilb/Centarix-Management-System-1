@@ -2951,6 +2951,7 @@ body.modal-open .popover {
     min-width: 10%;
     align-items: center;
     display: flex;
+    padding-right: 1rem;
 }
 .line-div{
     margin-top:1.25rem;

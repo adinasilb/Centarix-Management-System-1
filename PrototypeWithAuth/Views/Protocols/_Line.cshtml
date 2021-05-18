@@ -49,7 +49,7 @@
      @typeClass">
     <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
     <span role="textbox"
-          contenteditable name="@(dynamicName)Content" id="@(dynamicID)Content" class="  line input line-input">
-        @Model.TempLine?.Content
+          contenteditable line-id="@(dynamicID)Content" class="  line input line-input">
+        @Html.Raw(Model.TempLine?.Content)&ensp;&ensp;&ensp;
     </span>
 </div>

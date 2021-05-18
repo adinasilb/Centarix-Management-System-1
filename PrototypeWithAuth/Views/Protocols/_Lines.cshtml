@@ -55,6 +55,24 @@
     $(".function").click(function () {
         $(".addLinePopover").addClass("d-none");
         $("." + $(this).attr("id") + "LinePopoverButton").removeClass("d-none");
-        $(".focused-line").parent().append($(this).html());
+        $(".focused-line").append($(this).html());
     });
+    $(".line").change(function () {
+       $("#"+$(this).attr("line-id")).val($(this).html());
+    });
+    var lastText = $('#editable').text();
+    $('.line').on('focus', function () {
+        var $this = $(this);
+        $this.data('before', $this.html());
+        return $this;
+    }).on('blur keyup paste', function () {
+        var $this = $(this);
+        if ($this.data('before') !== $this.html()) {
+            $this.data('before', $this.html());
+            $this.trigger('change');
+        }
+
+        return $this;
+    });
+  
 </script>
