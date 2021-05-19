@@ -109,13 +109,13 @@ $(function () {
 	return selectedDate >= minDate;
 }, 'Please select a valid date');
 
-		$.validator.addMethod('maxDate', function (v, el, minDate) {
+	$.validator.addMethod('maxDate', function (v, el, minDate) {
 	if (this.optional(el)) {
 		return true;
 			}
 	var val = $(el).val();
-	val = val.split("/").reverse().join("-");
-	var selectedDate = moment(val).toDate();
+	//val = val.split("/").reverse().join("/");
+		var selectedDate = moment(val,"DD/MM/YYYY").toDate();
 	console.log("selected date"+selectedDate)
 	selectedDate = new Date(selectedDate.setHours(0));
 	selectedDate = new Date(selectedDate.setMinutes(0));

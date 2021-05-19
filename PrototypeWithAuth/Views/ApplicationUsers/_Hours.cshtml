@@ -130,8 +130,17 @@
                     @{var totalHoursInRange = (Model.TotalWorkingDaysInMonthOrYear - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay ?? 0;
                         var totalHours = employee.Hours.TotalMinutes / 60;
                         var totalHoursPercent = Math.Round((totalHours / totalHoursInRange) * 100, 2);
+                        var totalHoursPercentDisplay = "N/A";
+                        if (employee.Employee.EmployeeStatusID == 1)
+                        {
+                            totalHoursPercentDisplay = totalHoursPercent + "%";
+                        }
                     }
-                    @totalHoursPercent%
+                    
+                    
+                        @totalHoursPercentDisplay
+                                          
+
                 </td>
                 <td width="11%">
                     @employee.MissingDays

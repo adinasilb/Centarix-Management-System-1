@@ -631,7 +631,7 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
                     var cartRequests = _context.Requests
-              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
               .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
               .Include(r => r.ApplicationUserCreator)
               .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
@@ -1006,7 +1006,7 @@ namespace PrototypeWithAuth.Controllers
                                  new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                                  new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                                  new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
+                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
                                  new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                  new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                                  new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=12, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
@@ -2530,8 +2530,8 @@ namespace PrototypeWithAuth.Controllers
                             break;
                     }
                     reorderViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
-                    bool isReorder = true;
-                    return RedirectToAction(action, "Requests", new { requestIndexObject = reorderViewModel.RequestIndexObject, isReorder = isReorder });
+                    reorderViewModel.RequestIndexObject.IsReorder = true;
+                    return RedirectToAction(action, "Requests", reorderViewModel.RequestIndexObject );
                 }
                 catch (Exception ex)
                 {
@@ -4718,7 +4718,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType, bool isReorder = false)
+        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType)
         {
             var UploadQuoteViewModel = new UploadQuoteViewModel();
 
@@ -4740,7 +4740,7 @@ namespace PrototypeWithAuth.Controllers
             }
             UploadQuoteViewModel.OrderTypeEnum = OrderType;
             UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
-            UploadQuoteViewModel.IsReorder = isReorder;
+            UploadQuoteViewModel.IsReorder = requestIndexObject.IsReorder;
             return PartialView(UploadQuoteViewModel);
 
 
@@ -4843,7 +4843,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject, bool isReorder = false)
+        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject)
         {
 
             int lastParentRequestOrderNum = 0;
@@ -4858,7 +4858,7 @@ namespace PrototypeWithAuth.Controllers
                 OrderNumber = lastParentRequestOrderNum + 1,
                 OrderDate = DateTime.Now
             };
-            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject, IsReorder = isReorder};
+            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject, IsReorder = requestIndexObject.IsReorder};
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
