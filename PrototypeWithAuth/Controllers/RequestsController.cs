@@ -2530,8 +2530,8 @@ namespace PrototypeWithAuth.Controllers
                             break;
                     }
                     reorderViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
-                    bool isReorder = true;
-                    return RedirectToAction(action, "Requests", new { requestIndexObject = reorderViewModel.RequestIndexObject, isReorder = isReorder });
+                    reorderViewModel.RequestIndexObject.IsReorder = true;
+                    return RedirectToAction(action, "Requests", reorderViewModel.RequestIndexObject );
                 }
                 catch (Exception ex)
                 {
@@ -4718,7 +4718,7 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType, bool isReorder = false)
+        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType)
         {
             var UploadQuoteViewModel = new UploadQuoteViewModel();
 
@@ -4740,7 +4740,7 @@ namespace PrototypeWithAuth.Controllers
             }
             UploadQuoteViewModel.OrderTypeEnum = OrderType;
             UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
-            UploadQuoteViewModel.IsReorder = isReorder;
+            UploadQuoteViewModel.IsReorder = requestIndexObject.IsReorder;
             return PartialView(UploadQuoteViewModel);
 
 
@@ -4843,7 +4843,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject, bool isReorder = false)
+        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject)
         {
 
             int lastParentRequestOrderNum = 0;
@@ -4858,7 +4858,7 @@ namespace PrototypeWithAuth.Controllers
                 OrderNumber = lastParentRequestOrderNum + 1,
                 OrderDate = DateTime.Now
             };
-            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject, IsReorder = isReorder};
+            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject, IsReorder = requestIndexObject.IsReorder};
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
