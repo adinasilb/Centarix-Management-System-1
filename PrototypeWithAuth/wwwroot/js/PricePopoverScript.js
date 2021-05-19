@@ -2,7 +2,7 @@
 
 
 $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
-    $('#pricePopover').popover('hide');
+    $('.open-price-popover').popover('hide');
     $('input[name=SelectedCurrency]').attr("checked", false)
     $('input[name=SelectedCurrency]').prop("checked", false)
     $("."+$(this).attr("id")).attr("checked", true);
@@ -25,7 +25,8 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     return false;
 
 });
-$("#pricePopover").off('click').click(function () {
+$(".open-price-popover").off('click').click(function () {
+    console.log('price popover from index');
     $('[data-toggle="popover"]').popover('dispose');
         $(this).addClass("activePopover");
 		$('[data-toggle="popover"]').each(function() {
@@ -34,7 +35,7 @@ $("#pricePopover").off('click').click(function () {
                  $(this).popover('dispose');
             }
         });
-		$('#pricePopover').popover({
+        $('.open-price-popover').popover({
 			sanitize: false,
 			placement: 'bottom',
 			html: true,
@@ -42,7 +43,7 @@ $("#pricePopover").off('click').click(function () {
                 return $('#priceSortContent').html();
 			}
 		});
-    $('#pricePopover').popover('toggle');
+    $('.open-price-popover').popover('toggle');
 
     $(".popover").off("click").on("click", ".priceFilterDiv", function (e) {
         var id = "#" + $(this).children(".priceSort").prop("id")
@@ -61,5 +62,5 @@ $("#pricePopover").off('click').click(function () {
         }
         return false;
     })
-
+    
 	});

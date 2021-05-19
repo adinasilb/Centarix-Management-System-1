@@ -1948,16 +1948,18 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
+        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null)
         {
-            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable);
+            selectedPriceSort ??= new List<string>() { AppUtility.PriceSortEnum.Unit.ToString() };
+            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable, selectedPriceSort);
             return PartialView(requestItemViewModel);
         }
 
         [Authorize(Roles = "Requests")]
         public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
-            bool isEditable = true)
+            bool isEditable = true, List<string> selectedPriceSort = null)
         {
+            
             var categoryType = 1;
             if (SectionType == AppUtility.MenuItems.Operations)
             {
@@ -2168,6 +2170,11 @@ namespace PrototypeWithAuth.Controllers
 
 
             }
+            requestItemViewModel.PricePopoverViewModel = new PricePopoverViewModel();
+            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
+            //Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = selectedPriceSort.Contains(p.ToString()) }));
+            requestItemViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
+            requestItemViewModel.PricePopoverViewModel.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), requestItemViewModel.Requests[0].Currency);
 
 
             if (requestItemViewModel.Requests.FirstOrDefault() == null)

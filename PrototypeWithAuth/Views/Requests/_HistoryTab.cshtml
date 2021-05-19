@@ -8,6 +8,7 @@
     <div class="row modal-tab-name">
         <span class="heading-1 col-12 modal-tab-name">History</span>
     </div>
+    
     <table class="table table-headerspaced table-noheaderlines table-hover text-center">
         <thead>
             <tr>
@@ -25,15 +26,18 @@
                     Amount
                 </th>
                 <th>
-                    Total
+                    Price Per Unit
+                    <div class="d-inline-block">
+                        @{
+                            await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
+                        }
+                    </div>
                 </th>
 
             </tr>
         </thead>
         <tbody>
-            @{ 
-                var currencySymbol = Model.RequestsByProduct[0].Currency == "NIS" ? "&#x20aa;" : "&#36;";
-            }
+            
             @foreach (var item in Model.RequestsByProduct)
             {
                 <tr class="inv-list-item">
@@ -43,7 +47,7 @@
                         </button>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate)
+                        @item.ParentRequest.OrderDate.ToString("dd/M/yyyy")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName)&nbsp;
@@ -51,37 +55,74 @@
                     </td>
                     <td>
                         <ul style="list-style: none;" class="mb-0 pl-0">
-
-                            @if (item.Unit != null)
+                            <li>
+                                @Html.DisplayFor(modelItem => item.Unit)
+                                @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
+                            </li>
+                            @if (item.SubUnit != null)
                             {
                                 <li>
-                                    @Html.DisplayFor(modelItem => item.Unit)
-                                    @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
+                                    @Html.DisplayFor(modelItem => item.SubUnit)
+                                    @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
                                 </li>
-                                @if (item.SubUnit != null)
+                                @if (item.SubSubUnit != null)
                                 {
                                     <li>
-                                        @Html.DisplayFor(modelItem => item.SubUnit)
-                                        @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
+                                        @Html.DisplayFor(modelItem => item.SubSubUnit)
+                                        @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
                                     </li>
-                                    @if (item.SubSubUnit != null)
-                                    {
-                                        <li>
-                                            @Html.DisplayFor(modelItem => item.SubSubUnit)
-                                            @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
-                                        </li>
-                                    }
                                 }
-
                             }
                         </ul>
                     </td>
                     <td>
-                        @Html.Raw(currencySymbol)
-                        @Html.DisplayFor(modelItem => item.Cost)
+
+                        @if (Model.RequestsByProduct[0].Currency == "NIS")
+                        {
+                            <label>&#x20aa;</label>
+                            @Html.DisplayFor(modelItem => item.PricePerUnit)
+                        }
+                        else
+                        {
+                            
+                            var dollarPricePerUnit = Math.Round(item.PricePerUnit / item.ExchangeRate, 2);
+                             
+                            <label>&#36;</label>
+                            @dollarPricePerUnit
+                        }
                     </td>
                 </tr>
 
             }
         </tbody>
     </table>
+<script>
+    $("modal .open-price-popover").off('click').click(function () {
+        console.log('price popover from modal');
+        $('[data-toggle="popover"]').popover('dispose');
+        $(this).addClass("activePopover");
+        $('[data-toggle="popover"]').each(function () {
+            if (!$(this).hasClass("activePopover")) {
+                $(this).popover('dispose');
+            }
+        });
+        $('modal.open-price-popover').popover({
+            sanitize: false,
+            placement: 'bottom',
+            html: true,
+            content: function () {
+                return $('#priceSortContent').html();
+            }
+        });
+        $('modal .open-price-popover').popover('toggle');
+
+        $(".popover").off("click").on("click", ".priceFilterDiv", function (e) {
+            var id = "#" + $(this).children(".priceSort").prop("id")
+            $(id).attr("checked", !$(id).prop("checked"));
+            //  alert("In call index with new filter")
+            ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET", undefined, "");
+
+            return false;
+        })
+    });
+</script>
