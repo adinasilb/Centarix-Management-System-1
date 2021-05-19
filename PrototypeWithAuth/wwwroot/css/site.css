@@ -2919,3 +2919,62 @@ body.modal-open .popover {
 .textarea-border-radius{
     border-radius: .75rem;
 }
+
+
+
+
+
+
+
+
+
+.function-bar {
+    background-color: #E8E8E8;
+    border-radius: 1.9375rem;
+    height: 3.875rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+    display:flex;
+}
+.function-bar i{
+    font-size: 2rem;
+    vertical-align: middle;
+}
+.function-bar button {
+    border:none;
+    box-shadow:none;
+    background: none;
+    vertical-align: middle;
+
+}
+.line-input:focus {
+    outline-width: 0px !important;
+    outline-color: none !important;
+    border-bottom: 2px solid var(--protocol-color) !important;
+}
+.line-header {
+    font-size: 1.40rem;
+}
+.line-subheader {
+    font-size: 1.20rem;
+}
+.line-step{
+    font-size:1rem
+}
+.line-input {
+    min-width: 10%;
+    align-items: center;
+    display: flex;
+    padding-right: 1rem;
+}
+.line-div{
+    margin-top:1.25rem;
+}
+
+    .line-div .line-function {
+        cursor: pointer;
+        font-size: 2rem;
+        justify-content: center;
+        align-items: center;
+        display:flex;
+    }

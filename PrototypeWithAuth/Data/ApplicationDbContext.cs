@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Entities;
 
 namespace PrototypeWithAuth.Data
@@ -180,10 +181,7 @@ namespace PrototypeWithAuth.Data
                 .WithMany(au => au.RequestsCreated)
                 .HasForeignKey(r => r.ApplicationUserCreatorID);
 
-            modelBuilder.Entity<TempLine>()
-               .HasOne(tl => tl.PermanentLine)
-               .WithOne()
-               .HasForeignKey<TempLine>(tl => tl.PermanentLineID);
+
 
             modelBuilder.Entity<Line>()
                   .Property(e => e.LineID)
@@ -278,11 +276,15 @@ namespace PrototypeWithAuth.Data
               .WithMany(odt => odt.EmployeeHoursAwaitingApprovals)
               .HasForeignKey(eh => eh.OffDayTypeID);
 
+
+
+
             //modelBuilder.Entity<Vendor>()
             //.HasOne<ParentCategory>(v => v.ParentCategory)
             //.WithMany(pc => pc.Vendors)
             //.HasForeignKey(v => v.ParentCategoryID)
             //.OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<ParentQuote>()
                 .HasQueryFilter(item => !item.IsDeleted);
@@ -332,7 +334,6 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<ExchangeRate>().Property(e => e.LatestExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
-
             /*PROTOCOLS*/
             ///set up composite keys
 
@@ -356,14 +357,25 @@ namespace PrototypeWithAuth.Data
                .WithMany()
                .HasForeignKey(ltc => ltc.LineTypeChildID);
 
-            
 
+            modelBuilder.Entity<TempLine>().HasIndex(tl => tl.PermanentLineID).IsUnique().HasFilter(null);
+
+            modelBuilder.Entity<TempLine>()
+               .HasOne(tl => tl.ParentLine)
+               .WithMany()
+               .HasForeignKey(tl => tl.ParentLineID);
+               //.HasPrincipalKey(tl => tl.PermanentLineID).IsRequired(false);--edditted migration directly
+
+            modelBuilder.Entity<TempLine>()
+               .HasOne(tl => tl.PermanentLine)
+               .WithOne()
+               .HasForeignKey<TempLine>(tl => tl.PermanentLineID);
 
             modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
             modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
-
+            //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete
