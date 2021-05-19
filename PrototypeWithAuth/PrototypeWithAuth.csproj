@@ -329,6 +329,10 @@
     <Compile Remove="Data\Migrations\20210519060744_d.Designer.cs" />
     <Compile Remove="Data\Migrations\20210519063214_hj.cs" />
     <Compile Remove="Data\Migrations\20210519063214_hj.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519065517_FunctionDescriptionEnum.cs" />
+    <Compile Remove="Data\Migrations\20210519065517_FunctionDescriptionEnum.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.cs" />
+    <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.Designer.cs" />
   </ItemGroup>
 
 

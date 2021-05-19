@@ -111,6 +111,7 @@ namespace PrototypeWithAuth.AppData
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public enum FavoriteIconTitle { FilledIn, Empty }
+        public enum FuctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddTable, AddTemplate, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
         public static List<StringWithName> FavoriteIcons()
         {
             var StringsWithName = new List<StringWithName>(){
