@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Net.Http.Headers;
@@ -18,6 +19,7 @@ using PrototypeWithAuth.ViewModels;
 using SQLitePCL;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -31,7 +33,7 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public enum ProtocolIconNamesEnum { Share, Favorite, MorePopover, Edit }
+        public enum ProtocolIconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
         public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, userManager: userManager, hostingEnvironment: hostingEnvironment)
         {
             _context = context;
@@ -748,7 +750,12 @@ namespace PrototypeWithAuth.Controllers
                     IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
                 }).ToList();
             ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Library;
-            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<ProtocolIconNamesEnum>() { ProtocolIconNamesEnum.Favorite, ProtocolIconNamesEnum.Share, ProtocolIconNamesEnum.Edit });
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
+            {
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Favorite },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Share },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Edit }
+            });
             ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
             {
                 ResourcesListIndexViewModel = ResourcesListIndexViewModel,
@@ -957,8 +964,13 @@ namespace PrototypeWithAuth.Controllers
                                              select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteResourceID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser };
 
             ResourcesListIndexViewModel.ResourcesWithFavorites = tempResourcesWithFavorites.ToList();
-            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<ProtocolIconNamesEnum>() { ProtocolIconNamesEnum.Favorite, ProtocolIconNamesEnum.Share, ProtocolIconNamesEnum.Edit });
-
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
+            {
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Favorite },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Share },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Edit },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.MorePopover, IconNamesEnums = new List<AppUtility.IconNamesEnum>(){ AppUtility.IconNamesEnum.RemoveShare } }
+            });
             return View(ResourcesListIndexViewModel);
         }
 
@@ -987,7 +999,12 @@ namespace PrototypeWithAuth.Controllers
                 }).ToList();
             ResourcesListIndexViewModel.IsFavoritesPage = true;
             ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Favorites;
-            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<ProtocolIconNamesEnum>() { ProtocolIconNamesEnum.Favorite, ProtocolIconNamesEnum.Share, ProtocolIconNamesEnum.Edit });
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
+            {
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Favorite },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Share },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Edit }
+            });
             return ResourcesListIndexViewModel;
         }
 
@@ -1127,27 +1144,43 @@ namespace PrototypeWithAuth.Controllers
             return error;
         }
 
-        public List<IconColumnViewModel> GetIconColumnViewModels(List<ProtocolIconNamesEnum> protocolIconNamesEnums) //MUST USE THIS OVERRIDE WHEN FAVORITES ARE INCLUDED
+        public List<IconColumnViewModel> GetIconColumnViewModels(List<IconNamesEnumWithList> iconNamesEnumWithLists) //MUST USE THIS OVERRIDE WHEN FAVORITES ARE INCLUDED
         {
             var iconColumnViewModels = new List<IconColumnViewModel>();
+            var editIcon = new IconColumnViewModel("icon-create-24px", null, "edit-resource", "Edit");
+            var favoriteIcon = new IconColumnViewModel(AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition, null, "favorite-protocol", "Favorite");
+            var shareIcon = new IconColumnViewModel("icon-share-24px1", null, "share-resource", "Share");
+            var moreIcon = new IconColumnViewModel("icon-more_vert-24px", null, "popover-more", "More");
 
-            foreach (var iconNameEnum in protocolIconNamesEnums)
+            var removeShareIcon = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share-resource");
+
+            foreach (var iconNameEnum in iconNamesEnumWithLists)
             {
-                switch (iconNameEnum)
+                switch (iconNameEnum.IconNamesEnum)
                 {
-                    case ProtocolIconNamesEnum.Edit:
-                        iconColumnViewModels.Add(new IconColumnViewModel("icon-create-24px", null, "edit-resource", "Edit"));
+                    case AppUtility.IconNamesEnum.Edit:
+                        iconColumnViewModels.Add(editIcon);
                         break;
-                    case ProtocolIconNamesEnum.Favorite:
-                        iconColumnViewModels.Add(new IconColumnViewModel(AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition, null, "favorite-protocol", "Favorite"));
+                    case AppUtility.IconNamesEnum.Favorite:
+                        iconColumnViewModels.Add(favoriteIcon);
                         break;
-                    case ProtocolIconNamesEnum.Share:
-                        iconColumnViewModels.Add(new IconColumnViewModel("icon-share-24px1", null, "share-resource", "Share"));
+                    case AppUtility.IconNamesEnum.Share:
+                        iconColumnViewModels.Add(shareIcon);
                         break;
-                    case ProtocolIconNamesEnum.MorePopover:
-                        var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", null, "popover-more", "More");
-                        var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
-                        popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
+                    case AppUtility.IconNamesEnum.MorePopover:
+                        var popoverMoreIcon = moreIcon;
+                        popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                        foreach (var iconPopoverName in iconNameEnum.IconNamesEnums)
+                        {
+                            switch (iconPopoverName)
+                            {
+                                case AppUtility.IconNamesEnum.RemoveShare:
+                                    popoverMoreIcon.IconPopovers.Add(removeShareIcon);
+                                    break;
+                            }
+                        }
+                        //var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
+                        //popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
                         iconColumnViewModels.Add(popoverMoreIcon);
                         break;
                 };

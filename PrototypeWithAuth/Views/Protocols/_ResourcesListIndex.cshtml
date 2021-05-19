@@ -1,6 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.ResourcesListIndexViewModel;
 @using PrototypeWithAuth.AppData;
-@using PrototypeWithAuth.Controllers; 
+@using PrototypeWithAuth.Controllers;
 @using PrototypeWithAuth.AppData.UtilityModels;
 
 <script src="~/js/resourceslist.js"></script>
@@ -40,7 +40,7 @@
                         <div class="col-3">
                             <input class="small-custom-button call-resource-notes" value="Notes" id="@resource.Resource.ResourceID" />
                         </div>
-                        <div class=" col-6 offset-3 float-right">
+                        <div class=" col-9 float-right">
                             @*<input type="hidden" name="@PrototypeWithAuth.AppData.AppUtility.FavoriteIcons"*@
                             @{
                                 var filledFavIcon = AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.FilledIn.ToString()).FirstOrDefault().StringDefinition;
@@ -53,9 +53,12 @@
                                 //{
                                 //    icon = filledFavIcon;
                                 //}
+                                //var reverseICVM = Model.IconColumnViewModels.Reverse().ToList();
                             }
-                            @foreach (var icon in Model.IconColumnViewModels)
+                            @*@foreach (var icon in Model.IconColumnViewModels.Reverse())*@
+                            @for (var i = Model.IconColumnViewModels.Count - 1; i >= 0; i--)
                             {
+                                var icon = Model.IconColumnViewModels[i];
                                 var IconClass = icon.IconClass;
                                 if (IconClass == emptyFavIcon && resource.IsFavorite)
                                 {
@@ -64,43 +67,43 @@
                                 //if (icon. !col.Favorite)
                                 if (icon.IconPopovers?.Count >= 1)
                                 {
-                                    <div class="table-icon-div">
+                                    @*<div class="table-icon-div">
                                         <ul class="list-unstyled p-0 m-0">
-                                            <li>
-                                                <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@(resource.Resource.ResourceID + "more")">
-                                                    <i class="@IconClass hover-bold px-1" style="font-size:2rem;">
-                                                    </i>
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <div style="display:none;" id="@(resource.Resource.ResourceID + "more")">
-                                                    @foreach (var iconpopover in icon.IconPopovers)
-                                                    {
-                                                        <div class="row px-3 icon-more-popover accounting-popover">
-                                                            @*<a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
-                                                                   asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
-                                                                    <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
-                                                                    <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
-                                                                </a>*@
-                                                            <a class="btn-link text no-hover @iconpopover.AjaxCall" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation"
-                                                               data-route-request="@(resource.Resource.ResourceID)" data-route-newStatus="@iconpopover.Description">
-                                                                <i class="@iconpopover.Icon @iconpopover.AjaxCall" style="@iconpopover.Color"></i>
-                                                                <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
-                                                            </a>
-                                                        </div>
-                                                    }
-                                                    @*<a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
-                                                           title="@icon.TooltipTitle" value="@col.AjaxID">
-                                                            <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
-                                                        </a>*@
-                                                </div>
-                                            </li>
-                                        </ul>
+                                            <li>*@
+                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more float-right" value="@(resource.Resource.ResourceID + "more")">
+                                        <i class="@IconClass hover-bold px-1" style="font-size:2rem;">
+                                        </i>
+                                    </button>
+                                    @*</li>
+                                        <li>*@
+                                    <div style="display:none;" id="@(resource.Resource.ResourceID + "more")">
+                                        @foreach (var iconpopover in icon.IconPopovers)
+                                        {
+                                            <div class="row px-3 icon-more-popover accounting-popover">
+                                                @*<a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
+                                                       asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
+                                                        <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
+                                                        <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                    </a>*@
+                                                <a class="btn-link text no-hover @iconpopover.AjaxCall" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation"
+                                                   data-route-request="@(resource.Resource.ResourceID)" data-route-newStatus="@iconpopover.Description">
+                                                    <i class="@iconpopover.Icon @iconpopover.AjaxCall" style="@iconpopover.Color"></i>
+                                                    <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                </a>
+                                            </div>
+                                        }
+                                        @*<a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                               title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                            </a>*@
                                     </div>
+                                    @*</li>
+                                            </ul>
+                                        </div>*@
                                 }
                                 else
                                 {
-                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" title="@icon.TooltipTitle" class="btn p-0 m-0 no-box-shadow more @icon.IconAjaxLink" value="@resource.Resource.ResourceID" data-reload="@Model.IsFavoritesPage">
+                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" title="@icon.TooltipTitle" class="btn p-0 m-0 no-box-shadow float-right more @icon.IconAjaxLink" value="@resource.Resource.ResourceID" data-reload="@Model.IsFavoritesPage">
                                         <i class="@IconClass hover-bold px-1" style="font-size:2rem; color:@icon.Color">
                                         </i>
                                     </button>
@@ -137,3 +140,5 @@
         }
     }
 </div>
+
+<script src="~/js/accounting.js"></script>

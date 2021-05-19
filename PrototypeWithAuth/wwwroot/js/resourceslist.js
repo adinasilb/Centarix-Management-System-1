@@ -13,7 +13,6 @@
 	});
 
 	$(".favorite-protocol").on("click", function (e) {
-		alert("Favorite Protocol!");
 		var fullIcon = $(".FilledIn").attr("filled-value");
 		var emptyIcon = $(".Empty").attr("filled-value");
 		var reloadPageBool = $(this).attr("data-reload");
@@ -38,7 +37,6 @@
 						type: 'GET',
 						cache: true,
 						success: function (results) {
-							alert(results);
 							$(".resources-favorites-partial").html(results);
 						}
 					});
