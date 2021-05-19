@@ -13,6 +13,10 @@
 
 		var inputButton = $('#save-documents');
 		var filePath = $(".file-select")[0].value;
+		console.log($("#masterSidebarType").val())
+		if ($("#masterSidebarType").val() == "Installments") {
+
+        }
 		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
 		console.log("extn: " + extn);
 		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn !="") {

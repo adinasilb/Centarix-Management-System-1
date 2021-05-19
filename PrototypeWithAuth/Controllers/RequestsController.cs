@@ -4259,7 +4259,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AccountingPayments(AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
 
-            TempData["PayNowCount"] = GetPaymentRequests(AppUtility.SidebarEnum.PayNow).Count();
+            TempData["PayNowCount"] = GetPaymentRequests(AppUtility.SidebarEnum.PayNow).ToList().Count();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingPayments;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingPaymentsEnum;
@@ -4269,42 +4269,41 @@ namespace PrototypeWithAuth.Controllers
 
         private IQueryable<Request> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum)
         {
-            var requestsList = _context.Requests
+            var requests = _context.Requests
                 .Include(r => r.ParentRequest)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
                 .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
-
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
-                    requestsList = requestsList
-                        .Where(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice);
+                    requests = requests
+                    .Where(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice);
                     break;
                 case AppUtility.SidebarEnum.PayNow:
-                    requestsList = requestsList
+                    requests = requests
                     //.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     .Where(r => r.PaymentStatusID == 3);
                     break;
                 case AppUtility.SidebarEnum.PayLater:
-                    requestsList = requestsList
+                    requests = requests
                 .Where(r => r.PaymentStatusID == 4);
                     break;
                 case AppUtility.SidebarEnum.Installments:
-                    requestsList = requestsList
+                    requests = requests
                         .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
-                    foreach (var request in requestsList)
+                    var requestList = requests.ToList();
+                    foreach (var request in requests)
                     {
                         var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5));
                         if (currentInstallments.Count() > 0)
                         {
-                            var requests = requestsList.ToList();
                             for (var i = 1; i < currentInstallments.Count(); i++)
                             {
-                                requests.Add(request);
+                                requestList.Add(request);
                             }
-                            requestsList = requests.AsQueryable();
+                            requests = requestList.AsQueryable();
                         }
                     }
 
@@ -4314,11 +4313,11 @@ namespace PrototypeWithAuth.Controllers
                 //.Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
                 //    break;
                 case AppUtility.SidebarEnum.SpecifyPayment:
-                    requestsList = requestsList
+                    requests = requests
                 .Where(r => r.PaymentStatusID == 8 && r.Payments.FirstOrDefault().HasInvoice);
                     break;
             }
-            return requestsList;
+            return requests;
         }
         private IQueryable<Request> GetPaymentNotificationRequests(AppUtility.SidebarEnum accountingNotificationsEnum)
         {

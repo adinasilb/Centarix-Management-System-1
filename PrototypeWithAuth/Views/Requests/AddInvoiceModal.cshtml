@@ -4,6 +4,7 @@
 <script src="~/js/Validation/AddInvoiceFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/accounting.js"></script>
+<script src="~/js/site.js"></script>
 
 <div class="modal modal-view fader on-form-modal accounting-form" id="myModal" data-backdrop="false">
     <div class="add-invoice-modal modal-dialog-centered mx-auto">
@@ -121,16 +122,18 @@
                             </tbody>
                         </table>
                         <div class="row mt-5">
-                            <div class="col-3">
+                            <div class="col-3 form-group">
                                 <label asp-for="InvoiceImage" class="control-label"></label>
-                                <input type="file" asp-for="InvoiceImage" class="form-control-file  ta pt-1">
-                                <span asp-validation-for="InvoiceImage" class="text-danger"></span>
-                                @*<div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
-                            <button class="accounting-background-color custom-button-font custom-button open-invoice-doc-modal" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
-                                    data-ids="@Model.Request.RequestID"   ---> Get all the ids when in javascript
-                                    id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@false">
-                                Select File
-                            </button>*@
+                                <br />
+                                <button class="my-2 accounting-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
+                                        data-id="@Model.Requests[0].RequestID" 
+                                    id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@true" show-switch="@false">
+                                    Select File
+                                </button>
+                                    @*<input type="file" asp-for="InvoiceImage" class="form-control-file  ta pt-1">
+                                    <span asp-validation-for="InvoiceImage" class="text-danger"></span>*@
+                                    @*<div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
+            *@
                             </div>
                             <div class="col-2 offset-5">
                                 <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" value="Save" />
