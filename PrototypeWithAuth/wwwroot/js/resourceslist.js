@@ -13,9 +13,10 @@
 	});
 
 	$(".favorite-protocol").on("click", function (e) {
+		alert("Favorite Protocol!");
 		var fullIcon = $(".FilledIn").attr("filled-value");
 		var emptyIcon = $(".Empty").attr("filled-value");
-		var reloadPageBool = $(this).attr("reload");
+		var reloadPageBool = $(this).attr("data-reload");
 		var url = "/Protocols/FavoriteResources?ResourceID=" + $(this).val() + "&Favorite=";
 		var icon = $(this).children("i");
 		if (icon.hasClass(emptyIcon)) {

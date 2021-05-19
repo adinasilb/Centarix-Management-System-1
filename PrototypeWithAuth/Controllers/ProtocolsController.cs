@@ -957,6 +957,7 @@ namespace PrototypeWithAuth.Controllers
                                              select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteResourceID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser };
 
             ResourcesListIndexViewModel.ResourcesWithFavorites = tempResourcesWithFavorites.ToList();
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<ProtocolIconNamesEnum>() { ProtocolIconNamesEnum.Favorite, ProtocolIconNamesEnum.Share, ProtocolIconNamesEnum.Edit });
 
             return View(ResourcesListIndexViewModel);
         }
@@ -986,6 +987,7 @@ namespace PrototypeWithAuth.Controllers
                 }).ToList();
             ResourcesListIndexViewModel.IsFavoritesPage = true;
             ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Favorites;
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<ProtocolIconNamesEnum>() { ProtocolIconNamesEnum.Favorite, ProtocolIconNamesEnum.Share, ProtocolIconNamesEnum.Edit });
             return ResourcesListIndexViewModel;
         }
 
@@ -1137,7 +1139,7 @@ namespace PrototypeWithAuth.Controllers
                         iconColumnViewModels.Add(new IconColumnViewModel("icon-create-24px", null, "edit-resource", "Edit"));
                         break;
                     case ProtocolIconNamesEnum.Favorite:
-                        iconColumnViewModels.Add(new IconColumnViewModel(AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition, null, null, "Favorite"));
+                        iconColumnViewModels.Add(new IconColumnViewModel(AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition, null, "favorite-protocol", "Favorite"));
                         break;
                     case ProtocolIconNamesEnum.Share:
                         iconColumnViewModels.Add(new IconColumnViewModel("icon-share-24px1", null, "share-resource", "Share"));
