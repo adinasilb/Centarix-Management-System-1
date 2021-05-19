@@ -323,6 +323,12 @@
     <Compile Remove="Data\Migrations\20210513121932_HasFilterNullPermanentID3.Designer.cs" />
     <Compile Remove="Data\Migrations\20210513122233_HasFilterNullPermanentID2.cs" />
     <Compile Remove="Data\Migrations\20210513122233_HasFilterNullPermanentID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519060127_j.cs" />
+    <Compile Remove="Data\Migrations\20210519060127_j.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519060744_d.cs" />
+    <Compile Remove="Data\Migrations\20210519060744_d.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519063214_hj.cs" />
+    <Compile Remove="Data\Migrations\20210519063214_hj.Designer.cs" />
   </ItemGroup>
 
 
