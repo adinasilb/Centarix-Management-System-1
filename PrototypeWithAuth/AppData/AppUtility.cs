@@ -110,6 +110,7 @@ namespace PrototypeWithAuth.AppData
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
+        public enum GlobalInfoType { ExchangeRate, LoginUpdates}
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
