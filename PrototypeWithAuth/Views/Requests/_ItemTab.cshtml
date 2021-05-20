@@ -306,7 +306,7 @@
                 </div>
                 <div class="col-md-3">
                     <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
-                    <input type="text" asp-for="Requests[0].ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" />
+                    <input type="text" asp-for="Requests[0].ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" asp-format="{0:dd/MM/yyyy}"  />
                     <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
