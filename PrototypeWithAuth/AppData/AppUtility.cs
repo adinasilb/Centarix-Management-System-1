@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -34,6 +35,7 @@ namespace PrototypeWithAuth.AppData
             TotalVat = 4
         }
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
+        public enum RoleEnum { ApproveOrders }
         public enum PageTypeEnum
         {
             None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, RequestFavorite,
@@ -122,7 +124,7 @@ namespace PrototypeWithAuth.AppData
         }
 
         public enum IconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
-        
+
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocol }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
@@ -130,6 +132,73 @@ namespace PrototypeWithAuth.AppData
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
             return String.Join(' ', splitEnumValue);
         }
+
+        public static List<UserRoleList> GetUserRoles()
+        {
+            var userRoleList = new List<UserRoleList>();
+            //{ Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
+            userRoleList.Add(new UserRoleList()
+            {
+                RoleA = MenuItems.Requests.ToString(),
+                RoleAEnumType = MenuItems.Requests.GetType().ToString(),
+                RolesB = new List<UserRoleList>() { new UserRoleList()
+                    {
+                    RoleA= RoleEnum.ApproveOrders.ToString(),
+                    RoleAEnumType = RoleEnum.ApproveOrders.GetType().ToString()
+                    }
+                }
+            });
+            userRoleList.Add(new UserRoleList()
+            {
+                RoleA = MenuItems.Protocols.ToString(),
+                RoleAEnumType = MenuItems.Protocols.GetType().ToString(),
+            });
+            userRoleList.Add(new UserRoleList()
+            {
+                RoleA = MenuItems.Operations.ToString(),
+                RoleAEnumType = MenuItems.Operations.GetType().ToString(),
+            });
+            userRoleList.Add(new UserRoleList()
+            {
+                RoleA = MenuItems.Biomarkers.ToString(),
+                RoleAEnumType = MenuItems.Biomarkers.GetType().ToString(),
+            });
+            userRoleList.Add(new UserRoleList()
+            {
+                RoleA = MenuItems.TimeKeeper.ToString(),
+                RoleAEnumType = MenuItems.TimeKeeper.GetType().ToString(),
+            });
+            userRoleList.Add(new UserRoleList()
+            {
+                RoleA = MenuItems.LabManagement.ToString(),
+                RoleAEnumType = MenuItems.LabManagement.GetType().ToString(),
+            });
+            userRoleList.Add(new UserRoleList()
+            {
+                RoleA = MenuItems.Accounting.ToString(),
+                RoleAEnumType = MenuItems.Accounting.GetType().ToString(),
+            });
+            userRoleList.Add(new UserRoleList()
+            {
+                RoleA = MenuItems.Reports.ToString(),
+                RoleAEnumType = MenuItems.Reports.GetType().ToString(),
+            });
+            userRoleList.Add(new UserRoleList()
+            {
+                RoleA = MenuItems.Income.ToString(),
+                RoleAEnumType = MenuItems.Income.GetType().ToString(),
+            });
+            userRoleList.Add(new UserRoleList()
+            {
+                RoleA = MenuItems.Users.ToString(),
+                RoleAEnumType = MenuItems.Users.GetType().ToString(),
+            });
+
+
+            return userRoleList;
+        }
+
+
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, SidebarEnum sidebarType, String filterID)
         {
             int ReturnList = 0;
