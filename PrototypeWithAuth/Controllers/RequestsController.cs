@@ -5063,6 +5063,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 newRequest.RequestStatusID = 7;
                 newRequest.OrderType = AppUtility.OrderTypeEnum.Save.ToString();
+                newRequest.Unit = 1;
+                newRequest.UnitTypeID = 5;
                 _context.Add(newRequest);
                 await _context.SaveChangesAsync();
                 //var commentExists = true;
