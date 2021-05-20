@@ -117,7 +117,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> _Hours(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0, int amountInYear = 0)
         {
-            WorkersHoursViewModel viewModel = await hoursPagePopulate(yearlyMonthlyEnum, month, year, amountInYear);
+            WorkersHoursViewModel viewModel =  await hoursPagePopulate(yearlyMonthlyEnum, month, year, amountInYear);
             return PartialView(viewModel);
         }
         private async Task<WorkersHoursViewModel> hoursPagePopulate(YearlyMonthlyEnum yearlyMonthlyEnum = YearlyMonthlyEnum.Monthly, int month = 0, int year = 0, int amountInYear = 0)
@@ -148,11 +148,68 @@ namespace PrototypeWithAuth.Controllers
                 totalWorkingDaysInMonthOrYear = totalWorkingDaysInYear;
             }
             List<Task> listOfTasks = new List<Task>();
-            foreach (Employee employee in employees)
+            foreach(var employee in employees)
             {
-                listOfTasks.Add( GoThroughEachEmployee(yearlyMonthlyEnum, month, year, workerHoursViewModel, employee));               
+                int wholeVacationDays = 0;
+                double totalVacationDays = 0;
+                double workingDays = 0;
+                int wholeSickDays = 0;
+                double totalSickDays = 0;
+                double sickHours;
+                double vacationSickCount = 0;
+                double partialOffDayPercent = 0;
+                int missingDays = 0;
+                int specialDays = 0;
+                int unpaidLeave = 0;
+                double vacationHours;
+                TimeSpan hours = new TimeSpan();
+                IEnumerable<EmployeeHours> employeeHoursOfMonthOrYear;
+                if (yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly)
+                {
+                    employeeHoursOfMonthOrYear = employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month && eh.Date.Date < DateTime.Now.Date).ToList();
+                    workingDays = employeeHoursOfMonthOrYear.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Count();
+                }
+                else
+                {
+                    employeeHoursOfMonthOrYear = employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Date < DateTime.Now.Date).ToList();
+                    workingDays = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Count();
+                }
+                if (employee.EmployeeStatusID == 1)
+                {
+
+                    missingDays = employeeHoursOfMonthOrYear.Where(eh => (eh.Entry1 == null && eh.OffDayTypeID == null && eh.TotalHours == null && eh.CompanyDayOffID == null)
+                    || (eh.Entry1 != null && eh.Exit1 == null)).Count();
+
+                    wholeSickDays = employeeHoursOfMonthOrYear.Where(eh => eh.OffDayTypeID == 1/*&& eh.IsBonus == false*/).Count();
+                    sickHours = employeeHoursOfMonthOrYear.Where(eh => eh.PartialOffDayTypeID == 1/*&& eh.IsBonus == false*/).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                    totalSickDays = Math.Round(wholeSickDays + (sickHours / employee.SalariedEmployee?.HoursPerDay ?? 1), 2);
+
+                    wholeVacationDays = employeeHoursOfMonthOrYear.Where(eh => eh.OffDayTypeID == 2/* && eh.IsBonus == false*/).Count();
+                    vacationHours = employeeHoursOfMonthOrYear.Where(eh => eh.PartialOffDayTypeID == 2 /*&& eh.IsBonus == false*/).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                    totalVacationDays = Math.Round(wholeVacationDays + (vacationHours / employee.SalariedEmployee?.HoursPerDay ?? 1), 2);
+
+                    partialOffDayPercent = Math.Round((sickHours + vacationHours) / employee.SalariedEmployee?.HoursPerDay ?? 1, 2);
+
+                    hours = new TimeSpan(employeeHoursOfMonthOrYear.Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
+                    specialDays = employeeHoursOfMonthOrYear.Where(eh => eh.OffDayTypeID == 4).Count();
+                    unpaidLeave = employeeHoursOfMonthOrYear.Where(eh => eh.OffDayTypeID == 5).Count();
+                    vacationSickCount = totalSickDays + totalVacationDays + specialDays + unpaidLeave;
+
+                    workingDays = workingDays - partialOffDayPercent;
+                }
+                WorkerHourViewModel worker = new WorkerHourViewModel
+                {
+                    Employee = employee,
+                    SickDays = totalSickDays,
+                    UnpaidLeave = unpaidLeave,
+                    VacationDays = totalVacationDays,
+                    WorkingDays = workingDays,
+                    Hours = hours,
+                    VacationSickCount = vacationSickCount,
+                    MissingDays = missingDays
+                };
+                workerHoursViewModel.Add(worker);
             }
-            await Task.WhenAll(listOfTasks);
             WorkersHoursViewModel viewModel = new WorkersHoursViewModel
             {
                 Year = year,
@@ -166,68 +223,6 @@ namespace PrototypeWithAuth.Controllers
             return viewModel;
         }
 
-        private async Task  GoThroughEachEmployee(YearlyMonthlyEnum yearlyMonthlyEnum, int month, int year, List<WorkerHourViewModel> workerHoursViewModel, Employee employee)
-        {
-            int wholeVacationDays = 0;
-            double totalVacationDays = 0;
-            double workingDays = 0;
-            int wholeSickDays = 0;
-            double totalSickDays = 0;
-            double sickHours;
-            double vacationSickCount = 0;
-            double partialOffDayPercent = 0;
-            int missingDays = 0;
-            int specialDays = 0;
-            int unpaidLeave = 0;
-            double vacationHours;
-            TimeSpan hours = new TimeSpan();
-            IEnumerable<EmployeeHours> employeeHoursOfMonthOrYear;
-            if (yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly)
-            {
-                employeeHoursOfMonthOrYear = employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month && eh.Date.Date < DateTime.Now.Date).ToList();
-                workingDays = employeeHoursOfMonthOrYear.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Count();
-            }
-            else
-            {
-                employeeHoursOfMonthOrYear = employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Date < DateTime.Now.Date).ToList();
-                workingDays = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Count();
-            }
-            if (employee.EmployeeStatusID == 1)
-            {
-
-                missingDays = employeeHoursOfMonthOrYear.Where(eh => (eh.Entry1 == null && eh.OffDayTypeID == null && eh.TotalHours == null && eh.CompanyDayOffID == null)
-                || (eh.Entry1 != null && eh.Exit1 == null)).Count();
-
-                wholeSickDays = employeeHoursOfMonthOrYear.Where(eh => eh.OffDayTypeID == 1/*&& eh.IsBonus == false*/).Count();
-                sickHours = employeeHoursOfMonthOrYear.Where(eh => eh.PartialOffDayTypeID == 1/*&& eh.IsBonus == false*/).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                totalSickDays = Math.Round(wholeSickDays + (sickHours / employee.SalariedEmployee?.HoursPerDay ?? 1), 2);
-
-                wholeVacationDays = employeeHoursOfMonthOrYear.Where(eh => eh.OffDayTypeID == 2/* && eh.IsBonus == false*/).Count();
-                vacationHours = employeeHoursOfMonthOrYear.Where(eh => eh.PartialOffDayTypeID == 2 /*&& eh.IsBonus == false*/).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                totalVacationDays = Math.Round(wholeVacationDays + (vacationHours / employee.SalariedEmployee?.HoursPerDay ?? 1), 2);
-
-                partialOffDayPercent = Math.Round((sickHours + vacationHours) / employee.SalariedEmployee?.HoursPerDay ?? 1, 2);
-
-                hours = new TimeSpan(employeeHoursOfMonthOrYear.Select(eh => new { TimeSpan = eh.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan));
-                specialDays = employeeHoursOfMonthOrYear.Where(eh => eh.OffDayTypeID == 4).Count();
-                unpaidLeave = employeeHoursOfMonthOrYear.Where(eh => eh.OffDayTypeID == 5).Count();
-                vacationSickCount = totalSickDays + totalVacationDays + specialDays + unpaidLeave;
-
-                workingDays = workingDays - partialOffDayPercent;
-            }
-            WorkerHourViewModel worker = new WorkerHourViewModel
-            {
-                Employee = employee,
-                SickDays = totalSickDays,
-                UnpaidLeave = unpaidLeave,
-                VacationDays = totalVacationDays,
-                WorkingDays = workingDays,
-                Hours = hours,
-                VacationSickCount = vacationSickCount,
-                MissingDays = missingDays
-            };
-            workerHoursViewModel.Add(worker);
-        }
 
         public async Task<IActionResult> UserHours(string userId, int month, int year)
         {
