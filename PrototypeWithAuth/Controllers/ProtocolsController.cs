@@ -769,11 +769,15 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel = null, bool IsReload = false)
+        public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel = null, bool IsFavorites = false, bool IsShared = false)
         {
-            if (IsReload)
+            if (IsFavorites)
             {
                 ResourcesListIndexViewModel = GetFavoritesResourceListIndexViewModel();
+            }
+            else if (IsShared)
+            {
+                ResourcesListIndexViewModel = await GetResourcesSharedWithMe();
             }
             return PartialView(ResourcesListIndexViewModel);
         }
@@ -938,6 +942,12 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedWithMe;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
+            return View(await GetResourcesSharedWithMe());
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<ResourcesListIndexViewModel> GetResourcesSharedWithMe()
+        {
             ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
 
             var shareresourcesreceivedResoureid = _context.Users.Include(u => u.ShareResourcesReceived)
@@ -971,7 +981,8 @@ namespace PrototypeWithAuth.Controllers
                 new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Edit },
                 new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.MorePopover, IconNamesEnums = new List<AppUtility.IconNamesEnum>(){ AppUtility.IconNamesEnum.RemoveShare } }
             });
-            return View(ResourcesListIndexViewModel);
+
+            return ResourcesListIndexViewModel;
         }
 
         [Authorize(Roles = "Protocols")]
@@ -1084,7 +1095,7 @@ namespace PrototypeWithAuth.Controllers
             GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
             GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
         }
-        [Authorize(Roles ="Protocols")]
+        [Authorize(Roles = "Protocols")]
         public async void RemoveShare(int ShareID, AppUtility.ModelsEnum modelsEnum)
         {
             using (var transaction = _context.Database.BeginTransaction())
@@ -1098,12 +1109,12 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(sharedResource);
                             break;
                     }
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
+                     _context.SaveChanges();
+                     transaction.Commit();
                 }
                 catch (Exception ex)
                 {
-                    await transaction.RollbackAsync();
+                    transaction.Rollback();
                 }
             }
         }

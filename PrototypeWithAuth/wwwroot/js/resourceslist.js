@@ -33,7 +33,7 @@
 				if (reloadPageBool == "True") {
 					$.ajax({
 						async: true,
-						url: "/Protocols/_ResourcesListIndex?IsReload=true",
+						url: "/Protocols/_ResourcesListIndex?IsFavorites=true",
 						type: 'GET',
 						cache: true,
 						success: function (results) {

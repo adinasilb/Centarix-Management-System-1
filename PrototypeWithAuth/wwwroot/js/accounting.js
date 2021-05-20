@@ -218,7 +218,6 @@
 		//set up remove share on here
 		
 		$(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
-			alert("remove share classes: " + $(this).attr("class"));
 			var ModelsEnum = "";
 			var shareNum = "";
 			if ($(this).hasClass("resources")) { //THIS IF IS NOT WORKING
@@ -226,14 +225,21 @@
 				shareNum = $(this).attr("data-share-resource-id");
 			}
 			var url = "/Protocols/RemoveShare?ShareID=" + shareNum + "&ModelsEnum=" + ModelsEnum;
-			alert("url: " + url);
 			$.ajax({
 				async: true,
 				url: url,
 				type: 'GET',
 				cache: true,
 				success: function (data) {
-					//reload page with shares
+					$.ajax({
+						async: true,
+						url: "/Protocols/_ResourcesListIndex?IsShared=true",
+						type: 'GET',
+						cache: true,
+						success: function (d) {
+							$(".resources-shared-partial").html(d);
+						}
+					})
 				}
 			});
 		});
