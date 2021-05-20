@@ -51,7 +51,7 @@ namespace PrototypeWithAuth.Controllers
                     var userRoles = await _userManager.GetRolesAsync(employee);
                     if (userRoles.Contains("TimeKeeper") && employee.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
                     {
-                        fillInTimekeeperMissingDays(employee, lastUpdateToTimekeeper.Date);
+                        await fillInTimekeeperMissingDays(employee, lastUpdateToTimekeeper.Date);
                         fillInTimekeeperNotifications(employee, lastUpdateToTimekeeper.Date);
                     }
                 }
@@ -84,6 +84,7 @@ namespace PrototypeWithAuth.Controllers
             if (latestRate == null)
             {
                 latestRate = new GlobalInfo();
+                latestRate.GlobalInfoType = AppUtility.GlobalInfoType.ExchangeRate.ToString();
             }
             var updateDate = latestRate.Date;
             if (updateDate.Date != DateTime.Today)
