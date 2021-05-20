@@ -155,7 +155,6 @@ namespace PrototypeWithAuth.Controllers
                 double totalSickDays = 0;
                 double sickHours;
                 double vacationSickCount = 0;
-                int daysLeftOfMonthOrYear = 0;
                 double partialOffDayPercent = 0;
                 int missingDays = 0;
                 int specialDays = 0;
@@ -174,9 +173,7 @@ namespace PrototypeWithAuth.Controllers
                     workingDays = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null ) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Count();
                 }
                 if(employee.EmployeeStatusID == 1)
-                {
-                    daysLeftOfMonthOrYear = yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly ? (int)GetTotalWorkingDaysByInterval(DateTime.Now.Date, companyDaysOff, new DateTime(year, month + 1, 1))
-                    : (int)GetTotalWorkingDaysByInterval(DateTime.Now.Date, companyDaysOff, new DateTime(year + 1, 1, 1));
+                {                  
 
                     missingDays = employeeHoursOfMonthOrYear.Where(eh => (eh.Entry1 == null && eh.OffDayTypeID == null && eh.TotalHours == null) 
                     || (eh.Entry1!=null && eh.Exit1 == null)).Count();
