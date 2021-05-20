@@ -1,20 +1,29 @@
 ﻿using Abp.Extensions;
 using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using JetBrains.Annotations;
+using Microsoft.ApplicationInsights.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Net.Http.Headers;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
+using SQLitePCL;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -25,7 +34,8 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, hostingEnvironment)
+        public enum ProtocolIconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
+        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, userManager: userManager, hostingEnvironment: hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
@@ -915,66 +925,73 @@ namespace PrototypeWithAuth.Controllers
 
             var resourceLibraryViewModel = new ResourceLibraryViewModel();
 
-            switch (CategoryType)
-            {
-                case 2:
-                    resourceLibraryViewModel.PageType = 2;
-                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType == true);
-                    break;
-                case 1:
-                default:
-                    resourceLibraryViewModel.PageType = 1;
-                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType != true);
-                    break;
-            }
+            //switch (CategoryType)
+            //{
+            //    case 2:
+            //        resourceLibraryViewModel.PageType = 2;
+            //        resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType == true);
+            //        break;
+            //    case 1:
+            //    default:
+            //        resourceLibraryViewModel.PageType = 1;
+            //        resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType != true);
+            //        break;
+            //}
 
+            resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories;
             return View(resourceLibraryViewModel);
         }
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> ResourcesList(int? ResourceCategoryID, AppUtility.SidebarEnum SidebarEnum = AppUtility.SidebarEnum.Library)
+        public async Task<IActionResult> ResourcesList(int? ResourceCategoryID)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarEnum;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
-            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel() { IsFavoritesPage = false };
-            switch (SidebarEnum)
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
+
+            ResourcesListIndexViewModel.ResourcesWithFavorites = _context.Resources
+                .Include(r => r.FavoriteResources)
+                .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
+                .Select(r => new ResourceWithFavorite
+                {
+                    Resource = r,
+                    IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                }).ToList();
+            ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Library;
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
             {
-                case AppUtility.SidebarEnum.Library:
-                    resourcesListViewModel.ResourcesWithFavorites = _context.Resources
-                        .Include(r => r.FavoriteResources)
-                        .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                        .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
-                        .Select(r => new ResourceWithFavorite
-                        {
-                            Resource = r,
-                            IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
-                        }).ToList();
-
-                    resourcesListViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
-                    break;
-                case AppUtility.SidebarEnum.Favorites:
-                    resourcesListViewModel.ResourcesWithFavorites = _context.FavoriteResources
-                        .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                        .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
-                        .Select(fr => new ResourceWithFavorite
-                        {
-                            Resource = fr.Resource,
-                            IsFavorite = true
-                        }).ToList();
-                    resourcesListViewModel.IsFavoritesPage = true;
-                    resourcesListViewModel.PaginationTabs = new List<string>() { };
-                    break;
-                case AppUtility.SidebarEnum.SharedWithMe:
-                    break;
-            }
-
-
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Favorite },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Share },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Edit }
+            });
+            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
+            {
+                ResourcesListIndexViewModel = ResourcesListIndexViewModel,
+                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
+            };
 
 
             return View(resourcesListViewModel);
+        }
+
+        [HttpGet]
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel = null, AppUtility.SidebarEnum? sidebarEnum = null, bool IsFavorites = false, bool IsShared = false)
+        {
+            if (sidebarEnum == AppUtility.SidebarEnum.Favorites)
+            {
+                ResourcesListIndexViewModel = GetFavoritesResourceListIndexViewModel();
+            }
+            else if (sidebarEnum == AppUtility.SidebarEnum.SharedWithMe)
+            {
+                ResourcesListIndexViewModel = await GetResourcesSharedWithMe();
+            }
+            return PartialView(ResourcesListIndexViewModel);
         }
 
         [HttpGet]
@@ -1009,7 +1026,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> FavoriteResources(int ResourceID, bool Favorite = true, bool ReloadFavoritesPage = false)
+        public async Task<IActionResult> FavoriteResources(int ResourceID, bool Favorite = true)
         {
             //The system for checks is strict b/c the calls are dependent upon icon names in code and jquery that can break or be changed one day
             string retString = null;
@@ -1021,7 +1038,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         FavoriteResource favoriteResource = _context.FavoriteResources.Where(fr => fr.ResourceID == ResourceID && fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
                         if (favoriteResource != null) { _context.Remove(favoriteResource); } //check is here so it doesn't crash
-                        //if it doesn't exist the jquery will then cont and leave an empty icon which is ok b/c its empty
+                                                                                             //if it doesn't exist the jquery will then cont and leave an empty icon which is ok b/c its empty
                     }
                     else
                     {
@@ -1045,14 +1062,7 @@ namespace PrototypeWithAuth.Controllers
                     transaction.Rollback();
                 }
             }
-            if (ReloadFavoritesPage)
-            {
-                return RedirectToAction("ResourcesList", new { SidebarEnum = AppUtility.SidebarEnum.Favorites });
-            }
-            else
-            {
-                return new EmptyResult();
-            }
+            return new EmptyResult();
         }
 
         [HttpGet]
@@ -1143,15 +1153,82 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedWithMe;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+
+            return View(await GetResourcesSharedWithMe());
         }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<ResourcesListIndexViewModel> GetResourcesSharedWithMe()
+        {
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
+
+            var shareresourcesreceivedResoureid = _context.Users.Include(u => u.ShareResourcesReceived)
+                .Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault()
+                .ShareResourcesReceived.Select(srr => srr.ResourceID).ToList();
+
+            var testNew = _context.Resources
+            .Include(r => r.FavoriteResources)
+            .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+            .Where(r => shareresourcesreceivedResoureid.Contains(r.ResourceID));
+
+            ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.SharedWithMe;
+            ResourcesListIndexViewModel.ResourcesWithFavorites = testNew.Select(r => new ResourceWithFavorite
+            {
+                Resource = r,
+                IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+            }).ToList();
+
+            var tempResourcesWithFavorites = from r in _context.Resources
+                                             join sr in _context.ShareResources on r.ResourceID equals sr.ResourceID
+                                             join fr in _context.FavoriteResources on r.ResourceID equals fr.ResourceID into g
+                                             from fr in g.DefaultIfEmpty()
+                                             where sr.ToApplicationUserID == _userManager.GetUserId(User)
+                                             select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteResourceID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser, ShareResourceID = sr.ShareResourceID };
+
+            ResourcesListIndexViewModel.ResourcesWithFavorites = tempResourcesWithFavorites.ToList();
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
+            {
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Favorite },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Share },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Edit },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.MorePopover, IconNamesEnums = new List<AppUtility.IconNamesEnum>(){ AppUtility.IconNamesEnum.RemoveShare } }
+            });
+
+            return ResourcesListIndexViewModel;
+        }
+
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ResourcesFavorites()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+
+            return View(GetFavoritesResourceListIndexViewModel());
+        }
+
+
+        [Authorize(Roles = "Protocols")]
+        public ResourcesListIndexViewModel GetFavoritesResourceListIndexViewModel()
+        {
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel();
+            ResourcesListIndexViewModel.ResourcesWithFavorites = _context.FavoriteResources
+                .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                .Select(fr => new ResourceWithFavorite
+                {
+                    Resource = fr.Resource,
+                    IsFavorite = true
+                }).ToList();
+            ResourcesListIndexViewModel.IsFavoritesPage = true;
+            ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Favorites;
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
+            {
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Favorite },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Share },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Edit }
+            });
+            return ResourcesListIndexViewModel;
         }
 
         [Authorize(Roles = "Protocols")]
@@ -1223,15 +1300,141 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Protocols")]
-        private void FillDocumentsInfo(CreateProtocolsViewModel createProtoclsViewModel, string uploadFolder)
+        private void FillDocumentsInfo(CreateProtocolsViewModel createProtocolsViewModel, string uploadFolder)
         {
-            createProtoclsViewModel.DocumentsInfo = new List<DocumentFolder>();
+            createProtocolsViewModel.DocumentsInfo = new List<DocumentFolder>();
 
-            GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
-            GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
+            GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
+            GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
+        }
+        [Authorize(Roles = "Protocols")]
+        public async void RemoveShare(int ShareID, AppUtility.ModelsEnum modelsEnum)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    switch (modelsEnum)
+                    {
+                        case AppUtility.ModelsEnum.Resource:
+                            var sharedResource = _context.ShareResources.Where(sr => sr.ShareResourceID == ShareID).FirstOrDefault();
+                            _context.Remove(sharedResource);
+                            break;
+                    }
+                     _context.SaveChanges();
+                     transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
         }
 
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ShareModal(int ID, AppUtility.ModelsEnum ModelsEnum)
+        {
+            ShareModalViewModel shareModalViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
+            shareModalViewModel.MenuItem = AppUtility.MenuItems.Protocols;
+            switch (ModelsEnum)
+            {
+                case AppUtility.ModelsEnum.Resource:
+                    shareModalViewModel.ObjectDescription = _context.Resources.Where(r => r.ResourceID == ID).FirstOrDefault().Title;
+                    break;
+            }
+            return PartialView(shareModalViewModel);
+        }
 
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<bool> ShareModal(ShareModalViewModel shareModalViewModel)
+        {
+            var currentUserID = _userManager.GetUserId(User);
+            bool error = false;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    switch (shareModalViewModel.ModelsEnum)
+                    {
+                        case AppUtility.ModelsEnum.Resource:
+                            var PrevSharedResource = _context.ShareResources
+                                .Where(sr => sr.ResourceID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == shareModalViewModel.ApplicationUserID).FirstOrDefault();
+                            if (PrevSharedResource != null)
+                            {
+                                PrevSharedResource.TimeStamp = DateTime.Now;
+                                _context.Update(PrevSharedResource);
+                            }
+                            else
+                            {
+                                var shareResource = new ShareResource()
+                                {
+                                    ResourceID = shareModalViewModel.ID,
+                                    FromApplicationUserID = currentUserID,
+                                    ToApplicationUserID = shareModalViewModel.ApplicationUserID,
+                                    TimeStamp = DateTime.Now
+                                };
+                                _context.Update(shareResource);
+                            }
+                            break;
+                    }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    error = true;
+                }
+            }
+
+            return error;
+        }
+
+        public List<IconColumnViewModel> GetIconColumnViewModels(List<IconNamesEnumWithList> iconNamesEnumWithLists) //MUST USE THIS OVERRIDE WHEN FAVORITES ARE INCLUDED
+        {
+            var iconColumnViewModels = new List<IconColumnViewModel>();
+            var editIcon = new IconColumnViewModel("icon-create-24px", null, "edit", "Edit");
+            var favoriteIcon = new IconColumnViewModel(AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition, null, "favorite", "Favorite");
+            var shareIcon = new IconColumnViewModel("icon-share-24px1", null, "share", "Share");
+            var moreIcon = new IconColumnViewModel("icon-more_vert-24px", null, "popover-more", "More");
+
+            var removeShareIcon = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
+
+            foreach (var iconNameEnum in iconNamesEnumWithLists)
+            {
+                switch (iconNameEnum.IconNamesEnum)
+                {
+                    case AppUtility.IconNamesEnum.Edit:
+                        iconColumnViewModels.Add(editIcon);
+                        break;
+                    case AppUtility.IconNamesEnum.Favorite:
+                        iconColumnViewModels.Add(favoriteIcon);
+                        break;
+                    case AppUtility.IconNamesEnum.Share:
+                        iconColumnViewModels.Add(shareIcon);
+                        break;
+                    case AppUtility.IconNamesEnum.MorePopover:
+                        var popoverMoreIcon = moreIcon;
+                        popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                        foreach (var iconPopoverName in iconNameEnum.IconNamesEnums)
+                        {
+                            switch (iconPopoverName)
+                            {
+                                case AppUtility.IconNamesEnum.RemoveShare:
+                                    popoverMoreIcon.IconPopovers.Add(removeShareIcon);
+                                    break;
+                            }
+                        }
+                        //var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
+                        //popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
+                        iconColumnViewModels.Add(popoverMoreIcon);
+                        break;
+                };
+            }
+
+            return iconColumnViewModels;
+        }
 
     }
+
 }

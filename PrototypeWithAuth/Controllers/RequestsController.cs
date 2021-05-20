@@ -53,7 +53,7 @@ namespace PrototypeWithAuth.Controllers
         private ICompositeViewEngine _viewEngine;
 
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context, hostingEnvironment)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context, hostingEnvironment:hostingEnvironment)
         {
             //_Context = Context;
             _context = context;
