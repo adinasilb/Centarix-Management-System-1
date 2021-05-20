@@ -175,7 +175,7 @@ namespace PrototypeWithAuth.Controllers
                 if(employee.EmployeeStatusID == 1)
                 {                  
 
-                    missingDays = employeeHoursOfMonthOrYear.Where(eh => (eh.Entry1 == null && eh.OffDayTypeID == null && eh.TotalHours == null) 
+                    missingDays = employeeHoursOfMonthOrYear.Where(eh => (eh.Entry1 == null && eh.OffDayTypeID == null && eh.TotalHours == null && eh.CompanyDayOffID==null) 
                     || (eh.Entry1!=null && eh.Exit1 == null)).Count();
 
                     wholeSickDays = employeeHoursOfMonthOrYear.Where(eh => eh.OffDayTypeID == 1/*&& eh.IsBonus == false*/).Count();
