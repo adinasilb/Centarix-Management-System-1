@@ -961,7 +961,7 @@ namespace PrototypeWithAuth.Controllers
                                              join fr in _context.FavoriteResources on r.ResourceID equals fr.ResourceID into g
                                              from fr in g.DefaultIfEmpty()
                                              where sr.ToApplicationUserID == _userManager.GetUserId(User)
-                                             select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteResourceID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser };
+                                             select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteResourceID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser, ShareResourceID = sr.ShareResourceID };
 
             ResourcesListIndexViewModel.ResourcesWithFavorites = tempResourcesWithFavorites.ToList();
             ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
@@ -1084,6 +1084,29 @@ namespace PrototypeWithAuth.Controllers
             GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
             GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
         }
+        [Authorize(Roles ="Protocols")]
+        public async void RemoveShare(int ShareID, AppUtility.ModelsEnum modelsEnum)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    switch (modelsEnum)
+                    {
+                        case AppUtility.ModelsEnum.Resource:
+                            var sharedResource = _context.ShareResources.Where(sr => sr.ShareResourceID == ShareID).FirstOrDefault();
+                            _context.Remove(sharedResource);
+                            break;
+                    }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                }
+            }
+        }
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ShareModal(int ID, AppUtility.ModelsEnum ModelsEnum)
@@ -1147,12 +1170,12 @@ namespace PrototypeWithAuth.Controllers
         public List<IconColumnViewModel> GetIconColumnViewModels(List<IconNamesEnumWithList> iconNamesEnumWithLists) //MUST USE THIS OVERRIDE WHEN FAVORITES ARE INCLUDED
         {
             var iconColumnViewModels = new List<IconColumnViewModel>();
-            var editIcon = new IconColumnViewModel("icon-create-24px", null, "edit-resource", "Edit");
-            var favoriteIcon = new IconColumnViewModel(AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition, null, "favorite-protocol", "Favorite");
-            var shareIcon = new IconColumnViewModel("icon-share-24px1", null, "share-resource", "Share");
+            var editIcon = new IconColumnViewModel("icon-create-24px", null, "edit", "Edit");
+            var favoriteIcon = new IconColumnViewModel(AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition, null, "favorite", "Favorite");
+            var shareIcon = new IconColumnViewModel("icon-share-24px1", null, "share", "Share");
             var moreIcon = new IconColumnViewModel("icon-more_vert-24px", null, "popover-more", "More");
 
-            var removeShareIcon = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share-resource");
+            var removeShareIcon = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
 
             foreach (var iconNameEnum in iconNamesEnumWithLists)
             {

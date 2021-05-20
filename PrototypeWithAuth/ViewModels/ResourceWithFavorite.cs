@@ -11,6 +11,8 @@ namespace PrototypeWithAuth.ViewModels
     {
         public Resource Resource { get; set; }
         public bool IsFavorite { get; set; }
+        //public ShareResource ShareResouce { get; set; } //IWANT TO USE THIS IN THE FUTURE
         public ApplicationUser SharedByApplicationUser { get; set; }
+        public int ShareResourceID { get; set; }
     }
 }

@@ -16,7 +16,7 @@
                     <div class="resource-title heading-1">@resource.Resource.Title</div>
                     @if (Model.SidebarEnum.Equals(AppUtility.SidebarEnum.SharedWithMe))
                     {
-                        <div class="resource-shared-from py-1">Shared By: @resource.SharedByApplicationUser.FirstName &nbsp; @resource.SharedByApplicationUser.LastName</div>
+                        <div class="resource-shared-from py-1">Shared By: @resource.SharedByApplicationUser?.FirstName &nbsp; @resource.SharedByApplicationUser?.LastName</div>
                     }
                     <div class="resource-tags protocols-color">
                         Tags:
@@ -36,7 +36,7 @@
                     </div>
                     @{ int endCounter = Convert.ToInt32(resource.Resource.Summary?.Length < 246 ? resource.Resource.Summary?.Length : 246); }
                     <div class="resource-summary text under-row-margin ">@resource.Resource.Summary?.Substring(0, endCounter)</div>
-                    <div class="list-buttons row m-2 py-4 form-element-border-top-small w-100">
+                    <div class="resource-icons list-buttons row m-2 py-4 form-element-border-top-small w-100">
                         <div class="col-3">
                             <input class="small-custom-button call-resource-notes" value="Notes" id="@resource.Resource.ResourceID" />
                         </div>
@@ -85,9 +85,9 @@
                                                         <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
                                                         <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
                                                     </a>*@
-                                                <a class="btn-link text no-hover @iconpopover.AjaxCall" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation"
-                                                   data-route-request="@(resource.Resource.ResourceID)" data-route-newStatus="@iconpopover.Description">
-                                                    <i class="@iconpopover.Icon @iconpopover.AjaxCall" style="@iconpopover.Color"></i>
+                                                <a class="btn-link text no-hover @iconpopover.AjaxCall resources" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation"
+                                                   data-route-request="@(resource.Resource.ResourceID)" data-route-newStatus="@iconpopover.Description"  data-share-resource-id="@resource.ShareResourceID">
+                                                    <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
                                                     <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
                                                 </a>
                                             </div>
@@ -103,8 +103,8 @@
                                 }
                                 else
                                 {
-                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" title="@icon.TooltipTitle" class="btn p-0 m-0 no-box-shadow float-right more @icon.IconAjaxLink" value="@resource.Resource.ResourceID" data-reload="@Model.IsFavoritesPage">
-                                        <i class="@IconClass hover-bold px-1" style="font-size:2rem; color:@icon.Color">
+                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" title="@icon.TooltipTitle" class="resources btn p-0 m-0 no-box-shadow float-right @icon.IconAjaxLink" value="@resource.Resource.ResourceID" data-reload="@Model.IsFavoritesPage">
+                                        <i class="@IconClass hover-bold px-1" data-share-resource-id="@resource.ShareResourceID" style="font-size:2rem; color:@icon.Color">
                                         </i>
                                     </button>
                                     @*<div class="table-icon-div">

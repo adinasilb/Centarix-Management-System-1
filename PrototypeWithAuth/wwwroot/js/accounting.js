@@ -1,41 +1,38 @@
 ﻿$(function () {
 	$(".form-check.accounting-select .form-check-input ").on("click", function (e) {
-	
-		 if (!$(this).is(':checked')) 
-		 {
-			 
+
+		if (!$(this).is(':checked')) {
+
 			$(this).closest("tr").attr("class", "text-center");
-         }
-		else{
-			 //alert("is checked")
-			 $(this).closest("tr").addClass("clicked-border-acc");
+		}
+		else {
+			//alert("is checked")
+			$(this).closest("tr").addClass("clicked-border-acc");
 		}
 		var activeVendor = $(".activeVendor").val();
-		if(activeVendor == "" && $(this).is(":checked"))
-		{
-		//	alert("reset vendor")
-			 $(".activeVendor").val($(this).attr("vendorid"))
+		if (activeVendor == "" && $(this).is(":checked")) {
+			//	alert("reset vendor")
+			$(".activeVendor").val($(this).attr("vendorid"))
 		}
 		var addToSelectedButton = $("#add-to-selected");
 		var paySelectedButton = $("#pay-selected");
-	
+
 
 		var selectedButton;
-		if (addToSelectedButton.length>0) {
+		if (addToSelectedButton.length > 0) {
 			selectedButton = addToSelectedButton;
 		}
-		else if (paySelectedButton.length>0) {
+		else if (paySelectedButton.length > 0) {
 			selectedButton = paySelectedButton;
 		}
-	
+
 		if ($(".form-check.accounting-select .form-check-input:checked").length) {
-			if( $(".activeVendor").val() !=$(this).attr("vendorid"))
-			{
-			//	alert("active vendors are ot equal - not doing anything")
+			if ($(".activeVendor").val() != $(this).attr("vendorid")) {
+				//	alert("active vendors are ot equal - not doing anything")
 				$(this).removeAttr("checked");
 				$(this).prop("checked", false);
 				//alert("count checked: "+$(".form-check.accounting-select .form-check-input:checked").length)
-					$(this).closest("tr").attr("class", "text-center");
+				$(this).closest("tr").attr("class", "text-center");
 				return false;
 			}
 
@@ -52,14 +49,14 @@
 		}
 	});
 
-	
+
 	$(".remove-invoice-item").off("click").on("click", function (e) {
 		e.stopPropagation();
 		e.preventDefault();
 		$(this).closest("tr").replaceWith("");
 		if ($(".invoice-request").length == 1) {
 			$(".remove-invoice-item").replaceWith("");
-        }
+		}
 	});
 
 
@@ -82,13 +79,13 @@
 		console.log("in share payments body fx site.js");
 	});
 
-		/*--------------------------------Accounting Payment Notifications--------------------------------*/
+	/*--------------------------------Accounting Payment Notifications--------------------------------*/
 	$(".payments-pay-now").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 		var vendorid = $(this).attr("value");
 		var paymentstatusid = $(this).attr("paymentstatus");
-		var typeEnum =$("#masterSidebarType").val();
+		var typeEnum = $("#masterSidebarType").val();
 		console.log("vendor: " + vendorid);
 		console.log("payment status: " + paymentstatusid);
 		//var $itemurl = "Requests/TermsModal/?id=" + @TempData["RequestID"] + "&isSingleRequest=true"
@@ -123,7 +120,7 @@
 		e.preventDefault();
 		e.stopPropagation();
 		var typeEnum = $("#masterSidebarType").val();
-		var requestid=$(this).attr("value");
+		var requestid = $(this).attr("value");
 		var itemUrl = "/Requests/PaymentsPayModal/?requestid=" + requestid + "&accountingPaymentsEnum=" + typeEnum;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "payments-pay");
@@ -156,7 +153,7 @@
 		$("#loading").show();
 		$.ajax({
 			type: "GET",
-			url: "/Requests/PaymentsPayModal/?"+"accountingPaymentsEnum=" + typeEnum,
+			url: "/Requests/PaymentsPayModal/?" + "accountingPaymentsEnum=" + typeEnum,
 			traditional: true,
 			data: { 'requestIds': arrayOfSelected },
 			cache: true,
@@ -199,7 +196,7 @@
 	$(".invoice-add-one").off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
-		var requestid=$(this).attr("value");
+		var requestid = $(this).attr("value");
 		var itemUrl = "/Requests/AddInvoiceModal/?requestid=" + requestid;
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "add-invoice");
@@ -218,6 +215,28 @@
 		});
 		$(this).popover('toggle');
 
+		//set up remove share on here
+		
+		$(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
+			alert("remove share classes: " + $(this).attr("class"));
+			var ModelsEnum = "";
+			var shareNum = "";
+			if ($(this).hasClass("resources")) { //THIS IF IS NOT WORKING
+				ModelsEnum = "Resource";
+				shareNum = $(this).attr("data-share-resource-id");
+			}
+			var url = "/Protocols/RemoveShare?ShareID=" + shareNum + "&ModelsEnum=" + ModelsEnum;
+			alert("url: " + url);
+			$.ajax({
+				async: true,
+				url: url,
+				type: 'GET',
+				cache: true,
+				success: function (data) {
+					//reload page with shares
+				}
+			});
+		});
 	});
 });
 

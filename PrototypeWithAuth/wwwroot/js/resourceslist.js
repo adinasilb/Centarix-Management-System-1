@@ -12,7 +12,7 @@
 		});
 	});
 
-	$(".favorite-protocol").on("click", function (e) {
+	$(".resource-icons .favorite").on("click", function (e) {
 		var fullIcon = $(".FilledIn").attr("filled-value");
 		var emptyIcon = $(".Empty").attr("filled-value");
 		var reloadPageBool = $(this).attr("data-reload");
@@ -55,7 +55,7 @@
 		});
 	});
 
-	$(".share-resource").on("click", function (e) {
+	$(".resource-icons .share").on("click", function (e) {
 		var url = "/Protocols/ShareModal?ID=" + $(this).val() + "&ModelsEnum=Resource"; 
 		$.ajax({
 			async: true,
@@ -68,4 +68,6 @@
 			}
 		});
 	});
+
+	
 });
