@@ -162,9 +162,15 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
-        protected decimal GetExchangeRateIfNull()
+        protected decimal GetExchangeRate()
         {
-            return _context.ExchangeRates.Select(er => er.LatestExchangeRate).FirstOrDefault();
+            decimal rate;
+            var parsed = decimal.TryParse(_context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString()).Select(er => er.Description).FirstOrDefault(), out rate);
+            if(!parsed)
+            {
+                rate = 0;
+            }
+            return rate;
         }
 
         protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, string uploadFolderParent)
