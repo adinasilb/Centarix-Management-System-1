@@ -67,17 +67,18 @@ namespace PrototypeWithAuth.Controllers
             //}
 
             //update latest exchange rate if need be
-            var latestRate = _context.ExchangeRates.FirstOrDefault();
+            var latestRate = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString()).FirstOrDefault();
+
           
             if (latestRate == null)
             {
-                latestRate = new ExchangeRate();
+                latestRate = new GlobalInfo();
             }
-            var updateDate = latestRate.LastUpdated;
+            var updateDate = latestRate.Date;
             if (updateDate.Date != DateTime.Today)
             {
-                latestRate.LastUpdated = DateTime.Now;
-                latestRate.LatestExchangeRate = AppUtility.GetExchangeRateFromApi();
+                latestRate.Date = DateTime.Now;
+                latestRate.Description = AppUtility.GetExchangeRateFromApi().ToString();
                 _context.Update(latestRate);
                 await _context.SaveChangesAsync();
             }
