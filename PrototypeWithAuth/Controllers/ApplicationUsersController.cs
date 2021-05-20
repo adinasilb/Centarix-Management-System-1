@@ -133,7 +133,7 @@ namespace PrototypeWithAuth.Controllers
             
             IIncludableQueryable<Employee, SalariedEmployee> employees = _context.Users.OfType<Employee>().Where(u => !u.IsSuspended && u.EmployeeStatusID != 4)
               .Include(e => e.EmployeeStatus).Include(e => e.JobSubcategoryType).ThenInclude(js => js.JobCategoryType)
-              .Include(e => e.EmployeeHours).Include(e => e.SalariedEmployee);
+             /* .Include(e => e.EmployeeHours)*/.Include(e => e.SalariedEmployee);
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
             var companyDaysOff = _context.CompanyDayOffs.ToList();
             double totalWorkingDaysInMonthOrYear;
@@ -162,6 +162,7 @@ namespace PrototypeWithAuth.Controllers
                 double vacationHours;
                 TimeSpan hours = new TimeSpan();
                 IEnumerable<EmployeeHours> employeeHoursOfMonthOrYear;
+                employee.EmployeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == employee.Id);
                 if(yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly)
                 {
                     employeeHoursOfMonthOrYear = employee.EmployeeHours.Where(eh => eh.Date.Year == year && eh.Date.Month == month && eh.Date.Date < DateTime.Now.Date).ToList();
