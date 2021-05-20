@@ -33,7 +33,7 @@
 				if (reloadPageBool == "True") {
 					$.ajax({
 						async: true,
-						url: "/Protocols/_ResourcesListIndex?IsFavorites=true",
+						url: "/Protocols/_ResourcesListIndex?sidebarEnum=" + $("#SidebarEnum").val(),
 						type: 'GET',
 						cache: true,
 						success: function (results) {

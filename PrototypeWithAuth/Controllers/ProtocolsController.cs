@@ -769,13 +769,13 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel = null, bool IsFavorites = false, bool IsShared = false)
+        public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel = null, AppUtility.SidebarEnum? sidebarEnum = null, bool IsFavorites = false, bool IsShared = false)
         {
-            if (IsFavorites)
+            if (sidebarEnum == AppUtility.SidebarEnum.Favorites)
             {
                 ResourcesListIndexViewModel = GetFavoritesResourceListIndexViewModel();
             }
-            else if (IsShared)
+            else if (sidebarEnum == AppUtility.SidebarEnum.SharedWithMe)
             {
                 ResourcesListIndexViewModel = await GetResourcesSharedWithMe();
             }
