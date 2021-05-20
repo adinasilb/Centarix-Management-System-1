@@ -925,7 +925,7 @@ namespace PrototypeWithAuth.Controllers
                 var employeeHoursID = deleteHourViewModel.EmployeeHour.EmployeeHoursID;
                 var notifications = _context.TimekeeperNotifications.Where(n => n.EmployeeHoursID == employeeHoursID).ToList();
                 var dayoff = _context.CompanyDayOffs.Where(cdo => cdo.Date.Date == deleteHourViewModel.EmployeeHour.Date).FirstOrDefault();
-                var anotherEmployeeHourWithSameDate = _context.EmployeeHours.Where(eh => eh.Date == deleteHourViewModel.EmployeeHour.Date && eh.EmployeeID == deleteHourViewModel.EmployeeHour.EmployeeID && eh.EmployeeHoursID != deleteHourViewModel.EmployeeHour.EmployeeHoursID).FirstOrDefault();
+                var anotherEmployeeHourWithSameDate = _context.EmployeeHours.Where(eh => eh.Date.Date == deleteHourViewModel.EmployeeHour.Date.Date && eh.EmployeeID == deleteHourViewModel.EmployeeHour.EmployeeID && eh.EmployeeHoursID != deleteHourViewModel.EmployeeHour.EmployeeHoursID).FirstOrDefault();
                 var employeeHour = _context.EmployeeHours.Where(eh => eh.EmployeeHoursID == deleteHourViewModel.EmployeeHour.EmployeeHoursID).AsNoTracking().FirstOrDefault();
                 EmployeeHours newEmployeeHour = null;
                 using (var transaction = _context.Database.BeginTransaction())
@@ -971,14 +971,15 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else
                         {
-                            _context.Remove(employeeHour);
-                            await _context.SaveChangesAsync();
-
-                            foreach(TimekeeperNotification n in notifications)
+                            foreach (TimekeeperNotification n in notifications)
                             {
                                 _context.Remove(n);
                                 await _context.SaveChangesAsync();
                             }
+
+                            _context.Remove(employeeHour);
+                            await _context.SaveChangesAsync();
+                                                        
                         }
                         var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursID == employeeHoursID).FirstOrDefault();
                         if (ehaa != null)
