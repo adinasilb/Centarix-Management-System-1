@@ -971,14 +971,15 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else
                         {
-                            _context.Remove(employeeHour);
-                            await _context.SaveChangesAsync();
-
-                            foreach(TimekeeperNotification n in notifications)
+                            foreach (TimekeeperNotification n in notifications)
                             {
                                 _context.Remove(n);
                                 await _context.SaveChangesAsync();
                             }
+
+                            _context.Remove(employeeHour);
+                            await _context.SaveChangesAsync();
+                                                        
                         }
                         var ehaa = _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursID == employeeHoursID).FirstOrDefault();
                         if (ehaa != null)
