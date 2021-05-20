@@ -1,0 +1,144 @@
+﻿@model PrototypeWithAuth.ViewModels.ResourcesListIndexViewModel;
+@using PrototypeWithAuth.AppData;
+@using PrototypeWithAuth.Controllers;
+@using PrototypeWithAuth.AppData.UtilityModels;
+
+<script src="~/js/resourceslist.js"></script>
+
+<div class="row under-row-margin resources-list-index">
+
+    @if (Model.ResourcesWithFavorites != null)
+    {
+        foreach (var resource in Model.ResourcesWithFavorites)
+        {
+            <div class="type-div" style="width:22%;">
+                <fieldset class=" resource-fieldset px-3 pt-2">
+                    <div class="resource-title heading-1">@resource.Resource.Title</div>
+                    @if (Model.SidebarEnum.Equals(AppUtility.SidebarEnum.SharedWithMe))
+                    {
+                        <div class="resource-shared-from py-1">Shared By: @resource.SharedByApplicationUser?.FirstName &nbsp; @resource.SharedByApplicationUser?.LastName</div>
+                    }
+                    <div class="resource-tags protocols-color">
+                        Tags:
+                        @{var first = true; }
+                        @foreach (var resourceResourceCategory in resource.Resource.ResourceResourceCategories)
+                        {
+                            if (!first)
+                            {
+                                <span>,</span>
+                            }
+                            else
+                            {
+                                first = false;
+                            }
+                            <span>@resourceResourceCategory.ResourceCategory.ResourceCategoryDescription</span>
+                        }
+                    </div>
+                    @{ int endCounter = Convert.ToInt32(resource.Resource.Summary?.Length < 246 ? resource.Resource.Summary?.Length : 246); }
+                    <div class="resource-summary text under-row-margin ">@resource.Resource.Summary?.Substring(0, endCounter)</div>
+                    <div class="resource-icons list-buttons row m-2 py-4 form-element-border-top-small w-100">
+                        <div class="col-3">
+                            <input class="small-custom-button call-resource-notes" value="Notes" id="@resource.Resource.ResourceID" />
+                        </div>
+                        <div class=" col-9 float-right">
+                            @*<input type="hidden" name="@PrototypeWithAuth.AppData.AppUtility.FavoriteIcons"*@
+                            @{
+                                var filledFavIcon = AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.FilledIn.ToString()).FirstOrDefault().StringDefinition;
+                                var emptyFavIcon = AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition;
+                                //hidden input so jquery is seamless
+                                <input type="hidden" class="@AppUtility.FavoriteIconTitle.FilledIn" filled-value="@filledFavIcon" />
+                                <input type="hidden" class="@AppUtility.FavoriteIconTitle.Empty" filled-value="@emptyFavIcon" />
+                                //var icon = emptyFavIcon;
+                                //if (resource.IsFavorite)
+                                //{
+                                //    icon = filledFavIcon;
+                                //}
+                                //var reverseICVM = Model.IconColumnViewModels.Reverse().ToList();
+                            }
+                            @*@foreach (var icon in Model.IconColumnViewModels.Reverse())*@
+                            @for (var i = Model.IconColumnViewModels.Count - 1; i >= 0; i--)
+                            {
+                                var icon = Model.IconColumnViewModels[i];
+                                var IconClass = icon.IconClass;
+                                if (IconClass == emptyFavIcon && resource.IsFavorite)
+                                {
+                                    IconClass = AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.FilledIn.ToString()).FirstOrDefault().StringDefinition;
+                                }
+                                //if (icon. !col.Favorite)
+                                if (icon.IconPopovers?.Count >= 1)
+                                {
+                                    @*<div class="table-icon-div">
+                                        <ul class="list-unstyled p-0 m-0">
+                                            <li>*@
+                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more float-right" value="@(resource.Resource.ResourceID + "more")">
+                                        <i class="@IconClass hover-bold px-1" style="font-size:2rem;">
+                                        </i>
+                                    </button>
+                                    @*</li>
+                                        <li>*@
+                                    <div style="display:none;" id="@(resource.Resource.ResourceID + "more")">
+                                        @foreach (var iconpopover in icon.IconPopovers)
+                                        {
+                                            <div class="row px-3 icon-more-popover accounting-popover">
+                                                @*<a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
+                                                       asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
+                                                        <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
+                                                        <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                    </a>*@
+                                                <a class="btn-link text no-hover @iconpopover.AjaxCall resources" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation"
+                                                   data-route-request="@(resource.Resource.ResourceID)" data-route-newStatus="@iconpopover.Description"  data-share-resource-id="@resource.ShareResourceID">
+                                                    <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
+                                                    <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                </a>
+                                            </div>
+                                        }
+                                        @*<a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                               title="@icon.TooltipTitle" value="@col.AjaxID">
+                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                            </a>*@
+                                    </div>
+                                    @*</li>
+                                            </ul>
+                                        </div>*@
+                                }
+                                else
+                                {
+                                    <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" title="@icon.TooltipTitle" class="resources btn p-0 m-0 no-box-shadow float-right @icon.IconAjaxLink" value="@resource.Resource.ResourceID" data-reload="@Model.IsFavoritesPage">
+                                        <i class="@IconClass hover-bold px-1" data-share-resource-id="@resource.ShareResourceID" style="font-size:2rem; color:@icon.Color">
+                                        </i>
+                                    </button>
+                                    @*<div class="table-icon-div">
+                                            <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                               title="@icon.TooltipTitle" value="@resource.Resource.ResourceID">
+                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                            </a>
+                                        </div>*@
+                                }
+                            }
+                            @*<div class="table-icon-div">
+                                    <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                       title="@icon.TooltipTitle" value="@col.AjaxID">
+                                        <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                    </a>
+                                </div>*@
+                            @*<button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more favorite-protocol" value="@resource.Resource.ResourceID" reload="@Model.IsFavoritesPage">
+                                    <i class="@icon hover-bold px-1" style="font-size:2rem;">
+                                    </i>
+                                </button>
+                                <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more share-resource" value="@resource.Resource.ResourceID">
+                                    <i class="icon-share-24px1 hover-bold px-1" style="font-size:2rem;">
+                                    </i>
+                                </button>
+                                <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more " value="@resource.Resource.ResourceID">
+                                    <i class="icon-create-24px hover-bold px-1" style="font-size:2rem;">
+                                    </i>
+                                </button>*@
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+    }
+</div>
+
+<script src="~/js/accounting.js"></script>
