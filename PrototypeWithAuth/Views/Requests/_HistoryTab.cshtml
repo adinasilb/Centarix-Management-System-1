@@ -26,7 +26,7 @@
                     Amount
                 </th>
                 <th>
-                    Price Per Unit
+                    Price
                     <div class="d-inline-block">
                         @{
                             await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
@@ -77,18 +77,30 @@
                     </td>
                     <td>
 
-                        @if (Model.RequestsByProduct[0].Currency == "NIS")
+                        @*@if (Model.RequestsByProduct[0].Currency == "NIS")
                         {
                             <label>&#x20aa;</label>
                             @Html.DisplayFor(modelItem => item.PricePerUnit)
                         }
                         else
                         {
-                            
-                            var dollarPricePerUnit = Math.Round(item.PricePerUnit / item.ExchangeRate, 2);
-                             
+
+                            //var dollarPricePerUnit = Math.Round(item.PricePerUnit / item.ExchangeRate, 2);
+
                             <label>&#36;</label>
-                            @dollarPricePerUnit
+                            //@dollarPricePerUnit
+                        }*@
+
+                        @{
+                            var prices = AppUtility.GetPriceColumn(Model.PricePopoverViewModel.PriceSortEnums.Where(pse => pse.Selected == true).Select(pse => pse.PriceSortEnum.ToString()).ToList(), item, Model.PricePopoverViewModel.SelectedCurrency);
+                            for (int val = 0; val < prices.Count; val++)
+                            {
+                                if (val != 0)
+                                {
+                                    <br />
+                                }
+                                <label class="m-0 p-0">@prices[val]</label>
+                            }
                         }
                     </td>
                 </tr>

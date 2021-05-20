@@ -1950,7 +1950,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null)
         {
-            selectedPriceSort ??= new List<string>() { AppUtility.PriceSortEnum.Unit.ToString() };
+            selectedPriceSort = selectedPriceSort.Count == 0 ? new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() } : selectedPriceSort;
             var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable, selectedPriceSort);
             return PartialView(requestItemViewModel);
         }
@@ -2172,10 +2172,10 @@ namespace PrototypeWithAuth.Controllers
             }
             requestItemViewModel.PricePopoverViewModel = new PricePopoverViewModel();
             List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            //Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = selectedPriceSort.Contains(p.ToString()) }));
+            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = selectedPriceSort.Contains(p.ToString()) }));
             requestItemViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
             requestItemViewModel.PricePopoverViewModel.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), requestItemViewModel.Requests[0].Currency);
-
+            
 
             if (requestItemViewModel.Requests.FirstOrDefault() == null)
             {
