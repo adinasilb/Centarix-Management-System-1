@@ -103,7 +103,10 @@
                         </div>
                     </div>
                     <div class="form-group requestPriceQuote @hideNoQuote">
-                        <label class="control-label price-per-unit-label">Price Per Unit:</label>
+                        @{ 
+                            var unitLabel = Model.Requests[0].UnitType != null ? Model.Requests[0].UnitType.UnitTypeDescription : "Unit";
+                        } 
+                        <label class="control-label price-per-unit-label">Price Per @unitLabel:</label>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
@@ -168,17 +171,20 @@
                     </div>
 
                     <div class="form-group requestPriceQuote @hideNoQuote">
-                        <label class="control-label price-per-subunit-label">Price Per Subunit:</label>
-                        <div class="row" >
+                        @{
+                            var subunitLabel = Model.Requests[0].SubUnitType != null ? Model.Requests[0].SubUnitType.UnitTypeDescription : "Subunit";
+                        }
+                        <label class="control-label price-per-subunit-label">Price Per @subunitLabel:</label>
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <span class="input-group-text disabled-text" disabled >&#36;</span>
-                                    <input class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subunit-price-dollars" id="subunit-price-dollars"  value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].PricePerSubUnit??0) / Model.Requests[0].ExchangeRate,2))" />
+                                    <span class="input-group-text disabled-text" disabled>&#36;</span>
+                                    <input class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subunit-price-dollars" id="subunit-price-dollars" value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].PricePerSubUnit??0) / Model.Requests[0].ExchangeRate,2))" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <span class="input-group-text requestPriceQuote disabled-text" disabled >&#x20aa;</span>
+                                    <span class="input-group-text requestPriceQuote disabled-text" disabled>&#x20aa;</span>
                                     <input class="form-control-plaintext border-bottom disabled-text" disabled name="subunit-price-shekel" id="subunit-price-shekel" value="@(Model.Requests[0].PricePerSubUnit!= null?Math.Round((decimal)Model.Requests[0].PricePerSubUnit, 2):0)" />
                                 </div>
                             </div>
@@ -243,11 +249,14 @@
                     </div>
 
                     <div class="form-group requestPriceQuote @hideNoQuote">
-                        <label class="control-label price-per-sub-subunit-label">Price Per Sub-Subunit:</label>
+                        @{
+                            var subsubunitLabel = Model.Requests[0].SubSubUnitType != null ? Model.Requests[0].SubSubUnitType.UnitTypeDescription : "Sub-Subunit";
+                        }
+                        <label class="control-label price-per-sub-subunit-label">Price Per @subsubunitLabel:</label>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <span class="input-group-text disabled-text" disabled >&#36;</span>
+                                    <span class="input-group-text disabled-text" disabled>&#36;</span>
                                     <input class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subsubunit-price-dollars" id="subsubunit-price-dollars"
                                            value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].PricePerSubSubUnit??0) / Model.Requests[0].ExchangeRate,2))" />
                                 </div>
