@@ -3413,7 +3413,7 @@ namespace PrototypeWithAuth.Controllers
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
             {
                 locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID && !(li is TemporaryLocationInstance))
-                .Include(li => li.LocationRoomInstance).Include(li => li.LabPart),
+                .Include(li => li.LocationRoomInstance).Include(li => li.LabPart).OrderBy(li => li.LocationNumber),
                 locationTypeNames = new List<string>(),
                 locationInstancesSelected = new List<LocationInstance>()
             };
@@ -3857,7 +3857,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
         {
-            var locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).ToList();
+            var locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
             return Json(locationInstanceList);
         }
 

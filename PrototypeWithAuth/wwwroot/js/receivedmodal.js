@@ -23,7 +23,7 @@
 		}
 	});
 
-	$(".open-sublocations-types").on("click", function () {
+	$(".open-sublocations-types").off('click').on("click", function () {
 		$("#LocationTypeID").val($(this).attr("id"))
 		if (!$(".temporary-check").is(":checked")) {
 			console.log("select location")
