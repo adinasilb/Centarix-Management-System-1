@@ -107,6 +107,5 @@ namespace PrototypeWithAuth.AppData
         public bool SubcategorySelected { get; set; }
         public bool IsReorder { get; set; }
          //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
-         public bool IsReorder { get; set; }
     }
 }
