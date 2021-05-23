@@ -1337,6 +1337,11 @@ namespace PrototypeWithAuth.Controllers
                                 await _context.SaveChangesAsync();
                             }
                         }
+                        //var productRequests = _context.Requests.Where(r => r.ProductID == request.ProductID).ToList();
+                        //if(productRequests == null)
+                        //{
+                            
+                        //}
                         foreach (var requestLocationInstance in request.RequestLocationInstances)
                         {
                             requestLocationInstance.IsDeleted = true;
