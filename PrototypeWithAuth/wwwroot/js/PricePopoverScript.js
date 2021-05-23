@@ -64,7 +64,7 @@ $(".open-price-popover").off('click').click(function () {
     $('.open-price-popover').popover('toggle');
 
     $(".popover").off("click").on("click", ".priceFilterDiv", function (e) {
-        var id = "#" + $(this).children(".priceSort").prop("id")
+        var id = "#priceSortContent1 " + "#" + $(this).children(".priceSort").prop("id")
         $(id).attr("checked", !$(id).prop("checked"));
         //  alert("In call index with new filter")
         if ($('#masterPageType').val() == "RequestCart" || $('#masterPageType').val() == "LabManagementQuotes" || $('#masterPageType').val() == "AccountingPayments" || $('#masterPageType').val() == "AccountingNotifications") {

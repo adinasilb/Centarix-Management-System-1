@@ -280,7 +280,7 @@ $(".load-terms-modal").on("click", function (e) {
 function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years) {
 	console.log("in ajax partial index call" + url);
 	var selectedPriceSort = [];
-	$("#priceSortContent .priceSort:checked").each(function (e) {
+	$("#priceSortContent1 .priceSort:checked").each(function (e) {
 		selectedPriceSort.push($(this).attr("enum"));
 	})
 	var contentType = true;
