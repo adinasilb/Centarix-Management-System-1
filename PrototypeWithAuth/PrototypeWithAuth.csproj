@@ -333,6 +333,8 @@
     <Compile Remove="Data\Migrations\20210519065517_FunctionDescriptionEnum.Designer.cs" />
     <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.cs" />
     <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.cs" />
+    <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.Designer.cs" />
   </ItemGroup>
 
 

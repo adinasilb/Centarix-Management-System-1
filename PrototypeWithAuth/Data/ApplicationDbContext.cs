@@ -285,6 +285,8 @@ namespace PrototypeWithAuth.Data
             //.HasForeignKey(v => v.ParentCategoryID)
             //.OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Product>()
+            .HasQueryFilter(item => !item.IsDeleted);
 
             modelBuilder.Entity<ParentQuote>()
                 .HasQueryFilter(item => !item.IsDeleted);
