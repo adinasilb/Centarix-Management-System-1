@@ -86,6 +86,24 @@ namespace PrototypeWithAuth.AppData
         public enum FolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { Protocols, Requests, Materials }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
+        public static List<StringWithName> RequestRoleEnums()
+        {
+            List<StringWithName> rre = new List<StringWithName>()
+            {
+                new StringWithName(){StringName = "General", StringDefinition = "Requests"},
+                new StringWithName(){StringName = "Approve Orders", StringDefinition = "RequestsApproveOrders"}
+            };
+            return rre;
+        }
+        public static List<StringWithName> OperationRoleEnums()
+        {
+            List<StringWithName> ore = new List<StringWithName>()
+            {
+                new StringWithName(){StringName = "General", StringDefinition = "Operations"},
+                new StringWithName(){StringName = "Approve Orders", StringDefinition = "OperationsApproveOrders"}
+            };
+            return ore;
+        }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
         public enum PaymentsPopoverEnum
@@ -133,72 +151,6 @@ namespace PrototypeWithAuth.AppData
             return String.Join(' ', splitEnumValue);
         }
 
-        public static List<UserRoleList> GetUserRoles()
-        {
-            var userRoleList = new List<UserRoleList>();
-            //{ Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
-            userRoleList.Add(new UserRoleList()
-            {
-                RoleA = MenuItems.Requests.ToString(),
-                RoleAEnumType = MenuItems.Requests.GetType().ToString(),
-                RolesB = new List<UserRoleList>() { new UserRoleList()
-                    {
-                    RoleA= RoleEnum.ApproveOrders.ToString(),
-                    RoleAEnumType = RoleEnum.ApproveOrders.GetType().ToString()
-                    }
-                }
-            });
-            userRoleList.Add(new UserRoleList()
-            {
-                RoleA = MenuItems.Protocols.ToString(),
-                RoleAEnumType = MenuItems.Protocols.GetType().ToString(),
-            });
-            userRoleList.Add(new UserRoleList()
-            {
-                RoleA = MenuItems.Operations.ToString(),
-                RoleAEnumType = MenuItems.Operations.GetType().ToString(),
-            });
-            userRoleList.Add(new UserRoleList()
-            {
-                RoleA = MenuItems.Biomarkers.ToString(),
-                RoleAEnumType = MenuItems.Biomarkers.GetType().ToString(),
-            });
-            userRoleList.Add(new UserRoleList()
-            {
-                RoleA = MenuItems.TimeKeeper.ToString(),
-                RoleAEnumType = MenuItems.TimeKeeper.GetType().ToString(),
-            });
-            userRoleList.Add(new UserRoleList()
-            {
-                RoleA = MenuItems.LabManagement.ToString(),
-                RoleAEnumType = MenuItems.LabManagement.GetType().ToString(),
-            });
-            userRoleList.Add(new UserRoleList()
-            {
-                RoleA = MenuItems.Accounting.ToString(),
-                RoleAEnumType = MenuItems.Accounting.GetType().ToString(),
-            });
-            userRoleList.Add(new UserRoleList()
-            {
-                RoleA = MenuItems.Reports.ToString(),
-                RoleAEnumType = MenuItems.Reports.GetType().ToString(),
-            });
-            userRoleList.Add(new UserRoleList()
-            {
-                RoleA = MenuItems.Income.ToString(),
-                RoleAEnumType = MenuItems.Income.GetType().ToString(),
-            });
-            userRoleList.Add(new UserRoleList()
-            {
-                RoleA = MenuItems.Users.ToString(),
-                RoleAEnumType = MenuItems.Users.GetType().ToString(),
-            });
-
-
-            return userRoleList;
-        }
-
-
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, SidebarEnum sidebarType, String filterID)
         {
             int ReturnList = 0;
@@ -234,6 +186,8 @@ namespace PrototypeWithAuth.AppData
 
             return ReturnList;
         }
+
+
 
 
         public static ResourceAPIViewModel GetResourceArticleFromNCBIPubMed(string PubMedID)
