@@ -109,7 +109,7 @@
         </tbody>
     </table>
 <script>
-    $("body").off('click').on('click', "modal .open-price-popover", function () {
+    $("body").off('click').on('click', ".modal .open-price-popover", function () {
         console.log('price popover from modal');
         $('[data-toggle="popover"]').popover('dispose');
         $(this).addClass("activePopover");
@@ -118,23 +118,64 @@
                 $(this).popover('dispose');
             }
         });
-        $('modal.open-price-popover').popover({
+        $('.modal .open-price-popover').popover({
             sanitize: false,
             placement: 'bottom',
             html: true,
             content: function () {
-                return $('#priceSortContent').html();
+                return $('.modal #priceSortContent').html();
             }
         });
-        $('modal .open-price-popover').popover('toggle');
+        $('.modal .open-price-popover').popover('toggle');
 
         $(".popover").off("click").on("click", ".priceFilterDiv", function (e) {
             var id = "#" + $(this).children(".priceSort").prop("id")
             $(id).attr("checked", !$(id).prop("checked"));
             //  alert("In call index with new filter")
-            ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET", undefined, "");
+            var requestID = $('#history').find('button.open-history-item-modal').attr("value");
+            console.log(requestID);
+            var selectedPriceSort = [];
+            $("#priceSortContent .priceSort:checked").each(function (e) {
+                selectedPriceSort.push($(this).attr("enum"));
+            })
+            $.ajax({
+                async: false,
+                url: '/Requests/_HistoryTab',
+                data: { id: requestID, selectedPriceSort: selectedPriceSort, selectedCurrency: $('#tempCurrency').val()},
+                type: 'Post',
+                cache: false,
+                success: function (data) {
+                    $('#history').html(data);
+                }
+            });
 
             return false;
         })
     });
+    @*$('.modal').off('click', "#nis").on('click', "#nis", function (e) { //doesn't work....
+        $('.open-price-popover').popover('hide');
+        $('input[name=SelectedCurrency]').attr("checked", false)
+        $('input[name=SelectedCurrency]').prop("checked", false)
+        $("." + $(this).attr("id")).attr("checked", true);
+        $("." + $(this).attr("id")).prop("checked", true);
+        var requestID = $('#history').find('button.open-history-item-modal').attr("value");
+        console.log('history tab popover');
+        $('#tempCurrency').val($(this).val())
+        var selectedPriceSort = [];
+        $("#priceSortContent .priceSort:checked").each(function (e) {
+            selectedPriceSort.push($(this).attr("enum"));
+        })
+        $.ajax({
+            async: false,
+            url: '/Requests/_HistoryTab',
+            data: { id: requestID, selectedPriceSort: selectedPriceSort, selectedCurrency: $('#tempCurrency').val() },
+            type: 'Post',
+            cache: false,
+            success: function (data) {
+                $('#history').html(data);
+            }
+        });
+        return false;
+
+    });*@
 </script>

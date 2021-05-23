@@ -1957,7 +1957,7 @@ namespace PrototypeWithAuth.Controllers
 
         [Authorize(Roles = "Requests")]
         public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
-            bool isEditable = true, List<string> selectedPriceSort = null)
+            bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null)
         {
             
             var categoryType = 1;
@@ -2170,12 +2170,14 @@ namespace PrototypeWithAuth.Controllers
 
 
             }
-            requestItemViewModel.PricePopoverViewModel = new PricePopoverViewModel();
-            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = selectedPriceSort.Contains(p.ToString()) }));
-            requestItemViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
-            requestItemViewModel.PricePopoverViewModel.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), requestItemViewModel.Requests[0].Currency);
-            
+            if (selectedPriceSort != null)
+            {
+                requestItemViewModel.PricePopoverViewModel = new PricePopoverViewModel();
+                List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
+                Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = selectedPriceSort.Contains(p.ToString()) }));
+                requestItemViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
+                requestItemViewModel.PricePopoverViewModel.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), selectedCurrency ?? requestItemViewModel.Requests[0].Currency);
+            }
 
             if (requestItemViewModel.Requests.FirstOrDefault() == null)
             {
@@ -5589,7 +5591,13 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.IsHistory = true;
             return PartialView(requestItemViewModel);
         }
-
+        [Authorize(Roles = "Requests")]
+        [HttpPost]
+        public async Task<IActionResult> _HistoryTab(int? id, List<string> selectedPriceSort, string selectedCurrency, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        {
+            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false, selectedPriceSort, selectedCurrency);
+            return PartialView(requestItemViewModel);
+        }
         //public async Task<bool> PopulateProductSerialNumber()
         //{
         //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();
