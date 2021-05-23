@@ -138,7 +138,7 @@ namespace PrototypeWithAuth.Controllers
                  EmployeeHours = e.EmployeeHours.Where(eh => (yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly && (eh.Date.Year == year && eh.Date.Month == month && eh.Date.Date < DateTime.Now.Date))
                  || ((yearlyMonthlyEnum == YearlyMonthlyEnum.Yearly && (eh.Date.Year == year && eh.Date.Date < DateTime.Now.Date)))),
                  EmployeeHoursAwaitingApproval = e.EmployeeHours.Where(eh => (yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly && (eh.Date.Year == year && eh.Date.Month == month && eh.Date.Date < DateTime.Now.Date))
-                 || ((yearlyMonthlyEnum == YearlyMonthlyEnum.Yearly && (eh.Date.Year == year && eh.Date.Date < DateTime.Now.Date)))).Select(eh => eh.EmployeeHoursAwaitingApproval).Where(eha=>eha!=null)
+                 || ((yearlyMonthlyEnum == YearlyMonthlyEnum.Yearly && (eh.Date.Year == year && eh.Date.Date < DateTime.Now.Date)))).Select(eh => eh.EmployeeHoursAwaitingApproval).Where(eha=>eha!=null && !eha.IsDenied)
                  
              }); 
 
