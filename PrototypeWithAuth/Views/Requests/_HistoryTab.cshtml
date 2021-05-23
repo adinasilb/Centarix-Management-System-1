@@ -27,7 +27,7 @@
                 </th>
                 <th>
                     Price
-                    <div class="d-inline-block">
+                    <div class="d-inline-block history-price">
                         @{
                             await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
                         }
@@ -130,14 +130,17 @@
 
         $(".popover").off("click").on("click", ".priceFilterDiv", function (e) {
             var id = "#" + $(this).children(".priceSort").prop("id")
-            $(id).attr("checked", !$(id).prop("checked"));
+            console.log(id);
+            $('editModal').find(id).attr("checked", !$(id).prop("checked"));
             //  alert("In call index with new filter")
             var requestID = $('#history').find('button.open-history-item-modal').attr("value");
             console.log(requestID);
             var selectedPriceSort = [];
-            $("#priceSortContent .priceSort:checked").each(function (e) {
+            //console.log($(".history-price span ul #priceSortContent .priceSort:checked"))
+            $(".#priceSortContent .priceSort:checked").each(function (e) {
                 selectedPriceSort.push($(this).attr("enum"));
             })
+            console.log(selectedPriceSort);
             $.ajax({
                 async: false,
                 url: '/Requests/_HistoryTab',
@@ -152,30 +155,4 @@
             return false;
         })
     });
-    @*$('.modal').off('click', "#nis").on('click', "#nis", function (e) { //doesn't work....
-        $('.open-price-popover').popover('hide');
-        $('input[name=SelectedCurrency]').attr("checked", false)
-        $('input[name=SelectedCurrency]').prop("checked", false)
-        $("." + $(this).attr("id")).attr("checked", true);
-        $("." + $(this).attr("id")).prop("checked", true);
-        var requestID = $('#history').find('button.open-history-item-modal').attr("value");
-        console.log('history tab popover');
-        $('#tempCurrency').val($(this).val())
-        var selectedPriceSort = [];
-        $("#priceSortContent .priceSort:checked").each(function (e) {
-            selectedPriceSort.push($(this).attr("enum"));
-        })
-        $.ajax({
-            async: false,
-            url: '/Requests/_HistoryTab',
-            data: { id: requestID, selectedPriceSort: selectedPriceSort, selectedCurrency: $('#tempCurrency').val() },
-            type: 'Post',
-            cache: false,
-            success: function (data) {
-                $('#history').html(data);
-            }
-        });
-        return false;
-
-    });*@
 </script>
