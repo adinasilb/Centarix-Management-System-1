@@ -61,6 +61,7 @@ namespace PrototypeWithAuth.Controllers
             double vacationDaysTaken = 0;
             double sickDaysTaken = 0;
             var companyDaysOff = _context.CompanyDayOffs.Include(co => co.CompanyDayOffType).ToList();
+            var employeeHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id);
             if (user.EmployeeStatusID != 1)
             {
                 totalhours = null;
@@ -68,15 +69,16 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 
-                var sickHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 1 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                sickDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year &&  eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
+                var sickHours = employeeHours.Where(eh => eh.Date.Year == year && eh.PartialOffDayTypeID == 1 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                sickDaysTaken = employeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year &&  eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
                 sickDaysTaken = Math.Round(sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay), 2);
                 
-                var vacationHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                vacationDaysTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Count();
+                var vacationHours = employeeHours.Where(eh =>  eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                vacationDaysTaken = employeeHours.Where(eh =>  eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Count();
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
-                
-                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff) - (vacationDaysTaken + sickDaysTaken);
+                var specialDays = employeeHours.Where(eh => eh.OffDayTypeID == 4).Count();
+                var unpaidLeave =employeeHours.Where(eh => eh.OffDayTypeID == 5).Count();
+                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff) - (vacationDaysTaken + sickDaysTaken+unpaidLeave+specialDays);
                 totalhours = totalhours * user.SalariedEmployee.HoursPerDay;
 
             }
@@ -164,9 +166,15 @@ namespace PrototypeWithAuth.Controllers
             }
 
         }
-        protected decimal GetExchangeRateIfNull()
+        protected decimal GetExchangeRate()
         {
-            return _context.ExchangeRates.Select(er => er.LatestExchangeRate).FirstOrDefault();
+            decimal rate;
+            var parsed = decimal.TryParse(_context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString()).Select(er => er.Description).FirstOrDefault(), out rate);
+            if(!parsed)
+            {
+                rate = 0;
+            }
+            return rate;
         }
 
         protected void GetExistingFileStrings(List<DocumentFolder> DocumentsInfo, AppUtility.FolderNamesEnum folderName, string uploadFolderParent)
