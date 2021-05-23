@@ -1,19 +1,29 @@
 ﻿using Abp.Extensions;
 using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using JetBrains.Annotations;
+using Microsoft.ApplicationInsights.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Net.Http.Headers;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
+using SQLitePCL;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -24,7 +34,8 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, hostingEnvironment)
+        public enum ProtocolIconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
+        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, userManager: userManager, hostingEnvironment: hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
@@ -274,11 +285,11 @@ namespace PrototypeWithAuth.Controllers
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID = 0)
         {
             var protocol = _context.Protocols
-                .Include(p => p.Urls).Include(p => p.Lines)
-                .Include(p => p.Materials).ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
+                .Include(p => p.Urls).Include(p => p.Materials)
+                .ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
             protocol.Urls??= new List<Link>();
-            protocol.Materials ??= new List<Material>();
-            protocol.Lines ??= new List<Line>();
+            protocol.Materials ??= new List<Material>();        
+            
             if (protocol.Urls.Count()< 2)
             {
                 while (protocol.Urls.Count() < 2)
@@ -297,8 +308,11 @@ namespace PrototypeWithAuth.Controllers
                 ProtocolCategories = _context.ProtocolCategories,
                 ProtocolSubCategories = _context.ProtocolSubCategories,
                 MaterialCategories = _context.MaterialCategories,
-                LineTypes = _context.LineTypes.ToList()
+                LineTypes = _context.LineTypes.ToList(),
+                FunctionTypes = _context.FunctionTypes
             };
+            await CopySelectedLinesToTempLineTable(protocol.ProtocolID);
+            viewmodel.TempLines = OrderLinesForView(); 
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
             string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, protocol.ProtocolID.ToString());
             FillDocumentsInfo(viewmodel, uploadProtocolsFolder2);
@@ -306,7 +320,117 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.MaterialDocuments = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value);
             return viewmodel;
         }
+        private TempLine TurnLineIntoTempLine(Line line)
+        {
+            TempLine tempLine = new TempLine();
+            tempLine.PermanentLineID = line.LineID;
+            tempLine.Content = line.Content;
+            tempLine.LineNumber = line.LineNumber;
+            tempLine.LineTypeID = line.LineTypeID;
+            tempLine.ProtocolID = line.ProtocolID;
+            tempLine.Timer = line.Timer;
+            tempLine.ParentLineID = line.ParentLineID;
+            return tempLine;
+        }
+        private Line TurnTempLineToLine (TempLine tempLine)
+        {
+            Line line = new Line();
+            line.LineID = tempLine.PermanentLineID?? tempLine.LineID;
+            line.Content = tempLine.Content;
+            line.LineNumber = tempLine.LineNumber;
+            line.LineTypeID = tempLine.LineTypeID;
+            line.ProtocolID = tempLine.ProtocolID;
+            line.Timer = tempLine.Timer;
+            line.ParentLineID = tempLine.ParentLineID;
+            return line;
+        }
+        private List<LineType> GetOrderLineTypeFromParentToChild()
+        {
+            List<LineType> orderedLineTypes = new List<LineType>();
+            var lineTypes = _context.LineTypes;
+            var parentLineType = lineTypes.Where(lt=>lt.LineTypeParentID==null).FirstOrDefault();
+            orderedLineTypes.Add(parentLineType);
+            while(parentLineType.LineTypeChildID!=null)
+            {
+                parentLineType = lineTypes.Where(lt => lt.LineTypeID == parentLineType.LineTypeChildID).FirstOrDefault();
+                orderedLineTypes.Add(parentLineType);
+            }
+            return orderedLineTypes;
+        }
+        private List<LineType> GetOrderLineTypeFromChildToParent()
+        {
+            List<LineType> orderedLineTypes = new List<LineType>();
+            var lineTypes = _context.LineTypes;
+            var childLineType = lineTypes.Where(lt => lt.LineTypeChildID == null).FirstOrDefault();
+            orderedLineTypes.Add(childLineType);
+            while (childLineType.LineTypeParentID != null)
+            {
+                childLineType = lineTypes.Where(lt => lt.LineTypeID == childLineType.LineTypeParentID).FirstOrDefault();
+                orderedLineTypes.Add(childLineType);
+            }
+            return orderedLineTypes;
+        }
 
+        private async Task CopySelectedLinesToTempLineTable(int protocolID)
+        {
+            await ClearTempLinesTable();
+            var lines = _context.Lines.Where(l => l.ProtocolID == protocolID);
+            var lineTypes = GetOrderLineTypeFromParentToChild();
+            foreach(var lineType in lineTypes)
+            {
+                var linesByType = lines.Where(l => l.LineTypeID == lineType.LineTypeID);
+                foreach (var line in linesByType)
+                {
+                    _context.Add(TurnLineIntoTempLine(line));
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task SaveTempLines(List<TempLine> TempLines)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    await UpdateLineContentAsync(TempLines);
+                    var tempLines = _context.TempLines;
+                    var lines = _context.Lines.Where(l => l.ProtocolID == tempLines.FirstOrDefault().ProtocolID);
+                    foreach (var line in tempLines)
+                    {
+                        _context.Update(TurnTempLineToLine(line));
+                    }
+                    _context.SaveChanges();
+                    await ClearTempLinesTable();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                    //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
+                }
+            }
+        }
+        private async Task ClearTempLinesTable()
+        {
+            var lineTypes = GetOrderLineTypeFromChildToParent();
+            foreach (var lineType in lineTypes)
+            {
+                var linesByType = _context.TempLines.Where(l => l.LineTypeID == lineType.LineTypeID);
+                foreach (var line in linesByType)
+                {
+                    _context.Remove(line);
+                }
+                await _context.SaveChangesAsync();
+            }
+           
+            var tempLines = _context.Lines.Where(tl => tl.IsTemporary);
+            foreach(var tempLine in tempLines)
+            {
+                _context.Remove(tempLine);
+            }
+            await _context.SaveChangesAsync();
+        }
         private Dictionary<Material, List<DocumentFolder>> FillMaterialDocumentsModel(IEnumerable<Material> Materials, string uploadProtocolsFolder)
         {
             Dictionary<Material, List<DocumentFolder>> MaterialFolders = new Dictionary<Material, List<DocumentFolder>>();
@@ -369,71 +493,169 @@ namespace PrototypeWithAuth.Controllers
                 return redirectToMaterialTab(materialDB.ProtocolID);
             }
         }
-
+        [HttpPost]
+        [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> _Line(int index, int lineTypeID, int currentLineTypeID,string lineNumberString, string parentLineNumberString, int parentLineID, int currentLineNumber)
+        public async Task<IActionResult> _Lines(List<TempLine> TempLines, int lineTypeID, int currentLineID, int protocolID)
         {
-            var newLineNumberString = "";
-            var newLineNumber = 0;
-            switch(lineTypeID)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                case 1:
-                    switch (currentLineTypeID)
+                try
+                {
+                    //save all temp line data 
+                    await UpdateLineContentAsync(TempLines);
+                
+                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Where(l => l.PermanentLineID == currentLineID).FirstOrDefault();
+                    var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
+                    var orderedLineTypes = GetOrderLineTypeFromParentToChild();
+                    TempLine newLine = new TempLine();
+                    newLine.LineTypeID = lineTypeID;
+                    newLine.ProtocolID = protocolID;
+                    if (newLine.LineNumber == 0)
                     {
-                        case 1:
-                            //if current line type and new line type are same type
-                            newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString +"."+newLineNumber;
-                            break;
-                        case 2:
-                            //if current line is child of new line 
-                     
-                            break;
-                        case 3:
-                            //if current line is child of new line but not a direct child
+                        newLine.LineNumber = 1;
+                    }
+                    _context.Add(newLine);
+                    await _context.SaveChangesAsync();
+                    _context.Add(new Line { LineID = newLine.LineID, LineTypeID = lineTypeID, ProtocolID = protocolID, IsTemporary= true });
+                    await _context.SaveChangesAsync();
+                    newLine.PermanentLineID = newLine.LineID;
+                    _context.Update(newLine);
+                    await _context.SaveChangesAsync();
+                    if (currentLine != null)
+                    {
+                        var currentLineTypeIndex = orderedLineTypes.IndexOf(currentLine.LineType);
+                        var newLineTypeIndex = orderedLineTypes.IndexOf(newLineType);
+                        if (newLineTypeIndex <= currentLineTypeIndex)
+                        {
+                            //new line is parent of child
+                            var parent = currentLine;
 
-                            break;
+                            newLine.LineTypeID = newLineType.LineTypeID;
+
+                            while (parent != null)
+                            {
+                                if (parent.LineTypeID == newLineType.LineTypeID)
+                                {
+                                    newLine.LineNumber = (parent.LineNumber + 1);
+                                    newLine.ParentLineID = parent.ParentLineID;
+                                    _context.Update(newLine);
+                                    //we have to increment all the sibling parents
+                                    var siblings = _context.TempLines.Where(tl => tl.LineNumber > parent.LineNumber && tl.ParentLineID == newLine.ParentLineID);
+                                    await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
+                                    await _context.SaveChangesAsync();
+
+                                    break;
+                                }
+                                parent = _context.TempLines.Where(tl => tl.PermanentLineID == parent.ParentLineID).FirstOrDefault();
+                            }
+
+
+                            if (newLineTypeIndex < currentLineTypeIndex)
+                            {
+                                //get currentline siblings and make their parent point to new line
+                                var currentLineSiblings = _context.TempLines.Where(lt => lt.ParentLineID == currentLine.PermanentLineID && lt.LineNumber > currentLine.LineNumber);
+                                await currentLineSiblings.ForEachAsync(tl =>
+                                {
+                                    tl.LineNumber -= currentLine.LineNumber;
+                                    tl.ParentLineID = newLine.LineID;
+                                    _context.Update(tl);
+                                });
+                                await _context.SaveChangesAsync();
+
+                                if (orderedLineTypes.IndexOf(currentLine.ParentLine.LineType) < newLineTypeIndex)
+                                {
+                                    //make new line currents parent
+                                    newLine.ParentLineID = currentLine.ParentLineID;
+                                    currentLine.ParentLineID = newLine.LineID;
+                                    _context.Update(currentLine);
+                                    _context.Update(newLine);
+                                    await _context.SaveChangesAsync();
+                                }
+                            }
+                            else // types are the same
+                            {
+                                //all curents children should pount to new line
+                                await _context.TempLines.Where(tl => tl.ParentLineID == currentLine.PermanentLineID).ForEachAsync(tl => { tl.ParentLineID = newLine.LineID; _context.Update(tl); });
+                                await _context.SaveChangesAsync();
+
+                            }
+
+                        }
+                        else
+                        {
+                            newLine.LineNumber = 1;
+                            newLine.ParentLineID = currentLine.PermanentLineID;
+                            _context.Update(newLine);
+                            var siblings = _context.TempLines.Where(tl => tl.ParentLineID == newLine.ParentLineID);
+                            await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
+                            await _context.SaveChangesAsync();
+                        }
+
                     }
-                    break;
-                case 2:
-                    switch (currentLineTypeID)
-                    {
-                        case 1:
-                            //current line is parent of new line
-                            newLineNumberString = lineNumberString + "."+1;
-                            newLineNumber = 1;
-                            break;
-                        case 2:
-                            //if current line type and new line type are same type
-                            newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
-                            break;
-                        case 3:
-                            //current line is child of new line
-                          
-                            break;
-                    }
-                    break;
-                case 3:
-                    switch (currentLineTypeID)
-                    {
-                        case 1:   //current line is parent of new line                  
-                        case 2:
-                            newLineNumberString = lineNumberString + "." + 1;
-                            newLineNumber = 1;
-                            break;
-                        case 3:
-                            //if current line type and new line type are same type
-                            newLineNumber = currentLineNumber + 1;
-                            newLineNumberString = parentLineNumberString+"." +newLineNumber;
-                            break;
-                    }
-                    break;
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                    //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
+                    return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(), ErrorMessage = AppUtility.GetExceptionMessage(ex) }) ;
+                }
             }
-            var lineTypes = _context.LineTypes.ToList();
-            return PartialView(new ProtocolsLineViewModel { Index = (index+1), Line = new Line { LineTypeID = lineTypeID, LineNumber=newLineNumber}, LineNumberString = newLineNumberString , LineTypes = lineTypes});
+
+            List<ProtocolsLineViewModel> refreshedLines = OrderLinesForView();
+
+            return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
         }
 
+
+        public async Task<IActionResult> AddFunctionToLine(int lineID, int functionID)
+        {
+            return RedirectToAction("_Lines");
+        }
+        public bool CheckIfSerialNumberExists(string serialNumber)
+        {
+            return _context.Products.Where(p => p.SerialNumber.Equals(serialNumber)).ToList().Any();
+        }
+        private async Task UpdateLineContentAsync(List<TempLine> TempLines)
+        {
+            foreach (var line in TempLines)
+            {
+    
+                var temp = _context.TempLines.Where(tl => tl.PermanentLineID == line.PermanentLineID).FirstOrDefault();
+                if (temp != null)
+                {
+                    temp.Content = line.Content ?? "";
+                    _context.Update(temp);
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        private List<ProtocolsLineViewModel> OrderLinesForView()
+        {
+            List<ProtocolsLineViewModel> refreshedLines = new List<ProtocolsLineViewModel>();
+            Stack<TempLine> parentNodes = new Stack<TempLine>();
+            var lineTypes = _context.LineTypes.ToList();
+            _context.TempLines.Where(tl => tl.ParentLineID == null).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(tl => { parentNodes.Push(tl); });
+            int count = 0;
+            while (!parentNodes.IsEmpty())
+            {
+                var node = parentNodes.Pop();
+
+                refreshedLines.Add(new ProtocolsLineViewModel() { LineTypes = lineTypes,
+                    TempLine = node, Index = count++,
+                    LineNumberString = refreshedLines.Where(rl => rl.TempLine.PermanentLineID == node.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.LineNumber+"."
+                });
+                _context.TempLines.Where(c => c.ParentLineID == (node.PermanentLineID)).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
+            }
+            if(refreshedLines.Count == 0)
+            {
+                refreshedLines.Add(new ProtocolsLineViewModel() { LineTypes = lineTypes, Index = 0, LineNumberString = 1 + "" });
+            }
+            return refreshedLines;
+        }
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> LinkMaterialToProductModal(int materialID)
@@ -538,7 +760,7 @@ namespace PrototypeWithAuth.Controllers
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
             var materials = _context.Materials.Include(m => m.Product).Where(m => m.ProtocolID == protocolID);
             Dictionary<Material, List<DocumentFolder>> MaterialFolders = FillMaterialDocumentsModel(materials, uploadProtocolsFolder);
-            return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = materials, MaterialCategories = _context.MaterialCategories, Folders = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value) });
+            return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = materials.ToList(), MaterialCategories = _context.MaterialCategories, Folders = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value) });
         }
 
         [Authorize(Roles = "Requests")]
@@ -703,66 +925,73 @@ namespace PrototypeWithAuth.Controllers
 
             var resourceLibraryViewModel = new ResourceLibraryViewModel();
 
-            switch (CategoryType)
-            {
-                case 2:
-                    resourceLibraryViewModel.PageType = 2;
-                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType == true);
-                    break;
-                case 1:
-                default:
-                    resourceLibraryViewModel.PageType = 1;
-                    resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType != true);
-                    break;
-            }
+            //switch (CategoryType)
+            //{
+            //    case 2:
+            //        resourceLibraryViewModel.PageType = 2;
+            //        resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType == true);
+            //        break;
+            //    case 1:
+            //    default:
+            //        resourceLibraryViewModel.PageType = 1;
+            //        resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories.Where(rc => rc.IsResourceType != true);
+            //        break;
+            //}
 
+            resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories;
             return View(resourceLibraryViewModel);
         }
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> ResourcesList(int? ResourceCategoryID, AppUtility.SidebarEnum SidebarEnum = AppUtility.SidebarEnum.Library)
+        public async Task<IActionResult> ResourcesList(int? ResourceCategoryID)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = SidebarEnum;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
-            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel() { IsFavoritesPage = false };
-            switch (SidebarEnum)
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
+
+            ResourcesListIndexViewModel.ResourcesWithFavorites = _context.Resources
+                .Include(r => r.FavoriteResources)
+                .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
+                .Select(r => new ResourceWithFavorite
+                {
+                    Resource = r,
+                    IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                }).ToList();
+            ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Library;
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
             {
-                case AppUtility.SidebarEnum.Library:
-                    resourcesListViewModel.ResourcesWithFavorites = _context.Resources
-                        .Include(r => r.FavoriteResources)
-                        .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                        .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
-                        .Select(r => new ResourceWithFavorite
-                        {
-                            Resource = r,
-                            IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
-                        }).ToList();
-
-                    resourcesListViewModel.PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription };
-                    break;
-                case AppUtility.SidebarEnum.Favorites:
-                    resourcesListViewModel.ResourcesWithFavorites = _context.FavoriteResources
-                        .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                        .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
-                        .Select(fr => new ResourceWithFavorite
-                        {
-                            Resource = fr.Resource,
-                            IsFavorite = true
-                        }).ToList();
-                    resourcesListViewModel.IsFavoritesPage = true;
-                    resourcesListViewModel.PaginationTabs = new List<string>() { };
-                    break;
-                case AppUtility.SidebarEnum.SharedWithMe:
-                    break;
-            }
-
-
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Favorite },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Share },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Edit }
+            });
+            ResourcesListViewModel resourcesListViewModel = new ResourcesListViewModel()
+            {
+                ResourcesListIndexViewModel = ResourcesListIndexViewModel,
+                PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
+            };
 
 
             return View(resourcesListViewModel);
+        }
+
+        [HttpGet]
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _ResourcesListIndex(ResourcesListIndexViewModel ResourcesListIndexViewModel = null, AppUtility.SidebarEnum? sidebarEnum = null, bool IsFavorites = false, bool IsShared = false)
+        {
+            if (sidebarEnum == AppUtility.SidebarEnum.Favorites)
+            {
+                ResourcesListIndexViewModel = GetFavoritesResourceListIndexViewModel();
+            }
+            else if (sidebarEnum == AppUtility.SidebarEnum.SharedWithMe)
+            {
+                ResourcesListIndexViewModel = await GetResourcesSharedWithMe();
+            }
+            return PartialView(ResourcesListIndexViewModel);
         }
 
         [HttpGet]
@@ -797,7 +1026,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> FavoriteResources(int ResourceID, bool Favorite = true, bool ReloadFavoritesPage = false)
+        public async Task<IActionResult> FavoriteResources(int ResourceID, bool Favorite = true)
         {
             //The system for checks is strict b/c the calls are dependent upon icon names in code and jquery that can break or be changed one day
             string retString = null;
@@ -809,7 +1038,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         FavoriteResource favoriteResource = _context.FavoriteResources.Where(fr => fr.ResourceID == ResourceID && fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
                         if (favoriteResource != null) { _context.Remove(favoriteResource); } //check is here so it doesn't crash
-                        //if it doesn't exist the jquery will then cont and leave an empty icon which is ok b/c its empty
+                                                                                             //if it doesn't exist the jquery will then cont and leave an empty icon which is ok b/c its empty
                     }
                     else
                     {
@@ -833,14 +1062,7 @@ namespace PrototypeWithAuth.Controllers
                     transaction.Rollback();
                 }
             }
-            if (ReloadFavoritesPage)
-            {
-                return RedirectToAction("ResourcesList", new { SidebarEnum = AppUtility.SidebarEnum.Favorites });
-            }
-            else
-            {
-                return new EmptyResult();
-            }
+            return new EmptyResult();
         }
 
         [HttpGet]
@@ -931,15 +1153,82 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedWithMe;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+
+            return View(await GetResourcesSharedWithMe());
         }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<ResourcesListIndexViewModel> GetResourcesSharedWithMe()
+        {
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
+
+            var shareresourcesreceivedResoureid = _context.Users.Include(u => u.ShareResourcesReceived)
+                .Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault()
+                .ShareResourcesReceived.Select(srr => srr.ResourceID).ToList();
+
+            var testNew = _context.Resources
+            .Include(r => r.FavoriteResources)
+            .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+            .Where(r => shareresourcesreceivedResoureid.Contains(r.ResourceID));
+
+            ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.SharedWithMe;
+            ResourcesListIndexViewModel.ResourcesWithFavorites = testNew.Select(r => new ResourceWithFavorite
+            {
+                Resource = r,
+                IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+            }).ToList();
+
+            var tempResourcesWithFavorites = from r in _context.Resources
+                                             join sr in _context.ShareResources on r.ResourceID equals sr.ResourceID
+                                             join fr in _context.FavoriteResources on r.ResourceID equals fr.ResourceID into g
+                                             from fr in g.DefaultIfEmpty()
+                                             where sr.ToApplicationUserID == _userManager.GetUserId(User)
+                                             select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteResourceID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser, ShareResourceID = sr.ShareResourceID };
+
+            ResourcesListIndexViewModel.ResourcesWithFavorites = tempResourcesWithFavorites.ToList();
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
+            {
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Favorite },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Share },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Edit },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.MorePopover, IconNamesEnums = new List<AppUtility.IconNamesEnum>(){ AppUtility.IconNamesEnum.RemoveShare } }
+            });
+
+            return ResourcesListIndexViewModel;
+        }
+
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ResourcesFavorites()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+
+            return View(GetFavoritesResourceListIndexViewModel());
+        }
+
+
+        [Authorize(Roles = "Protocols")]
+        public ResourcesListIndexViewModel GetFavoritesResourceListIndexViewModel()
+        {
+            ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel();
+            ResourcesListIndexViewModel.ResourcesWithFavorites = _context.FavoriteResources
+                .Include(fr => fr.Resource).ThenInclude(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                .Select(fr => new ResourceWithFavorite
+                {
+                    Resource = fr.Resource,
+                    IsFavorite = true
+                }).ToList();
+            ResourcesListIndexViewModel.IsFavoritesPage = true;
+            ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Favorites;
+            ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
+            {
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Favorite },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Share },
+                new IconNamesEnumWithList(){ IconNamesEnum = AppUtility.IconNamesEnum.Edit }
+            });
+            return ResourcesListIndexViewModel;
         }
 
         [Authorize(Roles = "Protocols")]
@@ -1011,15 +1300,141 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Protocols")]
-        private void FillDocumentsInfo(CreateProtocolsViewModel createProtoclsViewModel, string uploadFolder)
+        private void FillDocumentsInfo(CreateProtocolsViewModel createProtocolsViewModel, string uploadFolder)
         {
-            createProtoclsViewModel.DocumentsInfo = new List<DocumentFolder>();
+            createProtocolsViewModel.DocumentsInfo = new List<DocumentFolder>();
 
-            GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
-            GetExistingFileStrings(createProtoclsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
+            GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
+            GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
+        }
+        [Authorize(Roles = "Protocols")]
+        public async void RemoveShare(int ShareID, AppUtility.ModelsEnum modelsEnum)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    switch (modelsEnum)
+                    {
+                        case AppUtility.ModelsEnum.Resource:
+                            var sharedResource = _context.ShareResources.Where(sr => sr.ShareResourceID == ShareID).FirstOrDefault();
+                            _context.Remove(sharedResource);
+                            break;
+                    }
+                     _context.SaveChanges();
+                     transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
         }
 
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ShareModal(int ID, AppUtility.ModelsEnum ModelsEnum)
+        {
+            ShareModalViewModel shareModalViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
+            shareModalViewModel.MenuItem = AppUtility.MenuItems.Protocols;
+            switch (ModelsEnum)
+            {
+                case AppUtility.ModelsEnum.Resource:
+                    shareModalViewModel.ObjectDescription = _context.Resources.Where(r => r.ResourceID == ID).FirstOrDefault().Title;
+                    break;
+            }
+            return PartialView(shareModalViewModel);
+        }
 
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<bool> ShareModal(ShareModalViewModel shareModalViewModel)
+        {
+            var currentUserID = _userManager.GetUserId(User);
+            bool error = false;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    switch (shareModalViewModel.ModelsEnum)
+                    {
+                        case AppUtility.ModelsEnum.Resource:
+                            var PrevSharedResource = _context.ShareResources
+                                .Where(sr => sr.ResourceID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == shareModalViewModel.ApplicationUserID).FirstOrDefault();
+                            if (PrevSharedResource != null)
+                            {
+                                PrevSharedResource.TimeStamp = DateTime.Now;
+                                _context.Update(PrevSharedResource);
+                            }
+                            else
+                            {
+                                var shareResource = new ShareResource()
+                                {
+                                    ResourceID = shareModalViewModel.ID,
+                                    FromApplicationUserID = currentUserID,
+                                    ToApplicationUserID = shareModalViewModel.ApplicationUserID,
+                                    TimeStamp = DateTime.Now
+                                };
+                                _context.Update(shareResource);
+                            }
+                            break;
+                    }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    error = true;
+                }
+            }
+
+            return error;
+        }
+
+        public List<IconColumnViewModel> GetIconColumnViewModels(List<IconNamesEnumWithList> iconNamesEnumWithLists) //MUST USE THIS OVERRIDE WHEN FAVORITES ARE INCLUDED
+        {
+            var iconColumnViewModels = new List<IconColumnViewModel>();
+            var editIcon = new IconColumnViewModel("icon-create-24px", null, "edit", "Edit");
+            var favoriteIcon = new IconColumnViewModel(AppUtility.FavoriteIcons().Where(fi => fi.StringName == AppUtility.FavoriteIconTitle.Empty.ToString()).FirstOrDefault().StringDefinition, null, "favorite", "Favorite");
+            var shareIcon = new IconColumnViewModel("icon-share-24px1", null, "share", "Share");
+            var moreIcon = new IconColumnViewModel("icon-more_vert-24px", null, "popover-more", "More");
+
+            var removeShareIcon = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
+
+            foreach (var iconNameEnum in iconNamesEnumWithLists)
+            {
+                switch (iconNameEnum.IconNamesEnum)
+                {
+                    case AppUtility.IconNamesEnum.Edit:
+                        iconColumnViewModels.Add(editIcon);
+                        break;
+                    case AppUtility.IconNamesEnum.Favorite:
+                        iconColumnViewModels.Add(favoriteIcon);
+                        break;
+                    case AppUtility.IconNamesEnum.Share:
+                        iconColumnViewModels.Add(shareIcon);
+                        break;
+                    case AppUtility.IconNamesEnum.MorePopover:
+                        var popoverMoreIcon = moreIcon;
+                        popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                        foreach (var iconPopoverName in iconNameEnum.IconNamesEnums)
+                        {
+                            switch (iconPopoverName)
+                            {
+                                case AppUtility.IconNamesEnum.RemoveShare:
+                                    popoverMoreIcon.IconPopovers.Add(removeShareIcon);
+                                    break;
+                            }
+                        }
+                        //var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
+                        //popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
+                        iconColumnViewModels.Add(popoverMoreIcon);
+                        break;
+                };
+            }
+
+            return iconColumnViewModels;
+        }
 
     }
+
 }

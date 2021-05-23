@@ -1,8 +1,10 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddMaterialViewModel
 @using PrototypeWithAuth.AppData
-    <script src="~/js/site.js"></script>
-<div class="modal modal-document fader on-form-modal protocol-form"  @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
-    <div class="modal-dialog-centered mx-auto" style="width:40% !important">
+<script src="~/js/site.js"></script>
+<script src="~/js/Validation/AddMaterialValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<div class="modal modal-document fader on-form-modal protocol-form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
+    <div class="modal-dialog-centered mx-auto" style="width:45% !important">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-material');">
                 <span aria-hidden="true">&times;</span>
@@ -57,7 +59,7 @@
                                 <div class="row">
                                     <div class=" offset-4 text-center">
                                         <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" name="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
-                                        <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Pictures.ToString()" name="@AppUtility.FolderNamesEnum.Pictures.ToString()" data-val="@true" showSwitch="@false" parentFolder ="@AppUtility.ParentFolderName.Materials">
+                                        <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Pictures.ToString()" name="@AppUtility.FolderNamesEnum.Pictures.ToString()" data-val="@true" showSwitch="@false" parentFolder="@AppUtility.ParentFolderName.Materials">
 
                                             <div class="card document-border @hasFileClass">
                                                 <div class="document-card text-center">
@@ -94,25 +96,40 @@
 
     $(".saveMaterial").click(function (e) {
         e.preventDefault();
-        var formData = new FormData($(".materialForm")[0]);
-        $.ajax({
-            url: "/Protocols/AddMaterialModal",
-            traditional: true,
-            data: formData,
-            contentType: false,
-            processData: false,
-            type: "POST",
-            success: function (data) {
-                $("#Materials").html(data);
-                $.fn.CloseModal('add-material');
-            },
-            error: function (jqxhr) {
-                if (jqxhr.status == 500) {
-                    $.fn.OpenModal('modal', 'add-material', jqxhr.responseText);
-                }
-                return true;
+        
+        $('.materialForm').data("validator").settings.ignore = "";
+        var valid = $('.materialForm').valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+            e.preventDefault();
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
             }
-        });
+
+        }
+        else {
+            $('.activeSubmit').removeClass('disabled-submit')
+            var formData = new FormData($(".materialForm")[0]);
+            $.ajax({
+                url: "/Protocols/AddMaterialModal",
+                traditional: true,
+                data: formData,
+                contentType: false,
+                processData: false,
+                type: "POST",
+                success: function (data) {
+                    $("#Materials").html(data);
+                    $.fn.CloseModal('add-material');
+                },
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $.fn.OpenModal('modal', 'add-material', jqxhr.responseText);
+                    }
+                    return true;
+                }
+            }); 
+        }
+        $('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
     });
 
 </script>

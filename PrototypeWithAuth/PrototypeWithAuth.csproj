@@ -275,6 +275,64 @@
     <Compile Remove="Data\Migrations\20210509050711_removeIdentityFromTempLine.Designer.cs" />
     <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.cs" />
     <Compile Remove="Data\Migrations\20210509051108_AddIdentityToTempLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210510114235_test.cs" />
+    <Compile Remove="Data\Migrations\20210510114235_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210511052342_TemplineGetterProperty.cs" />
+    <Compile Remove="Data\Migrations\20210511052342_TemplineGetterProperty.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512081048_PermanentLineIDNotNull.cs" />
+    <Compile Remove="Data\Migrations\20210512081048_PermanentLineIDNotNull.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512082448_PermanentLineIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210512082448_PermanentLineIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512083035_PermanentLineIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210512083035_PermanentLineIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210512090000_PermanentLineIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210512090000_PermanentLineIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513063210_PermanentIDNullabl.cs" />
+    <Compile Remove="Data\Migrations\20210513063210_PermanentIDNullabl.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513063650_PermaneetIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210513063650_PermaneetIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513063806_PermanentIDNullable.cs" />
+    <Compile Remove="Data\Migrations\20210513063806_PermanentIDNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513071025_PermanentIDNullable4.cs" />
+    <Compile Remove="Data\Migrations\20210513071025_PermanentIDNullable4.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513072330_PermanentFKNullable.cs" />
+    <Compile Remove="Data\Migrations\20210513072330_PermanentFKNullable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513072858_test.cs" />
+    <Compile Remove="Data\Migrations\20210513072858_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513073120_virtualPermanentLineID.cs" />
+    <Compile Remove="Data\Migrations\20210513073120_virtualPermanentLineID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513073732_virtualPermanentLineID2.cs" />
+    <Compile Remove="Data\Migrations\20210513073732_virtualPermanentLineID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513075020_fkNotationParentLineID.cs" />
+    <Compile Remove="Data\Migrations\20210513075020_fkNotationParentLineID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513080636_FKAnnotation.cs" />
+    <Compile Remove="Data\Migrations\20210513080636_FKAnnotation.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513102924_FKAnnotation.cs" />
+    <Compile Remove="Data\Migrations\20210513102924_FKAnnotation.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513115946_HasFilterNullPermanentID.cs" />
+    <Compile Remove="Data\Migrations\20210513115946_HasFilterNullPermanentID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513120854_HasFilterNullPermanentID2.cs" />
+    <Compile Remove="Data\Migrations\20210513120854_HasFilterNullPermanentID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121123_HasFilterNullPermanentID2.cs" />
+    <Compile Remove="Data\Migrations\20210513121123_HasFilterNullPermanentID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121302_HasFilterNullPermanentID3.cs" />
+    <Compile Remove="Data\Migrations\20210513121302_HasFilterNullPermanentID3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121717_HasFilterNullPermanentID3.cs" />
+    <Compile Remove="Data\Migrations\20210513121717_HasFilterNullPermanentID3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513121932_HasFilterNullPermanentID3.cs" />
+    <Compile Remove="Data\Migrations\20210513121932_HasFilterNullPermanentID3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210513122233_HasFilterNullPermanentID2.cs" />
+    <Compile Remove="Data\Migrations\20210513122233_HasFilterNullPermanentID2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519060127_j.cs" />
+    <Compile Remove="Data\Migrations\20210519060127_j.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519060744_d.cs" />
+    <Compile Remove="Data\Migrations\20210519060744_d.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519063214_hj.cs" />
+    <Compile Remove="Data\Migrations\20210519063214_hj.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519065517_FunctionDescriptionEnum.cs" />
+    <Compile Remove="Data\Migrations\20210519065517_FunctionDescriptionEnum.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.cs" />
+    <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.Designer.cs" />
   </ItemGroup>
 
 
@@ -294,6 +352,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6">
