@@ -74,8 +74,9 @@ namespace PrototypeWithAuth.Controllers
                 var vacationHours = employeeHours.Where(eh =>  eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                 vacationDaysTaken = employeeHours.Where(eh =>  eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Count();
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
-                
-                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff) - (vacationDaysTaken + sickDaysTaken);
+                var specialDays = employeeHours.Where(eh => eh.OffDayTypeID == 4).Count();
+                var unpaidLeave =employeeHours.Where(eh => eh.OffDayTypeID == 5).Count();
+                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff) - (vacationDaysTaken + sickDaysTaken+unpaidLeave+specialDays);
                 totalhours = totalhours * user.SalariedEmployee.HoursPerDay;
                
             }
