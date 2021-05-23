@@ -42,7 +42,9 @@ namespace PrototypeWithAuth.Controllers
             var lastUpdateToTimekeeper = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.LoginUpdates.ToString()).FirstOrDefault();
             if(lastUpdateToTimekeeper==null)
             {
-                lastUpdateToTimekeeper = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now };
+                lastUpdateToTimekeeper = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now.AddDays(-1) };
+                _context.Update(lastUpdateToTimekeeper);
+                await _context.SaveChangesAsync();
             }
             else if(lastUpdateToTimekeeper.Date.Date < DateTime.Today)
             {
@@ -59,6 +61,7 @@ namespace PrototypeWithAuth.Controllers
                 _context.Update(lastUpdateToTimekeeper);
                 await _context.SaveChangesAsync();
             }
+  
             if (user.LastLogin.Date < DateTime.Today)
             {
                 fillInOrderLate(user);
