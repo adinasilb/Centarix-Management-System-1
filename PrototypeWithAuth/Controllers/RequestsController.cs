@@ -413,6 +413,7 @@ namespace PrototypeWithAuth.Controllers
             Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
             requestIndexViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
             requestIndexViewModel.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
+            requestIndexViewModel.PricePopoverViewModel.PopoverSource = 1;
             requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
             bool isProprietary = requestIndexObject.RequestStatusID == 7 ? true : false;
             requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, requestIndexObject.SectionType,  isProprietary);
@@ -667,6 +668,7 @@ namespace PrototypeWithAuth.Controllers
             viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
             viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
             viewModelByVendor.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
+            viewModelByVendor.PricePopoverViewModel.PopoverSource = 1;
             viewModelByVendor.PageType = requestIndexObject.PageType;
             viewModelByVendor.SidebarType = requestIndexObject.SidebarType;
             viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
@@ -2177,6 +2179,7 @@ namespace PrototypeWithAuth.Controllers
                 Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = selectedPriceSort.Contains(p.ToString()) }));
                 requestItemViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
                 requestItemViewModel.PricePopoverViewModel.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), selectedCurrency ?? requestItemViewModel.Requests[0].Currency);
+                requestItemViewModel.PricePopoverViewModel.PopoverSource = 2;
             }
 
             if (requestItemViewModel.Requests.FirstOrDefault() == null)

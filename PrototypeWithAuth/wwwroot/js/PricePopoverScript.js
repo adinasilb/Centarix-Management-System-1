@@ -14,7 +14,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     if ($(".modal").hasClass('editModal')) {
         var requestID = $('#history').find('button.open-history-item-modal').attr("value");
         var selectedPriceSort = [];
-        $("#priceSortContent .priceSort:checked").each(function (e) {
+        $("#priceSortContent2 .priceSort:checked").each(function (e) {
             selectedPriceSort.push($(this).attr("enum"));
         })
         $.ajax({
@@ -58,7 +58,7 @@ $(".open-price-popover").off('click').click(function () {
 			placement: 'bottom',
 			html: true,
             content: function () {
-                return $('#priceSortContent').html();
+                return $('#priceSortContent1').html();
 			}
 		});
     $('.open-price-popover').popover('toggle');
