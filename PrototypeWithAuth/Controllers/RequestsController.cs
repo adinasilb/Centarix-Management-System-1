@@ -1962,16 +1962,16 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null)
+        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false)
         {
             selectedPriceSort = selectedPriceSort.Count == 0 ? new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() } : selectedPriceSort;
-            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable, selectedPriceSort);
+            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable, selectedPriceSort, isProprietary: isProprietary);
             return PartialView(requestItemViewModel);
         }
 
         [Authorize(Roles = "Requests")]
         public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
-            bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null)
+            bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null, bool isProprietary = false)
         {
             
             var categoryType = 1;
@@ -2184,7 +2184,7 @@ namespace PrototypeWithAuth.Controllers
 
 
             }
-            if (selectedPriceSort != null)
+            if (selectedPriceSort != null && !isProprietary)
             {
                 requestItemViewModel.PricePopoverViewModel = new PricePopoverViewModel();
                 List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
@@ -2193,6 +2193,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.PricePopoverViewModel.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), selectedCurrency ?? requestItemViewModel.Requests[0].Currency);
                 requestItemViewModel.PricePopoverViewModel.PopoverSource = 2;
             }
+            requestItemViewModel.IsProprietary = isProprietary;
 
             if (requestItemViewModel.Requests.FirstOrDefault() == null)
             {

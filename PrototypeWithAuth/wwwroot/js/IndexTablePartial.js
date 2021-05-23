@@ -86,7 +86,7 @@ $(".load-quote-details").on("click", function (e) {
 });
 
 
-$("body").on("click", ".load-order-details", function (e) {
+$("body").off('click').on("click", ".load-order-details", function (e) {
 	console.log("in order details");
 	e.preventDefault();
 	e.stopPropagation();
@@ -94,6 +94,7 @@ $("body").on("click", ".load-order-details", function (e) {
 	var section = $("#masterSectionType").val()
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
 	var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString()
+	console.log($(this).attr("value"));
 	$.fn.CallPageRequest($itemurl, "reorder");
 	return false;
 });
@@ -116,7 +117,8 @@ $(".load-product-details-summary").off('click').on("click", function (e) { //why
 	$("#loading").show();
 	console.log('in load products details summary');
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
-	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val();
+	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val() + "&isProprietary=" + isProprietary;
 	$.fn.CallPageRequest($itemurl, "summary");
 	return false;
 });
