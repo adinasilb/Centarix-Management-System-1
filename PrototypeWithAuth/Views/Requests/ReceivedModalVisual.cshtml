@@ -85,7 +85,7 @@
                         }
                         var labelClass = "tiny-label-font-size m-0";
 
-                        if ((locationsList[z].LocationTypeID == 201 || locationsList[z].LocationTypeID == 502) && locationsList[z].IsEmptyShelf)
+                        if (locationsList[z].IsEmptyShelf)
                         {
                             if (!create && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
@@ -102,7 +102,7 @@
                                 </div>
                             </td>
                         }
-                        else if ((locationsList[z].LocationTypeID == 201 || locationsList[z].LocationTypeID == 501) && !locationsList[z].IsEmptyShelf)
+                        else if ((locationsList[z].LocationTypeID == 201 || locationsList[z].LocationTypeID == 502) && !locationsList[z].IsEmptyShelf)
                         {
                             <td class="@outerClass not-clickable" style="padding:0px;" id="@(id+".LocationInstanceID")">
                                 <div>

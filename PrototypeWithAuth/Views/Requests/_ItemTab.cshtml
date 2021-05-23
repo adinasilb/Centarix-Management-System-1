@@ -306,7 +306,7 @@
                 </div>
                 <div class="col-md-3">
                     <label asp-for="Requests[0].ParentRequest.OrderDate" class="control-label"></label>
-                    <input type="text" asp-for="Requests[0].ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" />
+                    <input type="text" asp-for="Requests[0].ParentRequest.OrderDate" class="form-control-plaintext border-bottom datepicker  @markReadOnlyClass" asp-format="{0:dd/MM/yyyy}"  />
                     <span asp-validation-for="Requests[0].ParentRequest.OrderDate" class="text-danger-centarix"></span>
                 </div>
             }
@@ -330,7 +330,7 @@
 }
 else
 {
-    <div class="row">
+    @*<div class="row">
         <div class="col-md-4 form-group">
             <label asp-for="Requests[0].Unit" class="control-label"></label>
             @Html.EditorFor(vm => vm.Requests[0].Unit, new { htmlAttributes = new { @class = "form-control-plaintext border-bottom " + @markReadOnlyClass, @min = "1", @id = "unit" } })
@@ -346,7 +346,7 @@ else
                 )
             <span asp-validation-for="Requests[0].UnitType" class="text-danger-centarix"></span>
         </div>
-    </div>
+    </div>*@
     if (request.Product.ProductSubcategory.ProductSubcategoryDescription == "Cells")
     {
         <div class="row">
@@ -360,7 +360,7 @@ else
     }
     <div class="row">
         <div class="col-md-3 ">
-            <label asp-for="Requests[0].CreationDate" class="control-label"></label>
+            <label asp-for="Requests[0].CreationDate" class="control-label">Creation Date</label>
             <input asp-for="Requests[0].CreationDate" class="form-control-plaintext border-bottom datepicker @markReadOnlyClass @dateCreatedCategories"  asp-format="{0:dd/MM/yyyy}"  type="text" />
         </div>
     </div>

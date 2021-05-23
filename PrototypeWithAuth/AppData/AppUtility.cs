@@ -106,7 +106,7 @@ namespace PrototypeWithAuth.AppData
         public enum RequestModalType { Create, Edit, Summary }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, RemoveShare }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
