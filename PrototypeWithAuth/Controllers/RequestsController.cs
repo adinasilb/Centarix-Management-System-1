@@ -1733,7 +1733,7 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.Requests = new List<Request>();
             requestItemViewModel.Requests.Add(new Request());
-            requestItemViewModel.Requests.FirstOrDefault().ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
+            requestItemViewModel.Requests.FirstOrDefault().ExchangeRate = GetExchangeRate();
             requestItemViewModel.Requests.FirstOrDefault().Product = new Product();
             requestItemViewModel.Requests.FirstOrDefault().ParentQuote = new ParentQuote();
             requestItemViewModel.Requests.FirstOrDefault().SubProject = new SubProject();
@@ -3935,7 +3935,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList();
                 foreach (var request in requests)
                 {
-                    request.ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
+                    request.ExchangeRate = GetExchangeRate();
                 }
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
