@@ -117,20 +117,18 @@ $(function () {
 		console.log("exchange rate" + $exchangeRate)
 		$iptBox = $("input[name='unit-price-dollars']");
 		$.fn.ShowResults($iptBox, $unitPriceDollars)
+
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
 	};
 	$.fn.CalculatePriceDollars = function () {
-		var $unitPrice = $("#unit-price-shekel").val();
-		$priceShekels = $unitPrice * $("#unit").val();
-		$iptBox = $("#cost");
-		$.fn.ShowResults($iptBox, $priceShekels);
+		console.log("calculate dollars")
+		var $unitPriceDollars = $("#unit-price-dollars").val();
 		var $exchangeRate = $("#exchangeRate").val();
-		var inverseExchangeRate = 1 / $exchangeRate;
-		$unitPriceDollars = $unitPrice * inverseExchangeRate;
-		$iptBox = $("input[name='unit-price-dollars']");
+		$priceShekels = $unitPriceDollars * $exchangeRate;
+		$iptBox = $("#unit-price-shekel");
+		$.fn.ShowResults($iptBox, $priceShekels);
 		var $priceDollars = $unitPriceDollars * $("#unit").val();
-		$.fn.ShowResults($iptBox, $unitPriceDollars);
 		var $iptBox = $("input[name='sum-dollars']");
 		$.fn.ShowResults($iptBox, $priceDollars);
 		
@@ -452,8 +450,13 @@ $(function () {
 
 
 	$("#unit").change(function () {
-		//calculate the cost instead
-		$.fn.CalculatePriceDollars();
+		if ($("#currency").val() == "USD") {
+			$.fn.CalculatePriceDollars()
+		}
+		else
+		{
+			$.fn.CalculatePriceShekels()
+        }
 		console.log('in unit change');
 	//	$.fn.CalculateUnitAmounts();
 	//	$.fn.CalculateSubUnitAmounts();

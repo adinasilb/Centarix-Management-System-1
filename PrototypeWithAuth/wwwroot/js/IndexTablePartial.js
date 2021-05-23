@@ -86,7 +86,7 @@ $(".load-quote-details").on("click", function (e) {
 });
 
 
-$(".load-order-details").off('click').on("click", function (e) {
+$("body").on("click", ".load-order-details", function (e) {
 	console.log("in order details");
 	e.preventDefault();
 	e.stopPropagation();

@@ -106,7 +106,7 @@ namespace PrototypeWithAuth.AppData
         public enum RequestModalType { Create, Edit, Summary }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
@@ -120,6 +120,11 @@ namespace PrototypeWithAuth.AppData
             };
             return StringsWithName;
         }
+
+        public enum IconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
+        
+        public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
+        { Request, Resource, Protocol }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
@@ -564,7 +569,7 @@ namespace PrototypeWithAuth.AppData
             }
             return centarixID;
         }
-   
+
         public static List<String> GetChartColors()
         {
             return new List<string> { "#00BCD4", "#3F51B5", "#009688", "#607D8B",  "#FF9800", "#F44336", "#795548", "#673AB7", "#9E9E9E", "#4CAF50", "#2196F3",

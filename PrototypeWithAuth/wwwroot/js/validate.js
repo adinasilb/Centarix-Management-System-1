@@ -305,5 +305,9 @@ $(function () {
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
 
+	$.validator.addMethod("fileRequired", function (value, element) {
+		console.log("in file required")
+		return $(element).hasClass("contains-file");
+	}, 'Must upload a file before submitting');
 
 });

@@ -1488,36 +1488,57 @@ $(function () {
     }
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
+		var selectedElements = $('#' + dataActivates).find(".active")
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
-		if($('#' + dataActivates+" .search-wrap").length>0)
-		{
-			selectedIndex = selectedIndex-1;
-		}
-		var isOptGroup = false;
-		if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
-		if (isOptGroup) {
-			var selected = $(':selected', $(selectID));
-			console.log(selectID + "  " + selectedIndex);
-			var optgroup = selected.closest('optgroup').attr('label');
-			switch (optgroup) {
-				case "Units":
-					console.log("Units")
-					selectedIndex = selectedIndex - 1;
-					break;
-				case "Weight/Volume":
-					console.log("Volume")
-					selectedIndex = selectedIndex - 2;
-					break;
-				case "Test":
-					console.log("Test")
-					selectedIndex = selectedIndex - 3;
-					break;
-			} 
+		if (selectedElements.length <= 1) {
+			if($('#' + dataActivates+" .search-wrap").length>0)
+			{
+				selectedIndex = selectedIndex-1;
+			}
+			var isOptGroup = false;
+			if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
+			if (isOptGroup) {
+				var selected = $(':selected', $(selectID));
+				console.log(selectID + "  " + selectedIndex);
+				var optgroup = selected.closest('optgroup').attr('label');
+				switch (optgroup) {
+					case "Units":
+						console.log("Units")
+						selectedIndex = selectedIndex - 1;
+						break;
+					case "Weight/Volume":
+						console.log("Volume")
+						selectedIndex = selectedIndex - 2;
+						break;
+					case "Test":
+						console.log("Test")
+						selectedIndex = selectedIndex - 3;
+						break;
+				} 
 
-		} 
+			} 
+		}
 		$(selectID).destroyMaterialSelect();
 		$(selectID).prop("disabled", false);
-		$(selectID).prop('selectedIndex', selectedIndex);
+		if (selectedElements.length <= 1) {
+			if ($(selectID).children().first().val() != "") {
+				selectedIndex = selectedIndex - 1;
+            }
+			$(selectID).prop('selectedIndex', selectedIndex);
+		}
+		else {
+			var selectedIndexes = [];
+			selectedElements.each(function (el) {
+				selectedIndexes.push(el)
+            })
+			var i = 0
+			$(selectID).children().each(function (el) {
+				if (el == selectedIndexes[i]) {
+					el.selected = true;
+					i++
+				}
+			})
+        }
 		$(selectID).removeAttr("disabled")
 		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
 		$(selectID).materialSelect();
