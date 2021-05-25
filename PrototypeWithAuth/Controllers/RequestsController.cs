@@ -696,7 +696,8 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.RequestRequest:
                     switch (requestIndexObject.RequestStatusID)
                     {
-                        /*case 1:
+                        case 1:
+                            /*
                             iconList.Add(approveIcon);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetForApprovalRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
