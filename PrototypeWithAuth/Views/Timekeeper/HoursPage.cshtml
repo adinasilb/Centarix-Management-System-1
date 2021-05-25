@@ -185,6 +185,7 @@
                     @eh.EmployeeHours.Exit1?.ToString("HH:mm")
                     @if ((eh.EmployeeHours.Entry2 != null && eh.EmployeeHours.Exit2 == null) || (eh.EmployeeHours.Entry1 != null && eh.EmployeeHours.Exit1 == null))
                     {
+                        <br/>
                         <button type="button" class="custom-button-table-font table-button @pageColor-color  open-update-hours-modal @disabled @AppUtility.SidebarEnum.SummaryHours" value="@eh.EmployeeHours.Date.ToString("yyyy-MM-dd")">
                             Update Hours
                         </button>
