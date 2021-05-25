@@ -1415,5 +1415,86 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+
+        [HttpGet]
+        [HttpPost]
+        [Authorize(Roles = "Requests, Operations")] //redo this later
+        public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject, SelectedFilters selectedFilters = null, string searchText = "", int numFilters = 0)
+        {
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters, searchText: searchText, numFilters: numFilters);
+            SetViewModelCounts(requestIndexObject, viewModel, selectedFilters, searchText);
+            if (TempData["RequestStatus"]?.ToString() == "1")
+            {
+                Response.StatusCode = 210;
+            }
+            return PartialView(viewModel);
+        }
+
+
+        [HttpGet]
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject, SelectedFilters selectedFilters = null, string searchText = "", int numFilters = 0)
+        {
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, selectedFilters: selectedFilters, searchText: searchText, numFilters: numFilters);
+            return PartialView(viewModel);
+        }
+
+
+        [HttpGet]
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _IndexTableWithProprietaryTabs(RequestIndexObject requestIndexObject, List<int> months, List<int> years, SelectedFilters selectedFilters = null, string searchText = "", int numFilters = 0)
+        {
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters, searchText, numFilters);
+            SetViewModelProprietaryCounts(requestIndexObject, viewModel, selectedFilters, searchText);
+            return PartialView(viewModel);
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years)
+        {
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years);
+
+            return PartialView(viewModel);
+        }
+
+
+
+        protected void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedFilters selectedFilters = null, string searchText = "")
+        {
+            int categoryID = 0;
+            if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
+            {
+                categoryID = 1;
+            }
+            else if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+            {
+                categoryID = 2;
+            }
+            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
+                .Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product).ThenInclude(p => p.Vendor).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
+            IQueryable<Request> fullRequestsListProprietary = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
+                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
+            if (requestIndexObject.RequestStatusID == 7)
+            {
+                fullRequestsListProprietary = filterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.Product.ProductName.Contains(searchText ?? ""));
+            }
+            else
+            {
+                fullRequestsList = filterListBySelectFilters(selectedFilters, fullRequestsList);
+                fullRequestsList = fullRequestsList.Where(r => r.Product.ProductName.Contains(searchText ?? ""));
+            }
+
+            int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsListProprietary, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            viewmodel.ProprietaryCount = proprietaryCount;
+            viewmodel.NonProprietaryCount = nonProprietaryCount;
+        }
+
+
     }
 }
