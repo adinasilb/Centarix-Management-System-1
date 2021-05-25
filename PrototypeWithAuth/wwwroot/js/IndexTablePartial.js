@@ -11,8 +11,9 @@
 	});
 	$(this).popover('toggle');
 	$(".popover").off("click").on("click", ".share-request-fx", function () {
-		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-		//alert("url: " + url);
+		//switch this to universal share request and the modelsenum send in
+		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=Request";
+		alert("url: " + url);
 		$.ajax({
 			async: true,
 			url: url,
@@ -20,7 +21,7 @@
 			type: "GET",
 			cache: false,
 			success: function (data) {
-				$.fn.OpenModal("share-request-modal", "share-request", data)
+				$.fn.OpenModal("shared-modal", "share-modal", data)
 				$.fn.EnableMaterialSelect('#userlist', 'select-options-userlist')
 				$("#loading").hide();
 				return false;
@@ -224,7 +225,7 @@ $(".request-favorite").on("click", function (e) {
 				requestFavorite.attr("data-original-title", title);
 				requestFavorite.addClass(unfav);
 				$("#loading").hide();
-				
+
 			}
 		})
 	}
