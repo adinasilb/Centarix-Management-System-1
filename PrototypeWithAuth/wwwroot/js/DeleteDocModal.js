@@ -1,6 +1,9 @@
 ﻿$(".delete-file-perm").on("click", function (e) {
 	e.preventDefault();
 	e.stopPropagation();
+	if ($("#masterSidebarType").val() == "NoInvoice") {
+		$(".invoice-image-name").text("")
+	}
 	var link = $('#submitDelete').attr("href");
 	console.log("link: " + link)
 	var formData = new FormData($(".DeleteDocumentModalForm")[0]);

@@ -1,0 +1,41 @@
+﻿@model PrototypeWithAuth.ViewModels.ShareModalViewModel
+<script src="~/js/_sharemodal.js"></script>
+<div class="modal modal-view shared-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index:9999">
+
+    <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; width:40rem;">
+
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
+            <button type="button" class="close modal-close-padding modal-close-style " @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('share-modal');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" class="sharemodal">
+                <input type="hidden" asp-for="ID" />
+                <input type="hidden" asp-for="ModelsEnum" />
+                <input type="hidden" asp-for="MenuItem" />
+                <div class="modal-padding">
+                    <div class="modal-header pt-0" style="border-bottom: 0;">
+                        <input type="hidden" text="open" class="modal-open-state" />
+                        <div class="row top-menu">
+                            <div class="col">Share&nbsp;<span class="font-weight-bold">@Model.ObjectDescription</span>&nbsp;With</div>
+                        </div>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            @Html.DropDownListFor(m => m.ApplicationUserID,
+                Model.ApplicationUsers, "Select User",
+                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "userlist", @searchable = "Select User" })
+                        </div>
+                        <div class="row text-center mt-5">
+
+                            @*<button class="text custom-button custom-button-font @bcColor exit-edit-modal between-button-margin" value="@Model.URL">Yes</button>*@
+                            <button class="custom-button custom-cancel text share-object">Share</button>
+
+                            @*<button class="custom-button custom-cancel float-right text cancel-request-edits">Cancel</button>*@
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

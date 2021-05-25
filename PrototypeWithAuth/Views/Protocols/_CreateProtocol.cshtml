@@ -1,34 +1,59 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
 @using PrototypeWithAuth.ViewModels
 
-    <form action="" id="myForm" class=" on-form-modal protocol-form" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
-        <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
+<form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+    <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
+    <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
+    <div class="item-table">
+        <ul class=" pl-0 nav" style="">
+            <li class="list-inline-item m-0 nav-item">
+                <a data-toggle="tab" href="#Theory" class="next-tab nav-link active new-button Theory new-protocols-button protocol-tab">
+                    <i class="new-icon icon-theory-tab-24px"></i>
+                    <label class="new-button-text">Theory</label>
+                </a>
+            </li>
+            <li class="list-inline-item m-0 nav-item">
+                <a data-toggle="tab" href="#Materials" class="next-tab nav-link new-button Materials saveProtocol new-protocols-button protocol-tab">
+                    <i class=" new-icon icon-centarix-icons-03"></i>
+                    <label class="new-button-text">Material</label>
+                </a>
+            </li>
+            <li class="list-inline-item m-0 nav-item">
+                <a data-toggle="tab" href="#Protocol" class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab">
+                    <i class="new-icon icon-protocol-tab-24px"></i>
+                    <label class="new-button-text">Protocols</label>
+                </a>
+            </li>
+            <li class="only-protocol-tab  d-none">
+                <div class=" function-bar">
+                    @foreach (var type in Model.FunctionTypes)
+                    {
+                        <button class="function" type="button" value="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
+                    }
+                </div>
+            </li>
+            <li class="only-protocol-tab  d-none">
+                <div class="h-100 d-flex ml-6" style=" align-items: center;">
+                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
+                </div>
+            </li>
 
-        <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
-        <div class="item-table">
-            <ul class=" pl-0 nav" style="">
-                <li class="list-inline-item m-0 nav-item">
-                    <a data-toggle="tab" href="#Theory" class="next-tab nav-link active new-button Theory new-protocols-button">
-                        <i class="new-icon icon-theory-tab-24px"></i>
-                        <label class="new-button-text">Theory</label>
-                    </a>
-                </li>
-                <li class="list-inline-item m-0 nav-item">
-                    <a data-toggle="tab" href="#Materials" class="next-tab nav-link new-button Materials saveProtocol new-protocols-button">
-                        <i class=" new-icon icon-centarix-icons-03"></i>
-                        <label class="new-button-text">Material</label>
-                    </a>
-                </li>
-                <li class="list-inline-item m-0 nav-item">
-                    <a data-toggle="tab" href="#Protocol" class="next-tab nav-link new-button new-protocols-button">
-                        <i class="new-icon icon-protocol-tab-24px"></i>
-                        <label class="new-button-text">Protocols</label>
-                    </a>
-                </li>
+        </ul>
+    </div>
+    <div class="tab-content _CreateProtocolTabs">
+        @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}
+    </div>
+</form>
 
-            </ul>
-        </div>
-        <div class="tab-content _CreateProtocolTabs">
-            @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}
-        </div>
-    </form>
+<script>
+    $(".protocol-tab").click(function () {
+
+        if ($(this).hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
+            $(".only-protocol-tab").removeClass("d-none");
+        }
+        else {
+            $(".only-protocol-tab").addClass("d-none");
+        }
+    })
+
+</script>

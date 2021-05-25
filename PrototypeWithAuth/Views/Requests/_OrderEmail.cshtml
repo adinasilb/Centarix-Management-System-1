@@ -4,6 +4,8 @@
 @{
     char currency = '₪';
     decimal vat = 0;
+    var showPrice = "";
+    var requestText = "";
     if (Model.Requests[0].Currency == AppUtility.CurrencyEnum.USD.ToString())
     {
         currency = '$';
@@ -31,7 +33,9 @@
             @if (Model.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes &&
 Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
             {
-                <span style="font-weight: 700; font-size:2rem;">Request Price Quote</span>
+                <span style="font-weight: 700; font-size:2rem;">Price Quote Request</span>
+                showPrice = "d-none";
+                requestText = "We would like to get a price quote for the following items:";
             }
             else
             {
@@ -55,7 +59,6 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
         <div class="col-6 offset-2">
             <div class="note-message p-4 pl-5">
 
-
                 @{
                     var notes = "";
                     foreach (var request in Model.Requests)
@@ -74,6 +77,9 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
         </div>
     </div>
     <br>
+    <div class="row pl-3">
+        <span class="text">@requestText</span>
+    </div><br>
     <div class="row">
         <table class="table confirm-table">
             <thead style="background-color: #D0001C; color: #ffffff;">
@@ -83,9 +89,12 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                         <th style="width:30%;">Items</th>
                         <th style="width:15%;">SKU</th>
                         <th style="width:8%;">Units</th>
-                        <th style="width:16%;">Price</th>
-                        <th style="width:15%;">Discount</th>
-                        <th style="width:16%;">Total</th>
+                        if (showPrice == "")
+                        {
+                            <th style="width:16%;">Price</th>
+                            <th style="width:15%;">Discount</th>
+                            <th style="width:16%;">Total</th>
+                        }
                     }
                     else
                     {
@@ -121,10 +130,10 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                             {
                                 <td>@request.Unit</td>
                                 decimal unitPrice = (cost ?? 0) / request.Unit;
-                                <td>@currency @unitPrice.ToString("N2")</td>
+                                <td class="@showPrice">@currency @unitPrice.ToString("N2")</td>
                             }
-                            <td>@request.Discount%</td>
-                            <td>@currency @cost?.ToString("N2")</td>
+                            <td class="@showPrice">@request.Discount%</td>
+                            <td class="@showPrice">@currency @cost?.ToString("N2")</td>
                         </tr>
                     }
                     var shipping = Model.Requests[0].ParentRequest?.Shipping ?? 0;
@@ -146,16 +155,16 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                     <td>@currency @shipping.ToString("N2")</td>
                 }
                 </tr>
-                <tr>
+                <tr class="@showPrice">
                     <td>Total</td>
                     <td>@currency @total.ToString("N2")</td>
                 </tr>
-                <tr>
+                <tr class="@showPrice">
                     <td>VAT [17%]</td>
                     @* make the vat a global variable*@
                     <td>@currency @vat.ToString("N2")</td>
                 </tr>
-                <tr>
+                <tr class="@showPrice">
                     <td class="font-weight-bold">Total To Pay</td>
 
                     <td class="font-weight-bold">@currency @totalWithVat.ToString("N2")</td>
@@ -183,13 +192,13 @@ Model.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
     }
     @if (Model.Requests.FirstOrDefault().PaymentStatus != null)
     {<div class="m-4" style="width:25%;">
-        <span class="heading-1">
-            Payment Terms:
-        </span><br />
-        <span class="text">
-            @installments
-            @Model.Requests.FirstOrDefault().PaymentStatus.PaymentStatusDescription
-        </span><br />
-    </div>
+            <span class="heading-1">
+                Payment Terms:
+            </span><br />
+            <span class="text">
+                @installments
+                @Model.Requests.FirstOrDefault().PaymentStatus.PaymentStatusDescription
+            </span><br />
+        </div>
     }
 </div>

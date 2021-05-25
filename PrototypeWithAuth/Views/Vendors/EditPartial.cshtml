@@ -83,7 +83,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label class="control-label">Category Type</label>
-                        @Html.DropDownListFor(m => m.VendorCategoryTypes,
+                        @Html.ListBoxFor(m => m.VendorCategoryTypes,
     new SelectList(Model.CategoryTypes, "CategoryTypeID", "CategoryTypeDescription"),
      new { @class = "mdb-select custom select-dropdown form-control-plaintext mark-readonly", @multiple = "multiple", @disabled = "disabled" })
                         @*<select class=" mdb-select custom select-dropdown form-control-plaintext mark-readonly" asp-for="VendorCategoryTypes" multiple disabled>

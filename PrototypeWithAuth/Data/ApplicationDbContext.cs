@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.Models;
 using PrototypeWithAuth.Data;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Abp.Domain.Entities;
 
 namespace PrototypeWithAuth.Data
@@ -18,6 +19,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<ShareResource> ShareResources { get; set; }
         public DbSet<FavoriteResource> FavoriteResources { get; set; }
         public DbSet<FavoriteProtocol> FavoriteProtocols { get; set; }
         public DbSet<ResourceNote> ResourceNotes { get; set; }
@@ -42,6 +44,8 @@ namespace PrototypeWithAuth.Data
         public DbSet<FunctionLine> FunctionLines { get; set; }
         public DbSet<ProtocolComment> ProtocolComments { get; set; }
         public DbSet<Line> Lines { get; set; }
+        public DbSet<TempLine> TempLines { get; set; }
+        //public DbSet<LineBase> LineBases { get; set; }
         public DbSet<ProtocolInstance> ProtocolInstances { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<FunctionType> FunctionTypes { get; set; }
@@ -111,6 +115,7 @@ namespace PrototypeWithAuth.Data
         {
             base.OnModelCreating(modelBuilder);
 
+
             modelBuilder.Entity<VendorCategoryType>()
                 .HasKey(v => new { v.VendorID, v.CategoryTypeID });
 
@@ -176,6 +181,12 @@ namespace PrototypeWithAuth.Data
                 .WithMany(au => au.RequestsCreated)
                 .HasForeignKey(r => r.ApplicationUserCreatorID);
 
+
+
+            modelBuilder.Entity<Line>()
+                  .Property(e => e.LineID)
+                  .ValueGeneratedNever();
+
             modelBuilder.Entity<Request>()
                 .HasOne(r => r.ApplicationUserReceiver)
                 .WithMany(au => au.RequestsReceived)
@@ -191,6 +202,15 @@ namespace PrototypeWithAuth.Data
                 .WithMany(au => au.ShareRequestsReceived)
                 .HasForeignKey(sr => sr.ToApplicationUserID);
 
+            modelBuilder.Entity<ShareResource>()
+                .HasOne(sr => sr.FromApplicationUser)
+                .WithMany(au => au.ShareResourcesCreated)
+                .HasForeignKey(sr => sr.FromApplicationUserID);
+
+            modelBuilder.Entity<ShareResource>()
+                .HasOne(sr => sr.ToApplicationUser)
+                .WithMany(au => au.ShareResourcesReceived)
+                .HasForeignKey(sr => sr.ToApplicationUserID);
 
             // configures one-to-many relationship between Inventory and InventorySubcategories
             modelBuilder.Entity<ProductSubcategory>()
@@ -256,11 +276,17 @@ namespace PrototypeWithAuth.Data
               .WithMany(odt => odt.EmployeeHoursAwaitingApprovals)
               .HasForeignKey(eh => eh.OffDayTypeID);
 
+
+
+
             //modelBuilder.Entity<Vendor>()
             //.HasOne<ParentCategory>(v => v.ParentCategory)
             //.WithMany(pc => pc.Vendors)
             //.HasForeignKey(v => v.ParentCategoryID)
             //.OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Product>()
+            .HasQueryFilter(item => !item.IsDeleted);
 
             modelBuilder.Entity<ParentQuote>()
                 .HasQueryFilter(item => !item.IsDeleted);
@@ -305,11 +331,9 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Employee>().Ignore(e => e.DOB_submit);
             modelBuilder.Entity<ParentCategory>().Ignore(e => e.ParentCategoryDescriptionEnum);
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
-            modelBuilder.Entity<Request>().Property(r => r.IncludeVAT).HasDefaultValue(true);
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
-
             /*PROTOCOLS*/
             ///set up composite keys
 
@@ -333,14 +357,25 @@ namespace PrototypeWithAuth.Data
                .WithMany()
                .HasForeignKey(ltc => ltc.LineTypeChildID);
 
-            
 
+            modelBuilder.Entity<TempLine>().HasIndex(tl => tl.PermanentLineID).IsUnique().HasFilter(null);
+
+            modelBuilder.Entity<TempLine>()
+               .HasOne(tl => tl.ParentLine)
+               .WithMany()
+               .HasForeignKey(tl => tl.ParentLineID);
+               //.HasPrincipalKey(tl => tl.PermanentLineID).IsRequired(false);--edditted migration directly
+
+            modelBuilder.Entity<TempLine>()
+               .HasOne(tl => tl.PermanentLine)
+               .WithOne()
+               .HasForeignKey<TempLine>(tl => tl.PermanentLineID);
 
             modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
             modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
-
+            //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
             modelBuilder.Seed();
 
             //foreach loop ensures that deletion is resticted - no cascade delete

@@ -26,7 +26,4 @@
 	}
 });
 
-$.validator.addMethod("fileRequired", function (value, element) {
-	console.log("in file required")
-	return $(element).hasClass("contains-file");
-}, 'Must upload a file before submitting');
+

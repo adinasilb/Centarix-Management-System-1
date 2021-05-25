@@ -545,7 +545,8 @@ namespace PrototypeWithAuth.Controllers
                                         LocationInstanceAbbrev = currentAbbrev,
                                         LocationInstanceName = lastParent.LocationInstanceName + currentAbbrev,
                                         LocationInstanceParentID = parentId,
-                                        LocationTypeID = typeId
+                                        LocationTypeID = typeId,
+                                        IsEmptyShelf = true
                                     };
                                     _context.Add(newSublocationInstance);
                                     waitingLocations.Add(newSublocationInstance);

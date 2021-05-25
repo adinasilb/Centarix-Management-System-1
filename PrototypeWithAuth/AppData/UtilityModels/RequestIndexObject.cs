@@ -105,7 +105,7 @@ namespace PrototypeWithAuth.AppData
         public AppUtility.OrderTypeEnum OrderType { get; set; }
         public bool CategorySelected { get; set; }
         public bool SubcategorySelected { get; set; }
+        public bool IsReorder { get; set; }
          //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
-         public bool IsReorder { get; set; }
     }
 }

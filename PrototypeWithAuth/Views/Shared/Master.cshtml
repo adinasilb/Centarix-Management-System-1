@@ -464,6 +464,7 @@
         $.fn.CallPageRequest = function ($itemurl, $type) {
             console.log("in call page function");
             console.log("itemurl " + $itemurl);
+            console.log('type '+ $type);
             //delete existing modals
             //$('.modal:not(#visualZoomModal)').replaceWith('');
             //$(".modal-backdrop").remove();
@@ -495,7 +496,7 @@
                         case "summary":
                             //$.fn.OnOpenModalView();
                             $.fn.OpenModal('modal', 'edits', modal)
-                            $.fn.LoadSummaryModal();
+                            $.fn.LoadSummaryModal('.edits');
                             $('.modal-content a:first').tab('show');
                             break;
                         case "create":
@@ -527,6 +528,11 @@
                             break;
                         case "materialInfo":
                             $.fn.OpenModal('modal', 'material-info', modal)
+                            break;
+                        case "historyItem":
+                            $.fn.OpenModal('historyModal', 'history-item', modal)
+                            $.fn.LoadSummaryModal('.history-item');
+                            $('.modal-content a:first').tab('show');
                             break;
                  
                     }
@@ -567,16 +573,17 @@
             $('.edits .mdb-select').materialSelect();
             $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
+        
 
-        $.fn.LoadSummaryModal = function () {
+        $.fn.LoadSummaryModal = function (modalClass) {
             $("#cost").trigger('change');
             var category = $("#categoryDescription").val();
             console.log(category)
             $("." + category).removeClass("d-none");
-            console.log("in detilas of case")
+            console.log("in details of case")
             $.fn.TurnToDetails();
-            $('.edits .mdb-select:not(.ignore-mdb)').materialSelect();
-            $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            $(modalClass + ' .mdb-select:not(.ignore-mdb)').materialSelect();
+            $(modalClass + ' .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
 
@@ -781,7 +788,9 @@
 
 
 
-        $("#openNotifications").click(function () {
+        $("#openNotifications").click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             $('[data-toggle="popover"]').popover('dispose');
             $('[data-toggle="popover"]').popover({
                 sanitize: false,
@@ -1049,7 +1058,7 @@
         };
         $.fn.getRequestIndexString = function(){
             var selectedPriceSort = [];
-            $("#priceSortContent .priceSort:checked").each(function (e) {
+            $("#priceSortContent1 .priceSort:checked").each(function (e) {
                 selectedPriceSort.push($(this).attr("enum"));
             })
             return(
@@ -1120,6 +1129,9 @@
         //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
             console.log("open modal")
+            //console.log(modalClass);
+            //console.log(data.text());
+            //console.log(modalDivClass)
             var backdrop = "static";
             if ($('.modal-backdrop').length > 0) {
                 backdrop = false;

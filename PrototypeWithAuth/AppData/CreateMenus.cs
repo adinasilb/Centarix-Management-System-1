@@ -1180,7 +1180,7 @@ namespace PrototypeWithAuth.AppData
                 },
                 Classes = CurrentClasses,
                 IconName = "icon-add_circle_outline-24px1",
-                AjaxLink = "add-item-sidebar"               
+                AjaxLink = "add-item-sidebar"
             });
             if (SidebarTitle == AppUtility.SidebarEnum.Type) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
             SidebarMenuItems.Add(new MenuItems()
@@ -1739,51 +1739,51 @@ namespace PrototypeWithAuth.AppData
             return SidebarMenuItems;
         }
         public static List<MenuItems> CreateProtocolsReportsSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
-            {
-                List<MenuItems> SidebarMenuItems = new List<MenuItems>();
-                string CurrentClasses = OrigClasses;
+        {
+            List<MenuItems> SidebarMenuItems = new List<MenuItems>();
+            string CurrentClasses = OrigClasses;
 
-                if (SidebarTitle == AppUtility.SidebarEnum.DailyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-                SidebarMenuItems.Add(new MenuItems()
-                {
-                    Description = "Daily Reports",
-                    Controller = "Protocols",
-                    Action = "DailyReports",
-                    RouteValues = new RouteValueDictionary(),
-                    Classes = CurrentClasses,
-                    IconName = "icon-assignment_ind-24px-1"
-                });
-                if (SidebarTitle == AppUtility.SidebarEnum.WeeklyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-                SidebarMenuItems.Add(new MenuItems()
-                {
-                    Description = "Weekly Reports",
-                    Controller = "Protocols",
-                    Action = "WeeklyReports",
-                    RouteValues = new RouteValueDictionary(),
-                    Classes = CurrentClasses,
-                    IconName = "icon-access_time-24px"
-                });
-                if (SidebarTitle == AppUtility.SidebarEnum.MonthlyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-                SidebarMenuItems.Add(new MenuItems()
-                {
-                    Description = "Monthly Reports",
-                    Controller = "Protocols",
-                    Action = "MonthlyReports",
-                    RouteValues = new RouteValueDictionary(),
-                    Classes = CurrentClasses,
-                    IconName = "icon-monetization_on-24px"
-                });
-                if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
-                SidebarMenuItems.Add(new MenuItems()
-                {
-                    Description = "Shared With Me",
-                    Controller = "Protocols",
-                    Action = "ReportsSharedWithMe",
-                    RouteValues = new RouteValueDictionary(),
-                    Classes = CurrentClasses,
-                    IconName = "icon-monetization_on-24px"
-                });
-                return SidebarMenuItems;
+            if (SidebarTitle == AppUtility.SidebarEnum.DailyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Daily Reports",
+                Controller = "Protocols",
+                Action = "DailyReports",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-assignment_ind-24px-1"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.WeeklyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Weekly Reports",
+                Controller = "Protocols",
+                Action = "WeeklyReports",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-access_time-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.MonthlyReports) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Monthly Reports",
+                Controller = "Protocols",
+                Action = "MonthlyReports",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            if (SidebarTitle == AppUtility.SidebarEnum.SharedWithMe) { CurrentClasses += ActiveClasses; } else { CurrentClasses = OrigClasses; }
+            SidebarMenuItems.Add(new MenuItems()
+            {
+                Description = "Shared With Me",
+                Controller = "Protocols",
+                Action = "ReportsSharedWithMe",
+                RouteValues = new RouteValueDictionary(),
+                Classes = CurrentClasses,
+                IconName = "icon-monetization_on-24px"
+            });
+            return SidebarMenuItems;
         }
         public static List<MenuItems> CreateProtocolsResourcesSidebar(AppUtility.SidebarEnum SidebarTitle, string OrigClasses, string ActiveClasses)
         {
@@ -1826,7 +1826,9 @@ namespace PrototypeWithAuth.AppData
                 Description = "Favorites",
                 Controller = "Protocols",
                 Action = "ResourcesFavorites",
-                RouteValues = new RouteValueDictionary(),
+                RouteValues = new RouteValueDictionary() {
+                    { "SidebarEnum" , AppUtility.SidebarEnum.Favorites }
+                },
                 Classes = CurrentClasses,
                 IconName = "icon-monetization_on-24px"
             });

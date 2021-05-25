@@ -86,15 +86,11 @@ $(".load-quote-details").on("click", function (e) {
 });
 
 
-$(".load-order-details").off('click').on("click", function (e) {
+$("body").off("click").on("click", ".load-order-details", function (e) {
 	console.log("in order details");
 	e.preventDefault();
 	e.stopPropagation();
 	$("#loading").show();
-	var selectedPriceSort = [];
-	$("#priceSortContent .priceSort:checked").each(function (e) {
-		selectedPriceSort.push($(this).attr("enum"));
-	})
 	var section = $("#masterSectionType").val()
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
 	var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString()
@@ -113,13 +109,15 @@ $(".load-product-details").off('click').on("click", function (e) {
 
 //$("body, .modal").off('click', ".load-product-details-summary").on("click", ".load-product-details-summary", function (e) {
 
-$(".load-product-details-summary").off('click').on("click", function (e) {
+$(".load-product-details-summary").off('click').on("click", function (e) { //why is it being called twice if there's an off click??
 
 	e.preventDefault();
 	e.stopPropagation();
 	$("#loading").show();
+	console.log('in load products details summary');
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
-	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val();
+	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val() + "&isProprietary=" + isProprietary;
 	$.fn.CallPageRequest($itemurl, "summary");
 	return false;
 });
@@ -147,7 +145,7 @@ $(".approve-order").off('click').on("click", function (e) {
 	var val = $(this).attr("value");
 	e.preventDefault();
 	$("#loading").show();
-	console.log(".order-type" + val)
+	console.log($(".order-type" + val).val())
 	if ($(".order-type" + val).val() == "1") {
 		console.log("terms")
 		$.ajax({
@@ -187,7 +185,7 @@ $(".request-favorite").on("click", function (e) {
 	var fullHeartClass = "icon-favorite-24px";
 	var fav = "request-favorite";
 	var unfav = "request-unlike";
-	var title = "Like";
+	var title = "Favorite";
 	var requestFavorite = $(this);
 	var FavType = "favorite";
 	var sidebarType = $('#masterSidebarType').val();
@@ -213,7 +211,7 @@ $(".request-favorite").on("click", function (e) {
 		})
 	}
 	else {
-		title = "Unlike";
+		title = "Unfavorite";
 		$.ajax({
 			async: true,
 			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
@@ -283,7 +281,7 @@ $(".load-terms-modal").on("click", function (e) {
 function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years) {
 	console.log("in ajax partial index call" + url);
 	var selectedPriceSort = [];
-	$("#priceSortContent .priceSort:checked").each(function (e) {
+	$("#priceSortContent1 .priceSort:checked").each(function (e) {
 		selectedPriceSort.push($(this).attr("enum"));
 	})
 	var contentType = true;

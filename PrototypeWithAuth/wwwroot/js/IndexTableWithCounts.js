@@ -1,5 +1,5 @@
 ﻿$('.countStatus').off('click').click( function(e){
-    $('#pricePopover').popover('dispose');
+    $('.open-price-popover').popover('dispose');
     e.preventDefault()
     $(".active").removeClass("active")
     $(this).addClass("active")

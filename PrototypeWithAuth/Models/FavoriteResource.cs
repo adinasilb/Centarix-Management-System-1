@@ -12,6 +12,7 @@ namespace PrototypeWithAuth.Models
         [Key]
         public int FavoriteResourceID { get; set; }
         public int ResourceID { get; set; }
+        public Resource Resource { get; set; }
         public string ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
     }

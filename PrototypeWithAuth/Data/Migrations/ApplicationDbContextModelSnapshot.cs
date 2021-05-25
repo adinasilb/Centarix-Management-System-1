@@ -953,7 +953,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("EmployeeHoursAwaitingApprovalID");
 
-                    b.HasIndex("EmployeeHoursID");
+                    b.HasIndex("EmployeeHoursID")
+                        .IsUnique()
+                        .HasFilter("[EmployeeHoursID] IS NOT NULL");
 
                     b.HasIndex("EmployeeHoursStatusEntry1ID");
 
@@ -1163,6 +1165,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("DescriptionEnum")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FunctionDescription")
                         .HasColumnType("nvarchar(max)");
 
@@ -1175,6 +1180,96 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("FunctionTypeID");
 
                     b.ToTable("FunctionTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            FunctionTypeID = 1,
+                            DescriptionEnum = "AddImage",
+                            FunctionDescription = "Add Image",
+                            Icon = "",
+                            IconActionClass = "add-image-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 2,
+                            DescriptionEnum = "AddTimer",
+                            FunctionDescription = "Add Timer",
+                            Icon = "icon-centarix-icons-19",
+                            IconActionClass = "add-timer-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 3,
+                            DescriptionEnum = "AddComment",
+                            FunctionDescription = "Add Comment",
+                            Icon = "icon-comment-24px",
+                            IconActionClass = "add-comment-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 4,
+                            DescriptionEnum = "AddWarning",
+                            FunctionDescription = "Add Warning",
+                            Icon = "icon-report_problem-24px",
+                            IconActionClass = "add-warning-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 5,
+                            DescriptionEnum = "AddTip",
+                            FunctionDescription = "Add Tip",
+                            Icon = "icon-tip-24px",
+                            IconActionClass = "add-tip-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 6,
+                            DescriptionEnum = "AddTable",
+                            FunctionDescription = "Add Table",
+                            Icon = "icon-table_chart-24px1",
+                            IconActionClass = "add-table-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 7,
+                            DescriptionEnum = "AddTemplate",
+                            FunctionDescription = "Add Template",
+                            Icon = "",
+                            IconActionClass = "add-template-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 8,
+                            DescriptionEnum = "AddStop",
+                            FunctionDescription = "Add Stop",
+                            Icon = "icon-stop-24px",
+                            IconActionClass = "add-stop-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 9,
+                            DescriptionEnum = "AddLinkToProduct",
+                            FunctionDescription = "Add Link To Product",
+                            Icon = "icon-attach-item-24px",
+                            IconActionClass = "add-product-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 10,
+                            DescriptionEnum = "AddLinkToProtocol",
+                            FunctionDescription = "Add Link To Protocol",
+                            Icon = "icon-attach-protocol-24px",
+                            IconActionClass = "add-protocol-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 11,
+                            DescriptionEnum = "AddFile",
+                            FunctionDescription = "Add File",
+                            Icon = "icon-description-24px2",
+                            IconActionClass = "add-file-to-line"
+                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.GlobalInfo", b =>
@@ -1742,12 +1837,13 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.Line", b =>
                 {
                     b.Property<int>("LineID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsTemporary")
+                        .HasColumnType("bit");
 
                     b.Property<int>("LineNumber")
                         .HasColumnType("int");
@@ -1755,10 +1851,13 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("LineTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParentLineID")
+                    b.Property<int?>("ParentLineID")
                         .HasColumnType("int");
 
                     b.Property<int>("ProtocolID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TempLineLineID")
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("Timer")
@@ -1771,6 +1870,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ParentLineID");
 
                     b.HasIndex("ProtocolID");
+
+                    b.HasIndex("TempLineLineID");
 
                     b.ToTable("Lines");
                 });
@@ -2748,6 +2849,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Handeling")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ProductComment")
                         .HasColumnType("nvarchar(max)");
@@ -3883,7 +3987,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<byte?>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
 
-                    b.Property<bool?>("IncludeVAT")
+                    b.Property<bool>("IncludeVAT")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
@@ -4156,6 +4260,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
@@ -4173,6 +4280,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 1,
+                            ImageUrl = "rejuvenation_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Rejuvenation"
@@ -4180,6 +4288,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 2,
+                            ImageUrl = "biomarkers_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Biomarkers"
@@ -4187,6 +4296,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 3,
+                            ImageUrl = "delivery_systems_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Delivery Systems"
@@ -4194,6 +4304,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 4,
+                            ImageUrl = "clinical_trials_image.svg",
                             IsMain = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Clinical Trials"
@@ -4264,13 +4375,15 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 14,
+                            ImageUrl = "software_image.svg",
                             IsMain = false,
                             IsResourceType = true,
-                            ResourceCategoryDescription = "Softwares"
+                            ResourceCategoryDescription = "Software"
                         },
                         new
                         {
                             ResourceCategoryID = 15,
+                            ImageUrl = "learning_image.svg",
                             IsMain = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Learning"
@@ -4278,6 +4391,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 16,
+                            ImageUrl = "companies_image.svg",
                             IsMain = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Companies"
@@ -4285,6 +4399,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         new
                         {
                             ResourceCategoryID = 17,
+                            ImageUrl = "news_image.svg",
                             IsMain = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "News"
@@ -4391,6 +4506,36 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ToApplicationUserID");
 
                     b.ToTable("ShareRequests");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
+                {
+                    b.Property<int>("ShareResourceID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FromApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ResourceID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ToApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ShareResourceID");
+
+                    b.HasIndex("FromApplicationUserID");
+
+                    b.HasIndex("ResourceID");
+
+                    b.HasIndex("ToApplicationUserID");
+
+                    b.ToTable("ShareResources");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
@@ -4509,6 +4654,48 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ProtocolID");
 
                     b.ToTable("TagProtocols");
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TempLine", b =>
+                {
+                    b.Property<int>("LineID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LineNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LineTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentLineID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PermanentLineID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProtocolID")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("Timer")
+                        .HasColumnType("time");
+
+                    b.HasKey("LineID");
+
+                    b.HasIndex("LineTypeID");
+
+                    b.HasIndex("ParentLineID");
+
+                    b.HasIndex("PermanentLineID")
+                        .IsUnique();
+
+                    b.HasIndex("ProtocolID");
+
+                    b.ToTable("TempLines");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.TimekeeperNotification", b =>
@@ -5645,8 +5832,8 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHours", "EmployeeHours")
-                        .WithMany()
-                        .HasForeignKey("EmployeeHoursID")
+                        .WithOne("EmployeeHoursAwaitingApproval")
+                        .HasForeignKey("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", "EmployeeHoursID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry1")
@@ -5704,7 +5891,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PrototypeWithAuth.Models.Resource", null)
+                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
                         .WithMany("FavoriteResources")
                         .HasForeignKey("ResourceID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5754,14 +5941,18 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Line", "ParentLine")
                         .WithMany()
                         .HasForeignKey("ParentLineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany("Line")
+                        .WithMany("Lines")
                         .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.TempLine", "TempLine")
+                        .WithMany()
+                        .HasForeignKey("TempLineLineID")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.LineType", b =>
@@ -6179,6 +6370,25 @@ namespace PrototypeWithAuth.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                        .WithMany("ShareResourcesCreated")
+                        .HasForeignKey("FromApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Resource", "Resource")
+                        .WithMany()
+                        .HasForeignKey("ResourceID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                        .WithMany("ShareResourcesReceived")
+                        .HasForeignKey("ToApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.SubProject", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.Project", "Project")
@@ -6199,6 +6409,31 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Tag", "Tag")
                         .WithMany()
                         .HasForeignKey("TagID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.TempLine", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Models.LineType", "LineType")
+                        .WithMany()
+                        .HasForeignKey("LineTypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Models.TempLine", "ParentLine")
+                        .WithMany()
+                        .HasForeignKey("ParentLineID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Line", "PermanentLine")
+                        .WithOne()
+                        .HasForeignKey("PrototypeWithAuth.Models.TempLine", "PermanentLineID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                        .WithMany()
+                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -34,6 +35,7 @@ namespace PrototypeWithAuth.AppData
             TotalVat = 4
         }
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
+        public enum RoleEnum { ApproveOrders }
         public enum PageTypeEnum
         {
             None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, RequestFavorite,
@@ -84,6 +86,24 @@ namespace PrototypeWithAuth.AppData
         public enum FolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { Protocols, Requests, Materials }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
+        public static List<StringWithName> RequestRoleEnums()
+        {
+            List<StringWithName> rre = new List<StringWithName>()
+            {
+                new StringWithName(){StringName = "General", StringDefinition = "Requests"},
+                new StringWithName(){StringName = "Approve Orders", StringDefinition = "RequestsApproveOrders"}
+            };
+            return rre;
+        }
+        public static List<StringWithName> OperationRoleEnums()
+        {
+            List<StringWithName> ore = new List<StringWithName>()
+            {
+                new StringWithName(){StringName = "General", StringDefinition = "Operations"},
+                new StringWithName(){StringName = "Approve Orders", StringDefinition = "OperationsApproveOrders"}
+            };
+            return ore;
+        }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
         public enum PaymentsPopoverEnum
@@ -106,16 +126,32 @@ namespace PrototypeWithAuth.AppData
         public enum RequestModalType { Create, Edit, Summary }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
-        public enum GlobalInfoType { ExchangeRate, LoginUpdates}
+        public enum FavoriteIconTitle { FilledIn, Empty }
+        public enum FuctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddTable, AddTemplate, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public static List<StringWithName> FavoriteIcons()
+        {
+            var StringsWithName = new List<StringWithName>(){
+                new StringWithName() { StringName = FavoriteIconTitle.FilledIn.ToString(), StringDefinition = "icon-favorite-24px" },
+                new StringWithName() { StringName = FavoriteIconTitle.Empty.ToString(), StringDefinition = "icon-favorite_border-24px" }
+            };
+            return StringsWithName;
+        }
+
+        public enum IconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
+
+        public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
+        { Request, Resource, Protocol }
+        public enum GlobalInfoType { ExchangeRate, LoginUpdates }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
             return String.Join(' ', splitEnumValue);
         }
+
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, SidebarEnum sidebarType, String filterID)
         {
             int ReturnList = 0;
@@ -151,6 +187,8 @@ namespace PrototypeWithAuth.AppData
 
             return ReturnList;
         }
+
+
 
 
         public static ResourceAPIViewModel GetResourceArticleFromNCBIPubMed(string PubMedID)
@@ -555,7 +593,7 @@ namespace PrototypeWithAuth.AppData
             }
             return centarixID;
         }
-   
+
         public static List<String> GetChartColors()
         {
             return new List<string> { "#00BCD4", "#3F51B5", "#009688", "#607D8B",  "#FF9800", "#F44336", "#795548", "#673AB7", "#9E9E9E", "#4CAF50", "#2196F3",
@@ -582,7 +620,10 @@ namespace PrototypeWithAuth.AppData
                         switch (ipAddress.AddressFamily)
                         {
                             case AddressFamily.InterNetwork:
-                                myIpAddress = address.ToString();
+                                if (myIpAddress.ToString().StartsWith("172.27.71"))
+                                {
+                                    myIpAddress = address.ToString();
+                                }
                                 break;
                             default:
                                 break;
