@@ -9,11 +9,13 @@ namespace PrototypeWithAuth.Models
 {
     public class FunctionLine
     {
-        [Key, Column(Order = 1)]
+        public int FunctionLineID { get; set; }
         public int LineID { get; set; }
         public Line Line { get; set; }
-        [Key, Column(Order = 1)]
         public int FunctionTypeID { get; set; }
         public FunctionType FunctionType { get; set; }
+        public TimeSpan Timer { get; set; }
+        public string CommentText {get; set;}
+
     }
 }
