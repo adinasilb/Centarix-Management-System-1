@@ -53,7 +53,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<LocationRoomType> LocationRoomTypes { get; set; }
         public DbSet<LabPart> LabParts { get; set; }
         public DbSet<CentarixID> CentarixIDs { get; set; }
-        public DbSet<ExchangeRate> ExchangeRates { get; set; }
+        public DbSet<GlobalInfo> GlobalInfos { get; set; }
         public DbSet<CompanyDayOff> CompanyDayOffs { get; set; }
         public DbSet<CompanyDayOffType> CompanyDayOffTypes { get; set; }
         public DbSet<CalibrationType> CalibrationTypes { get; set; }
@@ -285,6 +285,8 @@ namespace PrototypeWithAuth.Data
             //.HasForeignKey(v => v.ParentCategoryID)
             //.OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Product>()
+            .HasQueryFilter(item => !item.IsDeleted);
 
             modelBuilder.Entity<ParentQuote>()
                 .HasQueryFilter(item => !item.IsDeleted);
@@ -331,7 +333,6 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<EmployeeHoursAwaitingApproval>().Property(e => e.IsDenied).HasDefaultValue(false);
             modelBuilder.Entity<Request>().Property(r => r.IncludeVAT).HasDefaultValue(true);
             modelBuilder.Entity<ApplicationUser>().HasIndex(a => a.UserNum).IsUnique();
-            modelBuilder.Entity<ExchangeRate>().Property(e => e.LatestExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Request>().Property(r => r.ExchangeRate).HasColumnType("decimal(18,3)");
             modelBuilder.Entity<Product>().Property(r => r.ProductCreationDate).HasDefaultValueSql("getdate()");
             /*PROTOCOLS*/

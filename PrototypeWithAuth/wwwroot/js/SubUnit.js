@@ -603,7 +603,7 @@ $(function () {
 	$("#unit-price-shekel").change(function () {
 		$.fn.CalculatePriceShekels();
 	})
-	$('.unit-type-select').change(function () {
+	$('body').on('change', '.unit-type-select', function () {
 		$.fn.UpdatePricePerUnitLabel('.price-per-unit-label', $('#select-options-unitTypeID li.active.selected span').text());
 	})
 	$('body').on('change', '.subunit-type-select', function (e) {

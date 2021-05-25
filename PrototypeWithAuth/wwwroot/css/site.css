@@ -1158,6 +1158,19 @@ a.nav-link {
     /*background-color: #FAFAFA;*/
 }
 
+/*Left*/
+.modal.left.fader .modal-dialog {
+    position: fixed;
+    margin: auto;
+    /*width: 1200em;*/
+    height: 100%;
+    transition: opacity 0.5s linear, right 0.5s ease-out;
+}
+.modal.left .modal-content {
+    height: 100%;
+    overflow-y: auto;
+}
+
 .new-button {
     margin: 0 4rem 0 0;
     background-color: transparent;
@@ -2921,13 +2934,6 @@ body.modal-open .popover {
 }
 
 
-
-
-
-
-
-
-
 .function-bar {
     background-color: #E8E8E8;
     border-radius: 1.9375rem;
@@ -2978,3 +2984,7 @@ body.modal-open .popover {
         align-items: center;
         display:flex;
     }
+
+.gray-background {
+    background-color: rgba(0, 0, 0, 0.075) !important;
+}

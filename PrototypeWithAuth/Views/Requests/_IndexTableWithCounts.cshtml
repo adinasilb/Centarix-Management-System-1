@@ -2,23 +2,23 @@
 @using PrototypeWithAuth.AppData
 @{
 
-    string newButtonText = "";
+    @*string newButtonText = "";*@
     string orderedButtonText = "";
     string receivedButtonText = "";
     string approvedButtonText = "";
 
-    string newActiveClass = "";
+    @*string newActiveClass = "";*@
     string orderedActiveClass = "";
     string receivedActiveClass = "";
     string approvedActiveClass = "";
     int requestStatusID = Model.RequestStatusID;
-
-    newButtonText = "For Approval [" + Model.NewCount + "]";
+@*
+    newButtonText = "For Approval [" + Model.NewCount + "]";*@
     orderedButtonText = "Ordered [" + Model.OrderedCount + "]";
     receivedButtonText = "Received [" + Model.ReceivedCount + "]";
     approvedButtonText = "Requests [" + Model.ApprovedCount + "]";
 
-    newActiveClass = "new-button pt-4 ";
+    @*newActiveClass = "new-button pt-4 ";*@
     orderedActiveClass = "new-button pt-4 ";
     receivedActiveClass = "new-button pt-4 ";
     approvedActiveClass = "new-button pt-4 ";
@@ -38,8 +38,8 @@
         case 1:
         case 4:
         case 5:
-            newActiveClass = activeClasses;
-            break;
+            @*newActiveClass = activeClasses;
+            break;*@
         case 2:
             orderedActiveClass = activeClasses;
             break;
@@ -59,9 +59,9 @@
         <ul class="pl-0">
             @if (Model.PageType != AppUtility.PageTypeEnum.OperationsRequest)
             {
-                <li class="list-inline-item active m-0">
+                @*<li class="list-inline-item active m-0">
                     <a class="@newActiveClass countStatus" value="1" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
-                </li>
+                </li>*@
                 <li class="list-inline-item m-0">
                     <a class="@approvedActiveClass countStatus" value="6" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
 

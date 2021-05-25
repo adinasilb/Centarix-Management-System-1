@@ -126,7 +126,7 @@ namespace PrototypeWithAuth.AppData
         public enum RequestModalType { Create, Edit, Summary }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, RemoveShare }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
@@ -145,6 +145,7 @@ namespace PrototypeWithAuth.AppData
 
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocol }
+        public enum GlobalInfoType { ExchangeRate, LoginUpdates }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");

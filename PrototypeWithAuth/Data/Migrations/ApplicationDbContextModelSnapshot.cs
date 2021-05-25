@@ -953,7 +953,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("EmployeeHoursAwaitingApprovalID");
 
-                    b.HasIndex("EmployeeHoursID");
+                    b.HasIndex("EmployeeHoursID")
+                        .IsUnique()
+                        .HasFilter("[EmployeeHoursID] IS NOT NULL");
 
                     b.HasIndex("EmployeeHoursStatusEntry1ID");
 
@@ -1056,24 +1058,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             LastCentarixID = 0,
                             LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ExchangeRate", b =>
-                {
-                    b.Property<int>("ExchangeRateID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("LatestExchangeRate")
-                        .HasColumnType("decimal(18,3)");
-
-                    b.HasKey("ExchangeRateID");
-
-                    b.ToTable("ExchangeRates");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteProtocol", b =>
@@ -1286,6 +1270,27 @@ namespace PrototypeWithAuth.Data.Migrations
                             Icon = "icon-description-24px2",
                             IconActionClass = "add-file-to-line"
                         });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.GlobalInfo", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GlobalInfoType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("GlobalInfos");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Invoice", b =>
@@ -2844,6 +2849,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Handeling")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ProductComment")
                         .HasColumnType("nvarchar(max)");
@@ -5824,8 +5832,8 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHours", "EmployeeHours")
-                        .WithMany()
-                        .HasForeignKey("EmployeeHoursID")
+                        .WithOne("EmployeeHoursAwaitingApproval")
+                        .HasForeignKey("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", "EmployeeHoursID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry1")
