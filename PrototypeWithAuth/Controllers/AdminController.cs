@@ -833,7 +833,7 @@ namespace PrototypeWithAuth.Controllers
                     //}
 
 
-                    IList<string> rolesList = await _userManager.GetRolesAsync(employeeEditted).ConfigureAwait(false);
+                    List<string> rolesList = new List<string>( await _userManager.GetRolesAsync(employeeEditted).ConfigureAwait(false) );
 
                     foreach (var role in registerUserViewModel.OrderRoles)
                     {
