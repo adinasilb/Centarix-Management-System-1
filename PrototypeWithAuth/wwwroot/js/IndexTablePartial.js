@@ -12,7 +12,7 @@
 	$(this).popover('toggle');
 	$(".popover").off("click").on("click", ".share-request-fx", function () {
 		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-		alert("url: " + url);
+		//alert("url: " + url);
 		$.ajax({
 			async: true,
 			url: url,
@@ -116,7 +116,8 @@ $(".load-product-details-summary").off('click').on("click", function (e) { //why
 	$("#loading").show();
 	console.log('in load products details summary');
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
-	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val();
+	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val() + "&isProprietary=" + isProprietary;
 	$.fn.CallPageRequest($itemurl, "summary");
 	return false;
 });
