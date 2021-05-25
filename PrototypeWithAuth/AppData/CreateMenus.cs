@@ -114,7 +114,7 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Requests",
-                        Controller = "Requests",
+                        Controller = "Operations",
                         Action = "Index",
                         RouteValues = new RouteValueDictionary()
                         {
@@ -130,7 +130,7 @@ namespace PrototypeWithAuth.AppData
                     MainMenuItems.Add(new MenuItems()
                     {
                         Description = "Inventory",
-                        Controller = "Requests",
+                        Controller = "Operations",
                         Action = "IndexInventory",
                         RouteValues = new RouteValueDictionary()
                         {
@@ -1153,7 +1153,7 @@ namespace PrototypeWithAuth.AppData
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Last Item",
-                Controller = "Requests",
+                Controller = "Operations",
                 Action = "Index",
                 RouteValues = new RouteValueDictionary()
                         {
@@ -1170,7 +1170,7 @@ namespace PrototypeWithAuth.AppData
             SidebarMenuItems.Add(new MenuItems()
             {
                 Description = "Add Item",
-                Controller = "Requests",
+                Controller = "Operations",
                 Action = "AddItemView",
                 RouteValues = new RouteValueDictionary()
                 {
