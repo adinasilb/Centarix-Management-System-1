@@ -610,10 +610,6 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        public async Task<IActionResult> AddFunctionToLine(int lineID, int functionID)
-        {
-            return RedirectToAction("_Lines");
-        }
         public bool CheckIfSerialNumberExists(string serialNumber)
         {
             return _context.Products.Where(p => p.SerialNumber.Equals(serialNumber)).ToList().Any();
@@ -702,6 +698,41 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> DeleteMaterial(AddMaterialViewModel addMaterialViewModel)
+        {
+            var materialDB = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    materialDB.IsDeleted = true;
+                    _context.Update(materialDB);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                    return PartialView("DeleteMaterial", new AddMaterialViewModel { Material = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                }
+                return redirectToMaterialTab(materialDB.ProtocolID);
+            }
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID)
+        {
+            return PartialView(new AddFunctionViewModel
+            {
+                FunctionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault(),
+                Line = _context.TempLines.Where(tl => tl.PermanentLineID == LineID).FirstOrDefault()
+            });
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddFunctionModal(AddMaterialViewModel addMaterialViewModel)
         {
             var materialDB = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault();
             using (var transaction = _context.Database.BeginTransaction())

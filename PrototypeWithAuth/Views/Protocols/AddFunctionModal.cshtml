@@ -1,4 +1,5 @@
-﻿@model PrototypeWithAuth.ViewModels.AddMaterialViewModel
+﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel
+@using PrototypeWithAuth.AppData
 <div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class="sm-modal modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
@@ -6,20 +7,43 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form materialForm">
-                @Html.HiddenFor(r => r.Material.MaterialID)
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
                     <div class="container p-0">
                         <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
 
                         <div>
-                            <span class="heading-1"><i class="icon-info-24px-2"></i>&ensp;Info</span>
+                            <span class="heading-1"><i class="@Model.FunctionType.Icon"></i>&ensp;@Model.FunctionType.FunctionDescription</span>
                         </div>
                     </div>
                 </div>
-                <div class="modal-bodym-0 p-0">
-                    <textarea class="p-3 text rounded-reorder border form-control-plaintext  w-100" asp-for="Material.Info" rows="6">
-                            
-                        </textarea>
+                <div class="modal-body m-0 p-0">
+                    @switch (Enum.Parse<AppUtility.FuctionTypes>(Model.FunctionType.DescriptionEnum))
+                    {
+                        case AppUtility.FuctionTypes.AddComment:
+                            break;
+                        case AppUtility.FuctionTypes.AddFile:
+                            break;
+                        case AppUtility.FuctionTypes.AddImage:
+                            break;
+                        case AppUtility.FuctionTypes.AddLinkToProduct:
+                            break;
+                        case AppUtility.FuctionTypes.AddLinkToProtocol:
+                            break;
+                        case AppUtility.FuctionTypes.AddStop:
+                            break;
+                        case AppUtility.FuctionTypes.AddTable:
+                            break;
+                        case AppUtility.FuctionTypes.AddTemplate:
+                            break;
+                        case AppUtility.FuctionTypes.AddTimer:
+                            <input type="text" asp-for="Line.Timer" class="form-control-plaintext border-bottom " />
+                            break;
+                        case AppUtility.FuctionTypes.AddTip:
+         
+                            break;
+                        case AppUtility.FuctionTypes.AddWarning:
+                            break;
+                    }
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
