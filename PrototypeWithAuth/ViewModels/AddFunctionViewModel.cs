@@ -9,7 +9,8 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class AddFunctionViewModel : ViewModelBase
     {
-        public FunctionType FunctionType { get; set; }
-        public TempLine Line { get; set; }
+        //public FunctionType FunctionType { get; set; }
+        //public TempLine Line { get; set; }
+        public FunctionLine FunctionLine { get; set;}
     }
 }

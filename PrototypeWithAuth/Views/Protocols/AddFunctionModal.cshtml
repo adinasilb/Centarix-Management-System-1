@@ -1,7 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel
 @using PrototypeWithAuth.AppData
 <div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
-    <div class="sm-modal modal-dialog-centered mx-auto">
+    <div class=" modal-dialog-centered mx-auto" style="width:30%">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-function');">
                 <span aria-hidden="true">&times;</span>
@@ -12,14 +12,17 @@
                         <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
 
                         <div>
-                            <span class="heading-1"><i class="@Model.FunctionType.Icon"></i>&ensp;@Model.FunctionType.FunctionDescription</span>
+                            <span class="heading-1"><i class="@Model.FunctionLine.FunctionType.Icon"></i>&ensp;@Model.FunctionLine.FunctionType.FunctionDescription</span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-body m-0 p-0">
-                    @switch (Enum.Parse<AppUtility.FuctionTypes>(Model.FunctionType.DescriptionEnum))
+                    @switch (Enum.Parse<AppUtility.FuctionTypes>(Model.FunctionLine.FunctionType.DescriptionEnum))
                     {
                         case AppUtility.FuctionTypes.AddComment:
+                        case AppUtility.FuctionTypes.AddTip:
+                        case AppUtility.FuctionTypes.AddWarning:
+                            <textarea class="border form-control-plaintext " rows="6" asp-for="FunctionLine.Text"></textarea>
                             break;
                         case AppUtility.FuctionTypes.AddFile:
                             break;
@@ -36,13 +39,9 @@
                         case AppUtility.FuctionTypes.AddTemplate:
                             break;
                         case AppUtility.FuctionTypes.AddTimer:
-                            <input type="text" asp-for="Line.Timer" class="form-control-plaintext border-bottom " />
+                            <input class="border form-control-plaintext " rows="6" asp-for="FunctionLine.Timer" />
                             break;
-                        case AppUtility.FuctionTypes.AddTip:
-         
-                            break;
-                        case AppUtility.FuctionTypes.AddWarning:
-                            break;
+
                     }
                 </div>
                 <div class="modal-footer border-0 p-0">

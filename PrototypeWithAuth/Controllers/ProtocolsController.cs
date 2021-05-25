@@ -328,7 +328,6 @@ namespace PrototypeWithAuth.Controllers
             tempLine.LineNumber = line.LineNumber;
             tempLine.LineTypeID = line.LineTypeID;
             tempLine.ProtocolID = line.ProtocolID;
-            tempLine.Timer = line.Timer;
             tempLine.ParentLineID = line.ParentLineID;
             return tempLine;
         }
@@ -340,7 +339,6 @@ namespace PrototypeWithAuth.Controllers
             line.LineNumber = tempLine.LineNumber;
             line.LineTypeID = tempLine.LineTypeID;
             line.ProtocolID = tempLine.ProtocolID;
-            line.Timer = tempLine.Timer;
             line.ParentLineID = tempLine.ParentLineID;
             return line;
         }
@@ -724,8 +722,8 @@ namespace PrototypeWithAuth.Controllers
         {
             return PartialView(new AddFunctionViewModel
             {
-                FunctionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault(),
-                Line = _context.TempLines.Where(tl => tl.PermanentLineID == LineID).FirstOrDefault()
+               FunctionLine = new FunctionLine { FunctionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault(), FunctionTypeID = FunctionTypeID,
+                Line = TurnTempLineToLine(_context.TempLines.Where(tl =>  tl.PermanentLineID == null ? tl.LineID == LineID : tl.PermanentLineID==LineID).FirstOrDefault()), LineID = LineID }
             });
         }
 
