@@ -2362,38 +2362,28 @@ namespace PrototypeWithAuth.Controllers
                         if(receivedModalVisualViewModel.LocationInstancePlaces != null)
                         {
                             var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
-                            var isTemporary = false;
                             foreach (var location in requestLocations)
                             {   
                                 var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
-                                if (locationInstance is TemporaryLocationInstance)
-                                {
-                                    isTemporary = true;
-                                }
-                                else
-                                {
                                     _context.Remove(location);
-                                    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                                if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                                {
+                                    locationInstance.IsFull = false;
+                                    _context.Update(locationInstance);
+                                }
+                                else if (locationInstance.IsEmptyShelf)
+                                {
+                                    var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+                                                            && rli.RequestID != request.RequestID).ToList();
+                                    if (duplicateLocations.Count() == 0)
                                     {
-                                        locationInstance.IsFull = false;
+                                        locationInstance.ContainsItems = false;
                                         _context.Update(locationInstance);
                                     }
-                                    else if (locationInstance.IsEmptyShelf)
-                                    {
-                                        var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
-                                                                && rli.RequestID != request.RequestID).ToList();
-                                        if (duplicateLocations.Count() == 0)
-                                        {
-                                            locationInstance.ContainsItems = false;
-                                            _context.Update(locationInstance);
-                                        }
-                                    }
                                 }
                             }
-                            if (!isTemporary)
-                            {
-                                await SaveLocations(receivedModalVisualViewModel, request);
-                            }
+                            await _context.SaveChangesAsync();
+                            await SaveLocations(receivedModalVisualViewModel, request);
                         }
 
 
