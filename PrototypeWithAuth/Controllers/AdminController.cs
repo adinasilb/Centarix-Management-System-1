@@ -842,7 +842,7 @@ namespace PrototypeWithAuth.Controllers
                     await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.Protocols.ToString(), registerUserViewModel.ProtocolRoles[0].Selected);
                     foreach (var role in registerUserViewModel.OperationRoles)
                     {
-                        CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected);
+                        await CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected);
                     }
                     await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.Biomarkers.ToString(), registerUserViewModel.BiomarkerRoles[0].Selected);
                     await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.TimeKeeper.ToString(), registerUserViewModel.TimekeeperRoles[0].Selected);
