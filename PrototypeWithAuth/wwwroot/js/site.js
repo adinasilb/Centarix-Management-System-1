@@ -1495,8 +1495,9 @@ $(function () {
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
 		var selectedElements = $('#' + dataActivates).find(".active")
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
+		var dataActivatesLength = $('#' + dataActivates).children('li').length;
 		if (selectedElements.length <= 1) {
-			if($('#' + dataActivates+" .search-wrap").length>0)
+			if ($('#' + dataActivates + " .search-wrap").length > 0 || $(selectID).children().length < dataActivatesLength)
 			{
 				selectedIndex = selectedIndex-1;
 			}
@@ -1526,9 +1527,7 @@ $(function () {
 		$(selectID).destroyMaterialSelect();
 		$(selectID).prop("disabled", false);
 		if (selectedElements.length <= 1) {
-			if ($(selectID).children().first().val() != "") {
-				selectedIndex = selectedIndex - 1;
-            }
+			
 			$(selectID).prop('selectedIndex', selectedIndex);
 		}
 		else {

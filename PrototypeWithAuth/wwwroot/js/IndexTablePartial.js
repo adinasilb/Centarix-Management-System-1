@@ -86,7 +86,7 @@ $(".load-quote-details").on("click", function (e) {
 });
 
 
-$("body").off('click').on("click", ".load-order-details", function (e) {
+$("body").off("click").on("click", ".load-order-details", function (e) {
 	console.log("in order details");
 	e.preventDefault();
 	e.stopPropagation();
@@ -94,7 +94,6 @@ $("body").off('click').on("click", ".load-order-details", function (e) {
 	var section = $("#masterSectionType").val()
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
 	var $itemurl = "/Requests/ReOrderFloatModalView/?id=" + $(this).attr("value") + "&" + $.fn.getRequestIndexString()
-	console.log($(this).attr("value"));
 	$.fn.CallPageRequest($itemurl, "reorder");
 	return false;
 });
