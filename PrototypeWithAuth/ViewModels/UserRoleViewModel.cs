@@ -9,8 +9,10 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class UserRoleViewModel : ViewModelBase
     {
-        public AppUtility.MenuItems MenuItemsID { get; set; }
-        public bool Selected { get; set; } 
-        public string Name { get; set; }
+        public int MenuItemsID { get; set; }
+        public bool Selected { get; set; }
+        public StringWithName StringWithName { get; set; }
+
+        //public List<UserRoleViewModel> UserRoleViewModels { get; set }
     }
 }
