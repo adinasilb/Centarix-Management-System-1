@@ -283,7 +283,8 @@ namespace PrototypeWithAuth.Controllers
         private void fillInTimekeeperNotifications(ApplicationUser user, DateTime lastUpdate)
         {
 
-                var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
+                var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id)
+                    .Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
                     .Where(r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today);
                 foreach (var e in eh)
                 {

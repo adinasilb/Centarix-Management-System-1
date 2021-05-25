@@ -277,6 +277,9 @@
         <div class="col">
             Total Hours
         </div>
+        <div class="col">
+            Percentage
+        </div>
     </div>
     <div class="row mt-2 py-4  border  text-center" style="border-color: @borderColor !important;">
         <div class="col">
@@ -301,13 +304,26 @@
             @{ var sum = new TimeSpan(Model.EmployeeHours.Select(eh => new { TimeSpan = eh.EmployeeHours.TotalHours?.Ticks ?? 0 }).Sum(a => a.TimeSpan)); }
             @{var totalHours = sum.Days * 24 + sum.Hours;
                 String? totalInMonthString = null;
+                TimeSpan totalInMonth = new TimeSpan();
                 if (Model.TotalHoursInMonth != null)
                 {
-                    var totalInMonth = TimeSpan.FromHours(Model.TotalHoursInMonth ?? 0);
+                    totalInMonth = TimeSpan.FromHours(Model.TotalHoursInMonth ?? 0);
                     totalInMonthString = " / " + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
                 }
             }
             @totalHours:@sum.ToString("mm")@totalInMonthString
+        </div>
+        <div class="col">
+            @{
+                var totalHoursPercentDisplay = "N/A";
+                if (Model.User.EmployeeStatusID == 1)
+                {
+                    double totalHoursDecimalWithMinutes = totalHours + (sum.Minutes / 60);
+                    var totalHoursPercent = Math.Round((totalHoursDecimalWithMinutes / totalInMonth.TotalHours) * 100, 2);
+                    totalHoursPercentDisplay = totalHoursPercent + "%";
+                }
+            }
+            @totalHoursPercentDisplay
         </div>
 
     </div>
