@@ -42,12 +42,12 @@ namespace PrototypeWithAuth.Models
         private TimeSpan? _TotalHours;
         [DisplayFormat(DataFormatString = @"{0:hh\:mm}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Time)]
-        public TimeSpan? TotalHours { 
-            get { 
-                if(Entry1!=null || Exit1 !=null)
+        public TimeSpan? TotalHours {
+            get {
+                if (Entry1 != null || Exit1 != null)
                     return ((Exit1 - Entry1) ?? TimeSpan.Zero) + ((Exit2 - Entry2) ?? TimeSpan.Zero);
                 else return _TotalHours;
-                }
+            }
             set { _TotalHours = value; }
 
         }
@@ -60,5 +60,6 @@ namespace PrototypeWithAuth.Models
         public int? CompanyDayOffID { get; set; }
         public CompanyDayOff CompanyDayOff { get; set; }
         public bool IsBonus { get; set; }
+        public EmployeeHoursAwaitingApproval EmployeeHoursAwaitingApproval { get;set;}
     }
 }

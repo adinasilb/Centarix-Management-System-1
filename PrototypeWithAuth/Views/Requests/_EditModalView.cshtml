@@ -1,0 +1,261 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestItemViewModel
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@using PrototypeWithAuth.AppData
+@inject UserManager<ApplicationUser> _userManager
+@{
+    var form = " order-inv-form ";
+
+    var summary = "";
+    var disabled = "";
+    var markReadOnlyClass = "";
+    var color = "";
+    if (Model.ModalType == AppUtility.RequestModalType.Edit || Model.ModalType == AppUtility.RequestModalType.Summary)
+    {
+        markReadOnlyClass = "mark-readonly";
+    }
+    if (Model.ModalType != AppUtility.RequestModalType.Summary)
+    {
+        summary = "hidden";
+    }
+    if (Model.ModalType != AppUtility.RequestModalType.Create)
+    {
+        disabled = "disabled";
+    }
+
+    switch (Model.SectionType)
+    {
+        case AppUtility.MenuItems.Requests:
+            color = "order-inv-background-color";
+            form = "order-inv-form";
+            break;
+        case AppUtility.MenuItems.Operations:
+            color = "oper-background-color";
+            form = "oper-form";
+            break;
+        case AppUtility.MenuItems.Accounting:
+            color = "accounting-background-color";
+            form = "accounting-form";
+
+            break;
+        case AppUtility.MenuItems.LabManagement:
+            color = "lab-man-background-color";
+            form = " supplier-form ";
+
+            break;
+    }
+    var requestCategoryType = Model.Requests[0].Product?.ProductSubcategory.ParentCategory.CategoryTypeID;
+}
+
+    <div class="modal-dialog modal-lg @form" role="document" style="max-height:100%; width: 50%; max-width: 100%">
+        @*style needed here to override bootstraps modal width limitations*@
+
+        <div class="modal-content d-inline-block ">
+
+            <form action="" id="myForm" class="ordersItemForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
+
+                @Html.HiddenFor(model => model.Requests[0].ParentRequest.ApplicationUserID)
+                <input type="hidden" text="close" class="modal-open-state" />
+
+                @*THE FOLLOWING HIDDEN VALUES ARE TO REMEMBER THE REQUESTS INDEX PAGE FROM BEFORE*@
+                @*the values for the hidden data is set in js on the modal success area off of the tempdata*@
+                @Html.HiddenFor(model => model.RequestStatusID)
+                @Html.HiddenFor(model => model.PageType) @*JS should be taking this as a string *@
+                @Html.HiddenFor(model => model.SectionType)
+                @*Requests search view model*@
+                @Html.HiddenFor(model => model.Requests[0].ApplicationUserCreatorID)
+                @Html.HiddenFor(model => model.Requests[0].ApplicationUserReceiverID)
+                @Html.HiddenFor(model => model.Requests[0].CreationDate)
+                <input type="hidden" asp-for="Requests[0].RequestID" />
+                <input type="hidden" asp-for="Requests[0].ProductID" />
+                <input type="hidden" asp-for="Requests[0].Payments.FirstOrDefault().HasInvoice" />
+                <input type="hidden" asp-for="Requests[0].NoteForClarifyDelivery" />
+                <input type="hidden" asp-for="Requests[0].NoteForPartialDelivery" />
+                <input type="hidden" asp-for="Requests[0].NoteToSupplier" />
+                <input type="hidden" asp-for="Requests[0].Payments.FirstOrDefault().InvoiceID" />
+                <input type="hidden" asp-for="Requests[0].OrderType" />
+                <input type="hidden" asp-for="Requests[0].ArrivalDate" />
+                <input type="hidden" value="@Model.Requests[0].Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum" id="categoryDescription" />
+
+                <!-- Modal Header -->
+                <div class="new-modal-header modal-line-1-header-with-back modal-sides">
+                    @*class needed here to override bootstraps modal limitations*@
+
+                    @if (Model.ErrorMessage != null)
+                    {
+                        <div class="row">
+                            <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+                        </div>
+                    }
+                    <div>
+                        <button class="back-button" type="button" style="border-width: 0; background: transparent">
+                            <img src="~/images/css/inventory/icons/RightArrow.png" alt="Alternate Text" />
+                        </button>
+                    </div>
+                    <div class="row modal-title-line justify-content-between">
+                        @*<div class="col-md-2 px-0">*@
+                        @if (Model.Requests[0].Product.ProductSubcategory.ImageURL != null)
+                        {
+                            <img src="@Model.Requests[0].Product.ProductSubcategory.ImageURL" class="top-modal-image" alt="Alternate Text" width="75" />
+                        }
+                        else
+                        {
+                            <img src="~/images/css/CategoryImages/placeholder.png" alt="Alternate Text" class="top-modal-image" width="75" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
+                        }
+                        @*</div>*@
+                        @if (Model.SectionType != AppUtility.MenuItems.Operations)
+                        {
+                            <div class="modal-product-title" @*style="width: 80%;"*@>
+                                <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name name mark-readonly" disabled placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
+                                <span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-4 ">
+                                <div class="form-group">
+                                    @Html.DropDownListFor(
+                        vm => vm.Requests[0].Product.VendorID,
+                        new SelectList(
+                        Model.Vendors,
+                        dataValueField: "VendorID",
+                        dataTextField: "VendorEnName"),
+                        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+                        "Select a Vendor",
+                        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext vendor " + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
+                        )
+                                    <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
+                                </div>
+                            </div>
+                            <input class="" type="hidden" value="" id="vendor-primary-email" />
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 2) && Model.SectionType == AppUtility.MenuItems.Requests)
+                            {
+                                <div class="d-flex align-items-center">
+                                    <button type="button" value="@Model.Requests[0].RequestID" class="load-order-details custom-button custom-button-font @color m-auto">Request</button>
+                                </div>
+                            }
+                            <div class="row pt-2 d-flex justify-content-center">
+                                Serial: @Model.Requests[0].Product.SerialNumber
+                            </div>
+                        </div>
+
+                    </div>
+                    @{await Html.RenderPartialAsync("EditItemTabs", Model); }
+                </div>
+
+                <!-- Modal body -->
+                <div class="new-modal-body edit-modal-outer-body ">
+                    <input type="hidden" class="old-name" value="@Model.Requests[0].Product.ProductName" />
+                    <div class="container-fluid edit-modal-body box-shadow orders partial-div" style="background: #FFF; border: 2px solid #EAEAEB;">
+                        @{await Html.RenderPartialAsync("ItemData", Model); }
+                    </div>
+                </div>
+                @*Begin Hidden Inputs:*@
+                @Html.HiddenFor(vm => vm.Requests[0].ProductID)
+                @Html.HiddenFor(vm => vm.Requests[0].Product.ProductSubcategory.ParentCategoryID)
+                @Html.HiddenFor(vm => vm.Requests[0].RequestStatusID)
+                @Html.HiddenFor(vm => vm.Requests[0].ParentRequestID)
+                @Html.HiddenFor(vm => vm.Requests[0].ParentQuoteID)
+                @*End Hidden Inputs*@
+
+                @*Hidden Input for Product Subcategory*@
+                @Html.HiddenFor(vm => vm.Requests[0].Product.ProductSubcategory.ProductSubcategoryDescription)
+            </form>
+
+        </div>
+    </div>
+
+
+<script>
+    //AJAX load full partial view for modalview manage locations
+    function loadReceivedModalSubLocations(val) {
+        var myDiv = $(".divSublocations");
+        $.ajax({
+            //IMPORTANT: ADD IN THE ID
+            url: "/Requests/ReceivedModalSublocations/?LocationTypeID=" + val,
+            type: 'GET',
+            cache: false,
+            context: myDiv,
+            success: function (result) {
+                $(this).html(result);
+                $('visualView').html('');
+            }
+        });
+    };
+
+
+</script>
+<script>
+    function SLI(el) {
+        //ONE ---> GET THE NEXT DROPDOWNLIST
+
+        var nextSelect = $(el).parents('.form-group').nextAll().first().find('.dropdown-menu')
+        console.log(nextSelect)
+        var locationInstanceParentId = $(el).val();;
+        var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
+
+        if (nextSelect != undefined) { //if there is another one
+
+            $(nextSelect).html('');
+            $(nextSelect).parents('.dropdown-main').find('span:not(.caret)').text('select');
+            $.getJSON(url, { locationInstanceParentId, locationInstanceParentId }, function (result) {
+                var item = "<li>Select Location Instance</li>";
+                $.each(result, function (i, field) {
+                    item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' " onclick="SLI(this)">' + field.locationInstanceName + '</li>'
+                });
+                $(nextSelect).append(item);
+            });
+
+        }
+        //TWO ---> FILL VISUAL VIEW
+        var myDiv = $(".visualView");
+        if (locationInstanceParentId == 0) { //if zero was selected
+            console.log("selected was 0");
+            //check if there is a previous select box
+            var oldSelectClass = name.replace(place.toString(), (place - 1).toString());
+            var oldSelect = $("select[name='" + oldSelectClass + "']");
+            if (oldSelect.length) {
+                console.log("oldSelectClass " + oldSelectClass + " exists and refilling with that");
+                var oldSelected = $("." + oldSelect).children("option:selected").val();
+                console.log("oldSelected: " + oldSelected);
+                $.ajax({
+                    url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected,
+                    type: 'GET',
+                    cache: false,
+                    context: myDiv,
+                    success: function (result) {
+                        $(this).html(result);
+                    }
+                });
+            }
+            else {
+                console.log("oldSelectClass " + oldSelectClass + " does not exist and clearing");
+                myDiv.html("");
+            }
+        }
+        else {
+            console.log("regular visual");
+            $.ajax({
+                url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
+                type: 'GET',
+                cache: false,
+                context: myDiv,
+                success: function (result) {
+                    $(this).html(result);
+                }
+            });
+        }
+
+        $(el).parents('.dropdown-main').find('span:not(.caret)').text($(el).text());
+    };
+
+
+</script>

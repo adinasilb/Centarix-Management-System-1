@@ -1825,7 +1825,7 @@ namespace PrototypeWithAuth.AppData
             {
                 Description = "Favorites",
                 Controller = "Protocols",
-                Action = "ResourcesList",
+                Action = "ResourcesFavorites",
                 RouteValues = new RouteValueDictionary() {
                     { "SidebarEnum" , AppUtility.SidebarEnum.Favorites }
                 },

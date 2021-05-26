@@ -1,0 +1,33 @@
+﻿@model PrototypeWithAuth.ViewModels.AddMaterialViewModel
+<div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+    <div class="sm-modal modal-dialog-centered mx-auto">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-function');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form materialForm">
+                @Html.HiddenFor(r => r.Material.MaterialID)
+                <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
+                    <div class="container p-0">
+                        <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
+
+                        <div>
+                            <span class="heading-1"><i class="icon-info-24px-2"></i>&ensp;Info</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-bodym-0 p-0">
+                    <textarea class="p-3 text rounded-reorder border form-control-plaintext  w-100" asp-for="Material.Info" rows="6">
+                            
+                        </textarea>
+                </div>
+                <div class="modal-footer border-0 p-0">
+                    <div class="mx-auto modal-footer-mt">
+                        <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin " value="Save" />
+                        <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('add-function');">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

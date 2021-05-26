@@ -31,6 +31,13 @@
         color = "lab-man-filter";
         sectionType = AppUtility.MenuItems.LabManagement.ToString();
     }
+    else if (Model.SectionType == AppUtility.MenuItems.Accounting)
+    {
+        form = "accounting-form";
+        bcColor = "accounting-background-color";
+        color = "accounting-filter";
+        sectionType = AppUtility.MenuItems.LabManagement.ToString();
+    }
     else if (Model.SectionType == AppUtility.MenuItems.Protocols)
     {
         form = "protocol-form";

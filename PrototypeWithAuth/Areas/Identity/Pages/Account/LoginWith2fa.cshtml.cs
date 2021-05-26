@@ -107,6 +107,14 @@ namespace PrototypeWithAuth.Areas.Identity.Pages.Account
                     var ipEnd = myIpAddress.Split(".").LastOrDefault();
                     var ipEndNum = 501;
                     Int32.TryParse(ipEnd, out ipEndNum);
+                    /*//this is for adina's netfree
+                    if (myIpAddress.StartsWith("100.79.1."))
+                    {
+                        #if (DEBUG)
+                        myIpAddress = "172.27.71.80";
+                        #endif
+                    }*/
+
 
                     if (myIpAddress.StartsWith("172.27.71.") && (ipEndNum >= 0 && ipEndNum <= 500))
                     {

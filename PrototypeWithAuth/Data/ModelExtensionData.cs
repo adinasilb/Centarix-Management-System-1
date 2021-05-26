@@ -1794,10 +1794,10 @@ namespace PrototypeWithAuth.Data
                     LocationTypeID = 500,
                     LocationTypeName = "25°C",
                     LocationTypePluralName = "25°C",
-                    LocationTypeChildID =501,
+                    LocationTypeChildID = 501,
                     Depth = 0
                 },
-               
+
                  new LocationType
                  {
                      LocationTypeID = 501,
@@ -2815,7 +2815,97 @@ namespace PrototypeWithAuth.Data
                     LineTypeDescription = "Step",
                     LineTypeParentID = 2
                 }
-                );
+             );
+            modelBuilder.Entity<FunctionType>().HasData(
+                new FunctionType
+                {
+                    FunctionTypeID = 1,
+                    FunctionDescription = "Add Image",
+                    Icon = "",
+                    IconActionClass = "add-image-to-line",
+                    DescriptionEnum ="AddImage"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 2,
+                    FunctionDescription = "Add Timer",
+                    Icon = "icon-centarix-icons-19",
+                    IconActionClass = "add-timer-to-line",
+                    DescriptionEnum = "AddTimer"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 3,
+                    FunctionDescription = "Add Comment",
+                    Icon = "icon-comment-24px",
+                    IconActionClass = "add-comment-to-line",
+                    DescriptionEnum = "AddComment"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 4,
+                    FunctionDescription = "Add Warning",
+                    Icon = "icon-report_problem-24px",
+                    IconActionClass = "add-warning-to-line",
+                    DescriptionEnum = "AddWarning"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 5,
+                    FunctionDescription = "Add Tip",
+                    Icon = "icon-tip-24px",
+                    IconActionClass = "add-tip-to-line",
+                    DescriptionEnum = "AddTip"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 6,
+                    FunctionDescription = "Add Table",
+                    Icon = "icon-table_chart-24px1",
+                    IconActionClass = "add-table-to-line",
+                    DescriptionEnum = "AddTable"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 7,
+                    FunctionDescription = "Add Template",
+                    Icon = "",
+                    IconActionClass = "add-template-to-line",
+                    DescriptionEnum = "AddTemplate"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 8,
+                    FunctionDescription = "Add Stop",
+                    Icon = "icon-stop-24px",
+                    IconActionClass = "add-stop-to-line",
+                    DescriptionEnum = "AddStop"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 9,
+                    FunctionDescription = "Add Link To Product",
+                    Icon = "icon-attach-item-24px",
+                    IconActionClass = "add-product-to-line",
+                    DescriptionEnum = "AddLinkToProduct"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 10,
+                    FunctionDescription = "Add Link To Protocol",
+                    Icon = "icon-attach-protocol-24px",
+                    IconActionClass = "add-protocol-to-line",
+                    DescriptionEnum = "AddLinkToProtocol"
+                },
+                new FunctionType
+                {
+                    FunctionTypeID = 11,
+                    FunctionDescription = "Add File",
+                    Icon = "icon-description-24px2",
+                    IconActionClass = "add-file-to-line",
+                    DescriptionEnum = "AddFile"
+                }
+          );
         }
     }
 }

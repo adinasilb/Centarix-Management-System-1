@@ -53,6 +53,6 @@ namespace PrototypeWithAuth.Models
         [Display(Name = "Serial Number")]
         public string SerialNumber { get; set; }
         public DateTime ProductCreationDate { get; set; }
-
+        public bool IsDeleted { get; set; }
     }
 }

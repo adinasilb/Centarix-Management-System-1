@@ -1,9 +1,10 @@
 ﻿@model AddInvoiceViewModel
 @using PrototypeWithAuth.AppData
 <script src="~/js/InitializeDatePicker.js"></script>
-<script src="~/js/Validation/AddInvoiceFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
+<script src="~/js/Validation/AddInvoiceFormValidation.js"></script>
 <script src="~/js/accounting.js"></script>
+<script src="~/js/site.js"></script>
 
 <div class="modal modal-view fader on-form-modal accounting-form" id="myModal" data-backdrop="false">
     <div class="add-invoice-modal modal-dialog-centered mx-auto">
@@ -93,14 +94,19 @@
                                         </td>
                                         <td style="width:15%;">
                                             <div class="input-group">
-                                                @if (Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString())
-                                                {
-                                                    <span class="input-group-text border-bottom pr-2">&#x20aa;</span>
-                                                    <input asp-for="Requests[x].Cost" class="form-control-plaintext border-bottom " />
+                                                @{
+                                                    var cost = Model.Requests[x].IncludeVAT ? (Model.Requests[x].Cost + Model.Requests[x].Cost * (decimal)0.17) : Model.Requests[x].Cost;
                                                 }
-                                                else
-                                                {
-                                                    <span class="input-group-text border-bottom pr-2">&#36;</span>
+                                                @if (Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString())
+                                                    {
+                                                        cost = Math.Round((cost??0), 2);
+                                                    <span class="input-group-text border-bottom pr-2">&#x20aa;</span>
+                                                    <input asp-for="Requests[x].Cost" class="form-control-plaintext border-bottom " value="@cost" />
+                                                    }
+                                                    else
+                                                    {
+                                                        cost = Math.Round((cost ?? 0) / Model.Requests[0].ExchangeRate, 2);
+                                                        <span class="input-group-text border-bottom pr-2">&#36;</span>
                                                     <input class="form-control-plaintext border-bottom cost-validation price-in-dollars" index="@x"
                                                            value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[x].Cost ?? 0) / Model.Requests[0].ExchangeRate, 2))" />
                                                     <input type="hidden" asp-for="Requests[x].Cost" class="cost @x" />
@@ -121,21 +127,25 @@
                             </tbody>
                         </table>
                         <div class="row mt-5">
-                            <div class="col-3">
+                            <div class="col-5">
                                 <label asp-for="InvoiceImage" class="control-label"></label>
-                                <input type="file" asp-for="InvoiceImage" class="form-control-file  ta pt-1">
-                                <span asp-validation-for="InvoiceImage" class="text-danger"></span>
-                                @*<div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
-                            <button class="accounting-background-color custom-button-font custom-button open-invoice-doc-modal" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
-                                    data-ids="@Model.Request.RequestID"   ---> Get all the ids when in javascript
-                                    id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@false">
-                                Select File
-                            </button>*@
+                                <br />
+                                <button class="my-2 accounting-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Invoices.ToString()"
+                                        data-id="@Model.Requests[0].RequestID" 
+                                    id="@AppUtility.FolderNamesEnum.Invoices.ToString()" data-val="@true" show-switch="@false">
+                                    Select File
+                                </button>
+                                <input type="hidden" asp-for="InvoiceImage" id="@AppUtility.FolderNamesEnum.Invoices.ToString()Input" />
+                                <span class="invoice-image-name pl-2"></span>
+                                    @*<input type="file" asp-for="InvoiceImage" class="form-control-file  ta pt-1">
+                                    <span asp-validation-for="InvoiceImage" class="text-danger"></span>*@
+                                    @*<div class="btn btn-link p-0 circular-profile-img circular-profile-img-150"><img id="invoice-image" /></div>
+            *@
                             </div>
-                            <div class="col-2 offset-5">
+                            <div class="col-2 offset-3 align-self-center">
                                 <input type="submit" class="accounting-background-color custom-button-font custom-button" asp-action="AddInvoiceModal" value="Save" />
                             </div>
-                            <div class="col-2">
+                            <div class="col-2 align-self-center">
                                 <button data-dismiss="modal" class="custom-button custom-cancel" onclick="$(this).closest('.modal').modal('hide');">Cancel</button>
                             </div>
                         </div>
