@@ -1,4 +1,4 @@
-﻿$(".more").off('click').click(function () {
+﻿$(".popover-more").off('click').click(function () {
 	var val = $(this).val();
 	$('[data-toggle="popover"]').popover('dispose');
 	$(this).popover({
@@ -10,9 +10,12 @@
 		}
 	});
 	$(this).popover('toggle');
-	$(".popover").off("click").on("click", ".share-request-fx", function () {
+	$(".popover .share-request-fx").click(function (e) {
+		e.preventDefault();
+		alert("popover click");
 		//switch this to universal share request and the modelsenum send in
 		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=Request";
+		alert("url: " + url);
 		$.ajax({
 			async: true,
 			url: url,

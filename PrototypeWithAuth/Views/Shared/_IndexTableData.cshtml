@@ -42,7 +42,7 @@
                                             <div class="table-icon-div">
                                                 <ul class="list-unstyled p-0 m-0">
                                                     <li>
-                                                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@(col.AjaxID + "more")">
+                                                        <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" value="@(col.AjaxID + "more")">
                                                             <i class="@icon.IconClass hover-bold px-1" style="font-size:2rem;">
                                                             </i>
                                                         </button>
@@ -134,9 +134,9 @@
         @Html.PagedListPager(Model.PagedList, page => Url.Action(" "), new PagedListRenderOptions { LiElementClasses = new string[] { "page-item pr-4" }, DisplayLinkToNextPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToPreviousPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToLastPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, DisplayLinkToFirstPage = X.PagedList.Mvc.Common.PagedListDisplayMode.Never, MaximumPageNumbersToDisplay = 10, DisplayEllipsesWhenNotShowingAllPageNumbers = true })
     </div>
 </div>
-<script src="~/js/accounting.js"></script>
 <script src="~/js/IndexTablePartial.js"></script>
 <script src="~/js/ConfirmDeleteScript.js"></script>
+<script src="~/js/accounting.js"></script>
 @if (AppUtility.IsAjaxRequest(this.Context.Request))
 {
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
