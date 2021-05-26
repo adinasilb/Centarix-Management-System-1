@@ -2222,17 +2222,22 @@ namespace PrototypeWithAuth.Controllers
             if (confirmQuoteEmail.IsResend)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == confirmQuoteEmail.RequestID)
-           .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
+                    .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                    .Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
             }
             else
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 1)
-                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
+                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                    .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 1).Where(r => r.RequestStatusID == 6)
+                     .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor)
+                     .Include(r => r.ParentQuote).ToList();
             }
             if (requests.Count() == 0)
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 2)
-                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
+                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                    .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 2).Where(r => r.RequestStatusID == 6)
+                     .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                     .Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
             }
             //base url needs to be declared - perhaps should be getting from js?
             //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -2248,15 +2253,15 @@ namespace PrototypeWithAuth.Controllers
             // create a new pdf document converting an url
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
-            foreach (var request in requests)
-            {
+            /*foreach (var request in requests) //this seems to be doing the exact same thing for each request -> overwriting previously saved one. what should be happening here???
+            {*/
                 //creating the path for the file to be saved
                 string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
                 string uniqueFileName = "QuotePDF.pdf";
                 string filePath = Path.Combine(path1, uniqueFileName);
                 // save pdf document
                 doc.Save(filePath);
-            }
+            //}
             // close pdf document
             doc.Close();
 
