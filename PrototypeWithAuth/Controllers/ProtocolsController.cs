@@ -720,11 +720,37 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID)
         {
-            return PartialView(new AddFunctionViewModel
+            var functionType =  _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
+            var line = TurnTempLineToLine(_context.TempLines.Where(tl => tl.PermanentLineID == null ? tl.LineID == LineID : tl.PermanentLineID == LineID).FirstOrDefault());
+            var functionLine = new FunctionLine
             {
-               FunctionLine = new FunctionLine { FunctionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault(), FunctionTypeID = FunctionTypeID,
-                Line = TurnTempLineToLine(_context.TempLines.Where(tl =>  tl.PermanentLineID == null ? tl.LineID == LineID : tl.PermanentLineID==LineID).FirstOrDefault()), LineID = LineID }
-            });
+                FunctionType = functionType,
+                FunctionTypeID = FunctionTypeID,
+                Line = line,
+                LineID = LineID
+            };
+            var viewmodel = new AddFunctionViewModel
+            {
+                FunctionLine = functionLine
+            };
+
+            switch (Enum.Parse<AppUtility.FuctionTypes>(functionType.DescriptionEnum))
+            {
+                case AppUtility.FuctionTypes.AddLinkToProduct:
+                    viewmodel.ParentCategories = _context.ParentCategories.ToList();
+                    viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();
+                    viewmodel.Products = _context.Products.ToList();
+                    viewmodel.Vendors = _context.Vendors.ToList();
+                    break;
+                case AppUtility.FuctionTypes.AddLinkToProtocol:
+                    viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
+                    viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
+                    viewmodel.Creators = _context.Users.Select(u =>
+                        new SelectListItem() { Value = u.Id, Text = u.FirstName+ u.LastName }).ToList();
+                    viewmodel.Protocols = _context.Protocols.ToList();
+                    break;    
+            }
+            return PartialView(viewmodel);
         }
 
 
