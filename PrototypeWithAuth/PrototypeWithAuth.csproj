@@ -343,6 +343,7 @@
     <PackageReference Include="bootstrap" Version="4.5.0" />
     <PackageReference Include="Chart.Mvc.Core" Version="1.1.0" />
     <PackageReference Include="EmguCV" Version="3.1.0.1" />
+    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="GoogleAuthenticator" Version="2.0.1" />
     <PackageReference Include="jQuery.Fullcalendar" Version="3.9.0" />
     <PackageReference Include="jQuery.Validation" Version="1.19.2" />
@@ -373,6 +374,7 @@
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="20.1.0" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
     <PackageReference Include="WebcamCapturer.Controls.WPF" Version="1.1.1.2" />
     <PackageReference Include="WebcamCapturer.Core" Version="1.1.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="7.9.1" />

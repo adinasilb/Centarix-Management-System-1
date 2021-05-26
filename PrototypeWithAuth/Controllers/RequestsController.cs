@@ -37,6 +37,7 @@ using Newtonsoft.Json;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.AppData.Exceptions;
 using System.Drawing;
+using ExcelDataReader;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -5637,6 +5638,39 @@ namespace PrototypeWithAuth.Controllers
         //    }
         //    return true;
         //}
+
+        [HttpPost]
+
+        public void UploadRequestsFromExcel()
+        {
+            var fileName = "ExcelFileNameHere";
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            using (var stream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    while (reader.Read()) //Each row of the file
+                    {
+                        var request = new Request();
+                        var product = new Product();
+                        var parentRequest = new ParentRequest();
+                        var parentQuote = new ParentQuote();
+
+                        var serialNumber = reader.GetValue(0);
+                        var sample = reader.GetValue(1).ToString()=="Sample";
+                        var productName = reader.GetValue(2);
+                        var productHebrewName = reader.GetValue(3);
+                        var vendorID = _context.Vendors.Where(v =>v.VendorEnName == reader.GetValue(4).ToString()).FirstOrDefault().VendorID;
+                        var catalogNumber = reader.GetValue(5);
+                        var applicationUserOwner = reader.GetValue(6).ToString().Split(" ")[1];
+                        //var productName = reader.GetValue(7);
+                        //var productName = reader.GetValue(8);
+                        //var productName = reader.GetValue(9);
+                        //var productName = reader.GetValue(10);
+                    }
+                }
+            }
+        }
 
     }
 }
