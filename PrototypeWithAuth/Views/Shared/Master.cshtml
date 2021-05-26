@@ -242,12 +242,14 @@
     @*<script src="~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/moment.js"></script>
     <script src="~/js/moment.min.js"></script>
+    <script src="~/js/moment-timezone-with-data.js"></script>
     @*<script src="~/js/datepicker.min.js"></script>
 
          Include English language
         <script src="~/js/datepicker.en.js"></script>*@
 
     <script>
+        console.log(moment().tz("Israel").format())
 
         $.fn.setUpChartDDlPlaceholders = function () {
             $("#select-options-SelectedCategoryTypes li:first").hide()
@@ -522,13 +524,13 @@
                         case "locations": case "addlocation":
                             $.fn.OpenModal('modal', 'add-location', modal)
                             break;
-                        case "addMaterial": 
+                        case "addMaterial":
                             $.fn.OpenModal('modal', 'add-material', modal)
                             break;
                         case "materialInfo":
                             $.fn.OpenModal('modal', 'material-info', modal)
                             break;
-                 
+
                     }
 
                 },
@@ -618,7 +620,7 @@
 
         }
 
-      
+
 
         $(".load-confirm-email").on("click", function (e) {
             e.preventDefault();

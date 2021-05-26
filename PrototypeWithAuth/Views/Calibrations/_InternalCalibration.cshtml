@@ -2,6 +2,7 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model PrototypeWithAuth.ViewModels._InternalCalibrationViewModel
+@using PrototypeWithAuth.AppData;
 <script src="~/js/calibrationpartials.js"></script>
 
 @{
@@ -64,7 +65,7 @@
         <div class="col-2">
             @if (Model.IsNew || Model.InternalCalibration.Date > AppUtility.ElixirDate())
             {
-                <button type="button" class="close modal-close-padding modal-close-style removeNewInternalCalibration" aria-label="Close"  index="@Model.InternalCalibrationIndex">
+                <button type="button" class="close modal-close-padding modal-close-style removeNewInternalCalibration" aria-label="Close" index="@Model.InternalCalibrationIndex">
                     <span aria-hidden="true">&times;</span>
                 </button>
             }

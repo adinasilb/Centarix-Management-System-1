@@ -1,5 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.ReportHoursFromHomeViewModel;
-    <script src="~/js/Validation/UpdateHoursValidation.js"></script>
+@using PrototypeWithAuth.AppData;
+
+<script src="~/js/Validation/UpdateHoursValidation.js"></script>
 <script src="~/js/validate.js" asp-append-version="true"></script>
 <div class="modal modal-document fader on-form-modal timekeeper-form" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
     <div class="modal-dialog-centered mx-auto modal-sm  work-from-home-modal">
@@ -9,7 +11,7 @@
             </button>
             <form action="" method="post" id="myForm" enctype="multipart/form-data" class="reportHoursForm modal-padding" style="height: 100%; overflow: auto;">
                 @{var disabled = false;
-                    if (Model.PageType?.Equals("SummaryHours")==true)
+                    if (Model.PageType?.Equals("SummaryHours") == true)
                     {
                         disabled = true;
                     }
