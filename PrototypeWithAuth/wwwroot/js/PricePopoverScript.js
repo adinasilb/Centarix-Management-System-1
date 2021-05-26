@@ -67,7 +67,7 @@ $(".open-price-popover").off('click').click(function () {
         var id = "#priceSortContent1 " + "#" + $(this).children(".priceSort").prop("id")
         $(id).attr("checked", !$(id).prop("checked"));
         //  alert("In call index with new filter")
-        if ($('#masterPageType').val() == "RequestCart" || $('#masterPageType').val() == "LabManagementQuotes" || $('#masterPageType').val() == "AccountingPayments" || $('#masterPageType').val() == "AccountingNotifications") {
+        if ($('#masterSidebarType').val() == "Cart" || $('#masterPageType').val() == "LabManagementQuotes" || $('#masterPageType').val() == "AccountingPayments" || $('#masterPageType').val() == "AccountingNotifications") {
             ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableDataByVendor", "._IndexTableDataByVendor", "GET");
         }
         else {

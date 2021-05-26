@@ -94,14 +94,19 @@
                                         </td>
                                         <td style="width:15%;">
                                             <div class="input-group">
-                                                @if (Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString())
-                                                {
-                                                    <span class="input-group-text border-bottom pr-2">&#x20aa;</span>
-                                                    <input asp-for="Requests[x].Cost" class="form-control-plaintext border-bottom " />
+                                                @{
+                                                    var cost = Model.Requests[x].IncludeVAT ? (Model.Requests[x].Cost + Model.Requests[x].Cost * (decimal)0.17) : Model.Requests[x].Cost;
                                                 }
-                                                else
-                                                {
-                                                    <span class="input-group-text border-bottom pr-2">&#36;</span>
+                                                @if (Model.Requests[0].Currency == AppUtility.CurrencyEnum.NIS.ToString())
+                                                    {
+                                                        cost = Math.Round((cost??0), 2);
+                                                    <span class="input-group-text border-bottom pr-2">&#x20aa;</span>
+                                                    <input asp-for="Requests[x].Cost" class="form-control-plaintext border-bottom " value="@cost" />
+                                                    }
+                                                    else
+                                                    {
+                                                        cost = Math.Round((cost ?? 0) / Model.Requests[0].ExchangeRate, 2);
+                                                        <span class="input-group-text border-bottom pr-2">&#36;</span>
                                                     <input class="form-control-plaintext border-bottom cost-validation price-in-dollars" index="@x"
                                                            value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[x].Cost ?? 0) / Model.Requests[0].ExchangeRate, 2))" />
                                                     <input type="hidden" asp-for="Requests[x].Cost" class="cost @x" />
