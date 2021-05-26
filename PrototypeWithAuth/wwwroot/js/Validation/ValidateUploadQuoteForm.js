@@ -20,6 +20,11 @@
 			required: true,
 			maxDate: new Date()
 		},
+		"ExpectedSupplyDays": {
+			required: true,
+			min: 0,
+			integer: true
+        }
 		//OrdersInput :{
 		//	fileRequired : true			
 		//}
