@@ -45,7 +45,7 @@ namespace PrototypeWithAuth.AppData
                     menuID = 3,
                     MenuDescription = AppUtility.MenuItems.Operations.ToString(),
                     MenuViewName = "Operation",
-                    ControllerName = "Requests",
+                    ControllerName = "Operations",
                     ActionName = "Index",
                     RouteValues = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
                     {
