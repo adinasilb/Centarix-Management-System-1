@@ -1355,11 +1355,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
+                    foreach(var userID in shareModalViewModel.ApplicationUserIDs)
+                    {
+
                     switch (shareModalViewModel.ModelsEnum)
                     {
                         case AppUtility.ModelsEnum.Resource:
                             var PrevSharedResource = _context.ShareResources
-                                .Where(sr => sr.ResourceID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == shareModalViewModel.ApplicationUserID).FirstOrDefault();
+                                .Where(sr => sr.ResourceID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
                             if (PrevSharedResource != null)
                             {
                                 PrevSharedResource.TimeStamp = DateTime.Now;
@@ -1371,12 +1374,13 @@ namespace PrototypeWithAuth.Controllers
                                 {
                                     ResourceID = shareModalViewModel.ID,
                                     FromApplicationUserID = currentUserID,
-                                    ToApplicationUserID = shareModalViewModel.ApplicationUserID,
+                                    ToApplicationUserID = userID,
                                     TimeStamp = DateTime.Now
                                 };
                                 _context.Update(shareResource);
                             }
                             break;
+                        }
                     }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();

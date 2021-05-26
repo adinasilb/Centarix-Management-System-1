@@ -1942,25 +1942,28 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var sharedRequest = _context.ShareRequests.Where(sr => sr.RequestID == shareModalViewModel.ID)
-                        .Where(sr => sr.FromApplicationUserID == _userManager.GetUserId(User))
-                        .Where(sr => sr.ToApplicationUserID == shareModalViewModel.ApplicationUserID).FirstOrDefault();
-                    if (sharedRequest == null)
+                    foreach(var userID in shareModalViewModel.ApplicationUserIDs)
                     {
-                        sharedRequest = new ShareRequest()
+                        var sharedRequest = _context.ShareRequests.Where(sr => sr.RequestID == shareModalViewModel.ID)
+                                               .Where(sr => sr.FromApplicationUserID == _userManager.GetUserId(User))
+                                               .Where(sr => sr.ToApplicationUserID == userID).FirstOrDefault();
+                        if (sharedRequest == null)
                         {
-                            RequestID = shareModalViewModel.ID,
-                            FromApplicationUserID = _userManager.GetUserId(User),
-                            ToApplicationUserID = shareModalViewModel.ApplicationUserID,
-                            TimeStamp = DateTime.Now
-                        };
+                            sharedRequest = new ShareRequest()
+                            {
+                                RequestID = shareModalViewModel.ID,
+                                FromApplicationUserID = _userManager.GetUserId(User),
+                                ToApplicationUserID = userID,
+                                TimeStamp = DateTime.Now
+                            };
+                        }
+                        else
+                        {
+                            sharedRequest.TimeStamp = DateTime.Now;
+                        }
+                        _context.Update(sharedRequest);
                     }
-                    else
-                    {
-                        sharedRequest.TimeStamp = DateTime.Now;
-                    }
-
-                    _context.Update(sharedRequest);
+                   
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }

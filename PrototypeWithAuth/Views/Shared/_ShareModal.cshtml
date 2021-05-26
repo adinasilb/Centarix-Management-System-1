@@ -21,12 +21,16 @@
                     </div>
 
                     <div class="modal-body">
-                        <div class="row">
-                            @Html.DropDownListFor(m => m.ApplicationUserID,
-                Model.ApplicationUsers, "Select User",
-                new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "userlist", @searchable = "Select User" })
+                        <div class="row ">
+                            <div class="col-10 offset-1">
+                                @Html.DropDownListFor(vm => vm.ApplicationUserIDs, Model.ApplicationUsers,
+        htmlAttributes: new { @class = "mdb-select custom-select-dropdown form-control-plaintext float-right", @searchable = "Search here...", @multiple = "multiple" })
+                                @*@Html.DropDownListFor(m => m.ApplicationUserID,
+                                    Model.ApplicationUsers, "Select User",
+                                    new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "userlist", @searchable = "Select User" })*@
+                            </div>
                         </div>
-                        <div class="row text-center mt-5">
+                        <div class="row mt-5">
 
                             @*<button class="text custom-button custom-button-font @bcColor exit-edit-modal between-button-margin" value="@Model.URL">Yes</button>*@
                             <button class="custom-button custom-cancel text share-object">Share</button>

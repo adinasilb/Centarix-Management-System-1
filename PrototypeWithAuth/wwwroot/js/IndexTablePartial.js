@@ -13,7 +13,6 @@
 	$(".popover").off("click").on("click", ".share-request-fx", function () {
 		//switch this to universal share request and the modelsenum send in
 		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=Request";
-		alert("url: " + url);
 		$.ajax({
 			async: true,
 			url: url,
@@ -22,7 +21,7 @@
 			cache: false,
 			success: function (data) {
 				$.fn.OpenModal("shared-modal", "share-modal", data)
-				$.fn.EnableMaterialSelect('#userlist', 'select-options-userlist')
+				$.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs')
 				$("#loading").hide();
 				return false;
 			}
