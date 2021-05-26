@@ -1109,19 +1109,19 @@ namespace PrototypeWithAuth.Controllers
             var newLIName = "";
             if (locationInstance.LocationInstanceParentID == null)//is temporary location
             {
-                newLIName = _context.TemporaryLocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault().LocationInstanceAbbrev;
+                newLIName = _context.TemporaryLocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault().LocationInstanceName;
             }
             else
             {
-                newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceAbbrev;
-                if (newLIName == null)
-                {
-                    while (locationInstance.LocationInstanceParentID != null)
-                    {
-                        newLIName = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).Include(li => li.LocationInstanceParent).FirstOrDefault().LocationInstanceName + newLIName;
-                        locationInstance = locationInstance.LocationInstanceParent;
-                    }
-                }
+                newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceName;
+                //if (newLIName == null)
+                //{
+                //    while (locationInstance.LocationInstanceParentID != null)
+                //    {
+                //        newLIName = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).Include(li => li.LocationInstanceParent).FirstOrDefault().LocationInstanceName + newLIName;
+                //        locationInstance = locationInstance.LocationInstanceParent;
+                //    }
+                //}
             }
             return newLIName;
         }
@@ -2118,11 +2118,11 @@ namespace PrototypeWithAuth.Controllers
                         var parent = parentLocationInstance;
                         receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                         requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
-                        requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).ToList());
+                        requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
                         while (parent.LocationInstanceParentID != null)
                         {
                             parent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
-                            requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).ToList());
+                            requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
                             receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                         }
                         while (!finished)
@@ -2362,6 +2362,7 @@ namespace PrototypeWithAuth.Controllers
                         if(receivedModalVisualViewModel.LocationInstancePlaces != null)
                         {
                             var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
+                            var isTemporary = false;
                             foreach (var location in requestLocations)
                             {   
                                 var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
@@ -2383,7 +2384,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                             }
                             await _context.SaveChangesAsync();
-                            await SaveLocations(receivedModalVisualViewModel, request);
+                                await SaveLocations(receivedModalVisualViewModel, request);
                         }
 
 
@@ -2672,7 +2673,7 @@ namespace PrototypeWithAuth.Controllers
 
             //save this as orderform
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-            string fileName = Path.Combine(path1, "OrderForm.pdf");
+            string fileName = Path.Combine(path1, "CentarixOrder#" + allRequests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
             doc.Save(fileName);
             doc.Close();
             confirm.RequestIndexObject = requestIndexObject;
@@ -2686,9 +2687,6 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-                string uploadFile = Path.Combine(uploadFolder, "OrderForm.pdf");
-
                 var isRequests = true;
                 var RequestNum = 1;
                 var PaymentNum = 1;
@@ -2755,6 +2753,9 @@ namespace PrototypeWithAuth.Controllers
                     emailNum++;
                 }
 
+                string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+                string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + requests.FirstOrDefault().ParentRequest.OrderNumber +".pdf");
+
                 if (System.IO.File.Exists(uploadFile))
                 {
                     //instatiate mimemessage
@@ -2806,7 +2807,8 @@ namespace PrototypeWithAuth.Controllers
                     message.Subject = "Order from Centarix to " + vendorName;
 
                     //body
-                    builder.TextBody = @"Hello,"+"\n\n"+ "Please see the attached order. \n\nThank you.\n"
+                    builder.TextBody = @"Hello,"+"\n\n"+ "Please see the attached order for quote number " + requests.FirstOrDefault().ParentQuote.QuoteNumber + 
+                        ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
                         + ownerUsername + "\nCentarix";
                     builder.Attachments.Add(uploadFile);
 
@@ -3022,7 +3024,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 //creating the path for the file to be saved
                 string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-                string uniqueFileName = "QuotePDF.pdf";
+                string uniqueFileName = "PriceQuoteRequest.pdf";
                 string filePath = Path.Combine(path1, uniqueFileName);
                 // save pdf document
                 doc.Save(filePath);
@@ -3032,7 +3034,7 @@ namespace PrototypeWithAuth.Controllers
 
           
             string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-            string uploadFile = Path.Combine(uploadFolder, "QuotePDF.pdf");
+            string uploadFile = Path.Combine(uploadFolder, "PriceQuoteRequest.pdf");
 
             if (System.IO.File.Exists(uploadFile))
             {
