@@ -999,14 +999,15 @@ namespace PrototypeWithAuth.Controllers
                 needsPlaceholder = true;
             }
             //resend icon
-            var resendIcon = new IconColumnViewModel("Resend");
-            var placeholder = new IconColumnViewModel("Placeholder");
-            if (request.ParentQuote?.QuoteStatusID == 2)
+            if (request.RequestStatusID != 1 && request.ParentQuote?.QuoteStatusID == 2)
             {
+                var resendIcon = new IconColumnViewModel("Resend");
                 newIconList.Insert(0, resendIcon);
             }
-            else if (needsPlaceholder)
+            else if (needsPlaceholder) //for approval and resend placeholder
             {
+                var placeholderString = request.RequestStatusID == 1 ? "ApprovePlaceholder": "ResendPlaceholder";
+                var placeholder = new IconColumnViewModel(placeholderString);
                 newIconList.Insert(0, placeholder);
             }
             
