@@ -696,9 +696,11 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async void AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
+        public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
-            base.SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel);
+            var redirectToActionResult = base.SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
+            var x = 1;
+            return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
         }
 
 
@@ -3743,15 +3745,37 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType)
+        public async Task<IActionResult> UploadQuoteModal(AppUtility.OrderTypeEnum OrderType)
         {
-            var UploadQuoteViewModel = new UploadQuoteViewModel();
+            RequestIndexObject requestIndexObject = new RequestIndexObject();
+            var uploadQuoteViewModel = new UploadQuoteViewModel();
 
-            
-            return PartialView(UploadQuoteViewModel);
+            uploadQuoteViewModel.OrderTypeEnum = OrderType;
+            uploadQuoteViewModel.RequestIndexObject = requestIndexObject;
+            uploadQuoteViewModel.IsReorder = requestIndexObject.IsReorder;
 
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
+            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
+
+            uploadQuoteViewModel = new UploadQuoteViewModel();
+            if (Directory.Exists(uploadFolderQuotes))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
+                //searching for the partial file name in the directory
+                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                uploadQuoteViewModel.FileStrings = new List<String>();
+                foreach (var orderfile in orderfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+                    uploadQuoteViewModel.FileStrings.Add(newFileString);
+                }
+            }
+
+            return PartialView(uploadQuoteViewModel);
 
         }
+
         [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel, bool isCancel = false)

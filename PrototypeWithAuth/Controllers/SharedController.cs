@@ -1535,7 +1535,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles ="Requests,Operations")]
-        public async Task<IActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
+        public async Task<RedirectToActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             try
             {
@@ -1666,29 +1666,30 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
+                //Redirect Results Need to be checked here
                 requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 //Response.WriteAsync(ex.Message?.ToString());
                 if (requestItemViewModel.RequestStatusID == 7)
                 {
-                    return PartialView("CreateItemTabs", requestItemViewModel);
+                    return new RedirectToActionResult(actionName : "CreateItemTabs", controllerName : "Requests", routeValues:  new { RequestItemViewModel = requestItemViewModel } );
                 }
-                return PartialView("_OrderTab", requestItemViewModel);
+                return new RedirectToActionResult(actionName: "_OrderTab",controllerName: "Requests", routeValues: new { RequestItemViewMOdel = requestItemViewModel });
             }
             switch (OrderType)
             {
                 case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                    return RedirectToAction("UploadOrderModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
+                    return new RedirectToActionResult("UploadOrderModal", "Requests", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
                 case AppUtility.OrderTypeEnum.OrderNow:
-                    return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
+                    return new RedirectToActionResult("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.AddToCart:
-                    return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
+                    return new RedirectToActionResult("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.SaveOperations:
-                    return RedirectToAction("UploadOrderModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
+                    return new RedirectToActionResult("UploadOrderModal", "Requests", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
                 default:
                     if (requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
                     {
-                        return RedirectToAction("IndexInventory", "Requests", new
+                        return new RedirectToActionResult("IndexInventory", "Requests", new
                         {
                             PageType = requestItemViewModel.PageType,
                             SectionType = requestItemViewModel.SectionType,
@@ -1696,14 +1697,13 @@ namespace PrototypeWithAuth.Controllers
                             RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
                         });
                     }
-                    return RedirectToAction("Index", "Requests", new
+                    return new RedirectToActionResult("Index", "Requests", new
                     {
                         PageType = requestItemViewModel.PageType,
                         SectionType = requestItemViewModel.SectionType,
                         SidebarType = AppUtility.SidebarEnum.List,
                         RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
                     });
-
             }
         }
 
@@ -2049,29 +2049,5 @@ namespace PrototypeWithAuth.Controllers
             return true;
         }
 
-        [Authorize(Roles ="Requests, Operations")]
-        protected  async Task<IActionResult> _UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType)
-        {
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
-            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
-            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
-
-            if (Directory.Exists(uploadFolderQuotes))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
-                //searching for the partial file name in the directory
-                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                ViewModels.UploadQuoteViewModel.FileStrings = new List<String>();
-                foreach (var orderfile in orderfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    UploadQuoteViewModel.FileStrings.Add(newFileString);
-                }
-            }
-            UploadQuoteViewModel.OrderTypeEnum = OrderType;
-            UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
-            UploadQuoteViewModel.IsReorder = requestIndexObject.IsReorder;
-            return View(UploadQuoteViewModel);
-        }
     }
 }
