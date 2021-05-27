@@ -12,6 +12,7 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -1533,5 +1534,544 @@ namespace PrototypeWithAuth.Controllers
             return viewModel;
         }
 
+        [Authorize(Roles ="Requests,Operations")]
+        public async Task<IActionResult> SaveAddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
+        {
+            try
+            {
+                RemoveRequestWithCommentsAndEmailSessions();
+                var vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
+                var categoryType = 1;
+                var serialLetter = "L";
+                var exchangeRate = requestItemViewModel.Requests.FirstOrDefault().ExchangeRate;
+                var currency = requestItemViewModel.Requests.FirstOrDefault().Currency;
+                if (OrderType == AppUtility.OrderTypeEnum.SaveOperations)
+                {
+                    categoryType = 2;
+                    serialLetter = "P";
+                }
+                var productSubcategories = _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ParentCategory.CategoryTypeID == categoryType).ToList();
+                //in case we need to return to the modal view
+                //requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
+
+                //declared outside the if b/c it's used farther down too 
+                var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p => p.ProductCreationDate).LastOrDefault()?.SerialNumber ?? serialLetter + "0").Substring(1));
+
+                var RequestNum = 1;
+                var i = 1;
+                var additionalRequests = false;
+                foreach (var request in requestItemViewModel.Requests)
+                {
+                    if (!request.Ignore)
+                    {
+                        request.ApplicationUserCreatorID = currentUser.Id;
+                        if (!requestItemViewModel.IsProprietary)
+                        {
+                            request.Product.VendorID = vendor.VendorID;
+                            request.Product.Vendor = vendor;
+                        }
+
+                        request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
+                        request.CreationDate = DateTime.Now;
+                        var isInBudget = false;
+                        if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)//is proprietry
+                        {
+                            if (request.Currency == null)
+                            {
+                                request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
+                            }
+                            isInBudget = checkIfInBudget(request);
+                        }
+                        request.ExchangeRate = exchangeRate;
+                        request.Product.SerialNumber = serialLetter + (lastSerialNumber + 1);
+                        lastSerialNumber++;
+
+                        using (var transaction = _context.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestNum: RequestNum);
+                                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                                var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
+
+                                if (requestItemViewModel.Comments != null)
+                                {
+                                    var x = 1; //to name the comments in session
+                                    foreach (var comment in requestItemViewModel.Comments)
+                                    {
+                                        if (comment.CommentText.Length != 0)
+                                        {
+                                            //save the new comment
+                                            comment.ApplicationUserID = currentUser.Id;
+
+                                            comment.RequestID = request.RequestID;
+
+                                            if (!isSavedUsingSession)
+                                            {
+                                                _context.Add(comment);
+                                            }
+                                            else
+                                            {
+                                                var SessionCommentName = AppData.SessionExtensions.SessionNames.Comment.ToString() + x;
+                                                HttpContext.Session.SetObject(SessionCommentName, comment);
+                                            }
+                                        }
+
+                                        x++; //to name the comments in session
+                                    }
+                                }
+                                if (!isSavedUsingSession)
+                                {
+                                    await _context.SaveChangesAsync();
+                                    if (receivedModalVisualViewModel.LocationInstancePlaces != null)
+                                    {
+                                        await SaveLocations(receivedModalVisualViewModel, request);
+                                    }
+                                    if (i < requestItemViewModel.Requests.Count)
+                                    {
+                                        additionalRequests = true;
+                                    }
+                                    else
+                                    {
+                                        additionalRequests = false;
+                                    }
+                                    MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
+                                    await transaction.CommitAsync();
+                                    RemoveRequestWithCommentsAndEmailSessions();
+                                }
+                                else if (OrderType != AppUtility.OrderTypeEnum.SaveOperations)
+                                {
+                                    var emailNum = 1;
+                                    foreach (var e in requestItemViewModel.EmailAddresses)
+                                    {
+                                        var SessionEmailName = AppData.SessionExtensions.SessionNames.Email.ToString() + emailNum;
+                                        HttpContext.Session.SetObject(SessionEmailName, e);
+                                        emailNum++;
+                                    }
+
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                await transaction.RollbackAsync();
+                                RemoveRequestWithCommentsAndEmailSessions();
+                                throw ex;
+                            }
+                        }
+                        RequestNum++;
+                    }
+                    i++;
+                }
+            }
+            catch (Exception ex)
+            {
+                requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
+                Response.StatusCode = 500;
+                //Response.WriteAsync(ex.Message?.ToString());
+                if (requestItemViewModel.RequestStatusID == 7)
+                {
+                    return PartialView("CreateItemTabs", requestItemViewModel);
+                }
+                return PartialView("_OrderTab", requestItemViewModel);
+            }
+            switch (OrderType)
+            {
+                case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                    return RedirectToAction("UploadOrderModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
+                case AppUtility.OrderTypeEnum.OrderNow:
+                    return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
+                case AppUtility.OrderTypeEnum.AddToCart:
+                    return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
+                case AppUtility.OrderTypeEnum.SaveOperations:
+                    return RedirectToAction("UploadOrderModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
+                default:
+                    if (requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                    {
+                        return RedirectToAction("IndexInventory", "Requests", new
+                        {
+                            PageType = requestItemViewModel.PageType,
+                            SectionType = requestItemViewModel.SectionType,
+                            SidebarType = AppUtility.SidebarEnum.List,
+                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
+                        });
+                    }
+                    return RedirectToAction("Index", "Requests", new
+                    {
+                        PageType = requestItemViewModel.PageType,
+                        SectionType = requestItemViewModel.SectionType,
+                        SidebarType = AppUtility.SidebarEnum.List,
+                        RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
+                    });
+
+            }
+        }
+
+        protected async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
+        {
+            foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
+            {
+                if (place.Placed)
+                {
+                    //getting the parentlocationinstanceid
+                    var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+                    var mayHaveParent = true;
+                    while (mayHaveParent)
+                    {
+                        if (liParent.LocationInstanceParentID != null)
+                        {
+                            liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
+                        }
+                        else
+                        {
+                            mayHaveParent = false;
+                        }
+                    }
+
+                    //adding the requestlocationinstance
+                    var rli = new RequestLocationInstance()
+                    {
+                        LocationInstanceID = place.LocationInstanceId,
+                        RequestID = requestReceived.RequestID,
+                        ParentLocationInstanceID = liParent.LocationInstanceID
+                    };
+                    _context.Add(rli);
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                    //updating the locationinstance
+                    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
+                    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                    {
+                        locationInstance.IsFull = true;
+                    }
+                    else
+                    {
+                        locationInstance.ContainsItems = true;
+                    }
+                    _context.Update(locationInstance);
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+        protected bool checkIfInBudget(Request request, Product oldProduct = null)
+        {
+            if (oldProduct == null)
+            {
+                oldProduct = request.Product;
+            }
+            var user = _context.Users.Where(u => u.Id == request.ApplicationUserCreatorID).FirstOrDefault();
+            DateTime firstOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            if (oldProduct.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+            { //lab
+                var pricePerUnit = request.Cost / request.Unit;
+                if (pricePerUnit > user.LabUnitLimit)
+                {
+                    return false;
+                }
+                if (request.TotalWithVat > user.LabOrderLimit)
+                {
+                    return false;
+                }
+                var monthsSpending = _context.Requests
+                      .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                      .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && r.Product.VendorID == oldProduct.VendorID)
+                      .Where(r => r.ParentRequest.OrderDate >= firstOfMonth).AsEnumerable()
+                      .Sum(r => r.TotalWithVat);
+                if (monthsSpending + request.TotalWithVat > user.LabMonthlyLimit)
+                {
+                    return false;
+                }
+                return true;
+            }
+
+            else
+            {
+                var pricePerUnit = request.Cost;
+                if (pricePerUnit > user.OperationUnitLimit)
+                {
+                    return false;
+                }
+                if (request.Cost > user.OperationOrderLimit)
+                {
+                    return false;
+                }
+
+                var monthsSpending = _context.Requests
+                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
+                    .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID)
+                    .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
+                    .Sum(r => r.Cost);
+                if (monthsSpending + request.Cost > user.OperationMonthlyLimit)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        protected async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, int requestNum = 1)
+        {
+
+            var context = new ValidationContext(newRequest, null, null);
+            var results = new List<ValidationResult>();
+            var validatorCreate = Validator.TryValidateObject(newRequest, context, results, true);
+            if (validatorCreate)
+            {
+                try
+                {
+                    switch (OrderTypeEnum)
+                    {
+                        case AppUtility.OrderTypeEnum.AddToCart:
+                            await AddToCart(newRequest, isInBudget);
+                            break;
+                        case AppUtility.OrderTypeEnum.AlreadyPurchased:
+                            AlreadyPurchased(newRequest);
+                            break;
+                        case AppUtility.OrderTypeEnum.OrderNow:
+                            OrderNow(newRequest, isInBudget);
+                            break;
+                        case AppUtility.OrderTypeEnum.RequestPriceQuote:
+                            await RequestItem(newRequest, isInBudget);
+                            break;
+                        case AppUtility.OrderTypeEnum.Save:
+                            await SaveItem(newRequest);
+                            break;
+                        case AppUtility.OrderTypeEnum.SaveOperations:
+                            await SaveOperationsItem(newRequest, requestNum);
+                            break;
+                    }
+
+                }
+                catch (DbUpdateException ex)
+                {
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+        }
+        protected async Task<bool> AddToCart(Request request, bool isInBudget)
+        {
+            try
+            {
+                if (isInBudget)
+                {
+                    request.RequestStatusID = 6;
+                }
+                else
+                {
+                    request.RequestStatusID = 1;
+                }
+                request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
+                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                HttpContext.Session.SetObject(requestNum, request);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        private void AlreadyPurchased(Request request)
+        {
+            try
+            {
+                request.RequestStatusID = 2;
+                request.ParentQuoteID = null;
+                request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
+                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                HttpContext.Session.SetObject(requestNum, request);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        private void OrderNow(Request request, bool isInBudget)
+        {
+            try
+            {
+                if (isInBudget)
+                {
+                    request.RequestStatusID = 6;
+                }
+                else
+                {
+                    request.RequestStatusID = 1;
+                }
+                request.OrderType = AppUtility.OrderTypeEnum.OrderNow.ToString();
+                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                HttpContext.Session.SetObject(requestNum, request);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+        private async Task<bool> RequestItem(Request newRequest, bool isInBudget)
+        {
+
+            try
+            {
+                if (isInBudget)
+                {
+                    newRequest.RequestStatusID = 6;
+                }
+                else
+                {
+                    newRequest.RequestStatusID = 1;
+                }
+                newRequest.Cost = 0;
+                newRequest.ParentQuote = new ParentQuote();
+                newRequest.ParentQuote.QuoteStatusID = 1;
+                newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote.ToString();
+                _context.Add(newRequest);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return true;
+        }
+        private async Task<bool> SaveItem(Request newRequest)
+        {
+
+            try
+            {
+                newRequest.RequestStatusID = 7;
+                newRequest.OrderType = AppUtility.OrderTypeEnum.Save.ToString();
+                newRequest.Unit = 1;
+                newRequest.UnitTypeID = 5;
+                _context.Add(newRequest);
+                await _context.SaveChangesAsync();
+                //var commentExists = true;
+                //var n = 1;
+                //do
+                //{
+                //    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
+                //    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                //    if (comment != null)
+                //    //will only go in here if there are comments so will only work if it's there
+                //    //IMPT look how to clear the session information if it fails somewhere...
+                //    {
+                //        comment.RequestID = newRequest.RequestID;
+                //        _context.Add(comment);
+                //    }
+                //    else
+                //    {
+                //        commentExists = false;
+                //    }
+                //    n++;
+                //} while (commentExists);
+                //await _context.SaveChangesAsync();
+                MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests);
+
+                newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
+                RequestNotification requestNotification = new RequestNotification();
+                requestNotification.RequestID = newRequest.RequestID;
+                requestNotification.IsRead = false;
+                requestNotification.RequestName = newRequest.Product.ProductName;
+                requestNotification.ApplicationUserID = newRequest.ApplicationUserCreatorID;
+                requestNotification.Description = "item created";
+                requestNotification.NotificationStatusID = 2;
+                requestNotification.TimeStamp = DateTime.Now;
+                requestNotification.Controller = "Requests";
+                requestNotification.Action = "NotificationsView";
+                requestNotification.OrderDate = DateTime.Now;
+                _context.Update(requestNotification);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return true;
+        }
+        private async Task<bool> SaveOperationsItem(Request request, int requestNum)
+        {
+
+            try
+            {
+                if (request.IsReceived)
+                {
+                    request.RequestStatusID = 3;
+                    request.ApplicationUserReceiverID = _userManager.GetUserId(User);
+                    request.ArrivalDate = DateTime.Now;
+                }
+                else
+                {
+                    request.RequestStatusID = 2;
+                }
+                request.UnitTypeID = 5;
+                request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
+                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
+                HttpContext.Session.SetObject(requestName, request);
+            }
+            catch (DbUpdateException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return true;
+        }
+
+        [Authorize(Roles ="Requests, Operations")]
+        protected  async Task<IActionResult> _UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType)
+        {
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
+            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
+
+            if (Directory.Exists(uploadFolderQuotes))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
+                //searching for the partial file name in the directory
+                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                ViewModels.UploadQuoteViewModel.FileStrings = new List<String>();
+                foreach (var orderfile in orderfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+                    UploadQuoteViewModel.FileStrings.Add(newFileString);
+                }
+            }
+            UploadQuoteViewModel.OrderTypeEnum = OrderType;
+            UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
+            UploadQuoteViewModel.IsReorder = requestIndexObject.IsReorder;
+            return View(UploadQuoteViewModel);
+        }
     }
 }

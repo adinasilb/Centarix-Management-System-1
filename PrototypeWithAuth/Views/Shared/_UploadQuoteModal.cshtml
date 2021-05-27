@@ -1,0 +1,238 @@
+﻿@model PrototypeWithAuth.ViewModels.UploadQuoteViewModel;
+@using PrototypeWithAuth.AppData
+@{
+    Layout = null;
+    var markDisabled = "details";
+
+    var bcColor = "order-inv-background-color";
+    var color = "order-inv-color";
+    var form = "order-inv-form";
+    var deleteDocumentClass = "";
+    var sectionType = AppUtility.MenuItems.Requests.ToString();
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+    {
+        form = "oper-form";
+        bcColor = "oper-background-color";
+        color = "operations-filter";
+        sectionType = AppUtility.MenuItems.Operations.ToString();
+    }
+    //else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
+    //{
+
+    //    form = "supplier-form";
+    //    bcColor = "lab-man-background-color";
+    //    color = "lab-man-filter";
+    //    sectionType = AppUtility.MenuItems.LabManagement.ToString();
+    //}
+}
+
+@*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
+
+<script src="~/js/site.js"></script>
+<script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/WarantySupplyDateCalc.js"></script>
+<div class="modal modal-document fader modalStep1 on-form-modal @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9000">
+    <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+            <button type="button" class="close modal-close-padding modal-close-style  cancel-quote" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('step-1');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
+                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
+                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+                <div>
+                    <div class="modal-header modal-header-padding">
+                        <div class="container-fluid">
+                            <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
+                            <div class="row ">
+                                <div class="col-4">
+                                    <div class="heading-1">Upload Quote</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body mt-5 ">
+                    @{
+                        var urlAction = Url.Action("DocumentsModal", "Requests");
+                        var fontSize = "2rem";
+                    }
+                    <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+                    @{
+                        var filterClass = "opac87";
+                        var hasFileClass = "";
+                        var containsFile = "";
+                        <input type="hidden" asp-for="FileStrings" />@*This is for reloading hte modal on error*@
+                        if (Model.FileStrings != null && Model.FileStrings.Count > 0)
+                        {
+                            filterClass = "order-inv-filter";
+                            containsFile = "contains-file";
+                            hasFileClass = "hasFile";
+                        }
+                    }
+
+                    <div class="row">
+                        <div class=" offset-4 text-center">
+                            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
+                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Quotes.ToString()" name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false">
+
+                                <div class="card document-border @hasFileClass">
+                                    <div class="document-card text-center">
+                                        <i class="icon-centarix-icons-03 @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                    </div>
+                                </div>
+                            </a>
+                            <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
+                        </div>
+                        <div class="col-4 pl-5 pt-4">
+                            <div class="row">
+                                <div class=" col-md-6">
+                                    <div class="form-group ">
+                                        <label asp-for="@Model.ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" />
+                                        <span asp-validation-for="@Model.ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                </div>
+                            </div>
+                            @if (Model.IsReorder)
+                            {
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        <div class="form-group ">
+                                            <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                            <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0 expected-supply-days" min="1" />
+                                            <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                    <div class=" col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Expected supply date</label>
+                                            <input value="" class="form-control-plaintext border-bottom datepicker " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @*<div class="row">
+                                    <div class="form-group ">
+                                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
+                                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-0">
+                    <div class="mx-auto modal-footer-mt">
+                        <input type="hidden" asp-for="OrderTypeEnum" />
+                        <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin submitQuote" @*asp-action="UploadQuoteModal"*@ />
+                        <button type="button" class="custom-button custom-cancel cancel-quote" onclick="$.fn.CloseModal('step-1');">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/js/DeleteDocModal.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
+<script>
+    $(".submitQuote").off('click').on("click", function (e) {
+        e.preventDefault();
+        console.log("submit quote");
+        //alert("validate form");
+        $(".uploadQuoteForm").data("validator").settings.ignore = "";
+        var valid = $(".uploadQuoteForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('.activeSubmit').removeClass('disabled-submit')
+            $("#loading").show();
+            var formData = new FormData($(".uploadQuoteForm")[0]);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Requests/UploadQuoteModal",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                cache: false,
+                success: function (data, textStatus, jqxhr) {
+                    //console.log(data)
+                    console.log("status code" + jqxhr.status)
+                    console.log($("#OrderTypeEnum").val())
+                    if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210") {
+                        $.fn.CloseModal("step-1");
+                        $.fn.CloseModal("edits");
+                        $.fn.CloseModal("reorder-item");
+                        console.log('remove save item')
+                        $(".save-item").removeClass("save-item").off('click')
+                        console.log("Index");
+                        if ($(".editModal").length > 0) {
+                            $(".render-body").html(data)
+                        }
+                        else if ($('#masterPageType').val() == "RequestSummary") {
+                            window.location.href = "/Requests/IndexInventory?" + $.fn.getRequestIndexString();
+                        }
+                        else {
+                            window.location.href = "/Requests/Index"
+                        }
+                        //$('.modal').modal('hide');
+                    }
+                    else {
+                        $.fn.OpenModal('termsModal', 'terms', data)
+                    }
+
+                    $("#loading").hide();
+                    return true;
+                },
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $.fn.OpenModal('modalStep1', 'step-1', jqxhr.responseText)
+                    }
+
+                    $("#loading").hide();
+                    return true;
+                }
+            });
+        }
+        $(".uploadQuoteForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+    });
+    //$(".cancel-quote").click(function (e) {
+    //    console.log("cancel quote")
+    //    var formData = new FormData($(".uploadQuoteForm")[0]);
+    //    $.ajax({
+    //        contentType: false,
+    //        processData: false,
+    //        async: true,
+    //        url: "/Requests/UploadQuoteModal?isCancel=true",
+    //        data: formData,
+    //        traditional: true,
+    //        type: "POST",
+    //        cache: false,
+    //        success: function (data) {
+    //            $.fn.CloseModal("step-1");
+    //            $.fn.RemoveColorsOfDocs("Quote");
+    //            return true;
+    //        }
+    //    })
+
+    //});
+</script>
