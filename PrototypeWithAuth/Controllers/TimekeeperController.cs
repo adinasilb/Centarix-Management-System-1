@@ -197,8 +197,6 @@ namespace PrototypeWithAuth.Controllers
         private ReportDaysViewModel GetSummaryDaysOffModel(string userid, Employee user, int year)
         {
             int month = DateTime.Now.Month;
-            double vacationDays =  user.VacationDaysPerMonth * month;
-            double sickDays = user.SickDays * month;
             var daysOffViewModel = new ReportDaysViewModel
             {
                 VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).OrderByDescending(eh => eh.Date),
@@ -230,7 +228,13 @@ namespace PrototypeWithAuth.Controllers
             }
 
             var unpaidLeaveTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 5 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Count();
-            if (year == AppUtility.YearStartedTimeKeeper & year == year)
+            if (year == user.StartedWorking.Year)
+            {
+                int month = year == DateTime.Now.Year ? (DateTime.Now.Month - user.StartedWorking.Month + 1) : (12 - user.StartedWorking.Month + 1);
+                vacationDays = user.VacationDaysPerMonth * month;
+                sickDays = user.SickDaysPerMonth * month;
+            }
+            else if (year == AppUtility.YearStartedTimeKeeper && year == DateTime.Now.Year)
             {
                 int month = DateTime.Now.Month;
                 vacationDays = (user.VacationDaysPerMonth * month) + user.RollOverVacationDays;
@@ -241,12 +245,6 @@ namespace PrototypeWithAuth.Controllers
                 int month = DateTime.Now.Month;
                 vacationDays = user.VacationDays + user.RollOverVacationDays;
                 sickDays = user.SickDays + user.RollOverSickDays;
-            }
-            else if (year == user.StartedWorking.Year)
-            {
-                int month = 12 - user.StartedWorking.Month + 1;
-                vacationDays = user.VacationDaysPerMonth * month;
-                sickDays = user.SickDays * month;
             }
             else if (year == DateTime.Now.Year)
             {

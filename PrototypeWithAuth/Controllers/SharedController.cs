@@ -951,8 +951,8 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.PageTypeEnum.RequestRequest:
                     switch (requestIndexObject.RequestStatusID)
                     {
-                        /*case 1:
-                            iconList.Add(approveIcon);
+                        case 1:
+                            /*iconList.Add(approveIcon);
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await GetForApprovalRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
                             break;*/
@@ -1253,7 +1253,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                              new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                             new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
+                             new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor?.VendorEnName ?? ""} },
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
                              new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
                              new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
@@ -1328,14 +1328,15 @@ namespace PrototypeWithAuth.Controllers
                 needsPlaceholder = true;
             }
             //resend icon
-            var resendIcon = new IconColumnViewModel("Resend");
-            var placeholder = new IconColumnViewModel("Placeholder");
-            if (request.ParentQuote?.QuoteStatusID == 2)
+            if (request.RequestStatusID != 1 && request.ParentQuote?.QuoteStatusID == 2)
             {
+                var resendIcon = new IconColumnViewModel("Resend");
                 newIconList.Insert(0, resendIcon);
             }
-            else if (needsPlaceholder)
+            else if (needsPlaceholder) //for approval and resend placeholder
             {
+                var placeholderString = request.RequestStatusID == 1 ? "ApprovePlaceholder" : "ResendPlaceholder";
+                var placeholder = new IconColumnViewModel(placeholderString);
                 newIconList.Insert(0, placeholder);
             }
 

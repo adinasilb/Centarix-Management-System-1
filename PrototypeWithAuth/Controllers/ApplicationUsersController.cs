@@ -394,7 +394,7 @@ namespace PrototypeWithAuth.Controllers
                             EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID,
                             EmployeeID = employeeHoursBeingApproved.EmployeeID,
                             Date = employeeHoursBeingApproved.Date,
-                            EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID ?? 0,
+                            EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID,
                             PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID,
                             PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours,
                             OffDayTypeID = employeeHoursBeingApproved.OffDayTypeID,
@@ -412,7 +412,7 @@ namespace PrototypeWithAuth.Controllers
                         employeeHours.EmployeeHoursStatusEntry2ID = employeeHoursBeingApproved.EmployeeHoursStatusEntry2ID;
                         employeeHours.EmployeeID = employeeHoursBeingApproved.EmployeeID;
                         employeeHours.Date = employeeHoursBeingApproved.Date;
-                        employeeHours.EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID ?? 0;
+                        employeeHours.EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID;
                         employeeHours.PartialOffDayTypeID = employeeHoursBeingApproved.PartialOffDayTypeID;
                         employeeHours.PartialOffDayHours = employeeHoursBeingApproved.PartialOffDayHours;
                         employeeHours.OffDayTypeID = employeeHoursBeingApproved.OffDayTypeID;
@@ -503,13 +503,29 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Users")]
         public async Task<IActionResult> DenyApprovalRequestModal(EmployeeHoursAwaitingApproval employeeHoursAwaitingApproval)
         {
-            EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals.Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == employeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID).FirstOrDefaultAsync();
+            EmployeeHoursAwaitingApproval employeeHoursBeingApproved = await _context.EmployeeHoursAwaitingApprovals
+                .Where(ehaa => ehaa.EmployeeHoursAwaitingApprovalID == employeeHoursAwaitingApproval.EmployeeHoursAwaitingApprovalID)
+                .FirstOrDefaultAsync();
 
             employeeHoursBeingApproved.IsDenied = true;
 
             try
             {
                 _context.Update(employeeHoursBeingApproved);
+                await _context.SaveChangesAsync();
+                
+                TimekeeperNotification notification = new TimekeeperNotification()
+                {
+                    EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID,
+                    IsRead = false,
+                    ApplicationUserID = employeeHoursBeingApproved.EmployeeID,
+                    Description = "update hours request denied for " + employeeHoursBeingApproved.Date.ToString("dd/MM/yyyy"),
+                    NotificationStatusID = 5,
+                    TimeStamp = DateTime.Now,
+                    Controller = "Timekeeper",
+                    Action = "SummaryHours"
+                };
+                _context.Add(notification);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

@@ -376,7 +376,7 @@
         <label class="radio-button custom-control-label pt-1 pl-2 include-vat-radio @markReadOnlyClass" for="NoVAT">No VAT</label>
     </div>
 
-    <input type="hidden" asp-for="Requests[0].IncludeVAT" value="true" />
+    <input type="hidden" asp-for="Requests[0].IncludeVAT" />
     @if (Model.Requests[0].RequestStatusID != 1 && Model.Requests[0].RequestStatusID != 6)
     {
 <div class="col-3">

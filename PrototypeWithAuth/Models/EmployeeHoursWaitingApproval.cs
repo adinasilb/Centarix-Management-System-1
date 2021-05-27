@@ -12,7 +12,7 @@ namespace PrototypeWithAuth.Models
     {
         [Key]
         public int EmployeeHoursAwaitingApprovalID { get; set; }
-        public int? EmployeeHoursID { get; set; }
+        public int EmployeeHoursID { get; set; }
         public EmployeeHours EmployeeHours { get; set; }
         public string EmployeeID { get; set; }
         [ForeignKey("EmployeeID")]
