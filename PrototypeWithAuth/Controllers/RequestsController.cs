@@ -4039,7 +4039,6 @@ namespace PrototypeWithAuth.Controllers
                 {
                     requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
           .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString() && r.ParentQuote.QuoteStatusID == 4)
-          .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
                 .Include(r => r.Product).ThenInclude(r => r.Vendor)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
                 }
