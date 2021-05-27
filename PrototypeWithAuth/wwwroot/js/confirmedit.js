@@ -76,11 +76,9 @@
 						var pageType = $('#PageType').val();
 						if (pageType == "UsersWorkers") {
 							url = "/ApplicationUsers/_Details"
-							alert("url " + url);
 						}
 						else {
 							url = "/Admin/_Index"
-							alert("url " + url);
 						}
 						$.ajax({
 							async: true,

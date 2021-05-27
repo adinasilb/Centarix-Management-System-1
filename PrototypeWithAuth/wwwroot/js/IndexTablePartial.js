@@ -12,10 +12,9 @@
 	$(this).popover('toggle');
 	$(".popover .share-request-fx").click(function (e) {
 		e.preventDefault();
-		alert("popover click");
 		//switch this to universal share request and the modelsenum send in
 		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=Request";
-		alert("url: " + url);
+
 		$.ajax({
 			async: true,
 			url: url,
@@ -29,6 +28,35 @@
 				return false;
 			}
 		})
+	});
+	$(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
+		var ControllersEnum = "";
+		var shareNum = "";
+		if ($(this).hasClass("requests")) { //THIS IF IS NOT WORKING
+			ControllersEnum = "Requests";
+		}
+		shareNum = $(this).attr("data-share-resource-id");
+		var url = "/" + ControllersEnum + "/RemoveShare?ID=" + shareNum + "&ModelsEnum=" + $("#masterSectionType").val();
+		alert("url " + url);
+		$.ajax({
+			async: true,
+			url: url,
+			type: 'GET',
+			cache: true,
+			success: function (e) {
+				if (!e) {
+					$.ajax({
+						async: true,
+						url: "/Requests/_IndexSharedTable",
+						type: 'GET',
+						cache: true,
+						success: function (data) {
+							$("._IndexSharedTable").html(data);
+						}
+					})
+				}
+			}
+		});
 	});
 
 });

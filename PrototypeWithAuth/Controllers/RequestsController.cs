@@ -53,7 +53,7 @@ namespace PrototypeWithAuth.Controllers
         private ICompositeViewEngine _viewEngine;
 
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context, hostingEnvironment:hostingEnvironment, userManager:userManager)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager)
         {
             //_Context = Context;
             _context = context;
@@ -104,9 +104,9 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
-        
 
-       [Authorize(Roles = "Requests, LabManagement, Operations")]
+
+        [Authorize(Roles = "Requests, LabManagement, Operations")]
         private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject)
         {
             RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
@@ -383,8 +383,8 @@ namespace PrototypeWithAuth.Controllers
             return onePageOfProducts;
         }
 
-        
-      
+
+
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
@@ -449,12 +449,12 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedRequests;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            RequestIndexObject requestIndexObject = new RequestIndexObject()
-            {
-                PageType = AppUtility.PageTypeEnum.RequestCart,
-                SidebarType = AppUtility.SidebarEnum.SharedRequests
-            };
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            //RequestIndexObject requestIndexObject = new RequestIndexObject()
+            //{
+            //    PageType = AppUtility.PageTypeEnum.RequestCart,
+            //    SidebarType = AppUtility.SidebarEnum.SharedRequests
+            //};
+            RequestIndexPartialViewModel viewModel = await base.GetSharedRequestIndexObjectAsync();
             return View(viewModel);
         }
 
@@ -1193,6 +1193,36 @@ namespace PrototypeWithAuth.Controllers
                     error = true;
                 }
             }
+            return error;
+        }
+
+        [Authorize(Roles = "Requests")]
+        public async Task<bool> RemoveShare(int ID, AppUtility.ModelsEnum ModelsEnum = AppUtility.ModelsEnum.Request)
+        {
+            bool error = false;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    switch (ModelsEnum)
+                    {
+                        case AppUtility.ModelsEnum.Request:
+                            var shareRequests = _context.ShareRequests.Where(sr => sr.RequestID == ID && sr.ToApplicationUserID == _userManager.GetUserId(User));
+                            foreach (var sr in shareRequests)
+                            {
+                                _context.Remove(sr);
+                            }
+                            break;
+                    }
+                    _context.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    error = true;
+                    transaction.Rollback();
+                }
+            };
             return error;
         }
 

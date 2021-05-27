@@ -69,17 +69,17 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-                
+
                 var sickHours = employeeHours.Where(eh => eh.Date.Year == year && eh.PartialOffDayTypeID == 1 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                sickDaysTaken = employeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year &&  eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
+                sickDaysTaken = employeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
                 sickDaysTaken = Math.Round(sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay), 2);
-                
-                var vacationHours = employeeHours.Where(eh =>  eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
-                vacationDaysTaken = employeeHours.Where(eh =>  eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Count();
+
+                var vacationHours = employeeHours.Where(eh => eh.Date.Year == year && eh.PartialOffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
+                vacationDaysTaken = employeeHours.Where(eh => eh.Date.Year == year && eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Count();
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
                 var specialDays = employeeHours.Where(eh => eh.OffDayTypeID == 4).Count();
-                var unpaidLeave =employeeHours.Where(eh => eh.OffDayTypeID == 5).Count();
-                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff) - (vacationDaysTaken + sickDaysTaken+unpaidLeave+specialDays);
+                var unpaidLeave = employeeHours.Where(eh => eh.OffDayTypeID == 5).Count();
+                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff) - (vacationDaysTaken + sickDaysTaken + unpaidLeave + specialDays);
                 totalhours = totalhours * user.SalariedEmployee.HoursPerDay;
 
             }
@@ -171,7 +171,7 @@ namespace PrototypeWithAuth.Controllers
         {
             decimal rate;
             var parsed = decimal.TryParse(_context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString()).Select(er => er.Description).FirstOrDefault(), out rate);
-            if(!parsed)
+            if (!parsed)
             {
                 rate = 0;
             }
@@ -1082,7 +1082,6 @@ namespace PrototypeWithAuth.Controllers
                                  new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
                                  new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false), AjaxID = r.RequestID },
                                  new RequestIndexPartialColumnViewModel() { Width=0, AjaxLink = " d-none order-type"+r.RequestID, AjaxID = (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum),r.OrderType), Value = new List<string>(){r.OrderType.ToString()} }
-
                             }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
             return onePageOfProducts;
@@ -1304,6 +1303,21 @@ namespace PrototypeWithAuth.Controllers
                 var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
                 newIconList[favIconIndex] = unLikeIcon;
             }
+            ////share icon
+            //var popoverMoreIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("popover-more"));
+            ////var removeShareIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("remove-share"));//implement this if any of the items will have a remove share in an icon
+            //if (popoverMoreIndex != -1)
+            //{
+            //    var removeShareIndex = newIconList.Find(ni => ni.IconAjaxLink.Contains("popover-more")).IconPopovers.FindIndex(ip => ip.AjaxCall.Contains("remove-share"));
+            //    if (removeShareIndex != -1)
+            //    {
+            //        var test = _context.ShareRequests.Where(sr => sr.RequestID == RequestID && sr.ToApplicationUserID == _userManager.GetUserId(User)).ToList().OrderBy(sr => sr.TimeStamp);
+            //        var shareID = test.FirstOrDefault().ShareRequestID;
+            //        var share = newIconList.Find(ni => ni.IconAjaxLink.Contains("popover-more")).IconPopovers.Find(ip => ip.AjaxCall.Contains("remove-share"));
+            //        share.ShareID = shareID;
+            //    }
+            //}
+
             //for approval icon
             var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("approve-order"));
             var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.ParentQuote).FirstOrDefault();
@@ -1498,6 +1512,26 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.NonProprietaryCount = nonProprietaryCount;
         }
 
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _IndexSharedTable()
+        {
+            RequestIndexPartialViewModel viewModel = await GetSharedRequestIndexObjectAsync();
+            return PartialView(viewModel);
+        }
+
+        [Authorize(Roles = "Requests")]
+        public async Task<RequestIndexPartialViewModel> GetSharedRequestIndexObjectAsync()
+        {
+            RequestIndexObject requestIndexObject = new RequestIndexObject()
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.SharedRequests
+            };
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            return viewModel;
+        }
 
     }
 }

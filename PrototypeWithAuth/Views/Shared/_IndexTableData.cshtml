@@ -57,7 +57,7 @@
                                                                             <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
                                                                             <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
                                                                         </a>*@
-                                                                    <a class="btn-link text no-hover @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation"
+                                                                    <a class="btn-link text no-hover requests @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation" data-share-resource-id="@col.AjaxID"
                                                                        data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description">
                                                                         <i class="@iconpopover.Icon @iconpopover.AjaxCall" style="color: @iconpopover.Color"></i>
                                                                         <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
@@ -76,7 +76,7 @@
                                         else
                                         {
                                             <div class="table-icon-div">
-                                                <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                                <a class="btn p-0 m-0 no-box-shadow requests @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
                                                    title="@icon.TooltipTitle" value="@col.AjaxID">
                                                     <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
                                                 </a>
@@ -136,7 +136,7 @@
 </div>
 <script src="~/js/IndexTablePartial.js"></script>
 <script src="~/js/ConfirmDeleteScript.js"></script>
-<script src="~/js/accounting.js"></script>
+@*<script src="~/js/accounting.js"></script>*@
 @if (AppUtility.IsAjaxRequest(this.Context.Request))
 {
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
