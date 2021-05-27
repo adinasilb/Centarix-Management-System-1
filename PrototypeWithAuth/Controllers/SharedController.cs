@@ -935,28 +935,27 @@ namespace PrototypeWithAuth.Controllers
             var popoverReorder = new IconPopoverViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", AppUtility.PopoverDescription.Reorder, "Reorder", "Requests", AppUtility.PopoverEnum.None, "load-order-details");
             var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareRequest", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
+            var user = await _userManager.GetUserAsync(User);
             switch (requestIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.RequestRequest:
                     switch (requestIndexObject.RequestStatusID)
                     {
-                        /*case 1:
-                            iconList.Add(approveIcon);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetForApprovalRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;*/
                         case 6:
                             iconList.Add(approveIcon);
                             iconList.Add(deleteIcon);
-                            //onePageOfProducts = await GetForApprovalRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            //iconList.Add(reorderIcon);
-                            //iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetApprovedRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
+                            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Select(r => 
+                                    new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Approved,
+                                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                                             r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage,null,null,null, null,null)
+                                    ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
                             break;
                         case 2:
                             iconList.Add(receiveIcon);
                             iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetOrderedRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
+                            onePageOfProducts =  await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Ordered,
+                                r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                                             r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null,r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
                             break;
                         case 3:
                             //iconList.Add(reorderIcon);
@@ -970,17 +969,7 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.OperationsRequest:
                     switch (requestIndexObject.RequestStatusID)
-                    {
-                        /*case 1:
-                            iconList.Add(approveIcon);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetForApprovalOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
-                        case 6:
-                            iconList.Add(orderOperations);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetApprovedOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;*/
+                    {                       
                         case 2:
                             iconList.Add(receiveIcon);
                             iconList.Add(deleteIcon);
@@ -996,7 +985,9 @@ namespace PrototypeWithAuth.Controllers
                     popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder };
                     iconList.Add(deleteIcon);
                     iconList.Add(popoverMoreIcon);
-                    onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
+                    onePageOfProducts = onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
+                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                             r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user, null, null, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
                     break;
                 case AppUtility.PageTypeEnum.RequestSummary:
 
@@ -1040,7 +1031,9 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.Favorites:
                             iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            onePageOfProducts = await GetReceivedInventoryFavoriteRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
+                            onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryFavorites,
+                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user, null, null, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
                             break;
                         case AppUtility.SidebarEnum.SharedRequests:
                             iconList.Add(reorderIcon);
@@ -1052,57 +1045,12 @@ namespace PrototypeWithAuth.Controllers
             }
 
             return onePageOfProducts;
-        }
-
-        protected async Task<IPagedList<RequestIndexPartialRowViewModel>> GetApprovedRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false), AjaxID = r.RequestID },
-                                 new RequestIndexPartialColumnViewModel() { Width=0, AjaxLink = " d-none order-type"+r.RequestID, AjaxID = (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum),r.OrderType), Value = new List<string>(){r.OrderType.ToString()} }
-
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-        protected static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetOrderedRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=12, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel()
-                                 {
-                                     Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                                 }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
+        }      
 
         protected async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+            var user = await _userManager.GetUserAsync(User);
+            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
                         {
@@ -1110,14 +1058,14 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
+                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent) } },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
                              {
-                                 Title = "", Width=10, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false), AjaxID = r.RequestID
+                                 Title = "", Width=10, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), null,user), AjaxID = r.RequestID
                              }
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
@@ -1133,7 +1081,7 @@ namespace PrototypeWithAuth.Controllers
                                  new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                                  new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                                  new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
+                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum=AppUtility.FilterEnum.Category },
                                  new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                                  new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                                  new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=12, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
@@ -1155,7 +1103,7 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                              new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=10, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
@@ -1177,8 +1125,8 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details-summary", AjaxID=r.RequestID},
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
+                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent) } },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=10, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
@@ -1200,8 +1148,8 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details-summary", AjaxID=r.RequestID},
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
+                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent) } },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                              new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=10, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
@@ -1234,7 +1182,6 @@ namespace PrototypeWithAuth.Controllers
 
         protected async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryFavoriteRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
         {
-            var newIconList = iconList;
             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
             {
                 Columns = new List<RequestIndexPartialColumnViewModel>()
@@ -1243,14 +1190,14 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
+                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent) } },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                              new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
                              new RequestIndexPartialColumnViewModel()
                              {
-                                 Title = "", Width=10, Icons = GetIconsByIndividualRequest(r.RequestID, newIconList, false), AjaxID = r.RequestID
+                                 Title = "", Width=10, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false), AjaxID = r.RequestID
                              }
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
@@ -1267,77 +1214,21 @@ namespace PrototypeWithAuth.Controllers
                              new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
                              new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
+                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent) } },
+                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum=AppUtility.FilterEnum.Category },
                              new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
                              new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
                              new RequestIndexPartialColumnViewModel() { Title = "Shared By", Width=10, Value = new List<string>(){ GetSharedBy(r) } },
                              new RequestIndexPartialColumnViewModel()
                              {
-                                 Title = "", Width=10, Icons = GetIconsByIndividualRequest(r.RequestID, newIconList, false), AjaxID = r.RequestID
+                                 Title = "", Width=10, Icons = GetIconsByIndividualRequest(r.RequestID, newIconList, false ), AjaxID = r.RequestID
                              }
                         }
             }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
             return onePageOfProducts;
         }
 
-        protected List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder)
-        {
-            var newIconList = AppUtility.DeepClone(iconList);
-            //favorite icon
-            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
-            var favoriteRequest = _context.FavoriteRequests.Where(fr => fr.RequestID == RequestID).Where(fr => fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
-            if (favIconIndex != -1 && favoriteRequest != null) //check these checks
-            {
-                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
-                newIconList[favIconIndex] = unLikeIcon;
-            }
-            //for approval icon
-            var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("approve-order"));
-            var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.ParentQuote).FirstOrDefault();
-            if (request.RequestStatusID != 1 && forApprovalIconIndex != -1)
-            {
-                newIconList.RemoveAt(forApprovalIconIndex);
-                needsPlaceholder = true;
-            }
-            //resend icon
-            var resendIcon = new IconColumnViewModel("Resend");
-            var placeholder = new IconColumnViewModel("Placeholder");
-            if (request.ParentQuote?.QuoteStatusID == 2)
-            {
-                newIconList.Insert(0, resendIcon);
-            }
-            else if (needsPlaceholder)
-            {
-                newIconList.Insert(0, placeholder);
-            }
-
-            return newIconList;
-        }
-
-
-        protected string GetLocationInstanceNameBefore(LocationInstance locationInstance)
-        {
-            var newLIName = "";
-            if (locationInstance.LocationInstanceParentID == null)//is temporary location
-            {
-                newLIName = _context.TemporaryLocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceID).FirstOrDefault().LocationInstanceAbbrev;
-            }
-            else
-            {
-                newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceAbbrev;
-                if (newLIName == null)
-                {
-                    while (locationInstance.LocationInstanceParentID != null)
-                    {
-                        newLIName = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).Include(li => li.LocationInstanceParent).FirstOrDefault().LocationInstanceName + newLIName;
-                        locationInstance = locationInstance.LocationInstanceParent;
-                    }
-                }
-            }
-            return newLIName;
-        }
-
+       
         protected String GetSharedBy(Request request)
         {
             var applicationUser = _context.ShareRequests

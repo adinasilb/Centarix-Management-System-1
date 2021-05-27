@@ -78,6 +78,7 @@ namespace PrototypeWithAuth.AppData
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
             Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests
         }
+        public enum IndexTableTypes { Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared }
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
@@ -485,10 +486,10 @@ namespace PrototypeWithAuth.AppData
             return priceColumn;
         }
 
-        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, ProductSubcategory ps)
+        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, ProductSubcategory ps, ParentCategory pc)
         {
             List<string> categoryColumn = new List<String>();
-            var category = ps.ParentCategory.ParentCategoryDescription;
+            var category = pc.ParentCategoryDescription;
             var subcategory = ps.ProductSubcategoryDescription;
             if (categorySelected)
             {
