@@ -92,7 +92,7 @@ namespace PrototypeWithAuth.Controllers
                     if (todaysEntry != null && todaysEntry.OffDayTypeID != null)
                     {
                         todaysEntry.OffDayTypeID = null;
-                        entryExitViewModel.OffDayRemoved = todaysEntry.OffDayType.Description;
+                        //entryExitViewModel.OffDayRemoved = todaysEntry.OffDayType.Description;
                     }
 
                     if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry1)
@@ -109,51 +109,47 @@ namespace PrototypeWithAuth.Controllers
                         }
                         _context.EmployeeHours.Update(todaysEntry);
                         await _context.SaveChangesAsync();
-                        entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit1;
-                        entryExitViewModel.Entry = todaysEntry.Entry1;
+                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit1;
+                        //entryExitViewModel.Entry = todaysEntry.Entry1;
                     }
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit1)
                     {
                         todaysEntry.Exit1 = DateTime.Now;
                         _context.EmployeeHours.Update(todaysEntry);
                         await _context.SaveChangesAsync();
-                        entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
+                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
                     }
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry2)
                     {
-                        todaysEntry.Entry2 = DateTime.Now;
-                        _context.EmployeeHours.Update(todaysEntry);
-                        await _context.SaveChangesAsync();
-                        entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
-                        entryExitViewModel.Entry = todaysEntry.Entry2;
-
+                            todaysEntry.Entry2 = DateTime.Now;
+                            _context.EmployeeHours.Update(todaysEntry);
+                            await _context.SaveChangesAsync();
+                            //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
+                            //entryExitViewModel.Entry = todaysEntry.Entry2;
+                        
                     }
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit2)
                     {
                         todaysEntry.Exit2 = DateTime.Now;
                         _context.EmployeeHours.Update(todaysEntry);
                         await _context.SaveChangesAsync();
-                        entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
+                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
                     }
                     else
                     {
-                        entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
+                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
                     }
                     // throw new Exception();
-                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
-                    entryExitViewModel.TimekeeperNotifications = notifications;
+                    //var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
+                    //entryExitViewModel.TimekeeperNotifications = notifications;
                     await transaction.CommitAsync();
-                    return PartialView(entryExitViewModel);
+                    return RedirectToAction();
+                    //return PartialView(entryExitViewModel);
                 }
                 catch(Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    entryExitViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    entryExitViewModel.EntryExitEnum = currentClickButton;
-                    var userid = _userManager.GetUserId(User);
-                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
-                    entryExitViewModel.TimekeeperNotifications = notifications;
-                    return PartialView(entryExitViewModel);
+                    return RedirectToAction("ReportHours", new { errorMessage = AppUtility.GetExceptionMessage(ex) });
 
                 }
             }
