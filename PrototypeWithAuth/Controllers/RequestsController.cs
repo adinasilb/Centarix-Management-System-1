@@ -4023,7 +4023,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(int vendorID, RequestIndexObject requestIndexObject) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
-            var requ = HttpContext.Session.GetObject<Request>("Request1");
+            var requ = HttpContext.Session.GetObject<Request>("Request1"); //where is this used?
             List<Request> requests = new List<Request>();
             if (vendorID != 0)
             {
@@ -4038,8 +4038,7 @@ namespace PrototypeWithAuth.Controllers
                 else if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Orders)
                 {
                     requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-          .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString() && r.ParentQuote.QuoteStatusID == 4)
-          .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString() && r.ParentQuote.QuoteStatusID == 4)
                 .Include(r => r.Product).ThenInclude(r => r.Vendor)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
                 }
