@@ -301,7 +301,7 @@ namespace PrototypeWithAuth.AppData
             }
             else if (!RequestListToCheck1.IsEmpty() && !RequestListToCheck2.IsEmpty())
             {
-                ReturnList = RequestListToCheck1.Concat(RequestListToCheck2).OrderByDescending(r => r.ParentRequest.OrderDate);
+                ReturnList = RequestListToCheck1.Concat(RequestListToCheck2);
             }
             return ReturnList;
         }
