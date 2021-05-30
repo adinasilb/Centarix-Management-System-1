@@ -1576,7 +1576,7 @@ namespace PrototypeWithAuth.Controllers
                         request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
                         request.CreationDate = DateTime.Now;
                         var isInBudget = false;
-                        if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)//is proprietry
+                        if (!request.Product.ProductSubcategory.ParentCategory.IsProprietary)
                         {
                             if (request.Currency == null)
                             {

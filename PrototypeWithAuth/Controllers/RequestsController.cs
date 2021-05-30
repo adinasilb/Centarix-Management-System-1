@@ -3800,7 +3800,10 @@ namespace PrototypeWithAuth.Controllers
                 var request = HttpContext.Session.GetObject<Request>(requestName);
                 uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
                 request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
-                request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
+                {
+                    request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                }
                 if (request.RequestStatusID == 1)
                 {
                     TempData["RequestStatus"] = 1;
@@ -3938,7 +3941,10 @@ namespace PrototypeWithAuth.Controllers
                     var req = HttpContext.Session.GetObject<Request>(requestName);
                     if (req != null)
                     {
-                        req.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                        if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
+                        {
+                            req.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                        }
                         requests.Add(req);
                     }
                     else
