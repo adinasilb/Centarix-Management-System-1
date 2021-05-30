@@ -1396,14 +1396,25 @@ namespace PrototypeWithAuth.Controllers
             changingList = filterListBySelectFilters(selectedFilters, changingList);
 
             int[] requestStatusIds = { 1, 2, 3, 6 };
-            requestStatusIds = requestStatusIds.Where(id => id != requestIndexObject.RequestStatusID).ToArray();
+            int[] newRequestStatusIds = new int[2];
+            if (requestIndexObject.RequestStatusID != 6)
+            {
+                newRequestStatusIds[0] = requestIndexObject.RequestStatusID;
+            }
+            else //for approval and approved are combined
+            {
+                newRequestStatusIds[0] = 1;
+                newRequestStatusIds[1] = 6;
+            }
+            requestStatusIds = requestStatusIds.Where(id => !newRequestStatusIds.Contains(id)).ToArray();
             foreach (int statusId in requestStatusIds)
             {
                 SetCountByStatusId(requestIndexObject, viewmodel, fullRequestsList, statusId);
             }
-
-            SetCountByStatusId(requestIndexObject, viewmodel, changingList, requestIndexObject.RequestStatusID);
-
+            foreach (int statusId in newRequestStatusIds)
+            {
+                SetCountByStatusId(requestIndexObject, viewmodel, changingList, statusId);
+            }
 
             /*int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
@@ -1430,6 +1441,8 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case 6:
                     viewmodel.ApprovedCount += count;
+                    break;
+                default:
                     break;
             }
         }
