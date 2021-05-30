@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210527071404_ChangeExpectedSupplyAndWarrantyToInt")]
+    partial class ChangeExpectedSupplyAndWarrantyToInt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3955,7 +3957,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("ApplicationUserCreatorID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ApplicationUserReceiverID")
@@ -3985,8 +3986,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<decimal>("ExchangeRate")
                         .HasColumnType("decimal(18,3)");
 
-                    b.Property<byte?>("ExpectedSupplyDays")
-                        .HasColumnType("tinyint");
+                    b.Property<int?>("ExpectedSupplyDays")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IncludeVAT")
                         .HasColumnType("bit");
@@ -4063,8 +4064,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("UnitTypeID")
                         .HasColumnType("int");
 
-                    b.Property<byte?>("Warranty")
-                        .HasColumnType("tinyint");
+                    b.Property<int?>("Warranty")
+                        .HasColumnType("int");
 
                     b.HasKey("RequestID");
 
@@ -6209,8 +6210,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
                         .WithMany("RequestsCreated")
                         .HasForeignKey("ApplicationUserCreatorID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserReceiver")
                         .WithMany("RequestsReceived")

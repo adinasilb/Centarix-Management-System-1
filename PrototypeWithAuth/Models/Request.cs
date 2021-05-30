@@ -20,6 +20,7 @@ namespace PrototypeWithAuth.Models
         public Product Product { get; set; }
         public int? ParentRequestID { get; set; }
         public ParentRequest ParentRequest { get; set; }
+        [Required]
         public string ApplicationUserCreatorID { get; set; }
         [ForeignKey("ApplicationUserCreatorID")]
         public ApplicationUser ApplicationUserCreator { get; set; }
