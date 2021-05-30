@@ -170,9 +170,12 @@
                 <div class="col-8 text-left pt-2" style="font-size:large">
                     @tn.Description
                 </div>
-                <div class="col-3 text-right pr-5">
+                <div class="col-2 text-right pr-2">
                     <button class="danger-color rounded-pill border-0 open-update-hours-modal text-white  ReportHours py-2 px-4 " style="font-size:large" value="@tn.EmployeeHours.Date.ToString("yyyy-MM-dd")" type="button">Update Now</button>
 
+                </div>
+                <div class="col-1">
+                    <button class="delete-notification border-0" style="color:var(--danger-color); background-color: transparent; font-size: xx-large; padding:0px " value="@tn.NotificationID">&times;</button>
                 </div>
             </div>
         }
@@ -215,5 +218,20 @@
         if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
         return i;
     }
-
+    $('.delete-notification').on('click', function () {
+        $.ajax({
+            traditional: true,
+            async: true,
+            url: "/Timekeeper/DeleteNotification?id=" + $(this).attr("value"),
+            type: 'POST',
+            cache: false,
+            success: function (newData) {
+                $('.render-body').html(newData);
+            },
+            error: function (newData) {
+                console.log('error deleting notification');
+                $('.render-body').html(newData);
+            }
+        });
+    });
 </script>
