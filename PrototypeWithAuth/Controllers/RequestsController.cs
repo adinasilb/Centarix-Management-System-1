@@ -3314,16 +3314,16 @@ namespace PrototypeWithAuth.Controllers
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
                     requests = requests
-                    .Where(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice);
+                    .Where(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.PayNow:
                     requests = requests
                     //.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                    .Where(r => r.PaymentStatusID == 3);
+                    .Where(r => r.PaymentStatusID == 3 r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.PayLater:
                     requests = requests
-                .Where(r => r.PaymentStatusID == 4);
+                .Where(r => r.PaymentStatusID == 4 r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     requests = requests
