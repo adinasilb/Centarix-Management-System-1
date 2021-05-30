@@ -45,44 +45,7 @@
     </div>
 </div>
 <script>
-    $('body').on('click', "#applyFilter", function () {
-       console.log('clicked!')
-        var data = $.fn.BindSelectedFilters();
-        var searchText = $('.popover .search-requests-in-filter').val();
-        var numFilters = $('.numFilters').attr("value");
-        console.log('search text ' + searchText);
-        var url;
-        switch ($('#masterPageType').val()) {
-            case 'RequestSummary':
-                url = "_IndexTableWithProprietaryTabs";
-                break;
-            case 'RequestRequest':
-            case 'OperationsRequest':
-                url = "_IndexTableWithCounts"
-                break;
-            case 'OperationsInventory':
-                url = "_IndexTable";
-                break;
-        }
-        //console.log(data);
-        $.ajax({
-        //    processData: false,
-        //    contentType: false,
-            data: data,
-            async: true,
-            traditional: true,
-            url: "/Requests/" + url + "?" + $.fn.getRequestIndexString() + "&searchText=" + searchText + "&numFilters=" + numFilters,
-            type: 'POST',
-            cache: false,
-            success: function (data) {
-                $('.'+url).html(data);
-                $('[data-toggle="popover"]').popover('dispose');
-                $('body').removeClass('popover-open');
-                $('#invFilterPopover').removeClass('order-inv-background-color custom-button-font');
-                $('#invFilterPopover').addClass('custom-order-inv');
-            }
-        });
-    });
+    
   
     $("#invFilterPopover").click(function () {
         $('[data-toggle="popover"]').popover('dispose');
