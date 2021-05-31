@@ -23,20 +23,20 @@ namespace PrototypeWithAuth.ViewModels
             RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ShareRequest shareRequest, ApplicationUser user, LocationInstance locationInstance, LocationInstance parentLocationInstance, ParentRequest parentRequest)
         {
             r = request;
-            //r.Product = product;
-            //r.Product.Vendor = vendor;
-            //r.Product.ProductSubcategory = productSubcategory;
-            //r.Product.ProductSubcategory.ParentCategory = parentCategory;
-            //r.UnitType = unitType;
-            //r.SubUnitType = subUnitType;
-            //r.SubSubUnitType = subSubUnitType;
-            //r.ParentRequest = parentRequest;
-            //if(locationInstance !=null)
-            //{
-            //    r.RequestLocationInstances = new List<RequestLocationInstance>() { new RequestLocationInstance { Request = r, LocationInstance = locationInstance } };
-            //    r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent = parentLocationInstance;
+            r.Product = product;
+            r.Product.Vendor = vendor;
+            r.Product.ProductSubcategory = productSubcategory;
+            r.Product.ProductSubcategory.ParentCategory = parentCategory;
+            r.UnitType = unitType;
+            r.SubUnitType = subUnitType;
+            r.SubSubUnitType = subSubUnitType;
+            r.ParentRequest = parentRequest;
+            if (locationInstance != null)
+            {
+                r.RequestLocationInstances = new List<RequestLocationInstance>() { new RequestLocationInstance { Request = r, LocationInstance = locationInstance } };
+                r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent = parentLocationInstance;
 
-            //}
+            }
             RequestIndexPartialRowViewModel.requestIndexObject = requestIndexObject;
             RequestIndexPartialRowViewModel.defaultImage = defaultImage;
             this.iconList = iconList;
