@@ -52,6 +52,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             var applicationDbContext = _context.ProductSubcategories.Include(p => p.ParentCategory).ThenInclude(pc => pc.CategoryType)
                 .Where(ps => ps.ParentCategory.CategoryTypeID == categoryType);
+            if(PageType == AppUtility.PageTypeEnum.RequestRequest)
+            {
+                applicationDbContext = applicationDbContext.Where(ps => ps.ParentCategory.IsProprietary == false);
+            }
             return View(await applicationDbContext.ToListAsync());
         }
         
