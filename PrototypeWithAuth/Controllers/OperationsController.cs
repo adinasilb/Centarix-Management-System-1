@@ -45,7 +45,7 @@ namespace PrototypeWithAuth.Controllers
         private ICompositeViewEngine _viewEngine;
 
         public OperationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/) : base(context)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/) : base(context, userManager:userManager)
         {
             //_Context = Context;
             _context = context;

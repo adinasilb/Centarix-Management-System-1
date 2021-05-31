@@ -323,28 +323,11 @@ namespace PrototypeWithAuth.Controllers
               .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
 
                     iconList.Add(deleteIcon);
-                    viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                    viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage,null, null, null, null, null, null)
                     {
-
-                        Vendor = r.Product.Vendor,
-                        TotalCost = (r.Cost ?? 0) + r.VAT,
-                        ExchangeRate = r.ExchangeRate,
                         ButtonClasses = " load-terms-modal order-inv-background-color ",
                         ButtonText = "Order",
-                        Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                                new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum=AppUtility.FilterEnum.Category },
-                                new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                new RequestIndexPartialColumnViewModel()
-                                {
-                                    Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID,
-                                },
-
-                        }
                     }).ToLookup(c => c.Vendor);
 
                     break;
@@ -362,29 +345,7 @@ namespace PrototypeWithAuth.Controllers
             return viewModelByVendor;
         }
 
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetForApprovalRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory), FilterEnum=AppUtility.FilterEnum.Category },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Icons = iconList,  AjaxID = r.RequestID },
-                                 new RequestIndexPartialColumnViewModel() { Width=0, AjaxLink = " d-none order-type"+r.RequestID, AjaxID = (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum),r.OrderType), Value = new List<string>(){r.OrderType.ToString()} }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-
-
+     
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
