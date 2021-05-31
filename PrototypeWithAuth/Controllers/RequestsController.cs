@@ -3319,11 +3319,11 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.SidebarEnum.PayNow:
                     requests = requests
                     //.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                    .Where(r => r.PaymentStatusID == 3 r.Payments.FirstOrDefault().IsPaid == false);
+                    .Where(r => r.PaymentStatusID == 3 && r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.PayLater:
                     requests = requests
-                .Where(r => r.PaymentStatusID == 4 r.Payments.FirstOrDefault().IsPaid == false);
+                .Where(r => r.PaymentStatusID == 4 && r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     requests = requests
