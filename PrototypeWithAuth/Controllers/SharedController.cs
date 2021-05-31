@@ -1093,10 +1093,6 @@ namespace PrototypeWithAuth.Controllers
             }
 
             return onePageOfProducts;
-        }
-
-
-            return onePageOfProducts;
         }  
       
         protected void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedFilters selectedFilters = null, string searchText = "")
