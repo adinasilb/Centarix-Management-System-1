@@ -193,7 +193,7 @@ span.choose {
     border-radius: 18px;
     border-color: var(--acc-color) !important;
 }
-.protocol-form .RequestUnitCard div:first-child, .accounting-form .RequestSubunitCard div:first-child, .protocol-form .RequestSubsubunitCard div:first-child {
+.protocol-form .RequestUnitCard div:first-child, .protocol-form .RequestSubunitCard div:first-child, .protocol-form .RequestSubsubunitCard div:first-child {
     border-radius: 18px;
     border-color: var(--protocol-color) !important;
 }
