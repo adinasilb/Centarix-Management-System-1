@@ -907,7 +907,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmployeeHoursID")
+                    b.Property<int>("EmployeeHoursID")
                         .HasColumnType("int");
 
                     b.Property<int?>("EmployeeHoursStatusEntry1ID")
@@ -954,8 +954,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("EmployeeHoursAwaitingApprovalID");
 
                     b.HasIndex("EmployeeHoursID")
-                        .IsUnique()
-                        .HasFilter("[EmployeeHoursID] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("EmployeeHoursStatusEntry1ID");
 
@@ -3988,9 +3987,7 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("tinyint");
 
                     b.Property<bool>("IncludeVAT")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<long?>("Installments")
                         .HasColumnType("bigint");
@@ -5834,7 +5831,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHours", "EmployeeHours")
                         .WithOne("EmployeeHoursAwaitingApproval")
                         .HasForeignKey("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", "EmployeeHoursID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry1")
                         .WithMany()

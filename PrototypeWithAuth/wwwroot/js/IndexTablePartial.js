@@ -1,4 +1,4 @@
-﻿$(".more").off('click').click(function () {
+﻿$(".popover-more").off('click').click(function () {
 	var val = $(this).val();
 	$('[data-toggle="popover"]').popover('dispose');
 	$(this).popover({
@@ -10,9 +10,11 @@
 		}
 	});
 	$(this).popover('toggle');
-	$(".popover").off("click").on("click", ".share-request-fx", function () {
-		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?requestId=" + $(this).attr("data-route-request");
-		//alert("url: " + url);
+	$(".popover .share-request-fx").click(function (e) {
+		e.preventDefault();
+		//switch this to universal share request and the modelsenum send in
+		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=Request";
+
 		$.ajax({
 			async: true,
 			url: url,
@@ -20,12 +22,41 @@
 			type: "GET",
 			cache: false,
 			success: function (data) {
-				$.fn.OpenModal("share-request-modal", "share-request", data)
-				$.fn.EnableMaterialSelect('#userlist', 'select-options-userlist')
+				$.fn.OpenModal("shared-modal", "share-modal", data)
+				$.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs')
 				$("#loading").hide();
 				return false;
 			}
 		})
+	});
+	$(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
+		var ControllersEnum = "";
+		var shareNum = "";
+		if ($(this).hasClass("requests")) { //THIS IF IS NOT WORKING
+			ControllersEnum = "Requests";
+		}
+		shareNum = $(this).attr("data-share-resource-id");
+		var url = "/" + ControllersEnum + "/RemoveShare?ID=" + shareNum + "&ModelsEnum=" + $("#masterSectionType").val();
+		alert("url " + url);
+		$.ajax({
+			async: true,
+			url: url,
+			type: 'GET',
+			cache: true,
+			success: function (e) {
+				if (!e) {
+					$.ajax({
+						async: true,
+						url: "/Requests/_IndexSharedTable",
+						type: 'GET',
+						cache: true,
+						success: function (data) {
+							$("._IndexSharedTable").html(data);
+						}
+					})
+				}
+			}
+		});
 	});
 
 });
@@ -224,7 +255,7 @@ $(".request-favorite").on("click", function (e) {
 				requestFavorite.attr("data-original-title", title);
 				requestFavorite.addClass(unfav);
 				$("#loading").hide();
-				
+
 			}
 		})
 	}

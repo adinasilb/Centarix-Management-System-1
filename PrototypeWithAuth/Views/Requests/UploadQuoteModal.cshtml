@@ -9,13 +9,7 @@
     var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
-    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-    {
-        form = "oper-form";
-        bcColor = "oper-background-color";
-        color = "operations-filter";
-        sectionType = AppUtility.MenuItems.Operations.ToString();
-    }
+    
     //else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     //{
 
@@ -102,33 +96,33 @@
                                 </div>
                                 <div class="col-md-6">
                                 </div>
-                                </div>
-                                @if (Model.IsReorder)
-                                {
-                                    <div class="row">
-                                        <div class=" col-md-6">
+                            </div>
+                            @if (Model.IsReorder)
+                            {
+                                <div class="row">
+                                    <div class=" col-md-6">
                                         <div class="form-group ">
                                             <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
                                             <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0 expected-supply-days" min="1" />
                                             <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
                                         </div>
-                                        </div>
-                                        <div class=" col-md-6">
+                                    </div>
+                                    <div class=" col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Expected supply date</label>
                                             <input value="" class="form-control-plaintext border-bottom datepicker " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
                                         </div>
-                                        </div>
                                     </div>
-                                }
-                                @*<div class="row">
-            <div class="form-group ">
-                <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
-                <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
-            </div>
-        </div>*@
-                            </div>
+                                </div>
+                            }
+                            @*<div class="row">
+                                    <div class="form-group ">
+                                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
+                                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>*@
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0 p-0">

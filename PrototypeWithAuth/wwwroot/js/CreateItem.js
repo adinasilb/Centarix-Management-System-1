@@ -219,7 +219,7 @@
             $("#" + deletedid).val("true");
         }
     })
-    $('body').off('click', '.include-vat-radio').on('click', '.include-vat-radio', function (e) {
+    $('body').off('change', '.include-vat-radio').on('change', '.include-vat-radio', function (e) {
         console.log("radio click")
         var index = $(this).attr("index");
         var vatInfoClass = ".vat-info";

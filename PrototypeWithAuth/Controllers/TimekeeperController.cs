@@ -92,7 +92,7 @@ namespace PrototypeWithAuth.Controllers
                     if (todaysEntry != null && todaysEntry.OffDayTypeID != null)
                     {
                         todaysEntry.OffDayTypeID = null;
-                        entryExitViewModel.OffDayRemoved = todaysEntry.OffDayType.Description;
+                        //entryExitViewModel.OffDayRemoved = todaysEntry.OffDayType.Description;
                     }
 
                     if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry1)
@@ -109,51 +109,47 @@ namespace PrototypeWithAuth.Controllers
                         }
                         _context.EmployeeHours.Update(todaysEntry);
                         await _context.SaveChangesAsync();
-                        entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit1;
-                        entryExitViewModel.Entry = todaysEntry.Entry1;
+                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit1;
+                        //entryExitViewModel.Entry = todaysEntry.Entry1;
                     }
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit1)
                     {
                         todaysEntry.Exit1 = DateTime.Now;
                         _context.EmployeeHours.Update(todaysEntry);
                         await _context.SaveChangesAsync();
-                        entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
+                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Entry2;
                     }
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Entry2)
                     {
-                        todaysEntry.Entry2 = DateTime.Now;
-                        _context.EmployeeHours.Update(todaysEntry);
-                        await _context.SaveChangesAsync();
-                        entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
-                        entryExitViewModel.Entry = todaysEntry.Entry2;
-
+                            todaysEntry.Entry2 = DateTime.Now;
+                            _context.EmployeeHours.Update(todaysEntry);
+                            await _context.SaveChangesAsync();
+                            //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.Exit2;
+                            //entryExitViewModel.Entry = todaysEntry.Entry2;
+                        
                     }
                     else if (entryExitViewModel.EntryExitEnum == AppUtility.EntryExitEnum.Exit2)
                     {
                         todaysEntry.Exit2 = DateTime.Now;
                         _context.EmployeeHours.Update(todaysEntry);
                         await _context.SaveChangesAsync();
-                        entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
+                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
                     }
                     else
                     {
-                        entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
+                        //entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
                     }
                     // throw new Exception();
-                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
-                    entryExitViewModel.TimekeeperNotifications = notifications;
+                    //var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
+                    //entryExitViewModel.TimekeeperNotifications = notifications;
                     await transaction.CommitAsync();
-                    return PartialView(entryExitViewModel);
+                    return RedirectToAction();
+                    //return PartialView(entryExitViewModel);
                 }
                 catch(Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    entryExitViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                    entryExitViewModel.EntryExitEnum = currentClickButton;
-                    var userid = _userManager.GetUserId(User);
-                    var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n => n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
-                    entryExitViewModel.TimekeeperNotifications = notifications;
-                    return PartialView(entryExitViewModel);
+                    return RedirectToAction("ReportHours", new { errorMessage = AppUtility.GetExceptionMessage(ex) });
 
                 }
             }
@@ -197,8 +193,6 @@ namespace PrototypeWithAuth.Controllers
         private ReportDaysViewModel GetSummaryDaysOffModel(string userid, Employee user, int year)
         {
             int month = DateTime.Now.Month;
-            double vacationDays =  user.VacationDaysPerMonth * month;
-            double sickDays = user.SickDays * month;
             var daysOffViewModel = new ReportDaysViewModel
             {
                 VacationDaysTaken = _context.EmployeeHours.Where(eh => eh.Date.Year == year).Where(eh => eh.EmployeeID == userid).Where(eh => eh.OffDayTypeID == 2 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).OrderByDescending(eh => eh.Date),
@@ -230,7 +224,13 @@ namespace PrototypeWithAuth.Controllers
             }
 
             var unpaidLeaveTaken = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Year == year && eh.OffDayTypeID == 5 && eh.Date <= DateTime.Now.Date && eh.IsBonus == false).Count();
-            if (year == AppUtility.YearStartedTimeKeeper & year == year)
+            if (year == user.StartedWorking.Year)
+            {
+                int month = year == DateTime.Now.Year ? (DateTime.Now.Month - user.StartedWorking.Month + 1) : (12 - user.StartedWorking.Month + 1);
+                vacationDays = user.VacationDaysPerMonth * month;
+                sickDays = user.SickDaysPerMonth * month;
+            }
+            else if (year == AppUtility.YearStartedTimeKeeper && year == DateTime.Now.Year)
             {
                 int month = DateTime.Now.Month;
                 vacationDays = (user.VacationDaysPerMonth * month) + user.RollOverVacationDays;
@@ -241,12 +241,6 @@ namespace PrototypeWithAuth.Controllers
                 int month = DateTime.Now.Month;
                 vacationDays = user.VacationDays + user.RollOverVacationDays;
                 sickDays = user.SickDays + user.RollOverSickDays;
-            }
-            else if (year == user.StartedWorking.Year)
-            {
-                int month = 12 - user.StartedWorking.Month + 1;
-                vacationDays = user.VacationDaysPerMonth * month;
-                sickDays = user.SickDays * month;
             }
             else if (year == DateTime.Now.Year)
             {

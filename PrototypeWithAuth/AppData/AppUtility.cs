@@ -535,6 +535,7 @@ namespace PrototypeWithAuth.AppData
             }
             return amountColumn;
         }
+
         public static string GetNote(SidebarEnum sidebarEnum, Request request)
         {
             if (sidebarEnum == SidebarEnum.PartialDelivery)
