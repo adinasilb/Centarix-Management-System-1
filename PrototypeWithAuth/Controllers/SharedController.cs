@@ -812,7 +812,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).AsQueryable();
 
-            RequestPassedInWithInclude = RequestPassedInWithInclude.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance);
+            RequestPassedInWithInclude = RequestPassedInWithInclude.Include(r => r.RequestLocationInstances).ThenInclude(li => li.LocationInstance).ThenInclude(l=>l.LocationInstanceParent);
 
             RequestPassedInWithInclude = filterListBySelectFilters(selectedFilters, RequestPassedInWithInclude);
 

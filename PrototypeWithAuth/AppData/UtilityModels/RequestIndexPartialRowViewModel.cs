@@ -13,32 +13,36 @@ namespace PrototypeWithAuth.ViewModels
     {
         private static RequestIndexObject requestIndexObject;
         private static string defaultImage;
-        private static List<IconColumnViewModel> iconList;
-        private static Request r;
-        private static ApplicationUser user;
-        private static FavoriteRequest favoriteRequest;
-        private static ShareRequest shareRequest;
+        private List<IconColumnViewModel> iconList;
+        private Request r;
+        private ApplicationUser user;
+        private FavoriteRequest favoriteRequest;
+        private ShareRequest shareRequest;
         public RequestIndexPartialRowViewModel() { }
         public RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes indexTableTypes, Request request, Product product, Vendor vendor, ProductSubcategory productSubcategory, ParentCategory parentCategory, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType,
             RequestIndexObject requestIndexObject, List<IconColumnViewModel> iconList, string defaultImage, FavoriteRequest favoriteRequest, ShareRequest shareRequest, ApplicationUser user, LocationInstance locationInstance, LocationInstance parentLocationInstance, ParentRequest parentRequest)
         {
             r = request;
-            r.Product = product;
-            r.Product.Vendor = vendor;
-            r.Product.ProductSubcategory = productSubcategory;
-            r.Product.ProductSubcategory.ParentCategory = parentCategory;
-            r.UnitType = unitType;
-            r.SubUnitType = subUnitType;
-            r.SubSubUnitType = subSubUnitType;
-            r.ParentRequest = parentRequest;
-            r.RequestLocationInstances = new List<RequestLocationInstance>() { new RequestLocationInstance { Request = r, LocationInstance = locationInstance } };
-            r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent = parentLocationInstance;
+            //r.Product = product;
+            //r.Product.Vendor = vendor;
+            //r.Product.ProductSubcategory = productSubcategory;
+            //r.Product.ProductSubcategory.ParentCategory = parentCategory;
+            //r.UnitType = unitType;
+            //r.SubUnitType = subUnitType;
+            //r.SubSubUnitType = subSubUnitType;
+            //r.ParentRequest = parentRequest;
+            //if(locationInstance !=null)
+            //{
+            //    r.RequestLocationInstances = new List<RequestLocationInstance>() { new RequestLocationInstance { Request = r, LocationInstance = locationInstance } };
+            //    r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent = parentLocationInstance;
+
+            //}
             RequestIndexPartialRowViewModel.requestIndexObject = requestIndexObject;
             RequestIndexPartialRowViewModel.defaultImage = defaultImage;
-            RequestIndexPartialRowViewModel.iconList = iconList;
-            RequestIndexPartialRowViewModel.user = user;
-            RequestIndexPartialRowViewModel.favoriteRequest = favoriteRequest;
-            RequestIndexPartialRowViewModel.shareRequest = shareRequest;
+            this.iconList = iconList;
+            this.user = user;
+            this.favoriteRequest = favoriteRequest;
+            this.shareRequest = shareRequest;
             switch (indexTableTypes)
             {
                 case AppUtility.IndexTableTypes.Approved:
@@ -48,28 +52,28 @@ namespace PrototypeWithAuth.ViewModels
                     Columns = GetReceivedInventoryFavoriteColumns();
                     break;
                 case AppUtility.IndexTableTypes.Ordered:
-                    GetOrderedColumns();
+                    Columns = GetOrderedColumns();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventoryShared:
-                    GetReceivedInventorySharedColumns();
+                    Columns = GetReceivedInventorySharedColumns();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventory:
-                    GetReceivedInventoryColumns();
+                    Columns = GetReceivedInventoryColumns();
                     break;
                 case AppUtility.IndexTableTypes.Summary:
-                    GetSummaryColumns();
+                    Columns = GetSummaryColumns();
                     break;
                 case AppUtility.IndexTableTypes.SummaryProprietary:
-                    GetSummaryProprietaryColumns();
+                    Columns = GetSummaryProprietaryColumns();
                     break;
                 case AppUtility.IndexTableTypes.OrderedOperations:
-                    GetOrderedOperationsColumns();
+                    Columns = GetOrderedOperationsColumns();
                     break;
                 case AppUtility.IndexTableTypes.ReceivedInventoryOperations:
-                    GetReceivedInventoryOperationsColumns();
+                    Columns = GetReceivedInventoryOperationsColumns();
                     break;
                 case AppUtility.IndexTableTypes.AccountingGeneral:
-                    GetAccountingGeneralColumns();
+                    Columns = GetAccountingGeneralColumns();
                     break;
             }
 
@@ -82,8 +86,7 @@ namespace PrototypeWithAuth.ViewModels
         public decimal ExchangeRate { get; set; }
         public string ButtonClasses { get; set; }
         public string ButtonText { get; set; }
-
-        private static string GetLocationInstanceNameBefore(Request r)
+        private string GetLocationInstanceNameBefore(Request r)
         {
             var newLIName = "";
             if (r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParentID == null)//is temporary location
@@ -96,7 +99,6 @@ namespace PrototypeWithAuth.ViewModels
             }
             return newLIName;
         }
-
         private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
         {
             var newIconList = AppUtility.DeepClone(iconList);
@@ -131,19 +133,17 @@ namespace PrototypeWithAuth.ViewModels
             }
             return newIconList;
         }
-
         private static int GetOrderTypeEnum(string orderType)
         {
             return (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum), orderType);
         }
-
-        private static String GetSharedBy(Request request, ShareRequest shareRequest)
+        private String GetSharedBy(Request request, ShareRequest shareRequest)
         {
             var applicationUser = shareRequest.FromApplicationUser;
             return applicationUser.FirstName + " " + applicationUser.LastName;
         }
 
-        private static IEnumerable<RequestIndexPartialColumnViewModel> GetApproveColumns()
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetApproveColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID };
@@ -156,7 +156,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false, null, r, null), AjaxID = r.RequestID };
             yield return new RequestIndexPartialColumnViewModel() { Width = 0, AjaxLink = " d-none order-type" + r.RequestID, AjaxID = GetOrderTypeEnum(r.OrderType), Value = new List<string>() { r.OrderType.ToString() } };
         }
-        private static IEnumerable<RequestIndexPartialColumnViewModel> GetOrderedColumns()
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetOrderedColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID };
@@ -174,7 +174,7 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = r.RequestID
             };
         }
-        private static IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventoryFavoriteColumns()
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventoryFavoriteColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID };
@@ -193,7 +193,7 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = r.RequestID
             };
         }
-        private static IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventorySharedColumns()
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventorySharedColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID };
@@ -212,7 +212,7 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = r.RequestID
             };
         }
-        private static IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventoryColumns()
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventoryColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID };
@@ -231,7 +231,7 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = r.RequestID
             };
         }
-        private static IEnumerable<RequestIndexPartialColumnViewModel> GetSummaryColumns()
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetSummaryColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID };
@@ -251,7 +251,7 @@ namespace PrototypeWithAuth.ViewModels
             };
         }
 
-        private static IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingGeneralColumns()
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetAccountingGeneralColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID };
@@ -261,7 +261,7 @@ namespace PrototypeWithAuth.ViewModels
             yield return new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } };
         }
-        private static IEnumerable<RequestIndexPartialColumnViewModel> GetSummaryProprietaryColumns()
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetSummaryProprietaryColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID };
@@ -278,7 +278,7 @@ namespace PrototypeWithAuth.ViewModels
                 AjaxID = r.RequestID
             };
         }
-        private static IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventoryOperationsColumns()
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetReceivedInventoryOperationsColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 9, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 14, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID };
@@ -296,7 +296,7 @@ namespace PrototypeWithAuth.ViewModels
             };
         }
 
-        private static IEnumerable<RequestIndexPartialColumnViewModel> GetOrderedOperationsColumns()
+        private IEnumerable<RequestIndexPartialColumnViewModel> GetOrderedOperationsColumns()
         {
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID };
