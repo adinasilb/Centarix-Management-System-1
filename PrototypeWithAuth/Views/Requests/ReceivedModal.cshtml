@@ -227,6 +227,7 @@
                                     <div class="form-group">
                                         <label class="control-label" asp-for="locationTypesDepthZero">Location Type</label>
                                         <div class=" form-control-plaintext border-bottom p-0">
+
                                             <span class="choose p-0"></span>
                                             <div class="dropdown dropdown-main">
                                                 <div class="select d-inline-flex">
@@ -234,11 +235,9 @@
                                                         ▼
                                                     </span>
                                                     <span class="overflow-hidden locationType">Select Type:</span>
-
                                                 </div>
 
                                                 <ul class="p-0 locationinstance dropdown-menu ">
-
                                                     @foreach (var locationType in Model.locationTypesDepthZero)
                                                     {
                                                         <li id="@locationType.LocationTypeID" class="open-sublocations-types" data-string="" @*onclick="loadReceivedModalSubLocations(this.id)"*@>

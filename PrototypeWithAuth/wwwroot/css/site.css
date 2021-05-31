@@ -2748,6 +2748,10 @@ td.visual-box:not(.is12X12) .row-1, td.visual-shelf .row-1 {
     background-color: var(--order-inv-color);
 }
 
+.supplier-form .location-selected {
+    background-color: var(--lab-man-color);
+}
+
 .visual-locations tr {
     border: 1px solid var(--black-87) !important;
 }
