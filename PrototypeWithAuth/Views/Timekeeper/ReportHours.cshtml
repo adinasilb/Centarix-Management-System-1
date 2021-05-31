@@ -22,7 +22,7 @@
     <div class="row">
         @if (Model.ErrorMessage != null && Model.ErrorMessage != "")
         {
-            <span class="text danger-text view-bag-error">Error: @Model.ErrorMessage</span>
+            <span class="text danger-text view-bag-error pb-2">Error: @Model.ErrorMessage</span>
 
         }
     </div>
@@ -228,9 +228,9 @@
             success: function (newData) {
                 $('.render-body').html(newData);
             },
-            error: function (newData) {
+            error: function (xhr) {
                 console.log('error deleting notification');
-                $('.render-body').html(newData);
+                $('.render-body').html(xhr.responseText);
             }
         });
     });
