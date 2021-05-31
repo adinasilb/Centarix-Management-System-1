@@ -4032,7 +4032,11 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
         {
             var r = await base.SaveTermsModalAsync(termsViewModel);
-            return RedirectToAction(r.ActionName, r.ControllerName, r.RouteValues);
+            if (r.RedirectToActionResult.ActionName == "" && r.RedirectToActionResult.ControllerName == "")
+            {
+                return PartialView("TermsModal", r.TermsViewModel);
+            }
+            return RedirectToAction(r.RedirectToActionResult.ActionName, r.RedirectToActionResult.ControllerName, r.RedirectToActionResult.RouteValues);
         }
 
         [Authorize(Roles = "Reports")]
