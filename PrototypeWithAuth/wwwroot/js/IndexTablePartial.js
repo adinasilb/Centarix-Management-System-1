@@ -211,13 +211,15 @@ $(".approve-order").off('click').on("click", function (e) {
 	return false;
 });
 
-$(".request-favorite").on("click", function (e) {
+$(".request-favorite").off("click").on("click", function (e) {
+	//$(this).off("click");
+	//alert("in click fr");
+	var requestFavorite = $(this);
+	//alert(" in favorite request fx");
 	var emptyHeartClass = "icon-favorite_border-24px";
 	var fullHeartClass = "icon-favorite-24px";
-	var fav = "request-favorite";
 	var unfav = "request-unlike";
 	var title = "Favorite";
-	var requestFavorite = $(this);
 	var FavType = "favorite";
 	var sidebarType = $('#masterSidebarType').val();
 	if (requestFavorite.hasClass("request-unlike")) {
@@ -229,6 +231,7 @@ $(".request-favorite").on("click", function (e) {
 			type: "GET",
 			cache: false,
 			success: function (data) {
+				$(this).attr("disabled", false);
 				requestFavorite.children("i").addClass(emptyHeartClass);
 				requestFavorite.children("i").removeClass(fullHeartClass);
 				requestFavorite.attr("data-original-title", title);
@@ -250,6 +253,7 @@ $(".request-favorite").on("click", function (e) {
 			type: "GET",
 			cache: false,
 			success: function (data) {
+				$(this).attr("disabled", false);
 				requestFavorite.children("i").removeClass(emptyHeartClass);
 				requestFavorite.children("i").addClass(fullHeartClass);
 				requestFavorite.attr("data-original-title", title);
@@ -259,9 +263,12 @@ $(".request-favorite").on("click", function (e) {
 			}
 		})
 	}
-
+	//$.fn.FavoriteRequests(requestFavorite);
 });
 
+$.fn.FavoriteRequests = function (requestFavorite) {
+	
+};
 
 $(".create-calibration").off('click').on("click", function (e) {
 	e.preventDefault();

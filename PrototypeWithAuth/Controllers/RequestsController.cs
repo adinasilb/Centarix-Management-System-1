@@ -145,27 +145,13 @@ namespace PrototypeWithAuth.Controllers
                                      .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);
 
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel
+                             (AppUtility.IndexTableTypes.LabOrders, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, null)
+
                             {
-                                TotalCost = (r.Cost ?? 0) + r.VAT,
-                                ExchangeRate = r.ExchangeRate,
-                                Vendor = r.Product.Vendor,
                                 ButtonClasses = " load-terms-modal lab-man-background-color ",
-                                ButtonText = "Order",
-                                Columns = new List<RequestIndexPartialColumnViewModel>()
-                                {
-                                     new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                     new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
-                                     new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                     new RequestIndexPartialColumnViewModel()
-                                     {
-                                         Title = "", Width=10, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, false), AjaxID = r.RequestID
-                                     }
-                                }
+                                ButtonText = "Order"
                             }).ToLookup(c => c.Vendor);
                             break;
                         case AppUtility.SidebarEnum.Quotes:
@@ -176,27 +162,12 @@ namespace PrototypeWithAuth.Controllers
                             //iconList.Add(resendIcon);
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, r.ParentQuote, null)
+
                             {
-                                TotalCost = (r.Cost ?? 0) + r.VAT,
-                                ExchangeRate = r.ExchangeRate,
-                                Vendor = r.Product.Vendor,
                                 ButtonClasses = " confirm-quote lab-man-background-color ",
-                                ButtonText = "Ask For Quote",
-                                Columns = new List<RequestIndexPartialColumnViewModel>()
-                                {
-                                     new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                     new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
-                                     new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                     new RequestIndexPartialColumnViewModel()
-                                     {
-                                         Title = "", Width=15, Icons = GetIconsByIndividualRequest(r.RequestID, iconList, true), AjaxID = r.RequestID
-                                     }
-                                }
+                                ButtonText = "Ask For Quote"
                             }).ToLookup(c => c.Vendor);
                             break;
                     }
@@ -205,18 +176,15 @@ namespace PrototypeWithAuth.Controllers
 
                     var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
                     iconList.Add(popoverPartialClarifyIcon);
-                    string value = "";
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
                             checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.PartialDelivery:
-                            value = "PartialClarify";
                             checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.ForClarification:
-                            value = "PartialClarify";
                             checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
@@ -224,27 +192,12 @@ namespace PrototypeWithAuth.Controllers
                             buttonText = "Add To All";
                             break;
                     }
-                    viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                    viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                    (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, null)
                     {
-                        TotalCost = (r.Cost ?? 0) + r.VAT,
-                        ExchangeRate = r.ExchangeRate,
-                        Vendor = r.Product.Vendor,
                         ButtonClasses = " invoice-add-all accounting-background-color ",
-                        ButtonText = buttonText,
-                        Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID },
-                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
-                            new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID },
-                            new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
-                            new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
-                            new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
-                            new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
-                            new RequestIndexPartialColumnViewModel()
-                            {
-                                Title = "", Width = 10, Icons = iconList, AjaxID = r.RequestID, Note = AppUtility.GetNote(requestIndexObject.SidebarType, r)
-                            }
-                        }
+                        ButtonText = buttonText
                     }).ToLookup(c => c.Vendor);
 
                     break;
@@ -258,54 +211,25 @@ namespace PrototypeWithAuth.Controllers
                             checkboxString = "";
                             iconList.Add(payNowIcon);
                             iconList.Add(popoverMoreIcon);
-                            var usedPaymentsList = new List<Payment>();
-                            var currentPayment = new Payment();
-                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                             (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, r.Payments)
+
                             {
-                                TotalCost = (r.Cost ?? 0) + r.VAT,
-                                ExchangeRate = r.ExchangeRate,
-                                Vendor = r.Product.Vendor,
                                 ButtonText = "",
-                                Columns = new List<RequestIndexPartialColumnViewModel>()
-                                {
-                                    new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() {checkboxString} , AjaxID = r.RequestID},
-                                    new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Payment Date", Width = 12, Value = new List<string>() { AppUtility.GetCurrentInstallment(usedPaymentsList, r, out currentPayment).PaymentDate.ToString("dd'/'MM'/'yyyy") } },
-                                    new RequestIndexPartialColumnViewModel()
-                                    {
-                                        Title = "", Width = 10, Icons = iconList, AjaxID = currentPayment.PaymentID
-                                    }
-                                }
                             }).ToLookup(c => c.Vendor);
                             break;
                         default:
                             iconList.Add(payNowIcon);
                             iconList.Add(popoverMoreIcon);
-                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                             (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, r.Payments)
+
+
                             {
-                                TotalCost = (r.Cost ?? 0) + r.VAT,
-                                ExchangeRate = r.ExchangeRate,
-                                Vendor = r.Product.Vendor,
                                 ButtonClasses = " payments-pay-now accounting-background-color ",
-                                ButtonText = "Pay All",
-                                Columns = new List<RequestIndexPartialColumnViewModel>()
-                                {
-                                    new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() {checkboxString} , AjaxID = r.RequestID},
-                                    new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details-summary", AjaxID = r.RequestID },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
-                                    new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
-                                    new RequestIndexPartialColumnViewModel()
-                                    {
-                                        Title = "", Width = 10, Icons = iconList, AjaxID = r.RequestID
-                                    }
-                                }
+                                ButtonText = "Pay All"                                
                             }).ToLookup(c => c.Vendor);
                             buttonText = "Pay All";
                             break;
@@ -323,28 +247,11 @@ namespace PrototypeWithAuth.Controllers
               .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
 
                     iconList.Add(deleteIcon);
-                    viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                    viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage,null, null, null, null, null, null, null, null, null)
                     {
-
-                        Vendor = r.Product.Vendor,
-                        TotalCost = (r.Cost ?? 0) + r.VAT,
-                        ExchangeRate = r.ExchangeRate,
                         ButtonClasses = " load-terms-modal order-inv-background-color ",
                         ButtonText = "Order",
-                        Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                                new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
-                                new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                new RequestIndexPartialColumnViewModel()
-                                {
-                                    Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID,
-                                },
-
-                        }
                     }).ToLookup(c => c.Vendor);
 
                     break;
@@ -362,29 +269,7 @@ namespace PrototypeWithAuth.Controllers
             return viewModelByVendor;
         }
 
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetForApprovalRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = AppUtility.GetCategoryColumn(requestIndexObject.CategorySelected, requestIndexObject.SubcategorySelected, r.Product.ProductSubcategory), FilterEnum=AppUtility.FilterEnum.Category },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Icons = iconList,  AjaxID = r.RequestID },
-                                 new RequestIndexPartialColumnViewModel() { Width=0, AjaxLink = " d-none order-type"+r.RequestID, AjaxID = (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum),r.OrderType), Value = new List<string>(){r.OrderType.ToString()} }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-
-
+     
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
@@ -592,7 +477,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(locationInstance);
                             await _context.SaveChangesAsync();
                         }
-                        var comments = _context.Comments.Where(c => c.RequestID == request.RequestID);
+                        var comments = _context.Comments.Where(c => c.RequestID == request.RequestID).ToList();
                         foreach (var comment in comments)
                         {
                             comment.IsDeleted = true;
@@ -699,8 +584,43 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             var redirectToActionResult = base.SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
-            var x = 1;
             return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
+        }
+
+
+        private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
+        {
+            var newIconList = AppUtility.DeepClone(iconList);
+            //favorite icon
+            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
+
+            if (favIconIndex != -1 && favoriteRequest != null) //check these checks
+            {
+                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
+                newIconList[favIconIndex] = unLikeIcon;
+            }
+            //for approval icon
+            if (request != null)
+            {
+                var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("approve-order"));
+                if (request.RequestStatusID != 1 && forApprovalIconIndex != -1)
+                {
+                    newIconList.RemoveAt(forApprovalIconIndex);
+                    needsPlaceholder = true;
+                }
+                //resend icon
+                var resendIcon = new IconColumnViewModel("Resend");
+                var placeholder = new IconColumnViewModel("Placeholder");
+                if (request.ParentQuote?.QuoteStatusID == 2)
+                {
+                    newIconList.Insert(0, resendIcon);
+                }
+                else if (needsPlaceholder)
+                {
+                    newIconList.Insert(0, placeholder);
+                }
+            }
+            return newIconList;
         }
 
 
@@ -904,24 +824,28 @@ namespace PrototypeWithAuth.Controllers
             var userID = _userManager.GetUserId(User);
             if (FavType == "favorite")
             {
-                using (var transaction = _context.Database.BeginTransaction())
+                var favoriteRequest = _context.FavoriteRequests.Where(fr => fr.RequestID == requestID && fr.ApplicationUserID == userID).FirstOrDefault();
+                if (favoriteRequest == null)
                 {
-                    try
+                    using (var transaction = _context.Database.BeginTransaction())
                     {
-                        var favoriteRequest = new FavoriteRequest()
+                        try
                         {
-                            RequestID = requestID,
-                            ApplicationUserID = userID
-                        };
-                        _context.Add(favoriteRequest);
-                        await _context.SaveChangesAsync();
-                        await transaction.CommitAsync();
-                    }
-                    //throw new Exception(); //check this after!
-                    catch (Exception e)
-                    {
-                        await transaction.RollbackAsync();
-                        await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                            favoriteRequest = new FavoriteRequest()
+                            {
+                                RequestID = requestID,
+                                ApplicationUserID = userID
+                            };
+                            _context.Add(favoriteRequest);
+                            await _context.SaveChangesAsync();
+                            await transaction.CommitAsync();
+                        }
+                        //throw new Exception(); //check this after!
+                        catch (Exception e)
+                        {
+                            await transaction.RollbackAsync();
+                            await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                        }
                     }
                 }
             }
@@ -952,7 +876,7 @@ namespace PrototypeWithAuth.Controllers
                         PageType = AppUtility.PageTypeEnum.RequestCart,
                         SidebarType = sidebarType
                     };
-                    return RedirectToAction("_IndexTable", requestIndexObject);
+                    return await base.RedirectRequestsToShared("_IndexTable", requestIndexObject);
                 }
             }
             return new EmptyResult();
@@ -2784,7 +2708,7 @@ namespace PrototypeWithAuth.Controllers
 
             }
 
-            return RedirectToAction("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
+            return await base.RedirectRequestsToShared("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
 
         }
 
@@ -3020,7 +2944,7 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 500;
                 await Response.WriteAsync(ex.Message);
             }
-            return RedirectToAction("_IndexTableWithCounts", requestIndex);
+            return await RedirectRequestsToShared("_IndexTableWithCounts", requestIndex);
 
         }
 
@@ -3866,7 +3790,9 @@ namespace PrototypeWithAuth.Controllers
                                 throw ex;
                             }
                             base.RemoveRequestWithCommentsAndEmailSessions();
+                            
                             var action = "_IndexTableData";
+                            var controller = "Shared";
                             if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
                                 action = "_IndexTableWithCounts";
@@ -3874,9 +3800,9 @@ namespace PrototypeWithAuth.Controllers
                             else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                             {
                                 action = "NotificationsView";
+                                return RedirectToAction(action, "Requests", uploadQuoteOrderViewModel.RequestIndexObject);
                             }
-
-                            return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
+                            return await base.RedirectRequestsToShared(action, uploadQuoteOrderViewModel.RequestIndexObject);
                         }
                         catch (Exception ex)
                         {
@@ -3985,6 +3911,7 @@ namespace PrototypeWithAuth.Controllers
                 else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                 {
                     action = "_IndexTableWithCounts";
+                    return await base.RedirectRequestsToShared(action, uploadQuoteOrderViewModel.RequestIndexObject);
                 }
                 else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                 {
@@ -3993,6 +3920,7 @@ namespace PrototypeWithAuth.Controllers
                 else
                 {
                     action = "_IndexTableData";
+                    return await base.RedirectRequestsToShared(action, uploadQuoteOrderViewModel.RequestIndexObject);
                 }
                 Response.StatusCode = 200;
                 return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
@@ -4042,7 +3970,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(int vendorID, RequestIndexObject requestIndexObject) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
-            var requ = HttpContext.Session.GetObject<Request>("Request1"); //where is this used?
+            var requ = HttpContext.Session.GetObject<Request>("Request1");
             List<Request> requests = new List<Request>();
             if (vendorID != 0)
             {
@@ -4057,7 +3985,8 @@ namespace PrototypeWithAuth.Controllers
                 else if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Orders)
                 {
                     requests = await _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString() && r.ParentQuote.QuoteStatusID == 4)
+          .Where(r => r.Product.VendorID == vendorID && r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString() && r.ParentQuote.QuoteStatusID == 4)
+          .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
                 .Include(r => r.Product).ThenInclude(r => r.Vendor)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
                 }
@@ -4074,230 +4003,19 @@ namespace PrototypeWithAuth.Controllers
                     {
                         requests.Add(HttpContext.Session.GetObject<Request>(requestName));
 
-                    }
-                    else
-                    {
-                        isRequests = false;
-                    }
-                    RequestNum++;
-                }
-
-            }
-            var requestNum = 1;
-            foreach (var req in requests)
-            {
-                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
-                HttpContext.Session.SetObject(requestName, req);
-                requestNum++;
-            }
-            var termsList = new List<SelectListItem>() { };
-            await _context.PaymentStatuses.ForEachAsync(ps =>
-            {
-                if (ps.PaymentStatusID != 7)//don't have standing orders as an option
-                {
-                    termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription });
-                }
-            });
-            TermsViewModel termsViewModel = new TermsViewModel()
-            {
-                ParentRequest = new ParentRequest(),
-                TermsList = termsList,
-                InstallmentDate = DateTime.Now
-            };
-            requestIndexObject.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), requests[0].Currency);
-            termsViewModel.RequestIndexObject = requestIndexObject;
-            return PartialView(termsViewModel);
+            return PartialView(await base.GetTermsViewModelAsync(vendorID, requestIndexObject));
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
         {
-            try
+            var r = await base.SaveTermsModalAsync(termsViewModel);
+            if (r.RedirectToActionResult.ActionName == "" && r.RedirectToActionResult.ControllerName == "")
             {
-                var requests = new List<Request>();
-                var isRequests = true;
-                var RequestNum = 1;
-                while (isRequests)
-                {
-                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
-                    {
-                        requests.Add(HttpContext.Session.GetObject<Request>(requestName));
-                    }
-                    else
-                    {
-                        isRequests = false;
-                    }
-                    RequestNum++;
-                }
-
-                RequestNum = 1;
-                var PaymentNum = 1;
-                var SaveUsingSessions = true;
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        foreach (var req in requests)
-                        {
-                            if (req.Product == null)
-                            {
-                                req.Product = _context.Products.Where(p => p.ProductID == req.ProductID).Include(p => p.ProductSubcategory).FirstOrDefault();
-                            }
-
-                            if (req.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
-                            {
-                                SaveUsingSessions = false;
-                            }
-                            if (req.ParentRequest == null)
-                            {
-                                req.ParentRequest = termsViewModel.ParentRequest;
-                            }
-                            req.ParentRequest.Shipping = termsViewModel.ParentRequest.Shipping;
-                            req.PaymentStatusID = termsViewModel.SelectedTerm;
-                            req.Installments = (uint)termsViewModel.Installments;
-                            if (termsViewModel.Installments == 0)
-                            {
-                                req.Installments = 1;
-                            }
-                            if (SaveUsingSessions)
-                            {
-                                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                                HttpContext.Session.SetObject(requestName, req);
-                            }
-                            else
-                            {
-
-                                //if (req.PaymentStatusID == 7)
-                                //{
-                                //    req.RequestStatusID = 3;
-                                //    req.ApplicationUserReceiverID = _userManager.GetUserId(User);
-                                //    req.ArrivalDate = DateTime.Now;
-                                //}
-                                if (req.Product.ProductID == 0)
-                                {
-                                    _context.Entry(req.Product).State = EntityState.Added;
-                                }
-                                else
-                                {
-                                    _context.Entry(req.Product).State = EntityState.Unchanged;
-                                }
-                                _context.Entry(req).State = EntityState.Added;
-                                _context.Entry(req.ParentRequest).State = EntityState.Added;
-
-
-                                await _context.SaveChangesAsync();
-                            }
-                            for (int i = 0; i < req.Installments; i++)
-                            {
-                                var payment = new Payment() { InstallmentNumber = i + 1 };
-                                if (req.PaymentStatusID == 5)
-                                {
-                                    payment.PaymentDate = termsViewModel.InstallmentDate.AddMonths(i);
-                                    payment.Sum = ((req.Cost ?? 0) / (req.Installments ?? 0));
-                                }
-                                else
-                                {
-                                    payment.PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-                                    payment.Sum = req.Cost ?? 0;
-                                }
-                                if (SaveUsingSessions)
-                                {
-                                    var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
-                                    HttpContext.Session.SetObject(paymentName, payment);
-                                }
-                                else
-                                {
-                                    payment.RequestID = req.RequestID;
-                                    _context.Add(payment);
-                                    await _context.SaveChangesAsync();
-                                }
-                                PaymentNum++;
-                            }
-                            RequestNum++;
-                        }
-                        if (!SaveUsingSessions)
-                        {
-
-                            int i = 1;
-                            var additionalRequests = false;
-                            foreach (var request in requests)
-                            {
-                                var commentExists = true;
-                                var n = 1;
-                                do
-                                {
-                                    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
-                                    if (comment != null)
-                                    //will only go in here if there are comments so will only work if it's there
-                                    //IMPT look how to clear the session information if it fails somewhere...
-                                    {
-                                        comment.RequestID = request.RequestID;
-                                        _context.Add(comment);
-                                    }
-                                    else
-                                    {
-                                        commentExists = false;
-                                    }
-                                    n++;
-                                } while (commentExists);
-                                await _context.SaveChangesAsync();
-                                if (i < requests.Count)
-                                {
-                                    additionalRequests = true;
-                                }
-                                else
-                                {
-                                    additionalRequests = false;
-                                }
-                                MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
-                                request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
-                                RequestNotification requestNotification = new RequestNotification();
-                                requestNotification.RequestID = request.RequestID;
-                                requestNotification.IsRead = false;
-                                requestNotification.RequestName = request.Product.ProductName;
-                                requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                                requestNotification.Description = "item ordered";
-                                requestNotification.NotificationStatusID = 2;
-                                requestNotification.TimeStamp = DateTime.Now;
-                                requestNotification.Controller = "Requests";
-                                requestNotification.Action = "NotificationsView";
-                                requestNotification.OrderDate = DateTime.Now;
-                                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                                _context.Add(requestNotification);
-                                i++;
-                            }
-                            await _context.SaveChangesAsync();
-                            await transaction.CommitAsync();
-                            var action = "Index";
-                            if (termsViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
-                            {
-                                action = "IndexInventory";
-                            }
-                            return RedirectToAction(action, termsViewModel.RequestIndexObject);
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw ex;
-                    }
-
-                }
-                return RedirectToAction("ConfirmEmailModal", termsViewModel.RequestIndexObject);
+                return PartialView("TermsModal", r.TermsViewModel);
             }
-            catch (Exception ex)
-            {
-                termsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                Response.StatusCode = 500;
-                var termsList = new List<SelectListItem>() { };
-                await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }));
-                termsViewModel.TermsList = termsList;
-                return PartialView("TermsModal", termsViewModel);
-            }
+            return RedirectToAction(r.RedirectToActionResult.ActionName, r.RedirectToActionResult.ControllerName, r.RedirectToActionResult.RouteValues);
         }
 
         [Authorize(Roles = "Reports")]
