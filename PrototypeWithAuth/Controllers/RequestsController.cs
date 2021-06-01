@@ -952,7 +952,7 @@ namespace PrototypeWithAuth.Controllers
                         PageType = AppUtility.PageTypeEnum.RequestCart,
                         SidebarType = sidebarType
                     };
-                    return RedirectToAction("_IndexTable", requestIndexObject);
+                    return await base.RedirectRequestsToShared("_IndexTable", requestIndexObject);
                 }
             }
             return new EmptyResult();
@@ -2766,7 +2766,7 @@ namespace PrototypeWithAuth.Controllers
 
             }
 
-            return RedirectToAction("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
+            return await base.RedirectRequestsToShared("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
 
         }
 
@@ -3007,7 +3007,7 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 500;
                 await Response.WriteAsync(ex.Message);
             }
-            return RedirectToAction("_IndexTableWithCounts", requestIndex);
+            return await RedirectRequestsToShared("_IndexTableWithCounts", requestIndex);
 
         }
 
@@ -3850,15 +3850,18 @@ namespace PrototypeWithAuth.Controllers
                                 throw ex;
                             }
                             base.RemoveRequestWithCommentsAndEmailSessions();
-                           
-                            if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                            
+                            var action = "_IndexTableData";
+                            if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
-                                return RedirectToAction("NotificationsView", "Requests", uploadQuoteOrderViewModel.RequestIndexObject);
+                                action = "_IndexTableWithCounts";
                             }
-                            else
+                            else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                             {
-                                return await base.RedirectRequestsQuoteModal(uploadQuoteOrderViewModel.RequestIndexObject);
+                                action = "NotificationsView";
+                                return RedirectToAction(action, "Requests", uploadQuoteOrderViewModel.RequestIndexObject);
                             }
+                            return await base.RedirectRequestsToShared(action, uploadQuoteOrderViewModel.RequestIndexObject);
                         }
                         catch (Exception ex)
                         {
@@ -3867,6 +3870,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -3963,6 +3967,7 @@ namespace PrototypeWithAuth.Controllers
                 else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                 {
                     action = "_IndexTableWithCounts";
+                    return await base.RedirectRequestsToShared(action, uploadQuoteOrderViewModel.RequestIndexObject);
                 }
                 else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                 {
@@ -3971,6 +3976,7 @@ namespace PrototypeWithAuth.Controllers
                 else
                 {
                     action = "_IndexTableData";
+                    return await base.RedirectRequestsToShared(action, uploadQuoteOrderViewModel.RequestIndexObject);
                 }
                 Response.StatusCode = 200;
                 return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);

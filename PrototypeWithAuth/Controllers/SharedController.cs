@@ -2309,13 +2309,8 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        public async Task<IActionResult> RedirectRequestsQuoteModal(RequestIndexObject requestIndexObject)
+        public async Task<IActionResult> RedirectRequestsToShared(string action, RequestIndexObject requestIndexObject)
         {
-            var action = "_IndexTableData";
-            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
-            {
-                action = "_IndexTableWithCounts";
-            }
             return RedirectToAction(action, requestIndexObject);
         }
 
