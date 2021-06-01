@@ -2801,8 +2801,9 @@ namespace PrototypeWithAuth.Controllers
                     //subject
                     message.Subject = "Order from Centarix to " + vendorName;
 
+                    var quoteNumber = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requests.FirstOrDefault().ParentQuoteID).Select(pq => pq.QuoteNumber).FirstOrDefault();
                     //body
-                    builder.TextBody = @"Hello,"+"\n\n"+ "Please see the attached order for quote number " + requests.FirstOrDefault().ParentQuote.QuoteNumber + 
+                    builder.TextBody = @"Hello,"+"\n\n"+ "Please see the attached order for quote number " + quoteNumber + 
                         ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
                         + ownerUsername + "\nCentarix";
                     builder.Attachments.Add(uploadFile);
