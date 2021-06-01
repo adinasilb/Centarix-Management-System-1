@@ -4002,6 +4002,11 @@ namespace PrototypeWithAuth.Controllers
                     if (HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
                         requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                        RequestNum++;
+                    }
+                    else
+                    {
+                        isRequests = false;
                     }
                 }
             }
