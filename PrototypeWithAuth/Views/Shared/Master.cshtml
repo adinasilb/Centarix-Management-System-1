@@ -338,7 +338,7 @@
             e.preventDefault();
             e.stopPropagation();
             $("#loading").show();
-            var $itemurl = "/Requests/DeleteModal/?id=" + $(this).val() + "&isQuote=true" + "&SectionType=" + $(this).attr('name');
+            var $itemurl = "/Requests/DeleteModal/?id=" + $(this).val(); // this is old code: + "&isQuote=true" + "&SectionType=" + $(this).attr('name');
             $.fn.CallPageRequest($itemurl, "delete");
             return false;
         });
