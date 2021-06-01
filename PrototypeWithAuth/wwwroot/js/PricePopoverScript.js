@@ -9,7 +9,7 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
     $("."+$(this).attr("id")).prop("checked", true);
     console.log(this);
     $('#tempCurrency').val($(this).val())
-    console.log($('#masterPageType').val())
+    console.log($('#masterSidebarType').val())
     //console.log($(".modal").hasClass('editModal'));
     if ($(".modal").hasClass('editModal')) {
         var requestID = $('#history').find('button.open-history-item-modal').attr("value");
@@ -27,6 +27,10 @@ $('body').off('click', "#nis, #usd").on('click', "#nis, #usd", function (e) {
                 $('#history').html(data);
             }
         });
+    }
+    else if ($("#masterSidebarType").val() == "Favorites" || $("#masterSidebarType").val() == "SharedRequests")
+    {
+        ajaxPartialIndexTable($('.request-status-id').val(), "/Requests/_IndexTableData", "._IndexTableData", "GET");
     }
     else if ($('#masterPageType').val() == "RequestCart" || $('#masterPageType').val() == "LabManagementQuotes" || $('#masterPageType').val() == "AccountingPayments" || $('#masterPageType').val() == "AccountingNotifications") {
     

@@ -455,7 +455,8 @@ namespace PrototypeWithAuth.AppData
             var cost = request.Cost;
             var total = request.TotalWithVat;
             var vat = request.VAT;
-            var exchangeRate = request.ExchangeRate;
+            var exchangeRate = request.ExchangeRate == 0 ? 1: request.ExchangeRate;
+
             if (currency == AppUtility.CurrencyEnum.USD)
             {
                 currencyFormat = "en-US";
