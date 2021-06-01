@@ -731,8 +731,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                    .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType);
-                    RequestsPassedIn = RequestsPassedIn.Include(r => r.RequestLocationInstances).ThenInclude(r => r.LocationInstance);
-                    RequestsPassedIn = RequestsPassedIn.ToList().GroupBy(r => r.ProductID).Select(e => e.Last()).AsQueryable();
+                    RequestsPassedIn = RequestsPassedIn.Include(r => r.RequestLocationInstances).ThenInclude(r => r.LocationInstance).GroupBy(r => r.ProductID).Select(e => e.Last());
                 }
 
             }

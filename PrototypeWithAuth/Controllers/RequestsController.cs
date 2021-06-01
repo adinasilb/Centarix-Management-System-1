@@ -699,7 +699,6 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             var redirectToActionResult = base.SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
-            var x = 1;
             return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
         }
 
@@ -904,24 +903,28 @@ namespace PrototypeWithAuth.Controllers
             var userID = _userManager.GetUserId(User);
             if (FavType == "favorite")
             {
-                using (var transaction = _context.Database.BeginTransaction())
+                var favoriteRequest = _context.FavoriteRequests.Where(fr => fr.RequestID == requestID && fr.ApplicationUserID == userID).FirstOrDefault();
+                if (favoriteRequest == null)
                 {
-                    try
+                    using (var transaction = _context.Database.BeginTransaction())
                     {
-                        var favoriteRequest = new FavoriteRequest()
+                        try
                         {
-                            RequestID = requestID,
-                            ApplicationUserID = userID
-                        };
-                        _context.Add(favoriteRequest);
-                        await _context.SaveChangesAsync();
-                        await transaction.CommitAsync();
-                    }
-                    //throw new Exception(); //check this after!
-                    catch (Exception e)
-                    {
-                        await transaction.RollbackAsync();
-                        await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                            favoriteRequest = new FavoriteRequest()
+                            {
+                                RequestID = requestID,
+                                ApplicationUserID = userID
+                            };
+                            _context.Add(favoriteRequest);
+                            await _context.SaveChangesAsync();
+                            await transaction.CommitAsync();
+                        }
+                        //throw new Exception(); //check this after!
+                        catch (Exception e)
+                        {
+                            await transaction.RollbackAsync();
+                            await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                        }
                     }
                 }
             }
@@ -2142,12 +2145,12 @@ namespace PrototypeWithAuth.Controllers
 
             /*foreach (var request in requests) //this seems to be doing the exact same thing for each request -> overwriting previously saved one. what should be happening here???
             {*/
-                //creating the path for the file to be saved
-                string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-                string uniqueFileName = "QuotePDF.pdf";
-                string filePath = Path.Combine(path1, uniqueFileName);
-                // save pdf document
-                doc.Save(filePath);
+            //creating the path for the file to be saved
+            string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+            string uniqueFileName = "QuotePDF.pdf";
+            string filePath = Path.Combine(path1, uniqueFileName);
+            // save pdf document
+            doc.Save(filePath);
             //}
             // close pdf document
             doc.Close();
@@ -2766,7 +2769,7 @@ namespace PrototypeWithAuth.Controllers
 
             }
 
-            return RedirectToAction("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
+            return RedirectToAction("_IndexTableWithCounts",  receivedLocationViewModel.RequestIndexObject);
 
         }
 
@@ -3851,6 +3854,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             base.RemoveRequestWithCommentsAndEmailSessions();
                             var action = "_IndexTableData";
+                            var controller = "Shared";
                             if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
                                 action = "_IndexTableWithCounts";
@@ -3858,9 +3862,10 @@ namespace PrototypeWithAuth.Controllers
                             else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                             {
                                 action = "NotificationsView";
+                                controller = "Requests";
                             }
 
-                            return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
+                            return RedirectToAction(action, controller, uploadQuoteOrderViewModel.RequestIndexObject);
                         }
                         catch (Exception ex)
                         {
@@ -4024,7 +4029,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> TermsModal(int vendorID, RequestIndexObject requestIndexObject) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
 
-            return PartialView( await base.GetTermsViewModelAsync(vendorID, requestIndexObject));
+            return PartialView(await base.GetTermsViewModelAsync(vendorID, requestIndexObject));
         }
 
         [HttpPost]
