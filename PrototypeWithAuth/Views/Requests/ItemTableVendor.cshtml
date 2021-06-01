@@ -21,8 +21,20 @@
 }
 else
 {
-    <div class="_IndexTable">
-        @{await Html.RenderPartialAsync("_IndexTable", Model); }
-    </div>
+    if (Model.PagedList.Count == 0)
+    {
+        <div>
+            @{
+                await Html.RenderPartialAsync("~/Views/Shared/_EmptyPageFull.cshtml", Model);
+            }
+        </div>
+    }
+    else
+    {
+        <div class="_IndexTableWithProprietaryTabs">
+            @{ await Html.RenderPartialAsync("_IndexTableWithProprietaryTabs", Model);}
+        </div>
+
+    }
 
 }
