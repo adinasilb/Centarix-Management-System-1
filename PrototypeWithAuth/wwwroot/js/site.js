@@ -1460,11 +1460,8 @@ $(function () {
 					$("#loading").hide();
 					$.fn.OpenModal('confirm-edit-modal', 'confirm-edit', data)
 					$(".modal-open-state").attr("text", "open");
-
 				}
-
 			});
-
 
 		}
 		else if (type == 'details') {
@@ -1493,6 +1490,7 @@ $(function () {
     }
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
+		console.log("enable " + selectID)
 		var selectedElements = $('#' + dataActivates).find(".active")
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
 		var dataActivatesLength = $('#' + dataActivates).children('li').length;

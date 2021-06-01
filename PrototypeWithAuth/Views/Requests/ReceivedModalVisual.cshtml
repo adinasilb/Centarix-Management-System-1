@@ -22,17 +22,16 @@
         }
     }
     @{
+        var receive = Model.RequestChildrenLocationInstances == null;
         var disabledEdit = "";
         if (Model.IsEditModalTable)
         {
             disabledEdit = "disabled mark-readonly";
         }
-        var create = true;
         var locationsList = Model.ChildrenLocationInstances?.ToList();
         if (Model.ChildrenLocationInstances == null)
         {
             locationsList = Model.RequestChildrenLocationInstances.Select(r => r.LocationInstance).ToList();
-            create = false;
         }
         @Html.HiddenFor(vm => vm.ParentLocationInstance.LocationInstanceID)
         @Html.HiddenFor(vm => vm.IsEditModalTable)
@@ -72,7 +71,7 @@
                         var description = locationsList[z].LocationInstanceAbbrev;
                         var id = "ChildrenLocationInstances_" + z;
                         var name = "ChildrenLocationInstances[" + z + "]";
-                        if (!create)
+                        if (Model.ChildrenLocationInstances == null)
                         {
                             id = "Request" + id + "__LocationInstance";
                             name = "Request" + name + ".LocationInstance";
@@ -87,7 +86,7 @@
 
                         if (locationsList[z].IsEmptyShelf)
                         {
-                            if (!create && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            if (!receive && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 outerClass += " location-selected";
                                 iconClass = "icon-delete-24px";
@@ -115,14 +114,13 @@
                                     </div>
                                 </div>
                             </td>
-
                         }
                         else if (locationsList[z].IsFull)
                         {
                             var backgroundClass = "graduated-table-background-color  ";
                             var iconRow = "d-none";
                             var disabled = "disabled";
-                            if (!create && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            if (!receive && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 backgroundClass = "";
                                 iconClass = "icon-delete-24px";
