@@ -107,7 +107,7 @@ namespace PrototypeWithAuth.Models
         public IEnumerable<RequestNotification> RequestNotifications { get; set; }
         public string OrderType { get; set; }
 
-
+      
 
 
         //payment info
