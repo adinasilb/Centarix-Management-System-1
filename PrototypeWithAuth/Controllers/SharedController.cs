@@ -60,6 +60,8 @@ namespace PrototypeWithAuth.Controllers
             var hours = GetHours(year, month, user);
             var CurMonth = new DateTime(year, month, 1);
             double? totalhours;
+            double totalDays = 0;
+            double workingDays = 0;
             double vacationDaysTaken = 0;
             double sickDaysTaken = 0;
             var companyDaysOff = _context.CompanyDayOffs.Include(co => co.CompanyDayOffType).ToList();
@@ -70,7 +72,6 @@ namespace PrototypeWithAuth.Controllers
             }
             else
             {
-
                 var sickHours = employeeHours.Where(eh => eh.Date.Year == year && eh.PartialOffDayTypeID == 1 && eh.Date <= DateTime.Now.Date && eh.Date.Month == month).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
                 sickDaysTaken = employeeHours.Where(eh => eh.Date.Month == month && eh.Date.Year == year && eh.OffDayTypeID == 1 && eh.Date <= DateTime.Now.Date).Count();
                 sickDaysTaken = Math.Round(sickDaysTaken + (sickHours / user.SalariedEmployee.HoursPerDay), 2);
@@ -80,9 +81,11 @@ namespace PrototypeWithAuth.Controllers
                 vacationDaysTaken = Math.Round(vacationDaysTaken + (vacationHours / user.SalariedEmployee.HoursPerDay), 2);
                 var specialDays = employeeHours.Where(eh => eh.OffDayTypeID == 4).Count();
                 var unpaidLeave = employeeHours.Where(eh => eh.OffDayTypeID == 5).Count();
-                totalhours = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff) - (vacationDaysTaken + sickDaysTaken + unpaidLeave + specialDays);
-                totalhours = totalhours * user.SalariedEmployee.HoursPerDay;
-
+                totalDays = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
+                totalhours = (totalDays - (vacationDaysTaken + sickDaysTaken + unpaidLeave + specialDays)) * user.SalariedEmployee.HoursPerDay;
+                workingDays = user.EmployeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)
+                && eh.Date.Date < DateTime.Now.Date).Count();
+                workingDays = workingDays - Math.Round((sickHours + vacationHours) / user.SalariedEmployee?.HoursPerDay ?? 1, 2);
             }
             SummaryHoursViewModel summaryHoursViewModel = new SummaryHoursViewModel()
             {
@@ -93,7 +96,9 @@ namespace PrototypeWithAuth.Controllers
                 TotalHolidaysInMonth = _context.CompanyDayOffs.Where(cdo => cdo.Date.Year == year && cdo.Date.Month == month).Count(),
                 VacationDayInThisMonth = vacationDaysTaken,
                 SickDayInThisMonth = sickDaysTaken,
-                User = user
+                User = user,
+                TotalWorkingDaysInThisMonth = totalDays,
+                WorkingDays = workingDays
             };
             if (errorMessage != null)
             {
