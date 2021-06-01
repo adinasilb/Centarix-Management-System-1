@@ -17,9 +17,7 @@
                 </div>
                 <div class="modal-body border rounded m-0 p-0">
                     <p class="p-3 text" >
-                        Hello, <br /><br />
-                        Order number @Model.ParentRequest.OrderNumber for @Model.Product.ProductName scheduled to arrive at 
-                        @Model.ParentRequest.OrderDate.AddDays((double)Model.ExpectedSupplyDays).Date.<br />
+                        The order number @Model.ParentRequest.OrderNumber for @Model.Product.ProductName has not arrived yet.<br />
                         Please update us on the matter.<br />
                         Best regards,<br />
                         @Model.ApplicationUserCreator.FirstName @Model.ApplicationUserCreator.LastName <br />

@@ -4207,7 +4207,7 @@ namespace PrototypeWithAuth.Controllers
             message.Subject = "Please update on delayed supply for Centarix's Order #"+ request.ParentRequest.OrderNumber;
 
             //body
-            builder.TextBody = $"Hello,\n\nOrder number {request.ParentRequest.OrderNumber} for {request.Product.ProductName}" +
+            builder.TextBody = $"The order number {request.ParentRequest.OrderNumber} for {request.Product.ProductName}" +
                 $" which was scheduled to arrive at {request.ParentRequest.OrderDate.AddDays((double)request.ExpectedSupplyDays).Date}, " +
                 $"has not arrived yet. \n" +
                     $"Please update us on the matter.\n" +
