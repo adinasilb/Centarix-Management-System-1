@@ -2309,6 +2309,16 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
+        public async Task<IActionResult> RedirectRequestsQuoteModal(RequestIndexObject requestIndexObject)
+        {
+            var action = "_IndexTableData";
+            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+            {
+                action = "_IndexTableWithCounts";
+            }
+            return RedirectToAction(action, requestIndexObject);
+        }
+
         //[HttpPost]
         //[Authorize(Roles = "Requests")]
         //public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)

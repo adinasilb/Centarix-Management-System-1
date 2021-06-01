@@ -592,7 +592,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(locationInstance);
                             await _context.SaveChangesAsync();
                         }
-                        var comments = _context.Comments.Where(c => c.RequestID == request.RequestID);
+                        var comments = _context.Comments.Where(c => c.RequestID == request.RequestID).ToList();
                         foreach (var comment in comments)
                         {
                             comment.IsDeleted = true;
@@ -3850,17 +3850,15 @@ namespace PrototypeWithAuth.Controllers
                                 throw ex;
                             }
                             base.RemoveRequestWithCommentsAndEmailSessions();
-                            var action = "_IndexTableData";
-                            if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                           
+                            if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                             {
-                                action = "_IndexTableWithCounts";
+                                return RedirectToAction("NotificationsView", "Requests", uploadQuoteOrderViewModel.RequestIndexObject);
                             }
-                            else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                            else
                             {
-                                action = "NotificationsView";
+                                return await base.RedirectRequestsQuoteModal(uploadQuoteOrderViewModel.RequestIndexObject);
                             }
-
-                            return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
                         }
                         catch (Exception ex)
                         {
@@ -3869,7 +3867,6 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
