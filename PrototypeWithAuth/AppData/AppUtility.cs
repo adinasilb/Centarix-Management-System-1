@@ -78,7 +78,13 @@ namespace PrototypeWithAuth.AppData
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
             Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests
         }
-        public enum IndexTableTypes { Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, OrderedOperations, Cart }
+        public enum IndexTableTypes { Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, OrderedOperations, Cart,
+            AccountingNotifications,
+            AccountingPaymentsDefault,
+            AccountingPaymentsInstallments,
+            LabQuotes,
+            LabOrders
+        }
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
