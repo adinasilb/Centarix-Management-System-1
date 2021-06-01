@@ -2285,7 +2285,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
-                            //return new RedirectToActionResult("Index", controller, termsViewModel.RequestIndexObject);
+                            return new RedirectToActionResult("Index", controller, termsViewModel.RequestIndexObject);
                         }
 
                     }
@@ -2296,7 +2296,7 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                 }
-                //return RedirectToAction("ConfirmEmailModal", controller, termsViewModel.RequestIndexObject);
+                return RedirectToAction("ConfirmEmailModal", controller, termsViewModel.RequestIndexObject);
             }
             catch (Exception ex)
             {
@@ -2307,7 +2307,6 @@ namespace PrototypeWithAuth.Controllers
                 termsViewModel.TermsList = termsList;
             return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("", "", ""), TermsViewModel = termsViewModel };
             }
-            return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("", "", ""), TermsViewModel = termsViewModel };
         }
 
         //[HttpPost]
