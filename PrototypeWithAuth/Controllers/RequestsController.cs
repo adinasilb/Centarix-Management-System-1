@@ -4002,6 +4002,9 @@ namespace PrototypeWithAuth.Controllers
                     if (HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
                         requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                    }
+                }
+            }
 
             return PartialView(await base.GetTermsViewModelAsync(vendorID, requestIndexObject));
         }
