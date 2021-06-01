@@ -110,7 +110,7 @@
         </tbody>
     </table>
 <script>
-    $("body").off('click').on('click', ".modal .open-price-popover", function () {
+    $("body, .modal").off('click', ".open-price-popover").on('click', ".open-price-popover", function () {
         console.log('price popover from modal');
         $('[data-toggle="popover"]').popover('dispose');
         $(this).addClass("activePopover");
