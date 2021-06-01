@@ -214,6 +214,7 @@ $(".approve-order").off('click').on("click", function (e) {
 $(".request-favorite").off("click").on("click", function (e) {
 	//$(this).off("click");
 	//alert("in click fr");
+	$("#loading").show();
 	var requestFavorite = $(this);
 	//alert(" in favorite request fx");
 	var emptyHeartClass = "icon-favorite_border-24px";
