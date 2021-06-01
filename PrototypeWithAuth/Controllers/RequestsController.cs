@@ -4005,7 +4005,6 @@ namespace PrototypeWithAuth.Controllers
                     }
                 }
             }
-
             return PartialView(await base.GetTermsViewModelAsync(vendorID, requestIndexObject));
         }
 
