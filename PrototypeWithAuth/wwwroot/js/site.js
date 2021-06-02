@@ -1468,6 +1468,7 @@ $(function () {
 			if ($(this).hasClass('locations')) {
 				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
 				$('#location .mark-readonly').removeClass("disabled")
+				$('#location .mark-readonly').attr("disabled", false);
 				$('.edit-mode-switch-description').text("Edit Mode On");
 				$('.turn-edit-on-off').attr('name', 'edit');
 			}
