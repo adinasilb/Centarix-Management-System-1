@@ -907,7 +907,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmployeeHoursID")
+                    b.Property<int>("EmployeeHoursID")
                         .HasColumnType("int");
 
                     b.Property<int?>("EmployeeHoursStatusEntry1ID")
@@ -953,7 +953,8 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.HasKey("EmployeeHoursAwaitingApprovalID");
 
-                    b.HasIndex("EmployeeHoursID");
+                    b.HasIndex("EmployeeHoursID")
+                        .IsUnique();
 
                     b.HasIndex("EmployeeHoursStatusEntry1ID");
 
@@ -1056,24 +1057,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             LastCentarixID = 0,
                             LastCentarixIDTimeStamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ExchangeRate", b =>
-                {
-                    b.Property<int>("ExchangeRateID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("LatestExchangeRate")
-                        .HasColumnType("decimal(18,3)");
-
-                    b.HasKey("ExchangeRateID");
-
-                    b.ToTable("ExchangeRates");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteProtocol", b =>
@@ -1181,6 +1164,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("DescriptionEnum")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FunctionDescription")
                         .HasColumnType("nvarchar(max)");
 
@@ -1193,6 +1179,117 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("FunctionTypeID");
 
                     b.ToTable("FunctionTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            FunctionTypeID = 1,
+                            DescriptionEnum = "AddImage",
+                            FunctionDescription = "Add Image",
+                            Icon = "",
+                            IconActionClass = "add-image-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 2,
+                            DescriptionEnum = "AddTimer",
+                            FunctionDescription = "Add Timer",
+                            Icon = "icon-centarix-icons-19",
+                            IconActionClass = "add-timer-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 3,
+                            DescriptionEnum = "AddComment",
+                            FunctionDescription = "Add Comment",
+                            Icon = "icon-comment-24px",
+                            IconActionClass = "add-comment-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 4,
+                            DescriptionEnum = "AddWarning",
+                            FunctionDescription = "Add Warning",
+                            Icon = "icon-report_problem-24px",
+                            IconActionClass = "add-warning-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 5,
+                            DescriptionEnum = "AddTip",
+                            FunctionDescription = "Add Tip",
+                            Icon = "icon-tip-24px",
+                            IconActionClass = "add-tip-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 6,
+                            DescriptionEnum = "AddTable",
+                            FunctionDescription = "Add Table",
+                            Icon = "icon-table_chart-24px1",
+                            IconActionClass = "add-table-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 7,
+                            DescriptionEnum = "AddTemplate",
+                            FunctionDescription = "Add Template",
+                            Icon = "",
+                            IconActionClass = "add-template-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 8,
+                            DescriptionEnum = "AddStop",
+                            FunctionDescription = "Add Stop",
+                            Icon = "icon-stop-24px",
+                            IconActionClass = "add-stop-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 9,
+                            DescriptionEnum = "AddLinkToProduct",
+                            FunctionDescription = "Add Link To Product",
+                            Icon = "icon-attach-item-24px",
+                            IconActionClass = "add-product-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 10,
+                            DescriptionEnum = "AddLinkToProtocol",
+                            FunctionDescription = "Add Link To Protocol",
+                            Icon = "icon-attach-protocol-24px",
+                            IconActionClass = "add-protocol-to-line"
+                        },
+                        new
+                        {
+                            FunctionTypeID = 11,
+                            DescriptionEnum = "AddFile",
+                            FunctionDescription = "Add File",
+                            Icon = "icon-description-24px2",
+                            IconActionClass = "add-file-to-line"
+                        });
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.GlobalInfo", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GlobalInfoType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("GlobalInfos");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Invoice", b =>
@@ -1744,13 +1841,16 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsTemporary")
+                        .HasColumnType("bit");
+
                     b.Property<int>("LineNumber")
                         .HasColumnType("int");
 
                     b.Property<int>("LineTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParentLineID")
+                    b.Property<int?>("ParentLineID")
                         .HasColumnType("int");
 
                     b.Property<int>("ProtocolID")
@@ -2361,6 +2461,11 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             OffDayTypeID = 4,
                             Description = "Special Day"
+                        },
+                        new
+                        {
+                            OffDayTypeID = 5,
+                            Description = "Unpaid Leave"
                         });
                 });
 
@@ -2743,6 +2848,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<string>("Handeling")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ProductComment")
                         .HasColumnType("nvarchar(max)");
@@ -3958,10 +4066,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<byte?>("ExpectedSupplyDays")
                         .HasColumnType("tinyint");
 
-                    b.Property<bool?>("IncludeVAT")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                    b.Property<bool>("IncludeVAT")
+                        .HasColumnType("bit");
 
                     b.Property<long?>("Installments")
                         .HasColumnType("bigint");
@@ -4643,7 +4749,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("LineTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParentLineID")
+                    b.Property<int?>("ParentLineID")
                         .HasColumnType("int");
 
                     b.Property<int?>("PermanentLineID")
@@ -4662,8 +4768,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasIndex("ParentLineID");
 
                     b.HasIndex("PermanentLineID")
-                        .IsUnique()
-                        .HasFilter("[PermanentLineID] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("ProtocolID");
 
@@ -5849,9 +5954,10 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHours", "EmployeeHours")
-                        .WithMany()
-                        .HasForeignKey("EmployeeHoursID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithOne("EmployeeHoursAwaitingApproval")
+                        .HasForeignKey("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", "EmployeeHoursID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry1")
                         .WithMany()
@@ -5958,8 +6064,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Line", "ParentLine")
                         .WithMany()
                         .HasForeignKey("ParentLineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
                         .WithMany("Lines")
@@ -6466,8 +6571,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.TempLine", "ParentLine")
                         .WithMany()
                         .HasForeignKey("ParentLineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Line", "PermanentLine")
                         .WithOne()

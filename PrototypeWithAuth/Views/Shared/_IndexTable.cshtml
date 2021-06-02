@@ -1,0 +1,56 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+@using PrototypeWithAuth.AppData
+<input type="hidden" value="@Model.RequestStatusID" class="request-status-id" />
+<input type="hidden" value="@Model.SidebarFilterID" class="sideBarFilterID" />
+@if (Model.PagedList.Count() > 0)
+{
+
+<table class="table table-headerspaced table-noheaderlines table-hover mb-0">
+    <thead>
+        <tr class="text-center">
+            @foreach (var col in Model.PagedList[0].Columns)
+                {
+
+            <th width="@col.Width%">
+                <label>@col.Title</label>
+                @switch (col.FilterEnum)
+                {
+                    case AppUtility.FilterEnum.Price:
+
+                        <div class="d-inline-block">
+                            @{
+                                await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
+                            }
+                        </div>
+                        break;
+                    case AppUtility.FilterEnum.Category:
+                        <div class="d-inline-block">
+                            @{
+                                await Html.RenderPartialAsync("_CategoryPopover", Model.CategoryPopoverViewModel);
+                            }
+                        </div>
+                        break;
+                    default:
+                        break;
+                }
+
+            </th>
+
+                }
+        </tr>
+    </thead>
+</table>
+<div class="_IndexTableData">
+    @{
+        await Html.RenderPartialAsync("_IndexTableData", Model);
+    }
+</div>
+}
+else{
+<div>
+    @{
+            await Html.RenderPartialAsync("~/Views/Shared/_EmptyPagePartial.cshtml", Model);
+    }
+</div>
+}
+<script src="~/js/PricePopoverScript.js"></script>

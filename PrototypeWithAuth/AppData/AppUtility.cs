@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Abp.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -34,6 +35,7 @@ namespace PrototypeWithAuth.AppData
             TotalVat = 4
         }
         public enum TermsModalEnum { PayNow, PayWithInMonth, Installments, Paid }
+        public enum RoleEnum { ApproveOrders }
         public enum PageTypeEnum
         {
             None, RequestRequest, RequestInventory, RequestCart, RequestSearch, RequestLocation, RequestSummary, RequestFavorite,
@@ -76,6 +78,13 @@ namespace PrototypeWithAuth.AppData
             SOPProtocol, BufferCreating, RoboticProtocol, MaintenanceProtocol, DailyReports, WeeklyReports, MonthlyReports,
             Library, Personal, SharedWithMe, Active, Done, LastProtocol, SharedRequests
         }
+        public enum IndexTableTypes { Approved, Ordered, ReceivedInventory, ReceivedInventoryFavorites, ReceivedInventoryShared, Summary, AccountingGeneral, SummaryProprietary, ReceivedInventoryOperations, OrderedOperations, Cart,
+            AccountingNotifications,
+            AccountingPaymentsDefault,
+            AccountingPaymentsInstallments,
+            LabQuotes,
+            LabOrders
+        }
         public enum FilterEnum { None, Price, Category, Amount }
         public enum YearlyMonthlyEnum { Yearly, Monthly }
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
@@ -84,6 +93,24 @@ namespace PrototypeWithAuth.AppData
         public enum FolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { Protocols, Requests, Materials }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
+        public static List<StringWithName> RequestRoleEnums()
+        {
+            List<StringWithName> rre = new List<StringWithName>()
+            {
+                new StringWithName(){StringName = "General", StringDefinition = "Requests"},
+                new StringWithName(){StringName = "Approve Orders", StringDefinition = "RequestsApproveOrders"}
+            };
+            return rre;
+        }
+        public static List<StringWithName> OperationRoleEnums()
+        {
+            List<StringWithName> ore = new List<StringWithName>()
+            {
+                new StringWithName(){StringName = "General", StringDefinition = "Operations"},
+                new StringWithName(){StringName = "Approve Orders", StringDefinition = "OperationsApproveOrders"}
+            };
+            return ore;
+        }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
         public enum PaymentsPopoverEnum
@@ -105,12 +132,13 @@ namespace PrototypeWithAuth.AppData
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
-        public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay }
-        public enum PopoverDescription { More, Share, Delete }
+        public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public enum FavoriteIconTitle { FilledIn, Empty }
+        public enum FuctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddTable, AddTemplate, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
         public static List<StringWithName> FavoriteIcons()
         {
             var StringsWithName = new List<StringWithName>(){
@@ -119,13 +147,18 @@ namespace PrototypeWithAuth.AppData
             };
             return StringsWithName;
         }
+
+        public enum IconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
+
         public enum ModelsEnum //used now for the shared modals but can add more models and use in other places
         { Request, Resource, Protocol }
+        public enum GlobalInfoType { ExchangeRate, LoginUpdates }
         public static string GetDisplayNameOfEnumValue(string EnumValueName)
         {
             string[] splitEnumValue = Regex.Split(EnumValueName, @"(?<!^)(?=[A-Z])");
             return String.Join(' ', splitEnumValue);
         }
+
         public static int GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(IQueryable<Request> RequestsList, int RequestStatusID, SidebarEnum sidebarType, String filterID)
         {
             int ReturnList = 0;
@@ -161,6 +194,8 @@ namespace PrototypeWithAuth.AppData
 
             return ReturnList;
         }
+
+
 
 
         public static ResourceAPIViewModel GetResourceArticleFromNCBIPubMed(string PubMedID)
@@ -273,7 +308,7 @@ namespace PrototypeWithAuth.AppData
             }
             else if (!RequestListToCheck1.IsEmpty() && !RequestListToCheck2.IsEmpty())
             {
-                ReturnList = RequestListToCheck1.Concat(RequestListToCheck2).OrderByDescending(r => r.ParentRequest.OrderDate);
+                ReturnList = RequestListToCheck1.Concat(RequestListToCheck2);
             }
             return ReturnList;
         }
@@ -427,7 +462,8 @@ namespace PrototypeWithAuth.AppData
             var cost = request.Cost;
             var total = request.TotalWithVat;
             var vat = request.VAT;
-            var exchangeRate = request.ExchangeRate;
+            var exchangeRate = request.ExchangeRate == 0 ? 1: request.ExchangeRate;
+
             if (currency == AppUtility.CurrencyEnum.USD)
             {
                 currencyFormat = "en-US";
@@ -457,10 +493,10 @@ namespace PrototypeWithAuth.AppData
             return priceColumn;
         }
 
-        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, ProductSubcategory ps)
+        public static List<string> GetCategoryColumn(bool categorySelected, bool subcategorySelected, ProductSubcategory ps, ParentCategory pc)
         {
             List<string> categoryColumn = new List<String>();
-            var category = ps.ParentCategory.ParentCategoryDescription;
+            var category = pc.ParentCategoryDescription;
             var subcategory = ps.ProductSubcategoryDescription;
             if (categorySelected)
             {
@@ -506,6 +542,7 @@ namespace PrototypeWithAuth.AppData
             }
             return amountColumn;
         }
+
         public static string GetNote(SidebarEnum sidebarEnum, Request request)
         {
             if (sidebarEnum == SidebarEnum.PartialDelivery)
@@ -592,7 +629,10 @@ namespace PrototypeWithAuth.AppData
                         switch (ipAddress.AddressFamily)
                         {
                             case AddressFamily.InterNetwork:
-                                myIpAddress = address.ToString();
+                                if (myIpAddress.ToString().StartsWith("172.27.71"))
+                                {
+                                    myIpAddress = address.ToString();
+                                }
                                 break;
                             default:
                                 break;

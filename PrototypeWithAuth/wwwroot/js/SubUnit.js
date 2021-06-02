@@ -10,6 +10,7 @@ $(function () {
 
 	$.fn.CalculateSumPlusVat = function (index = "0") {
 		var $exchangeRate = $("#exchangeRate").val();
+		var inverseExchangeRate = 1/$exchangeRate
 		if ($exchangeRate == "0") {
 			$exchangeRate = "1";
 		}
@@ -35,7 +36,7 @@ $(function () {
 		//$("#Request_VAT").val(vatCalc)
 		//var vatInShekel = $("#Request_VAT").val();
 		if ($("#" + dollarId).prop("disabled") || $("#" + dollarId).hasClass("disabled")) {
-			$sumDollars = parseFloat($("#" + shekelId).val()) / $exchangeRate;
+			$sumDollars = parseFloat($("#" + shekelId).val()) * inverseExchangeRate;
 			console.log("sumDollars"+$sumDollars)
 			$iptBox = $('#'+dollarId);
 			$.fn.ShowResults($iptBox, $sumDollars);
@@ -51,11 +52,11 @@ $(function () {
 		//$vatOnshekel = $sumShekel * parseFloat(vatCalc);
 		$('#' + vatId).val(vatCalc.toFixed(2));
 		console.log("vat calc " + vatCalc)
-		$('#' + vatDollarId).val((vatCalc / $exchangeRate).toFixed(2));
+		$('#' + vatDollarId).val((vatCalc * inverseExchangeRate).toFixed(2));
 		$sumTotalVatShekel = $sumShekel + vatCalc;
 		$iptBox = $("#" + totalVatId);
 		$.fn.ShowResults($iptBox, $sumTotalVatShekel);
-		$sumTotalVatDollars = $sumTotalVatShekel / $exchangeRate;
+		$sumTotalVatDollars = $sumTotalVatShekel * inverseExchangeRate;
 		$iptBox = $("#" + totalVatDollarId);
 		$.fn.ShowResults($iptBox, $sumTotalVatDollars);
 	};
@@ -64,7 +65,8 @@ $(function () {
 		$iptBox = $("input[name='unit-price-shekel']");
 		$.fn.ShowResults($iptBox, $unitSumShekel);
 		var $exchangeRate = $("#exchangeRate").val();
-		$unitSumDollars = $unitSumShekel / $exchangeRate;
+		var inverseExchangeRate = 1 / $exchangeRate;
+		$unitSumDollars = $unitSumShekel * inverseExchangeRate;
 		$iptBox = $("input[name='unit-price-dollars']");
 		$.fn.ShowResults($iptBox, $unitSumDollars);
 	};
@@ -115,22 +117,21 @@ $(function () {
 		console.log("exchange rate" + $exchangeRate)
 		$iptBox = $("input[name='unit-price-dollars']");
 		$.fn.ShowResults($iptBox, $unitPriceDollars)
+
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
 	};
 	$.fn.CalculatePriceDollars = function () {
-		var $unitPrice = $("#unit-price-dollars").val();
-		var $priceDollars = $unitPrice * $("#unit").val();
+		console.log("calculate dollars")
+		var $unitPriceDollars = $("#unit-price-dollars").val();
+		var $exchangeRate = $("#exchangeRate").val();
+		$priceShekels = $unitPriceDollars * $exchangeRate;
+		$iptBox = $("#unit-price-shekel");
+		$.fn.ShowResults($iptBox, $priceShekels);
+		var $priceDollars = $unitPriceDollars * $("#unit").val();
 		var $iptBox = $("input[name='sum-dollars']");
 		$.fn.ShowResults($iptBox, $priceDollars);
-		var $exchangeRate = $("#exchangeRate").val();
 		
-		$priceShekels = $priceDollars * $exchangeRate;
-		$iptBox = $("#cost");
-		$.fn.ShowResults($iptBox, $priceShekels);
-		$unitPriceShekels = $unitPrice * $exchangeRate;
-		$iptBox = $("input[name='unit-price-shekel']");
-		$.fn.ShowResults($iptBox, $unitPriceShekels)
 		$.fn.CalculateSubUnitAmounts();
 		$.fn.CalculateSubSubUnitAmounts();
 		$.fn.CalculateSumPlusVat();
@@ -402,6 +403,7 @@ $(function () {
 				$(shekelSelector).prop("readonly", true);
 				$(shekelSelector).addClass('disabled-text');
 				$(dollarSelector).prop("disabled", false);
+				$(dollarSelector).removeClass("disabled");
 				$(dollarSelector).removeClass('disabled-text');
 				$(dollarSelector).addClass('requestPriceQuote');
 				$(shekelSelector).removeClass('requestPriceQuote');
@@ -448,8 +450,13 @@ $(function () {
 
 
 	$("#unit").change(function () {
-		//calculate the cost instead
-		$.fn.CalculatePriceDollars();
+		if ($("#currency").val() == "USD") {
+			$.fn.CalculatePriceDollars()
+		}
+		else
+		{
+			$.fn.CalculatePriceShekels()
+        }
 		console.log('in unit change');
 	//	$.fn.CalculateUnitAmounts();
 	//	$.fn.CalculateSubUnitAmounts();
@@ -596,7 +603,7 @@ $(function () {
 	$("#unit-price-shekel").change(function () {
 		$.fn.CalculatePriceShekels();
 	})
-	$('.unit-type-select').change(function () {
+	$('body').on('change', '.unit-type-select', function () {
 		$.fn.UpdatePricePerUnitLabel('.price-per-unit-label', $('#select-options-unitTypeID li.active.selected span').text());
 	})
 	$('body').on('change', '.subunit-type-select', function (e) {

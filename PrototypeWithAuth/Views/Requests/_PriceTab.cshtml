@@ -16,6 +16,7 @@
     var disableDollar = "disabled-text";
     var dollarReadOnly = "";
     var shekelReadOnly = "";
+    var shekelSelected = "selected";
     if (modalType == AppUtility.RequestModalType.Edit || modalType == AppUtility.RequestModalType.Summary)
     {
         markReadOnlyClass = "mark-readonly";
@@ -28,6 +29,7 @@
             disabledShekelProperty = "readonly";
             shekelReadOnly = "";
             dollarReadOnly = "mark-readonly";
+            shekelSelected = "";
         }
     }
     if(modalType == AppUtility.RequestModalType.Edit && Model.Requests[0].ParentQuote?.QuoteStatusID < 3)
@@ -52,8 +54,8 @@
                 <div class="form-group">
                     <label class="control-label">Currency</label>
                     <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext @markReadOnlyClass">
-                        <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
-                        <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
+                            <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
+                            <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
                     </select>
                 </div>
             </div>
@@ -103,7 +105,10 @@
                         </div>
                     </div>
                     <div class="form-group requestPriceQuote @hideNoQuote">
-                        <label class="control-label price-per-unit-label">Price Per Unit:</label>
+                        @{ 
+                            var unitLabel = Model.Requests[0].UnitType != null ? Model.Requests[0].UnitType.UnitTypeDescription : "Unit";
+                        } 
+                        <label class="control-label price-per-unit-label">Price Per @unitLabel:</label>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
@@ -168,17 +173,20 @@
                     </div>
 
                     <div class="form-group requestPriceQuote @hideNoQuote">
-                        <label class="control-label price-per-subunit-label">Price Per Subunit:</label>
-                        <div class="row" >
+                        @{
+                            var subunitLabel = Model.Requests[0].SubUnitType != null ? Model.Requests[0].SubUnitType.UnitTypeDescription : "Subunit";
+                        }
+                        <label class="control-label price-per-subunit-label">Price Per @subunitLabel:</label>
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <span class="input-group-text disabled-text" disabled >&#36;</span>
-                                    <input class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subunit-price-dollars" id="subunit-price-dollars"  value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].PricePerSubUnit??0) / Model.Requests[0].ExchangeRate,2))" />
+                                    <span class="input-group-text disabled-text" disabled>&#36;</span>
+                                    <input class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subunit-price-dollars" id="subunit-price-dollars" value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].PricePerSubUnit??0) / Model.Requests[0].ExchangeRate,2))" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <span class="input-group-text requestPriceQuote disabled-text" disabled >&#x20aa;</span>
+                                    <span class="input-group-text requestPriceQuote disabled-text" disabled>&#x20aa;</span>
                                     <input class="form-control-plaintext border-bottom disabled-text" disabled name="subunit-price-shekel" id="subunit-price-shekel" value="@(Model.Requests[0].PricePerSubUnit!= null?Math.Round((decimal)Model.Requests[0].PricePerSubUnit, 2):0)" />
                                 </div>
                             </div>
@@ -243,11 +251,14 @@
                     </div>
 
                     <div class="form-group requestPriceQuote @hideNoQuote">
-                        <label class="control-label price-per-sub-subunit-label">Price Per Sub-Subunit:</label>
+                        @{
+                            var subsubunitLabel = Model.Requests[0].SubSubUnitType != null ? Model.Requests[0].SubSubUnitType.UnitTypeDescription : "Sub-Subunit";
+                        }
+                        <label class="control-label price-per-sub-subunit-label">Price Per @subsubunitLabel:</label>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <span class="input-group-text disabled-text" disabled >&#36;</span>
+                                    <span class="input-group-text disabled-text" disabled>&#36;</span>
                                     <input class="form-control-plaintext border-bottom requestPriceQuote disabled-text" disabled name="subsubunit-price-dollars" id="subsubunit-price-dollars"
                                            value="@(Model.Requests[0].ExchangeRate == 0 ? 0 : Math.Round((Model.Requests[0].PricePerSubSubUnit??0) / Model.Requests[0].ExchangeRate,2))" />
                                 </div>
@@ -365,103 +376,106 @@
         <label class="radio-button custom-control-label pt-1 pl-2 include-vat-radio @markReadOnlyClass" for="NoVAT">No VAT</label>
     </div>
 
-    <input type="hidden" asp-for="Requests[0].IncludeVAT" value="true" />
+    <input type="hidden" asp-for="Requests[0].IncludeVAT" />
     @if (Model.Requests[0].RequestStatusID != 1 && Model.Requests[0].RequestStatusID != 6)
     {
-<div class="col-3">
-    <label class="control-label" asp-for="Requests[0].PaymentStatus.PaymentStatusDescription">Terms</label>
-    <input asp-for="Requests[0].PaymentStatus.PaymentStatusDescription" class="form-control-plaintext border-bottom" disabled />
-    <input type="hidden" asp-for="Requests[0].PaymentStatusID"/>
-</div>
+        <div class="col-3">
+            <label class="control-label" asp-for="Requests[0].PaymentStatus.PaymentStatusDescription">Terms</label>
+            <input asp-for="Requests[0].PaymentStatus.PaymentStatusDescription" class="form-control-plaintext border-bottom" disabled />
+            <input type="hidden" asp-for="Requests[0].PaymentStatusID"/>
+        </div>
     }
     </div>
 @if (Model.Requests[0].RequestStatusID != 1 && Model.Requests[0].RequestStatusID != 6)
 {
-<div class="row">
+    <div class="row">
 
-    <div class="col-2">
-        <input type="checkbox" asp-for="Requests[0].Payments.LastOrDefault().IsPaid" class="form-check-input filled-in " disabled />
-        <label class="form-check-label" asp-for="Requests[0].Payments.LastOrDefault().IsPaid"></label>
-        <input type="hidden" asp-for="Requests[0].Payments.LastOrDefault().IsPaid" />
-    </div>
-    <div class="col-2">
-        <input type="checkbox" asp-for="Requests[0].IsPartial" class="form-check-input filled-in " disabled />
-        <label class="form-check-label" asp-for="Requests[0].IsPartial">Partial</label>
-        <input type="hidden" asp-for="Requests[0].IsPartial" />
-    </div>
-    <div class="col-2">
-        <input type="checkbox" asp-for="Requests[0].IsClarify" class="form-check-input filled-in " disabled />
-        <label class="form-check-label" asp-for="Requests[0].IsClarify">Clarify</label>
-        <input type="hidden" asp-for="Requests[0].IsClarify" />
-    </div>
-
-</div>
-<div class="row">
-    <div class="col-2">
-        <label class="control-label" asp-for="Requests[0].Installments">Payments</label>
-        <input asp-for="Requests[0].Installments" class="form-control-plaintext border-bottom " readonly />
-    </div>
-    @{var payments = Model.Requests[0].Payments.Where(p => p.IsPaid).OrderBy(p => p.PaymentDate).ToList(); }
-    @if (payments.Count() > 0)
-    {
-<div class="container col-10">
-    @for (int i = 0; i < payments.Count(); i++)
-    {
-        <input type="hidden" asp-for="Requests[0].Payments[i].PaymentReferenceDate" />
-        <input type="hidden" asp-for="Requests[0].Payments[i].PaymentTypeID" />
-        <input type="hidden" asp-for="Requests[0].Payments[i].CreditCardID" />
-        <input type="hidden" asp-for="Requests[0].Payments[i].Reference" />
-        <input type="hidden" asp-for="Requests[0].Payments[i].CheckNumber" />
-        <input type="hidden" asp-for="Requests[0].Payments[i].PaymentDate" />
-        <div class="row">
-            <div class="col-3 pl-0">
-                <div class="form-group">
-                    <label class="control-label">Date</label>
-                    <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="@payments[i].PaymentReferenceDate" disabled />
-                </div>
-            </div>
-
-            <div class="col-3">
-                <div class="payment-type form-group">
-                    <label class="control-label">Payment Type</label>
-                    <input class="form-control-plaintext border-bottom" value="@payments[i].PaymentType.PaymentTypeDescription" disabled />
-                </div>
-            </div>
-            @if (payments[i].PaymentTypeID == 1)
-            {
-                <div class="col-3">
-                    <div class="form-group payment-account">
-                        <label class="control-label">Credit Card Number</label>
-                        <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].CreditCard.CardNumber" />
-                    </div>
-                </div>
-            }
-            @if (payments[i].PaymentTypeID == 3)
-            {
-                <div class="col-3">
-                    <div class="form-group payment-reference">
-                        <label class="control-label">Payment Reference</label>
-                        <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].Reference" />
-                    </div>
-                </div>
-            }
-            @if (payments[i].PaymentTypeID == 2)
-            {
-                <div class="col-3">
-                    <div class="form-group payment-reference">
-                        <label class="control-label">Check Number</label>
-                        <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].CheckNumber" />
-                    </div>
-                </div>
-            }
+        <div class="col-2">
+            <input type="checkbox" asp-for="Requests[0].Payments.LastOrDefault().IsPaid" class="form-check-input filled-in " disabled />
+            <label class="form-check-label" asp-for="Requests[0].Payments.LastOrDefault().IsPaid"></label>
+            <input type="hidden" asp-for="Requests[0].Payments.LastOrDefault().IsPaid" />
+        </div>
+        <div class="col-2">
+            <input type="checkbox" asp-for="Requests[0].IsPartial" class="form-check-input filled-in " disabled />
+            <label class="form-check-label" asp-for="Requests[0].IsPartial">Partial</label>
+            <input type="hidden" asp-for="Requests[0].IsPartial" />
+        </div>
+        <div class="col-2">
+            <input type="checkbox" asp-for="Requests[0].IsClarify" class="form-check-input filled-in " disabled />
+            <label class="form-check-label" asp-for="Requests[0].IsClarify">Clarify</label>
+            <input type="hidden" asp-for="Requests[0].IsClarify" />
         </div>
 
-    }
-</div>
-    }
-
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <label class="control-label" asp-for="Requests[0].Installments">Payments</label>
+            <input asp-for="Requests[0].Installments" class="form-control-plaintext border-bottom " readonly />
         </div>
-
+        @{var payments = Model.Requests[0].Payments.Where(p => p.IsPaid).OrderBy(p => p.PaymentDate).ToList(); }
+        @if (payments.Count() > 0)
+        {
+    <div class="container col-10">
+        @for (int i = 0; i < payments.Count(); i++)
+        {
+            <input type="hidden" asp-for="Requests[0].Payments[i].PaymentReferenceDate" />
+            <input type="hidden" asp-for="Requests[0].Payments[i].PaymentTypeID" />
+            <input type="hidden" asp-for="Requests[0].Payments[i].CreditCardID" />
+            <input type="hidden" asp-for="Requests[0].Payments[i].Reference" />
+            <input type="hidden" asp-for="Requests[0].Payments[i].CheckNumber" />
+            <input type="hidden" asp-for="Requests[0].Payments[i].PaymentDate" />
+            <input type="hidden" asp-for="Requests[0].Payments[i].PaymentID" />
+            <div class="row">
+                <div class="col-3 pl-0">
+                    <div class="form-group">
+                        <label class="control-label">Bank Name</label>
+                        <input class="form-control-plaintext border-bottom" type="text" asp-for="@payments[i].CompanyAccount.CompanyBankName" disabled />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="payment-type form-group">
+                        <label class="control-label">Payment Type</label>
+                        <input class="form-control-plaintext border-bottom" value="@payments[i].PaymentType.PaymentTypeDescription" disabled />
+                    </div>
+                </div>
+                @if (payments[i].PaymentTypeID == 1)
+                {
+                    <div class="col-3">
+                        <div class="form-group payment-account">
+                            <label class="control-label">Credit Card Number</label>
+                            <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].CreditCard.CardNumber" />
+                        </div>
+                    </div>
+                }
+                @if (payments[i].PaymentTypeID == 3)
+                {
+                    <div class="col-3">
+                        <div class="form-group payment-reference">
+                            <label class="control-label">Payment Reference</label>
+                            <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].Reference" />
+                        </div>
+                    </div>
+                }
+                @if (payments[i].PaymentTypeID == 2)
+                {
+                    <div class="col-3">
+                        <div class="form-group payment-reference">
+                            <label class="control-label">Check Number</label>
+                            <input class="form-control-plaintext border-bottom reference-1" disabled value="@payments[i].CheckNumber" />
+                        </div>
+                    </div>
+                }
+                <div class="col-3 pl-0">
+                    <div class="form-group">
+                        <label class="control-label">Date</label>
+                        <input class="form-control-plaintext border-bottom  datepicker" type="text" asp-for="@payments[i].PaymentReferenceDate" disabled />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+        }
+    </div>
 }
 <script src="~/js/Validation/OrderInvItemFormValidation.js"></script>
 <script src="~/js/validate.js"></script>

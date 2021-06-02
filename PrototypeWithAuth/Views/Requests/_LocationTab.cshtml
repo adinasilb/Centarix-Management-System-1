@@ -20,7 +20,7 @@
 <div class="row modal-tab-name">
     <span class="heading-1 col-4">Location</span>
     @{
-        if (Model.ModalType == AppUtility.RequestModalType.Summary)
+        if (Model.ModalType == AppUtility.RequestModalType.Summary && Model.IsHistory == false)
         {
             <div class="switch col-4 offset-4 switch-margin text-right">
                 <label>
@@ -32,7 +32,7 @@
             }
         }
 </div>
-<div class="row">
+<div class="row" style="min-height:42px;">
     @{
         var name = "";
         if (Model.ReceivedModalSublocationsViewModel != null)

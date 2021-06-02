@@ -14,6 +14,7 @@ namespace PrototypeWithAuth.ViewModels
         public bool Exit1 { get; set; }
         public bool Exit2 { get; set; }
         public bool TotalHours { get; set; }
+        public bool PartialHours { get; set; }
         public EmployeeHoursAwaitingApproval EmployeeHoursAwaitingApproval { get; set; }
     }
 }

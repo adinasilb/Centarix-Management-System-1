@@ -12,10 +12,10 @@
 		});
 	});
 
-	$(".favorite-protocol").on("click", function (e) {
+	$(".resource-icons .favorite").on("click", function (e) {
 		var fullIcon = $(".FilledIn").attr("filled-value");
 		var emptyIcon = $(".Empty").attr("filled-value");
-		var reloadPageBool = $(this).attr("reload");
+		var reloadPageBool = $(this).attr("data-reload");
 		var url = "/Protocols/FavoriteResources?ResourceID=" + $(this).val() + "&Favorite=";
 		var icon = $(this).children("i");
 		if (icon.hasClass(emptyIcon)) {
@@ -33,11 +33,10 @@
 				if (reloadPageBool == "True") {
 					$.ajax({
 						async: true,
-						url: "/Protocols/_ResourcesListIndex?IsReload=true",
+						url: "/Protocols/_ResourcesListIndex?sidebarEnum=" + $("#SidebarEnum").val(),
 						type: 'GET',
 						cache: true,
 						success: function (results) {
-							alert(results);
 							$(".resources-favorites-partial").html(results);
 						}
 					});
@@ -56,7 +55,7 @@
 		});
 	});
 
-	$(".share-resource").on("click", function (e) {
+	$(".resource-icons .share").on("click", function (e) {
 		var url = "/Protocols/ShareModal?ID=" + $(this).val() + "&ModelsEnum=Resource"; 
 		$.ajax({
 			async: true,
@@ -65,8 +64,10 @@
 			cache: true,
 			success: function (data) {
 				$.fn.OpenModal("shared-modal", "share-modal", data);
-				$.fn.EnableMaterialSelect('#userlist', 'select-options-userlist')
+				$.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs')
 			}
 		});
 	});
+
+	
 });

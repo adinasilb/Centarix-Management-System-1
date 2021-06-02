@@ -27,10 +27,6 @@
 			console.log("has class orders");
 			url = "/Requests/EditModalView";
 		}
-		else if ($('.turn-edit-on-off').hasClass('orders')) {
-			console.log("has class orders");
-			url = "/Requests/EditModalView";
-		}
 		else if ($('.turn-edit-on-off').hasClass('locations')) {
 			console.log("has class locations");
 			url = "/Requests/ReceivedModalVisual";

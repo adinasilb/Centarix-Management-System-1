@@ -37,18 +37,37 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Index()
         {
             var user = _context.Employees.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
-
+            var usersLoggedIn = _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).Count();
+            var users = _context.Employees.ToList();
+            var lastUpdateToTimekeeper = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.LoginUpdates.ToString()).FirstOrDefault();
+            if(lastUpdateToTimekeeper==null)
+            {
+                lastUpdateToTimekeeper = new GlobalInfo { GlobalInfoType = AppUtility.GlobalInfoType.LoginUpdates.ToString(), Date = DateTime.Now.AddDays(-1) };
+                _context.Update(lastUpdateToTimekeeper);
+                await _context.SaveChangesAsync();
+            }
+            else if(lastUpdateToTimekeeper.Date.Date < DateTime.Today)
+            {
+                foreach (Employee employee in users)
+                {
+                    var userRoles = await _userManager.GetRolesAsync(employee);
+                    if (userRoles.Contains("TimeKeeper") && employee.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
+                    {
+                        await fillInTimekeeperMissingDays(employee, lastUpdateToTimekeeper.Date);
+                        fillInTimekeeperNotifications(employee, lastUpdateToTimekeeper.Date);
+                    }
+                }
+                lastUpdateToTimekeeper.Date = DateTime.Now;
+                _context.Update(lastUpdateToTimekeeper);
+                await _context.SaveChangesAsync();
+            }
+  
             if (user.LastLogin.Date < DateTime.Today)
             {
                 fillInOrderLate(user);
-                if (User.IsInRole("TimeKeeper") && user.EmployeeStatusID != 4) //if employee statuses updated, function needs to be changed
-                {
-                    fillInTimekeeperMissingDays(user);
-                    fillInTimekeeperNotifications(user);                  
-                }
                 user.LastLogin = DateTime.Now;
                 _context.Update(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             IEnumerable<Menu> menu = null;
@@ -62,17 +81,19 @@ namespace PrototypeWithAuth.Controllers
             //}
 
             //update latest exchange rate if need be
-            var latestRate = _context.ExchangeRates.FirstOrDefault();
+            var latestRate = _context.GlobalInfos.Where(gi => gi.GlobalInfoType == AppUtility.GlobalInfoType.ExchangeRate.ToString()).FirstOrDefault();
+
           
             if (latestRate == null)
             {
-                latestRate = new ExchangeRate();
+                latestRate = new GlobalInfo();
+                latestRate.GlobalInfoType = AppUtility.GlobalInfoType.ExchangeRate.ToString();
             }
-            var updateDate = latestRate.LastUpdated;
+            var updateDate = latestRate.Date;
             if (updateDate.Date != DateTime.Today)
             {
-                latestRate.LastUpdated = DateTime.Now;
-                latestRate.LatestExchangeRate = AppUtility.GetExchangeRateFromApi();
+                latestRate.Date = DateTime.Now;
+                latestRate.Description = AppUtility.GetExchangeRateFromApi().ToString();
                 _context.Update(latestRate);
                 await _context.SaveChangesAsync();
             }
@@ -176,34 +197,34 @@ namespace PrototypeWithAuth.Controllers
             TwoFactorAuthenticationViewModel twoFactorAuthenticationViewModel = new TwoFactorAuthenticationViewModel { };
             return View(twoFactorAuthenticationViewModel);
         }
-       
-        private void fillInTimekeeperMissingDays(Employee user)
-        {           
-            DateTime nextDay = user.LastLogin.AddDays(1);
-            var year = nextDay.Year;
-            var companyDaysOff = _context.CompanyDayOffs.Where(d => d.Date.Year == year).ToList();
 
+        private async Task fillInTimekeeperMissingDays(Employee user, DateTime lastUpdate)
+        {
+            DateTime nextDay = lastUpdate.AddDays(1);
+            var year = nextDay.Year;
+            var companyDaysOff = await _context.CompanyDayOffs.Where(d => d.Date.Year == year).ToListAsync();
+            
             while (nextDay.Date <= DateTime.Today)
             {
-                if( year != nextDay.Year)
+                if (year != nextDay.Year)
                 {
                     year = nextDay.Year;
-                    companyDaysOff = _context.CompanyDayOffs.Where(d => d.Date.Year == year).ToList();
+                    companyDaysOff = await _context.CompanyDayOffs.Where(d => d.Date.Year == year).ToListAsync();
                 }
                 if (nextDay.DayOfWeek != DayOfWeek.Friday && nextDay.DayOfWeek != DayOfWeek.Saturday)
                 {
                     var existentHours = _context.EmployeeHours.Where(eh => eh.EmployeeID == user.Id && eh.Date.Date == nextDay.Date).FirstOrDefault();
                     var dayoff = companyDaysOff.Where(cdo => cdo.Date.Date == nextDay.Date).FirstOrDefault();
-                    if (dayoff !=null)
+                    if (dayoff != null)
                     {
                         if (existentHours == null)
                         {
                             existentHours = new EmployeeHours
                             {
                                 EmployeeID = user.Id,
-                                Date = nextDay.Date                                
+                                Date = nextDay.Date
                             };
-                           
+
                         }
                         existentHours.OffDayTypeID = null;
                         existentHours.PartialOffDayTypeID = null;
@@ -212,7 +233,7 @@ namespace PrototypeWithAuth.Controllers
                         _context.Update(existentHours);
                     }
                     else
-                    {                       
+                    {
                         if (existentHours == null)
                         {
                             EmployeeHours employeeHours = new EmployeeHours
@@ -223,11 +244,11 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(employeeHours);
                         }
                     }
-                   
+
                 }
                 nextDay = nextDay.AddDays(1);
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         private void fillInOrderLate(ApplicationUser user)
@@ -259,13 +280,12 @@ namespace PrototypeWithAuth.Controllers
 
             }
         }
-        private void fillInTimekeeperNotifications(ApplicationUser user)
+        private void fillInTimekeeperNotifications(ApplicationUser user, DateTime lastUpdate)
         {
 
-            if (user.LastLogin.Date != DateTime.Now.Date)
-            {
                 var eh = _context.EmployeeHours.Where(r => r.EmployeeID == user.Id).Where(r => (r.Entry1 != null && r.Exit1 == null) || (r.Entry1 == null && r.Exit1 == null && r.OffDayType == null && r.TotalHours == null) || (r.Entry2 != null && r.Exit2 == null))
-                    .Where(r => r.Date.Date >= user.LastLogin.Date && r.Date.Date < DateTime.Today);
+                    .Where(r => r.Date.Date >=lastUpdate.Date && r.Date.Date < DateTime.Today).Where(r => r.CompanyDayOffID==null)
+                    .Where(r => r.EmployeeHoursAwaitingApproval == null);
                 foreach (var e in eh)
                 {
                     TimekeeperNotification timekeeperNotification = new TimekeeperNotification();
@@ -281,7 +301,6 @@ namespace PrototypeWithAuth.Controllers
                 }
                 _context.SaveChanges();
 
-            }
         }
 
 

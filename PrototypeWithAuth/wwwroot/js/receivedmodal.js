@@ -23,7 +23,7 @@
 		}
 	});
 
-	$(".open-sublocations-types").on("click", function () {
+	$(".open-sublocations-types").off('click').on("click", function () {
 		$("#LocationTypeID").val($(this).attr("id"))
 		if (!$(".temporary-check").is(":checked")) {
 			console.log("select location")
@@ -38,7 +38,8 @@
 			if (valid) {
 				$('.activeSubmit').removeClass('disabled-submit')
 			}
-        }
+		}
+		$(".locationFullName").html("");
 	});
 
 	//AJAX load full partial view for modalview manage locations
@@ -63,18 +64,8 @@
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
-			var name = ""
-		$(".dropdown.dropdown-main span:not(.caret)").each(function(){
-		if($(this).html()!="select")
-		{
-			if($(this).attr("description") !=undefined)
-			{
-				name+=$(this).attr("description");
-			}
 
-		}
-			
-		});
+		var name = $(this).html();
 		$(".locationFullName").html(name);
 	});
 
@@ -103,6 +94,7 @@
 		console.log(nextSelect)
 		console.log("selected")
 		var locationInstanceParentId = $(el).val();
+		var requestID = $("#Requests_0__RequestID").val();
 
 		if (nextSelect != undefined) { //if there is another one
 			$(nextSelect).html('');
@@ -122,7 +114,7 @@
 				var oldSelected = $("." + oldSelect).children("option:selected").val();
 				console.log("oldSelected: " + oldSelected);
 				$.ajax({
-					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected,
+					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected + "&RequestID=" + requestID,
 					type: 'GET',
 					cache: false,
 					context: myDiv,
@@ -140,7 +132,7 @@
 		
 			console.log("regular visual");
 			$.ajax({
-				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
+				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId + "&RequestID=" + requestID,
 				type: 'GET',
 				cache: false,
 				context: myDiv,
@@ -309,7 +301,8 @@
 			if ($("#LocationTypeID").val() != 0)
 			{
 				$("#locationSelected").val(true)
-            }
+			}
+			$('.visualView').html('');
 		}
 		else {
 			$("#locationSelected").val("")
