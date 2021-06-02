@@ -18,6 +18,7 @@
                 @{
                     var years = Enumerable.Range(2010, DateTime.Today.Year - 2009);
                     int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
+                    int curMonth = DateTime.Today.Month;
                 }
 
                 @Html.DropDownListFor(vm =>vm.Years, years.Select(x =>
@@ -42,7 +43,7 @@
                     {
                         Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(m),
                         Value = m.ToString(),
-                        //Selected = Model.Months
+                        Selected = (m == curMonth)
                     }),
                     htmlAttributes: new { @class = " mdb-select  custom select-dropdown form-control-plaintext float-right  ignore-mdb", @searchable = "Search here...", @multiple = "multiple" })
                 @*</div>

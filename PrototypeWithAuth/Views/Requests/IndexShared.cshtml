@@ -1,0 +1,28 @@
+﻿@model PrototypeWithAuth.ViewModels.RequestIndexPartialViewModel
+@using PrototypeWithAuth.AppData;
+@using PrototypeWithAuth.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    TempData.Keep();
+    ViewData["Title"] = "Index";
+
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+
+
+    bool search = false;
+    if (TempData["Search"] != null)
+    {
+        if (TempData["Search"].ToString() == "True")
+        {
+            search = true;
+        }
+    }
+
+}
+<div class="_IndexSharedTable">
+    @{ await Html.RenderPartialAsync("_IndexSharedTable", Model);}
+</div>
+
+<script src="~/js/PricePopoverScript.js"></script>

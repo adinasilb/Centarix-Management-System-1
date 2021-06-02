@@ -3,20 +3,13 @@
 @{
     Layout = null;
     var markDisabled = "details";
-    int requestid;
 
     var bcColor = "order-inv-background-color";
     var color = "order-inv-color";
     var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
-    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-    {
-        form = "oper-form";
-        bcColor = "oper-background-color";
-        color = "operations-filter";
-        sectionType = AppUtility.MenuItems.Operations.ToString();
-    }
+    
     //else if (Model.SectionType == AppUtility.MenuItems.LabManagement)
     //{
 
@@ -31,6 +24,7 @@
 
 <script src="~/js/site.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
+<script src="~/js/WarantySupplyDateCalc.js"></script>
 <div class="modal modal-document fader modalStep1 on-form-modal @form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false" style="z-index: 9000">
     <div class="modal-dialog-centered mx-auto  modal-xl " role="document">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
@@ -80,8 +74,8 @@
 
                     <div class="row">
                         <div class=" offset-4 text-center">
-                            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
-                            <a href="" class="open-document-modal " data-string="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" name="@AppUtility.RequestFolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false">
+                            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" name="@AppUtility.FolderNamesEnum.Quotes.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
+                            <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Quotes.ToString()" name="@AppUtility.FolderNamesEnum.Quotes.ToString()" data-val="@true" showSwitch="@false">
 
                                 <div class="card document-border @hasFileClass">
                                     <div class="document-card text-center">
@@ -91,21 +85,43 @@
                             </a>
                             <label class="control-label text-center text document-text-margin" style="width:100%;">Quote</label>
                         </div>
-                        <div class="col-3 offset-1 d-flex align-items-center">
+                        <div class="col-4 pl-5 pt-4">
                             <div class="row">
-                                <div class="form-group ">
-                                    <label asp-for="@Model.ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
-                                    <input asp-for="@Model.ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" />
-                                    <span asp-validation-for="@Model.ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
+                                <div class=" col-md-6">
+                                    <div class="form-group ">
+                                        <label asp-for="@Model.ParentQuote.QuoteNumber" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.ParentQuote.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" />
+                                        <span asp-validation-for="@Model.ParentQuote.QuoteNumber" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                 </div>
                             </div>
+                            @if (Model.IsReorder)
+                            {
+                                <div class="row">
+                                    <div class=" col-md-6">
+                                        <div class="form-group ">
+                                            <label asp-for="@Model.ExpectedSupplyDays" class=" control-label m-0 mt-2" style="width:100%;"></label>
+                                            <input asp-for="@Model.ExpectedSupplyDays" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0 expected-supply-days" min="1" />
+                                            <span asp-validation-for="@Model.ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                        </div>
+                                    </div>
+                                    <div class=" col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Expected supply date</label>
+                                            <input value="" class="form-control-plaintext border-bottom datepicker " disabled type="text" name="expected-supply-days" id="expected-supply-date" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                             @*<div class="row">
-                    <div class="form-group ">
-                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
-                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
-                    </div>
-                </div>*@
+                                    <div class="form-group ">
+                                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
+                                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>*@
                         </div>
                     </div>
                 </div>
@@ -121,8 +137,8 @@
     </div>
 </div>
 <script src="~/js/DeleteDocModal.js"></script>
-<script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
 <script src="~/js/validate.js"></script>
+<script src="~/js/Validation/ValidateUploadQuoteForm.js"></script>
 <script>
     $(".submitQuote").off('click').on("click", function (e) {
         e.preventDefault();

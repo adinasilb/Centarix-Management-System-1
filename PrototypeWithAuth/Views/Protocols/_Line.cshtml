@@ -1,0 +1,55 @@
+﻿@model PrototypeWithAuth.ViewModels.ProtocolsLineViewModel
+@{
+    var dynamicID = "TempLines_" + Model.Index + "__";
+    var dynamicName = "TempLines[" + Model.Index + "].";
+}
+<input name="@(dynamicName)LineID" id="@(dynamicID)LineID" value="@Model.TempLine?.LineID" type="hidden" />
+<input name="@(dynamicName)PermanentLineID" id="@(dynamicID)PermanentLineID" value="@Model.TempLine?.PermanentLineID" type="hidden" />
+<div class="position-absolute" style="right:91%;">
+    <ul class="list-unstyled m-0">
+        <li>
+            @{
+                var dNone = "d-none";
+                if (Model.Index == 0)
+                {
+                    dNone = "";
+                }
+            }
+            <button type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.TempLine?.ParentLineID" lineCount="@Model.Index">
+                <i class="protocols-color icon-add_circle-24px" style="  font-size: 3rem;"></i>
+            </button>
+        </li>
+        <div style="display:none; " id="line-content@(Model.Index)">
+            @foreach (var item in Model.LineTypes)
+            {
+                <div class="row px-2 comment-btn">
+                    <button type="button" value="@item.LineTypeID" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine " style="font-size:1rem; font-weight:400;">
+                        @item.LineTypeDescription
+                    </button><hr class="m-0" />
+                </div>
+            }
+        </div>
+    </ul>
+</div>
+<input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine?.Content" />
+@{var typeClass = "";}
+@switch (Model.TempLine?.LineTypeID)
+{
+    case 1:
+        typeClass = " line-header ";
+        break;
+    case 2:
+        typeClass = " line-subheader ml-4";
+        break;
+    case 3:
+        typeClass = " line-step ml-6 ";
+        break;
+}
+<div class="d-flex line-div  
+     @typeClass">
+    <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
+    <span role="textbox"
+          contenteditable line-id="@(dynamicID)Content" class="  line input line-input">
+        @Html.Raw(Model.TempLine?.Content)&ensp;&ensp;&ensp;
+    </span>
+</div>

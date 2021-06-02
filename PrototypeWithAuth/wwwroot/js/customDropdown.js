@@ -7,15 +7,14 @@
 		$(this).removeClass('active');
 		$(this).find('.dropdown-menu').slideUp(300);
 	});
-	$('.dropdown-main .dropdown-menu li').click(function () {
-		console.log($(this).text())
+$("body, .modal").on("click", '.dropdown-main .dropdown-menu li', function () {
 		$(this).parents('.dropdown-main').find('span:not(.caret)').text($(this).text());
 		$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
 	});
 	/*End Dropdown Menu*/
 
 
-	$("body").off("click", '.dropdown-menu li').on("click", '.dropdown-menu li', function () {
+$("body").off("click", '.dropdown-menu li').on("click", '.dropdown-menu li', function () {
 		var input = '<strong>' + $(this).parents('.dropdown').find('input').val() + '</strong>',
 			msg = '<span class="msg">Hidden input value: ';
 		$('.msg').html(msg + input + '</span>');

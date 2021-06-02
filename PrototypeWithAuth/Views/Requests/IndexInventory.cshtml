@@ -30,7 +30,9 @@
 }
 else
 {
-
+    <div>
+        @{ await Html.RenderPartialAsync("_IndexFilter", Model.InventoryFilterViewModel);}
+    </div>
     <div class="_IndexTable">
         @{ await Html.RenderPartialAsync("_IndexTable", Model);}
     </div>

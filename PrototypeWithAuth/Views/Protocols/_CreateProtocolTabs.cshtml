@@ -1,0 +1,227 @@
+﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
+@using PrototypeWithAuth.ViewModels
+
+
+<div id="Theory" class="tab-pane fade in active show">
+    <div class="container-fluid new-modal-body m-0" style="width:55%">
+        <input type="hidden" class="createProtocolMasterProtocolID" value="@Model.Protocol.ProtocolID" />
+        <input type="hidden" asp-for="Protocol.ProtocolID" />
+        <div class="row under-row-margin">
+            <div class="col-4">
+                <label asp-for="Protocol.Name" class="control-label"></label>
+                <input asp-for="Protocol.Name" class="form-control-plaintext border-bottom" />
+                <span asp-validation-for="Protocol.Name" class="text-danger-centarix"></span>
+            </div>
+            @*<div class="col-4">
+                    <label asp-for="Protocol.VersionNumber" class="control-label"></label>
+                    <input asp-for="Protocol.VersionNumber" class="form-control-plaintext border-bottom" />
+                    <span asp-validation-for="Protocol.VersionNumber" class="text-danger-centarix"></span>
+                </div>*@
+            <div class="col-4">
+                <label asp-for="Protocol.UniqueCode" class="control-label"></label>
+                <input asp-for="Protocol.UniqueCode" class="form-control-plaintext border-bottom" />
+                <span asp-validation-for="Protocol.UniqueCode" class="text-danger-centarix"></span>
+            </div>
+        </div>
+
+        <div class="row under-row-margin">
+            <div class="col-4">
+                <label class="control-label">Category</label>
+                @Html.DropDownListFor(vm => vm.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID,
+new SelectList(
+Model.ProtocolCategories,
+"ProtocolCategoryTypeID",
+"ProtocolCategoryDescription"
+), "Select Category",
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolParentList", @searchable = "Select Category" })
+            </div>
+            <div class="col-4">
+                <label class="control-label">Sub Category</label>
+                @Html.DropDownListFor(vm => vm.Protocol.ProtocolSubCategoryID,
+new SelectList(
+Model.ProtocolSubCategories,
+"ProtocolSubCategoryTypeID",
+"ProtocolSubCategoryTypeDescription"
+), "Select Category",
+new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolSubList", @searchable = "Select Category" })
+            </div>
+            @*<div class="col-4">
+                    <label asp-for="Tags" class="control-label"></label>
+                    <input asp-for="Tags" class="form-control-plaintext border-bottom" />
+                    <span asp-validation-for="Tags" class="text-danger-centarix"></span>
+                </div>*@
+        </div>
+        <div class="row ">
+            <div class="col-12">
+                <label asp-for="Protocol.ShortDescription" class="control-label"></label>
+                <input asp-for="Protocol.ShortDescription" class="form-control-plaintext border-bottom " />
+                <span asp-validation-for="Protocol.ShortDescription" class="text-danger-centarix"></span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-12">
+                <label asp-for="Protocol.Theory" class="control-label"></label>
+                <textarea asp-for="Protocol.Theory" class="form-control-plaintext border-bottom border" rows="15"></textarea>
+                <span asp-validation-for="Protocol.Theory" class="text-danger-centarix"></span>
+            </div>
+        </div>
+        <div class="row mt-6">
+            <div class="col-6 heading-1">
+                Add Document
+            </div>
+            <div class="col-6 heading-1">
+                Add Links
+
+            </div>
+        </div>
+        @{
+            var urlAction = Url.Action("DocumentsModal", "Protocols");
+            var fontSize = "2rem";
+        }
+        <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+        <div class="row">
+            <div class="col-6">
+                <div class="row ">
+
+                    @{
+                        var hasFileClass = "";
+                        var color = "protocols-filter";
+
+                    }
+
+                    @foreach (var folder in Model.DocumentsInfo)
+                    {
+
+                        <div class="document-margin ">
+                            @{
+                                var filterClass = "opac87";
+                                if (folder.FileStrings != null && folder.FileStrings.Count > 0)
+                                {
+                                    hasFileClass = "hasFile";
+                                    filterClass = color;
+                                }
+                            }
+                            <a href="" class="open-document-modal mark-edditable" data-string="@folder.FolderName.ToString()" data-id="@Model.Protocol.ProtocolID" id="@folder.FolderName.ToString()" data-val="@true" showSwitch="@false">
+                                <div class="card document-border ">
+                                    <div class="document-card text-center">
+                                        <i class="@folder.Icon @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                    </div>
+
+                                </div>
+                            </a>
+                            <label class="control-label text-center text document-text-margin" style="width:100%;">@folder.FolderName</label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-6 ">
+                <div class="container ">
+
+                    @for (int i = 0; i < Model.Protocol.Urls.Count(); i++)
+                    {
+                        <input type="hidden" asp-for="Protocol.Urls[i].LinkID" />
+                        <div class="row">
+                            <div class="col-6">
+                                <label asp-for="Protocol.Urls[i].LinkDescription" class="control-label">Link Description</label>
+                                <input asp-for="Protocol.Urls[i].LinkDescription" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="Protocol.Urls[i].LinkDescription" class="text-danger-centarix"></span>
+                            </div>
+                            <div class="col-6">
+                                <label asp-for="Protocol.Urls[i].Url" class="control-label"></label>
+                                <input asp-for="Protocol.Urls[i].Url" class="form-control-plaintext border-bottom" />
+                                <span asp-validation-for="Protocol.Urls[i].Url" class="text-danger-centarix"></span>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div id="Materials" class="tab-pane fade in ">
+    @{ await Html.RenderPartialAsync("_MaterialTab", new MaterialTabViewModel { Materials = Model.Protocol.Materials.ToList(), MaterialCategories = Model.MaterialCategories, Folders = Model.MaterialDocuments });
+    }
+</div>
+<div id="Protocol" class="tab-pane fade in ">
+
+    <div class="lines">
+        <div class="heading-1">@Model.Protocol.Name</div>
+        <div class="_Lines">
+            @{await Html.RenderPartialAsync("_Lines", new ProtocolsLinesViewModel { Lines = Model.TempLines.ToList() });}
+        </div>
+
+
+    </div>
+</div>
+
+<script src="~/js/CreateProtocol.js"></script>
+<script>
+    $(".saveProtocol").off("click").click(function (e) {
+        e.preventDefault();
+        $('.createProtocolForm').data("validator").settings.ignore = "";
+        var valid = $('.createProtocolForm').valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+            e.preventDefault();
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('.activeSubmit').removeClass('disabled-submit')
+            var formData = new FormData($(".createProtocolForm")[0]);
+            $.ajax({
+                url: "/Protocols/CreateProtocol",
+                traditional: true,
+                data: formData,
+                contentType: false,
+                processData: false,
+                type: "POST",
+                success: function (data) {
+                    $("._CreateProtocolTabs").html(data)
+                    $(".mdb-select").materialSelect();
+                    $('#Theory').removeClass("active");
+                    $('#Theory').removeClass("show");
+                    $('#Materials').addClass("active");
+                    $('#Materials').addClass("show");
+                },
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $("._CreateProtocol").html(jqxhr.responseText)
+                    }
+                    $(".mdb-select").materialSelect();
+                    return true;
+                }
+            });
+        }
+        $('.createProtocolForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+
+    });
+
+    $(".saveLines").off("click").click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            processData: false,
+            contentType: false,
+            data: new FormData($("#myForm")[0]),
+            url: "/Protocols/SaveTempLines",
+            type: 'POST',
+            success: function (data) {
+                //$("._Lines").html(data);
+            },
+            error: function (jqxhr) {
+                //if(jqxhr.responst)
+            }
+        });
+    });
+
+
+</script>

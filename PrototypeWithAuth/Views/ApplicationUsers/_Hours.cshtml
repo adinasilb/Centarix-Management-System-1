@@ -14,7 +14,6 @@
     var header = "";
     var col1 = "";
     var col2 = "";
-    var totalHoursYearOrMonth = 0;
     switch (Model.YearlyMonthlyEnum)
     {
         case AppUtility.YearlyMonthlyEnum.Monthly:
@@ -22,19 +21,17 @@
             header = date.ToString("MMMM") + " ";
             col1 = " col-2 ";
             col2 = " col-6 ";
-            totalHoursYearOrMonth = Model.TotalWorkingDaysInMonth;
             break;
         case AppUtility.YearlyMonthlyEnum.Yearly:
             yearStyle = "yearly-monthly ";
             col1 = " col-1 ";
             col2 = " col-7 ";
-            totalHoursYearOrMonth = Model.TotalWorkingDaysInYear;
             break;
     }
 
 }
 <script src="~/js/workerHours.js"></script>
-<input type="hidden" id="newYearAmount" value="@Model.TotalWorkingDaysInYear" />
+<input type="hidden" id="newYearAmount" value="@Model.TotalWorkingDaysInMonthOrYear" />
 <input type="hidden" id="currentYear" value="@Model.Year" />
 <div class="container-fluid m-0">
     <div class="row">
@@ -87,25 +84,25 @@
                     <td width="11%"></td>
                     <td width="11%">Name</td>
                     <td width="11%">
-                        Job Type
-                    </td>
-                    <td width="11%">
                         Percentage
                     </td>
                     <td width="11%">
-                        Missing Days
+                        Missing Report
                     </td>
-                    <td width="10%">
+                    <td width="11%">
                         Hours
                     </td>
-                    <td width="8%">
+                    <td width="11%">
                         Working Days
                     </td>
-                    <td width="8%">
+                    <td width="11%">
                         Vacation Days
                     </td>
-                    <td width="8%">
+                    <td width="11%">
                         Sick Days
+                    </td>
+                    <td width="11%">
+                        Unpaid Leave
                     </td>
                 </tr>
 
@@ -124,31 +121,36 @@
                 </td>
                 <td width="11%">
                     <div>
-                        <a href="@Url.Action("UserHours", "ApplicationUsers", new { userId = @employee.Employee.Id })">
+                        <a href="@Url.Action("UserHours", "ApplicationUsers", new { userId = @employee.Employee.Id , month = Model.Month, year = Model.Year})">
                             @employee.Employee.FirstName  @employee.Employee.LastName
                         </a>
                     </div>
                 </td>
                 <td width="11%">
-                    @employee.Employee.EmployeeStatus.Description
-                </td>
-                <td width="11%">
-                    @{var totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
-                        var totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
+                    @{var totalHoursInRange = (Model.TotalWorkingDaysInMonthOrYear - employee.VacationSickCount) * employee.Employee.SalariedEmployee?.HoursPerDay ?? 0;
+                        var totalHours = employee.Hours.TotalMinutes / 60;
                         var totalHoursPercent = Math.Round((totalHours / totalHoursInRange) * 100, 2);
-                     }
-                    @totalHoursPercent%
+                        var totalHoursPercentDisplay = "N/A";
+                        if (employee.Employee.EmployeeStatusID == 1)
+                        {
+                            totalHoursPercentDisplay = totalHoursPercent + "%";
+                        }
+                    }
+                    
+                    
+                        @totalHoursPercentDisplay
+                                          
+
                 </td>
                 <td width="11%">
                     @employee.MissingDays
                 </td>
-                <td width="10%">
+                <td width="11%">
                     @{totalHours = employee.Hours.Days * 24 + employee.Hours.Hours;
                         var totalHoursString = "";
                     }
                     @if (employee.Employee.EmployeeStatusID == 1)
                     {
-                        totalHoursInRange = (totalHoursYearOrMonth - employee.VacationSickCount) * employee.Employee.SalariedEmployee.HoursPerDay;
                         var totalInMonth = TimeSpan.FromHours(totalHoursInRange);
                         totalHoursString = totalHours + ":" + employee.Hours.ToString("mm") + "/" + Math.Floor(totalInMonth.TotalHours) + ":" + totalInMonth.Minutes;
                     }
@@ -158,27 +160,28 @@
                     }
                     @totalHoursString
                 </td>
-                <td width="8%">
+                <td width="11%">
                     @{
                         var totalDaysString = "";
                     }
                     @if (employee.Employee.EmployeeStatusID == 1)
                     {
-                        var totalDaysInRange = (totalHoursYearOrMonth - employee.VacationSickCount);
-                        totalDaysString = employee.WorkingDays + "/" + totalDaysInRange;
+                        totalDaysString = Math.Round(employee.WorkingDays, 2) + "/" + Model.TotalWorkingDaysInMonthOrYear;
                     }
                     else
                     {
-
                         totalDaysString = employee.WorkingDays + "";
                     }
                     @totalDaysString
                 </td>
-                <td width="8%">
+                <td width="11%">
                     @employee.VacationDays
                 </td>
-                <td width="8%">
+                <td width="11%">
                     @employee.SickDays
+                </td>
+                <td width="11%">
+                    @employee.UnpaidLeave
                 </td>
             </tr>
                 }

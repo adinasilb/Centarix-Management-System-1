@@ -36,6 +36,7 @@ using System.Text.Json;
 using Newtonsoft.Json;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.AppData.Exceptions;
+using System.Drawing;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -52,7 +53,7 @@ namespace PrototypeWithAuth.Controllers
         private ICompositeViewEngine _viewEngine;
 
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager)
         {
             //_Context = Context;
             _context = context;
@@ -93,7 +94,7 @@ namespace PrototypeWithAuth.Controllers
 
             var viewmodel = await GetIndexViewModel(requestIndexObject);
             SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
-            viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
+            //viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
 
             if (ViewBag.ErrorMessage != null)
             {
@@ -103,268 +104,35 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
-        private void SetViewModelCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel)
-        {
-            int categoryID = 0;
-            if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
-            {
-                categoryID = 1;
-            }
-            else if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-            {
-                categoryID = 2;
-            }
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
-              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
-
-            int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            int receivedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            int approvedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 6, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 4, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            newCount += AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 5, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            viewmodel.NewCount = newCount;
-            viewmodel.ApprovedCount = approvedCount;
-            viewmodel.OrderedCount = orderedCount;
-            viewmodel.ReceivedCount = receivedCount;
-        }
-
-        private void SetViewModelProprietaryCounts(RequestIndexObject requestIndexObject, RequestIndexPartialViewModel viewmodel, SelectedFilters selectedFilters = null)
-        {
-            int categoryID = 0;
-            if (requestIndexObject.SectionType == AppUtility.MenuItems.Requests)
-            {
-                categoryID = 1;
-            }
-            else if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-            {
-                categoryID = 2;
-            }
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
-.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
-            IQueryable<Request> fullRequestsListProprietary = _context.Requests.Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor)
-.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
-            if (requestIndexObject.RequestStatusID == 7)
-            {
-                fullRequestsListProprietary = filterListBySelectFilters(selectedFilters, fullRequestsListProprietary);
-            }
-            else
-            {
-                fullRequestsList = filterListBySelectFilters(selectedFilters, fullRequestsList);
-            }
-
-            int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsListProprietary, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            viewmodel.ProprietaryCount = proprietaryCount;
-            viewmodel.NonProprietaryCount = nonProprietaryCount;
-        }
-
-        private static IQueryable<Request> filterListBySelectFilters(SelectedFilters selectedFilters, IQueryable<Request> fullRequestsListProprietary)
-        {
-            if (selectedFilters != null)
-            {
-                if (selectedFilters.SelectedCategoriesIDs.Count() > 0)
-                {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedCategoriesIDs.Contains(r.Product.ProductSubcategory.ParentCategoryID));
-                }
-                if (selectedFilters.SelectedSubcategoriesIDs.Count() > 0)
-                {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedSubcategoriesIDs.Contains(r.Product.ProductSubcategoryID));
-                }
-                if (selectedFilters.SelectedVendorsIDs.Count() > 0)
-                {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedVendorsIDs.Contains(r.Product.VendorID ?? 0));
-                }
-                if (selectedFilters.SelectedLocationsIDs.Count() > 0)
-                {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedLocationsIDs.Contains((int)(Math.Floor(r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationTypeID / 100.0) * 100)));
-                }
-                if (selectedFilters.SelectedOwnersIDs.Count() > 0)
-                {
-                    fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
-                }
-            }
-
-            return fullRequestsListProprietary;
-        }
-
-        [Authorize(Roles = "Requests, LabManagement, Operations")]
-        private async Task<RequestIndexPartialViewModel> GetIndexViewModel(RequestIndexObject requestIndexObject, List<int> Months = null, List<int> Years = null, SelectedFilters selectedFilters = null)
-        {
-            int categoryID = 1;
-            if (requestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-            {
-                categoryID = 2;
-            }
-            IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
-            IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator)
-         .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Include(x => x.ParentRequest);
-
-            int sideBarID = 0;
-            if (requestIndexObject.SidebarType != AppUtility.SidebarEnum.Owner)
-            {
-                int.TryParse(requestIndexObject.SidebarFilterID, out sideBarID);
-            }
-
-            if (requestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementEquipment)
-            {
-                if (requestIndexObject.SidebarType == AppUtility.SidebarEnum.Category)
-                {
-                    RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
-                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-                        .Include(r => r.ParentRequest).Where(r => r.Product.ProductSubcategoryID == sideBarID).Include(r => r.ParentRequest);
-
-                }
-                else
-                {
-                    RequestsPassedIn = _context.Requests.Where(r => r.RequestStatusID == 3).Where(r => r.Product.ProductSubcategory.ParentCategoryID == 5).Include(r => r.Product.ProductSubcategory)
-                        .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance)
-                        .Include(r => r.ParentRequest);
-                }
-                RequestsPassedIn.OrderByDescending(e => e.ParentRequest.OrderDate);
-            }
-            else if (ViewData["ReturnRequests"] != null)
-            {
-                RequestsPassedIn = TempData["ReturnRequests"] as IQueryable<Request>;
-            }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest || requestIndexObject.PageType == AppUtility.PageTypeEnum.OperationsRequest)
-            {
-                /*
-                 * In order to combine all the requests each one needs to be in a separate list
-                 * Then you need to union them one at a time into separate variables
-                 * you only need the separate union variable in order for the union to work
-                 * and the original queries are on separate lists because each is querying the full database with a separate where
-                 */
-
-                IQueryable<Request> TempRequestList = Enumerable.Empty<Request>().AsQueryable();
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 1)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 1);
-                    RequestsPassedIn = TempRequestList;
-                }
-
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 6)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 6);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                }
-
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 2)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 2);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                }
-
-                if (requestIndexObject.RequestStatusID == 0 || requestIndexObject.RequestStatusID == 3)
-                {
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 3, 50);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 4);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                    TempRequestList = AppUtility.GetRequestsListFromRequestStatusID(fullRequestsList, 5);
-                    RequestsPassedIn = AppUtility.CombineTwoRequestsLists(RequestsPassedIn, TempRequestList);
-                }
-
-            }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
-            {
-                if (requestIndexObject.RequestStatusID == 7)
-                {
-                    RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 7).Include(r => r.Product.ProductSubcategory)
-                 .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
-                }
-                else
-                {
-                    RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5).Include(r => r.Product.ProductSubcategory)
-                   .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
-                }
-
-            }
-            else if (requestIndexObject.PageType == AppUtility.PageTypeEnum.AccountingGeneral)
-            {
-                //we need both categories
-                RequestsPassedIn = _context.Requests.Include(r => r.ApplicationUserCreator)
-                     .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).Include(r => r.ParentQuote)
-                     .Include(r => r.ParentRequest).Where(r => Years.Contains(r.ParentRequest.OrderDate.Year)).Where(r => r.HasInvoice && r.Paid && !r.IsClarify && !r.IsPartial);
-                if (Months != null)
-                {
-                    RequestsPassedIn = RequestsPassedIn.Where(r => Months.Contains(r.ParentRequest.OrderDate.Month));
-                }
-            }
-            else //we just want what is in inventory
-            {
-                RequestsPassedIn = fullRequestsList.Where(r => r.RequestStatus.RequestStatusID == 3 || r.RequestStatus.RequestStatusID == 4 || r.RequestStatus.RequestStatusID == 5);
-            }
-            AppUtility.SidebarEnum SidebarTitle = AppUtility.SidebarEnum.List;
-            //now that the lists are created sort by vendor or subcategory
-            var sidebarFilterDescription = "";
-            switch (requestIndexObject.SidebarType)
-            {
-                case AppUtility.SidebarEnum.Vendors:
-                    sidebarFilterDescription = _context.Vendors.Where(v => v.VendorID == sideBarID).Select(v => v.VendorEnName).FirstOrDefault();
-                    RequestsPassedIn = RequestsPassedIn
-                     .OrderByDescending(r => r.ProductID)
-                     .Where(r => r.Product.VendorID == sideBarID);
-                    break;
-                case AppUtility.SidebarEnum.Type:
-                    sidebarFilterDescription = _context.ProductSubcategories.Where(p => p.ProductSubcategoryID == sideBarID).Select(p => p.ProductSubcategoryDescription).FirstOrDefault();
-                    RequestsPassedIn = RequestsPassedIn
-                   .OrderByDescending(r => r.ProductID)
-                   .Where(r => r.Product.ProductSubcategoryID == sideBarID);
-                    break;
-                case AppUtility.SidebarEnum.Owner:
-                    var owner = _context.Employees.Where(e => e.Id.Equals(requestIndexObject.SidebarFilterID)).FirstOrDefault();
-                    sidebarFilterDescription = owner.FirstName + " " + owner.LastName;
-                    RequestsPassedIn = RequestsPassedIn
-                    .OrderByDescending(r => r.ProductID)
-                    .Where(r => r.ApplicationUserCreatorID == requestIndexObject.SidebarFilterID);
-                    break;
-            }
 
 
-            RequestIndexPartialViewModel requestIndexViewModel = new RequestIndexPartialViewModel();
-            requestIndexViewModel.PricePopoverViewModel = new PricePopoverViewModel();
-            requestIndexViewModel.PageNumber = requestIndexObject.PageNumber;
-            requestIndexViewModel.RequestStatusID = requestIndexObject.RequestStatusID;
-            requestIndexViewModel.PageType = requestIndexObject.PageType;
-            requestIndexViewModel.SidebarFilterID = requestIndexObject.SidebarFilterID;
-            requestIndexViewModel.ErrorMessage = requestIndexObject.ErrorMessage;
-            var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
-
-            var RequestPassedInWithInclude = RequestsPassedIn.Include(r => r.Product.ProductSubcategory)
-                .Include(r => r.ParentRequest).Include(r => r.ApplicationUserCreator)
-                .Include(r => r.Product.Vendor).Include(r => r.RequestStatus)
-                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                .Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).AsQueryable();
-
-
-            RequestPassedInWithInclude = filterListBySelectFilters(selectedFilters, RequestPassedInWithInclude);
-
-            onePageOfProducts = await GetColumnsAndRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude);
-
-            requestIndexViewModel.PagedList = onePageOfProducts;
-            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
-            requestIndexViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
-            requestIndexViewModel.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
-            requestIndexViewModel.SidebarFilterName = sidebarFilterDescription;
-            bool isProprietary = requestIndexObject.RequestStatusID == 7 ? true : false;
-            requestIndexViewModel.InventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, isProprietary: isProprietary);
-            return requestIndexViewModel;
-        }
         [Authorize(Roles = "Requests, LabManagement, Operations")]
         private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject)
         {
             RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
+            if (!requestIndexObject.CategorySelected && !requestIndexObject.SubcategorySelected)
+            {
+                requestIndexObject.SubcategorySelected = true;
+            }
+            viewModelByVendor.CategoryPopoverViewModel = new CategoryPopoverViewModel()
+            {
+                SelectedCategoryOption = new List<bool>()
+                {
+                    requestIndexObject.CategorySelected,
+                    requestIndexObject.SubcategorySelected
+                }
+            };
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
             var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
             var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
             var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
+
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
-            var popoverMoreIcon = new IconColumnViewModel("More");
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "#5F79E2", "request-favorite", "Favorite");
+            var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
             var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
             string checkboxString = "Checkbox";
+            string buttonText = "";
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             switch (requestIndexObject.PageType)
             {
@@ -373,61 +141,33 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case AppUtility.SidebarEnum.Orders:
                             var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
-                                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
                                      .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);
 
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel
+                             (AppUtility.IndexTableTypes.LabOrders, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
+
                             {
-                                TotalCost = (r.Cost ?? 0) + r.VAT,
-                                ExchangeRate = r.ExchangeRate,
-                                Vendor = r.Product.Vendor,
                                 ButtonClasses = " load-terms-modal lab-man-background-color ",
-                                ButtonText = "Order",
-                                Columns = new List<RequestIndexPartialColumnViewModel>()
-                                {
-                                     new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                     new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                     new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                     new RequestIndexPartialColumnViewModel()
-                                     {
-                                         Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                                     }
-                                }
+                                ButtonText = "Order"
                             }).ToLookup(c => c.Vendor);
                             break;
                         case AppUtility.SidebarEnum.Quotes:
                             var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
-            .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+            .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
             .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
             .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
+                            //iconList.Add(resendIcon);
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, checkboxString, r.ParentQuote)
+
                             {
-                                TotalCost = (r.Cost ?? 0) + r.VAT,
-                                ExchangeRate = r.ExchangeRate,
-                                Vendor = r.Product.Vendor,
                                 ButtonClasses = " confirm-quote lab-man-background-color ",
-                                ButtonText = "Ask For Quote",
-                                Columns = new List<RequestIndexPartialColumnViewModel>()
-                                {
-                                     new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                     new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                     new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                     new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                     new RequestIndexPartialColumnViewModel()
-                                     {
-                                         Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                                     }
-                                }
+                                ButtonText = "Ask For Quote"
                             }).ToLookup(c => c.Vendor);
                             break;
                     }
@@ -436,19 +176,15 @@ namespace PrototypeWithAuth.Controllers
 
                     var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
                     iconList.Add(popoverPartialClarifyIcon);
-                    string value = "";
-                    string buttonText = "";
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.DidntArrive:
                             checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.PartialDelivery:
-                            value = "PartialClarify";
                             checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.ForClarification:
-                            value = "PartialClarify";
                             checkboxString = "";
                             break;
                         case AppUtility.SidebarEnum.NoInvoice:
@@ -456,62 +192,54 @@ namespace PrototypeWithAuth.Controllers
                             buttonText = "Add To All";
                             break;
                     }
-                    viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                    viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                    (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString)
                     {
-                        TotalCost = (r.Cost ?? 0) + r.VAT,
-                        ExchangeRate = r.ExchangeRate,
-                        Vendor = r.Product.Vendor,
                         ButtonClasses = " invoice-add-all accounting-background-color ",
-                        ButtonText = buttonText,
-                        Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() { checkboxString }, AjaxID = r.RequestID },
-                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
-                            new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID },
-                            new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } },
-                            new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
-                            new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
-                            new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
-                            new RequestIndexPartialColumnViewModel()
-                            {
-                                Title = "", Width = 10, Icons = iconList, AjaxID = r.RequestID, Note = AppUtility.GetNote(requestIndexObject.SidebarType, r)
-                            }
-                        }
+                        ButtonText = buttonText
                     }).ToLookup(c => c.Vendor);
 
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
-                    
+
                     var paymentList = GetPaymentRequests(requestIndexObject.SidebarType);
-                    iconList.Add(payNowIcon);
-                    iconList.Add(popoverMoreIcon);
-                    viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel()
+                    switch (requestIndexObject.SidebarType)
                     {
-                        TotalCost = (r.Cost ?? 0) + r.VAT,
-                        ExchangeRate = r.ExchangeRate,
-                        Vendor = r.Product.Vendor,
-                        ButtonClasses = " payments-pay-now accounting-background-color ",
-                        ButtonText = "Pay All",
-                        Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Value = new List<string>() {checkboxString} , AjaxID = r.RequestID},
-                            new RequestIndexPartialColumnViewModel() { Title = "", Width = 10, Image = r.Product.ProductSubcategory.ImageURL == null ? defaultImage : r.Product.ProductSubcategory.ImageURL },
-                            new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width = 15, Value = new List<string>() { r.Product.ProductName }, AjaxLink = "load-product-details", AjaxID = r.RequestID },
-                            new RequestIndexPartialColumnViewModel() { Title = "Category", Width = 11, Value = new List<string>() { r.Product.ProductSubcategory.ProductSubcategoryDescription } },
-                            new RequestIndexPartialColumnViewModel() { Title = "Amount", Width = 10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType) },
-                            new RequestIndexPartialColumnViewModel() { Title = "Price", Width = 10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum = AppUtility.FilterEnum.Price },
-                            new RequestIndexPartialColumnViewModel() { Title = "Date", Width = 12, Value = new List<string>() { r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
-                            new RequestIndexPartialColumnViewModel()
+                        case AppUtility.SidebarEnum.Installments:
+                            payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
+                            checkboxString = "";
+                            iconList.Add(payNowIcon);
+                            iconList.Add(popoverMoreIcon);
+                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                             (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, r.Payments)
+
                             {
-                                Title = "", Width = 10, Icons = iconList, AjaxID = r.RequestID
-                            }
-                        }
-                    }).ToLookup(c => c.Vendor);
+                                ButtonText = "",
+                            }).ToLookup(c => c.Vendor);
+                            break;
+                        default:
+                            iconList.Add(payNowIcon);
+                            iconList.Add(popoverMoreIcon);
+                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                             (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, r.Payments)
+
+
+                            {
+                                ButtonClasses = " payments-pay-now accounting-background-color ",
+                                ButtonText = "Pay All"                                
+                            }).ToLookup(c => c.Vendor);
+                            buttonText = "Pay All";
+                            break;
+                    }
+
 
                     break;
                 case AppUtility.PageTypeEnum.RequestCart:
                     var cartRequests = _context.Requests
-              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
               .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
               .Include(r => r.ApplicationUserCreator)
               .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
@@ -519,28 +247,11 @@ namespace PrototypeWithAuth.Controllers
               .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
 
                     iconList.Add(deleteIcon);
-                    viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel()
+                    viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage)
                     {
-
-                        Vendor = r.Product.Vendor,
-                        TotalCost = (r.Cost ?? 0) + r.VAT,
-                        ExchangeRate = r.ExchangeRate,
                         ButtonClasses = " load-terms-modal order-inv-background-color ",
                         ButtonText = "Order",
-                        Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                                new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                new RequestIndexPartialColumnViewModel()
-                                {
-                                    Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID,
-                                },
-
-                        }
                     }).ToLookup(c => c.Vendor);
 
                     break;
@@ -551,367 +262,15 @@ namespace PrototypeWithAuth.Controllers
             viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
             viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
             viewModelByVendor.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
+            viewModelByVendor.PricePopoverViewModel.PopoverSource = 1;
             viewModelByVendor.PageType = requestIndexObject.PageType;
             viewModelByVendor.SidebarType = requestIndexObject.SidebarType;
             viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
             return viewModelByVendor;
         }
 
-        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetColumnsAndRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude)
-        {
-            List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
-            var reorderIcon = new IconColumnViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", "load-order-details", "Reorder");
-            var orderOperations = new IconColumnViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", "order-approved-operation", "Order");
-            var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
-            var receiveIcon = new IconColumnViewModel(" icon-done-24px ", "#00CA72", "load-receive-and-location", "Receive");
-            var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
-            var equipmentIcon = new IconColumnViewModel(" icon-settings-24px-1 ", "var(--lab-man-color);", "create-calibration", "Create Calibration");
-            var defaultImage = "/images/css/CategoryImages/placeholder.png";
-            switch (requestIndexObject.PageType)
-            {
-                case AppUtility.PageTypeEnum.RequestRequest:
-                    switch (requestIndexObject.RequestStatusID)
-                    {
-                        case 1:
-                            iconList.Add(approveIcon);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetForApprovalRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
-                        case 6:
-                            //iconList.Add(reorderIcon);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetApprovedRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
-                        case 2:
-                            iconList.Add(receiveIcon);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetOrderedRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
-                        case 3:
-                            iconList.Add(reorderIcon);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
+     
 
-                    }
-                    break;
-                case AppUtility.PageTypeEnum.OperationsRequest:
-                    switch (requestIndexObject.RequestStatusID)
-                    {
-                        case 1:
-                            iconList.Add(approveIcon);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetForApprovalOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
-                        case 6:
-                            iconList.Add(orderOperations);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetApprovedOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
-                        case 2:
-                            iconList.Add(receiveIcon);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetOrderedOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
-                        case 3:
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetReceivedInventoryOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
-                    }
-                    break;
-                case AppUtility.PageTypeEnum.RequestInventory:
-                    iconList.Add(reorderIcon);
-                    iconList.Add(deleteIcon);
-                    onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                    break;
-                case AppUtility.PageTypeEnum.RequestSummary:
-
-
-                    switch (requestIndexObject.RequestStatusID)
-                    {
-                        case 7:
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetSummaryProprietaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
-                        default:
-                            iconList.Add(reorderIcon);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await GetSummaryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                            break;
-                    }
-
-                    break;
-                case AppUtility.PageTypeEnum.OperationsInventory:
-                    iconList.Add(orderOperations);
-                    iconList.Add(deleteIcon);
-                    onePageOfProducts = await GetReceivedInventoryOperationsRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                    break;
-                case AppUtility.PageTypeEnum.LabManagementEquipment:
-                    iconList.Add(equipmentIcon);
-                    iconList.Add(reorderIcon);
-                    iconList.Add(deleteIcon);
-                    onePageOfProducts = await GetReceivedInventoryRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                    break;
-                case AppUtility.PageTypeEnum.ExpensesStatistics:
-                    break;
-                case AppUtility.PageTypeEnum.AccountingGeneral:
-                    onePageOfProducts = await GetAccountingGeneralRows(requestIndexObject, onePageOfProducts, RequestPassedInWithInclude, iconList, defaultImage);
-                    break;
-            }
-
-            return onePageOfProducts;
-        }
-
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetForApprovalRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Icons = iconList,  AjaxID = r.RequestID },
-                                 new RequestIndexPartialColumnViewModel() { Width=0, AjaxLink = " d-none order-type"+r.RequestID, AjaxID = (int)Enum.Parse(typeof(AppUtility.OrderTypeEnum),r.OrderType), Value = new List<string>(){r.OrderType.ToString()} }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetApprovedRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetOrderedRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=12, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel()
-                                 {
-                                     Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                                 }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetAccountingGeneralRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details-summary", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=10, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=12, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                             new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                             new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                             new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                             new RequestIndexPartialColumnViewModel() { Title = "Arrival Date", Width=10, Value = new List<string>(){ r.ArrivalDate.ToString("dd'/'MM'/'yyyy") } },
-                             new RequestIndexPartialColumnViewModel()
-                             {
-                                 Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                             }
-                        }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetForApprovalOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel()
-                                 {
-                                     Title = "", Width=10, Icons = iconList,  AjaxID = r.RequestID
-                                 }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetApprovedOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel()
-                                 {
-                                     Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                                 }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetOrderedOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=15, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=10, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=11, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=12, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r,  requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=12, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
-                                 new RequestIndexPartialColumnViewModel()
-                                 {
-                                     Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                                 }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-
-        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetReceivedInventoryOperationsRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                             new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                             new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details", AjaxID=r.RequestID},
-                             new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                             new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=10, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
-                             new RequestIndexPartialColumnViewModel()
-                             {
-                                 Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                             }
-                        }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetSummaryProprietaryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                             new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                             new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details-summary", AjaxID=r.RequestID},
-                             new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=10, Value = new List<string>(){ r.CreationDate.ToString("dd'/'MM'/'yyyy") } },
-                             new RequestIndexPartialColumnViewModel()
-                             {
-                                 Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                             }
-                        }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetSummaryRows(RequestIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProducts, IQueryable<Request> RequestPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-
-            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).ToList().Select(r => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                        {
-                             new RequestIndexPartialColumnViewModel() { Title = "", Width=9, Image = r.Product.ProductSubcategory.ImageURL==null?defaultImage: r.Product.ProductSubcategory.ImageURL},
-                             new RequestIndexPartialColumnViewModel() { Title = "Item Name", Width=14, Value = new List<string>(){ r.Product.ProductName}, AjaxLink = "load-product-details-summary", AjaxID=r.RequestID},
-                             new RequestIndexPartialColumnViewModel() { Title = "Vendor", Width=9, Value = new List<string>(){ r.Product.Vendor.VendorEnName} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Amount", Width=9, Value = AppUtility.GetAmountColumn(r, r.UnitType, r.SubUnitType, r.SubSubUnitType)},
-                             new RequestIndexPartialColumnViewModel() { Title = "Location", Width=9, Value = new List<string>(){ GetLocationInstanceNameBefore(r.RequestLocationInstances.FirstOrDefault().LocationInstance) } },
-                             new RequestIndexPartialColumnViewModel() { Title = "Category", Width=9, Value = new List<string>(){ r.Product.ProductSubcategory.ProductSubcategoryDescription} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Owner", Width=10, Value = new List<string>(){r.ApplicationUserCreator.FirstName + " " + r.ApplicationUserCreator.LastName} },
-                             new RequestIndexPartialColumnViewModel() { Title = "Price", Width=10, Value = AppUtility.GetPriceColumn(requestIndexObject.SelectedPriceSort, r, requestIndexObject.SelectedCurrency), FilterEnum=AppUtility.FilterEnum.Price},
-                             new RequestIndexPartialColumnViewModel() { Title = "Date Ordered", Width=10, Value = new List<string>(){ r.ParentRequest.OrderDate.ToString("dd'/'MM'/'yyyy") } },
-                             new RequestIndexPartialColumnViewModel()
-                             {
-                                 Title = "", Width=10, Icons = iconList, AjaxID = r.RequestID
-                             }
-                        }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProducts;
-        }
-        private string GetLocationInstanceNameBefore(LocationInstance locationInstance)
-        {
-            var newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).FirstOrDefault().LocationInstanceAbbrev;
-            if (newLIName == null)
-            {
-                while (locationInstance.LocationInstanceParentID != null)
-                {
-                    newLIName = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstance.LocationInstanceParentID).Include(li => li.LocationInstanceParent).FirstOrDefault().LocationInstanceName + newLIName;
-                    locationInstance = locationInstance.LocationInstanceParent;
-                }
-            }
-            return newLIName;
-        }
         [HttpGet]
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AccountingGeneral(RequestIndexObject requestIndexObject)
@@ -924,46 +283,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(viewModel);
         }
 
-        [HttpGet]
-        [HttpPost]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableWithProprietaryTabs(RequestIndexObject requestIndexObject, List<int> months, List<int> years, SelectedFilters selectedFilters = null)
-        {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years, selectedFilters);
-            SetViewModelProprietaryCounts(requestIndexObject, viewModel, selectedFilters);
-            return PartialView(viewModel);
-        }
 
-
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableData(RequestIndexObject requestIndexObject, List<int> months, List<int> years)
-        {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject, months, years);
-
-            return PartialView(viewModel);
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTableWithCounts(RequestIndexObject requestIndexObject)
-        {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
-            SetViewModelCounts(requestIndexObject, viewModel);
-            if (TempData["RequestStatus"]?.ToString() == "1")
-            {
-                Response.StatusCode = 210;
-            }
-            return PartialView(viewModel);
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> _IndexTable(RequestIndexObject requestIndexObject)
-        {
-            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
-            return PartialView(viewModel);
-        }
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
@@ -988,6 +308,38 @@ namespace PrototypeWithAuth.Controllers
             RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
             SetViewModelCounts(requestIndexObject, viewModel);
             SetViewModelProprietaryCounts(requestIndexObject, viewModel);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> IndexFavorites()
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            RequestIndexObject requestIndexObject = new RequestIndexObject()
+            {
+                PageType = AppUtility.PageTypeEnum.RequestCart,
+                SidebarType = AppUtility.SidebarEnum.Favorites
+            };
+            RequestIndexPartialViewModel viewModel = await GetIndexViewModel(requestIndexObject);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> IndexShared()
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedRequests;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+            //RequestIndexObject requestIndexObject = new RequestIndexObject()
+            //{
+            //    PageType = AppUtility.PageTypeEnum.RequestCart,
+            //    SidebarType = AppUtility.SidebarEnum.SharedRequests
+            //};
+            RequestIndexPartialViewModel viewModel = await base.GetSharedRequestIndexObjectAsync();
             return View(viewModel);
         }
 
@@ -1106,10 +458,18 @@ namespace PrototypeWithAuth.Controllers
                                 await _context.SaveChangesAsync();
                             }
                         }
+                        var productRequests = _context.Requests.Where(r => r.ProductID == request.ProductID).ToList();
+                        if (productRequests.Count() == 0)
+                        {
+                            var product = request.Product;
+                            product.IsDeleted = true;
+                            _context.Update(product);
+                            await _context.SaveChangesAsync();
+                        }
                         foreach (var requestLocationInstance in request.RequestLocationInstances)
                         {
                             requestLocationInstance.IsDeleted = true;
-                            var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
+                            var locationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
                             locationInstance.IsFull = false;
 
                             _context.Update(requestLocationInstance);
@@ -1117,14 +477,14 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(locationInstance);
                             await _context.SaveChangesAsync();
                         }
-                        var comments = _context.Comments.Where(c => c.RequestID == request.RequestID);
+                        var comments = _context.Comments.Where(c => c.RequestID == request.RequestID).ToList();
                         foreach (var comment in comments)
                         {
                             comment.IsDeleted = true;
                             _context.Update(comment);
                             await _context.SaveChangesAsync();
                         }
-                        var notifications = _context.RequestNotifications.Where(rn => rn.RequestID == request.RequestID);
+                        var notifications = _context.RequestNotifications.Where(rn => rn.RequestID == request.RequestID).ToList();
 
                         foreach (var notification in notifications)
                         {
@@ -1221,177 +581,46 @@ namespace PrototypeWithAuth.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel? receivedModalVisualViewModel = null)
+        public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
-            try
+            var redirectToActionResult = base.SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
+            return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
+        }
+
+
+        private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
+        {
+            var newIconList = AppUtility.DeepClone(iconList);
+            //favorite icon
+            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
+
+            if (favIconIndex != -1 && favoriteRequest != null) //check these checks
             {
-                RemoveRequestWithCommentsAndEmailSessions();
-                var vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
-                var categoryType = 1;
-                var serialLetter = "L";
-                var exchangeRate = requestItemViewModel.Requests.FirstOrDefault().ExchangeRate;
-                var currency = requestItemViewModel.Requests.FirstOrDefault().Currency;
-                if (OrderType == AppUtility.OrderTypeEnum.SaveOperations)
+                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
+                newIconList[favIconIndex] = unLikeIcon;
+            }
+            //for approval icon
+            if (request != null)
+            {
+                var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("approve-order"));
+                if (request.RequestStatusID != 1 && forApprovalIconIndex != -1)
                 {
-                    categoryType = 2;
-                    serialLetter = "P";
+                    newIconList.RemoveAt(forApprovalIconIndex);
+                    needsPlaceholder = true;
                 }
-                var productSubcategories = _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ParentCategory.CategoryTypeID == categoryType).ToList();
-                //in case we need to return to the modal view
-                //requestItemViewModel.ParentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == requestItemViewModel.Request.Product.ProductSubcategory.ParentCategory.ParentCategoryID).FirstOrDefaultAsync();
-
-                //declared outside the if b/c it's used farther down too 
-                var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                var lastSerialNumber = Int32.Parse((_context.Products.Where(p => p.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).ToList().OrderBy(p=>p.ProductCreationDate).LastOrDefault().SerialNumber ?? "L0").Substring(1));
-
-                var RequestNum = 1;
-                var i = 1;
-                var additionalRequests = false;
-                foreach (var request in requestItemViewModel.Requests)
+                //resend icon
+                var resendIcon = new IconColumnViewModel("Resend");
+                var placeholder = new IconColumnViewModel("Placeholder");
+                if (request.ParentQuote?.QuoteStatusID == 2)
                 {
-                    if (!request.Ignore)
-                    {
-                        request.ApplicationUserCreatorID = currentUser.Id;
-                        if (!requestItemViewModel.IsProprietary)
-                        {
-                            request.Product.VendorID = vendor.VendorID;
-                            request.Product.Vendor = vendor;
-                        }
-
-                        request.Product.ProductSubcategory = productSubcategories.FirstOrDefault(ps => ps.ProductSubcategoryID == request.Product.ProductSubcategory.ProductSubcategoryID);
-                        request.CreationDate = DateTime.Now;
-                        var isInBudget = false;
-                        if (!request.Product.ProductSubcategory.ParentCategory.isProprietary)//is proprietry
-                        {
-                            if (request.Currency == null)
-                            {
-                                request.Currency = AppUtility.CurrencyEnum.NIS.ToString();
-                            }
-                            isInBudget = checkIfInBudget(request);
-                        }
-                        request.ExchangeRate = exchangeRate;
-                        request.Product.SerialNumber = serialLetter + (lastSerialNumber + 1);
-                        lastSerialNumber++;
-
-                        using (var transaction = _context.Database.BeginTransaction())
-                        {
-                            try
-                            {
-                                await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestNum: RequestNum);
-                                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                                var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
-
-                                if (requestItemViewModel.Comments != null)
-                                {
-                                    var x = 1; //to name the comments in session
-                                    foreach (var comment in requestItemViewModel.Comments)
-                                    {
-                                        if (comment.CommentText.Length != 0)
-                                        {
-                                            //save the new comment
-                                            comment.ApplicationUserID = currentUser.Id;
-
-                                            comment.RequestID = request.RequestID;
-
-                                            if (!isSavedUsingSession)
-                                            {
-                                                _context.Add(comment);
-                                            }
-                                            else
-                                            {
-                                                var SessionCommentName = AppData.SessionExtensions.SessionNames.Comment.ToString() + x;
-                                                HttpContext.Session.SetObject(SessionCommentName, comment);
-                                            }
-                                        }
-
-                                        x++; //to name the comments in session
-                                    }
-                                }
-                                if (!isSavedUsingSession)
-                                {
-                                    await _context.SaveChangesAsync();
-                                    if (receivedModalVisualViewModel.LocationInstancePlaces != null)
-                                    {
-                                        await SaveLocations(receivedModalVisualViewModel, request);
-                                    }
-                                    if (i < requestItemViewModel.Requests.Count)
-                                    {
-                                        additionalRequests = true;
-                                    }
-                                    else
-                                    {
-                                        additionalRequests = false;
-                                    }
-                                    MoveDocumentsOutOfTempFolder(request, additionalRequests);
-                                    await transaction.CommitAsync();
-                                    base.RemoveRequestWithCommentsAndEmailSessions();
-                                }
-                                else if (OrderType != AppUtility.OrderTypeEnum.SaveOperations)
-                                {
-                                    var emailNum = 1;
-                                    foreach (var e in requestItemViewModel.EmailAddresses)
-                                    {
-                                        var SessionEmailName = AppData.SessionExtensions.SessionNames.Email.ToString() + emailNum;
-                                        HttpContext.Session.SetObject(SessionEmailName, e);
-                                        emailNum++;
-                                    }
-
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                await transaction.RollbackAsync();
-                                base.RemoveRequestWithCommentsAndEmailSessions();
-                                throw ex;
-                            }
-                        }
-                        RequestNum++;
-                    }
-                    i++;
+                    newIconList.Insert(0, resendIcon);
+                }
+                else if (needsPlaceholder)
+                {
+                    newIconList.Insert(0, placeholder);
                 }
             }
-            catch (Exception ex)
-            {
-                requestItemViewModel.ErrorMessage += AppUtility.GetExceptionMessage(ex);
-                Response.StatusCode = 500;
-                //Response.WriteAsync(ex.Message?.ToString());
-                if (requestItemViewModel.RequestStatusID == 7)
-                {
-                    return PartialView("CreateItemTabs", requestItemViewModel);
-                }
-                return PartialView("_OrderTab", requestItemViewModel);
-            }
-            switch (OrderType)
-            {
-                case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                    return RedirectToAction("UploadOrderModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
-                case AppUtility.OrderTypeEnum.OrderNow:
-                    return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
-                case AppUtility.OrderTypeEnum.AddToCart:
-                    return RedirectToAction("UploadQuoteModal", "Requests", new { OrderType = OrderType });
-                case AppUtility.OrderTypeEnum.SaveOperations:
-                    return RedirectToAction("UploadOrderModal", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
-                default:
-                    if (requestItemViewModel.PageType == AppUtility.PageTypeEnum.RequestSummary)
-                    {
-                        return RedirectToAction("IndexInventory", "Requests", new
-                        {
-                            PageType = requestItemViewModel.PageType,
-                            SectionType = requestItemViewModel.SectionType,
-                            SidebarType = AppUtility.SidebarEnum.List,
-                            RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
-                        });
-                    }
-                    return RedirectToAction("Index", "Requests", new
-                    {
-                        PageType = requestItemViewModel.PageType,
-                        SectionType = requestItemViewModel.SectionType,
-                        SidebarType = AppUtility.SidebarEnum.List,
-                        RequestStatusID = requestItemViewModel.Requests.FirstOrDefault().RequestStatusID,
-                    });
-
-            }
-
+            return newIconList;
         }
 
 
@@ -1433,7 +662,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     parentcategories = await _context.ParentCategories.Where(pc => pc.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
                 }
-                else {
+                else
+                {
                     parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToListAsync();
                 }
                 productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == productSubcategory.ParentCategoryID).ToListAsync();
@@ -1443,12 +673,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (requestItemViewModel.IsProprietary)
                 {
-                    var proprietarycategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString()).FirstOrDefaultAsync();
+                    var proprietarycategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString()).FirstOrDefaultAsync();
                     productsubcategories = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == proprietarycategory.ParentCategoryID).ToListAsync();
                 }
                 else
                 {
-                    parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.isProprietary).ToListAsync();
+                    parentcategories = await _context.ParentCategories.Where(pc => pc.CategoryTypeID == categoryTypeId && !pc.IsProprietary).ToListAsync();
                 }
             }
             var vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0).ToListAsync();
@@ -1482,7 +712,7 @@ namespace PrototypeWithAuth.Controllers
                 ParentCategory parentCategory = new ParentCategory();
                 if (requestItemViewModel.IsProprietary)
                 {
-                    parentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString()).FirstOrDefaultAsync();
+                    parentCategory = await _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString()).FirstOrDefaultAsync();
                 }
 
                 productSubcategory = new ProductSubcategory()
@@ -1490,7 +720,7 @@ namespace PrototypeWithAuth.Controllers
                     ParentCategory = parentCategory
                 };
             }
-            else if (productSubcategory.ParentCategory.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Proprietary.ToString())
+            else if (productSubcategory.ParentCategory.ParentCategoryDescription == AppUtility.ParentCategoryEnum.Samples.ToString())
             {
                 requestItemViewModel.IsProprietary = true;
             }
@@ -1501,7 +731,7 @@ namespace PrototypeWithAuth.Controllers
 
             requestItemViewModel.Requests = new List<Request>();
             requestItemViewModel.Requests.Add(new Request());
-            requestItemViewModel.Requests.FirstOrDefault().ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
+            requestItemViewModel.Requests.FirstOrDefault().ExchangeRate = GetExchangeRate();
             requestItemViewModel.Requests.FirstOrDefault().Product = new Product();
             requestItemViewModel.Requests.FirstOrDefault().ParentQuote = new ParentQuote();
             requestItemViewModel.Requests.FirstOrDefault().SubProject = new SubProject();
@@ -1509,11 +739,10 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory = productSubcategory.ParentCategory;
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategoryID = productSubcategory.ParentCategoryID;
             requestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
-            requestItemViewModel.Requests.FirstOrDefault().IncludeVAT = true;
             requestItemViewModel.Requests.FirstOrDefault().Cost = 0;
 
 
-            if (productSubcategory != null && productSubcategory.ParentCategory.isProprietary)
+            if (productSubcategory != null && productSubcategory.ParentCategory.IsProprietary)
             {
                 requestItemViewModel.ReceivedLocationViewModel = new ReceivedLocationViewModel()
                 {
@@ -1526,42 +755,42 @@ namespace PrototypeWithAuth.Controllers
             FillDocumentsInfo(requestItemViewModel, "", productSubcategory);
             /* if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
              {
-                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.S, "");
+                 GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.S, "");
 
              }
              if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                  && productSubcategory.ProductSubcategoryDescription != "Cells")
              {
-                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, "");
+                 GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Info, "");
 
              }
              if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                  && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
              {
-                 GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Map, "");
+                 GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Map, "");
 
              }
          }
          else if(requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID==2)
          {
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Details, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Orders, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Invoices, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Details, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Quotes, "");
          }
          else
          {
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Shipments, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Pictures, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, "");
-             GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Orders, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Invoices, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Shipments, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Quotes, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Info, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Pictures, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Returns, "");
+             GetExistingFileStrings(requestItemViewModel, AppUtility.FolderNamesEnum.Credits, "");
          }
-*/
-            DeleteTemporaryDocuments();
+    */
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
             return requestItemViewModel;
         }
 
@@ -1589,9 +818,174 @@ namespace PrototypeWithAuth.Controllers
             //operationsItemViewModel.Request.Product.ProductSubcategory = new ProductSubcategory();
             return PartialView(operationsItemViewModel);
         }
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> RequestFavorite(int requestID, string FavType, AppUtility.SidebarEnum sidebarType)
+        {
+            var userID = _userManager.GetUserId(User);
+            if (FavType == "favorite")
+            {
+                var favoriteRequest = _context.FavoriteRequests.Where(fr => fr.RequestID == requestID && fr.ApplicationUserID == userID).FirstOrDefault();
+                if (favoriteRequest == null)
+                {
+                    using (var transaction = _context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            favoriteRequest = new FavoriteRequest()
+                            {
+                                RequestID = requestID,
+                                ApplicationUserID = userID
+                            };
+                            _context.Add(favoriteRequest);
+                            await _context.SaveChangesAsync();
+                            await transaction.CommitAsync();
+                        }
+                        //throw new Exception(); //check this after!
+                        catch (Exception e)
+                        {
+                            await transaction.RollbackAsync();
+                            await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                        }
+                    }
+                }
+            }
+            else if (FavType == "unlike")
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var favoriteRequest = _context.FavoriteRequests
+                            .Where(fr => fr.ApplicationUserID == userID)
+                            .Where(fr => fr.RequestID == requestID).FirstOrDefault();
+                        _context.Remove(favoriteRequest);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    //throw new Exception(); //check this after!
+                    catch (Exception e)
+                    {
+                        await transaction.RollbackAsync();
+                        await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                    }
+                }
+                if (sidebarType == AppUtility.SidebarEnum.Favorites)
+                {
+                    RequestIndexObject requestIndexObject = new RequestIndexObject()
+                    {
+                        PageType = AppUtility.PageTypeEnum.RequestCart,
+                        SidebarType = sidebarType
+                    };
+                    return await base.RedirectRequestsToShared("_IndexTable", requestIndexObject);
+                }
+            }
+            return new EmptyResult();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ShareModal(int ID, AppUtility.ModelsEnum ModelsEnum)
+        {
+            //var shareRequestViewModel = new ShareRequestViewModel()
+            //{
+            //    Request = _context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault(),
+            //    ApplicationUsers = _context.Users
+            //                  .Where(u => u.Id != _userManager.GetUserId(User))
+            //                  .Select(
+            //                      u => new SelectListItem
+            //                      {
+            //                          Text = u.FirstName + " " + u.LastName,
+            //                          Value = u.Id
+            //                      }
+            //                  ).ToList()
+            //};
+            var shareViewModel = base.GetShareModalViewModel(ID, ModelsEnum);
+            switch (ModelsEnum)
+            {
+                case AppUtility.ModelsEnum.Request:
+                    shareViewModel.ObjectDescription = _context.Requests.Where(r => r.RequestID == ID).Include(r => r.Product).FirstOrDefault().Product.ProductName;
+                    break;
+            }
+
+            return PartialView(shareViewModel);
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<bool> ShareModal(ShareModalViewModel shareModalViewModel)
+        {
+            bool error = false;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var userID in shareModalViewModel.ApplicationUserIDs)
+                    {
+                        var sharedRequest = _context.ShareRequests.Where(sr => sr.RequestID == shareModalViewModel.ID)
+                                               .Where(sr => sr.FromApplicationUserID == _userManager.GetUserId(User))
+                                               .Where(sr => sr.ToApplicationUserID == userID).FirstOrDefault();
+                        if (sharedRequest == null)
+                        {
+                            sharedRequest = new ShareRequest()
+                            {
+                                RequestID = shareModalViewModel.ID,
+                                FromApplicationUserID = _userManager.GetUserId(User),
+                                ToApplicationUserID = userID,
+                                TimeStamp = DateTime.Now
+                            };
+                        }
+                        else
+                        {
+                            sharedRequest.TimeStamp = DateTime.Now;
+                        }
+                        _context.Update(sharedRequest);
+                    }
+
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    error = true;
+                }
+            }
+            return error;
+        }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ItemData(int? id, int? Tab = 0, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
+        public async Task<bool> RemoveShare(int ID, AppUtility.ModelsEnum ModelsEnum = AppUtility.ModelsEnum.Request)
+        {
+            bool error = false;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    switch (ModelsEnum)
+                    {
+                        case AppUtility.ModelsEnum.Request:
+                            var shareRequests = _context.ShareRequests.Where(sr => sr.RequestID == ID && sr.ToApplicationUserID == _userManager.GetUserId(User));
+                            foreach (var sr in shareRequests)
+                            {
+                                _context.Remove(sr);
+                            }
+                            break;
+                    }
+                    _context.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    error = true;
+                    transaction.Rollback();
+                }
+            };
+            return error;
+        }
+
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ItemData(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
         {
             var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable);
             return PartialView(requestItemViewModel);
@@ -1599,16 +993,18 @@ namespace PrototypeWithAuth.Controllers
 
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(int? id, bool NewRequestFromProduct = false, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
+        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false)
         {
-            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable);
+            selectedPriceSort = selectedPriceSort.Count == 0 ? new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() } : selectedPriceSort;
+            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable, selectedPriceSort, isProprietary: isProprietary);
             return PartialView(requestItemViewModel);
         }
 
         [Authorize(Roles = "Requests")]
         public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
-            bool isEditable = true)
+            bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null, bool isProprietary = false)
         {
+
             var categoryType = 1;
             if (SectionType == AppUtility.MenuItems.Operations)
             {
@@ -1629,17 +1025,25 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product.ProductSubcategory)
                 .Include(r => r.Product.ProductSubcategory.ParentCategory)
                 .Include(r => r.Product.Vendor)
-                .Include(r => r.Invoice)
                 .Include(r => r.RequestStatus)
-                .Include(r => r.ApplicationUserCreator).Include(r=>r.PaymentStatus).Include(r=>r.Payments).ThenInclude(p=>p.CompanyAccount).Include(r=>r.ApplicationUserReceiver)
+                .Include(r => r.ApplicationUserCreator).Include(r => r.PaymentStatus)
+                .Include(r => r.Payments).ThenInclude(p => p.CompanyAccount)
+                .Include(r => r.Payments).ThenInclude(p => p.CreditCard)
+                .Include(r => r.Payments).ThenInclude(p => p.Invoice)
+                .Include(r => r.ApplicationUserReceiver)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
+            if(request.RequestStatusID == 7)
+            {
+                isProprietary = true;
+            }
 
             var requestsByProduct = _context.Requests.Where(r => r.ProductID == productId && (r.RequestStatusID == 3))
                  .Include(r => r.Product.ProductSubcategory).Include(r => r.Product.ProductSubcategory.ParentCategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Include(r => r.ParentRequest)
                     .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType).Include(r => r.ApplicationUserReceiver)
+                    .OrderByDescending(r => r.CreationDate)
                     .ToList();
 
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
@@ -1670,7 +1074,7 @@ namespace PrototypeWithAuth.Controllers
             //    .ToListAsync();
             //requestItemViewModel.SubProjects = subprojects;
             //may be able to do this together - combining the path for the orders folders
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Requests.FirstOrDefault().RequestID.ToString());
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
@@ -1703,87 +1107,128 @@ namespace PrototypeWithAuth.Controllers
                 {
                     //get the parent location instances of the first one
                     //can do this now b/c can only be in one box - later on will have to be a list or s/t b/c will have more boxes
-                    //int? locationInstanceParentID = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
-                    LocationInstance parentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).Include(li => li.LocationType).FirstOrDefault();
-                    //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
+                    //int? locationInstanceParentID = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstanceID).FirstOrDefault().LocationInstanceParentID;
+                    LocationInstance parentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).Include(li => li.LocationType).FirstOrDefault();
+                    //requestItemViewModel.ParentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceParentID).FirstOrDefault();
                     //need to test b/c the model is int? which is nullable
 
-                    var locationType = parentLocationInstance.LocationType;
-                    while (locationType.Depth != 0)
+                    if (parentLocationInstance == null)
                     {
-                        locationType = _context.LocationTypes.Where(l => l.LocationTypeID == locationType.LocationTypeParentID).FirstOrDefault();
+                        var locationType = _context.TemporaryLocationInstances.Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).Select(li => li.LocationType).FirstOrDefault();
+                        requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
+                        ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
+                        {
+                            locationInstancesDepthZero = new List<LocationInstance>(),
+                            locationTypeNames = new List<string>(),
+                            locationInstancesSelected = _context.LocationInstances.Where(l => l.LocationInstanceID == requestLocationInstances[0].LocationInstance.LocationInstanceID).ToList()
+
+                        };
+                        requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
+                        requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
+                        requestItemViewModel.ChildrenLocationInstances.Add(receivedModalSublocationsViewModel.locationInstancesSelected);
+
+                        requestItemViewModel.ParentDepthZeroOfSelected = locationType;
+                        //requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
                     }
-
-                    receivedLocationViewModel.locationInstancesSelected.Add(parentLocationInstance);
-                    requestItemViewModel.ParentDepthZeroOfSelected = locationType;
-                    requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
-
-                    ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
+                    else
                     {
-                        locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == locationType.LocationTypeID),
-                        locationTypeNames = new List<string>(),
-                        locationInstancesSelected = new List<LocationInstance>()
-                    };
-                    bool finished = false;
-                    int locationTypeIDLoop = locationType.LocationTypeID;
-                    var parent = parentLocationInstance;
-                    receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
-                    requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
-                    requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).ToList());
-                    while (parent.LocationInstanceParentID != null)
-                    {
-                        parent = _context.LocationInstances.Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
-                        requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).ToList());
+                        var locationType = parentLocationInstance.LocationType;
+                        while (locationType.Depth != 0)
+                        {
+                            locationType = _context.LocationTypes.Where(l => l.LocationTypeID == locationType.LocationTypeParentID).FirstOrDefault();
+                        }
+
+                        receivedLocationViewModel.locationInstancesSelected.Add(parentLocationInstance);
+                        requestItemViewModel.ParentDepthZeroOfSelected = locationType;
+                        requestItemViewModel.ReceivedLocationViewModel = receivedLocationViewModel;
+
+                        ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
+                        {
+                            locationInstancesDepthZero = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationTypeID == locationType.LocationTypeID),
+                            locationTypeNames = new List<string>(),
+                            locationInstancesSelected = new List<LocationInstance>()
+                        };
+                        bool finished = false;
+                        int locationTypeIDLoop = locationType.LocationTypeID;
+                        var parent = parentLocationInstance;
                         receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
-                    }
-                    while (!finished)
-                    {
-                        //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
-                        var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
-                        string nextTYpeName = nextType.LocationTypeName;
-                        int? tryNewLocationType = nextType.LocationTypeChildID;
-                        //add it to the list in the viewmodel
-                        receivedModalSublocationsViewModel.locationTypeNames.Add(nextTYpeName);
-
-                        //while we're still looping through we'll instantiate the locationInstancesSelected so we can have dropdownlistfors on the view
-                        //receivedModalSublocationsViewModel.locationInstancesSelected.Add(new LocationInstance());
-
-                        if (tryNewLocationType == null)
+                        requestItemViewModel.ChildrenLocationInstances = new List<List<LocationInstance>>();
+                        requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
+                        while (parent.LocationInstanceParentID != null)
                         {
-                            //if its not null we can convert it and pass it in
-                            finished = true;
+                            parent = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == parent.LocationInstanceParentID).FirstOrDefault();
+                            requestItemViewModel.ChildrenLocationInstances.Add(_context.LocationInstances.OfType<LocationInstance>().Where(l => l.LocationInstanceParentID == parent.LocationInstanceParentID).OrderBy(l => l.LocationNumber).ToList());
+                            receivedModalSublocationsViewModel.locationInstancesSelected.Add(parent);
                         }
-                        else
+                        while (!finished)
                         {
-                            locationTypeIDLoop = (Int32)tryNewLocationType;
-                        }
-                    }
-                    requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
-                    ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
-                    {
-                        IsEditModalTable = true,
-                        ParentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == parentLocationInstance.LocationInstanceID).FirstOrDefault()
-                    };
+                            //need to get the whole thing b/c need both the name and the child id so it's instead of looping through the list twice
+                            var nextType = _context.LocationTypes.Where(lt => lt.LocationTypeID == locationTypeIDLoop).FirstOrDefault();
+                            string nextTYpeName = nextType.LocationTypeName;
+                            int? tryNewLocationType = nextType.LocationTypeChildID;
+                            //add it to the list in the viewmodel
+                            receivedModalSublocationsViewModel.locationTypeNames.Add(nextTYpeName);
 
-                    if (receivedModalVisualViewModel.ParentLocationInstance != null)
-                    {
-                        receivedModalVisualViewModel.RequestChildrenLocationInstances =
-                            _context.LocationInstances.Where(m => m.LocationInstanceParentID == parentLocationInstance.LocationInstanceID)
-                            .Include(m => m.RequestLocationInstances)
-                            .Select(li => new RequestChildrenLocationInstances()
+                            //while we're still looping through we'll instantiate the locationInstancesSelected so we can have dropdownlistfors on the view
+                            //receivedModalSublocationsViewModel.locationInstancesSelected.Add(new LocationInstance());
+
+                            if (tryNewLocationType == null)
                             {
-                                LocationInstance = li,
-                                IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == id).Any()
-                            }).ToList();
+                                //if its not null we can convert it and pass it in
+                                finished = true;
+                            }
+                            else
+                            {
+                                locationTypeIDLoop = (Int32)tryNewLocationType;
+                            }
+                        }
+                        requestItemViewModel.ReceivedModalSublocationsViewModel = receivedModalSublocationsViewModel;
+                        ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
+                        {
+                            IsEditModalTable = true,
+                            ParentLocationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceID == parentLocationInstance.LocationInstanceID).FirstOrDefault()
+                        };
 
-                        //return NotFound();
+                        if (receivedModalVisualViewModel.ParentLocationInstance != null)
+                        {
+                            receivedModalVisualViewModel.RequestChildrenLocationInstances =
+                                _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceParentID == parentLocationInstance.LocationInstanceID)
+                                .Include(m => m.RequestLocationInstances)
+                                .Select(li => new RequestChildrenLocationInstances()
+                                {
+                                    LocationInstance = li,
+                                    IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == id).Any()
+                                }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
+
+                            List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
+                            foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
+                            {
+                                liPlaces.Add(new LocationInstancePlace()
+                                {
+                                    LocationInstanceId = cli.LocationInstance.LocationInstanceID,
+                                    Placed = cli.IsThisRequest
+                                });
+                            }
+                            receivedModalVisualViewModel.LocationInstancePlaces = liPlaces;
+                            //return NotFound();
+                        }
+                        requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
                     }
-                    requestItemViewModel.ReceivedModalVisualViewModel = receivedModalVisualViewModel;
+
                 }
 
 
             }
-
+            if (selectedPriceSort != null && !isProprietary)
+            {
+                requestItemViewModel.PricePopoverViewModel = new PricePopoverViewModel();
+                List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
+                Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = selectedPriceSort.Contains(p.ToString()) }));
+                requestItemViewModel.PricePopoverViewModel.PriceSortEnums = priceSorts;
+                requestItemViewModel.PricePopoverViewModel.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), selectedCurrency ?? requestItemViewModel.Requests[0].Currency);
+                requestItemViewModel.PricePopoverViewModel.PopoverSource = 2;
+            }
+            requestItemViewModel.IsProprietary = isProprietary;
 
             if (requestItemViewModel.Requests.FirstOrDefault() == null)
             {
@@ -1803,50 +1248,51 @@ namespace PrototypeWithAuth.Controllers
         {
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
-            if (productSubcategory.ParentCategory.isProprietary)
+            if (productSubcategory.ParentCategory.IsProprietary)
             {
                 if (productSubcategory.ProductSubcategoryDescription == "Blood" || productSubcategory.ProductSubcategoryDescription == "Serum")
                 {
-                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.S, uploadFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.S, uploadFolder);
 
                 }
                 if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                     && productSubcategory.ProductSubcategoryDescription != "Cells")
                 {
-                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, uploadFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
 
                 }
                 if (productSubcategory.ProductSubcategoryDescription != "Blood" && productSubcategory.ProductSubcategoryDescription != "Serum"
                     && productSubcategory.ProductSubcategoryDescription != "Cells" && productSubcategory.ProductSubcategoryDescription != "Probes")
                 {
-                    GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Map, uploadFolder);
+                    GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Map, uploadFolder);
 
                 }
             }
             else if (requestItemViewModel.ParentCategories.FirstOrDefault().CategoryTypeID == 2)
             {
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Details, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Details, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, uploadFolder);
             }
             else
             {
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Orders, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Invoices, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Shipments, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Quotes, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Info, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Pictures, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, uploadFolder);
-                GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Quotes, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Orders, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Invoices, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Shipments, uploadFolder);
+
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
+                GetExistingFileStrings(requestItemViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
+                //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Returns, uploadFolder);
+                //GetExistingFileStrings(requestItemViewModel, AppUtility.RequestFolderNamesEnum.Credits, uploadFolder);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, string OrderType)
+        public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -1931,7 +1377,6 @@ namespace PrototypeWithAuth.Controllers
                         await _context.SaveChangesAsync();
 
 
-
                         if (requestItemViewModel.Comments != null)
                         {
 
@@ -1947,6 +1392,33 @@ namespace PrototypeWithAuth.Controllers
                                 }
                             }
                             await _context.SaveChangesAsync();
+                        }
+
+                        if (receivedModalVisualViewModel.LocationInstancePlaces != null)
+                        {
+                            var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
+                            foreach (var location in requestLocations)
+                            {
+                                var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                                    _context.Remove(location);
+                                if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                                {
+                                    locationInstance.IsFull = false;
+                                    _context.Update(locationInstance);
+                                }
+                                else if (locationInstance.IsEmptyShelf)
+                                {
+                                    var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+                                                            && rli.RequestID != request.RequestID).ToList();
+                                    if (duplicateLocations.Count() == 0)
+                                    {
+                                        locationInstance.ContainsItems = false;
+                                        _context.Update(locationInstance);
+                                    }
+                                }
+                            }
+                            await _context.SaveChangesAsync();
+                            await SaveLocations(receivedModalVisualViewModel, request);
                         }
 
 
@@ -2009,7 +1481,7 @@ namespace PrototypeWithAuth.Controllers
                     var categoryTypeId = requestItemViewModel.SectionType == AppUtility.MenuItems.Requests ? 1 : 2;
                     var productSubcategory = requestItemViewModel.Requests[0].Product.ProductSubcategory;
                     requestItemViewModel = await FillRequestDropdowns(requestItemViewModel, productSubcategory, categoryTypeId);
-                    string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                    string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                     string uploadFolder2 = Path.Combine(uploadFolder1, requestItemViewModel.Requests[0].RequestID.ToString());
                     FillDocumentsInfo(requestItemViewModel, uploadFolder2, productSubcategory);
                     requestItemViewModel.Comments = await _context.Comments.Include(r => r.ApplicationUser).Where(r => r.Request.RequestID == requestItemViewModel.Requests[0].RequestID).ToListAsync();
@@ -2021,9 +1493,9 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, bool NewRequestFromProduct = false, String SectionType = "")
+        public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, String SectionType = "")
         {
-            DeleteTemporaryDocuments();
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
             base.RemoveRequestWithCommentsAndEmailSessions();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             var unittypes = _context.UnitTypes.Include(u => u.UnitParentType).OrderBy(u => u.UnitParentType.UnitParentTypeID).ThenBy(u => u.UnitTypeDescription);
@@ -2050,7 +1522,7 @@ namespace PrototypeWithAuth.Controllers
         {
             if (isCancel)
             {
-                DeleteTemporaryDocuments();
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
                 return PartialView("Default");
             }
             else
@@ -2073,6 +1545,7 @@ namespace PrototypeWithAuth.Controllers
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().ApplicationUserCreatorID = currentUser.Id;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().CreationDate = DateTime.Now;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().SubProjectID = oldRequest.SubProjectID;
+                    reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product = oldRequest.Product;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Product.SerialNumber = oldRequest.Product.SerialNumber;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().URL = oldRequest.URL;
                     reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().Warranty = oldRequest.Warranty;
@@ -2095,18 +1568,9 @@ namespace PrototypeWithAuth.Controllers
                             var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
                             if (!isSavedUsingSession)
                             {
-                                MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault());
+                                MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
                                 await transaction.CommitAsync();
                                 base.RemoveRequestWithCommentsAndEmailSessions();
-                            }
-                            switch (OrderTypeEnum)
-                            {
-                                case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                                    break;
-                                case AppUtility.OrderTypeEnum.OrderNow:
-                                    break;
-                                case AppUtility.OrderTypeEnum.AddToCart:
-                                    break;
                             }
                         }
                         catch (Exception ex)
@@ -2129,7 +1593,7 @@ namespace PrototypeWithAuth.Controllers
                             break;
                     }
                     reorderViewModel.RequestIndexObject.OrderType = OrderTypeEnum;
-
+                    reorderViewModel.RequestIndexObject.IsReorder = true;
                     return RedirectToAction(action, "Requests", reorderViewModel.RequestIndexObject);
                 }
                 catch (Exception ex)
@@ -2242,8 +1706,8 @@ namespace PrototypeWithAuth.Controllers
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
             //save this as orderform
-            string path1 = Path.Combine("wwwroot", "files");
-            string fileName = Path.Combine(path1, "OrderForm.pdf");
+            string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+            string fileName = Path.Combine(path1, "CentarixOrder#" + allRequests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
             doc.Save(fileName);
             doc.Close();
             confirm.RequestIndexObject = requestIndexObject;
@@ -2257,11 +1721,9 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                string uploadFolder = Path.Combine("wwwroot", "files");
-                string uploadFile = Path.Combine(uploadFolder, "OrderForm.pdf");
-
                 var isRequests = true;
                 var RequestNum = 1;
+                var PaymentNum = 1;
                 var requests = new List<Request>();
                 var payments = new List<Payment>();
                 while (isRequests)
@@ -2272,24 +1734,21 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var request = HttpContext.Session.GetObject<Request>(requestName);
                         requests.Add(request);
-                        if (request.PaymentStatusID == 5)
+                        for (int i = 0; i < request.Installments; i++)
                         {
-                            for (int i = 0; i < request.Installments; i++)
-                            {
-                                var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (i + 1);
-                                var payment = HttpContext.Session.GetObject<Payment>(paymentName);
-                                payment.Request = request;
-                                payments.Add(payment);
-                            }
-                        }
-
-                        if (request.PaymentStatusID == 7)
-                        {
-                            var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + 1;
+                            var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
                             var payment = HttpContext.Session.GetObject<Payment>(paymentName);
                             payment.Request = request;
                             payments.Add(payment);
+                            PaymentNum++;
                         }
+                        //if (request.PaymentStatusID == 7)
+                        //{
+                        //    var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + 1;
+                        //    var payment = HttpContext.Session.GetObject<Payment>(paymentName);
+                        //    payment.Request = request;
+                        //    payments.Add(payment);
+                        //}
                     }
                     else
                     {
@@ -2328,6 +1787,9 @@ namespace PrototypeWithAuth.Controllers
                     emailNum++;
                 }
 
+                string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+                string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + requests.FirstOrDefault().ParentRequest.OrderNumber +".pdf");
+
                 if (System.IO.File.Exists(uploadFile))
                 {
                     //instatiate mimemessage
@@ -2337,7 +1799,7 @@ namespace PrototypeWithAuth.Controllers
                     var builder = new BodyBuilder();
 
                     var userId = requests.FirstOrDefault().ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
-                    //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                                                                                                                     //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
                     var currentUser = _context.Users.FirstOrDefault(u => u.Id == userId);
                     //var users = _context.Users.ToList();
                     //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
@@ -2351,20 +1813,21 @@ namespace PrototypeWithAuth.Controllers
                     message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
 
                     // add a "To" Email
+
                     message.To.Add(new MailboxAddress(vendorName, vendorEmail));
-                    if (emails.Count > 1)
+                    if (emails.Count >= 2)
                     {
                         message.Cc.Add(new MailboxAddress(emails[1]));
                     }
-                    if (emails.Count > 2)
+                    if (emails.Count >= 3)
                     {
                         message.Cc.Add(new MailboxAddress(emails[2]));
                     }
-                    if (emails.Count > 3)
+                    if (emails.Count >= 4)
                     {
                         message.Cc.Add(new MailboxAddress(emails[3]));
                     }
-                    if (emails.Count > 5)
+                    if (emails.Count >= 5)
                     {
                         message.Cc.Add(new MailboxAddress(emails[4]));
                     }
@@ -2377,8 +1840,11 @@ namespace PrototypeWithAuth.Controllers
                     //subject
                     message.Subject = "Order from Centarix to " + vendorName;
 
+                    var quoteNumber = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requests.FirstOrDefault().ParentQuoteID).Select(pq => pq.QuoteNumber).FirstOrDefault();
                     //body
-                    builder.TextBody = @"Please see attached order." + "\n" + "Thank you.";
+                    builder.TextBody = @"Hello,"+"\n\n"+ "Please see the attached order for quote number " + quoteNumber + 
+                        ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
+                        + ownerUsername + "\nCentarix";
                     builder.Attachments.Add(uploadFile);
 
                     message.Body = builder.ToMessageBody();
@@ -2418,20 +1884,27 @@ namespace PrototypeWithAuth.Controllers
                                     foreach (var r in requests)
                                     {
                                         r.RequestStatusID = 2;
-                                      
-                                        if (r.OrderType != AppUtility.OrderTypeEnum.OrderNow.ToString())
+                                        if (r.RequestID == 0)
                                         {
-                                            r.Product = null;
+                                            if (r.Product.ProductID == 0)
+                                            {
+                                                _context.Entry(r.Product).State = EntityState.Added;
+                                            }
+                                            _context.Entry(r).State = EntityState.Added;
+                                            _context.Entry(r.ParentRequest).State = EntityState.Added;
+                                            _context.Entry(r.ParentQuote).State = EntityState.Added;
                                         }
-
-                                        _context.Entry(currentUser).State = EntityState.Detached;
-                                        _context.Update(r);
+                                        else
+                                        {
+                                            _context.Entry(r).State = EntityState.Modified;
+                                            _context.Entry(r.ParentRequest).State = EntityState.Added;
+                                        }
                                         await _context.SaveChangesAsync();
                                     }
 
                                     foreach (var p in payments)
                                     {
-                                        _context.Add(p);
+                                        _context.Entry(p).State = EntityState.Added;
                                         await _context.SaveChangesAsync();
                                     }
 
@@ -2457,7 +1930,7 @@ namespace PrototypeWithAuth.Controllers
                                     await _context.SaveChangesAsync();
                                     if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
                                     {
-                                        MoveDocumentsOutOfTempFolder(requests.FirstOrDefault());
+                                        MoveDocumentsOutOfTempFolder(requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
                                     }
 
                                     //save the document
@@ -2465,7 +1938,7 @@ namespace PrototypeWithAuth.Controllers
                                     {
 
                                         string NewFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
-                                        string folderPath = Path.Combine(NewFolder, AppUtility.RequestFolderNamesEnum.Orders.ToString());
+                                        string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
                                         Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
 
                                         string uniqueFileName = 1 + "OrderEmail.pdf";
@@ -2490,7 +1963,7 @@ namespace PrototypeWithAuth.Controllers
                                         requestNotification.Action = "NotificationsView";
                                         requestNotification.OrderDate = DateTime.Now;
                                         requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                                        _context.Update(requestNotification);
+                                        _context.Add(requestNotification);
                                     }
                                     await _context.SaveChangesAsync();
                                 }
@@ -2556,17 +2029,22 @@ namespace PrototypeWithAuth.Controllers
             if (confirmQuoteEmail.IsResend)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.RequestID == confirmQuoteEmail.RequestID)
-           .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
+                    .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                    .Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
             }
             else
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 1)
-                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
+                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                    .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 1).Where(r => r.RequestStatusID == 6)
+                     .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor)
+                     .Include(r => r.ParentQuote).ToList();
             }
             if (requests.Count() == 0)
             {
-                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 2)
-                         .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
+                requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                    .Where(r => r.Product.VendorID == confirmQuoteEmail.VendorId && r.ParentQuote.QuoteStatusID == 2).Where(r => r.RequestStatusID == 6)
+                     .Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                     .Include(r => r.Product.Vendor).Include(r => r.ParentQuote).ToList();
             }
             //base url needs to be declared - perhaps should be getting from js?
             //once deployed need to take base url and put in the parameter for converter.convertHtmlString
@@ -2582,21 +2060,21 @@ namespace PrototypeWithAuth.Controllers
             // create a new pdf document converting an url
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
-            foreach (var request in requests)
-            {
+            /*foreach (var request in requests) //this seems to be doing the exact same thing for each request -> overwriting previously saved one. what should be happening here???
+            {*/
                 //creating the path for the file to be saved
-                string path1 = Path.Combine("wwwroot", "files");
-                string uniqueFileName = "QuotePDF.pdf";
+                string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+                string uniqueFileName = "PriceQuoteRequest.pdf";
                 string filePath = Path.Combine(path1, uniqueFileName);
                 // save pdf document
                 doc.Save(filePath);
-            }
+            //}
             // close pdf document
             doc.Close();
 
-            string uploadFolder1 = Path.Combine("~", "files");
-            string uploadFolder = Path.Combine("wwwroot", "files");
-            string uploadFile = Path.Combine(uploadFolder, "QuotePDF.pdf");
+
+            string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+            string uploadFile = Path.Combine(uploadFolder, "PriceQuoteRequest.pdf");
 
             if (System.IO.File.Exists(uploadFile))
             {
@@ -2624,7 +2102,8 @@ namespace PrototypeWithAuth.Controllers
                 message.Subject = "Order from Centarix to " + vendorName;
 
                 //body
-                builder.TextBody = @"Please see attached order." + "\n" + "Thank you.";
+                builder.TextBody = @"Hello," + "\n\n" + "Please send a price quote for the items listed in the attached pdf. \n\nThank you.\n"
+                        + ownerUsername + "\nCentarix"; ;
                 builder.Attachments.Add(uploadFile);
 
                 message.Body = builder.ToMessageBody();
@@ -2688,12 +2167,14 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 1)
-                         .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
+                    .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(p => p.Vendor)
+                    .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
             }
             if (requests.Count() == 0)
             {
                 requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.Product.VendorID == id && r.ParentQuote.QuoteStatusID == 2)
-                         .Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
+                    .Where(r => r.RequestStatusID == 6).Include(r => r.Product).ThenInclude(r => r.Vendor).Include(r => r.ParentQuote)
+                    .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ParentQuote).ToList();
             }
             RequestIndexObject requestIndexObject = new RequestIndexObject
             {
@@ -2796,162 +2277,162 @@ namespace PrototypeWithAuth.Controllers
             return View(requestsSearchViewModel);
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Admin, Requests, Operations")]
-        public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)
-        {
-            var categoryType = requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operations ? 2 : 1;
-            int RSRecieved = 0;
-            int RSOrdered = 0;
-            int RSNew = 0;
-            IQueryable<Request> requestsSearched = _context.Requests.AsQueryable().Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType);
+        //[HttpPost]
+        //[Authorize(Roles = "Admin, Requests, Operations")]
+        //public async Task<IActionResult> Search(RequestsSearchViewModel requestsSearchViewModel, int? page)
+        //{
+        //    var categoryType = requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operations ? 2 : 1;
+        //    int RSRecieved = 0;
+        //    int RSOrdered = 0;
+        //    int RSNew = 0;
+        //    IQueryable<Request> requestsSearched = _context.Requests.AsQueryable().Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryType);
 
-            //convert the bools into their corresponding IDs
-            if (requestsSearchViewModel.Inventory)
-            {
-                RSRecieved = 3;
-            }
-            if (requestsSearchViewModel.Ordered)
-            {
-                RSOrdered = 2;
-            }
-            if (requestsSearchViewModel.ForApproval)
-            {
-                RSNew = 1;
-            }
-            if (requestsSearchViewModel.Inventory || requestsSearchViewModel.Ordered || requestsSearchViewModel.ForApproval) //if any of the checkboxes were selected then filter accordingly
-            {
-                requestsSearched = requestsSearched.Where(rs => rs.RequestStatusID == RSRecieved || rs.RequestStatusID == RSOrdered || rs.RequestStatusID == RSNew);
-            }
-
-
-            requestsSearchViewModel.Request.Product.ProductSubcategory = await _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID).FirstOrDefaultAsync();
-            if (requestsSearchViewModel.Request.Product.ProductName != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.Product.ProductName.Contains(requestsSearchViewModel.Request.Product.ProductName));
-            }
-            if (requestsSearchViewModel.Request.Product?.ProductSubcategory?.ParentCategoryID != 0 && requestsSearchViewModel.Request.Product?.ProductSubcategory?.ParentCategoryID != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategory.ParentCategoryID == requestsSearchViewModel.Request.Product.ProductSubcategory.ParentCategoryID);
-            }
-            if (requestsSearchViewModel.Request.Product?.ProductSubcategoryID != 0 && requestsSearchViewModel.Request.Product?.ProductSubcategoryID != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID);
-            }
-            //check for project
-            //check for sub project
-            if (requestsSearchViewModel.Request.Product?.VendorID != 0 && requestsSearchViewModel.Request.Product?.VendorID != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.Product.VendorID == requestsSearchViewModel.Request.Product.VendorID);
-            }
-            if (requestsSearchViewModel.Request.ParentRequest?.OrderNumber != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderNumber.ToString().Contains(requestsSearchViewModel.Request.ParentRequest.OrderNumber.ToString()));
-            }
-            if (requestsSearchViewModel.Request.ParentRequest.OrderDate != DateTime.MinValue) //should this be datetime.min?
-            {
-                requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderDate == requestsSearchViewModel.Request.ParentRequest.OrderDate);
-            }
-            if (requestsSearchViewModel.Request.Invoice.InvoiceNumber != null)
-            {
-                requestsSearched = requestsSearched.Where(r => r.Invoice.InvoiceNumber.Contains(requestsSearchViewModel.Request.Invoice.InvoiceNumber));
-            }
-            if (requestsSearchViewModel.Request.Invoice.InvoiceDate != DateTime.MinValue) //should this be datetime.min?
-            {
-                requestsSearched = requestsSearched.Where(r => r.Invoice.InvoiceDate == requestsSearchViewModel.Request.Invoice.InvoiceDate);
-            }
-            if (requestsSearchViewModel.Request.ExpectedSupplyDays != null)//should this be on the parent request
-            {
-                requestsSearched = requestsSearched.Where(r => r.ExpectedSupplyDays == requestsSearchViewModel.Request.ExpectedSupplyDays);
-            }
-
-            //not sure what the to date and the from date are on????
-
-            bool IsRequest = true;
-            bool IsInventory = false;
-            bool IsAll = false;
-            if (requestsSearchViewModel.Inventory)
-            {
-                IsRequest = false;
-                IsInventory = true;
-            }
-            else
-            {
-                foreach (Request r in requestsSearched)
-                {
-                    if (r.RequestStatusID != 6)
-                    {
-                        break;
-                    }
-                }
-                IsRequest = false;
-                IsInventory = true;
-            }
-
-            //also need to get the list smaller to just request or inventory
-
-            var PageType = AppUtility.PageTypeEnum.None;
-            if (IsRequest)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
-            }
-            else if (IsInventory)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestInventory;
-            }
-            else if (IsAll)
-            {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
-            }
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-
-            //ViewData["ReturnRequests"] = requestsSearched;
+        //    //convert the bools into their corresponding IDs
+        //    if (requestsSearchViewModel.Inventory)
+        //    {
+        //        RSRecieved = 3;
+        //    }
+        //    if (requestsSearchViewModel.Ordered)
+        //    {
+        //        RSOrdered = 2;
+        //    }
+        //    if (requestsSearchViewModel.ForApproval)
+        //    {
+        //        RSNew = 1;
+        //    }
+        //    if (requestsSearchViewModel.Inventory || requestsSearchViewModel.Ordered || requestsSearchViewModel.ForApproval) //if any of the checkboxes were selected then filter accordingly
+        //    {
+        //        requestsSearched = requestsSearched.Where(rs => rs.RequestStatusID == RSRecieved || rs.RequestStatusID == RSOrdered || rs.RequestStatusID == RSNew);
+        //    }
 
 
-            //Getting the page that is going to be seen (if no page was specified it will be one)
-            var pageNumber = page ?? 1;
-            var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
-            try
-            {
-                onePageOfProducts = await requestsSearched.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
-                //onePageOfProducts;
+        //    requestsSearchViewModel.Request.Product.ProductSubcategory = await _context.ProductSubcategories.Include(ps => ps.ParentCategory).Where(ps => ps.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID).FirstOrDefaultAsync();
+        //    if (requestsSearchViewModel.Request.Product.ProductName != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Product.ProductName.Contains(requestsSearchViewModel.Request.Product.ProductName));
+        //    }
+        //    if (requestsSearchViewModel.Request.Product?.ProductSubcategory?.ParentCategoryID != 0 && requestsSearchViewModel.Request.Product?.ProductSubcategory?.ParentCategoryID != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategory.ParentCategoryID == requestsSearchViewModel.Request.Product.ProductSubcategory.ParentCategoryID);
+        //    }
+        //    if (requestsSearchViewModel.Request.Product?.ProductSubcategoryID != 0 && requestsSearchViewModel.Request.Product?.ProductSubcategoryID != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Product.ProductSubcategoryID == requestsSearchViewModel.Request.Product.ProductSubcategoryID);
+        //    }
+        //    //check for project
+        //    //check for sub project
+        //    if (requestsSearchViewModel.Request.Product?.VendorID != 0 && requestsSearchViewModel.Request.Product?.VendorID != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Product.VendorID == requestsSearchViewModel.Request.Product.VendorID);
+        //    }
+        //    if (requestsSearchViewModel.Request.ParentRequest?.OrderNumber != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderNumber.ToString().Contains(requestsSearchViewModel.Request.ParentRequest.OrderNumber.ToString()));
+        //    }
+        //    if (requestsSearchViewModel.Request.ParentRequest.OrderDate != DateTime.MinValue) //should this be datetime.min?
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.ParentRequest.OrderDate == requestsSearchViewModel.Request.ParentRequest.OrderDate);
+        //    }
+        //    if (requestsSearchViewModel.Request.Invoice.InvoiceNumber != null)
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Invoice.InvoiceNumber.Contains(requestsSearchViewModel.Request.Invoice.InvoiceNumber));
+        //    }
+        //    if (requestsSearchViewModel.Request.Invoice.InvoiceDate != DateTime.MinValue) //should this be datetime.min?
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.Invoice.InvoiceDate == requestsSearchViewModel.Request.Invoice.InvoiceDate);
+        //    }
+        //    if (requestsSearchViewModel.Request.ExpectedSupplyDays != null)//should this be on the parent request
+        //    {
+        //        requestsSearched = requestsSearched.Where(r => r.ExpectedSupplyDays == requestsSearchViewModel.Request.ExpectedSupplyDays);
+        //    }
+
+        //    //not sure what the to date and the from date are on????
+
+        //    bool IsRequest = true;
+        //    bool IsInventory = false;
+        //    bool IsAll = false;
+        //    if (requestsSearchViewModel.Inventory)
+        //    {
+        //        IsRequest = false;
+        //        IsInventory = true;
+        //    }
+        //    else
+        //    {
+        //        foreach (Request r in requestsSearched)
+        //        {
+        //            if (r.RequestStatusID != 6)
+        //            {
+        //                break;
+        //            }
+        //        }
+        //        IsRequest = false;
+        //        IsInventory = true;
+        //    }
+
+        //    //also need to get the list smaller to just request or inventory
+
+        //    var PageType = AppUtility.PageTypeEnum.None;
+        //    if (IsRequest)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
+        //    }
+        //    else if (IsInventory)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestInventory;
+        //    }
+        //    else if (IsAll)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
+        //    }
+        //    TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+
+        //    //ViewData["ReturnRequests"] = requestsSearched;
 
 
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                TempData["InnerMessage"] = ex.InnerException;
-                return View("~/Views/Shared/RequestError.cshtml");
-            }
+        //    //Getting the page that is going to be seen (if no page was specified it will be one)
+        //    var pageNumber = page ?? 1;
+        //    var onePageOfProducts = Enumerable.Empty<Request>().ToPagedList();
+        //    try
+        //    {
+        //        onePageOfProducts = await requestsSearched.Include(r => r.ParentRequest).Include(r => r.Product.ProductSubcategory)
+        //            .Include(r => r.Product.Vendor).Include(r => r.RequestStatus).ToPagedListAsync(pageNumber, 25);
+        //        //onePageOfProducts;
 
-            TempData["Search"] = "True";
-            if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Requests)
-            {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
-                return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
-            }
-            else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
-            {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSearch;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
-                return RedirectToAction("IndexForLabManage", "Vendors", onePageOfProducts);
-            }
-            else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operations)
-            {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory;
-                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
-                return RedirectToAction("Index", "Operations", new { vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
-            }
 
-            return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        TempData["ErrorMessage"] = ex.Message;
+        //        TempData["InnerMessage"] = ex.InnerException;
+        //        return View("~/Views/Shared/RequestError.cshtml");
+        //    }
 
-        }
+        //    TempData["Search"] = "True";
+        //    if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Requests)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestRequest;
+        //        TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
+        //        return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
+        //    }
+        //    else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSearch;
+        //        TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
+        //        return RedirectToAction("IndexForLabManage", "Vendors", onePageOfProducts);
+        //    }
+        //    else if (requestsSearchViewModel.SectionType == AppUtility.MenuItems.Operations)
+        //    {
+        //        TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
+        //        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsInventory;
+        //        TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.List;
+        //        return RedirectToAction("Index", "Operations", new { vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
+        //    }
+
+        //    return RedirectToAction("Index", new { pagetype = TempData[AppUtility.TempDataTypes.PageType.ToString()], vendorID = requestsSearchViewModel.Request.Product.VendorID, subcategoryID = requestsSearchViewModel.Request.Product.ProductSubcategoryID, requestsSearchViewModel = onePageOfProducts });
+
+        //}
 
 
         /*
@@ -2999,13 +2480,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public IActionResult ReceivedModalSublocations(int LocationTypeID)
         {
-            if (LocationTypeID == 500)
-            {
-                LocationTypeID = 501;
-            }
             ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
             {
-                locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID),
+                locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == LocationTypeID && !(li is TemporaryLocationInstance))
+                .Include(li => li.LocationRoomInstance).Include(li => li.LabPart).OrderBy(li => li.LocationNumber),
                 locationTypeNames = new List<string>(),
                 locationInstancesSelected = new List<LocationInstance>()
             };
@@ -3038,7 +2516,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public IActionResult ReceivedModalVisual(int LocationInstanceID)
+        public IActionResult ReceivedModalVisual(int LocationInstanceID, int RequestID)
         {
             ReceivedModalVisualViewModel receivedModalVisualViewModel = new ReceivedModalVisualViewModel()
             {
@@ -3047,41 +2525,14 @@ namespace PrototypeWithAuth.Controllers
 
             var parentLocationInstance = _context.LocationInstances.Where(m => m.LocationInstanceID == LocationInstanceID).FirstOrDefault();
 
-
-
             var firstChildLI = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID).FirstOrDefault();
             LocationInstance secondChildLi = null;
-            bool Is80Freezer = false;
-            bool Is25Freezer = false;
-            var hasEmptyShelves = false;
             if (firstChildLI != null)
             {
                 secondChildLi = _context.LocationInstances.Where(li => li.LocationInstanceParentID == firstChildLI.LocationInstanceID).FirstOrDefault(); //second child is to ensure it doesn't have any box units
             }
-            if (parentLocationInstance.LocationTypeID == 200) //check if it containes empty shelves ONLY IF -80
-            {
-                Is80Freezer = true;
-                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmptyShelf == true).ToList();
-                if (shelves.Any())
-                {
-                    hasEmptyShelves = true;
-                }
-            }
 
-            if (parentLocationInstance.LocationTypeID == 501) //check if it containes empty shelves ONLY IF 25
-            {
-                Is25Freezer = true;
-                var shelves = _context.LocationInstances.Where(li => li.LocationInstanceParentID == parentLocationInstance.LocationInstanceID && li.IsEmptyShelf == true).ToList();
-                if (shelves.Any())
-                {
-                    hasEmptyShelves = true;
-                }
-            }
-            if (parentLocationInstance.LocationTypeID == 500)
-            {
-                receivedModalVisualViewModel.DeleteTable = true;
-            }
-            if (/*parentLocationInstance.IsEmptyShelf == true ||*/ (secondChildLi != null && !Is80Freezer) || (Is80Freezer && hasEmptyShelves) || (secondChildLi != null && !Is25Freezer) || (Is25Freezer && !hasEmptyShelves)) //secondChildLi will be null if first child is null
+            if (secondChildLi != null)
             {
                 receivedModalVisualViewModel.DeleteTable = true;
             }
@@ -3098,30 +2549,55 @@ namespace PrototypeWithAuth.Controllers
 
                 if (receivedModalVisualViewModel.ParentLocationInstance != null)
                 {
+                    var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
+                    
+                    
+
                     receivedModalVisualViewModel.ChildrenLocationInstances =
                         _context.LocationInstances.Where(m => m.LocationInstanceParentID == LocationInstanceID)
-                        .Include(m => m.RequestLocationInstances).ToList();
+                        .Include(m => m.RequestLocationInstances).OrderBy(m => m.LocationNumber).ToList();
 
-
-                    //add placeholders for new places
                     List<LocationInstancePlace> liPlaces = new List<LocationInstancePlace>();
-                    foreach (var cli in receivedModalVisualViewModel.ChildrenLocationInstances)
+                    if (request != null)
                     {
-                        liPlaces.Add(new LocationInstancePlace()
+                        var requestLocationInstances = request.RequestLocationInstances.ToList();
+                        receivedModalVisualViewModel.RequestChildrenLocationInstances =
+                                   _context.LocationInstances.OfType<LocationInstance>().Where(m => m.LocationInstanceParentID == parentLocationInstance.LocationInstanceID)
+                                   .Include(m => m.RequestLocationInstances)
+                                   .Select(li => new RequestChildrenLocationInstances()
+                                   {
+                                       LocationInstance = li,
+                                       IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == RequestID).Any()
+                                   }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
+                       
+                        foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
                         {
-                            LocationInstanceId = cli.LocationInstanceID,
-                            Placed = false
-                        });
-
+                            liPlaces.Add(new LocationInstancePlace()
+                            {
+                                LocationInstanceId = cli.LocationInstance.LocationInstanceID,
+                                Placed = cli.IsThisRequest
+                            });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var cli in receivedModalVisualViewModel.ChildrenLocationInstances)
+                        {
+                            liPlaces.Add(new LocationInstancePlace()
+                            {
+                                LocationInstanceId = cli.LocationInstanceID,
+                                Placed = false
+                            });
+                        }
                     }
                     receivedModalVisualViewModel.LocationInstancePlaces = liPlaces;
-                    //return NotFound();
                 }
             }
             return PartialView(receivedModalVisualViewModel);
         }
 
         [HttpPost]
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReceivedModal(ReceivedLocationViewModel receivedLocationViewModel, ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
@@ -3130,49 +2606,48 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     var requestReceived = _context.Requests.Where(r => r.RequestID == receivedLocationViewModel.Request.RequestID)
-             .Include(r => r.Product).ThenInclude(p => p.Vendor).FirstOrDefault();
-                    bool hasLocationInstances = false;
+             .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
                     if (receivedLocationViewModel.CategoryType == 1)
-                    { foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
-                        {
-                            if (place.Placed)
-                            {
-                                hasLocationInstances = true;
-                            }
-                        }
-                        await SaveLocations(receivedModalVisualViewModel, requestReceived);
-
-                        if (hasLocationInstances)
-                        {
-                            if (receivedLocationViewModel.Clarify)
-                            {
-                                requestReceived.RequestStatusID = 5;
-                            }
-                            else if (receivedLocationViewModel.PartialDelivery)
-                            {
-                                requestReceived.RequestStatusID = 4;
-                            }
-                            else
-                            {
-                                requestReceived.RequestStatusID = 3;
-                            }
-                        }
-
-                    }
-                    else
                     {
-                        if (receivedLocationViewModel.Clarify)
+                        if (receivedLocationViewModel.TemporaryLocation)
                         {
-                            requestReceived.RequestStatusID = 5;
-                        }
-                        else if (receivedLocationViewModel.PartialDelivery)
-                        {
-                            requestReceived.RequestStatusID = 4;
+                            var tempLocationInstance = _context.TemporaryLocationInstances.Where(tli => tli.LocationTypeID == receivedLocationViewModel.LocationTypeID).FirstOrDefault();
+                            if (tempLocationInstance == null)
+                            {
+                                var locationTypeName = _context.LocationTypes.Where(lt => lt.LocationTypeID == receivedLocationViewModel.LocationTypeID).Select(lt => lt.LocationTypeName).FirstOrDefault();
+                                tempLocationInstance = new TemporaryLocationInstance()
+                                {
+                                    LocationTypeID = receivedLocationViewModel.LocationTypeID,
+                                    LocationInstanceName = "Temporary " + locationTypeName,
+                                    LocationInstanceAbbrev = "Temporary " + locationTypeName
+                                };
+                                _context.Update(tempLocationInstance);
+                                await _context.SaveChangesAsync();
+                            }
+                            var rli = new RequestLocationInstance()
+                            {
+                                LocationInstanceID = tempLocationInstance.LocationInstanceID,
+                                RequestID = requestReceived.RequestID,
+                            };
+                            _context.Add(rli);
+                            await _context.SaveChangesAsync();
                         }
                         else
                         {
-                            requestReceived.RequestStatusID = 3;
+                            await SaveLocations(receivedModalVisualViewModel, requestReceived);
                         }
+                    }
+                    if (receivedLocationViewModel.Clarify)
+                    {
+                        requestReceived.RequestStatusID = 5;
+                    }
+                    else if (receivedLocationViewModel.PartialDelivery)
+                    {
+                        requestReceived.RequestStatusID = 4;
+                    }
+                    else
+                    {
+                        requestReceived.RequestStatusID = 3;
                     }
 
                     requestReceived.ArrivalDate = receivedLocationViewModel.Request.ArrivalDate;
@@ -3182,6 +2657,11 @@ namespace PrototypeWithAuth.Controllers
                     requestReceived.IsPartial = receivedLocationViewModel.Request.IsPartial;
                     requestReceived.NoteForClarifyDelivery = receivedLocationViewModel.Request.NoteForClarifyDelivery;
                     requestReceived.IsClarify = receivedLocationViewModel.Request.IsClarify;
+                    if (requestReceived.Product.ProductSubcategory.ParentCategory.ParentCategoryDescriptionEnum == AppUtility.ParentCategoryEnum.ReagentsAndChemicals.ToString())
+                    {
+                        requestReceived.Batch = receivedLocationViewModel.Request.Batch;
+                        requestReceived.BatchExpiration = receivedLocationViewModel.Request.BatchExpiration;
+                    }
                     if (requestReceived.PaymentStatusID == 4)
                     {
                         requestReceived.PaymentStatusID = 3;
@@ -3202,6 +2682,12 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.Action = "NotificationsView";
                     requestNotification.Vendor = requestReceived.Product.Vendor.VendorEnName;
                     _context.Update(requestNotification);
+
+                    var didntArriveNotification = _context.RequestNotifications.Where(r => r.RequestID == requestReceived.RequestID && r.NotificationStatusID == 1).FirstOrDefault();
+                    if (didntArriveNotification != null)
+                    {
+                        _context.Remove(didntArriveNotification);
+                    }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
 
@@ -3222,156 +2708,100 @@ namespace PrototypeWithAuth.Controllers
 
             }
 
-            return RedirectToAction("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
+            return await base.RedirectRequestsToShared("_IndexTableWithCounts", receivedLocationViewModel.RequestIndexObject);
 
         }
 
-        private async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
+        [HttpPost]
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ReceivedModalVisual(ReceivedModalVisualViewModel receivedModalVisualViewModel, List<Request> Requests)
         {
-            foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                if (place.Placed)
+                try
                 {
-                    //getting the parentlocationinstanceid
-                    var liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
-                    var mayHaveParent = true;
-                    while (mayHaveParent)
+                    if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                     {
-                        if (liParent.LocationInstanceParentID != null)
-                        {
-                            liParent = _context.LocationInstances.Where(li => li.LocationInstanceID == liParent.LocationInstanceParentID).FirstOrDefault();
-                        }
-                        else
-                        {
-                            mayHaveParent = false;
-                        }
-                    }
+                        var request = Requests.FirstOrDefault();
 
-                    //adding the requestlocationinstance
-                    var rli = new RequestLocationInstance()
-                    {
-                        LocationInstanceID = place.LocationInstanceId,
-                        RequestID = requestReceived.RequestID,
-                        ParentLocationInstanceID = liParent.LocationInstanceID
-                    };
-                    _context.Add(rli);
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
+                        var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
+                        foreach (var location in requestLocations)
+                        {
+                            var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
+                            _context.Remove(location);
 
-                    //updating the locationinstance
-                    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == place.LocationInstanceId).FirstOrDefault();
-                    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
-                    {
-                        locationInstance.IsFull = true;
+                            if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                            {
+                                locationInstance.IsFull = false;
+                                _context.Update(locationInstance);
+                            }
+                            else if (locationInstance.IsEmptyShelf)
+                            {
+                                var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+                                                        && rli.RequestID != request.RequestID).ToList();
+                                if (duplicateLocations.Count() == 0)
+                                {
+                                    locationInstance.ContainsItems = false;
+                                    _context.Update(locationInstance);
+                                }
+                            }
+                        }
+                       
+                        await SaveLocations(receivedModalVisualViewModel, request);
+                        await transaction.CommitAsync();
                     }
                     else
                     {
-                        locationInstance.ContainsItems = true;
+                        receivedModalVisualViewModel.DeleteTable = true;
                     }
-                    _context.Update(locationInstance);
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
+                    
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
                 }
             }
+            return PartialView(receivedModalVisualViewModel);
         }
-
 
         /*
          * END RECEIVED MODAL
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(int? id, int[]? ids, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult DocumentsModal(int? id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
-                Requests = new List<Request>(),
-                //Request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault(),
-                RequestFolderName = RequestFolderNameEnum,
+                FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
-                //Files = new List<FileInfo>(),
+                ParentFolderName = AppUtility.ParentFolderName.Requests,
+                ObjectID = id ?? 0,
                 SectionType = SectionType,
                 ShowSwitch = showSwitch
             };
 
-            if (id != null)
-            {
-                documentsModalViewModel.Requests.Add(_context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).FirstOrDefault());
-            }
-            else if (ids != null)
-            {
-                foreach (int requestID in ids)
-                {
-                    documentsModalViewModel.Requests.Add(_context.Requests.Where(r => r.RequestID == requestID).Include(r => r.Product).FirstOrDefault());
-                }
-            }
-
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string uploadFolder2 = Path.Combine(uploadFolder1, id.ToString());
-            string uploadFolder3 = Path.Combine(uploadFolder2, RequestFolderNameEnum.ToString());
-
-            if (Directory.Exists(uploadFolder3))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolder3);
-                //searching for the partial file name in the directory
-                FileInfo[] docfilesfound = DirectoryToSearch.GetFiles("*.*");
-                documentsModalViewModel.FileStrings = new List<String>();
-                foreach (var docfile in docfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);
-                    documentsModalViewModel.FileStrings.Add(newFileString);
-                    //documentsModalViewModel.Files.Add(docfile);
-                }
-            }
-
-            return View(documentsModalViewModel);
+            FillDocumentsViewModel(documentsModalViewModel);
+            return PartialView(documentsModalViewModel);
         }
 
 
         [HttpPost]
         public void DocumentsModal(/*[FromBody]*/ DocumentsModalViewModel documentsModalViewModel)
         {
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string requestFolder = Path.Combine(uploadFolder, documentsModalViewModel.Requests[0].RequestID.ToString());
-            Directory.CreateDirectory(requestFolder);
-            if (documentsModalViewModel.FilesToSave != null) //test for more than one???
-            {
-                var x = 1;
-                foreach (IFormFile file in documentsModalViewModel.FilesToSave)
-                {
-                    //create file
-                    string folderPath = Path.Combine(requestFolder, documentsModalViewModel.RequestFolderName.ToString());
-                    Directory.CreateDirectory(folderPath);
-                    string uniqueFileName = x + file.FileName;
-                    string filePath = Path.Combine(folderPath, uniqueFileName);
-                    FileStream filestream = new FileStream(filePath, FileMode.Create);
-                    file.CopyTo(filestream);
-                    filestream.Close();
-                    x++;
-                }
-            }
+            base.DocumentsModal(documentsModalViewModel);
         }
 
         [HttpGet]
-        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.RequestFolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        public ActionResult DeleteDocumentModal(String FileString, int id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Requests)
         {
             DeleteDocumentsViewModel deleteDocumentsViewModel = new DeleteDocumentsViewModel()
             {
                 FileName = FileString,
-                RequestID = id,
+                ObjectID = id,
+                ParentFolderName = parentFolderName,
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 SectionType = SectionType,
@@ -3453,7 +2883,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         public JsonResult GetSublocationInstancesList(int locationInstanceParentId)
         {
-            var locationInstanceList = _context.LocationInstances.Where(li => li.LocationInstanceParentID == locationInstanceParentId).ToList();
+            var locationInstanceList = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceParentID == locationInstanceParentId).Include(li => li.LabPart).OrderBy(li => li.LocationNumber).ToList();
             return Json(locationInstanceList);
         }
 
@@ -3514,7 +2944,7 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 500;
                 await Response.WriteAsync(ex.Message);
             }
-            return RedirectToAction("_IndexTableWithCounts", requestIndex);
+            return await RedirectRequestsToShared("_IndexTableWithCounts", requestIndex);
 
         }
 
@@ -3531,7 +2961,7 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList();
                 foreach (var request in requests)
                 {
-                    request.ExchangeRate = _context.ExchangeRates.FirstOrDefault().LatestExchangeRate;
+                    request.ExchangeRate = GetExchangeRate();
                 }
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
@@ -3563,7 +2993,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 using (var transaction = _context.Database.BeginTransaction())
                 {
-                    try {
+                    try
+                    {
                         var requests = _context.Requests.Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Include(x => x.ParentQuote).Select(r => r);
                         //var quoteDate = editQuoteDetailsViewModel.QuoteDate;
                         var quoteNumber = editQuoteDetailsViewModel.QuoteNumber;
@@ -3574,15 +3005,21 @@ namespace PrototypeWithAuth.Controllers
 
                             request.ParentQuote.QuoteStatusID = 4;
                             //request.ParentQuote.QuoteDate = quoteDate;
-                            request.ParentQuote.QuoteNumber = quoteNumber.ToString(); ;
+                            request.ParentQuote.QuoteNumber = quoteNumber.ToString();
+                            if (quote.IncludeVAT)
+                            {
+                                quote.Cost = quote.Cost / (decimal)1.17;
+                            }
                             request.Cost = quote.Cost;
+                            request.Currency = quote.Currency;
+                            request.IncludeVAT = quote.IncludeVAT;
                             request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
                             _context.Update(request);
                             _context.SaveChanges();
                             //save file
-                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                             string requestFolder = Path.Combine(uploadFolder, quote.RequestID.ToString());
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+                            string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Quotes.ToString());
                             Directory.CreateDirectory(folderPath);
                             string uniqueFileName = 1 + editQuoteDetailsViewModel.QuoteFileUpload.FileName;
                             string filePath = Path.Combine(folderPath, uniqueFileName);
@@ -3593,7 +3030,7 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception ex)
                     {
                         transaction.RollbackAsync();
-                        editQuoteDetailsViewModel.Requests.ForEach(r => DeleteTemporaryDocuments(r.RequestID));
+                        editQuoteDetailsViewModel.Requests.ForEach(r => DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, r.RequestID));
                         throw ex;
                     }
                 }
@@ -3619,20 +3056,31 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> NotificationsView(int requestID = 0)
+        public async Task<IActionResult> NotificationsView(int requestID = 0, bool DidntArrive = false)
         {
+            IEnumerable<RequestNotification> requestNotifications = null;
+            if (DidntArrive)
+            {
+                requestNotifications = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(rn => rn.NotificationStatusID == 1).Include(r => r.Request);
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.DidntArrive;
+            }
+            else
+            {
+                requestNotifications = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(rn => rn.NotificationStatusID != 1);
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Notifications;
+            }
             if (requestID != 0)
             {
-                var notification = _context.RequestNotifications.Where(rn => rn.NotificationID == requestID).FirstOrDefault();
+                var notification = requestNotifications.Where(rn => rn.NotificationID == requestID).FirstOrDefault();
                 notification.IsRead = true;
                 _context.Update(notification);
                 await _context.SaveChangesAsync();
             }
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Notifications;
+
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             ApplicationUser currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-            var requests = _context.RequestNotifications.Include(n => n.NotificationStatus).Where(n => n.ApplicationUserID == currentUser.Id).OrderByDescending(n => n.TimeStamp).ToList();
+            var requests = requestNotifications.Where(n => n.ApplicationUserID == currentUser.Id).OrderByDescending(n => n.TimeStamp).ToList();
             return View(requests);
         }
 
@@ -3669,7 +3117,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Users, Biomarkers, Accounting, Admin, Reports, Timekeeper, Operations, Protocols, Income, Operation, Expenses, LabManagement")]
         public async Task<IActionResult> ConfirmExit(ConfirmExitViewModel confirmExit)
         {
-            DeleteTemporaryDocuments();
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
             RemoveRequestWithCommentsAndEmailSessions();
 
             if (confirmExit.URL.IsEmpty())
@@ -3687,26 +3135,6 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        private void DeleteTemporaryDocuments(int requestID = 0)
-        {
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string requestFolder = Path.Combine(uploadFolder, requestID.ToString());
-
-            if (Directory.Exists(requestFolder))
-            {
-                System.IO.DirectoryInfo di = new DirectoryInfo(requestFolder);
-                foreach (FileInfo file in di.GetFiles())
-                {
-                    file.Delete();
-                }
-                foreach (DirectoryInfo dir in di.EnumerateDirectories())
-                {
-                    dir.Delete(true);
-                }
-                Directory.Delete(requestFolder);
-            }
-            Directory.CreateDirectory(requestFolder);
-        }
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
@@ -3763,13 +3191,15 @@ namespace PrototypeWithAuth.Controllers
             message.To.Add(new MailboxAddress(vendorName, vendorEmail));
 
             //subject
-            message.Subject = "Message to " + vendorName;
+            message.Subject = "Please update on delayed supply for Centarix's Order #" + request.ParentRequest.OrderNumber;
 
             //body
-            builder.TextBody = $"The order number {request.ParentRequest.OrderNumber} for {request.Product.ProductName} , has not arrived yet.\n" +
-                    $"Please update us on the matter.\n" +
+            builder.TextBody = $"Hello,\n\nOrder number {request.ParentRequest.OrderNumber} for {request.Product.ProductName}" +
+                $" which was scheduled to arrive on {request.ParentRequest.OrderDate.AddDays((double)request.ExpectedSupplyDays).ToString("dd/MM/yyyy")}, " +
+                $"has not arrived yet. \n" +
+                    $"Please update us on the matter.\n\n" +
                     $"Best regards,\n" +
-                    $"{request.ApplicationUserCreator.FirstName} { request.ApplicationUserCreator.FirstName}\n" +
+                    $"{ownerUsername}\n" +
                     $"Centarix";
 
             message.Body = builder.ToMessageBody();
@@ -3792,63 +3222,7 @@ namespace PrototypeWithAuth.Controllers
                 client.Disconnect(true);
 
             }
-            return RedirectToAction("NotificationsView");
-        }
-
-        private bool checkIfInBudget(Request request, Product oldProduct = null)
-        {
-            if (oldProduct == null)
-            {
-                oldProduct = request.Product;
-            }
-            var user = _context.Users.Where(u => u.Id == request.ApplicationUserCreatorID).FirstOrDefault();
-            DateTime firstOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            if (oldProduct.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-            { //lab
-                var pricePerUnit = request.Cost / request.Unit;
-                if (pricePerUnit > user.LabUnitLimit)
-                {
-                    return false;
-                }
-                if (request.TotalWithVat > user.LabOrderLimit)
-                {
-                    return false;
-                }
-                var monthsSpending = _context.Requests
-                      .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                      .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID && r.Product.VendorID == oldProduct.VendorID)
-                      .Where(r => r.ParentRequest.OrderDate >= firstOfMonth).AsEnumerable()
-                      .Sum(r => r.TotalWithVat);
-                if (monthsSpending + request.TotalWithVat > user.LabMonthlyLimit)
-                {
-                    return false;
-                }
-                return true;
-            }
-
-            else
-            {
-                var pricePerUnit = request.Cost;
-                if (pricePerUnit > user.OperationUnitLimit)
-                {
-                    return false;
-                }
-                if (request.Cost > user.OperationOrderLimit)
-                {
-                    return false;
-                }
-
-                var monthsSpending = _context.Requests
-                    .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 2)
-                    .Where(r => r.ApplicationUserCreatorID == request.ApplicationUserCreatorID)
-                    .Where(r => r.ParentRequest.OrderDate >= firstOfMonth)
-                    .Sum(r => r.Cost);
-                if (monthsSpending + request.Cost > user.OperationMonthlyLimit)
-                {
-                    return false;
-                }
-                return true;
-            }
+            return RedirectToAction("NotificationsView", new { DidntArrive = true });
         }
 
 
@@ -3857,7 +3231,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AccountingPayments(AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
 
-            TempData["PayNowCount"] = GetPaymentRequests(AppUtility.SidebarEnum.PayNow).Count();
+            TempData["PayNowCount"] = GetPaymentRequests(AppUtility.SidebarEnum.PayNow).ToList().Count();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingPayments;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingPaymentsEnum;
@@ -3867,42 +3241,55 @@ namespace PrototypeWithAuth.Controllers
 
         private IQueryable<Request> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum)
         {
-            var requestsList = _context.Requests
+            var requests = _context.Requests
                 .Include(r => r.ParentRequest)
                 .Include(r => r.Product).ThenInclude(p => p.Vendor)
                 .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
-                .Where(r => r.RequestStatusID != 7 && r.Paid == false);
-
+                .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
-                    requestsList = requestsList
-                        .Where(r => r.PaymentStatusID == 2);
+                    requests = requests
+                    .Where(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.PayNow:
-                    requestsList = requestsList
+                    requests = requests
                     //.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                    .Where(r => r.PaymentStatusID == 3);
+                    .Where(r => r.PaymentStatusID == 3 && r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.PayLater:
-                    requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 4);
+                    requests = requests
+                .Where(r => r.PaymentStatusID == 4 && r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.Installments:
-                    requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                    requests = requests
+                        .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                    var requestList = requests.ToList();
+                    foreach (var request in requests)
+                    {
+                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5));
+                        if (currentInstallments.Count() > 0)
+                        {
+                            for (var i = 1; i < currentInstallments.Count(); i++)
+                            {
+                                requestList.Add(request);
+                            }
+                            requests = requestList.AsQueryable();
+                        }
+                    }
+
                     break;
-                case AppUtility.SidebarEnum.StandingOrders:
-                    requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
-                    break;
+                //case AppUtility.SidebarEnum.StandingOrders:
+                //    requestsList = requestsList
+                //.Where(r => r.PaymentStatusID == 7).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                //    break;
                 case AppUtility.SidebarEnum.SpecifyPayment:
-                    requestsList = requestsList
-                .Where(r => r.PaymentStatusID == 8);
+                    requests = requests
+                .Where(r => r.PaymentStatusID == 8 && r.Payments.FirstOrDefault().HasInvoice);
                     break;
             }
-            return requestsList;
+            return requests;
         }
         private IQueryable<Request> GetPaymentNotificationRequests(AppUtility.SidebarEnum accountingNotificationsEnum)
         {
@@ -3915,7 +3302,7 @@ namespace PrototypeWithAuth.Controllers
             switch (accountingNotificationsEnum)
             {
                 case AppUtility.SidebarEnum.NoInvoice:
-                    requestsList = requestsList.Where(r => r.HasInvoice == false && (r.Paid || r.RequestStatusID == 3));
+                    requestsList = requestsList.Where(r => r.Payments.FirstOrDefault().HasInvoice == false).Where(r => (r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3));
                     break;
                 case AppUtility.SidebarEnum.DidntArrive:
                     requestsList = requestsList.Where(r => r.RequestStatusID == 2).Where(r => r.ExpectedSupplyDays != null).Where(r => r.ParentRequest.OrderDate.AddDays(r.ExpectedSupplyDays ?? 0).Date < DateTime.Today);
@@ -4002,6 +3389,7 @@ namespace PrototypeWithAuth.Controllers
                 requestsToPay = await requestsList.Where(r => r.RequestID == requestid).ToListAsync();
             }
             else if (requestIds != null)
+
             {
                 foreach (int rId in requestIds)
                 {
@@ -4033,31 +3421,30 @@ namespace PrototypeWithAuth.Controllers
                     var paymentsList = _context.Payments.Where(p => p.IsPaid == false);
                     foreach (Request request in paymentsPayModalViewModel.Requests)
                     {
-                        Payment payment = new Payment();
                         var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
-                        if (requestToUpdate.PaymentStatusID == 7)
-                        {
-                            payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
-                            _context.Add(new Payment() { PaymentDate = payment.PaymentDate.AddMonths(1), RequestID = requestToUpdate.RequestID });
-                        }
-                        else if (requestToUpdate.PaymentStatusID == 5)
-                        {
-                            var payments = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID);
-                            var count = payments.Count();
-                            payment = payments.OrderBy(p => p.PaymentDate).FirstOrDefault();
-                            if (count <= 1)
-                            {
-                                requestToUpdate.Paid = true;
-                                payment.Sum = requestToUpdate.Cost ?? 0;
-                            }
-                        }
-                        else
-                        {
-                            payment.Sum = request.Cost ?? 0;
-                            requestToUpdate.Paid = true;
-                            payment.PaymentDate = DateTime.Now.Date;
-                            payment.RequestID = requestToUpdate.RequestID;
-                        }
+                        Payment payment = _context.Payments.Where(p => p.RequestID == request.RequestID).FirstOrDefault();
+                        //if (requestToUpdate.PaymentStatusID == 7)
+                        //{
+                        //    payment = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID).FirstOrDefault();
+                        //    _context.Add(new Payment() { PaymentDate = payment.PaymentDate.AddMonths(1), RequestID = requestToUpdate.RequestID });
+                        //}
+                        //else if (requestToUpdate.PaymentStatusID == 5)
+                        //{
+                        //    var payments = paymentsList.Where(p => p.RequestID == requestToUpdate.RequestID);
+                        //    var count = payments.Count();
+
+                        //    payment = payments.OrderBy(p => p.PaymentDate).FirstOrDefault();
+                        //    if (count <= 1)
+                        //    {
+                        //        payment.Sum = requestToUpdate.Cost ?? 0;
+                        //    }
+                        //}
+                        //else
+                        //{
+                        payment.Sum = request.Cost ?? 0;
+                        payment.PaymentDate = DateTime.Now.Date;
+                        payment.RequestID = requestToUpdate.RequestID;
+                        //}
                         payment.Reference = paymentsPayModalViewModel.Payment.Reference;
                         payment.CompanyAccountID = paymentsPayModalViewModel.Payment.CompanyAccountID;
                         payment.PaymentReferenceDate = paymentsPayModalViewModel.Payment.PaymentReferenceDate;
@@ -4087,7 +3474,116 @@ namespace PrototypeWithAuth.Controllers
 
             return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsPayModalViewModel.AccountingEnum });
         }
+        [HttpGet]
+        [Authorize(Roles = "Accounting")]
+        public async Task<IActionResult> PaymentsInvoiceModal(int? vendorid, int? paymentid, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
+        {
+            var payment = _context.Payments.Where(p => p.PaymentID == paymentid).FirstOrDefault();
+            var requestToPay = _context.Requests.Where(r => r.RequestID == payment.RequestID).Include(r => r.ParentRequest)
+                    .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.Payments).ToList();
+            if (payment.InstallmentNumber == requestToPay.FirstOrDefault().Installments)
+            {
+                var paidSum = requestToPay.FirstOrDefault().Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
+                payment.Sum = (decimal)requestToPay.FirstOrDefault().Cost - paidSum;
+            }
+            PaymentsInvoiceViewModel paymentsInvoiceViewModel = new PaymentsInvoiceViewModel()
+            {
+                Requests = requestToPay,
+                AccountingEnum = accountingPaymentsEnum,
+                Payment = payment,
+                PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
+                CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList(),
+                Invoice = new Invoice()
+                {
+                    InvoiceDate = DateTime.Today
+                }
+            };
 
+            //check if payment status type is installments to show the installments in the view model
+
+            return PartialView(paymentsInvoiceViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Accounting")]
+        public async Task<IActionResult> PaymentsInvoiceModal(PaymentsInvoiceViewModel paymentsInvoiceViewModel)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var payment = _context.Payments.Where(p => p.PaymentID == paymentsInvoiceViewModel.Payment.PaymentID).FirstOrDefault(); ;
+                    foreach (Request request in paymentsInvoiceViewModel.Requests)
+                    {
+                        var requestToUpdate = _context.Requests.Where(r => r.RequestID == request.RequestID).FirstOrDefault();
+                        if (requestToUpdate.PaymentStatusID == 5)
+                        {
+                            payment.Sum = request.Payments.FirstOrDefault().Sum;
+                        }
+                        //else
+                        //{
+                        //    payment.Sum = request.Cost ?? 0;
+                        //    payment.PaymentDate = DateTime.Now.Date;
+                        //    payment.RequestID = requestToUpdate.RequestID;
+                        //}
+                        payment.Reference = paymentsInvoiceViewModel.Payment.Reference;
+                        payment.CompanyAccountID = paymentsInvoiceViewModel.Payment.CompanyAccountID;
+                        payment.PaymentReferenceDate = paymentsInvoiceViewModel.Payment.PaymentReferenceDate;
+                        payment.PaymentTypeID = paymentsInvoiceViewModel.Payment.PaymentTypeID;
+                        payment.CreditCardID = paymentsInvoiceViewModel.Payment.CreditCardID;
+                        payment.CheckNumber = paymentsInvoiceViewModel.Payment.CheckNumber;
+                        payment.IsPaid = true;
+                        payment.HasInvoice = true;
+                        payment.Invoice = paymentsInvoiceViewModel.Invoice;
+
+                        _context.Update(payment);
+                        _context.Update(requestToUpdate);
+                        await _context.SaveChangesAsync();
+
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+                        string requestFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
+                        Directory.CreateDirectory(requestFolder);
+                        if (paymentsInvoiceViewModel.InvoiceImage != null)
+                        {
+                            int x = 1;
+                            //create file
+                            string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Invoices.ToString());
+                            if (Directory.Exists(folderPath))
+                            {
+                                var filesInDirectory = Directory.GetFiles(folderPath);
+                                x = filesInDirectory.Length + 1;
+                            }
+                            else
+                            {
+                                Directory.CreateDirectory(folderPath);
+                            }
+                            string uniqueFileName = x + paymentsInvoiceViewModel.InvoiceImage.FileName;
+                            string filePath = Path.Combine(folderPath, uniqueFileName);
+                            FileStream filestream = new FileStream(filePath, FileMode.Create);
+                            paymentsInvoiceViewModel.InvoiceImage.CopyTo(filestream);
+                            filestream.Close();
+                        }
+                    }
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    Response.StatusCode = 500;
+                    for (int i = 0; i < paymentsInvoiceViewModel.Requests.Count; i++)
+                    {
+                        paymentsInvoiceViewModel.Requests[i] = _context.Requests.Where(r => r.RequestID == paymentsInvoiceViewModel.Requests[i].RequestID).Include(r => r.Product)
+                            .ThenInclude(p => p.Vendor).FirstOrDefault();
+                    }
+                    paymentsInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                    return PartialView(paymentsInvoiceViewModel);
+                }
+            }
+
+            return RedirectToAction("AccountingPayments", new { accountingPaymentsEnum = paymentsInvoiceViewModel.AccountingEnum });
+        }
         [HttpGet]
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AddInvoiceModal(int? vendorid, int? requestid, int[] requestIds)
@@ -4096,12 +3592,12 @@ namespace PrototypeWithAuth.Controllers
             var queryableRequests = _context.Requests
                 .Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
-                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-                    .Where(r => r.IsDeleted == false && r.HasInvoice == false && (r.Paid || r.RequestStatusID == 3)).Where(r => r.RequestStatusID != 7);
+                    .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.Payments)
+                    .Where(r => r.IsDeleted == false && r.Payments.FirstOrDefault().HasInvoice == false && ((r.PaymentStatusID == 2/*+30*/ && r.RequestStatusID == 3) || (r.PaymentStatusID == 3/*pay now*/) || (r.PaymentStatusID == 8/*specify payment*/ && r.RequestStatusID == 3))).Where(r => r.RequestStatusID != 7);
             if (vendorid != null)
             {
                 Requests = queryableRequests
-                    .Where(r => r.HasInvoice == false)
+                    .Where(r => r.Payments.FirstOrDefault().HasInvoice == false)
                     .Where(r => r.Product.VendorID == vendorid).ToList();
             }
             else if (requestid != null)
@@ -4140,31 +3636,25 @@ namespace PrototypeWithAuth.Controllers
 
                     foreach (var request in addInvoiceViewModel.Requests)
                     {
-                        var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r=>r.Payments).FirstOrDefault();
+                        var RequestToSave = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.Payments).FirstOrDefault();
                         RequestToSave.Cost = request.Cost;
-                        RequestToSave.InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
-                        if(request.PaymentStatusID==5)
+                        RequestToSave.Payments.FirstOrDefault().InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
+                        RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
+                        if (RequestToSave.IncludeVAT)
                         {
-                            if(request.Payments.Count() ==request.Installments)
-                            {
-                                request.HasInvoice = true;
-                            }
-                        }
-                        else if (request.PaymentStatusID != 7)
-                        {
-                            request.HasInvoice = true;
+                            RequestToSave.Cost = RequestToSave.Cost / (decimal)1.17;
                         }
 
                         _context.Update(RequestToSave);
 
-                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                        string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                         string requestFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
                         Directory.CreateDirectory(requestFolder);
                         if (addInvoiceViewModel.InvoiceImage != null)
                         {
                             int x = 1;
                             //create file
-                            string folderPath = Path.Combine(requestFolder, AppUtility.RequestFolderNamesEnum.Invoices.ToString());
+                            string folderPath = Path.Combine(requestFolder, AppUtility.FolderNamesEnum.Invoices.ToString());
                             if (Directory.Exists(folderPath))
                             {
                                 var filesInDirectory = Directory.GetFiles(folderPath);
@@ -4191,7 +3681,7 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     addInvoiceViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                     Response.StatusCode = 500;
-                    return PartialView("InvoiceModal", addInvoiceViewModel);
+                    return PartialView("AddInvoiceModal", addInvoiceViewModel);
                 }
             }
 
@@ -4199,71 +3689,37 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject, AppUtility.OrderTypeEnum OrderType)
+        public async Task<IActionResult> UploadQuoteModal(AppUtility.OrderTypeEnum OrderType)
         {
+            RequestIndexObject requestIndexObject = new RequestIndexObject();
+            var uploadQuoteViewModel = new UploadQuoteViewModel();
 
-            var UploadQuoteViewModel = new UploadQuoteViewModel();
+            uploadQuoteViewModel.OrderTypeEnum = OrderType;
+            uploadQuoteViewModel.RequestIndexObject = requestIndexObject;
+            uploadQuoteViewModel.IsReorder = requestIndexObject.IsReorder;
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
-            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Quotes.ToString());
+            string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
 
+            uploadQuoteViewModel = new UploadQuoteViewModel();
             if (Directory.Exists(uploadFolderQuotes))
             {
                 DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
                 //searching for the partial file name in the directory
                 FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                UploadQuoteViewModel.FileStrings = new List<String>();
+                uploadQuoteViewModel.FileStrings = new List<String>();
                 foreach (var orderfile in orderfilesfound)
                 {
                     string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    UploadQuoteViewModel.FileStrings.Add(newFileString);
-                }
-            }
-            UploadQuoteViewModel.OrderTypeEnum = OrderType;
-            UploadQuoteViewModel.RequestIndexObject = requestIndexObject;
-            return PartialView(UploadQuoteViewModel);
-
-
-        }
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject)
-        {
-
-            int lastParentRequestOrderNum = 0;
-            var prs = _context.ParentRequests;
-            if (_context.ParentRequests.Any())
-            {
-                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
-            }
-            ParentRequest pr = new ParentRequest()
-            {
-                ApplicationUserID = _userManager.GetUserId(User),
-                OrderNumber = lastParentRequestOrderNum + 1,
-                OrderDate = DateTime.Now
-            };
-            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject };
-
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
-            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Orders.ToString());
-
-            if (Directory.Exists(uploadFolderOrders))
-            {
-                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
-                //searching for the partial file name in the directory
-                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
-                UploadQuoteViewModel.FileStrings = new List<String>();
-                foreach (var orderfile in orderfilesfound)
-                {
-                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
-                    UploadQuoteViewModel.FileStrings.Add(newFileString);
+                    uploadQuoteViewModel.FileStrings.Add(newFileString);
                 }
             }
 
-            return PartialView(UploadQuoteViewModel);
+            return PartialView(uploadQuoteViewModel);
+
         }
+
         [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel, bool isCancel = false)
@@ -4271,7 +3727,7 @@ namespace PrototypeWithAuth.Controllers
             if (isCancel)
             {
                 RemoveRequestWithCommentsAndEmailSessions();
-                DeleteTemporaryDocuments();
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
                 return PartialView("Default");
             }
             try
@@ -4281,6 +3737,10 @@ namespace PrototypeWithAuth.Controllers
                 var request = HttpContext.Session.GetObject<Request>(requestName);
                 uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
                 request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
+                if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
+                {
+                    request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                }
                 if (request.RequestStatusID == 1)
                 {
                     TempData["RequestStatus"] = 1;
@@ -4298,12 +3758,20 @@ namespace PrototypeWithAuth.Controllers
                     {
                         try
                         {
-
-                            _context.Update(request);
+                            if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
+                            {
+                                request.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                            }
+                            _context.Entry(request.ParentQuote).State = EntityState.Added;
+                            if (request.Product.ProductID == 0)
+                            {
+                                _context.Entry(request.Product).State = EntityState.Added;
+                            }
+                            _context.Entry(request).State = EntityState.Added;
                             await _context.SaveChangesAsync();
                             await SaveCommentsFromSession(request);
                             //rename temp folder to the request id
-                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+                            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
                             string requestFolderFrom = Path.Combine(uploadFolder, "0");
                             string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
                             if (Directory.Exists(requestFolderTo))
@@ -4322,7 +3790,9 @@ namespace PrototypeWithAuth.Controllers
                                 throw ex;
                             }
                             base.RemoveRequestWithCommentsAndEmailSessions();
+                            
                             var action = "_IndexTableData";
+                            var controller = "Shared";
                             if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
                                 action = "_IndexTableWithCounts";
@@ -4330,9 +3800,9 @@ namespace PrototypeWithAuth.Controllers
                             else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                             {
                                 action = "NotificationsView";
+                                return RedirectToAction(action, "Requests", uploadQuoteOrderViewModel.RequestIndexObject);
                             }
-
-                            return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
+                            return await base.RedirectRequestsToShared(action, uploadQuoteOrderViewModel.RequestIndexObject);
                         }
                         catch (Exception ex)
                         {
@@ -4350,6 +3820,119 @@ namespace PrototypeWithAuth.Controllers
                 return PartialView("UploadQuoteModal", uploadQuoteOrderViewModel);
             }
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> UploadOrderModal(RequestIndexObject requestIndexObject)
+        {
+
+            int lastParentRequestOrderNum = 0;
+            var prs = _context.ParentRequests;
+            if (_context.ParentRequests.Any())
+            {
+                lastParentRequestOrderNum = _context.ParentRequests.OrderByDescending(x => x.OrderNumber).FirstOrDefault().OrderNumber ?? 0;
+            }
+            ParentRequest pr = new ParentRequest()
+            {
+                ApplicationUserID = _userManager.GetUserId(User),
+                OrderNumber = lastParentRequestOrderNum + 1,
+                OrderDate = DateTime.Now
+            };
+            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject, IsReorder = requestIndexObject.IsReorder };
+
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
+            string uploadFolder2 = Path.Combine(uploadFolder1, "0");
+            string uploadFolderOrders = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Orders.ToString());
+
+            if (Directory.Exists(uploadFolderOrders))
+            {
+                DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderOrders);
+                //searching for the partial file name in the directory
+                FileInfo[] orderfilesfound = DirectoryToSearch.GetFiles("*.*");
+                UploadQuoteViewModel.FileStrings = new List<String>();
+                foreach (var orderfile in orderfilesfound)
+                {
+                    string newFileString = AppUtility.GetLastFiles(orderfile.FullName, 4);
+                    UploadQuoteViewModel.FileStrings.Add(newFileString);
+                }
+            }
+
+            return PartialView(UploadQuoteViewModel);
+        }
+        [HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel, bool isCancel = false)
+        {
+            if (isCancel)
+            {
+                RemoveRequestWithCommentsAndEmailSessions();
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+                return PartialView("Default");
+            }
+            try
+            {
+                var requests = new List<Request>();
+                var isRequests = true;
+                var RequestNum = 1;
+                while (isRequests)
+                {
+                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                    var req = HttpContext.Session.GetObject<Request>(requestName);
+                    if (req != null)
+                    {
+                        if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
+                        {
+                            req.ExpectedSupplyDays = uploadQuoteOrderViewModel.ExpectedSupplyDays;
+                        }
+                        requests.Add(req);
+                    }
+                    else
+                    {
+                        isRequests = false;
+                    }
+                    RequestNum++;
+                }
+                RequestNum = 1;
+                foreach (var request in requests)
+                {
+                    request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
+                    request.ParentQuote = null;
+
+                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+
+                    HttpContext.Session.SetObject(requestName, request);
+                    RequestNum++;
+                }
+                string action;
+                if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
+                {
+                    action = "TermsModal";
+                }
+                else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
+                {
+                    action = "_IndexTableWithCounts";
+                    return await base.RedirectRequestsToShared(action, uploadQuoteOrderViewModel.RequestIndexObject);
+                }
+                else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                {
+                    action = "NotificationsView";
+                }
+                else
+                {
+                    action = "_IndexTableData";
+                    return await base.RedirectRequestsToShared(action, uploadQuoteOrderViewModel.RequestIndexObject);
+                }
+                Response.StatusCode = 200;
+                return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
+            }
+            catch (Exception ex)
+            {
+                uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                Response.StatusCode = 500;
+                return PartialView("UploadOrderModal", uploadQuoteOrderViewModel);
+            }
+        }
+
 
         private async Task SaveCommentsFromSession(Request request)
         {
@@ -4383,323 +3966,11 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadOrderModal(UploadOrderViewModel uploadQuoteOrderViewModel, bool isCancel = false)
-        {
-            if (isCancel)
-            {
-                RemoveRequestWithCommentsAndEmailSessions();
-                DeleteTemporaryDocuments();
-                return PartialView("Default");
-            }
-            try
-            {
-                var requests = new List<Request>();
-                var isRequests = true;
-                var RequestNum = 1;
-                while (isRequests)
-                {
-                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
-                    {
-                        requests.Add(HttpContext.Session.GetObject<Request>(requestName));
-                    }
-                    else
-                    {
-                        isRequests = false;
-                    }
-                    RequestNum++;
-                }
-                RequestNum = 1;
-                foreach (var request in requests)
-                {
-                    request.ParentRequest = uploadQuoteOrderViewModel.ParentRequest;
-                    request.ParentQuote = null;
-
-                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    HttpContext.Session.SetObject(requestName, request);
-                    RequestNum++;
-
-                }
-                string action;
-                if (uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased || uploadQuoteOrderViewModel.RequestIndexObject.OrderType == AppUtility.OrderTypeEnum.SaveOperations)
-                {
-                    action = "TermsModal";
-                }
-                else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
-                {
-                    action = "_IndexTableWithCounts";
-                }
-                else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
-                {
-                    action = "NotificationsView";
-                }
-                else
-                {
-                    action = "_IndexTableData";
-                }
-                Response.StatusCode = 200;
-                return RedirectToAction(action, uploadQuoteOrderViewModel.RequestIndexObject);
-            }
-            catch (Exception ex)
-            {
-                uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                Response.StatusCode = 500;
-                return PartialView("UploadOrderModal", uploadQuoteOrderViewModel);
-            }
-        }
-
-        private async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, int requestNum = 1)
-        {
-
-            var context = new ValidationContext(newRequest, null, null);
-            var results = new List<ValidationResult>();
-            var validatorCreate = Validator.TryValidateObject(newRequest, context, results, true);
-            if (validatorCreate)
-            {
-                try
-                {
-                    switch (OrderTypeEnum)
-                    {
-                        case AppUtility.OrderTypeEnum.AddToCart:
-                            await AddToCart(newRequest, isInBudget);
-                            break;
-                        case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                            AlreadyPurchased(newRequest);
-                            break;
-                        case AppUtility.OrderTypeEnum.OrderNow:
-                            OrderNow(newRequest, isInBudget);
-                            break;
-                        case AppUtility.OrderTypeEnum.RequestPriceQuote:
-                            await RequestItem(newRequest, isInBudget);
-                            break;
-                        case AppUtility.OrderTypeEnum.Save:
-                            await SaveItem(newRequest);
-                            break;
-                        case AppUtility.OrderTypeEnum.SaveOperations:
-                            await SaveOperationsItem(newRequest, requestNum);
-                            break;
-                    }
-
-                }
-                catch (DbUpdateException ex)
-                {
-                    throw ex;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
-
-        }
-        private async Task<bool> RequestItem(Request newRequest, bool isInBudget)
-        {
-
-            try
-            {
-                if (isInBudget)
-                {
-                    newRequest.RequestStatusID = 6;
-                }
-                else
-                {
-                    newRequest.RequestStatusID = 1;
-                }
-                newRequest.Cost = 0;
-                newRequest.ParentQuote = new ParentQuote();
-                newRequest.ParentQuote.QuoteStatusID = 1;
-                newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote.ToString();
-                _context.Add(newRequest);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return true;
-        }
-        private async Task<bool> SaveItem(Request newRequest)
-        {
-
-            try
-            {
-                newRequest.RequestStatusID = 7;
-                newRequest.OrderType = AppUtility.OrderTypeEnum.Save.ToString();
-                _context.Add(newRequest);
-                await _context.SaveChangesAsync();
-                //var commentExists = true;
-                //var n = 1;
-                //do
-                //{
-                //    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                //    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
-                //    if (comment != null)
-                //    //will only go in here if there are comments so will only work if it's there
-                //    //IMPT look how to clear the session information if it fails somewhere...
-                //    {
-                //        comment.RequestID = newRequest.RequestID;
-                //        _context.Add(comment);
-                //    }
-                //    else
-                //    {
-                //        commentExists = false;
-                //    }
-                //    n++;
-                //} while (commentExists);
-                //await _context.SaveChangesAsync();
-                MoveDocumentsOutOfTempFolder(newRequest);
-
-                newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
-                RequestNotification requestNotification = new RequestNotification();
-                requestNotification.RequestID = newRequest.RequestID;
-                requestNotification.IsRead = false;
-                requestNotification.RequestName = newRequest.Product.ProductName;
-                requestNotification.ApplicationUserID = newRequest.ApplicationUserCreatorID;
-                requestNotification.Description = "item created";
-                requestNotification.NotificationStatusID = 2;
-                requestNotification.TimeStamp = DateTime.Now;
-                requestNotification.Controller = "Requests";
-                requestNotification.Action = "NotificationsView";
-                requestNotification.OrderDate = DateTime.Now;
-                _context.Update(requestNotification);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return true;
-        }
-        private async Task<bool> SaveOperationsItem(Request request, int requestNum)
-        {
-
-            try
-            {
-                if (request.IsReceived)
-                {
-                    request.RequestStatusID = 3;
-                    request.ApplicationUserReceiverID = _userManager.GetUserId(User);
-                    request.ArrivalDate = DateTime.Now;
-                }
-                else
-                {
-                    request.RequestStatusID = 2;
-                }
-                request.UnitTypeID = 5;
-                request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
-                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
-                HttpContext.Session.SetObject(requestName, request);
-            }
-            catch (DbUpdateException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return true;
-        }
-        private async Task<bool> AddToCart(Request request, bool isInBudget)
-        {
-            try
-            {
-                if (isInBudget)
-                {
-                    request.RequestStatusID = 6;
-                }
-                else
-                {
-                    request.RequestStatusID = 1;
-                }
-                request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
-                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, request);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        private void AlreadyPurchased(Request request)
-        {
-            try
-            {
-                request.RequestStatusID = 2;
-                request.ParentQuoteID = null;
-                request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
-                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, request);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        private void OrderNow(Request request, bool isInBudget)
-        {
-            try
-            {
-                if (isInBudget)
-                {
-                    request.RequestStatusID = 6;
-                }
-                else
-                {
-                    request.RequestStatusID = 1;
-                }
-                request.OrderType = AppUtility.OrderTypeEnum.OrderNow.ToString();
-                var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, request);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-        }
-        private void MoveDocumentsOutOfTempFolder(Request request, bool additionalRequests = false)
-        {
-            //rename temp folder to the request id
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-            string requestFolderFrom = Path.Combine(uploadFolder, "0");
-            string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
-            if (Directory.Exists(requestFolderFrom))
-            {
-                if (Directory.Exists(requestFolderTo))
-                {
-                    Directory.Delete(requestFolderTo);
-                }
-                if (additionalRequests)
-                {
-                    AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
-                }
-                else
-                {
-                    Directory.Move(requestFolderFrom, requestFolderTo);
-                }
-            }
-        }
-
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(int vendorID, RequestIndexObject requestIndexObject) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
+            var requ = HttpContext.Session.GetObject<Request>("Request1");
             List<Request> requests = new List<Request>();
             if (vendorID != 0)
             {
@@ -4731,236 +4002,27 @@ namespace PrototypeWithAuth.Controllers
                     if (HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
                         requests.Add(HttpContext.Session.GetObject<Request>(requestName));
-
+                        RequestNum++;
                     }
                     else
                     {
                         isRequests = false;
                     }
-                    RequestNum++;
                 }
-
             }
-            var requestNum = 1;
-            foreach (var req in requests)
-            {
-                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
-                HttpContext.Session.SetObject(requestName, req);
-                requestNum++;
-            }
-            var termsList = new List<SelectListItem>() { };
-            await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }));
-            TermsViewModel termsViewModel = new TermsViewModel()
-            {
-                ParentRequest = new ParentRequest(),
-                TermsList = termsList
-            };
-            requestIndexObject.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), requests[0].Currency);
-            termsViewModel.RequestIndexObject = requestIndexObject;
-            return PartialView(termsViewModel);
+            return PartialView(await base.GetTermsViewModelAsync(vendorID, requestIndexObject));
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
         {
-            try
+            var r = await base.SaveTermsModalAsync(termsViewModel);
+            if (r.RedirectToActionResult.ActionName == "" && r.RedirectToActionResult.ControllerName == "")
             {
-                var requests = new List<Request>();
-                var isRequests = true;
-                var RequestNum = 1;
-                while (isRequests)
-                {
-                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
-                    {
-                        requests.Add(HttpContext.Session.GetObject<Request>(requestName));
-                    }
-                    else
-                    {
-                        isRequests = false;
-                    }
-                    RequestNum++;
-                }
-
-                RequestNum = 1;
-                var PaymentNum = 1;
-                var SaveUsingSessions = true;
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        foreach (var req in requests)
-                        {
-                            if (req.Product == null)
-                            {
-                                req.Product = _context.Products.Where(p => p.ProductID == req.ProductID).Include(p => p.ProductSubcategory).FirstOrDefault();
-                            }
-                            else
-                            {
-                                req.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == req.Product.ProductSubcategory.ProductSubcategoryID).FirstOrDefault();
-                            }
-                            if (req.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
-                            {
-                                SaveUsingSessions = false;
-                            }
-                            if (req.ParentRequest == null)
-                            {
-                                req.ParentRequest = termsViewModel.ParentRequest;
-                            }
-                            req.ParentRequest.Shipping = termsViewModel.ParentRequest.Shipping;
-                            req.PaymentStatusID = termsViewModel.SelectedTerm;
-                            req.Installments = (uint)termsViewModel.Installments;
-                            if (termsViewModel.Installments == 0)
-                            {
-                                req.Installments = 1;
-                            }
-                            if (SaveUsingSessions)
-                            {
-                                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                                HttpContext.Session.SetObject(requestName, req);
-                            }
-                            else
-                            {
-                                if (req.Product != null)
-                                {
-                                    req.Product.Vendor = null;
-                                    if (termsViewModel.SectionType == AppUtility.MenuItems.Operations) //TODO: better if
-                                    {
-                                        req.Product.ProductSubcategory = null;
-                                    }
-                                }
-                                if (req.PaymentStatusID == 7)
-                                {
-                                    req.RequestStatusID = 3;
-                                    req.ApplicationUserReceiverID = _userManager.GetUserId(User);
-                                    req.ArrivalDate = DateTime.Now;
-                                }
-
-                                _context.Update(req);
-                                await _context.SaveChangesAsync();
-                            }
-                            if (req.PaymentStatusID == 5)
-                            {
-                                for (int i = 0; i < req.Installments; i++)
-                                {
-
-                                    var payment = new Payment() { PaymentDate = DateTime.Now.AddMonths(i), Sum = (req.Cost ?? 0 / req.Installments ?? 0) };
-                                    if (SaveUsingSessions)
-                                    {
-                                        var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
-                                        HttpContext.Session.SetObject(paymentName, payment);
-                                    }
-                                    else
-                                    {
-                                        payment.Request = req;
-                                        _context.Update(payment);
-                                        await _context.SaveChangesAsync();
-                                    }
-                                    PaymentNum++;
-                                }
-                            }
-                            if (req.PaymentStatusID == 7)
-                            {
-                             
-                                var payment = new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) };
-                                if (SaveUsingSessions)
-                                {
-                                    var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + PaymentNum;
-                                    HttpContext.Session.SetObject(paymentName, new Payment() { PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.AddMonths(1).Month, 1) });
-                                }
-                                else
-                                {
-                                    payment.Request = req;
-                                    _context.Add(payment);
-                                    await _context.SaveChangesAsync();
-                                }
-                                PaymentNum++;
-                            }
-
-                            RequestNum++;
-                        }
-                        if (!SaveUsingSessions)
-                        {
-
-                            int i = 1;
-                            var additionalRequests = false;
-                            foreach (var request in requests)
-                            {
-                                var commentExists = true;
-                                var n = 1;
-                                do
-                                {
-                                    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
-                                    if (comment != null)
-                                    //will only go in here if there are comments so will only work if it's there
-                                    //IMPT look how to clear the session information if it fails somewhere...
-                                    {
-                                        comment.RequestID = request.RequestID;
-                                        _context.Add(comment);
-                                    }
-                                    else
-                                    {
-                                        commentExists = false;
-                                    }
-                                    n++;
-                                } while (commentExists);
-                                await _context.SaveChangesAsync();
-                                if (i < requests.Count)
-                                {
-                                    additionalRequests = true;
-                                }
-                                else
-                                {
-                                    additionalRequests = false;
-                                }
-                                MoveDocumentsOutOfTempFolder(request, additionalRequests);
-                                request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
-                                RequestNotification requestNotification = new RequestNotification();
-                                requestNotification.RequestID = request.RequestID;
-                                requestNotification.IsRead = false;
-                                requestNotification.RequestName = request.Product.ProductName;
-                                requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                                requestNotification.Description = "item ordered";
-                                requestNotification.NotificationStatusID = 2;
-                                requestNotification.TimeStamp = DateTime.Now;
-                                requestNotification.Controller = "Requests";
-                                requestNotification.Action = "NotificationsView";
-                                requestNotification.OrderDate = DateTime.Now;
-                                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                                _context.Update(requestNotification);
-                                i++;
-                            }
-                            await _context.SaveChangesAsync();
-                            await transaction.CommitAsync();
-                            var action = "Index";
-                            if (termsViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
-                            {
-                                action = "IndexInventory";
-                            }
-                            return RedirectToAction(action, termsViewModel.RequestIndexObject);
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw ex;
-                    }
-
-                }
-                return RedirectToAction("ConfirmEmailModal", termsViewModel.RequestIndexObject);
+                return PartialView("TermsModal", r.TermsViewModel);
             }
-            catch (Exception ex)
-            {
-                termsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                Response.StatusCode = 500;
-                var termsList = new List<SelectListItem>() { };
-                await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }));
-                termsViewModel.TermsList = termsList;
-                return PartialView("TermsModal", termsViewModel);
-            }
+            return RedirectToAction(r.RedirectToActionResult.ActionName, r.RedirectToActionResult.ControllerName, r.RedirectToActionResult.RouteValues);
         }
 
         [Authorize(Roles = "Reports")]
@@ -4975,67 +4037,11 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters, int numFilters, bool isProprietary)
+        public IActionResult _InventoryFilterResults(SelectedFilters selectedFilters, int numFilters, AppUtility.MenuItems sectionType, bool isProprietary)
         {
-            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, isProprietary: isProprietary);
+            InventoryFilterViewModel inventoryFilterViewModel = GetInventoryFilterViewModel(selectedFilters, numFilters, sectionType, isProprietary);
             return PartialView(inventoryFilterViewModel);
         }
-        private InventoryFilterViewModel GetInventoryFilterViewModel(SelectedFilters selectedFilters =null, int numFilters = 0, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests, bool isProprietary = false)
-        {
-            int categoryType = sectionType == AppUtility.MenuItems.Requests ? 1 : 2;
-            if(selectedFilters !=null)
-            {
-                InventoryFilterViewModel inventoryFilterViewModel = new InventoryFilterViewModel()
-                {
-                    //Types = _context.CategoryTypes.Where(ct => !selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
-                    Owners = _context.Employees.Where(o => !selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
-                    Locations = _context.LocationTypes.Where(l => l.Depth == 0).Where(l => !selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID)).ToList(),
-                    Categories = _context.ParentCategories.Where(c => c.CategoryTypeID == categoryType && c.isProprietary == isProprietary).Where(c => !selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID)).ToList(),
-                    Subcategories = _context.ProductSubcategories.Distinct().Where(v => !selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
-                    Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType)).Where(v => !selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
-                    //SelectedTypes = _context.CategoryTypes.Where(ct => selectedFilters.SelectedTypesIDs.Contains(ct.CategoryTypeID)).ToList(),
-                    SelectedVendors = _context.Vendors.Where(v => selectedFilters.SelectedVendorsIDs.Contains(v.VendorID)).ToList(),
-                    SelectedOwners = _context.Employees.Where(o => selectedFilters.SelectedOwnersIDs.Contains(o.Id)).ToList(),
-                    SelectedLocations = _context.LocationTypes.Where(l => l.Depth == 0).Where(l => selectedFilters.SelectedLocationsIDs.Contains(l.LocationTypeID)).ToList(),
-                    SelectedCategories = _context.ParentCategories.Where(c => selectedFilters.SelectedCategoriesIDs.Contains(c.ParentCategoryID)).ToList(),
-                    SelectedSubcategories = _context.ProductSubcategories.Distinct().Where(v => selectedFilters.SelectedSubcategoriesIDs.Contains(v.ProductSubcategoryID)).ToList(),
-                    //Projects = _context.Projects.ToList(),
-                    //SubProjects = _context.SubProjects.ToList()
-                    NumFilters = numFilters
-                };
-                if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
-                {
-                    inventoryFilterViewModel.Subcategories = inventoryFilterViewModel.Subcategories.Where(ps => inventoryFilterViewModel.SelectedCategories.Contains(ps.ParentCategory)).ToList();
-                }
-
-                return inventoryFilterViewModel;
-            }
-            else
-            {
-                return new InventoryFilterViewModel()
-                {
-                    //Types = _context.CategoryTypes.ToList(),
-                    //Vendors = _context.Vendors.ToList(),
-                    Vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).Contains(categoryType)).ToList(),
-                    Owners = _context.Employees.ToList(),
-                    Locations = _context.LocationTypes.Where(r => r.Depth == 0).ToList(),
-                    Categories = _context.ParentCategories.Where(c => c.CategoryTypeID == categoryType && c.isProprietary == isProprietary).ToList(),
-                    Subcategories = _context.ProductSubcategories.Distinct().ToList(),
-                    //SelectedTypes = new List<CategoryType>(),
-                    SelectedVendors = new List<Vendor>(),
-                    SelectedOwners = new List<Employee>(),
-                    SelectedLocations = new List<LocationType>(),
-                    SelectedCategories = new List<ParentCategory>(),
-                    SelectedSubcategories = new List<ProductSubcategory>(),
-                    //Projects = _context.Projects.ToList(),
-                    //SubProjects = _context.SubProjects.ToList()
-                    NumFilters = numFilters
-                };
-            }
-        }
-
-
-
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> _CartTotalModal(int requestID, AppUtility.MenuItems sectionType = AppUtility.MenuItems.Requests)
@@ -5055,14 +4061,29 @@ namespace PrototypeWithAuth.Controllers
             };
             return PartialView(viewModel);
         }
+
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> HistoryItemModal(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        {
+            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false);
+            requestItemViewModel.IsHistory = true;
+            return PartialView(requestItemViewModel);
+        }
+        [Authorize(Roles = "Requests")]
+        [HttpPost]
+        public async Task<IActionResult> _HistoryTab(int? id, List<string> selectedPriceSort, string selectedCurrency, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
+        {
+            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false, selectedPriceSort, selectedCurrency);
+            return PartialView(requestItemViewModel);
+        }
         //public async Task<bool> PopulateProductSerialNumber()
         //{
-        //    var products = _context.Products.Select(p => p).Include(p =>p.ProductSubcategory.ParentCategory).ToList();
+        //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();
         //    var operationSerialNumber = 0;
         //    var orderSerialNumber = 0;
         //    foreach (var product in products)
         //    {
-        //        if(product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+        //        if (product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
         //        {
         //            product.SerialNumber = "L" + orderSerialNumber;
         //            orderSerialNumber++;

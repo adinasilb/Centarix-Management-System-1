@@ -13,6 +13,10 @@
 
 		var inputButton = $('#save-documents');
 		var filePath = $(".file-select")[0].value;
+		if ($("#masterSidebarType").val() == "NoInvoice") {
+			var fileName = filePath.split("\\")[2]
+			$(".invoice-image-name").text(fileName)
+        }
 		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
 		console.log("extn: " + extn);
 		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn !="") {
@@ -51,7 +55,8 @@
 					section = "LabManagement"
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch);
+				var parentFolder = $(".active-document-modal").attr("parentfolder");
+				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder);
 				return true;
 			},
 			processData: false,
@@ -78,7 +83,8 @@
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch);
+		var parentFolder = $(".active-document-modal").attr("parentFolder");
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
 		return true;
 	});
 
@@ -100,9 +106,10 @@
 		var folder = "#" + $foldername + ".active-document-modal";
 		var div = $(folder + " i");
 		
-		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file")) {
+		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file" || $(".active-document-modal .material-image-icon").hasClass("protocols-filter"))) {
 			console.log("has class already");
 		} else {
+			console.log("does not class already");
 			console.log("does not class already");
 			$(folder +".active-document-modal" + " div.card.document-border").addClass("hasFile");
 			if (section=="Operations") {
@@ -110,13 +117,17 @@
 			} else if ((section == "LabManagement")) {
 				div.addClass("lab-man-filter");
 			}
+			else if ((section == "Protocols")) {
+				div.addClass("protocols-filter");
+				$(".active-document-modal .material-image-icon").addClass("protocols-filter");
+			}
 			else {
 				div.addClass("order-inv-filter");
 			}
 			var folderInput = "#" + $foldername + "Input";
 			$(folderInput).addClass("contains-file");
 			if ($(folderInput).rules()) {
-					$(folderInput).valid();
+				$(folderInput).valid();
 			}
 		}
 	};

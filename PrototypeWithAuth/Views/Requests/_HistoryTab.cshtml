@@ -8,6 +8,7 @@
     <div class="row modal-tab-name">
         <span class="heading-1 col-12 modal-tab-name">History</span>
     </div>
+    
     <table class="table table-headerspaced table-noheaderlines table-hover text-center">
         <thead>
             <tr>
@@ -25,57 +26,132 @@
                     Amount
                 </th>
                 <th>
-                    Total
+                    Price
+                    <div class="d-inline-block history-price">
+                        @if(!Model.IsProprietary)
+                        {
+                            await Html.RenderPartialAsync("_PricePopover", Model.PricePopoverViewModel);
+                        }
+                    </div>
                 </th>
 
             </tr>
         </thead>
         <tbody>
+            
             @foreach (var item in Model.RequestsByProduct)
             {
                 <tr class="inv-list-item">
                     <td>
-                        @Html.DisplayFor(modelItem => item.Product.ProductName)
+                        <button class="open-history-item-modal btn p-0 m-0 inv-link-clr no-box-shadow" value="@item.RequestID">
+                            @Html.DisplayFor(modelItem => item.Product.ProductName)
+                        </button>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ParentRequest.OrderDate)
+                        @item.ParentRequest.OrderDate.ToString("dd/M/yyyy")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName) &nbsp;
+                        @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName)&nbsp;
                         @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.LastName)
                     </td>
                     <td>
                         <ul style="list-style: none;" class="mb-0 pl-0">
-
-                            @if (item.Unit != null)
+                            <li>
+                                @Html.DisplayFor(modelItem => item.Unit)
+                                @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
+                            </li>
+                            @if (item.SubUnit != null)
                             {
                                 <li>
-                                    @Html.DisplayFor(modelItem => item.Unit)
-                                    @Html.DisplayFor(modelItem => item.UnitType.UnitTypeDescription)
+                                    @Html.DisplayFor(modelItem => item.SubUnit)
+                                    @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
                                 </li>
-                                @if (item.SubUnit != null)
+                                @if (item.SubSubUnit != null)
                                 {
                                     <li>
-                                        @Html.DisplayFor(modelItem => item.SubUnit)
-                                        @Html.DisplayFor(modelItem => item.SubUnitType.UnitTypeDescription)
+                                        @Html.DisplayFor(modelItem => item.SubSubUnit)
+                                        @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
                                     </li>
-                                    @if (item.SubSubUnit != null)
-                                    {
-                                        <li>
-                                            @Html.DisplayFor(modelItem => item.SubSubUnit)
-                                            @Html.DisplayFor(modelItem => item.SubSubUnitType.UnitTypeDescription)
-                                        </li>
-                                    }
                                 }
-
                             }
                         </ul>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Cost)
+
+                        @*@if (Model.RequestsByProduct[0].Currency == "NIS")
+                        {
+                            <label>&#x20aa;</label>
+                            @Html.DisplayFor(modelItem => item.PricePerUnit)
+                        }
+                        else
+                        {
+
+                            //var dollarPricePerUnit = Math.Round(item.PricePerUnit / item.ExchangeRate, 2);
+
+                            <label>&#36;</label>
+                            //@dollarPricePerUnit
+                        }*@
+
+                        @{
+                            var prices = AppUtility.GetPriceColumn(Model.PricePopoverViewModel.PriceSortEnums.Where(pse => pse.Selected == true).Select(pse => pse.PriceSortEnum.ToString()).ToList(), item, Model.PricePopoverViewModel.SelectedCurrency);
+                            for (int val = 0; val < prices.Count; val++)
+                            {
+                                if (val != 0)
+                                {
+                                    <br />
+                                }
+                                <label class="m-0 p-0">@prices[val]</label>
+                            }
+                        }
                     </td>
                 </tr>
 
             }
         </tbody>
     </table>
+<script>
+    $("body, .modal").off('click', ".open-price-popover").on('click', ".open-price-popover", function () {
+        console.log('price popover from modal');
+        $('[data-toggle="popover"]').popover('dispose');
+        $(this).addClass("activePopover");
+        $('[data-toggle="popover"]').each(function () {
+            if (!$(this).hasClass("activePopover")) {
+                $(this).popover('dispose');
+            }
+        });
+        $('.modal .open-price-popover').popover({
+            sanitize: false,
+            placement: 'bottom',
+            html: true,
+            content: function () {
+                return $('.modal #priceSortContent2').html();
+            }
+        });
+        $('.modal .open-price-popover').popover('toggle');
+
+        $(".popover").off("click").on("click", ".priceFilterDiv", function (e) {
+            var id = '#priceSortContent2 ' + "#" + $(this).children(".priceSort").prop("id")
+            console.log(id);
+            $(id).attr("checked", !$(id).prop("checked"));
+            //  alert("In call index with new filter")
+            var requestID = $('#history').find('button.open-history-item-modal').attr("value");
+            console.log(requestID);
+            var selectedPriceSort = [];
+            $("#priceSortContent2 .priceSort:checked").each(function (e) {
+                selectedPriceSort.push($(this).attr("enum"));
+            })
+            console.log(selectedPriceSort);
+            $.ajax({
+                async: false,
+                url: '/Requests/_HistoryTab',
+                data: { id: requestID, selectedPriceSort: selectedPriceSort, selectedCurrency: $('#tempCurrency').val()},
+                type: 'Post',
+                cache: false,
+                success: function (data) {
+                    $('#history').html(data);
+                }
+            });
+            return false;
+        })
+    });
+</script>

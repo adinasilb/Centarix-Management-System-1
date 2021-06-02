@@ -1,0 +1,135 @@
+﻿@model PrototypeWithAuth.ViewModels.AddMaterialViewModel
+@using PrototypeWithAuth.AppData
+<script src="~/js/site.js"></script>
+<script src="~/js/Validation/AddMaterialValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<div class="modal modal-document fader on-form-modal protocol-form" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
+    <div class="modal-dialog-centered mx-auto" style="width:45% !important">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-material');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <form action="" id="myForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto; " class="modal-padding materialForm">
+                <input type="hidden" asp-for="Material.MaterialCategoryID" />
+                <input type="hidden" asp-for="Material.ProtocolID" />
+                <div class="modal-body border-0 border-bottom modal-header-padding ">
+                    <div class="container ">
+                        <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
+
+                        <div class="heading-1">
+                            Add @Model.Material.MaterialCategory.MaterialCategoryDescription
+                        </div>
+                        <div class="row mt-5">
+                            <div class="container  col-8">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label asp-for="Material.Name" class="control-label"></label>
+                                        <input asp-for="Material.Name" class="form-control-plaintext border-bottom " />
+                                        <span asp-validation-for="Material.Name" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label asp-for="Material.Product.SerialNumber" class="control-label">Link To Product (Please enter product serial number)</label>
+                                        <input asp-for="Material.Product.SerialNumber" class="form-control-plaintext border-bottom " />
+                                        <span asp-validation-for="Material.Product.SerialNumber" class="text-danger-centarix"></span>
+                                    </div>
+                                </div>
+                                @{
+                                    var urlAction = Url.Action("DocumentsModal", "Protocols");
+                                    var fontSize = "2rem";
+                                }
+                            </div>
+                            <div class="col-4">
+                                <input type="submit" style="display:none;" id="documentSubmit" url="@urlAction" class="documentSubmit" />
+                                @{
+                                    var filterClass = "opac87";
+                                    var hasFileClass = "";
+                                    var containsFile = "";
+                                    <input type="hidden" asp-for="FileStrings" />@*This is for reloading hte modal on error*@
+                                    if (Model.FileStrings != null && Model.FileStrings.Count > 0)
+                                    {
+                                        filterClass = "protocols-filter";
+                                        containsFile = "contains-file";
+                                        hasFileClass = "hasFile";
+                                    }
+                                }
+
+                                <div class="row">
+                                    <div class=" offset-4 text-center">
+                                        <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" name="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
+                                        <a href="" class="open-document-modal " data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()" data-id="0" id="@AppUtility.FolderNamesEnum.Pictures.ToString()" name="@AppUtility.FolderNamesEnum.Pictures.ToString()" data-val="@true" showSwitch="@false" parentFolder="@AppUtility.ParentFolderName.Materials">
+
+                                            <div class="card document-border @hasFileClass">
+                                                <div class="document-card text-center">
+                                                    <i class="icon-camera_alt-24px @filterClass document-icon" alt="order" style="font-size:@fontSize"></i>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <label class="control-label text-center text document-text-margin" style="width:100%;">@AppUtility.FolderNamesEnum.Pictures.ToString()</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <label asp-for="Material.Info" class="control-label mb-2"></label>
+                                <textarea class="border form-control-plaintext " rows="8" asp-for="Material.Info"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer  border-0  ">
+                    <div class="mx-auto text-center">
+                        <button type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveMaterial" value="Save">Save</button>
+                        <button type="button" class="custom-cancel custom-button " onclick="$.fn.CloseModal('add-material');">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(".saveMaterial").click(function (e) {
+        e.preventDefault();
+        
+        $('.materialForm').data("validator").settings.ignore = "";
+        var valid = $('.materialForm').valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+            e.preventDefault();
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $('.activeSubmit').removeClass('disabled-submit')
+            var formData = new FormData($(".materialForm")[0]);
+            $.ajax({
+                url: "/Protocols/AddMaterialModal",
+                traditional: true,
+                data: formData,
+                contentType: false,
+                processData: false,
+                type: "POST",
+                success: function (data) {
+                    $("#Materials").html(data);
+                    $.fn.CloseModal('add-material');
+                },
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $.fn.OpenModal('modal', 'add-material', jqxhr.responseText);
+                    }
+                    return true;
+                }
+            }); 
+        }
+        $('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+    });
+
+</script>

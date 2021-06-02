@@ -1,0 +1,30 @@
+﻿@model PrototypeWithAuth.Models.ResourceNote
+<script src="~/js/resourcenote.js"></script>
+<div class="modal modal-view fader res-notes-modal" id="myModal" data-backdrop="false">
+    <div class="add-invoice-modal modal-dialog-centered mx-auto" style="width:54.625rem;">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
+            <form action="" method="post" id="myForm" class="modal-padding mt-4" enctype="multipart/form-data">
+                <div class="modal-header heading-1">
+                    Add Notes
+                    <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('resource-notes-modal')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <input type="hidden" asp-for="ResourceID" />
+                <div class="row under-row-margin">
+                    <div class="col-12">
+                        @*<label asp-for="Note" class="control-label"></label>*@
+                        <textarea asp-for="Note" rows="10" class="form-control-plaintext border" /></textarea>
+                        <span asp-validation-for="Note" class="text-danger-centarix"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mx-auto">
+                        <input @*type="submit"*@ class="custom-button custom-cancel protocols-filter ResourceNotesModal" />
+                        <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('resource-notes-modal')">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

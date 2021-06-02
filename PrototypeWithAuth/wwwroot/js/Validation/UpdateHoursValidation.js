@@ -42,27 +42,45 @@ $.validator.addMethod("validTime", function (value, element) {
 	return result;
 }, "Invalid time");
 
+$.validator.addMethod("EntryExit1FilledInBeforeEntryExit2", function (value, element) {
+	var entry1 = $('#EmployeeHour_Entry1').val() != "";
+	console.log("Entry 1" + entry1);
+	var exit1 = $('#EmployeeHour_Exit1').val() != "";
+	var entry2 = $('#EmployeeHour_Entry2').val() != "";
+	var result = true;
+	if ((exit1 && !entry1) || (entry2 && !exit1) || (entry2 && !entry1)) {
+		result = false;
+	}
+	return result
+}, "Entry 1 must be filled out before Entry 2");
+
 $('.UpdateHoursForm').validate({
 	rules: {
+		 normalizer: function( value ) {
+    return $.trim( value );
+  },
 		"EmployeeHour.Entry1": {
 			validTime: true,
-			eitherHoursOrTimeAndTimeRangeMakesSenseEntry1: true
+			eitherHoursOrTimeAndTimeRangeMakesSenseEntry1: true,
+			EntryExit1FilledInBeforeEntryExit2: true
 		},
 		"EmployeeHour.Exit1": {
 			validTime: true,
-			eitherHoursOrTimeAndTimeRangeMakesSenseEntry1: true
+			eitherHoursOrTimeAndTimeRangeMakesSenseEntry1: true,
+			EntryExit1FilledInBeforeEntryExit2 : true
 		},
 		"EmployeeHour.Entry2": {
 			validTime: true,
 			IfEntry2IsInView: true,
 			Entry2NotGreaterThanExitTwo: true,	
-			TimeRangeMakesSenseEntry2: true
+			TimeRangeMakesSenseEntry2: true,
+			EntryExit1FilledInBeforeEntryExit2 : true
 		},
 		"EmployeeHour.Exit2": {
 			validTime: true,
 			IfEntry2IsInView: true,
-			TimeRangeMakesSenseEntry2: true
-		
+			TimeRangeMakesSenseEntry2: true,
+			EntryExit1FilledInBeforeEntryExit2 : true
 		},
 		"EmployeeHour.TotalHours": {
 			validTime: true,

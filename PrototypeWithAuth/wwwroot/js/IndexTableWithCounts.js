@@ -1,14 +1,19 @@
 ﻿$('.countStatus').off('click').click( function(e){
-    $('#pricePopover').popover('dispose');
+    $('.open-price-popover').popover('dispose');
     e.preventDefault()
     $(".active").removeClass("active")
     $(this).addClass("active")
     //reset page number
     $('.page-number').val(1);
-    $.fn.ClearFilter();
-    ajaxPartialIndexTable($(this).attr("value"), "/Requests/_IndexTable", "._IndexTable", "GET")
+    var requestStatusId = $(this).attr("value");
+    var isProprietary = requestStatusId == 7 ? true : false;
+    var sectionType = $('#masterSectionType').val();
+    //alert(sectionType);
+    $.fn.ClearFilter(sectionType, isProprietary);
+    var pageType = $('#masterPageType').val();
+    var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
+    ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, "GET")
 });
-
 
 
 //function ajaxCallToPartialTable(status) {

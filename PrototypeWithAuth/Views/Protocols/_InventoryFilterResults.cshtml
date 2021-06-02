@@ -1,0 +1,77 @@
+﻿@model ProtocolsInventoryFilterViewModel
+@using PrototypeWithAuth.ViewModels;
+
+@using PrototypeWithAuth.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+<div style="width:1200px; height:35.75rem; margin:0;" class="container-fluid overflow-hidden order-inv-form">
+    <div class="row">
+        <div class=" col-1 offset-11">
+            <button type="button" class="close popover-close" style="font-size:2rem;">&times;</button>
+        </div>
+    </div>
+    <div class="row py-4 align-items-center">
+        <div class="col-9">
+            <label class="text text-left font-weight-bold">Total Filters:</label>
+            <span class=" text numFilters font-weight-bold" value="@Model.NumFilters">@Model.NumFilters</span>
+        </div>
+        <div class="col ">
+            <button class="text text-right font-weight-bold clear-filters" style="border: none; background: none">Clear All</button>
+        </div>
+        <div class="col ">
+            <button class="text custom-cancel custom-button-small-font rounded-pill  custom-small-filter-button" id="applyFilter">Apply</button>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="border-right col filter-col owner-col">
+            <input placeholder="Owner" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom owner-search" />
+            <div class="inventory-filter-col not-selected">
+                @foreach (var type in Model.Owners)
+                {
+                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left" labelName="@type.FirstName @type.LastName" value="@type.Id" style="border-radius:0.5rem;"><span class="filter-button-description">@type.FirstName @type.LastName</span></button>
+                }
+            </div>
+            <div class="inventory-filter-col selected">
+                @foreach (var type in Model.SelectedOwners)
+                {
+                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left filter-btn-select" value="@type.Id" style="border-radius:0.5rem;"><span class="filter-button-description">@type.FirstName @type.LastName</span></button>
+                }
+            </div>
+
+        </div>
+        <div class="border-right col filter-col category-col">
+            <input placeholder="Category" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom category-search" />
+            <div class="inventory-filter-col not-selected">
+                @foreach (var type in Model.ProtocolCategories)
+                {
+                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left" labelName="@type.ProtocolCategoryDescription" value="@type.ProtocolCategoryTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProtocolCategoryDescription</span></button>
+                }
+            </div>
+            <div class="inventory-filter-col selected">
+                @foreach (var type in Model.SelectedProtocolCategories)
+                {
+                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left filter-btn-select" value="@type.ProtocolCategoryTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProtocolCategoryDescription</span></button>
+                }
+            </div>
+        </div>
+        <div class="border-right col mh-100 filter-col subcategory-col">
+            <input placeholder="Subcategory" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom subCategory-search" />
+            <div class="inventory-filter-col not-selected">
+                @foreach (var type in Model.ProtocolSubCategories)
+                {
+                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left" labelName="@type.ProtocolSubCategoryTypeDescription" value="@type.ProtocolSubCategoryTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProtocolSubCategoryTypeDescription</span></button>
+                }
+            </div>
+            <div class="inventory-filter-col selected">
+                @foreach (var type in Model.SelectedProtocolSubCategories)
+                {
+                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left filter-btn-select" value="@type.ProtocolSubCategoryTypeID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.ProtocolSubCategoryTypeDescription</span></button>
+                }
+            </div>
+        </div>
+    
+    </div>
+</div>
+
+<script src="~/js/InventoryFilterScript.js"></script>

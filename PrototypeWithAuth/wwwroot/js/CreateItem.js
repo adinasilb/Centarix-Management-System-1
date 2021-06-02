@@ -119,6 +119,7 @@
     })
 
     $('.add-item').off('click').on('click', function (e) {
+       
         var newIndex = $(this).attr('data-val');
         var currency = $("#currency").val();
         var subcategoryID = $("#Requests_0__Product_ProductSubcategory_ProductSubcategoryID").val();
@@ -138,13 +139,13 @@
                 $("#addOperationItem").attr('data-val', parseInt(newIndex) + 1);
                 $(".mdb-select" + newIndex).materialSelect();
                 $(".parent-select" + newIndex).materialSelect();
-                if (currency == "NIS") {
-                    $(".dollar-cost").attr("readonly", true)
-                    $(".dollar-cost").addClass("disabled-text");
-                    $(".request-cost-dollar-icon").addClass("disabled-text");
-                    $(".shekel-cost").attr("readonly", false)
-                    $(".shekel-cost").removeClass("disabled-text");
-                    $(".request-cost-shekel-icon").removeClass("disabled-text");
+                if (currency == "USD") {
+                    $(".dollar-cost").attr("disabled", false)
+                    $(".dollar-cost").removeClass("disabled-text");
+                    $(".request-cost-dollar-icon").removeClass("disabled-text");
+                    $(".shekel-cost").attr("readonly", true)
+                    $(".shekel-cost").addClass("disabled-text");
+                    $(".request-cost-shekel-icon").addClass("disabled-text");
                 }
             }
         });
@@ -209,20 +210,16 @@
         if (items > 1) {
             console.log("index " + index)
             var itemClass = '.partial-item-tab.' + index;
-            $(itemClass).hide();
-            $(itemClass + " input").each(function () {
-                if (!$(this).attr('type') == "hidden") {
-                    $(this).attr("disabled", "true");
-                }
+            $(itemClass).children(".row").each(function (e) {
+                $(this).replaceWith("");
             })
-            $.fn.DisableMaterialSelect("Requests_" + index +"__Product_ProductSubcategory_ParentCategoryID","select-options-Requests_"+index+"__Product_ProductSubcategory_ParentCategoryID")
-            $.fn.DisableMaterialSelect("Requests_" + index + "__Product_ProductSubcategory_ProductSubcategoryID", "select-options-Requests_" + index + "__Product_ProductSubcategory_ProductSubcategoryID")
+            
             var deletedid = "Requests_" + index + "__Ignore";
             console.log("deleted hidden id: " + deletedid);
             $("#" + deletedid).val("true");
         }
     })
-    $('body').off('click', '.include-vat-radio').on('click', '.include-vat-radio', function (e) {
+    $('body').off('change', '.include-vat-radio').on('change', '.include-vat-radio', function (e) {
         console.log("radio click")
         var index = $(this).attr("index");
         var vatInfoClass = ".vat-info";
@@ -265,5 +262,16 @@
         });
         $('#addRequestComment').popover('toggle');
 
+    });
+
+    $('.open-history-item-modal').off('click').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //alert('here')
+        //highlight this
+        $(this).parents('tr').addClass('gray-background');
+        $(this).parents('tr').addClass('current-item');
+        var $itemurl = "/Requests/HistoryItemModal/?id=" + $(this).attr("value") + "&SectionType=" + $("#masterSectionType").val();
+        $.fn.CallPageRequest($itemurl, 'historyItem');
     });
 })

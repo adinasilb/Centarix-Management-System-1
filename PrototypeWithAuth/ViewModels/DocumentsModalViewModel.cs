@@ -12,8 +12,9 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class DocumentsModalViewModel : ViewModelBase
     {
-        public AppUtility.RequestFolderNamesEnum RequestFolderName { get; set; }
-        public List<Request> Requests { get; set; }
+        public AppUtility.FolderNamesEnum FolderName { get; set; }
+        public int ObjectID { get; set; }
+        public AppUtility.ParentFolderName ParentFolderName { get; set; }
         public List<string> FileStrings { get; set; }
         public List<FileInfo> Files { get; set; }
         public List<IFormFile> FilesToSave { get; set; }

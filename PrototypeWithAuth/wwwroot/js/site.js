@@ -308,7 +308,8 @@ $(function () {
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch);
+		var parentFolder = $(".active-document-modal").attr("parentfolder");
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
 		return true;
 	});
 
@@ -682,6 +683,7 @@ $(function () {
 		}
 
 	});
+
 
 	$.fn.validateDateisGreaterThanOrEqualToToday = function (date) {
 		var tdate = new Date();
@@ -1099,6 +1101,7 @@ $(function () {
 		e.preventDefault();
 		var pageType;
 		var val = $(this).attr("value");
+		console.log(val);
 		if (val != '') {
 			var date = new Date(val).toISOString();
 			console.log(date)
@@ -1128,7 +1131,8 @@ $(function () {
 	$('.no-hours-reported').off('change').change(function (e) {
 		var selectedDate = $(this).attr("date");
 		var pageType = "SummaryHours";
-		switch ($(this).val()) {
+		var chosenID = $(this).val();
+		switch (chosenID) {
 			case "1":
 				var itemurl = "UpdateHours?PageType=" + pageType + "&chosenDate=" + selectedDate + "&isWorkFromHome=" + true;
 				$("#loading").show();
@@ -1140,17 +1144,18 @@ $(function () {
 				$.fn.CallModal(itemurl, "update-time-worked");
 				break;
 			case "3":
-				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SickDay";
+			case "4":
+			case "5":
+			case "6":
+				var offDayEnum = ""
+				$(this).children(".confirm-report-offDay").each(function () {
+					if ($(this).val() == chosenID) {
+						offDayEnum = $(this).attr('data-val')
+                    }
+				})
+				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=" + offDayEnum;
 				$.fn.CallModal(itemurl, "off-day");
 				break;
-			case "4":
-				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=VacationDay";
-				$.fn.CallModal(itemurl,"off-day");
-				break;
-			case "5":
-				var itemurl = "OffDayConfirmModal?PageType=" + $("#masterPageType").val() + "&date=" + selectedDate + "&OffDayType=SpecialDay";
-				$.fn.CallModal(itemurl,"off-day");
-			break;
 		}
 	});
 
@@ -1355,7 +1360,7 @@ $(function () {
 	$(".back-button").off("click").on("click", function () {
 		console.log('back button');
 		var type = $(".turn-edit-on-off").attr('name');
-		console.log('type' + type);
+		console.log('type ' + type);
 		if (type == 'edit') {
 			var section = "";
 			console.log($('#masterSectionType').val());
@@ -1392,6 +1397,11 @@ $(function () {
 
 			});
 		}
+		else if ($(this).parents("div.modal").hasClass('historyModal')) {
+			$.fn.CloseModal("history-item");
+			$('div.editModal').find('tr.current-item').removeClass('gray-background');
+			console.log($('div.editModal').find('tr.current-item'))
+		}
 		else {
 			console.log('close edit')
 			$.fn.CloseModal("edits");
@@ -1427,6 +1437,10 @@ $(function () {
 			url = "/Requests/EditModalView";
 			section = "Requests";
 		}
+		else if ($(this).hasClass('locations')) {
+			url = "/Requests/ReceivedModalVisual";
+			section = "Requests";
+        }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
 			url = "/Requests/EditModalView";
 			section = "LabManagement";
@@ -1446,16 +1460,21 @@ $(function () {
 					$("#loading").hide();
 					$.fn.OpenModal('confirm-edit-modal', 'confirm-edit', data)
 					$(".modal-open-state").attr("text", "open");
-
 				}
-
 			});
-
 
 		}
 		else if (type == 'details') {
-			enableMarkReadonly($(this));
-			$(".proprietryHidenCategory").attr("disabled", false);
+			if ($(this).hasClass('locations')) {
+				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
+				$('#location .mark-readonly').removeClass("disabled")
+				$('.edit-mode-switch-description').text("Edit Mode On");
+				$('.turn-edit-on-off').attr('name', 'edit');
+			}
+			else {
+				enableMarkReadonly($(this));
+				$(".proprietryHidenCategory").attr("disabled", false);
+			}
 		}
 		//}
 	});
@@ -1471,36 +1490,57 @@ $(function () {
     }
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
+		console.log("enable " + selectID)
+		var selectedElements = $('#' + dataActivates).find(".active")
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
-		if($('#' + dataActivates+" .search-wrap").length>0)
-		{
-			selectedIndex = selectedIndex-1;
-		}
-		var isOptGroup = false;
-		if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
-		if (isOptGroup) {
-			var selected = $(':selected', $(selectID));
-			console.log(selectID + "  " + selectedIndex);
-			var optgroup = selected.closest('optgroup').attr('label');
-			switch (optgroup) {
-				case "Units":
-					console.log("Units")
-					selectedIndex = selectedIndex - 1;
-					break;
-				case "Weight/Volume":
-					console.log("Volume")
-					selectedIndex = selectedIndex - 2;
-					break;
-				case "Test":
-					console.log("Test")
-					selectedIndex = selectedIndex - 3;
-					break;
-			} 
+		var dataActivatesLength = $('#' + dataActivates).children('li').length;
+		if (selectedElements.length <= 1) {
+			if ($('#' + dataActivates + " .search-wrap").length > 0 || $(selectID).children().length < dataActivatesLength)
+			{
+				selectedIndex = selectedIndex-1;
+			}
+			var isOptGroup = false;
+			if ($('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup') || $('#' + dataActivates + ' li:nth-of-type(' + selectedIndex + ')').hasClass('optgroup-option')) { isOptGroup = true; }
+			if (isOptGroup) {
+				var selected = $(':selected', $(selectID));
+				console.log(selectID + "  " + selectedIndex);
+				var optgroup = selected.closest('optgroup').attr('label');
+				switch (optgroup) {
+					case "Units":
+						console.log("Units")
+						selectedIndex = selectedIndex - 1;
+						break;
+					case "Weight/Volume":
+						console.log("Volume")
+						selectedIndex = selectedIndex - 2;
+						break;
+					case "Test":
+						console.log("Test")
+						selectedIndex = selectedIndex - 3;
+						break;
+				} 
 
-		} 
+			} 
+		}
 		$(selectID).destroyMaterialSelect();
 		$(selectID).prop("disabled", false);
-		$(selectID).prop('selectedIndex', selectedIndex);
+		if (selectedElements.length <= 1) {
+			
+			$(selectID).prop('selectedIndex', selectedIndex);
+		}
+		else {
+			var selectedIndexes = [];
+			selectedElements.each(function (el) {
+				selectedIndexes.push(el)
+            })
+			var i = 0
+			$(selectID).children().each(function (el) {
+				if (el == selectedIndexes[i]) {
+					el.selected = true;
+					i++
+				}
+			})
+        }
 		$(selectID).removeAttr("disabled")
 		$('[data-activates="' + dataActivates + '"]').prop('disabled', false);
 		$(selectID).materialSelect();
@@ -1523,25 +1563,22 @@ $(function () {
 
 	
 
-	$("#home-btn").click(function () {
-			$('[data-toggle="popover"]').popover('dispose');
-			$("#home-btn").popover({
-				sanitize: false,
-				placement: 'bottom',
-				html: true,
-				content: function () {
-					return $('#home-content').html();
-				}
-			});
-			$("#home-btn").popover('toggle');
+	$("#home-btn").off('click').on('click', function () {
+		$('[data-toggle="popover"]').popover('dispose');
+		$('body').removeClass('popover-open');
+		//$('[data-toggle="tooltip"]').popover('dispose');
+		$("#home-btn").popover({
+			sanitize: false,
+			placement: 'bottom',
+			html: true,
+			content: function () {
+				return $('#home-content').html();
+			}
+		});
+		$("#home-btn").popover('toggle');
 
 	});
 	
-
-
-
-
-
 	$('.isRepeat').off("click").on("click", function () {
 		//console.log('employee status')
 		var val = $(this).val();
@@ -1587,6 +1624,13 @@ $(function () {
 			}
 		});
 	})
+
+	$('.load-delete-hour-modal').click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		$itemurl = "/Timekeeper/DeleteHourModal/?id=" + $(this).attr('value') + "&sectionType=" + $('#masterSectionType').val();
+		$.fn.CallPageRequest($itemurl, "delete");
+    })
 
 });
 

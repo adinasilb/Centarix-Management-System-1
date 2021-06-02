@@ -56,7 +56,7 @@ $(function () {
 	
 	$.fn.AppendAsteriskToRequired();
 
-	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled]';
+	$('#myForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible), [disabled], #-error';
 	$('#myForm').data("validator").settings.errorPlacement = function (error, element) {
 		if (element.hasClass('select-dropdown')) {
 			error.insertAfter(element);
@@ -96,8 +96,11 @@ $(function () {
 	$.validator.addMethod('mindate', function (v, el, minDate) {
 	if (this.optional(el)) {
 		return true;
-	}
-	var selectedDate = new Date($(el).attr("data-val"));
+		}
+		
+	var val = $(el).val();
+	val = val.split("/").reverse().join("-");
+	var selectedDate = moment(val).toDate();
 	console.log("selected date"+selectedDate)
 	minDate = new Date(minDate.setHours(0));
 	minDate = new Date(minDate.setMinutes(0));
@@ -106,13 +109,15 @@ $(function () {
 	return selectedDate >= minDate;
 }, 'Please select a valid date');
 
-		$.validator.addMethod('maxDate', function (v, el, minDate) {
+	$.validator.addMethod('maxDate', function (v, el, minDate) {
 	if (this.optional(el)) {
 		return true;
-	}
-	var selectedDate = new Date($(el).attr("data-val"));
+			}
+	var val = $(el).val();
+	//val = val.split("/").reverse().join("/");
+		var selectedDate = moment(val,"DD/MM/YYYY").toDate();
 	console.log("selected date"+selectedDate)
-		selectedDate = new Date(selectedDate.setHours(0));
+	selectedDate = new Date(selectedDate.setHours(0));
 	selectedDate = new Date(selectedDate.setMinutes(0));
 	selectedDate = new Date(selectedDate.setSeconds(0));
 	selectedDate = new Date(selectedDate.setMilliseconds(0));
@@ -120,7 +125,7 @@ $(function () {
 	minDate = new Date(minDate.setMinutes(0));
 	minDate = new Date(minDate.setSeconds(0));
 	minDate = new Date(minDate.setMilliseconds(0));
-				console.log("min date"+minDate)
+			console.log("min date" + minDate)
 	return selectedDate <= minDate;
 }, 'Please select a valid date');
 
@@ -299,6 +304,11 @@ $(function () {
 		}
 		$(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 	});
+
+	$.validator.addMethod("fileRequired", function (value, element) {
+		console.log("in file required")
+		return $(element).hasClass("contains-file");
+	}, 'Must upload a file before submitting');
 
 
 });

@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'elixir-icons';
-    src: url('fonts/elixir-icons.eot?u36px');
-    src: url('fonts/elixir-icons.eot?u36px#iefix') format('embedded-opentype'), url('fonts/elixir-icons.ttf?u36px') format('truetype'), url('fonts/elixir-icons.woff?u36px') format('woff'), url('fonts/elixir-icons.svg?u36px#elixir-icons') format('svg');
+    src: url('fonts/elixir-icons.eot?j8tntk');
+    src: url('fonts/elixir-icons.eot?j8tntk#iefix') format('embedded-opentype'), url('fonts/elixir-icons.ttf?j8tntk') format('truetype'), url('fonts/elixir-icons.woff?j8tntk') format('woff'), url('fonts/elixir-icons.svg?j8tntk#elixir-icons') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -81,8 +81,39 @@
     content: "\e987";
 }
 
-.
-:before {
+.icon-order_shortcut-24px:before {
+    content: "\e994";
+}
+
+.icon-download-24px:before {
+    content: "\e995";
+}
+
+.icon-yearly-24px:before {
+    content: "\e996";
+}
+
+.icon-add_customer-24px:before {
+    content: "\e997";
+}
+
+.icon-school-24px:before {
+    content: "\e998";
+}
+
+.icon-edit_doc-24px:before {
+    content: "\e999";
+}
+
+.icon-invoice_proforma-24px:before {
+    content: "\e99a";
+}
+
+.icon-dashboard-24px:before {
+    content: "\e99b";
+}
+
+.icon-tab-selected-24px:before {
     content: "\e993";
 }
 

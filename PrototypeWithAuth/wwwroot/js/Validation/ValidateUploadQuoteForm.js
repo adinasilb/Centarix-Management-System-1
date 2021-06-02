@@ -1,6 +1,8 @@
 ﻿$('.uploadQuoteForm').validate({
 	rules: {
-		
+		 normalizer: function( value ) {
+    return $.trim( value );
+  },
 		"ParentQuote.QuoteNumber": {
 			required: true
 		},
@@ -18,13 +20,15 @@
 			required: true,
 			maxDate: new Date()
 		},
-		OrdersInput :{
-			fileRequired : true			
-		}
+		"ExpectedSupplyDays": {
+			required: true,
+			min: 0,
+			integer: true
+        }
+		//OrdersInput :{
+		//	fileRequired : true			
+		//}
 	}
 });
 
-$.validator.addMethod("fileRequired", function (value, element) {
-	console.log("in file required")
-	return $(element).hasClass("contains-file");
-}, 'Must upload a file before submitting');
+

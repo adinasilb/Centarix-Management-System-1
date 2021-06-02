@@ -23,11 +23,23 @@
 		}
 	});
 
-	$(".open-sublocations-types").on("click", function () {
-		console.log("select location")
-		var id = $(this).attr("id");
-		console.log(id)
-		loadReceivedModalSubLocations(id);
+	$(".open-sublocations-types").off('click').on("click", function () {
+		$("#LocationTypeID").val($(this).attr("id"))
+		if (!$(".temporary-check").is(":checked")) {
+			console.log("select location")
+			var id = $(this).attr("id");
+			console.log(id)
+			loadReceivedModalSubLocations(id);
+		}
+		else {
+			$("#locationSelected").val(true);
+			$("#myForm").data("validator").settings.ignore = "";
+			var valid = $("#myForm").valid();
+			if (valid) {
+				$('.activeSubmit').removeClass('disabled-submit')
+			}
+		}
+		$(".locationFullName").html("");
 	});
 
 	//AJAX load full partial view for modalview manage locations
@@ -47,31 +59,13 @@
 		});
 	};
 
-
-
-
-
 	//FROM THE RECEIVED MODAL SUBLOCATIONS
-	//$(".SLI-click").on("click", function () {
-	//    alert("sli clicked!");
-	//    SLI($(this));
-	//});
 	$("body").off("click",".SLI-click").on("click",".SLI-click", function (e) {
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
-			var name = ""
-		$(".dropdown.dropdown-main span:not(.caret)").each(function(){
-		if($(this).html()!="select")
-		{
-			if($(this).attr("description") !=undefined)
-			{
-				name+=$(this).attr("description");
-			}
 
-		}
-			
-		});
+		var name = $(this).html();
 		$(".locationFullName").html(name);
 	});
 
@@ -100,16 +94,12 @@
 		console.log(nextSelect)
 		console.log("selected")
 		var locationInstanceParentId = $(el).val();
-		var url = "/Requests/GetSublocationInstancesList";/*/?LocationInstanceParentID=" + locationInstanceParentId;*/
+		var requestID = $("#Requests_0__RequestID").val();
 
 		if (nextSelect != undefined) { //if there is another one
 			$(nextSelect).html('');
 			$(nextSelect).parents('.dropdown-main').find('span:not(.caret)').text('select');
 			FillNextSelect(nextSelect, locationInstanceParentId);
-			//alert("items: " + items);
-			//nextSelect.html(items);
-		
-		
 		}
 			
 		//TWO ---> FILL VISUAL VIEW
@@ -124,7 +114,7 @@
 				var oldSelected = $("." + oldSelect).children("option:selected").val();
 				console.log("oldSelected: " + oldSelected);
 				$.ajax({
-					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected,
+					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected + "&RequestID=" + requestID,
 					type: 'GET',
 					cache: false,
 					context: myDiv,
@@ -142,7 +132,7 @@
 		
 			console.log("regular visual");
 			$.ajax({
-				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
+				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId + "&RequestID=" + requestID,
 				type: 'GET',
 				cache: false,
 				context: myDiv,
@@ -205,6 +195,10 @@
 					emptyText = " (nr)";
 					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
 				}
+				else if (field.locationTypeID == 501)
+				{
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" data-string="' + description + '" >' + field.labPart.labPartName + " " + field.locationNumber + emptyText + '</li>'
+                }
 				else
 				{
 					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
@@ -232,15 +226,16 @@
 	//	//now send a new visual
 	//});
 
-	$(".visual-locations td").on("click", function () {
+	$(".visual-locations td").off("click").on("click", function (e) {
+		console.log("clicked")
 		if (!$(this).hasClass("not-clickable")) {
+			
 			if ($(this).has("i").length) {
-
 				var locationInstanceId = $(this).children('div').first().children("input").first().attr("liid");
 				var lip = $(".liid." + locationInstanceId);
 				console.log("lip val: " + lip.val());
-				$(".complete-order").removeClass("disabled-submit")
-				if (lip.val() == "true") {
+				$(".submit-received").removeClass("disabled-submit")
+				if (lip.val().toLowerCase() == "true") {
 					//console.log("TRUE!");
 					lip.val("false"); //IMPT: sending back the true value to controller to place it here
 
@@ -249,11 +244,14 @@
 					$(this).removeClass('location-selected')
 					var hasLocationSelected = $('.liid[value="true"]').length;
 					if (hasLocationSelected <= 0) {
+						$(".submit-received").addClass("disabled-submit")
 						$('#locationSelected').val('');
 					}
 
 				}
 				else {
+					console.log("empty")
+					$(this).children(".css-checkbox").addClass("first");
 					//console.log("FALSE!");
 					lip.val("true"); //IMPT: sending back the true value to controller to place it here
 
@@ -267,5 +265,123 @@
 			}
 		}
 	});
+	$(".visual-locations td").on("click", function (e) {
+		var element = $(this);
+		if (!element.hasClass("not-clickable")) {
+	
+			if (e.shiftKey) {
+				MultipleLocation(element, ToggleBoxUnitSelected);
+			}
+			$(".first-selected").removeClass("first-selected");
+			element.addClass("first-selected");
+		}
+	});
+	function ToggleBoxUnitSelected(element, select) {
+		var locationInstanceId = element.children('div').first().children("input").first().attr("liid");
+		var lip = $(".liid." + locationInstanceId);
+		if (select) {
+			element.addClass('location-selected')
+			element.children('div').first().children(".row-1").children("i").removeClass("icon-add_circle_outline-24px1");
+			element.children('div').first().children(".row-1").children("i").addClass("icon-delete-24px");
+			lip.val("true")			
+		}
+		else {
+			element.removeClass('location-selected')
+			element.children('div').first().children(".row-1").children("i").addClass("icon-add_circle_outline-24px1");
+			element.children('div').first().children(".row-1").children("i").removeClass("icon-delete-24px");
+			lip.val("false")			
+        }
+	}
+
+	$(".temporary-check").click(function (e) {
+		var checked = $(this).is(":checked");
+		if (checked) {
+			$(".divSublocations").html("")
+			console.log($("#LocationTypeID").val())
+			if ($("#LocationTypeID").val() != 0)
+			{
+				$("#locationSelected").val(true)
+			}
+			$('.visualView').html('');
+		}
+		else {
+			$("#locationSelected").val("")
+		}
+    })
+
 
 });
+
+function MultipleLocation(element, ToggleBoxUnitSelected) {
+
+        console.log(element);
+        var firstSelected = $(".first-selected");
+        console.log(firstSelected);
+        var currentBox = element;
+        var boxIsPrevious = false;
+        var select = firstSelected.hasClass('location-selected');
+	if (!firstSelected.parent("tr").is(element.parent("tr"))) {
+		console.log("different row")
+		if (element.parent("tr").prevAll().filter(firstSelected.parent("tr")).length == 0) {
+			console.log("Earlier row");
+			boxIsPrevious = true;
+		}
+		var end = false;
+		if (boxIsPrevious) {
+			firstSelected.parent("tr").prevUntil(element.parent("tr").prev()).each(function () {
+				var reversed = $(this).children("td").toArray().reverse();
+				reversed.forEach(td => {
+					if (!end) {
+						if ($(td).is(currentBox)) {
+							end = true;
+						}
+						else {
+							if (!$(td).hasClass("graduated-table-background-color")) {
+								ToggleBoxUnitSelected($(td), select);
+							}
+						}
+					}
+				});
+			});
+		}
+		else {
+			firstSelected.parent("tr").nextUntil(element.parent("tr").next()).each(function () {
+				$(this).children("td").each(function () {
+					if (!end) {
+						if ($(this).is(currentBox)) {
+							end = true;
+						}
+						else {
+							if (!$(this).hasClass("graduated-table-background-color")) {
+								ToggleBoxUnitSelected($(this), select);
+							}
+						}
+					}
+				});
+			});
+		}
+	}
+	else {
+		console.log("same row")
+		if (element.prevAll().filter(firstSelected).length == 0) {
+			console.log("Earlier box");
+			boxIsPrevious = true;
+		}
+	}
+	if (boxIsPrevious) {
+		firstSelected.prevUntil(element).each(function () {
+			if (!$(this).hasClass("graduated-table-background-color")) {
+				ToggleBoxUnitSelected($(this), select);
+			}
+		});
+	}
+	else {
+		console.log("element" +$(element).html())
+		firstSelected.nextUntil(element).each(function () {
+			if (!$(this).hasClass("graduated-table-background-color")) {
+				console.log("this" + $(this))
+				ToggleBoxUnitSelected($(this), select);
+			}
+		});
+	}
+}

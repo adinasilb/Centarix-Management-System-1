@@ -75,7 +75,7 @@ namespace PrototypeWithAuth.Controllers
                 .Where(c => c.RequestID == requestid)
                 .Where(c => c.Date > DateTime.Now).ToListAsync();
             //delete temp files that may not have been deleted
-            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string requestFolder = Path.Combine(uploadFolder, "0");
            
             Directory.CreateDirectory(requestFolder);
@@ -90,12 +90,12 @@ namespace PrototypeWithAuth.Controllers
             };
 
             //may be able to do this together - combining the path for the orders folders
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, "files");
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, requestid.ToString());
-            string uploadFolderWarranties = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Warranty.ToString());
-            string uploadFolderManuals = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Manual.ToString());
-            string uploadFolderPictures = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.Pictures.ToString());
-            string uploadFolderMore = Path.Combine(uploadFolder2, AppUtility.RequestFolderNamesEnum.More.ToString());
+            string uploadFolderWarranties = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Warranty.ToString());
+            string uploadFolderManuals = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Manual.ToString());
+            string uploadFolderPictures = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Pictures.ToString());
+            string uploadFolderMore = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.More.ToString());
             //the partial file name that we will search for (1- because we want the first one)
             //creating the directory from the path made earlier
 

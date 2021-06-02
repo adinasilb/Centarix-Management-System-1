@@ -26,7 +26,10 @@
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
 			console.log("has class orders");
 			url = "/Requests/EditModalView";
-
+		}
+		else if ($('.turn-edit-on-off').hasClass('locations')) {
+			console.log("has class locations");
+			url = "/Requests/ReceivedModalVisual";
 		}
 		else {
 			//alert("didn't go into any edits");
@@ -42,49 +45,54 @@
 			type: 'POST',
 			cache: false,
 			success: function (data) {
-				$.fn.getMenuItems();
-				//reload index pages
-				if ($('.turn-edit-on-off').hasClass('operations')) {
-					    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
+				if ($('.turn-edit-on-off').hasClass('locations')) {
+					console.log(data)
+					$(".visualView").html(data);
 				}
-				else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
-
-					$.ajax({
-						async: true,
-						url: '/Vendors/_IndexForPayment?SectionType=' + $('#SectionType').val(),
-						type: 'GET',
-						cache: true,
-						success: function (data) {
-							$('.indexTable').html(data);
-							
-						}
-					});
-
-				}
-				else if ($('.turn-edit-on-off').hasClass('users')) {
-					var url = "";
-					var pageType = $('#PageType').val();
-					if (pageType == "UsersWorkers") {
-						url = "/ApplicationUsers/_Details"
+				else {
+					$.fn.getMenuItems();
+					//reload index pages
+					if ($('.turn-edit-on-off').hasClass('operations')) {
+						ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
 					}
-					else {
-						url = "/Admin/_Index"
-					}
-					$.ajax({
-						async: true,
-						url: url,
-						type: 'GET',
-						cache: true,
-						success: function (data) {
-							$('#usersTable').html(data);
-						//	alert("Updated CentarixID: " + $("#CentarixID").val());
-							$("#OriginalStatusID").attr("CentarixID", $("#CentarixID").val());
-						}
-					});
+					else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 
-				} else if ($('.turn-edit-on-off').hasClass('orders')) {
-					    ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
+						$.ajax({
+							async: true,
+							url: '/Vendors/_IndexForPayment?SectionType=' + $('#SectionType').val(),
+							type: 'GET',
+							cache: true,
+							success: function (data) {
+								$('.indexTable').html(data);
+							}
+						});
+					}
+					else if ($('.turn-edit-on-off').hasClass('users')) {
+						var url = "";
+						var pageType = $('#PageType').val();
+						if (pageType == "UsersWorkers") {
+							url = "/ApplicationUsers/_Details"
+						}
+						else {
+							url = "/Admin/_Index"
+						}
+						$.ajax({
+							async: true,
+							url: url,
+							type: 'GET',
+							cache: true,
+							success: function (data) {
+								$('#usersTable').html(data);
+								//	alert("Updated CentarixID: " + $("#CentarixID").val());
+								$("#OriginalStatusID").attr("CentarixID", $("#CentarixID").val());
+							}
+						});
+
+					} else if ($('.turn-edit-on-off').hasClass('orders')) {
+						ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
+					}
 				}
+				
 				//sets up error message if it has the setup in the view
 				//if ($(".hasErrorMessage").length > 0) {
 				//	alert("error message: " + $(".hasErrorMessage").val());
@@ -122,7 +130,6 @@
 		} else if ($('.turn-edit-on-off').hasClass('accounting')) {
 			section = "Accounting";
 			url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
-
 		}
 		else if ($('.turn-edit-on-off').hasClass('users')) {
 			//alert("in users");
@@ -133,7 +140,12 @@
 			console.log(selectedTab)
 			section = $("#masterSectionType").val();
 			url = "/Requests/ItemData?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section;
-
+		}
+		else if ($('.turn-edit-on-off').hasClass('locations')) {
+			selectedTab = $('.tab-content').children('.active').attr("value");
+			console.log(selectedTab)
+			section = $("#masterSectionType").val();
+			url = "/Requests/ItemData?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section +"&isEditable=false";
 		}
 		else {
 			alert("didn't go into any edits");

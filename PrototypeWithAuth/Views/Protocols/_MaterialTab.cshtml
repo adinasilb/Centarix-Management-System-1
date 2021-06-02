@@ -1,0 +1,91 @@
+﻿@model PrototypeWithAuth.ViewModels.MaterialTabViewModel
+@using PrototypeWithAuth.AppData
+
+    <div class="container-fluid new-modal-body m-0 " style="width:70%">
+        <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
+        <div class="row">
+            @foreach (var material in Model.MaterialCategories)
+            {
+                <div class="col heading-1">
+                    @material.MaterialCategoryDescription
+                </div>
+            }
+        </div>
+        <div class="row">
+            @foreach (var materialC in Model.MaterialCategories)
+            {
+                <div class="col">
+                    <div class="container">
+                        @{ var materialsPerCategory = Model.Materials.Where(m => m.MaterialCategoryID == materialC.MaterialCategoryID);
+                            if (materialsPerCategory.Count() > 0)
+                            {
+                                foreach (var material in materialsPerCategory)
+                                {
+                                    var color = " protocols-color ";
+                                    var disabledText = " disabled-text ";
+                                    var seeMaterialColor = disabledText;
+                                    if (material.Info != null)
+                                    {
+                                        seeMaterialColor = color;
+                                    }
+                                    var materialNameColor = "";
+                                    var seeProductDetailsClasses = disabledText+ " link-material-to-product ";
+                                    if (material.ProductID != null)
+                                    {
+                                        seeProductDetailsClasses = color+ " open-material-product ";
+                                        materialNameColor = " link-color link-underline ";
+                                    }
+
+                                    var updateImageColor = disabledText;
+                                    var folderPerMaterial = Model.Folders.Where(m => m.Key.MaterialID == material.MaterialID).SelectMany(f => f).FirstOrDefault();
+                                    if (folderPerMaterial[0].FileStrings != null && folderPerMaterial[0].FileStrings.Count > 0)
+                                    {
+                                        updateImageColor = "protocols-filter";
+                                    }
+                                    var deleteMaterialColor = color;
+                                    var materialName = material.Name ?? material.Product.ProductName;
+                                    <div class="row">
+                                        <div class="card-border material-cards">
+                                            <div class="text @materialNameColor ">@materialName</div>
+                                            <hr class="mb-2 mt-2" />
+                                            <div class=" d-flex text-center   align-items-center justify-content-sm-around">
+                                                <a href="#" class="open-document-modal mark-edditable " data-string="@AppUtility.FolderNamesEnum.Pictures" data-id="@material.MaterialID" id="@AppUtility.FolderNamesEnum.Pictures" data-val="@true" showSwitch="@false" parentFolder="@AppUtility.ParentFolderName.Materials">
+                                                    <i class="material-image-icon icon-camera_alt-24px @updateImageColor" style="font-size:1.55rem"></i>
+                                                </a>
+                                                <button class=" open-material-info @seeMaterialColor btn btn-link no-box-shadow p-0 m-0" value="@material.MaterialID">
+                                                    <i class=" icon-info-24px-2 " style="font-size:1.55rem"></i>
+                                                </button>
+                                                <button class="  @seeProductDetailsClasses btn btn-link no-box-shadow p-0 m-0" value="@material.ProductID" materialID="@material.MaterialID">                                                    <i class=" icon-broken-link " style="font-size:1.55rem"></i>
+                                                </button>
+                                                <button class=" delete-material  btn btn-link no-box-shadow p-0 m-0" value="@material.MaterialID">
+                                                    <i class=" icon-delete-24px1  " style="font-size:1.55rem"></i>
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                }
+                            }
+
+                        }
+                    </div>
+
+                </div>
+
+            }
+        </div>
+        <div class="row">
+            @foreach (var material in Model.MaterialCategories)
+            {
+                <div class="col text-center">
+                    <button value="@material.MaterialCategoryID" type="button" class="no-box-shadow btn p-0 m-0 addMaterial ">
+                        <i class="protocols-color icon-add_circle_outline-24px1" style="font-size: 3rem;"></i>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+<script src="~/js/site.js"></script>
+<script src="~/js/MaterialTab.js"></script>

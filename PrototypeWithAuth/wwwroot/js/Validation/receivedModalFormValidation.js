@@ -4,9 +4,13 @@ var isRequests = function () {
 }
 
 $('.receivedModalForm').validate({
+	 normalizer: function( value ) {
+    return $.trim( value );
+  },
 	rules: {
 		"Request.ArrivalDate": {
 			required: true,
+			maxDate: new Date()
 		},
 		"Request.ApplicationUserReceiverID": {
 			required: true,

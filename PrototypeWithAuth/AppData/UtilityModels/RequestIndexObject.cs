@@ -30,13 +30,17 @@ namespace PrototypeWithAuth.AppData
         {
             get
             {
-                if (_RequestStatusID == 0 && PageType == AppUtility.PageTypeEnum.RequestSummary)
+                if (_RequestStatusID == 0 && (PageType == AppUtility.PageTypeEnum.RequestSummary || PageType == AppUtility.PageTypeEnum.OperationsInventory))
                 {
                     return 3;
                 }
+                else if (_RequestStatusID == 0 && PageType == AppUtility.PageTypeEnum.OperationsRequest)
+                {
+                    return 2;
+                }
                 else if (_RequestStatusID == 0)
                 {
-                    return 1;
+                    return 6;
                 }
                 else
                 {
@@ -99,6 +103,9 @@ namespace PrototypeWithAuth.AppData
         }
         public AppUtility.CurrencyEnum SelectedCurrency { get; set; }
         public AppUtility.OrderTypeEnum OrderType { get; set; }
+        public bool CategorySelected { get; set; }
+        public bool SubcategorySelected { get; set; }
+        public bool IsReorder { get; set; }
          //ExpensesFilter = null, List<int> CategoryTypeIDs = null, List<int> Months = null, List<int> Years = null
     }
 }

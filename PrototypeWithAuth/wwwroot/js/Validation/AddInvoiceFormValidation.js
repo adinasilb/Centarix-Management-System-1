@@ -1,8 +1,10 @@
 ﻿$('.addInvoiceForm').validate({
+	 normalizer: function( value ) {
+	  return $.trim( value );
+	},
 	rules: {
 		"InvoiceImage": {
-			required: true,
-			extension: "jpg|jpeg|png|pdf"
+			fileRequired: true
 		},
 		"Invoice.InvoiceNumber": {
 			required: true,

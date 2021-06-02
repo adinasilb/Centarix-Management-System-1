@@ -4,17 +4,19 @@
 <span class="d-inline-block">
     <ul class="list-unstyled p-0 m-0">
         <li>
-            <button id="pricePopover" type="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body" class="btn p-0 m-0 no-box-shadow text">
+            <button   type="button" data-toggle="popover" data-placement="bottom" data-trigger="focus" data-container="body" class="open-price-popover btn p-0 m-0 no-box-shadow text">
                 <i class="icon-centarix-icons-17" style="font-size:1.6rem;">
                 </i>
             </button>
         </li>
-        <div style="display:none;" id="priceSortContent" class="">
+        @*<input type="hidden" asp-for="PopoverSource"/>*@
+        @{ 
+            var priceSortContentId = "priceSortContent" + Model.PopoverSource;
+        }
+        <div style="display:none;" id= @priceSortContentId>
             @for (int i = 0; i < Model.PriceSortEnums.Count; i++)
             {
-                var val = (int)(Model.PriceSortEnums[i].PriceSortEnum);
-                var id = "PriceSortEnums_" + i + "__Selected";
-                <div class="custom-control custom-checkbox plain-form priceFilterDiv" onclick="callIndexWithNewFilter(@val, @id)">
+                <div class="custom-control custom-checkbox plain-form priceFilterDiv">
                     <input type="checkbox" class="custom-control-input priceSort" enum="@Model.PriceSortEnums[i].PriceSortEnum" asp-for="PriceSortEnums[i].Selected" />
                     <label class="custom-control-label text" asp-for="PriceSortEnums[i].Selected">@Html.DisplayFor(e => Model.PriceSortEnums[i].PriceSortEnum)</label>
                 </div>
