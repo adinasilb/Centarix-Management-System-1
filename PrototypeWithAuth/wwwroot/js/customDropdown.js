@@ -7,7 +7,7 @@
 		$(this).removeClass('active');
 		$(this).find('.dropdown-menu').slideUp(300);
 	});
-$("body, .modal").on("click", '.dropdown-main .dropdown-menu li', function () {
+$("body, .modal, .choose-locations").on("click", '.dropdown-main .dropdown-menu li', function () {
 		$(this).parents('.dropdown-main').find('span:not(.caret)').text($(this).text());
 		$(this).parents('.dropdown-main').find('input').attr('value', $(this).attr('id'));
 	});
