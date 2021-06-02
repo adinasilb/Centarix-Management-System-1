@@ -13,6 +13,6 @@ namespace PrototypeWithAuth.Models
         public LocationInstance LocationInstance { get; set; }
         public int? ParentLocationInstanceID { get; set; }
         public LocationInstance ParentLocationInstance { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

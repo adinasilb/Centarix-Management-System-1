@@ -468,7 +468,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         foreach (var requestLocationInstance in request.RequestLocationInstances)
                         {
-                            requestLocationInstance.IsDeleted = true;
+                            /*requestLocationInstance.IsDeleted = true;*/
                             var locationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
                             locationInstance.IsFull = false;
 

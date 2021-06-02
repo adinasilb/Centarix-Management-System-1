@@ -136,23 +136,19 @@ namespace PrototypeWithAuth.Data
                 .HasForeignKey(rrc => rrc.ResourceID);
 
             modelBuilder.Entity<RequestLocationInstance>()
-                .HasQueryFilter(item => !item.IsDeleted)
                 .HasKey(rl => new { rl.RequestID, rl.LocationInstanceID });
 
             modelBuilder.Entity<RequestLocationInstance>()
-                .HasQueryFilter(item => !item.IsDeleted)
                 .HasOne(rl => rl.Request)
                 .WithMany(r => r.RequestLocationInstances)
                 .HasForeignKey(rl => rl.RequestID);
 
             modelBuilder.Entity<RequestLocationInstance>()
-                .HasQueryFilter(item => !item.IsDeleted)
                 .HasOne(rl => rl.LocationInstance)
                 .WithMany(l => l.RequestLocationInstances)
                 .HasForeignKey(rl => rl.LocationInstanceID);
 
             modelBuilder.Entity<RequestLocationInstance>()
-                .HasQueryFilter(item => !item.IsDeleted)
                 .HasOne(rl => rl.ParentLocationInstance)
                 .WithMany(l => l.AllRequestLocationInstances)
                 .HasForeignKey(rl => rl.ParentLocationInstanceID);
