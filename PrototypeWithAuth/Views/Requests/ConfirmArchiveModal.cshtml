@@ -1,26 +1,9 @@
 ﻿@using PrototypeWithAuth.AppData;
-@*@model AppUtility.MenuItems*@
+@model PrototypeWithAuth.ViewModels.ConfirmArchiveViewModel
 @{
     Layout = null;
     var bcColor = "order-inv-background-color";
-    @*switch (Model)
-    {
-        case AppUtility.MenuItems.Operations:
-            bcColor = "oper-background-color";
-            break;
-        case AppUtility.MenuItems.LabManagement:
-            bcColor = "lab-man-background-color";
-            break;
-        case AppUtility.MenuItems.Accounting:
-            bcColor = "accounting-background-color";
-            break;
-        case AppUtility.MenuItems.Requests:
-            bcColor = "order-inv-background-color";
-            break;
-        case AppUtility.MenuItems.Users:
-            bcColor = "users-background-color";
-            break;
-    }*@
+    
 }
 <script src="~/js/site.js"></script>
 <div class="modal modal-view confirm-archive-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index:9999;display:block">
@@ -40,7 +23,7 @@
 
                 <div class="modal-body">
                     <div class="row">
-                        Are you sure you want to archive this item?
+                        Are you sure you want to archive this item in location @Model.LocationName ?
                     </div>
                     <div class="row text-center">
 
@@ -54,23 +37,28 @@
     </div>
 </div>
 <script>
-    $('.archive-request').off('click').on('click', function () {
+    $('body, .modal').off('click', '.archive-request').on('click', '.archive-request', function (e) {
         e.preventDefault();
         e.stopPropagation();
         console.log('archive request.');
         var formData = new FormData($("#myForm")[0]);
+        console.log(...formData);
         $("#loading").show();
         $.ajax({
+            processData: false,
+            contentType: false,
             async: true,
-            url: "/Requests/ArchiveRequest?id=" + $('#Requests_0__RequestID').attr('value'),
+            url: "/Requests/ArchiveRequest?requestId=" + $('#Requests_0__RequestID').attr('value'),
             type: 'POST',
             data: formData,
             cache: true,
             success: function (data) {
                 console.log('success!');
                 $("#loading").hide();
+                $.fn.CloseModal('confirm-archive');
+                $('#location').html(data);
             }
         });
-    }
+    });
 
 </script>

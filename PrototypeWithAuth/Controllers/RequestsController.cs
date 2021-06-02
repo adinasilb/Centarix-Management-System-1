@@ -468,11 +468,10 @@ namespace PrototypeWithAuth.Controllers
                         }
                         foreach (var requestLocationInstance in request.RequestLocationInstances)
                         {
-                            /*requestLocationInstance.IsDeleted = true;*/
                             var locationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
                             locationInstance.IsFull = false;
 
-                            _context.Update(requestLocationInstance);
+                            _context.Remove(requestLocationInstance);
                             await _context.SaveChangesAsync();
                             _context.Update(locationInstance);
                             await _context.SaveChangesAsync();
@@ -2728,24 +2727,8 @@ namespace PrototypeWithAuth.Controllers
                         var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
                         foreach (var location in requestLocations)
                         {
-                            var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
                             _context.Remove(location);
-
-                            if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
-                            {
-                                locationInstance.IsFull = false;
-                                _context.Update(locationInstance);
-                            }
-                            else if (locationInstance.IsEmptyShelf)
-                            {
-                                var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
-                                                        && rli.RequestID != request.RequestID).ToList();
-                                if (duplicateLocations.Count() == 0)
-                                {
-                                    locationInstance.ContainsItems = false;
-                                    _context.Update(locationInstance);
-                                }
-                            }
+                            MarkLocationAvailable(request.RequestID, location.LocationInstanceID);
                         }
                         receivedModalVisualViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
 
@@ -4077,20 +4060,83 @@ namespace PrototypeWithAuth.Controllers
             var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false, selectedPriceSort, selectedCurrency);
             return PartialView(requestItemViewModel);
         }
+        [Authorize(Roles = "Requests")]
+        [HttpGet]
+        public async Task<IActionResult> _LocationTab(int id)
+        {
+            var requestItemViewModel = await editModalViewFunction(id, isEditable: false);
+            return PartialView(requestItemViewModel);
+        }
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ConfirmArchiveModal()
+        public IActionResult ConfirmArchiveModal(string locationName)
         {
-            return PartialView();
+            ConfirmArchiveViewModel confirmArchiveViewModel = new ConfirmArchiveViewModel();
+            confirmArchiveViewModel.LocationName = locationName;
+            return PartialView(confirmArchiveViewModel);
         }
 
-        /*[HttpPost]
+        [HttpPost]
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ArchiveRequest(int id)
+        public async Task<IActionResult> ArchiveRequest(int requestId, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (receivedModalVisualViewModel.LocationInstancePlaces != null)
+                    {
+                        var request = _context.Requests.Where(r => r.RequestID == requestId).FirstOrDefault();
+                        var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
+                        
+                        //archive one location and delete the rest
+                        var iterator = requestLocations.GetEnumerator();
+                        iterator.MoveNext();
+                        var locationToArchive = iterator.Current;
+                        locationToArchive.IsArchived = true; 
+                        _context.Update(locationToArchive);
+                        MarkLocationAvailable(requestId, locationToArchive.LocationInstanceID);
+                                              
+                        while (iterator.MoveNext())
+                        {
+                            var locationToDelete = iterator.Current;
+                            _context.Remove(locationToDelete);
+                            MarkLocationAvailable(requestId, locationToDelete.LocationInstanceID);
+                        }
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return RedirectToAction("_LocationTab", new { id = requestId });
             
-        }*/
+        }
+
+        private void MarkLocationAvailable(int requestId, int locationInstanceID)
+        {
+            var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstanceID).FirstOrDefault();
+            if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+            {
+                locationInstance.IsFull = false;
+                _context.Update(locationInstance);
+            }
+            else if (locationInstance.IsEmptyShelf)
+            {
+                var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+                                        && rli.RequestID != requestId).ToList();
+                if (duplicateLocations.Count() == 0)
+                {
+                    locationInstance.ContainsItems = false;
+                    _context.Update(locationInstance);
+                }
+            }
+        }
 
         //public async Task<bool> PopulateProductSerialNumber()
         //{

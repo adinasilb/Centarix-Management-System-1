@@ -172,7 +172,7 @@
         $("#loading").show();
         $.ajax({
             async: true,
-            url: "/Requests/ConfirmArchiveModal",
+            url: "/Requests/ConfirmArchiveModal?locationName=" + $('.locationFullName').text(),
             type: 'GET',
             cache: true,
             success: function (data) {
@@ -181,7 +181,6 @@
                 $.fn.OpenModal("confirm-archive-modal", 'confirm-archive', data);
             }
         });
-
     });
 </script>
 @*<script type="text/javascript">
