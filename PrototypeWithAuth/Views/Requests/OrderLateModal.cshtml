@@ -15,9 +15,12 @@
                         </div>
                     </div>
                 </div>
+                @{ 
+                    var supposedtToArriveDate = Model.ParentRequest.OrderDate.AddDays((double)Model.ExpectedSupplyDays).Date;
+                }
                 <div class="modal-body border rounded m-0 p-0">
-                    <p class="p-3 text" >
-                        The order number @Model.ParentRequest.OrderNumber for @Model.Product.ProductName has not arrived yet.<br />
+                    <p class="p-3 text">
+                        Hello, <br /> Order number @Model.ParentRequest.OrderNumber for @Model.Product.ProductName which was scheduled to arrive on @supposedtToArriveDate.ToString("dd/MM/yyyy"), has not arrived yet.<br />
                         Please update us on the matter.<br />
                         Best regards,<br />
                         @Model.ApplicationUserCreator.FirstName @Model.ApplicationUserCreator.LastName <br />

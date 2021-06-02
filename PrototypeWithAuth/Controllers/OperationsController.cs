@@ -45,7 +45,7 @@ namespace PrototypeWithAuth.Controllers
         private ICompositeViewEngine _viewEngine;
 
         public OperationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/) : base(context)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/) : base(context, userManager:userManager)
         {
             //_Context = Context;
             _context = context;
@@ -56,8 +56,32 @@ namespace PrototypeWithAuth.Controllers
             _viewEngine = viewEngine;
         }
 
-       
-       
+        public async Task<IActionResult> Index(RequestIndexObject requestIndexObject)
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
+
+            var viewmodel = await GetIndexViewModel(requestIndexObject);
+
+            SetViewModelCounts(requestIndexObject, viewmodel);
+
+            return View(viewmodel);
+        }
+
+
+        public async Task<IActionResult> AddItemView()
+        {
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.OperationsRequest;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
+
+            return View();
+        }
+
+
+
+
         public IActionResult Order(int id, RequestIndexObject requestIndexObject)
         {
             var request = _context.Requests.Where(r => r.RequestID == id).Include(r => r.Product).ThenInclude(p => p.ProductSubcategory).ThenInclude(px => px.ParentCategory).FirstOrDefault();

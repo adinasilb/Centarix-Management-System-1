@@ -130,7 +130,7 @@ else
     <div class="row">
 
         <div class="col-6">
-            <label asp-for="EmployeeHour.PartialOffDayHours" class="control-label">Partial Vacation</label>
+            <label asp-for="EmployeeHour.PartialOffDayHours" class="control-label">Partial Days</label>
             @Html.DropDownListFor(
                        vm => vm.EmployeeHour.PartialOffDayTypeID,
                        new SelectList(
