@@ -331,6 +331,8 @@
     <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.Designer.cs" />
     <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.cs" />
     <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210601121013_AddArchive.cs" />
+    <Compile Remove="Data\Migrations\20210601121013_AddArchive.Designer.cs" />
   </ItemGroup>
 
 
