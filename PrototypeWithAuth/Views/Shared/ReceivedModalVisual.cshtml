@@ -9,7 +9,7 @@
     for (int p = 0; p < pCount; p++)
     {
         <input type="hidden" asp-for="LocationInstancePlaces[p].LocationInstanceId" />
-        <input type="hidden" asp-for="LocationInstancePlaces[p].Placed" class="liid @Model.LocationInstancePlaces[p].LocationInstanceId" />
+        <input type="hidden" asp-for="LocationInstancePlaces[p].Placed" value="@Model.LocationInstancePlaces[p].Placed.ToString().ToLower()" class="liid @Model.LocationInstancePlaces[p].LocationInstanceId" />
     }
 
 <table class="table p-0 m-0 visual-locations">

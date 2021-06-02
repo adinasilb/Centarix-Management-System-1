@@ -43,7 +43,7 @@
         <div class="col-12 heading-1 text-center locationFullName">@name</div>
         }
 </div>
-<div class="row">
+<div class="row choose-locations">
     <div class="col-2">
         <div class="form-group">
             <label class="control-label" asp-for="ReceivedLocationViewModel.locationTypesDepthZero">Location Type</label>
@@ -174,7 +174,7 @@
         </div>
     </div>
 </div>
-<div class="row"><input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" @disable /></div>
+<div class="row"><input type="hidden" style="pointer-events:none" class="mark-readonly" id="locationSelected" name="locationSelected" value="true"/></div>
 <div class="row">
     <div class="visualView col-6 m-auto text-center">
         @if (Model.ReceivedModalVisualViewModel != null)
