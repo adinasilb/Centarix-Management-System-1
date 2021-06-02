@@ -788,23 +788,6 @@
 
 
 
-        $("#openNotifications").click(function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $('[data-toggle="popover"]').popover('dispose');
-            $('[data-toggle="popover"]').popover({
-                sanitize: false,
-                placement: 'bottom',
-                html: true,
-                content: function () {
-                    return $('#notifications-popover').html();
-                }
-            });
-            $('#openNotifications').popover('toggle');
-
-        });
-
-
         //$(document).popover({
         //    selector: '[data-toggle=popover]',
         //    html: true,
@@ -1005,7 +988,11 @@
             });
             $('#openNotifications').popover('toggle');
             $.fn.UpdateNotificationLastRead();
-
+            $(".popover-close").on("click", function (e) {
+                console.log(" popover click")
+                $('[data-toggle="popover"]').popover('dispose');
+                $('body').removeClass('popover-open');
+            });
         });
 
         $.fn.CallModal = function (url, modalClass) {
@@ -1166,10 +1153,7 @@
             var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
             return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner }
         }
-        $("body").on("click", ".popover-close", function (e) {
-            $('[data-toggle="popover"]').popover('dispose');
-            $('body').removeClass('popover-open');
-        });
+        
 
         $.fn.ClearFilter = function (sectionType, isProprietary) {
             //alert(sectionType);
