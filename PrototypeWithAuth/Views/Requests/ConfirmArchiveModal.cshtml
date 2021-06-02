@@ -1,0 +1,59 @@
+﻿@using PrototypeWithAuth.AppData;
+@*@model AppUtility.MenuItems*@
+@{
+    Layout = null;
+    var bcColor = "order-inv-background-color";
+    @*switch (Model)
+    {
+        case AppUtility.MenuItems.Operations:
+            bcColor = "oper-background-color";
+            break;
+        case AppUtility.MenuItems.LabManagement:
+            bcColor = "lab-man-background-color";
+            break;
+        case AppUtility.MenuItems.Accounting:
+            bcColor = "accounting-background-color";
+            break;
+        case AppUtility.MenuItems.Requests:
+            bcColor = "order-inv-background-color";
+            break;
+        case AppUtility.MenuItems.Users:
+            bcColor = "users-background-color";
+            break;
+    }*@
+}
+<script src="~/js/site.js"></script>
+<div class="modal modal-view confirm-archive-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false" style="z-index:9999;display:block">
+
+    <div class="modal-dialog-centered mx-auto  modal-lg" role="document" style="max-height:100%; width:32rem;">
+
+        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow">
+            <button type="button" class="close modal-close-padding modal-close-style" onclick="$.fn.CloseModal('confirm-archive')" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-padding">
+                <div class="modal-header pt-0" style="border-bottom: 0;">
+                    <div class="row heading-1">
+                        Archive Item
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        Are you sure you want to archive this item?
+                    </div>
+                    <div class="row text-center">
+
+                        <button class="text custom-button custom-button-font @bcColor archive-request between-button-margin">Save</button>
+                        <button class="custom-button custom-cancel text" onclick="$.fn.CloseModal('confirm-archive')">Cancel</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+</script>

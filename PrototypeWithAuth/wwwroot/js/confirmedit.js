@@ -35,7 +35,7 @@
 			alert("didn't go into any edits");
 		}
 		console.log("url: " + url);
-		console.log(...formData)
+		//console.log(...formData)
 		$.ajax({
 			processData: false,
 			contentType: false,
@@ -46,7 +46,7 @@
 			cache: false,
 			success: function (data) {
 				if ($('.turn-edit-on-off').hasClass('locations')) {
-					console.log(data)
+					//console.log(data)
 					$(".visualView").html(data);
 				}
 				else {

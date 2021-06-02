@@ -229,7 +229,7 @@ namespace PrototypeWithAuth.Controllers
 
                             {
                                 ButtonClasses = " payments-pay-now accounting-background-color ",
-                                ButtonText = "Pay All"                                
+                                ButtonText = "Pay All"
                             }).ToLookup(c => c.Vendor);
                             buttonText = "Pay All";
                             break;
@@ -269,7 +269,7 @@ namespace PrototypeWithAuth.Controllers
             return viewModelByVendor;
         }
 
-     
+
 
         [HttpGet]
         [Authorize(Roles = "Accounting")]
@@ -1033,7 +1033,7 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUserReceiver)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
-            if(request.RequestStatusID == 7)
+            if (request.RequestStatusID == 7)
             {
                 isProprietary = true;
             }
@@ -1400,7 +1400,7 @@ namespace PrototypeWithAuth.Controllers
                             foreach (var location in requestLocations)
                             {
                                 var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == location.LocationInstanceID).FirstOrDefault();
-                                    _context.Remove(location);
+                                _context.Remove(location);
                                 if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
                                 {
                                     locationInstance.IsFull = false;
@@ -1788,7 +1788,7 @@ namespace PrototypeWithAuth.Controllers
                 }
 
                 string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-                string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + requests.FirstOrDefault().ParentRequest.OrderNumber +".pdf");
+                string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
 
                 if (System.IO.File.Exists(uploadFile))
                 {
@@ -1842,7 +1842,7 @@ namespace PrototypeWithAuth.Controllers
 
                     var quoteNumber = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requests.FirstOrDefault().ParentQuoteID).Select(pq => pq.QuoteNumber).FirstOrDefault();
                     //body
-                    builder.TextBody = @"Hello,"+"\n\n"+ "Please see the attached order for quote number " + quoteNumber + 
+                    builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number " + quoteNumber +
                         ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
                         + ownerUsername + "\nCentarix";
                     builder.Attachments.Add(uploadFile);
@@ -2062,12 +2062,12 @@ namespace PrototypeWithAuth.Controllers
 
             /*foreach (var request in requests) //this seems to be doing the exact same thing for each request -> overwriting previously saved one. what should be happening here???
             {*/
-                //creating the path for the file to be saved
-                string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-                string uniqueFileName = "PriceQuoteRequest.pdf";
-                string filePath = Path.Combine(path1, uniqueFileName);
-                // save pdf document
-                doc.Save(filePath);
+            //creating the path for the file to be saved
+            string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+            string uniqueFileName = "PriceQuoteRequest.pdf";
+            string filePath = Path.Combine(path1, uniqueFileName);
+            // save pdf document
+            doc.Save(filePath);
             //}
             // close pdf document
             doc.Close();
@@ -2550,8 +2550,8 @@ namespace PrototypeWithAuth.Controllers
                 if (receivedModalVisualViewModel.ParentLocationInstance != null)
                 {
                     var request = _context.Requests.Where(r => r.RequestID == RequestID).Include(r => r.RequestLocationInstances).ThenInclude(rli => rli.LocationInstance).FirstOrDefault();
-                    
-                    
+
+
 
                     receivedModalVisualViewModel.ChildrenLocationInstances =
                         _context.LocationInstances.Where(m => m.LocationInstanceParentID == LocationInstanceID)
@@ -2569,7 +2569,7 @@ namespace PrototypeWithAuth.Controllers
                                        LocationInstance = li,
                                        IsThisRequest = li.RequestLocationInstances.Select(rli => rli.RequestID).Where(i => i == RequestID).Any()
                                    }).OrderBy(m => m.LocationInstance.LocationNumber).ToList();
-                       
+
                         foreach (var cli in receivedModalVisualViewModel.RequestChildrenLocationInstances)
                         {
                             liPlaces.Add(new LocationInstancePlace()
@@ -2747,7 +2747,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                             }
                         }
-                       
+
                         await SaveLocations(receivedModalVisualViewModel, request);
                         await transaction.CommitAsync();
                     }
@@ -2755,7 +2755,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         receivedModalVisualViewModel.DeleteTable = true;
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -3790,7 +3790,7 @@ namespace PrototypeWithAuth.Controllers
                                 throw ex;
                             }
                             base.RemoveRequestWithCommentsAndEmailSessions();
-                            
+
                             var action = "_IndexTableData";
                             var controller = "Shared";
                             if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
@@ -4076,6 +4076,14 @@ namespace PrototypeWithAuth.Controllers
             var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, false, selectedPriceSort, selectedCurrency);
             return PartialView(requestItemViewModel);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ConfirmArchiveModal()
+        {
+            return PartialView();
+        }
+
         //public async Task<bool> PopulateProductSerialNumber()
         //{
         //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();

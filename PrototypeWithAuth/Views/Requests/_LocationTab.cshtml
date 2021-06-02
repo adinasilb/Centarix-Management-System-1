@@ -17,7 +17,7 @@
     }
 }
 
-<div class="row modal-tab-name">
+<div class="row /*modal-tab-name*/" style="margin-bottom:0px">
     <span class="heading-1 col-4">Location</span>
     @{
         if (Model.ModalType == AppUtility.RequestModalType.Summary && Model.IsHistory == false)
@@ -32,6 +32,7 @@
             }
         }
 </div>
+
 <div class="row" style="min-height:42px;">
     @{
         var name = "";
@@ -179,23 +180,30 @@
         @if (Model.ReceivedModalVisualViewModel != null)
         {
             @*@if (Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 9 || Model.ReceivedModalVisualViewModel.ParentLocationInstance.Width == 12)
-            {
-                <div class="row">
-                    <div class="col-12">
-                        <button class="btn visual-locations-zoom
-                    float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ReceivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID">
-                            <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
-                        </button>
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="btn visual-locations-zoom
+                        float-lg-right mr-4" style="text-decoration:none; font-size:1.3rem;" value="@Model.ReceivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID">
+                                <i class="icon-zoom_in-24px font-weight-bold"></i> Zoom In
+                            </button>
+                        </div>
                     </div>
-                </div>
-            }*@
+                }*@
             <div>
                 @{ await Html.RenderPartialAsync("ReceivedModalVisual", Model.ReceivedModalVisualViewModel); }
             </div>
         }
     </div>
-
+    
 </div>
-
+@if(Model.ModalType != AppUtility.RequestModalType.Create && Model.IsProprietary)
+{ 
+    <div class="row justify-content-center">
+        <div class="">
+            <button class="open-archive-modal mark-readonly custom-button " disabled style="background: #8080809e; color: white; height: auto !important">Archive</button>
+        </div>
+    </div>
+}
 <script src="~/js/receivedmodal.js"></script>
 <script src="~/js/site.js"></script>

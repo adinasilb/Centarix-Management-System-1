@@ -164,7 +164,26 @@
     }
 </table>
 }
+<script>
+    $("body, .modal").off('click', ".open-archive-modal").on('click', ".open-archive-modal", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //alert('open archive modal.');
+        $("#loading").show();
+        $.ajax({
+            async: true,
+            url: "/Requests/ConfirmArchiveModal",
+            type: 'GET',
+            cache: true,
+            success: function (data) {
+                console.log('success!');
+                $("#loading").hide();
+                $.fn.OpenModal("confirm-archive-modal", 'confirm-archive', data);
+            }
+        });
 
+    });
+</script>
 @*<script type="text/javascript">
         $(function () {
             $("document").ready(function () {
