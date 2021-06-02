@@ -37,6 +37,7 @@ using Newtonsoft.Json;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.AppData.Exceptions;
 using System.Drawing;
+using Microsoft.Extensions.Caching.Memory;
 //using Org.BouncyCastle.Asn1.X509;
 //using System.Data.Entity.Validation;f
 //using System.Data.Entity.Infrastructure;
@@ -49,11 +50,12 @@ namespace PrototypeWithAuth.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IHostingEnvironment _hostingEnvironment;
-        private ISession _session;
-        private ICompositeViewEngine _viewEngine;
+        private readonly ISession _session;
+        private readonly ICompositeViewEngine _viewEngine;
+        private readonly IMemoryCache _cache;
 
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor, IMemoryCache cache) : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager, cache: cache)
         {
             //_Context = Context;
             _context = context;
@@ -63,6 +65,7 @@ namespace PrototypeWithAuth.Controllers
             _hostingEnvironment = hostingEnvironment;
             _viewEngine = viewEngine;
             //_session = httpContextAccessor.HttpContext.c
+            _cache = cache;
         }
 
         [HttpGet]

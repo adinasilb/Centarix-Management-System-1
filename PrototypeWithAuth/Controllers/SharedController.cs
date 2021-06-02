@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Data;
@@ -15,6 +17,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -25,11 +28,14 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
-        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager = null, IHostingEnvironment hostingEnvironment = null)
+        private readonly IMemoryCache _cache;
+
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager = null, IHostingEnvironment hostingEnvironment = null, IMemoryCache cache=null)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
             _userManager = userManager;
+            _cache = cache;
         }
         private List<EmployeeHoursAndAwaitingApprovalViewModel> GetHours(int year, int month, Employee user)
         {
@@ -652,7 +658,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 categoryID = 2;
             }
+           
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
+          
             IQueryable<Request> fullRequestsList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText ?? "")).Include(r => r.ApplicationUserCreator)
          .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID);
 
@@ -946,13 +954,28 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.RequestStatusID)
                     {
                         case 6:
-                            iconList.Add(approveIcon);
-                            iconList.Add(deleteIcon);
-                            onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Select(r => 
-                                    new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Approved,
-                                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
-                                             r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage)
-                                    ).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
+                            List<RequestIndexPartialRowViewModel> cacheEntry;
+                            if(!_cache.TryGetValue(AppUtility.IndexTableTypes.Approved, out cacheEntry))
+                                {
+                                    iconList.Add(approveIcon);
+                                    iconList.Add(deleteIcon);
+                                cacheEntry =
+                                 RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Select(r =>
+                                        new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Approved,
+                                                 r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
+                                                 r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage)
+                                        ).ToList();
+
+                                    var cts = new CancellationTokenSource(TimeSpan.FromHours(10));
+
+                                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                                        .AddExpirationToken(new CancellationChangeToken(cts.Token));
+
+                                    _cache.Set(AppUtility.IndexTableTypes.Approved, cacheEntry, cacheEntryOptions);
+                                }
+                            //todo: implement our own pagedlist
+                           // var kk = cacheEntry.Skip((requestIndexObject.PageNumber-1) * 3).Take(3);
+                            onePageOfProducts = await cacheEntry.ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 3);
                             break;
                         case 2:
                             iconList.Add(receiveIcon);

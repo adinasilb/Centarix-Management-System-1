@@ -369,6 +369,7 @@
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="20.1.0" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
+    <PackageReference Include="UmbracoCms.Core" Version="8.13.1" />
     <PackageReference Include="WebcamCapturer.Controls.WPF" Version="1.1.1.2" />
     <PackageReference Include="WebcamCapturer.Core" Version="1.1.1.2" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="7.9.1" />
