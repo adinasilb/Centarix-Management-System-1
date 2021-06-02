@@ -4084,6 +4084,13 @@ namespace PrototypeWithAuth.Controllers
             return PartialView();
         }
 
+        /*[HttpPost]
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> ArchiveRequest(int id)
+        {
+            
+        }*/
+
         //public async Task<bool> PopulateProductSerialNumber()
         //{
         //    var products = _context.Products.Select(p => p).Include(p => p.ProductSubcategory.ParentCategory).ToList();

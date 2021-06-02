@@ -54,6 +54,23 @@
     </div>
 </div>
 <script>
-
+    $('.archive-request').off('click').on('click', function () {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('archive request.');
+        var formData = new FormData($("#myForm")[0]);
+        $("#loading").show();
+        $.ajax({
+            async: true,
+            url: "/Requests/ArchiveRequest?id=" + $('#Requests_0__RequestID').attr('value'),
+            type: 'POST',
+            data: formData,
+            cache: true,
+            success: function (data) {
+                console.log('success!');
+                $("#loading").hide();
+            }
+        });
+    }
 
 </script>
