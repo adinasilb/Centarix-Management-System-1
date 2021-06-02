@@ -2747,7 +2747,8 @@ namespace PrototypeWithAuth.Controllers
                                 }
                             }
                         }
-                       
+                        receivedModalVisualViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
+
                         await SaveLocations(receivedModalVisualViewModel, request);
                         await transaction.CommitAsync();
                     }
