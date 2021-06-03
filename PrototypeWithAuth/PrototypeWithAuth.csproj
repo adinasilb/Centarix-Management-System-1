@@ -331,14 +331,14 @@
     <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.Designer.cs" />
     <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.cs" />
     <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.Designer.cs" />
-    <Compile Remove="Data\Migrations\20210602111332_ReportCategoryBool.cs" />
-    <Compile Remove="Data\Migrations\20210602111332_ReportCategoryBool.Designer.cs" />
-    <Compile Remove="Data\Migrations\20210602112121_ReportCategoryBoolean.cs" />
-    <Compile Remove="Data\Migrations\20210602112121_ReportCategoryBoolean.Designer.cs" />
-    <Compile Remove="Data\Migrations\20210602112542_test.cs" />
-    <Compile Remove="Data\Migrations\20210602112542_test.Designer.cs" />
-    <Compile Remove="Data\Migrations\20210602112856_test.cs" />
-    <Compile Remove="Data\Migrations\20210602112856_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603070637_jlj.cs" />
+    <Compile Remove="Data\Migrations\20210603070637_jlj.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603083914_DownFunctionLineNullableFK.cs" />
+    <Compile Remove="Data\Migrations\20210603083914_DownFunctionLineNullableFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603084849_AddFunctionLineFK.cs" />
+    <Compile Remove="Data\Migrations\20210603084849_AddFunctionLineFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603085414_AddFunctionLineFK.cs" />
+    <Compile Remove="Data\Migrations\20210603085414_AddFunctionLineFK.Designer.cs" />
   </ItemGroup>
 
 
