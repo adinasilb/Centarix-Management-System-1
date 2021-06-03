@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210602112310_ResetResourceCategory")]
+    partial class ResetResourceCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4343,9 +4345,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsReportsCategory")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsResourceType")
                         .HasColumnType("bit");
 
@@ -4362,7 +4361,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 1,
                             ImageUrl = "rejuvenation_image.svg",
                             IsMain = true,
-                            IsReportsCategory = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Rejuvenation"
                         },
@@ -4371,7 +4369,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 2,
                             ImageUrl = "biomarkers_image.svg",
                             IsMain = true,
-                            IsReportsCategory = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Biomarkers"
                         },
@@ -4380,7 +4377,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 3,
                             ImageUrl = "delivery_systems_image.svg",
                             IsMain = true,
-                            IsReportsCategory = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Delivery Systems"
                         },
@@ -4389,7 +4385,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 4,
                             ImageUrl = "clinical_trials_image.svg",
                             IsMain = true,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Clinical Trials"
                         },
@@ -4397,7 +4392,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 5,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "AAV"
                         },
@@ -4405,7 +4399,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 6,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Telomere Rejuvenation"
                         },
@@ -4413,7 +4406,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 7,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Telomere Measurement"
                         },
@@ -4421,7 +4413,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 8,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Methylation Biomarker"
                         },
@@ -4429,7 +4420,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 9,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Transcriptome"
                         },
@@ -4437,7 +4427,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 10,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Serum Rejuvenation"
                         },
@@ -4445,7 +4434,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 11,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Reprogramming"
                         },
@@ -4453,7 +4441,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 12,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Methylation Rejuvenation"
                         },
@@ -4461,7 +4448,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 13,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "New Methods"
                         },
@@ -4470,7 +4456,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 14,
                             ImageUrl = "software_image.svg",
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Software"
                         },
@@ -4479,7 +4464,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 15,
                             ImageUrl = "learning_image.svg",
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Learning"
                         },
@@ -4488,7 +4472,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 16,
                             ImageUrl = "companies_image.svg",
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Companies"
                         },
@@ -4497,7 +4480,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 17,
                             ImageUrl = "news_image.svg",
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "News"
                         });

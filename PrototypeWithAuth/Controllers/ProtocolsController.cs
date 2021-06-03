@@ -982,11 +982,14 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.WeeklyReports;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
+            var user = await _userManager.GetUserAsync(User);
+            var userRoles = await _userManager.GetRolesAsync(user);
             ReportCategoriesViewModel viewModel = new ReportCategoriesViewModel
             {
                 PageType = AppUtility.PageTypeEnum.ProtocolsReports.ToString(),
                 SidebarType = AppUtility.SidebarEnum.WeeklyReports.ToString(),
-                ReportCategories = _context.ResourceCategories.Where(rc => rc.IsMain).ToList()
+                ReportCategories = _context.ResourceCategories.Where(rc => rc.IsReportsCategory && 
+                userRoles.Contains("Protocols"+rc.ResourceCategoryDescription.Replace(" ", ""))).ToList(),
             };
             return View(viewModel);
         }
@@ -1555,6 +1558,8 @@ namespace PrototypeWithAuth.Controllers
             return iconColumnViewModels;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> NewReportModal(int reportCategoryId, AppUtility.SidebarEnum sidebarType)
         {
             var reportTypeID = 0;
@@ -1582,6 +1587,13 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(newReportViewModel);
         }
 
-    }
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> NewReportModal(NewReportViewModel newReportViewModel)
+        {
+
+        }
+
+        }
 
 }

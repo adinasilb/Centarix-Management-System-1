@@ -111,6 +111,17 @@ namespace PrototypeWithAuth.AppData
             };
             return ore;
         }
+        public static List<StringWithName> ProtocolRoleEnums()
+        {
+            List<StringWithName> ore = new List<StringWithName>()
+            {
+                new StringWithName(){StringName = "General", StringDefinition = "Protocols"},
+                new StringWithName(){StringName = "Biomarkers", StringDefinition = "ProtocolsBiomarkers"},
+                new StringWithName(){StringName = "Rejuvenation", StringDefinition = "ProtocolsRejuvenation"},
+                new StringWithName(){StringName = "Delivery Systems", StringDefinition = "ProtocolsDeliverySystems"}
+            };
+            return ore;
+        }
         public enum RoleItems { Admin, CEO }
         public enum CurrencyEnum { NIS, USD }
         public enum PaymentsPopoverEnum

@@ -71,7 +71,7 @@ namespace PrototypeWithAuth
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DevelopersDB"));
+                    Configuration.GetConnectionString("DefaultConnection"));
                 options.EnableSensitiveDataLogging(true);
             });
 
@@ -196,10 +196,12 @@ namespace PrototypeWithAuth
             string[] roleNames1 = Enum.GetNames(typeof(AppUtility.MenuItems)).Cast<string>().Select(x => x.ToString()).ToArray();
             string[] roleNames2 = AppUtility.RequestRoleEnums().Select(x => x.StringDefinition).ToArray();
             string[] roleNames3 = AppUtility.OperationRoleEnums().Select(x => x.StringDefinition).ToArray();
-            string[] roleNames = new string[roleNames1.Length + roleNames2.Length + roleNames3.Length];
+            string[] roleNames4 = AppUtility.ProtocolRoleEnums().Select(x => x.StringDefinition).ToArray();
+            string[] roleNames = new string[roleNames1.Length + roleNames2.Length + roleNames3.Length + roleNames4.Length];
             roleNames1.CopyTo(roleNames, 0);
             roleNames2.CopyTo(roleNames, roleNames1.Length);
             roleNames3.CopyTo(roleNames, roleNames1.Length + roleNames2.Length);
+            roleNames4.CopyTo(roleNames, roleNames1.Length + roleNames2.Length + roleNames3.Length);
 
             IdentityResult roleResult;
             //var roleCheck = await RoleManager.RoleExistsAsync("Admin");

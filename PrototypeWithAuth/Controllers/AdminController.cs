@@ -839,8 +839,11 @@ namespace PrototypeWithAuth.Controllers
                     {
                         await CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected);
                     }
-                    await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.Protocols.ToString(), registerUserViewModel.ProtocolRoles[0].Selected);
                     foreach (var role in registerUserViewModel.OperationRoles)
+                    {
+                        await CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected);
+                    }
+                    foreach (var role in registerUserViewModel.ProtocolRoles)
                     {
                         await CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected);
                     }
@@ -1197,17 +1200,12 @@ namespace PrototypeWithAuth.Controllers
                 }
                 registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>();
                 nextselected = rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) ? true : false;
-                registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel()
+                foreach (var role in AppUtility.ProtocolRoleEnums())
                 {
-                    MenuItemsID = counter,
-                    StringWithName = new StringWithName()
-                    {
-                        StringName = AppUtility.MenuItems.Protocols.ToString(),
-                        StringDefinition = AppUtility.MenuItems.Protocols.ToString()
-                    },
-                    Selected = nextselected
+                    nextselected = rolesList.Contains(role.StringDefinition) ? true : false;
+                    registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, StringWithName = role, Selected = nextselected });
+                    counter++;
                 }
-                );
                 counter++;
                 registerUserViewModel.OperationRoles = new List<UserRoleViewModel>();
                 foreach (var role in AppUtility.OperationRoleEnums())

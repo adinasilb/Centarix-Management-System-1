@@ -18,20 +18,20 @@
 <div class="container-fluid">
     <label class="m-2 heading-1 mb-lg-4">@reportType Reports</label>
     <div class="under-row-margin row text-center">
-        @foreach (var maincategory in Model.ReportCategories)
+        @foreach (var category in Model.ReportCategories)
         {
             <div class="type-div">
-                <a href='@Url.Action("IndexReports", "Protocols", new { ReportCategoryID = maincategory.ResourceCategoryID, SidebarType = Model.SidebarType })' class="text text-dark">
+                <a href='@Url.Action("IndexReports", "Protocols", new { ReportCategoryID = category.ResourceCategoryID, SidebarType = Model.SidebarType })' class="text text-dark">
                     <fieldset class=" main-type-fieldset">
                         @{
-                            var imageUrl = "/images/protocol_images/" + maincategory.ImageUrl;
-                            var altImage = maincategory.ResourceCategoryDescription;
+                            var imageUrl = "/images/protocol_images/" + category.ImageUrl;
+                            var altImage = category.ResourceCategoryDescription;
                         }
 
                         @*<img class=" main-type-img" src="@imageUrl" alt="@altImage" />*@
                         <img class=" main-type-img" src="@imageUrl" alt="@altImage" />
                         @*  }*@
-                        <label class="main-type-label top-menu protocols-filter text-center"> @maincategory.ResourceCategoryDescription</label>
+                        <label class="main-type-label top-menu protocols-filter text-center"> @category.ResourceCategoryDescription</label>
                     </fieldset>
                 </a>
             </div>
