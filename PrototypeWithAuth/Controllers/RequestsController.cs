@@ -4090,7 +4090,8 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var request = _context.Requests.Where(r => r.RequestID == requestId).FirstOrDefault();
                         var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
-                        
+                        request.IsArchived = true;
+                        _context.Update(request);
                         //archive one location and delete the rest
                         var iterator = requestLocations.GetEnumerator();
                         iterator.MoveNext();

@@ -115,7 +115,7 @@
                                 </div>
                             </td>
                         }
-                        else if (locationsList[z].IsFull)
+                        else if (locationsList[z].IsFull || (!receive && Model.RequestChildrenLocationInstances[z].IsThisRequest/*for archived*/))
                         {
                             var backgroundClass = "graduated-table-background-color  ";
                             var iconRow = "d-none";
@@ -131,7 +131,7 @@
                                 <div class="">
                                     <input class="@classes @disabled" id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1">
-                                        <i class="@iconClass @iconRow"></i>
+                                        <i class="@iconClass @iconRow"></i> @*hide on load, show when turn edit on*@
                                     </div>
 
                                     <div class="row-2 text-left">
@@ -146,7 +146,7 @@
                             <td class="@outerClass @disabledEdit" style="padding:0px;">
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
-                                    <div class="row-1">
+                                    <div class="row-1"> @*hide on load, show when turn edit on*@
                                         <i class="@iconClass"></i>
                                     </div>
                                     <div class="row-2 text-left">
