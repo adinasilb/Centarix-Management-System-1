@@ -92,21 +92,28 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Operations")]
         public async Task<IActionResult> IndexInventory(RequestIndexObject requestIndexObject)
         {
-
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
-
-            var viewmodel = await base.GetIndexViewModel(requestIndexObject);
-            SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
-            //viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
-
-            if (ViewBag.ErrorMessage != null)
+            if (await base.IsAuthorizedAsync(requestIndexObject.SectionType))
             {
-                ViewBag.ErrorMessage = ViewBag.ErrorMessage;
-            }
 
-            return View(viewmodel);
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
+
+                var viewmodel = await base.GetIndexViewModel(requestIndexObject);
+                SetViewModelProprietaryCounts(requestIndexObject, viewmodel);
+                //viewmodel.InventoryFilterViewModel = GetInventoryFilterViewModel();
+
+                if (ViewBag.ErrorMessage != null)
+                {
+                    ViewBag.ErrorMessage = ViewBag.ErrorMessage;
+                }
+
+                return View(viewmodel);
+            }
+            else
+            {
+                return Redirect(base.AccessDeniedPath);
+            }
         }
 
 
@@ -114,164 +121,164 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, LabManagement, Operations")]
         private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject)
         {
-            RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
-            if (!requestIndexObject.CategorySelected && !requestIndexObject.SubcategorySelected)
-            {
-                requestIndexObject.SubcategorySelected = true;
-            }
-            viewModelByVendor.CategoryPopoverViewModel = new CategoryPopoverViewModel()
-            {
-                SelectedCategoryOption = new List<bool>()
+                RequestIndexPartialViewModelByVendor viewModelByVendor = new RequestIndexPartialViewModelByVendor();
+                if (!requestIndexObject.CategorySelected && !requestIndexObject.SubcategorySelected)
+                {
+                    requestIndexObject.SubcategorySelected = true;
+                }
+                viewModelByVendor.CategoryPopoverViewModel = new CategoryPopoverViewModel()
+                {
+                    SelectedCategoryOption = new List<bool>()
                 {
                     requestIndexObject.CategorySelected,
                     requestIndexObject.SubcategorySelected
                 }
-            };
-            List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
-            var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
-            var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
-            var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
+                };
+                List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
+                var editQuoteDetailsIcon = new IconColumnViewModel(" icon-monetization_on-24px ", "var(--lab-man-color);", "load-quote-details", "Upload Quote");
+                var payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-one", "Pay");
+                var addInvoiceIcon = new IconColumnViewModel(" icon-cancel_presentation-24px  green-overlay ", "", "invoice-add-one", "Add Invoice");
 
-            var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
-            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "#5F79E2", "request-favorite", "Favorite");
-            var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
-            var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
-            string checkboxString = "Checkbox";
-            string buttonText = "";
-            var defaultImage = "/images/css/CategoryImages/placeholder.png";
-            switch (requestIndexObject.PageType)
-            {
-                case AppUtility.PageTypeEnum.LabManagementQuotes:
-                    switch (requestIndexObject.SidebarType)
-                    {
-                        case AppUtility.SidebarEnum.Orders:
-                            var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
-                                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-                                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);
+                var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
+                var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "#5F79E2", "request-favorite", "Favorite");
+                var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
+                var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
+                string checkboxString = "Checkbox";
+                string buttonText = "";
+                var defaultImage = "/images/css/CategoryImages/placeholder.png";
+                switch (requestIndexObject.PageType)
+                {
+                    case AppUtility.PageTypeEnum.LabManagementQuotes:
+                        switch (requestIndexObject.SidebarType)
+                        {
+                            case AppUtility.SidebarEnum.Orders:
+                                var ordersRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => r.ParentQuote.QuoteStatusID == 4 && r.RequestStatusID == 6)
+                                         .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                                         .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.ApplicationUserCreator);
 
-                            iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.LabOrders, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, null)
+                                iconList.Add(deleteIcon);
+                                viewModelByVendor.RequestsByVendor = ordersRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel
+                                 (AppUtility.IndexTableTypes.LabOrders, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                            r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, null)
 
-                            {
-                                ButtonClasses = " load-terms-modal lab-man-background-color ",
-                                ButtonText = "Order"
-                            }).ToLookup(c => c.Vendor);
-                            break;
-                        case AppUtility.SidebarEnum.Quotes:
-                            var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
-            .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-            .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-            .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
-                            //iconList.Add(resendIcon);
-                            iconList.Add(editQuoteDetailsIcon);
-                            iconList.Add(deleteIcon);
-                            viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, r.ParentQuote, null)
+                                {
+                                    ButtonClasses = " load-terms-modal lab-man-background-color ",
+                                    ButtonText = "Order"
+                                }).ToLookup(c => c.Vendor);
+                                break;
+                            case AppUtility.SidebarEnum.Quotes:
+                                var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
+                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
+                                //iconList.Add(resendIcon);
+                                iconList.Add(editQuoteDetailsIcon);
+                                iconList.Add(deleteIcon);
+                                viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).ToList().Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                            r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, r.ParentQuote, null)
 
-                            {
-                                ButtonClasses = " confirm-quote lab-man-background-color ",
-                                ButtonText = "Ask For Quote"
-                            }).ToLookup(c => c.Vendor);
-                            break;
-                    }
-                    break;
-                case AppUtility.PageTypeEnum.AccountingNotifications:
+                                {
+                                    ButtonClasses = " confirm-quote lab-man-background-color ",
+                                    ButtonText = "Ask For Quote"
+                                }).ToLookup(c => c.Vendor);
+                                break;
+                        }
+                        break;
+                    case AppUtility.PageTypeEnum.AccountingNotifications:
 
-                    var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
-                    iconList.Add(popoverPartialClarifyIcon);
-                    switch (requestIndexObject.SidebarType)
-                    {
-                        case AppUtility.SidebarEnum.DidntArrive:
-                            checkboxString = "";
-                            break;
-                        case AppUtility.SidebarEnum.PartialDelivery:
-                            checkboxString = "";
-                            break;
-                        case AppUtility.SidebarEnum.ForClarification:
-                            checkboxString = "";
-                            break;
-                        case AppUtility.SidebarEnum.NoInvoice:
-                            iconList.Add(addInvoiceIcon);
-                            buttonText = "Add To All";
-                            break;
-                    }
-                    viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
-                    (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, null)
-                    {
-                        ButtonClasses = " invoice-add-all accounting-background-color ",
-                        ButtonText = buttonText
-                    }).ToLookup(c => c.Vendor);
+                        var accountingNotificationsList = GetPaymentNotificationRequests(requestIndexObject.SidebarType);
+                        iconList.Add(popoverPartialClarifyIcon);
+                        switch (requestIndexObject.SidebarType)
+                        {
+                            case AppUtility.SidebarEnum.DidntArrive:
+                                checkboxString = "";
+                                break;
+                            case AppUtility.SidebarEnum.PartialDelivery:
+                                checkboxString = "";
+                                break;
+                            case AppUtility.SidebarEnum.ForClarification:
+                                checkboxString = "";
+                                break;
+                            case AppUtility.SidebarEnum.NoInvoice:
+                                iconList.Add(addInvoiceIcon);
+                                buttonText = "Add To All";
+                                break;
+                        }
+                        viewModelByVendor.RequestsByVendor = accountingNotificationsList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                        (AppUtility.IndexTableTypes.AccountingNotifications, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                            r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, null)
+                        {
+                            ButtonClasses = " invoice-add-all accounting-background-color ",
+                            ButtonText = buttonText
+                        }).ToLookup(c => c.Vendor);
 
-                    break;
-                case AppUtility.PageTypeEnum.AccountingPayments:
+                        break;
+                    case AppUtility.PageTypeEnum.AccountingPayments:
 
-                    var paymentList = GetPaymentRequests(requestIndexObject.SidebarType);
-                    switch (requestIndexObject.SidebarType)
-                    {
-                        case AppUtility.SidebarEnum.Installments:
-                            payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
-                            checkboxString = "";
-                            iconList.Add(payNowIcon);
-                            iconList.Add(popoverMoreIcon);
-                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, r.Payments)
+                        var paymentList = GetPaymentRequests(requestIndexObject.SidebarType);
+                        switch (requestIndexObject.SidebarType)
+                        {
+                            case AppUtility.SidebarEnum.Installments:
+                                payNowIcon = new IconColumnViewModel(" icon-monetization_on-24px green-overlay ", "", "pay-invoice-one", "Pay");
+                                checkboxString = "";
+                                iconList.Add(payNowIcon);
+                                iconList.Add(popoverMoreIcon);
+                                viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                                 (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                            r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, r.Payments)
 
-                            {
-                                ButtonText = "",
-                            }).ToLookup(c => c.Vendor);
-                            break;
-                        default:
-                            iconList.Add(payNowIcon);
-                            iconList.Add(popoverMoreIcon);
-                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, r.Payments)
-
-
-                            {
-                                ButtonClasses = " payments-pay-now accounting-background-color ",
-                                ButtonText = "Pay All"
-                            }).ToLookup(c => c.Vendor);
-                            buttonText = "Pay All";
-                            break;
-                    }
+                                {
+                                    ButtonText = "",
+                                }).ToLookup(c => c.Vendor);
+                                break;
+                            default:
+                                iconList.Add(payNowIcon);
+                                iconList.Add(popoverMoreIcon);
+                                viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                                 (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                            r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, r.ParentRequest, checkboxString, null, r.Payments)
 
 
-                    break;
-                case AppUtility.PageTypeEnum.RequestCart:
-                    var cartRequests = _context.Requests
-              .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-              .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-              .Include(r => r.ApplicationUserCreator)
-              .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
-              .Where(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
-              .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
+                                {
+                                    ButtonClasses = " payments-pay-now accounting-background-color ",
+                                    ButtonText = "Pay All"
+                                }).ToLookup(c => c.Vendor);
+                                buttonText = "Pay All";
+                                break;
+                        }
 
-                    iconList.Add(deleteIcon);
-                    viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, null, null, null, null)
-                    {
-                        ButtonClasses = " load-terms-modal order-inv-background-color ",
-                        ButtonText = "Order",
-                    }).ToLookup(c => c.Vendor);
 
-                    break;
+                        break;
+                    case AppUtility.PageTypeEnum.RequestCart:
+                        var cartRequests = _context.Requests
+                  .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                  .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                  .Include(r => r.ApplicationUserCreator)
+                  .Where(r => r.ApplicationUserCreatorID == _userManager.GetUserId(User))
+                  .Where(r => r.RequestStatusID == 6 && r.OrderType == AppUtility.OrderTypeEnum.AddToCart.ToString())
+                  .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1);
 
-            }
-            List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
-            Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
-            viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
-            viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
-            viewModelByVendor.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
-            viewModelByVendor.PricePopoverViewModel.PopoverSource = 1;
-            viewModelByVendor.PageType = requestIndexObject.PageType;
-            viewModelByVendor.SidebarType = requestIndexObject.SidebarType;
-            viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
-            return viewModelByVendor;
+                        iconList.Add(deleteIcon);
+                        viewModelByVendor.RequestsByVendor = cartRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Cart, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
+                            r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, null, null, null, null, null, null, null, null, null)
+                        {
+                            ButtonClasses = " load-terms-modal order-inv-background-color ",
+                            ButtonText = "Order",
+                        }).ToLookup(c => c.Vendor);
+
+                        break;
+
+                }
+                List<PriceSortViewModel> priceSorts = new List<PriceSortViewModel>();
+                Enum.GetValues(typeof(AppUtility.PriceSortEnum)).Cast<AppUtility.PriceSortEnum>().ToList().ForEach(p => priceSorts.Add(new PriceSortViewModel { PriceSortEnum = p, Selected = requestIndexObject.SelectedPriceSort.Contains(p.ToString()) }));
+                viewModelByVendor.PricePopoverViewModel = new PricePopoverViewModel() { };
+                viewModelByVendor.PricePopoverViewModel.PriceSortEnums = priceSorts;
+                viewModelByVendor.PricePopoverViewModel.SelectedCurrency = requestIndexObject.SelectedCurrency;
+                viewModelByVendor.PricePopoverViewModel.PopoverSource = 1;
+                viewModelByVendor.PageType = requestIndexObject.PageType;
+                viewModelByVendor.SidebarType = requestIndexObject.SidebarType;
+                viewModelByVendor.ErrorMessage = requestIndexObject.ErrorMessage;
+                return viewModelByVendor;
         }
         [Authorize(Roles = "Requests Protocols")]
         protected async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
@@ -1804,29 +1811,37 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles ="Requests, Operations")]
         public async Task<IActionResult> AddItemView(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
-
-            RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
-            var categoryType = 1;
-            if (SectionType == AppUtility.MenuItems.Operations)
+            if (await base.IsAuthorizedAsync(SectionType))
             {
-                categoryType = 2;
-            }
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
+                TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Add;
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
 
-            if (PageType == AppUtility.PageTypeEnum.RequestSummary)
+                RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
+                var categoryType = 1;
+                if (SectionType == AppUtility.MenuItems.Operations)
+                {
+                    categoryType = 2;
+                }
+
+                if (PageType == AppUtility.PageTypeEnum.RequestSummary)
+                {
+                    requestItemViewModel.IsProprietary = true;
+                }
+                requestItemViewModel = await FillRequestItemViewModel(requestItemViewModel, categoryType);
+
+                requestItemViewModel.PageType = PageType;
+                requestItemViewModel.SectionType = SectionType;
+                base.RemoveRequestWithCommentsAndEmailSessions();
+                return View(requestItemViewModel);
+            }
+            else
             {
-                requestItemViewModel.IsProprietary = true;
+                return Redirect(base.AccessDeniedPath);
             }
-            requestItemViewModel = await FillRequestItemViewModel(requestItemViewModel, categoryType);
-
-            requestItemViewModel.PageType = PageType;
-            requestItemViewModel.SectionType = SectionType;
-            base.RemoveRequestWithCommentsAndEmailSessions();
-            return View(requestItemViewModel);
         }
 
         [HttpPost]

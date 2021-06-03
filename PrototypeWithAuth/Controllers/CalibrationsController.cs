@@ -60,7 +60,6 @@ namespace PrototypeWithAuth.Controllers
         // GET: ProductSubcategories
         [Authorize(Roles = "LabManagement")]
         [HttpGet]
-
         public async Task<IActionResult> CreateCalibration(int requestid)
         {
             Request request = await _context.Requests.Where(r => r.RequestID == requestid).Include(r => r.Product).FirstOrDefaultAsync();
