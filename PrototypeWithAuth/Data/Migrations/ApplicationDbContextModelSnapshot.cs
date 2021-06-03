@@ -1150,28 +1150,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("LineID")
                         .HasColumnType("int");
 
-                    b.Property<int>("FunctionLineID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProtocolID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan>("Timer")
-                        .HasColumnType("time");
-
                     b.HasKey("FunctionTypeID", "LineID");
 
                     b.HasIndex("LineID");
-
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("ProtocolID");
 
                     b.ToTable("FunctionLines");
                 });
@@ -1877,6 +1858,9 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int?>("TempLineLineID")
                         .HasColumnType("int");
+
+                    b.Property<TimeSpan>("Timer")
+                        .HasColumnType("time");
 
                     b.HasKey("LineID");
 
@@ -4694,6 +4678,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
+                    b.Property<TimeSpan>("Timer")
+                        .HasColumnType("time");
+
                     b.HasKey("LineID");
 
                     b.HasIndex("LineTypeID");
@@ -5928,18 +5915,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Line", "Line")
                         .WithMany()
                         .HasForeignKey("LineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
-                        .HasForeignKey("ProtocolID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
