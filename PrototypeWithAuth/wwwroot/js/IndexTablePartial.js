@@ -322,7 +322,7 @@ $(".load-terms-modal").on("click", function (e) {
 	return false;
 });
 
-function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years) {
+function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
 	console.log("in ajax partial index call" + url);
 	var selectedPriceSort = [];
 	$("#priceSortContent1 .priceSort:checked").each(function (e) {
@@ -344,7 +344,8 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
 			CategorySelected: $('#categorySortContent .select-category').is(":checked"),
 			SubCategorySelected: $('#categorySortContent .select-subcategory').is(":checked"),
 			months: months,
-			years: years
+			years: years,
+			IsArchive: isArchive
 		};
 		console.log(formdata);
 	}

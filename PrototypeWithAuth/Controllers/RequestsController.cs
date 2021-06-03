@@ -104,8 +104,6 @@ namespace PrototypeWithAuth.Controllers
             return View(viewmodel);
         }
 
-
-
         [Authorize(Roles = "Requests, LabManagement, Operations")]
         private async Task<RequestIndexPartialViewModelByVendor> GetIndexViewModelByVendor(RequestIndexObject requestIndexObject)
         {
