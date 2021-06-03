@@ -333,6 +333,8 @@
     <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.Designer.cs" />
     <Compile Remove="Data\Migrations\20210603070637_jlj.cs" />
     <Compile Remove="Data\Migrations\20210603070637_jlj.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603083914_DownFunctionLineNullableFK.cs" />
+    <Compile Remove="Data\Migrations\20210603083914_DownFunctionLineNullableFK.Designer.cs" />
   </ItemGroup>
 
 
