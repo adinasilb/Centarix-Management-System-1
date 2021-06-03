@@ -606,6 +606,7 @@ namespace PrototypeWithAuth.Controllers
                     newLine.PermanentLineID = newLine.LineID;
                     _context.Update(newLine);
                     await _context.SaveChangesAsync();
+
                     if (currentLine != null)
                     {
                         var currentLineTypeIndex = orderedLineTypes.IndexOf(currentLine.LineType);

@@ -16,9 +16,9 @@ namespace PrototypeWithAuth.Models
         public FunctionType FunctionType { get; set; }
         public TimeSpan Timer { get; set; }
         public string Text {get; set;}
-        public int? ProtocolID { get; set; }
+        public int ProtocolID { get; set; }
         public Protocol Protocol { get; set; }
-        public int? ProductID { get; set; }
+        public int ProductID { get; set; }
         public Product Product { get; set; }
 
     }
