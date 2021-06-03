@@ -13,10 +13,10 @@
 
 		var inputButton = $('#save-documents');
 		var filePath = $(".file-select")[0].value;
-		if ($("#masterSidebarType").val() == "NoInvoice") {
-			var fileName = filePath.split("\\")[2]
-			$(".invoice-image-name").text(fileName)
-        }
+
+		var fileName = filePath.split("\\")[2]
+		$(".document-name").text(fileName)
+
 		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
 		console.log("extn: " + extn);
 		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn !="") {

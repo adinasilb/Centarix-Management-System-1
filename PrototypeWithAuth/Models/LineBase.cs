@@ -17,7 +17,6 @@ namespace PrototypeWithAuth.Models
         public int ProtocolID { get; set; }
         public Protocol Protocol { get; set; }
         public int LineNumber { get; set; }
-        public TimeSpan Timer { get; set; }
  
     }
 }

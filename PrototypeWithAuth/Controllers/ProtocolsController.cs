@@ -328,7 +328,6 @@ namespace PrototypeWithAuth.Controllers
             tempLine.LineNumber = line.LineNumber;
             tempLine.LineTypeID = line.LineTypeID;
             tempLine.ProtocolID = line.ProtocolID;
-            tempLine.Timer = line.Timer;
             tempLine.ParentLineID = line.ParentLineID;
             return tempLine;
         }
@@ -340,7 +339,6 @@ namespace PrototypeWithAuth.Controllers
             line.LineNumber = tempLine.LineNumber;
             line.LineTypeID = tempLine.LineTypeID;
             line.ProtocolID = tempLine.ProtocolID;
-            line.Timer = tempLine.Timer;
             line.ParentLineID = tempLine.ParentLineID;
             return line;
         }
@@ -610,10 +608,6 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        public async Task<IActionResult> AddFunctionToLine(int lineID, int functionID)
-        {
-            return RedirectToAction("_Lines");
-        }
         public bool CheckIfSerialNumberExists(string serialNumber)
         {
             return _context.Products.Where(p => p.SerialNumber.Equals(serialNumber)).ToList().Any();
@@ -721,6 +715,98 @@ namespace PrototypeWithAuth.Controllers
                 }
                 return redirectToMaterialTab(materialDB.ProtocolID);
             }
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID)
+        {
+            var functionType =  _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
+            var line = TurnTempLineToLine(_context.TempLines.Where(tl => tl.PermanentLineID == null ? tl.LineID == LineID : tl.PermanentLineID == LineID).FirstOrDefault());
+            var functionLine = new FunctionLine
+            {
+                FunctionType = functionType,
+                FunctionTypeID = FunctionTypeID,
+                Line = line,
+                LineID = LineID
+            };
+            var viewmodel = new AddFunctionViewModel
+            {
+                FunctionLine = functionLine
+            };
+
+            switch (Enum.Parse<AppUtility.FuctionTypes>(functionType.DescriptionEnum))
+            {
+                case AppUtility.FuctionTypes.AddLinkToProduct:
+                    viewmodel.ParentCategories = _context.ParentCategories.ToList();
+                    viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();
+                    viewmodel.Products = _context.Products.ToList();
+                    viewmodel.Vendors = _context.Vendors.ToList();
+                    break;
+                case AppUtility.FuctionTypes.AddLinkToProtocol:
+                    viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
+                    viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
+                    viewmodel.Creators = _context.Users.Select(u =>
+                        new SelectListItem() { Value = u.Id, Text = u.FirstName+ u.LastName }).ToList();
+                    viewmodel.Protocols = _context.Protocols.ToList();
+                    break;    
+            }
+            return PartialView(viewmodel);
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> AddFunctionModal(AddFunctionViewModel addFunctionViewModel)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Update(addFunctionViewModel.FunctionLine);
+                    await _context.SaveChangesAsync();
+                    var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
+                    var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
+
+                    switch (Enum.Parse<AppUtility.FuctionTypes>(functionType.DescriptionEnum))
+                    {
+                        case AppUtility.FuctionTypes.AddLinkToProduct:
+                            var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
+                            line.Content += "<a href='#' class='open-line-product'>" + product.ProductName + "</>";
+                            break;
+                        case AppUtility.FuctionTypes.AddLinkToProtocol:
+                            var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
+                            line.Content += "<a href='#' class='open-line-protocol'>" + protocol.Name + "</>";
+                            break;
+                        case AppUtility.FuctionTypes.AddFile:
+                        case AppUtility.FuctionTypes.AddImage:
+                            MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionLineID, AppUtility.ParentFolderName.FunctionLine);
+                            break;
+                        //case AppUtility.FuctionTypes.AddStop:
+                        //    break;
+                        case AppUtility.FuctionTypes.AddTable:
+                            break;
+                        case AppUtility.FuctionTypes.AddTemplate:
+                            break;
+                        //case AppUtility.FuctionTypes.AddTimer:
+                        //    break;
+                        //case AppUtility.FuctionTypes.AddTip:
+                        //case AppUtility.FuctionTypes.AddWarning:
+                        //case AppUtility.FuctionTypes.AddComment:
+                        //    break;
+                    }
+                    _context.Update(line);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                    //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
+                    //return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                }
+            }
+            return RedirectToAction("_Lines");
         }
 
         [HttpPost]

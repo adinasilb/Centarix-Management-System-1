@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210525105841_AddedFuntionLineFields")]
+    partial class AddedFuntionLineFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -907,7 +909,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EmployeeHoursID")
+                    b.Property<int?>("EmployeeHoursID")
                         .HasColumnType("int");
 
                     b.Property<int?>("EmployeeHoursStatusEntry1ID")
@@ -954,7 +956,8 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasKey("EmployeeHoursAwaitingApprovalID");
 
                     b.HasIndex("EmployeeHoursID")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[EmployeeHoursID] IS NOT NULL");
 
                     b.HasIndex("EmployeeHoursStatusEntry1ID");
 
@@ -2865,9 +2868,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("Handeling")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("ProductComment")
                         .HasColumnType("nvarchar(max)");
 
@@ -4003,7 +4003,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("tinyint");
 
                     b.Property<bool>("IncludeVAT")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<long?>("Installments")
                         .HasColumnType("bigint");
@@ -5844,8 +5846,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHours", "EmployeeHours")
                         .WithOne("EmployeeHoursAwaitingApproval")
                         .HasForeignKey("PrototypeWithAuth.Models.EmployeeHoursAwaitingApproval", "EmployeeHoursID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.EmployeeHoursStatus", "EmployeeHoursStatusEntry1")
                         .WithMany()
