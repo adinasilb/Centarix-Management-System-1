@@ -18,6 +18,5 @@ namespace PrototypeWithAuth.Models
         public int ReportNumber { get; set; }
         public int ReportCategoryID { get; set; }
         public ResourceCategory ReportCategory { get; set; }
-        public IEnumerable<ReportSection> ReportSections { get; set; }
     }
 }

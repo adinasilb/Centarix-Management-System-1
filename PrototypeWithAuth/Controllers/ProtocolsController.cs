@@ -185,7 +185,7 @@ namespace PrototypeWithAuth.Controllers
         {
             IQueryable<Report> ReportsPassedIn = Enumerable.Empty<Report>().AsQueryable();
             IQueryable<Report> ReportsPassedInWithInclude = _context.Reports.Where(r => reportsIndexObject.Years.Contains(r.DateCreated.Year) && reportsIndexObject.Months.Contains(r.DateCreated.Month) && r.ReportCategoryID == reportsIndexObject.ReportCategoryID)
-                .Include(r => r.ReportType).Include(r => r.ReportSections);
+                .Include(r => r.ReportType);
 
             switch (reportsIndexObject.PageType)
             {
@@ -1577,23 +1577,38 @@ namespace PrototypeWithAuth.Controllers
             }
 
             var reportType = _context.ReportTypes.Where(rt => rt.ReportTypeID == reportTypeID).FirstOrDefault();
-            NewReportViewModel newReportViewModel = new NewReportViewModel()
+            var report = new Report()
             {
-                ReportDate = DateTime.Now,
-                ReportType = reportType,
-                ReportCategoryID = reportCategoryId
+                DateCreated = DateTime.Now,
+                ReportCategoryID = reportCategoryId,
+                ReportType = reportType
             };
 
-            return PartialView(newReportViewModel);
+            CreateReportViewModel createReportViewModel = new CreateReportViewModel()
+            {
+                Report = report
+            };
+
+            return PartialView(createReportViewModel);
         }
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> NewReportModal(NewReportViewModel newReportViewModel)
+        public async Task<IActionResult> NewReportModal(CreateReportViewModel createReportViewModel)
         {
-
+            return RedirectToAction("CreateReport", createReportViewModel);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> CreateReport(CreateReportViewModel createReportViewModel)
+        {
+            var functionTypes = _context.FunctionTypes.Select(ft => ft).ToList();
+            createReportViewModel.FunctionTypes = functionTypes;
+
+            return PartialView(createReportViewModel);
         }
+
+    }
 
 }

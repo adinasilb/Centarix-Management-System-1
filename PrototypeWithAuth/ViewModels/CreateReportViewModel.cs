@@ -11,6 +11,7 @@ namespace PrototypeWithAuth.ViewModels
     public class CreateReportViewModel : ViewModelBase
     {
         public Report Report { get; set; }
-        public List<ReportSection> ReportSections { get; set; }
+        public IEnumerable<FunctionType> FunctionTypes { get; set; }
+        //public List<ReportSection> ReportSections { get; set; }
     }
 }

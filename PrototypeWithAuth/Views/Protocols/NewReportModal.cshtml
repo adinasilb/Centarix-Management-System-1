@@ -1,8 +1,8 @@
-﻿@model PrototypeWithAuth.ViewModels.NewReportViewModel
+﻿@model PrototypeWithAuth.ViewModels.CreateReportViewModel
 <script src="~/js/resourcenote.js"></script>
-<input type="hidden" asp-for="ReportDate" />
-<input type="hidden" asp-for="ReportType.ReportTypeID" />
-<input type="hidden" asp-for="ReportCategoryID" />
+<input type="hidden" asp-for="Report.DateCreated" />
+<input type="hidden" asp-for="Report.ReportType.ReportTypeID" />
+<input type="hidden" asp-for="Report.ReportCategoryID" />
 <div class="modal modal-view fader new-report-modal" id="myModal" data-backdrop="false">
     <div class="modal-dialog-centered mx-auto" style="width:33rem;">
         <div class="modal-content d-inline-block modal-box-shadow modal-border-radius">
@@ -13,7 +13,7 @@
                     </button>
                 </div>
                 <div class="row heading-1 my-3 justify-content-center" >
-                    <span class="text-center" style="width:90%;">Are you sure you want to open a @Model.ReportType.ReportTypeDescription report?</span>
+                    <span class="text-center" style="width:90%;">Are you sure you want to open a @Model.Report.ReportType.ReportTypeDescription Report?</span>
                 </div>
                 <br />
                 <div class="row justify-content-around">
