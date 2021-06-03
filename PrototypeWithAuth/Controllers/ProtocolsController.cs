@@ -756,15 +756,45 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddFunctionModal(AddMaterialViewModel addMaterialViewModel)
+        public async Task<IActionResult> AddFunctionModal(AddFunctionViewModel addFunctionViewModel)
         {
-            var materialDB = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault();
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    materialDB.IsDeleted = true;
-                    _context.Update(materialDB);
+                    _context.Update(addFunctionViewModel.FunctionLine);
+                    await _context.SaveChangesAsync();
+                    var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
+                    var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
+
+                    switch (Enum.Parse<AppUtility.FuctionTypes>(functionType.DescriptionEnum))
+                    {
+                        case AppUtility.FuctionTypes.AddLinkToProduct:
+                            var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
+                            line.Content += "<a href='#' class='open-line-product'>" + product.ProductName + "</>";
+                            break;
+                        case AppUtility.FuctionTypes.AddLinkToProtocol:
+                            var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
+                            line.Content += "<a href='#' class='open-line-protocol'>" + protocol.Name + "</>";
+                            break;
+                        case AppUtility.FuctionTypes.AddFile:
+                        case AppUtility.FuctionTypes.AddImage:
+                            MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionLineID, AppUtility.ParentFolderName.FunctionLine);
+                            break;
+                        //case AppUtility.FuctionTypes.AddStop:
+                        //    break;
+                        case AppUtility.FuctionTypes.AddTable:
+                            break;
+                        case AppUtility.FuctionTypes.AddTemplate:
+                            break;
+                        //case AppUtility.FuctionTypes.AddTimer:
+                        //    break;
+                        //case AppUtility.FuctionTypes.AddTip:
+                        //case AppUtility.FuctionTypes.AddWarning:
+                        //case AppUtility.FuctionTypes.AddComment:
+                        //    break;
+                    }
+                    _context.Update(line);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
@@ -772,10 +802,11 @@ namespace PrototypeWithAuth.Controllers
                 {
                     Response.StatusCode = 500;
                     await transaction.RollbackAsync();
-                    return PartialView("DeleteMaterial", new AddMaterialViewModel { Material = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                    //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
+                    //return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
                 }
-                return redirectToMaterialTab(materialDB.ProtocolID);
             }
+            return RedirectToAction("_Lines");
         }
 
         [HttpPost]

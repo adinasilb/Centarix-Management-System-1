@@ -7,7 +7,9 @@
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-function');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form materialForm">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm">
+                <input type="hidden" asp-for="FunctionLine.FunctionTypeID" />
+                <input type="hidden" asp-for="FunctionLine.LineID" />
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
                     <div class="container p-0">
 
@@ -156,7 +158,7 @@
                                     <div class="form-group">
                                         <label asp-for="FunctionLine.Protocol" class="control-label"></label>
                                         @Html.DropDownListFor(
-                            vm => vm.FunctionLine.Protocol.ProtocolID,
+                            vm => vm.FunctionLine.ProtocolID,
                             new SelectList(
                             Model.Protocols,
                             dataValueField: "ProtocolID",
@@ -182,18 +184,18 @@
                         case AppUtility.FuctionTypes.AddTemplate:
                             break;
                         case AppUtility.FuctionTypes.AddTimer:
-                <div class="row">
-                    <div class="col-4 offset-4">
-                    <input class="border-bottom form-control-plaintext heading-1 " rows="6" asp-for="FunctionLine.Timer" />
-                        </div>
-                </div>
+                            <div class="row">
+                                <div class="col-4 offset-4">
+                                    <input class="border-bottom form-control-plaintext heading-1 " rows="6" asp-for="FunctionLine.Timer" />
+                                </div>
+                            </div>
                             break;
 
                     }
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin " value="Save" />
+                        <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
                         <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('add-function');">Cancel</button>
                     </div>
                 </div>
@@ -201,3 +203,44 @@
         </div>
     </div>
 </div>
+<script>
+
+    $(".saveFunction").click(function (e) {
+        e.preventDefault();
+
+        //$('.materialForm').data("validator").settings.ignore = "";
+        //var valid = $('.materialForm').valid();
+        //console.log("valid form: " + valid)
+        //if (!valid) {
+        //    e.preventDefault();
+        //    if (!$('.activeSubmit').hasClass('disabled-submit')) {
+        //        $('.activeSubmit').addClass('disabled-submit')
+        //    }
+
+        //}
+        //else {
+            //$('.activeSubmit').removeClass('disabled-submit')
+            var formData = new FormData($(".addFunctionForm")[0]);
+            $.ajax({
+                url: "/Protocols/AddFunctionModal",
+                traditional: true,
+                data: formData,
+                contentType: false,
+                processData: false,
+                type: "POST",
+                success: function (data) {
+                    $("._Lines").html(data);
+                    $.fn.CloseModal('add-function');
+                },
+                error: function (jqxhr) {
+                    if (jqxhr.status == 500) {
+                        $.fn.OpenModal('modal', 'add-function', jqxhr.responseText);
+                    }
+                    return true;
+                }
+            });
+        //}
+        //$('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+    });
+
+</script>
