@@ -147,10 +147,10 @@ namespace PrototypeWithAuth.Controllers
             List<WorkerHourViewModel> workerHoursViewModel = new List<WorkerHourViewModel>();
             var companyDaysOff = _context.CompanyDayOffs.ToList();
             double totalWorkingDaysInMonthOrYear;
-            double totalWorkingDaysInYear = amountInYear == 0 ? GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1), companyDaysOff) : amountInYear;
+            double totalWorkingDaysInYear = amountInYear == 0 ? SharedController.GetTotalWorkingDaysThisYear(new DateTime(year, 1, 1), companyDaysOff) : amountInYear;
             if (yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly)
             {
-                 totalWorkingDaysInMonthOrYear = GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
+                 totalWorkingDaysInMonthOrYear = SharedController.GetTotalWorkingDaysThisMonth(new DateTime(year, month, 1), companyDaysOff);
             }
             else
             {
@@ -239,7 +239,7 @@ namespace PrototypeWithAuth.Controllers
 
             Employee user = _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == userId).FirstOrDefault();
 
-            SummaryHoursViewModel viewModel = SummaryHoursFunction(month, year, user);
+            SummaryHoursViewModel viewModel = base.SummaryHoursFunction(month, year, user);
             viewModel.PageType = PageTypeEnum.UsersWorkers;
             return View(viewModel);
         }

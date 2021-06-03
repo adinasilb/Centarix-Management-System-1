@@ -1,10 +1,19 @@
 ﻿@page
-@model AccessDeniedModel
+@using Microsoft.AspNetCore.Identity
+@using PrototypeWithAuth.Data
+@model AccessDeniedModel;
+@inject UserManager<ApplicationUser> _userManager
+@inject SignInManager<ApplicationUser> _signInManager
 @{
     ViewData["Title"] = "Access denied";
+    Layout = "~/Views/Shared/_HomeView.cshtml";
 }
 
 <header>
     <h1 class="text-danger-centarix">@ViewData["Title"]</h1>
     <p class="text-danger-centarix">You do not have access to this resource.</p>
 </header>
+@{
+    var rolesList = await _userManager.GetRolesAsync(await _userManager.GetUserAsync(User)).ConfigureAwait(false);
+    var menuButtons = PrototypeWithAuth.AppData.CreateMainMenu.GetMainMenu().Where(m => rolesList.Contains(m.MenuDescription));
+    await Html.RenderPartialAsync("~/Views/Home/_HomeButtons.cshtml", menuButtons);}

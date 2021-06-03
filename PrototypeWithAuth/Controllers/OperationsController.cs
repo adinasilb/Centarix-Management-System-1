@@ -62,9 +62,9 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
 
-            var viewmodel = await GetIndexViewModel(requestIndexObject);
+            var viewmodel = await base.GetIndexViewModel(requestIndexObject);
 
-            SetViewModelCounts(requestIndexObject, viewmodel);
+            //SetViewModelCounts(requestIndexObject, viewmodel);
 
             return View(viewmodel);
         }
