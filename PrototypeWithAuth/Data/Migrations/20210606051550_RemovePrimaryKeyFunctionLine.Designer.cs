@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210606051550_RemovePrimaryKeyFunctionLine")]
+    partial class RemovePrimaryKeyFunctionLine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1144,15 +1146,21 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FunctionLine", b =>
                 {
-                    b.Property<int>("FunctionLineID")
+                    b.Property<int>("FunctonLineID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FunctionTypeID")
+                    b.Property<int>("FunctioTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("LineID")
+                    b.Property<int?>("FunctionTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LieID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LineID")
                         .HasColumnType("int");
 
                     b.Property<int?>("ProductID")
@@ -1167,7 +1175,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<TimeSpan>("Timer")
                         .HasColumnType("time");
 
-                    b.HasKey("FunctionLineID");
+                    b.HasKey("FunctonLineID");
 
                     b.HasIndex("FunctionTypeID");
 
@@ -5926,14 +5934,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.FunctionType", "FunctionType")
                         .WithMany()
                         .HasForeignKey("FunctionTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Line", "Line")
                         .WithMany()
                         .HasForeignKey("LineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Product", "Product")
                         .WithMany()

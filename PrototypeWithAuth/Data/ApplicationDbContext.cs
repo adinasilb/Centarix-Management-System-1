@@ -340,9 +340,6 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TagProtocol>()
               .HasKey(t => new { t.TagID, t.ProtocolID });
 
-            modelBuilder.Entity<FunctionLine>()
-              .HasKey(f => new { f.FunctionTypeID, f.LineID });
-
             modelBuilder.Entity<AuthorProtocol>()
                 .HasKey(a => new { a.AuthorID, a.ProtocolID });
 

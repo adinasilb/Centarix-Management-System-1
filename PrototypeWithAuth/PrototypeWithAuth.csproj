@@ -339,6 +339,8 @@
     <Compile Remove="Data\Migrations\20210603084849_AddFunctionLineFK.Designer.cs" />
     <Compile Remove="Data\Migrations\20210603085414_AddFunctionLineFK.cs" />
     <Compile Remove="Data\Migrations\20210603085414_AddFunctionLineFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606050007_RemovePrimaryKeyFunctionLine.cs" />
+    <Compile Remove="Data\Migrations\20210606050007_RemovePrimaryKeyFunctionLine.Designer.cs" />
   </ItemGroup>
 
 

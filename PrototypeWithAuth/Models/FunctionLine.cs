@@ -9,6 +9,7 @@ namespace PrototypeWithAuth.Models
 {
     public class FunctionLine
     {
+        [Key]
         public int FunctionLineID { get; set; }
         public int LineID { get; set; }
         public Line Line { get; set; }
