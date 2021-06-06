@@ -458,7 +458,7 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task CopySelectedLinesToTempLineTable(int protocolID)
         {
-            await ClearTempLinesTable();
+            await ClearTempLinesTableAsync();
             var lines = _context.Lines.Where(l => l.ProtocolID == protocolID);
             var lineTypes = GetOrderLineTypeFromParentToChild();
             foreach(var lineType in lineTypes)
@@ -484,8 +484,8 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Update(TurnTempLineToLine(line));
                     }
-                    _context.SaveChanges();
-                    await ClearTempLinesTable();
+                    await _context.SaveChangesAsync();
+                    await ClearTempLinesTableAsync();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -496,7 +496,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
-        private async Task ClearTempLinesTable()
+        private async Task ClearTempLinesTableAsync()
         {
             var lineTypes = GetOrderLineTypeFromChildToParent();
             foreach (var lineType in lineTypes)
@@ -587,10 +587,13 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    //save all temp line data 
-                    await UpdateLineContentAsync(TempLines);
+                    if(TempLines != null)
+                    {
+                        //save all temp line data 
+                        await UpdateLineContentAsync(TempLines);
+                    }              
                 
-                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Where(l => l.PermanentLineID == currentLineID).FirstOrDefault();
+                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Where(l => l.PermanentLineID == currentLineID).Include(cl=>cl.ParentLine).ThenInclude(cl=>cl.LineType).FirstOrDefault();
                     var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
                     var orderedLineTypes = GetOrderLineTypeFromParentToChild();
                     TempLine newLine = new TempLine();
@@ -827,11 +830,11 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case AppUtility.FuctionTypes.AddLinkToProduct:
                             var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                            line.Content += "<a href='#' class='open-line-product'>" + product.ProductName + "</>";
+                            line.Content += " <a href='#' contenteditable=false class='open-line-product'>" + product.ProductName + "</a> ";
                             break;
                         case AppUtility.FuctionTypes.AddLinkToProtocol:
                             var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                            line.Content += "<a href='#' class='open-line-protocol'>" + protocol.Name + "</>";
+                            line.Content += " <a href='#' contenteditable=false class='open-line-protocol'>" + protocol.Name + "</a> ";
                             break;
                         case AppUtility.FuctionTypes.AddFile:
                         case AppUtility.FuctionTypes.AddImage:
@@ -850,7 +853,7 @@ namespace PrototypeWithAuth.Controllers
                         //case AppUtility.FuctionTypes.AddComment:
                         //    break;
                     }
-                    _context.Update(TurnTempLineToLine(line));
+                    _context.Update(line);
                     await _context.SaveChangesAsync();
                    
                     await transaction.CommitAsync();
@@ -860,10 +863,9 @@ namespace PrototypeWithAuth.Controllers
                     Response.StatusCode = 500;
                     await transaction.RollbackAsync();
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
-                    //return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
                 }
-            }
-            return RedirectToAction("_Lines");
+                return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView() });
+            }           
         }
 
         [HttpPost]
