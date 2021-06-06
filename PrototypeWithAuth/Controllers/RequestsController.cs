@@ -765,8 +765,10 @@ namespace PrototypeWithAuth.Controllers
                         {
                             requestReceived.IsArchived = true;
                             _context.Update(requestReceived);
+                            await _context.SaveChangesAsync();
                             rli.IsArchived = true;
                             _context.Update(rli);
+                            await _context.SaveChangesAsync();
                             MarkLocationAvailable(requestReceived.RequestID, place.LocationInstanceId);
                             await _context.SaveChangesAsync();
                             return;
