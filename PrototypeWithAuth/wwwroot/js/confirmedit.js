@@ -27,10 +27,6 @@
 			console.log("has class orders");
 			url = "/Requests/EditModalView";
 		}
-		else if ($('.turn-edit-on-off').hasClass('orders')) {
-			console.log("has class orders");
-			url = "/Requests/EditModalView";
-		}
 		else if ($('.turn-edit-on-off').hasClass('locations')) {
 			console.log("has class locations");
 			url = "/Requests/ReceivedModalVisual";
@@ -39,7 +35,7 @@
 			alert("didn't go into any edits");
 		}
 		console.log("url: " + url);
-		console.log(...formData)
+		//console.log(...formData)
 		$.ajax({
 			processData: false,
 			contentType: false,
@@ -50,7 +46,7 @@
 			cache: false,
 			success: function (data) {
 				if ($('.turn-edit-on-off').hasClass('locations')) {
-					console.log(data)
+					//console.log(data)
 					$(".visualView").html(data);
 				}
 				else {

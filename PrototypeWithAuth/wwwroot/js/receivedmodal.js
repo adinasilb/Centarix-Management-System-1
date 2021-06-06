@@ -38,7 +38,8 @@
 			if (valid) {
 				$('.activeSubmit').removeClass('disabled-submit')
 			}
-        }
+		}
+		$(".locationFullName").html("");
 	});
 
 	//AJAX load full partial view for modalview manage locations
@@ -63,18 +64,8 @@
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
-			var name = ""
-		$(".dropdown.dropdown-main span:not(.caret)").each(function(){
-		if($(this).html()!="select")
-		{
-			if($(this).attr("description") !=undefined)
-			{
-				name+=$(this).attr("description");
-			}
 
-		}
-			
-		});
+		var name = $(this).html();
 		$(".locationFullName").html(name);
 	});
 
@@ -103,6 +94,7 @@
 		console.log(nextSelect)
 		console.log("selected")
 		var locationInstanceParentId = $(el).val();
+		var requestID = $("#Requests_0__RequestID").val();
 
 		if (nextSelect != undefined) { //if there is another one
 			$(nextSelect).html('');
@@ -122,7 +114,7 @@
 				var oldSelected = $("." + oldSelect).children("option:selected").val();
 				console.log("oldSelected: " + oldSelected);
 				$.ajax({
-					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected,
+					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected + "&RequestID=" + requestID,
 					type: 'GET',
 					cache: false,
 					context: myDiv,
@@ -140,7 +132,7 @@
 		
 			console.log("regular visual");
 			$.ajax({
-				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId,
+				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId + "&RequestID=" + requestID,
 				type: 'GET',
 				cache: false,
 				context: myDiv,
@@ -251,6 +243,7 @@
 					$(this).children('div').first().children(".row-1").children("i").removeClass("icon-delete-24px");
 					$(this).removeClass('location-selected')
 					var hasLocationSelected = $('.liid[value="true"]').length;
+					console.log("locations selected " + hasLocationSelected)
 					if (hasLocationSelected <= 0) {
 						$(".submit-received").addClass("disabled-submit")
 						$('#locationSelected').val('');
@@ -309,7 +302,8 @@
 			if ($("#LocationTypeID").val() != 0)
 			{
 				$("#locationSelected").val(true)
-            }
+			}
+			$('.visualView').html('');
 		}
 		else {
 			$("#locationSelected").val("")

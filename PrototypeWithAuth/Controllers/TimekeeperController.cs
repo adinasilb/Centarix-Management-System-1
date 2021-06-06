@@ -61,14 +61,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 entryExitViewModel.EntryExitEnum = AppUtility.EntryExitEnum.None;
             }
-            if(errorMessage != null)
+            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
+            entryExitViewModel.TimekeeperNotifications = notifications;
+            if (errorMessage != null)
             {
                 entryExitViewModel.ErrorMessage += (errorMessage ?? "");
                 Response.StatusCode = 550;
-                return PartialView(entryExitViewModel);
+                //return PartialView(entryExitViewModel);
             }
-            var notifications = _context.TimekeeperNotifications.Where(n => n.ApplicationUserID == userid).Include(n=> n.EmployeeHours).OrderByDescending(n => n.EmployeeHours.Date).Take(25).ToList();
-            entryExitViewModel.TimekeeperNotifications = notifications;
             return View(entryExitViewModel);
         }
 
@@ -1002,6 +1002,34 @@ namespace PrototypeWithAuth.Controllers
                     new { Month = deleteHourViewModel.EmployeeHour.Date.Month, 
                         Year = deleteHourViewModel.EmployeeHour.Date.Year, errorMessage = AppUtility.GetExceptionMessage(ex) });
             }
+        }
+        [HttpPost]
+        [Authorize(Roles = "TimeKeeper")]
+        public async Task<IActionResult> DeleteNotification(int? id)
+        {
+            if (id == null)
+            {
+                ViewBag.ErrorMessage = "Timekeeper Notification not found (no id). Unable to delete.";
+                return NotFound();
+            }
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var notification = _context.TimekeeperNotifications.Where(tn => tn.NotificationID == id).FirstOrDefault();
+                    _context.Remove(notification);
+                    await _context.SaveChangesAsync();
+                    //throw new Exception();
+                    await transaction.CommitAsync();
+                    return RedirectToAction("ReportHours");
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return RedirectToAction("ReportHours", new { errorMessage = AppUtility.GetExceptionMessage(ex) });
+                }
+            }
+            
         }
     }
 }

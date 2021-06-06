@@ -1460,17 +1460,15 @@ $(function () {
 					$("#loading").hide();
 					$.fn.OpenModal('confirm-edit-modal', 'confirm-edit', data)
 					$(".modal-open-state").attr("text", "open");
-
 				}
-
 			});
-
 
 		}
 		else if (type == 'details') {
 			if ($(this).hasClass('locations')) {
 				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
 				$('#location .mark-readonly').removeClass("disabled")
+				$('#location .mark-readonly').attr("disabled", false);
 				$('.edit-mode-switch-description').text("Edit Mode On");
 				$('.turn-edit-on-off').attr('name', 'edit');
 			}
@@ -1493,6 +1491,7 @@ $(function () {
     }
 
 	$.fn.EnableMaterialSelect = function (selectID, dataActivates) {
+		console.log("enable " + selectID)
 		var selectedElements = $('#' + dataActivates).find(".active")
 		var selectedIndex = $('#' + dataActivates).find(".active").index();
 		var dataActivatesLength = $('#' + dataActivates).children('li').length;

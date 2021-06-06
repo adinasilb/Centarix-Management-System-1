@@ -211,63 +211,69 @@ $(".approve-order").off('click').on("click", function (e) {
 	return false;
 });
 
+
+var requestFavoritesHasRun = false; //This is preventing the double click
 $(".request-favorite").off("click").on("click", function (e) {
 	//$(this).off("click");
 	//alert("in click fr");
-	var requestFavorite = $(this);
-	//alert(" in favorite request fx");
-	var emptyHeartClass = "icon-favorite_border-24px";
-	var fullHeartClass = "icon-favorite-24px";
-	var unfav = "request-unlike";
-	var title = "Favorite";
-	var FavType = "favorite";
-	var sidebarType = $('#masterSidebarType').val();
-	if (requestFavorite.hasClass("request-unlike")) {
-		FavType = "unlike";
-		$.ajax({
-			async: true,
-			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
-			traditional: true,
-			type: "GET",
-			cache: false,
-			success: function (data) {
-				$(this).attr("disabled", false);
-				requestFavorite.children("i").addClass(emptyHeartClass);
-				requestFavorite.children("i").removeClass(fullHeartClass);
-				requestFavorite.attr("data-original-title", title);
-				requestFavorite.removeClass(unfav);
-				$("#loading").hide();
-				if (sidebarType == 'Favorites') {
-					$('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
-					$('._IndexTable').html(data);
+	if (!requestFavoritesHasRun) {
+		requestFavoritesHasRun = true;
+		$("#loading").show();
+		var requestFavorite = $(this);
+		//alert(" in favorite request fx");
+		var emptyHeartClass = "icon-favorite_border-24px";
+		var fullHeartClass = "icon-favorite-24px";
+		var unfav = "request-unlike";
+		var title = "Favorite";
+		var FavType = "favorite";
+		var sidebarType = $('#masterSidebarType').val();
+		if (requestFavorite.hasClass("request-unlike")) {
+			FavType = "unlike";
+			$.ajax({
+				async: true,
+				url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
+				traditional: true,
+				type: "GET",
+				cache: false,
+				success: function (data) {
+					requestFavoritesHasRun = false;
+					requestFavorite.children("i").addClass(emptyHeartClass);
+					requestFavorite.children("i").removeClass(fullHeartClass);
+					requestFavorite.attr("data-original-title", title);
+					requestFavorite.removeClass(unfav);
+					$("#loading").hide();
+					if (sidebarType == 'Favorites') {
+						$('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
+						$('._IndexTable').html(data);
+					}
 				}
-			}
-		})
-	}
-	else {
-		title = "Unfavorite";
-		$.ajax({
-			async: true,
-			url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
-			traditional: true,
-			type: "GET",
-			cache: false,
-			success: function (data) {
-				$(this).attr("disabled", false);
-				requestFavorite.children("i").removeClass(emptyHeartClass);
-				requestFavorite.children("i").addClass(fullHeartClass);
-				requestFavorite.attr("data-original-title", title);
-				requestFavorite.addClass(unfav);
-				$("#loading").hide();
+			})
+		}
+		else {
+			title = "Unfavorite";
+			$.ajax({
+				async: true,
+				url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
+				traditional: true,
+				type: "GET",
+				cache: false,
+				success: function (data) {
+					requestFavoritesHasRun = false;
+					requestFavorite.children("i").removeClass(emptyHeartClass);
+					requestFavorite.children("i").addClass(fullHeartClass);
+					requestFavorite.attr("data-original-title", title);
+					requestFavorite.addClass(unfav);
+					$("#loading").hide();
 
-			}
-		})
+				}
+			})
+		}
+		//$.fn.FavoriteRequests(requestFavorite);
 	}
-	//$.fn.FavoriteRequests(requestFavorite);
 });
 
 $.fn.FavoriteRequests = function (requestFavorite) {
-	
+
 };
 
 $(".create-calibration").off('click').on("click", function (e) {
@@ -316,7 +322,7 @@ $(".load-terms-modal").on("click", function (e) {
 	return false;
 });
 
-function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years) {
+function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
 	console.log("in ajax partial index call" + url);
 	var selectedPriceSort = [];
 	$("#priceSortContent1 .priceSort:checked").each(function (e) {
@@ -338,7 +344,8 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
 			CategorySelected: $('#categorySortContent .select-category').is(":checked"),
 			SubCategorySelected: $('#categorySortContent .select-subcategory').is(":checked"),
 			months: months,
-			years: years
+			years: years,
+			IsArchive: isArchive
 		};
 		console.log(formdata);
 	}
