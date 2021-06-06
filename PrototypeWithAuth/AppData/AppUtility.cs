@@ -729,5 +729,14 @@ namespace PrototypeWithAuth.AppData
             previousPayment = currentInstallment;
             return currentInstallment;
         }
+
+        public static List<DateTime> GetWeekStartEndDates(DateTime date)
+        {
+            var dateRangeList = new List<DateTime>();
+            dateRangeList.Add(date.AddDays(-(int)date.DayOfWeek));
+            dateRangeList.Add(date.AddDays(6 - (int)date.DayOfWeek));
+            return dateRangeList;
+        }
+
     }
 }
