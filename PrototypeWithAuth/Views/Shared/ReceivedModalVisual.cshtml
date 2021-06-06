@@ -169,18 +169,23 @@
         e.preventDefault();
         e.stopPropagation();
         //alert('open archive modal.');
-        $("#loading").show();
-        $.ajax({
-            async: true,
-            url: "/Requests/ConfirmArchiveModal?locationName=" + $('.locationFullName').text(),
-            type: 'GET',
-            cache: true,
-            success: function (data) {
-                console.log('success!');
-                $("#loading").hide();
-                $.fn.OpenModal("confirm-archive-modal", 'confirm-archive', data);
-            }
-        });
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (valid) {
+            $("#loading").show();
+            $.ajax({
+                async: true,
+                url: "/Requests/ConfirmArchiveModal?locationName=" + $('.locationFullName').text(),
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    console.log('success!');
+                    $("#loading").hide();
+                    $.fn.OpenModal("confirm-archive-modal", 'confirm-archive', data);
+                }
+            });
+        }
     });
 </script>
 @*<script type="text/javascript">
