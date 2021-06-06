@@ -743,7 +743,7 @@ namespace PrototypeWithAuth.Controllers
                             line.Content += "<a href='#' class='open-line-product'>" + product.ProductName + "</>";
                             break;
                         case AppUtility.FuctionTypes.AddLinkToProtocol:
-                            var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
+                            var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
                             line.Content += "<a href='#' class='open-line-protocol'>" + protocol.Name + "</>";
                             break;
                         case AppUtility.FuctionTypes.AddFile:
