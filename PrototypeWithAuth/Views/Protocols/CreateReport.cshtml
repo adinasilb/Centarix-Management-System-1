@@ -1,15 +1,17 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateReportViewModel
 @using PrototypeWithAuth.AppData
 @{
-    ViewData["Title"] = "Type";
+    //ViewData["Title"] = "Type";
 
-    Layout = "~/Views/Shared/RequestNavView.cshtml";
+    //Layout = "~/Views/Shared/RequestNavView.cshtml";
+
+    Layout = null;
 }
 <div class="row pb-3">
-    <a style="z-index:2000" href="@Url.ActionLink("Index", "ProductSubcategories", new { @PageType = TempData[AppUtility.TempDataTypes.PageType.ToString()], SectionType =TempData[AppUtility.TempDataTypes.MenuType.ToString()] }).ToString()"
+    <a style="z-index:2000" href="@Url.Action("IndexReports", "Protocols", new { ReportCategoryID = Model.Report.ReportCategoryID, SidebarType = TempData[AppUtility.TempDataTypes.SidebarType.ToString()] })"
        class="title-label  btn-link heading-1 ">
         <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
-        <label class="pl-2">@Model.Report.ReportType</label>
+        <label class="pl-2">Report</label>
     </a>
     <div class="only-protocol-tab  d-none">
         <div class=" function-bar">

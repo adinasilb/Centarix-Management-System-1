@@ -13,5 +13,6 @@ namespace PrototypeWithAuth.ViewModels
         public IPagedList<RequestIndexPartialRowViewModel> PagedList { get; set; }
         
         public ReportsIndexObject ReportsIndexObject { get; set; }
+        public bool CurrentReportCreated { get; set; }
     }
 }

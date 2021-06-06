@@ -36,18 +36,5 @@
                 </a>
             </div>
         }
-        @*@foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain && !rc.IsResourceType))
-        {
-            <div class="type-div">
-                <a href="@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID=category.ResourceCategoryID })" class="text text-dark">
-                    <fieldset class="small-type-fieldset">
-                        <label class="small-type-label top-menu protocols-filter text-center">
-                            @category.ResourceCategoryDescription
-                        </label>
-                    </fieldset>
-                </a>
-            </div>
-        }*@
     </div>
 </div>
-    </div>

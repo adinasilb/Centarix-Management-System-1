@@ -21,6 +21,7 @@ using SQLitePCL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -1095,12 +1096,19 @@ namespace PrototypeWithAuth.Controllers
                 
             };
             var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndexObject);
+            var currentWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
+            var currentWeekReport = _context.Reports.Where(r => r.WeekNumber == currentWeek).FirstOrDefault();
+            if (currentWeekReport != null)
+            {
+                reportsIndexViewModel.CurrentReportCreated = true;
+            }
             return View(reportsIndexViewModel);
         }
 
         public async Task<IActionResult> _ReportsIndexTable(ReportsIndexObject reportsIndex)
         {
             var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndex);
+            
             return PartialView(reportsIndexViewModel);
         }
 
@@ -1683,17 +1691,25 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> NewReportModal(CreateReportViewModel createReportViewModel)
         {
-            return RedirectToAction("CreateReport", createReportViewModel);
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.WeeklyReports;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
+
+            var functionTypes = _context.FunctionTypes.Select(ft => ft).ToList();
+            createReportViewModel.FunctionTypes = functionTypes;
+            var reportDateRange = AppUtility.GetWeekStartEndDates(createReportViewModel.Report.DateCreated);
+
+            return View("CreateReport", createReportViewModel);
         }
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> CreateReport(CreateReportViewModel createReportViewModel)
         {
-            var functionTypes = _context.FunctionTypes.Select(ft => ft).ToList();
-            createReportViewModel.FunctionTypes = functionTypes;
-
-            return PartialView(createReportViewModel);
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.WeeklyReports;
+            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsReports;
+            return View(createReportViewModel);
         }
 
     }
