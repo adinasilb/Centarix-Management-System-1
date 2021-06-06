@@ -5117,25 +5117,25 @@ namespace PrototypeWithAuth.Controllers
 
         }
 
-        private void MarkLocationAvailable(int requestId, int locationInstanceID)
-        {
-            var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstanceID).FirstOrDefault();
-            if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
-            {
-                locationInstance.IsFull = false;
-                _context.Update(locationInstance);
-            }
-            else if (locationInstance.IsEmptyShelf)
-            {
-                var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
-                                        && rli.RequestID != requestId).ToList();
-                if (duplicateLocations.Count() == 0)
-                {
-                    locationInstance.ContainsItems = false;
-                    _context.Update(locationInstance);
-                }
-            }
-        }
+        //private void MarkLocationAvailable(int requestId, int locationInstanceID)
+        //{
+        //    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstanceID).FirstOrDefault();
+        //    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+        //    {
+        //        locationInstance.IsFull = false;
+        //        _context.Update(locationInstance);
+        //    }
+        //    else if (locationInstance.IsEmptyShelf)
+        //    {
+        //        var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+        //                                && rli.RequestID != requestId).ToList();
+        //        if (duplicateLocations.Count() == 0)
+        //        {
+        //            locationInstance.ContainsItems = false;
+        //            _context.Update(locationInstance);
+        //        }
+        //    }
+        //}
 
         //public async Task<bool> PopulateProductSerialNumber()
         //{
