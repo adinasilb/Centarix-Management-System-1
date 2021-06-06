@@ -289,7 +289,7 @@ namespace PrototypeWithAuth.Controllers
                 .ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
             protocol.Urls??= new List<Link>();
             protocol.Materials ??= new List<Material>();        
-            
+           
             if (protocol.Urls.Count()< 2)
             {
                 while (protocol.Urls.Count() < 2)
