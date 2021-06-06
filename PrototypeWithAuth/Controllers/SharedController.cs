@@ -1364,7 +1364,7 @@ namespace PrototypeWithAuth.Controllers
                                     await _context.SaveChangesAsync();
                                     if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                                     {
-                                        await SaveLocations(receivedModalVisualViewModel, request);
+                                        await SaveLocations(receivedModalVisualViewModel, request, false);
                                     }
                                     if (i < requestItemViewModel.Requests.Count)
                                     {
@@ -1445,7 +1445,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        protected async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
+        protected async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool archiveOneRequest)
         {
             foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
             {
@@ -1476,6 +1476,16 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(rli);
                     try
                     {
+                        if(archiveOneRequest)
+                        {
+                            requestReceived.IsArchived = true;
+                            _context.Update(requestReceived);
+                            rli.IsArchived = true;
+                            _context.Update(rli);
+                            MarkLocationAvailable(requestReceived.RequestID, place.LocationInstanceId);
+                            await _context.SaveChangesAsync();
+                            return;
+                        }
                         await _context.SaveChangesAsync();
                     }
                     catch (Exception ex)
@@ -1502,6 +1512,25 @@ namespace PrototypeWithAuth.Controllers
                     {
                         throw ex;
                     }
+                }
+            }
+        }
+        protected void MarkLocationAvailable(int requestId, int locationInstanceID)
+        {
+            var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstanceID).FirstOrDefault();
+            if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+            {
+                locationInstance.IsFull = false;
+                _context.Update(locationInstance);
+            }
+            else if (locationInstance.IsEmptyShelf)
+            {
+                var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
+                                        && rli.RequestID != requestId).ToList();
+                if (duplicateLocations.Count() == 0)
+                {
+                    locationInstance.ContainsItems = false;
+                    _context.Update(locationInstance);
                 }
             }
         }

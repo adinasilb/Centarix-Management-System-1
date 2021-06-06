@@ -464,7 +464,8 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(product);
                             await _context.SaveChangesAsync();
                         }
-                        foreach (var requestLocationInstance in request.RequestLocationInstances)
+                        var requestLocationInstances =  request.RequestLocationInstances.ToList();
+                        foreach (var requestLocationInstance in requestLocationInstances)
                         {
                             var locationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
                             locationInstance.IsFull = false;
@@ -493,7 +494,7 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception e)
                     {
                         transaction.Rollback();
-                        throw e;
+                        throw new Exception(AppUtility.GetExceptionMessage(e));
                     }
                 }
                 if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
@@ -1415,7 +1416,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                             }
                             await _context.SaveChangesAsync();
-                            await SaveLocations(receivedModalVisualViewModel, request);
+                            await SaveLocations(receivedModalVisualViewModel, request, false);
                         }
 
 
@@ -1574,7 +1575,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             transaction.Rollback();
                             base.RemoveRequestWithCommentsAndEmailSessions();
-                            throw ex;
+                            throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
                         }
                     }
 
@@ -1871,8 +1872,8 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 catch (Exception ex)
                                 {
-                                    ViewBag.ErrorMessage = ex.InnerException?.ToString();
-                                    throw ex;
+                                    ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                                    throw new Exception(AppUtility.GetExceptionMessage(ex)); 
                                 }
                                 client.Disconnect(true);
 
@@ -1973,7 +1974,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 transaction.Rollback();
                                 base.RemoveRequestWithCommentsAndEmailSessions();
-                                throw ex;
+                                throw new Exception(AppUtility.GetExceptionMessage(ex));
                             }
 
                         }
@@ -2631,7 +2632,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else
                         {
-                            await SaveLocations(receivedModalVisualViewModel, requestReceived);
+                            await SaveLocations(receivedModalVisualViewModel, requestReceived, false);
                         }
                     }
                     if (receivedLocationViewModel.Clarify)
@@ -2730,18 +2731,15 @@ namespace PrototypeWithAuth.Controllers
                         }
                         receivedModalVisualViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
 
-                        await SaveLocations(receivedModalVisualViewModel, request);
+                        await SaveLocations(receivedModalVisualViewModel, request, false);
                         await transaction.CommitAsync();
                     }
-                    else
-                    {
-                        receivedModalVisualViewModel.DeleteTable = true;
-                    }
-
+                    
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    await transaction.RollbackAsync();
+                    throw new Exception(AppUtility.GetExceptionMessage(ex));
                 }
             }
             return PartialView(receivedModalVisualViewModel);
@@ -2912,7 +2910,7 @@ namespace PrototypeWithAuth.Controllers
                             catch (Exception ex)
                             {
                                 transaction.Rollback();
-                                throw ex;
+                                throw new Exception(AppUtility.GetExceptionMessage(ex));
                             }
                         }
                         break;
@@ -3013,7 +3011,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         transaction.RollbackAsync();
                         editQuoteDetailsViewModel.Requests.ForEach(r => DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, r.RequestID));
-                        throw ex;
+                        throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
                 }
 
@@ -3769,7 +3767,7 @@ namespace PrototypeWithAuth.Controllers
                             catch (Exception ex)
                             {
                                 Directory.Move(requestFolderTo, requestFolderFrom);
-                                throw ex;
+                                throw new Exception(AppUtility.GetExceptionMessage(ex));
                             }
                             base.RemoveRequestWithCommentsAndEmailSessions();
 
@@ -3789,7 +3787,7 @@ namespace PrototypeWithAuth.Controllers
                         catch (Exception ex)
                         {
                             transaction.Rollback();
-                            throw ex;
+                            throw new Exception(AppUtility.GetExceptionMessage(ex));
                         }
                     }
                 }
@@ -3943,7 +3941,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(AppUtility.GetExceptionMessage(ex));
             }
 
         }
@@ -4088,16 +4086,8 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var request = _context.Requests.Where(r => r.RequestID == requestId).FirstOrDefault();
                         var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
-                        request.IsArchived = true;
-                        _context.Update(request);
                         //archive one location and delete the rest
                         var iterator = requestLocations.GetEnumerator();
-                        iterator.MoveNext();
-                        var locationToArchive = iterator.Current;
-                        locationToArchive.IsArchived = true; 
-                        _context.Update(locationToArchive);
-                        MarkLocationAvailable(requestId, locationToArchive.LocationInstanceID);
-                                              
                         while (iterator.MoveNext())
                         {
                             var locationToDelete = iterator.Current;
@@ -4105,37 +4095,20 @@ namespace PrototypeWithAuth.Controllers
                             MarkLocationAvailable(requestId, locationToDelete.LocationInstanceID);
                         }
                         await _context.SaveChangesAsync();
+                        await SaveLocations(receivedModalVisualViewModel, request, true);
                         await transaction.CommitAsync();
                     }
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    await transaction.RollbackAsync();
+                    throw  new Exception(AppUtility.GetExceptionMessage(ex)); ;
                 }
             }
             return RedirectToAction("_LocationTab", new { id = requestId });
-            
         }
 
-        private void MarkLocationAvailable(int requestId, int locationInstanceID)
-        {
-            var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstanceID).FirstOrDefault();
-            if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
-            {
-                locationInstance.IsFull = false;
-                _context.Update(locationInstance);
-            }
-            else if (locationInstance.IsEmptyShelf)
-            {
-                var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
-                                        && rli.RequestID != requestId).ToList();
-                if (duplicateLocations.Count() == 0)
-                {
-                    locationInstance.ContainsItems = false;
-                    _context.Update(locationInstance);
-                }
-            }
-        }
+        
 
         //public async Task<bool> PopulateProductSerialNumber()
         //{
