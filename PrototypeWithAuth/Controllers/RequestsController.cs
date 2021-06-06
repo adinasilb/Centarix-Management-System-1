@@ -943,7 +943,7 @@ namespace PrototypeWithAuth.Controllers
                                     await _context.SaveChangesAsync();
                                     if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                                     {
-                                        await SaveLocations(receivedModalVisualViewModel, request);
+                                        await SaveLocations(receivedModalVisualViewModel, request, false);
                                     }
                                     if (i < requestItemViewModel.Requests.Count)
                                     {
@@ -1024,7 +1024,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        protected async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
+        protected async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool archiveOneRequest)
         {
             foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
             {
@@ -1055,6 +1055,16 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(rli);
                     try
                     {
+                        if (archiveOneRequest)
+                        {
+                            requestReceived.IsArchived = true;
+                            _context.Update(requestReceived);
+                            rli.IsArchived = true;
+                            _context.Update(rli);
+                            MarkLocationAvailable(requestReceived.RequestID, place.LocationInstanceId);
+                            await _context.SaveChangesAsync();
+                            return;
+                        }
                         await _context.SaveChangesAsync();
                     }
                     catch (Exception ex)
