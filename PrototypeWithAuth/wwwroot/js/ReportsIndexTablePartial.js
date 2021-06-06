@@ -21,5 +21,9 @@
 				$.fn.OpenModal('new-report-modal', "new-report", data)
 			}
 		});
+	})
+
+	$(".edit-report").click(function (e) {
+
     })
 });

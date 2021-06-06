@@ -29,7 +29,6 @@
 <script>
     $(".open-new-report").off('click').on('click', function (e) {
         e.preventDefault();
-        console.log("open new report")
         var formData = new FormData($("#myForm")[0]);
         console.log(...formData)
         $.ajax({

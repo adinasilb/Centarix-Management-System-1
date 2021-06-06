@@ -65,7 +65,8 @@ namespace PrototypeWithAuth.AppData
             {
                 if (_Months == null)
                 {
-                    return new List<int>();
+                    _Months = new List<int>();
+                    return _Months;
                 }
                 else
                 {
@@ -81,7 +82,8 @@ namespace PrototypeWithAuth.AppData
             {
                 if (_Years == null)
                 {
-                    return new List<int>();
+                    _Years = new List<int>();
+                    return _Years;
                 }
                 else
                 {

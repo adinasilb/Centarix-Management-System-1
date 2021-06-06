@@ -91,7 +91,7 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum {Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine }
+        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public static List<StringWithName> RequestRoleEnums()
         {
@@ -149,7 +149,9 @@ namespace PrototypeWithAuth.AppData
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public enum FavoriteIconTitle { FilledIn, Empty }
-        public enum FuctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddTable, AddTemplate, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public enum ProtocolFunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddTable, AddTemplate, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public enum ReportsFunctionTypes {AddFile }
+        public enum ReportTypes {Daily, Weekly, Monthly}
         public static List<StringWithName> FavoriteIcons()
         {
             var StringsWithName = new List<StringWithName>(){
@@ -730,12 +732,12 @@ namespace PrototypeWithAuth.AppData
             return currentInstallment;
         }
 
-        public static List<DateTime> GetWeekStartEndDates(DateTime date)
+        public static string GetWeekStartEndDates(DateTime date)
         {
-            var dateRangeList = new List<DateTime>();
-            dateRangeList.Add(date.AddDays(-(int)date.DayOfWeek));
-            dateRangeList.Add(date.AddDays(6 - (int)date.DayOfWeek));
-            return dateRangeList;
+            var startDate = date.AddDays(-(int)date.DayOfWeek);
+            var endDate = date.AddDays(6 - (int)date.DayOfWeek);
+            var dateRange = startDate.ToString("MMMM dd") + " - " + endDate.ToString("MMMM dd") + ", " + date.Year;
+            return dateRange;
         }
 
     }

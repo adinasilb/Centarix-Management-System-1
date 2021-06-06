@@ -9,21 +9,27 @@
     <div style="position: absolute; left: 13rem; top: 6rem; z-index: 1000;"><span class="text danger-text error-msg"></span></div>
     <br />
 }
+@{ 
+    var disabled = Model.CurrentReportCreated ? "disabled" : "";
+}
 <div class="">
     <input type="hidden" asp-for="ReportsIndexObject.PageNumber" class="page-number" />
     <table class="table table-headerspaced table-noheaderlines table-hover " style="height:100%">
         <tbody>
             <tr>
-                <td class=" px-4 create-report">
-                    <button class=" btn p-0 m-0 no-box-shadow d-flex align-content-center">
-                        <div class=" heading-1">Open Weekly Report</div>
+                <td class=" px-4 d-flex justify-content-center">
+                    <button class=" btn p-0 m-0 no-box-shadow d-flex align-content-center create-report text-center" @disabled>
+                        <div class="heading-1">Open Weekly Report</div>
                         <i class="icon-add_circle_outline-24px1 protocols-filter pl-3" style="font-size:40px;"></i>
                     </button>
+                </td>
+                <td class="text-center">
+                    <label class="m-0 p-0 @(disabled!=""?"disabled-text":"")">@AppUtility.GetWeekStartEndDates(DateTime.Now)</label>
                 </td>
             </tr>
             @for (int i = 0; i < Model.PagedList.Count; i++)
             {
-                <tr class="text-center ">
+                <tr class="text-center">
                     @*<td width="7%">
                         <div class="form-check order-inv-form">
                             <input type="checkbox" class="form-check-input filled-in" id="@Model.PagedList[itemNum].RequestID">
@@ -62,12 +68,12 @@
                                     {
                                         <br />
                                     }
-                                    if (col.AjaxLink != null)
+                                    @*if (col.AjaxLink != null)
                                     {
                                         <button class="btn p-0 m-0 inv-link-clr @col.AjaxLink no-box-shadow" title="Details" value="@col.AjaxID">
                                             <p class="m-0">@col.Value[val]</p>
                                         </button>
-                                    }
+                                    }*@
                                     else
                                     {
                                         <label class="m-0 p-0">@col.Value[val]</label>
