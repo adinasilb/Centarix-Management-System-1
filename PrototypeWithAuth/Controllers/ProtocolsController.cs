@@ -593,7 +593,7 @@ namespace PrototypeWithAuth.Controllers
                         await UpdateLineContentAsync(TempLines);
                     }              
                 
-                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Where(l => l.PermanentLineID == currentLineID).Include(cl=>cl.ParentLine).ThenInclude(cl=>cl.LineType).FirstOrDefault();
+                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Where(l => l.PermanentLineID == currentLineID).FirstOrDefault();
                     var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
                     var orderedLineTypes = GetOrderLineTypeFromParentToChild();
                     TempLine newLine = new TempLine();
@@ -652,6 +652,7 @@ namespace PrototypeWithAuth.Controllers
                                 });
                                 await _context.SaveChangesAsync();
 
+                                currentLine.ParentLine = _context.TempLines.Where(tl => tl.PermanentLineID == currentLine.ParentLineID).Include(tl => tl.LineType).FirstOrDefault();
                                 if (orderedLineTypes.IndexOf(currentLine.ParentLine.LineType) < newLineTypeIndex)
                                 {
                                     //make new line currents parent
