@@ -1692,7 +1692,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> CreateReport(int reportID, )
+        public async Task<IActionResult> CreateReport(int reportID)
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.WeeklyReports;
@@ -1703,11 +1703,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 functionTypes.Add(_context.FunctionTypes.Where(ft => ft.DescriptionEnum == functionType.ToString()).FirstOrDefault());
             }
-
+            var report = _context.Reports.Where(r => r.ReportID == reportID).FirstOrDefault();
             var createReportViewModel = new CreateReportViewModel()
             {
-                Report = _context.Reports.Where(r => r.ReportID == reportID).FirstOrDefault(),
-                FunctionTypes = functionTypes
+                Report = report,
+                FunctionTypes = functionTypes,
+                ReportDateRange = AppUtility.GetWeekStartEndDates(report.DateCreated)
             };
 
             return View(createReportViewModel);

@@ -24,6 +24,14 @@
 	})
 
 	$(".edit-report").click(function (e) {
-
+		var reportID = $(this).attr("value")
+		$.ajax({
+			url: "/Protocols/CreateReport?reportID=" + reportID,
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				$(".render-body").html(data)
+			}
+		});
     })
 });
