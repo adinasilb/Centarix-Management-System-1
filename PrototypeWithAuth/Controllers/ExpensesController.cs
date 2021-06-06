@@ -89,7 +89,7 @@ namespace PrototypeWithAuth.Controllers
             pieChartViewModel.SectionName = new List<String>();
             pieChartViewModel.SectionValue = new List<decimal>();
             pieChartViewModel.Currency = currency;
-            var latestExchangeRate = GetExchangeRate();
+            var latestExchangeRate = base.GetExchangeRate();
             if (summaryChartsViewModel.SelectedEmployees != null)
             {
                 var employees = _context.Employees.Where(e => summaryChartsViewModel.SelectedEmployees.Contains(e.Id));
@@ -380,7 +380,7 @@ namespace PrototypeWithAuth.Controllers
                 decimal plastics = 0;
                 decimal reusables = 0;
                 decimal total = 0;
-                var latestExchangeRate = GetExchangeRate();
+                var latestExchangeRate = base.GetExchangeRate();
                 switch (currencyEnum)
                 {
                     case AppUtility.CurrencyEnum.NIS:

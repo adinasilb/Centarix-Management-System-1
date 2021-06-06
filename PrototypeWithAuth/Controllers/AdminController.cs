@@ -80,6 +80,8 @@ namespace PrototypeWithAuth.Controllers
             UserIndexViewModel userIndexViewModel = GetUserIndexViewModel();
             return PartialView(userIndexViewModel);
         }
+
+        [Authorize(Roles ="Users")]
         private UserIndexViewModel GetUserIndexViewModel()
         {
 
@@ -604,6 +606,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index", new { errorMessage });
         }
 
+        [Authorize(Roles = "Users")]
         private async void SendConfimationEmail(ApplicationUser user)
         {
             string userId = await _userManager.GetUserIdAsync(user);
@@ -911,6 +914,7 @@ namespace PrototypeWithAuth.Controllers
             return new EmptyResult();
         }
 
+        [Authorize(Roles = "Users")]
         public async Task CheckRoleAsync(IList<string> roleslist, Employee employee, string roleName, bool selected)
         {
             if (!roleslist.Contains(roleName) && selected)

@@ -438,7 +438,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 List<DocumentFolder> folders = new List<DocumentFolder>();
                 string uploadMaterialFolder2 = Path.Combine(uploadProtocolsFolder, material.MaterialID.ToString());
-                GetExistingFileStrings(folders, AppUtility.FolderNamesEnum.Pictures, uploadMaterialFolder2);
+                base.GetExistingFileStrings(folders, AppUtility.FolderNamesEnum.Pictures, uploadMaterialFolder2);
                 MaterialFolders.Add(material, folders);
             }
 
@@ -740,7 +740,7 @@ namespace PrototypeWithAuth.Controllers
 
                     _context.Entry(addMaterialViewModel.Material).State = EntityState.Added;
                     await _context.SaveChangesAsync();
-                    MoveDocumentsOutOfTempFolder(addMaterialViewModel.Material.MaterialID, AppUtility.ParentFolderName.Materials);
+                    base.MoveDocumentsOutOfTempFolder(addMaterialViewModel.Material.MaterialID, AppUtility.ParentFolderName.Materials);
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -767,7 +767,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ProtocolsProductDetails(int? productID)
         {
             var requestID = _context.Requests.Where(r => r.ProductID == productID).OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => r.RequestID).FirstOrDefault();
-            var requestItemViewModel = await editModalViewFunction(requestID, isEditable: false);
+            var requestItemViewModel = await base.editModalViewFunction(requestID, isEditable: false);
             requestItemViewModel.SectionType = AppUtility.MenuItems.Protocols;
             return PartialView(requestItemViewModel);
         }
@@ -799,7 +799,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             _context.Entry(url).State = EntityState.Added;
                             await _context.SaveChangesAsync();
-                            MoveDocumentsOutOfTempFolder(createProtocolsViewModel.Protocol.ProtocolID, AppUtility.ParentFolderName.Protocols);
+                            base.MoveDocumentsOutOfTempFolder(createProtocolsViewModel.Protocol.ProtocolID, AppUtility.ParentFolderName.Protocols);
 
                         }
                         else
@@ -1265,7 +1265,7 @@ namespace PrototypeWithAuth.Controllers
                 IsEdittable = true
             };
 
-            FillDocumentsViewModel(documentsModalViewModel);
+            base.FillDocumentsViewModel(documentsModalViewModel);
             return PartialView(documentsModalViewModel);
         }
 
@@ -1304,8 +1304,8 @@ namespace PrototypeWithAuth.Controllers
         {
             createProtocolsViewModel.DocumentsInfo = new List<DocumentFolder>();
 
-            GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
-            GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
+            base.GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Info, uploadFolder);
+            base.GetExistingFileStrings(createProtocolsViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadFolder);
         }
         [Authorize(Roles = "Protocols")]
         public async void RemoveShare(int ShareID, AppUtility.ModelsEnum modelsEnum)
