@@ -363,13 +363,18 @@ namespace PrototypeWithAuth.Data
                .HasForeignKey(ltc => ltc.LineTypeChildID);
 
 
-            modelBuilder.Entity<TempLine>().HasIndex(tl => tl.PermanentLineID).IsUnique().HasFilter(null);
 
-            modelBuilder.Entity<TempLine>()
-               .HasOne(tl => tl.ParentLine)
-               .WithMany()
-               .HasForeignKey(tl => tl.ParentLineID);
-               //.HasPrincipalKey(tl => tl.PermanentLineID).IsRequired(false);--edditted migration directly
+            modelBuilder.Entity<TempLine>().Property(tl => tl.PermanentLineID).IsRequired(false);
+            modelBuilder.Entity<TempLine>(tl =>
+            {
+                tl.HasOne(tl => tl.ParentLine)
+                .WithMany(tl => tl.TempLines).IsRequired(false)
+                .HasForeignKey(tl => tl.ParentLineID).IsRequired(false);
+                //.HasPrincipalKey(tl => tl.PermanentLineID);
+                tl.Property(tl => tl.PermanentLineID).IsRequired(false);
+            });
+
+            modelBuilder.Entity<TempLine>().HasIndex(tl => tl.PermanentLineID).IsUnique().HasFilter(null);
 
             modelBuilder.Entity<TempLine>()
                .HasOne(tl => tl.PermanentLine)

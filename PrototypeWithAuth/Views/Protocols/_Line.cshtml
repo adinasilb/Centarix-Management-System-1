@@ -37,7 +37,7 @@
 </div>
 @if (Model.TempLine != null)
 {
-    <input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" data-val="@Model.TempLine.Content" />
+    <input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine.Content" />
    var typeClass = "";
     switch (Model.TempLine?.LineTypeID)
     {
