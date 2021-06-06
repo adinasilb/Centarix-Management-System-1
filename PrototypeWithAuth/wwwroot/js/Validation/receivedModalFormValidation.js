@@ -1,7 +1,7 @@
-﻿
+﻿/*
 var isRequests = function () {
 	return $("#masterSectionType").val() == "Requests";
-}
+}*/
 
 $('.receivedModalForm').validate({
 	 normalizer: function( value ) {
@@ -16,7 +16,7 @@ $('.receivedModalForm').validate({
 			required: true,
 		},
 		"locationSelected": {
-			required: isRequests
+			required: true /*isRequests*/
 		}
 
 	},
