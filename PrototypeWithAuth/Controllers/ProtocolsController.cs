@@ -376,7 +376,7 @@ namespace PrototypeWithAuth.Controllers
                 .ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
             protocol.Urls??= new List<Link>();
             protocol.Materials ??= new List<Material>();        
-            
+           
             if (protocol.Urls.Count()< 2)
             {
                 while (protocol.Urls.Count() < 2)
@@ -739,41 +739,7 @@ namespace PrototypeWithAuth.Controllers
             return refreshedLines;
         }
 
-        [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> LinkMaterialToProductModal(int materialID)
-        {
-            var material = _context.Materials.Where(m => m.MaterialID == materialID).FirstOrDefault();
-            return PartialView(new AddMaterialViewModel { Material = material });
-        }
-
-
-        [HttpPost]
-        [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> LinkMaterialToProductModal(AddMaterialViewModel addMaterialViewModel)
-        {
-            var materialDB = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault();
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    var product = _context.Products.Where(p => p.SerialNumber == addMaterialViewModel.Material.Product.SerialNumber).FirstOrDefault();
-                    materialDB.ProductID = product.ProductID;
-                    materialDB.Name = null;
-                    _context.Entry(materialDB).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    Response.StatusCode = 500;
-                    await transaction.RollbackAsync();
-                    return PartialView("LinkMaterialToProductModal", new AddMaterialViewModel { Material = _context.Materials.Where(m => m.MaterialID == addMaterialViewModel.Material.MaterialID).FirstOrDefault(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
-                }
-                return redirectToMaterialTab(materialDB.ProtocolID);
-            }
-        }
-
-        [Authorize(Roles = "Protocols")]
+       [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> DeleteMaterial(int materialID)
         {
             var material = _context.Materials.Where(m => m.MaterialID == materialID).Include(m => m.Product).FirstOrDefault();
@@ -850,7 +816,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    _context.Update(addFunctionViewModel.FunctionLine);
+                    addFunctionViewModel.FunctionLine.Product = null;
+                    addFunctionViewModel.FunctionLine.Protocol = null;
+                    _context.Add(addFunctionViewModel.FunctionLine);
                     await _context.SaveChangesAsync();
                     var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
                     var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
@@ -862,7 +830,7 @@ namespace PrototypeWithAuth.Controllers
                             line.Content += "<a href='#' class='open-line-product'>" + product.ProductName + "</>";
                             break;
                         case AppUtility.FuctionTypes.AddLinkToProtocol:
-                            var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
+                            var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
                             line.Content += "<a href='#' class='open-line-protocol'>" + protocol.Name + "</>";
                             break;
                         case AppUtility.FuctionTypes.AddFile:
@@ -882,8 +850,9 @@ namespace PrototypeWithAuth.Controllers
                         //case AppUtility.FuctionTypes.AddComment:
                         //    break;
                     }
-                    _context.Update(line);
+                    _context.Update(TurnTempLineToLine(line));
                     await _context.SaveChangesAsync();
+                   
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)

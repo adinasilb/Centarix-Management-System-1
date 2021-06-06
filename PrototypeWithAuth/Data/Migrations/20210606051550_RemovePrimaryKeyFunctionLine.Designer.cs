@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210606051550_RemovePrimaryKeyFunctionLine")]
+    partial class RemovePrimaryKeyFunctionLine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1144,15 +1146,21 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FunctionLine", b =>
                 {
-                    b.Property<int>("FunctionLineID")
+                    b.Property<int>("FunctonLineID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FunctionTypeID")
+                    b.Property<int>("FunctioTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("LineID")
+                    b.Property<int?>("FunctionTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LieID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LineID")
                         .HasColumnType("int");
 
                     b.Property<int?>("ProductID")
@@ -1167,7 +1175,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<TimeSpan>("Timer")
                         .HasColumnType("time");
 
-                    b.HasKey("FunctionLineID");
+                    b.HasKey("FunctonLineID");
 
                     b.HasIndex("FunctionTypeID");
 
@@ -3949,95 +3957,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ReportCategoryID")
-                        .HasColumnType("int");
-
                     b.Property<string>("ReportDescription")
                         .HasColumnType("ntext");
 
-                    b.Property<int>("ReportNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReportTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReportTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WeekNumber")
-                        .HasColumnType("int");
-
                     b.HasKey("ReportID");
 
-                    b.HasIndex("ReportCategoryID");
-
-                    b.HasIndex("ReportTypeID");
-
                     b.ToTable("Reports");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ReportSection", b =>
-                {
-                    b.Property<int>("ReportSectionID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReportID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReportSectionContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SectionNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReportSectionID");
-
-                    b.HasIndex("ReportID");
-
-                    b.ToTable("ReportSections");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("ReportSection");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ReportType", b =>
-                {
-                    b.Property<int>("ReportTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ReportTypeDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ReportTypeID");
-
-                    b.ToTable("ReportTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            ReportTypeID = 1,
-                            ReportTypeDescription = "Daily"
-                        },
-                        new
-                        {
-                            ReportTypeID = 2,
-                            ReportTypeDescription = "Weekly"
-                        },
-                        new
-                        {
-                            ReportTypeID = 3,
-                            ReportTypeDescription = "Monthly"
-                        });
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Request", b =>
@@ -4366,9 +4291,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsReportsCategory")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsResourceType")
                         .HasColumnType("bit");
 
@@ -4385,7 +4307,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 1,
                             ImageUrl = "rejuvenation_image.svg",
                             IsMain = true,
-                            IsReportsCategory = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Rejuvenation"
                         },
@@ -4394,7 +4315,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 2,
                             ImageUrl = "biomarkers_image.svg",
                             IsMain = true,
-                            IsReportsCategory = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Biomarkers"
                         },
@@ -4403,7 +4323,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 3,
                             ImageUrl = "delivery_systems_image.svg",
                             IsMain = true,
-                            IsReportsCategory = true,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Delivery Systems"
                         },
@@ -4412,7 +4331,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 4,
                             ImageUrl = "clinical_trials_image.svg",
                             IsMain = true,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Clinical Trials"
                         },
@@ -4420,7 +4338,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 5,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "AAV"
                         },
@@ -4428,7 +4345,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 6,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Telomere Rejuvenation"
                         },
@@ -4436,7 +4352,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 7,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Telomere Measurement"
                         },
@@ -4444,7 +4359,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 8,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Methylation Biomarker"
                         },
@@ -4452,7 +4366,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 9,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Transcriptome"
                         },
@@ -4460,7 +4373,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 10,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Serum Rejuvenation"
                         },
@@ -4468,7 +4380,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 11,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Reprogramming"
                         },
@@ -4476,7 +4387,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 12,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "Methylation Rejuvenation"
                         },
@@ -4484,7 +4394,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         {
                             ResourceCategoryID = 13,
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = false,
                             ResourceCategoryDescription = "New Methods"
                         },
@@ -4493,7 +4402,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 14,
                             ImageUrl = "software_image.svg",
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Software"
                         },
@@ -4502,7 +4410,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 15,
                             ImageUrl = "learning_image.svg",
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Learning"
                         },
@@ -4511,7 +4418,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 16,
                             ImageUrl = "companies_image.svg",
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "Companies"
                         },
@@ -4520,7 +4426,6 @@ namespace PrototypeWithAuth.Data.Migrations
                             ResourceCategoryID = 17,
                             ImageUrl = "news_image.svg",
                             IsMain = false,
-                            IsReportsCategory = false,
                             IsResourceType = true,
                             ResourceCategoryDescription = "News"
                         });
@@ -5778,51 +5683,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.Paragraph", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.ReportSection");
-
-                    b.HasDiscriminator().HasValue("Paragraph");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolLink", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.ReportSection");
-
-                    b.Property<int>("ProtocolID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("ProtocolID");
-
-                    b.HasDiscriminator().HasValue("ProtocolLink");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ReportFile", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.ReportSection");
-
-                    b.HasDiscriminator().HasValue("ReportFile");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ReportImage", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.ReportSection");
-
-                    b.HasDiscriminator().HasValue("ReportImage");
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestLink", b =>
-                {
-                    b.HasBaseType("PrototypeWithAuth.Models.ReportSection");
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.HasIndex("RequestID");
-
-                    b.HasDiscriminator().HasValue("RequestLink");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -6074,14 +5934,12 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.FunctionType", "FunctionType")
                         .WithMany()
                         .HasForeignKey("FunctionTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Line", "Line")
                         .WithMany()
                         .HasForeignKey("LineID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PrototypeWithAuth.Models.Product", "Product")
                         .WithMany()
@@ -6374,30 +6232,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.ProtocolCategory", "ProtocolCategoryType")
                         .WithMany()
                         .HasForeignKey("ProtocolCategoryTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.Report", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.ResourceCategory", "ReportCategory")
-                        .WithMany()
-                        .HasForeignKey("ReportCategoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Models.ReportType", "ReportType")
-                        .WithMany()
-                        .HasForeignKey("ReportTypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ReportSection", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Report", "Report")
-                        .WithMany()
-                        .HasForeignKey("ReportID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -6744,24 +6578,6 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("Employees")
                         .HasForeignKey("MaritalStatusID")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ProtocolLink", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
-                        .HasForeignKey("ProtocolID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.RequestLink", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Models.Request", "Request")
-                        .WithMany()
-                        .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

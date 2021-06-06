@@ -158,7 +158,7 @@ namespace PrototypeWithAuth
                 endpoints.MapRazorPages();
             });
 
-            //ChangePassword(serviceProvider).Wait();
+             //ChangePassword(serviceProvider).Wait();
             CreateRoles(serviceProvider).Wait();
             //AddRoles(serviceProvider).Wait();
 
@@ -169,10 +169,10 @@ namespace PrototypeWithAuth
         //private async Task ChangePassword(IServiceProvider serviceProvider)
         //{
         //    var _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        //    var user = await _userManager.FindByEmailAsync("adina@centarix.com");
+        //    var user = await _userManager.FindByEmailAsync("debbie@centarix.com");
         //    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-        //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        //    var result = _userManager.ResetPasswordAsync(user, code, "adinabCE2063*");
+        //    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        //    var result = await _userManager.ResetPasswordAsync(user, code, "Centarix.2020");
         //}
 
 
