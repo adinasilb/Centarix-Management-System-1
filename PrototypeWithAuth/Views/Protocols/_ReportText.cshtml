@@ -1,5 +1,16 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model PrototypeWithAuth.ViewModels.CreateReportViewModel
+@using PrototypeWithAuth.AppData
 @{
+    Layout = null;
 }
+
+<div class="col-6">
+    <span role="textbox" contenteditable class="report-text form-control-plaintext h-100 text-transform-none">@Model.Report.TemporaryReportText</span>
+    <input type="hidden" asp-for="Report.ReportText" value="@Model.Report.TemporaryReportText" />
+</div>
+
+<script>
+    $(".report-text").change(function (e) {
+        $("#Report_ReportText").val($(this).text)
+    })
+</script>

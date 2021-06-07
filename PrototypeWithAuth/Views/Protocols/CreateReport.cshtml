@@ -29,16 +29,14 @@
 </div>
 <div class="row py-3">
     <div class="col-6">
-        <input asp-for="Report.ReportTitle" placeholder="Add Title" class="form-control-plaintext border-bottom heading-1" 
-               />
+        <input asp-for="Report.ReportTitle" placeholder="Add Title" class="form-control-plaintext border-bottom heading-1" />
     </div>
 </div>
-<div class="row" style="min-height:50px; width:100%">
-    <div class="col-6">
-        <span role="textbox" contenteditable class="report-text form-control-plaintext h-100 text-transform-none">@Model.Report.TemporaryReportText</span>
-        <input type="hidden" asp-for="Report.ReportText" />
-    </div>
+<div class="row report-text-div" style="min-height:50px; width:100%">
+   @{
+       await Html.RenderPartialAsync("_ReportText", Model);
+   }
 </div>
 
 <script src="~/js/site.js"></script>
-<script src="~/js/CreateProtocol.js"></script>
+<script src="~/js/function.js"></script>
