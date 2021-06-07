@@ -1147,6 +1147,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 controller = "Operations";
             }
+            var needsToBeApproved = false;
             try
             {
                 var requests = new List<Request>();
@@ -1175,6 +1176,10 @@ namespace PrototypeWithAuth.Controllers
                     {
                         foreach (var req in requests)
                         {
+                            if (requests.Count() == 1 && req.RequestStatusID == 1) //item is ordernow and needs to be approved
+                            {
+                                needsToBeApproved = true;
+                            }
                             if (req.Product == null)
                             {
                                 req.Product = _context.Products.Where(p => p.ProductID == req.ProductID).Include(p => p.ProductSubcategory).FirstOrDefault();
@@ -1195,7 +1200,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 req.Installments = 1;
                             }
-                            if (SaveUsingSessions)
+                            if (SaveUsingSessions && !needsToBeApproved)
                             {
                                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
                                 HttpContext.Session.SetObject(requestName, req);
@@ -1288,19 +1293,22 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
                                 request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
-                                RequestNotification requestNotification = new RequestNotification();
-                                requestNotification.RequestID = request.RequestID;
-                                requestNotification.IsRead = false;
-                                requestNotification.RequestName = request.Product.ProductName;
-                                requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                                requestNotification.Description = "item ordered";
-                                requestNotification.NotificationStatusID = 2;
-                                requestNotification.TimeStamp = DateTime.Now;
-                                requestNotification.Controller = "Requests";
-                                requestNotification.Action = "NotificationsView";
-                                requestNotification.OrderDate = DateTime.Now;
-                                requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                                _context.Add(requestNotification);
+                                if (!needsToBeApproved)
+                                {
+                                    RequestNotification requestNotification = new RequestNotification();
+                                    requestNotification.RequestID = request.RequestID;
+                                    requestNotification.IsRead = false;
+                                    requestNotification.RequestName = request.Product.ProductName;
+                                    requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
+                                    requestNotification.Description = "item ordered";
+                                    requestNotification.NotificationStatusID = 2;
+                                    requestNotification.TimeStamp = DateTime.Now;
+                                    requestNotification.Controller = "Requests";
+                                    requestNotification.Action = "NotificationsView";
+                                    requestNotification.OrderDate = DateTime.Now;
+                                    requestNotification.Vendor = request.Product.Vendor.VendorEnName;
+                                    _context.Add(requestNotification);
+                                }
                                 i++;
                             }
                             await _context.SaveChangesAsync();
@@ -1316,7 +1324,18 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                 }
-                return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("ConfirmEmailModal", controller, termsViewModel.RequestIndexObject) };
+
+                //if (termsViewModel.ParentRequest.Requests.FirstOrDefault().RequestStatusID == 6 && request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
+                //{
+                //
+                if(!needsToBeApproved)
+                { 
+                   return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("ConfirmEmailModal", controller, termsViewModel.RequestIndexObject) };
+                }
+                else
+                {
+                    return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("NeedsToBeApproved", "", "") };
+                }
             }
             catch (Exception ex)
             {
@@ -4474,11 +4493,11 @@ namespace PrototypeWithAuth.Controllers
                     TempData["RequestStatus"] = 1;
                 }
 
-                if (request.RequestStatusID == 6 && request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
+                if ((request.RequestStatusID == 6 || request.RequestStatusID == 1) && request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
                 {
                     var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                    HttpContext.Session.SetObject(requestNum, request);
-                    return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.RequestIndexObject);
+                HttpContext.Session.SetObject(requestNum, request);
+                return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.RequestIndexObject);
                 }
                 else
                 {
@@ -4520,7 +4539,7 @@ namespace PrototypeWithAuth.Controllers
                             base.RemoveRequestWithCommentsAndEmailSessions();
 
                             var action = "_IndexTableData";
-                            var controller = "Shared";
+                            var controller = "Requests";
                             if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
                                 action = "_IndexTableWithCounts";
@@ -4709,6 +4728,10 @@ namespace PrototypeWithAuth.Controllers
             if (r.RedirectToActionResult.ActionName == "" && r.RedirectToActionResult.ControllerName == "")
             {
                 return PartialView("TermsModal", r.TermsViewModel);
+            }
+            else if(r.RedirectToActionResult.ActionName == "NeedsToBeApproved")
+            {
+                return PartialView("");
             }
             return RedirectToAction(r.RedirectToActionResult.ActionName, r.RedirectToActionResult.ControllerName, r.RedirectToActionResult.RouteValues);
         }
