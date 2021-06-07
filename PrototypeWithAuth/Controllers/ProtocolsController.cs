@@ -1675,6 +1675,18 @@ namespace PrototypeWithAuth.Controllers
                     var report = createReportViewModel.Report;
                     report.WeekNumber = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(report.DateCreated, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
 
+                    var reportNumber = "WR";
+                    var lastReportNumber = _context.Reports.OrderByDescending(r => r.ReportNumber).FirstOrDefault()?.ReportNumber.Substring(2);
+                    if(lastReportNumber == null)
+                    {
+                        reportNumber += 1;
+                    }
+                    else
+                    {
+                        reportNumber += (Int32.Parse(lastReportNumber) + 1);
+                    }
+
+                    report.ReportNumber = reportNumber;
                     _context.Update(report);
                     await _context.SaveChangesAsync();
 
@@ -1728,7 +1740,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
-            var viewmodel = new AddFunctionViewModel
+            var viewmodel = new AddReportFunctionViewModel
             {
                 FunctionType = functionType,
                 ReportID = ReportID
@@ -1755,7 +1767,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddReportFunctionModal(AddFunctionViewModel addFunctionViewModel)
+        public async Task<IActionResult> AddFunctionModal(AddReportFunctionViewModel addFunctionViewModel)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
 
