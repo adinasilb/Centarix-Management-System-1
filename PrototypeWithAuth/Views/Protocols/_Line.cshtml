@@ -55,14 +55,14 @@
      @typeClass">
     <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
     <span role="textbox"
-          contenteditable line-id="@(dynamicID)Content" class="  line input line-input" data-val="@Model.TempLine?.PermanentLineID">
+          contenteditable line-id="@(dynamicID)Content" class="  line input line-input text-transform-none" data-val="@Model.TempLine?.PermanentLineID">
         @Html.Raw(Model.TempLine?.Content)&ensp;&ensp;&ensp;
     </span>
     @if (Model.Functions != null)
     {
         foreach (var function in Model.Functions)
         {
-            <button class="function btn-link btn no-box-shadow p-0 m-0" type="button" value="@function.FunctionTypeID" data-val="@function.FunctionLineID"> <div functionID="@function.FunctionTypeID" class="@function.FunctionType.IconActionClass line-function"><i class="@function.FunctionType.Icon"></i></div></button>
+            <button class="function btn-link btn no-box-shadow p-0 m-0 containsLineID" type="button" typeID="@function.FunctionTypeID" value="@function.FunctionLineID" data-val="@function.LineID"> <div functionID="@function.FunctionTypeID" class="@function.FunctionType.IconActionClass line-function"><i class="@function.FunctionType.Icon"></i></div></button>
         }
     }
 
