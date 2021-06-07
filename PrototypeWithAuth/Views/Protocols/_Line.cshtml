@@ -62,7 +62,7 @@
     {
         foreach (var function in Model.Functions)
         {
-            <button class="function btn-link btn no-box-shadow p-0 m-0" type="button" value="@function.FunctionTypeID" data-val="@function.FunctionLineID"> <div functionID="@function.FunctionTypeID" class="@function.FunctionType.IconActionClass line-function"><i class="@function.FunctionType.Icon"></i></div></button>
+            <button class="function btn-link btn no-box-shadow p-0 m-0 containsLineID" type="button" typeID="@function.FunctionTypeID" value="@function.FunctionLineID" data-val="@function.LineID"> <div functionID="@function.FunctionTypeID" class="@function.FunctionType.IconActionClass line-function"><i class="@function.FunctionType.Icon"></i></div></button>
         }
     }
 

@@ -28,7 +28,7 @@
                 <div class=" function-bar">
                     @foreach (var type in Model.FunctionTypes)
                     {
-                        <button class="function" type="button" value="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
+                        <button class="function" type="button" typeID="@type.FunctionTypeID" > <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
                     }
                 </div>
             </li>

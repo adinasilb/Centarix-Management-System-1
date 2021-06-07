@@ -5,7 +5,7 @@
 		url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
     }
 	/*if ($("#masterPageType").val() == "ProtocolsCreate")*/ else {
-		url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).val() + "&LineID=" + $(".focused-line").attr("data-val")+"&functionLineID"+$(this).attr("data-val");
+		url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).attr("typeID") + "&LineID=" + $(".containsLineID").attr("data-val")+"&functionLineID="+$(this).attr("value");
 	}
 	$.fn.CallPageRequest( url , "addFunction");
 });
