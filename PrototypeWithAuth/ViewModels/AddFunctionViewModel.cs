@@ -12,7 +12,6 @@ namespace PrototypeWithAuth.ViewModels
     public class AddFunctionViewModel : ViewModelBase
     {
         public FunctionLine FunctionLine { get; set;}
-        public FunctionType FunctionType { get; set; }
         public List<Vendor> Vendors { get; set; }
         public List<Product> Products { get; set; }
         public List<ParentCategory> ParentCategories { get; set; }
@@ -21,6 +20,5 @@ namespace PrototypeWithAuth.ViewModels
         public List<ProtocolCategory> ProtocolCategories { get; set; }
         public List<ProtocolSubCategory> ProtocolSubCategories { get; set; }
         public List<Protocol> Protocols { get; set; }
-        public int ReportID { get; set; }
     }
 }
