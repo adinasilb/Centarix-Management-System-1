@@ -53,7 +53,8 @@ namespace PrototypeWithAuth.Controllers
         private ICompositeViewEngine _viewEngine;
 
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) 
+            : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager)
         {
             //_Context = Context;
             _context = context;
@@ -1664,43 +1665,6 @@ namespace PrototypeWithAuth.Controllers
             var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
             return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
         }
-
-
-        private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
-        {
-            var newIconList = AppUtility.DeepClone(iconList);
-            //favorite icon
-            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
-
-            if (favIconIndex != -1 && favoriteRequest != null) //check these checks
-            {
-                var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
-                newIconList[favIconIndex] = unLikeIcon;
-            }
-            //for approval icon
-            if (request != null)
-            {
-                var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("approve-order"));
-                if (request.RequestStatusID != 1 && forApprovalIconIndex != -1)
-                {
-                    newIconList.RemoveAt(forApprovalIconIndex);
-                    needsPlaceholder = true;
-                }
-                //resend icon
-                var resendIcon = new IconColumnViewModel("Resend");
-                var placeholder = new IconColumnViewModel("Placeholder");
-                if (request.ParentQuote?.QuoteStatusID == 2)
-                {
-                    newIconList.Insert(0, resendIcon);
-                }
-                else if (needsPlaceholder)
-                {
-                    newIconList.Insert(0, placeholder);
-                }
-            }
-            return newIconList;
-        }
-
 
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> CreateItemTabs(int productSubCategoryId, AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, string itemName = "", bool isRequestQuote = false)

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
@@ -24,10 +25,12 @@ namespace PrototypeWithAuth.Controllers
     public class LocationsController : SharedController
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public LocationsController(ApplicationDbContext context) : base(context)
+        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager: userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
