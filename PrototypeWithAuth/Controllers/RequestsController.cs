@@ -3719,6 +3719,7 @@ namespace PrototypeWithAuth.Controllers
                             request.Currency = quote.Currency;
                             request.IncludeVAT = quote.IncludeVAT;
                             request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
+                            request.Discount = quote.Discount;
                             _context.Update(request);
                             _context.SaveChanges();
                             //save file
