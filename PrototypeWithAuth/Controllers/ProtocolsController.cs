@@ -772,17 +772,22 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID)
+        public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID, int functionLineID)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var line = TurnTempLineToLine(_context.TempLines.Where(tl => tl.PermanentLineID == null ? tl.LineID == LineID : tl.PermanentLineID == LineID).FirstOrDefault());
-            var functionLine = new FunctionLine
+            FunctionLine functionLine = _context.FunctionLines.Where(fl => fl.FunctionLineID == functionLineID).FirstOrDefault();
+            if(functionLine == null)
             {
-                FunctionType = functionType,
-                FunctionTypeID = FunctionTypeID,
-                Line = line,
-                LineID = LineID
-            };
+                functionLine = new FunctionLine
+                {
+                    FunctionType = functionType,
+                    FunctionTypeID = FunctionTypeID,
+                    Line = line,
+                    LineID = LineID
+                };
+            }
+           
             var viewmodel = new AddFunctionViewModel
             {
                 FunctionLine = functionLine
