@@ -12,5 +12,6 @@ namespace PrototypeWithAuth.ViewModels
         public TempLine TempLine { get; set; }
         public string LineNumberString { get; set; }
         public List<LineType> LineTypes { get; set; }
+        public IEnumerable<FunctionLine> Functions { get; set; }
     }
 }

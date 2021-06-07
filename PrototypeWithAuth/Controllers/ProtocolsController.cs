@@ -390,7 +390,7 @@ namespace PrototypeWithAuth.Controllers
                 FunctionTypes = _context.FunctionTypes
             };
             await CopySelectedLinesToTempLineTable(protocol.ProtocolID);
-            viewmodel.TempLines = OrderLinesForView();
+            viewmodel.TempLines = OrderLinesForView(protocolID);
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
             string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, protocol.ProtocolID.ToString());
             FillDocumentsInfo(viewmodel, uploadProtocolsFolder2);
@@ -681,11 +681,11 @@ namespace PrototypeWithAuth.Controllers
                     Response.StatusCode = 500;
                     await transaction.RollbackAsync();
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
-                    return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
+                    return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(protocolID), ErrorMessage = AppUtility.GetExceptionMessage(ex) });
                 }
             }
 
-            List<ProtocolsLineViewModel> refreshedLines = OrderLinesForView();
+            List<ProtocolsLineViewModel> refreshedLines = OrderLinesForView(protocolID);
 
             return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
         }
@@ -710,8 +710,9 @@ namespace PrototypeWithAuth.Controllers
             await _context.SaveChangesAsync();
         }
 
-        private List<ProtocolsLineViewModel> OrderLinesForView()
+        private List<ProtocolsLineViewModel> OrderLinesForView(int protocolID)
         {
+            var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID).ToList();
             List<ProtocolsLineViewModel> refreshedLines = new List<ProtocolsLineViewModel>();
             Stack<TempLine> parentNodes = new Stack<TempLine>();
             var lineTypes = _context.LineTypes.ToList();
@@ -726,8 +727,9 @@ namespace PrototypeWithAuth.Controllers
                     LineTypes = lineTypes,
                     TempLine = node,
                     Index = count++,
-                    LineNumberString = refreshedLines.Where(rl => rl.TempLine.PermanentLineID == node.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.LineNumber + "."
-                });
+                    LineNumberString = refreshedLines.Where(rl => rl.TempLine.PermanentLineID == node.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.LineNumber + ".",
+                    Functions = functionLine.Where(fl => fl.LineID == node.PermanentLineID)
+                }); 
                 _context.TempLines.Where(c => c.ParentLineID == (node.PermanentLineID)).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
             }
             if (refreshedLines.Count == 0)
@@ -859,7 +861,7 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
-                return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView() });
+                return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(addFunctionViewModel.FunctionLine.Line.ProtocolID) });
             }           
         }
 
