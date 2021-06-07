@@ -10,5 +10,7 @@ namespace PrototypeWithAuth.ViewModels
     {
         public FunctionType FunctionType { get; set; }
         public int ReportID { get; set; }
+        public string ReportTempText { get; set; }
+        public string FileName { get; set; }
     }
 }

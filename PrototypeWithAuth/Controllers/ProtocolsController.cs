@@ -1737,13 +1737,14 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID)
+        public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID, string reportTempText)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var viewmodel = new AddReportFunctionViewModel
             {
                 FunctionType = functionType,
-                ReportID = ReportID
+                ReportID = ReportID,
+                ReportTempText = reportTempText
             };
 
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
@@ -1767,10 +1768,11 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddFunctionModal(AddReportFunctionViewModel addFunctionViewModel)
+        public async Task<IActionResult> AddFunctionModal(AddReportFunctionViewModel addReportsFunctionViewModel)
         {
-            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
+            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addReportsFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
 
+            var report = _context.Reports.Where(r => r.ReportID == addReportsFunctionViewModel.ReportID).FirstOrDefault();
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 //case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
@@ -1783,7 +1785,10 @@ namespace PrototypeWithAuth.Controllers
                 //    break;
                 case AppUtility.ProtocolFunctionTypes.AddFile:
                 case AppUtility.ProtocolFunctionTypes.AddImage:
-                    MoveDocumentsOutOfTempFolder(addFunctionViewModel.ReportID, AppUtility.ParentFolderName.Reports);
+                    MoveDocumentsOutOfTempFolder(addReportsFunctionViewModel.ReportID, AppUtility.ParentFolderName.Reports);
+                    //report.TemporaryReportText = addReportsFunctionViewModel.ReportTempText + "<a href='#' class='open-document-modal '
+                    //                    data - id = "@Model.ReportID"
+                    //                    id = "@AppUtility.FolderNamesEnum.Files.ToString()" parentFolder = "@AppUtility.ParentFolderName.Reports" data - val = "@true" show -switch= "@false" > '>" + addFunctionViewModel.FileName + "</>";
                     break;
             }
             return RedirectToAction("CreateReport");
