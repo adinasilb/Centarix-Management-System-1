@@ -291,7 +291,7 @@ $(function () {
 		//alert("validate form");
 		$(this).data("validator").settings.ignore = "";
 		var valid = $(this).valid();
-		console.log("valid form: " + valid)
+		console.log("validate.js says valid form: " + valid)
 		if (!valid) {
 			e.preventDefault();
 			if (!$('.activeSubmit').hasClass('disabled-submit')) {
