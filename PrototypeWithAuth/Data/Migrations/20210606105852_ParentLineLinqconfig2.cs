@@ -10,9 +10,9 @@ namespace PrototypeWithAuth.Data.Migrations
                 name: "FK_TempLines_TempLines_ParentLineID",
                 table: "TempLines");
 
-            migrationBuilder.DropUniqueConstraint(
-                name: "AK_TempLines_PermanentLineID",
-                table: "TempLines");
+            //migrationBuilder.DropUniqueConstraint(
+            //    name: "AK_TempLines_PermanentLineID",
+            //    table: "TempLines");
 
             migrationBuilder.AlterColumn<int>(
                 name: "PermanentLineID",
