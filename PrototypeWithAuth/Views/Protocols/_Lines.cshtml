@@ -49,9 +49,7 @@
         $(".addLinePopover").addClass("d-none");
         $("." + $(this).attr("line-id") + "LinePopoverButton").removeClass("d-none");
         $(".line").removeClass("focused-line");
-        $(".line").removeClass("containsLineID");
         $(this).addClass("focused-line");
-        $(this).addClass("containsLineID");
     });
    
     $(".line").change(function () {

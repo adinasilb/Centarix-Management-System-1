@@ -1,19 +1,23 @@
 ﻿$(".function").click(function (e) {
 	e.preventDefault();
-
-	var lineID =$(".containsLineID").attr("data-val");
-		alert(lineID)
-	if(lineID != undefined)
-		{
-		var url = "";
-	 if ($("#masterPageType").val() == "ProtocolsReports") {
-		url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
+    var lineID =$(this).attr("lineID");
+    if($(this).attr("lineID")==undefined){
+        lineID =$(".focused-line").attr("data-val") 
     }
-	/*if ($("#masterPageType").val() == "ProtocolsCreate")*/ else {
-		url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).attr("typeID") + "&LineID=" + lineID+"&functionLineID="+$(this).attr("value");
+    var url = "";
+	if ($("#masterPageType").val() == "ProtocolsReports") {
+		url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
+        	$.fn.CallPageRequest( url , "addFunction");
+    }
+	/*if ($("#masterPageType").val() == "ProtocolsCreate")*/
+    else {
+	    if(lineID != undefined)
+	    {
+		    url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).attr("typeID") + "&LineID=" + lineID+"&functionLineID="+$(this).attr("value");
+        	$.fn.CallPageRequest( url , "addFunction"); 
+        }
 	}
-	$.fn.CallPageRequest( url , "addFunction");
-		}
+	
 	
 });
 
