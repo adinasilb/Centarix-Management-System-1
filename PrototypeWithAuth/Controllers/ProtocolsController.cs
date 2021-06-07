@@ -476,6 +476,7 @@ namespace PrototypeWithAuth.Controllers
                         _context.Update(TurnTempLineToLine(line));
                     }
                     await _context.SaveChangesAsync();
+                    await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => fl.IsTemporary = false);
                     await ClearTempLinesTableAsync();
                     await transaction.CommitAsync();
                 }
@@ -506,6 +507,9 @@ namespace PrototypeWithAuth.Controllers
                 _context.Remove(tempLine);
             }
             await _context.SaveChangesAsync();
+            await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => {  _context.Remove(fl); });
+            await _context.SaveChangesAsync();
+
         }
         private Dictionary<Material, List<DocumentFolder>> FillMaterialDocumentsModel(IEnumerable<Material> Materials, string uploadProtocolsFolder)
         {
@@ -787,7 +791,7 @@ namespace PrototypeWithAuth.Controllers
                     LineID = LineID
                 };
             }
-           
+          
             var viewmodel = new AddFunctionViewModel
             {
                 FunctionLine = functionLine
@@ -823,6 +827,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     addFunctionViewModel.FunctionLine.Product = null;
                     addFunctionViewModel.FunctionLine.Protocol = null;
+                    addFunctionViewModel.FunctionLine.IsTemporary = true;
                     _context.Add(addFunctionViewModel.FunctionLine);
                     await _context.SaveChangesAsync();
                     var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();

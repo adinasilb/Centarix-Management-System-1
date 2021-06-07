@@ -55,7 +55,7 @@
      @typeClass">
     <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
     <span role="textbox"
-          contenteditable line-id="@(dynamicID)Content" class="  line input line-input" data-val="@Model.TempLine?.PermanentLineID">
+          contenteditable line-id="@(dynamicID)Content" class="  line input line-input text-transform-none" data-val="@Model.TempLine?.PermanentLineID">
         @Html.Raw(Model.TempLine?.Content)&ensp;&ensp;&ensp;
     </span>
     @if (Model.Functions != null)
