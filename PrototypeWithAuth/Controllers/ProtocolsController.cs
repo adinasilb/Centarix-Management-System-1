@@ -1665,6 +1665,9 @@ namespace PrototypeWithAuth.Controllers
                     var report = createReportViewModel.Report;
                     report.WeekNumber = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(report.DateCreated, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
 
+                    var lastReportNumber = _context.Reports.OrderByDescending(r => r.ReportNumber).FirstOrDefault()?.ReportNumber;
+                    
+
                     _context.Update(report);
                     await _context.SaveChangesAsync();
 
