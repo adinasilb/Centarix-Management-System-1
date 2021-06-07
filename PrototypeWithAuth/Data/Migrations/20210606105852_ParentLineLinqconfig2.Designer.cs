@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210606105852_ParentLineLinqconfig2")]
+    partial class ParentLineLinqconfig2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1151,9 +1153,6 @@ namespace PrototypeWithAuth.Data.Migrations
 
                     b.Property<int>("FunctionTypeID")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsTemporary")
-                        .HasColumnType("bit");
 
                     b.Property<int>("LineID")
                         .HasColumnType("int");
@@ -3958,20 +3957,17 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ReportCategoryID")
                         .HasColumnType("int");
 
+                    b.Property<string>("ReportDescription")
+                        .HasColumnType("ntext");
+
                     b.Property<int>("ReportNumber")
                         .HasColumnType("int");
-
-                    b.Property<string>("ReportText")
-                        .HasColumnType("ntext");
 
                     b.Property<string>("ReportTitle")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ReportTypeID")
                         .HasColumnType("int");
-
-                    b.Property<string>("TemporaryReportText")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("WeekNumber")
                         .HasColumnType("int");
