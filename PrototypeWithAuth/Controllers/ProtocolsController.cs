@@ -1775,29 +1775,42 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddReportFunctionModal(AddReportFunctionViewModel addReportsFunctionViewModel)
         {
-            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addReportsFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
-
+            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addReportsFunctionViewModel.FunctionType.FunctionTypeID).FirstOrDefault();
             var report = _context.Reports.Where(r => r.ReportID == addReportsFunctionViewModel.ReportID).FirstOrDefault();
-            switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+            
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                //case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                //    var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                //    line.Content += "<a href='#' class='open-line-product'>" + product.ProductName + "</>";
-                //    break;
-                //case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                //    var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                //    line.Content += "<a href='#' class='open-line-protocol'>" + protocol.Name + "</>";
-                //    break;
-                case AppUtility.ProtocolFunctionTypes.AddFile:
-                case AppUtility.ProtocolFunctionTypes.AddImage:
-                    MoveDocumentsOutOfTempFolder(addReportsFunctionViewModel.ReportID, AppUtility.ParentFolderName.Reports);
-                    report.TemporaryReportText = addReportsFunctionViewModel.ReportTempText + "<a href='#' class='open-document-modal mark-edditable' data-string='@AppUtility.FolderNamesEnum.Files.ToString() "
-                                        + "data-id = '@Model.ReportID' "
-                                        + "id = '@AppUtility.FolderNamesEnum.Files.ToString()' parentFolder = '@AppUtility.ParentFolderName.Reports' data-val = '@true' show-switch= '@false' >" + addReportsFunctionViewModel.FileName + "</>";
-                    _context.Update(report);
-                    break;
+                try
+                {
+                    switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+                    {
+                        //case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
+                        //    var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
+                        //    line.Content += "<a href='#' class='open-line-product'>" + product.ProductName + "</>";
+                        //    break;
+                        //case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
+                        //    var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
+                        //    line.Content += "<a href='#' class='open-line-protocol'>" + protocol.Name + "</>";
+                        //    break;
+                        case AppUtility.ProtocolFunctionTypes.AddFile:
+                        case AppUtility.ProtocolFunctionTypes.AddImage:
+                            MoveDocumentsOutOfTempFolder(addReportsFunctionViewModel.ReportID, AppUtility.ParentFolderName.Reports);
+                            report.TemporaryReportText = addReportsFunctionViewModel.ReportTempText + " <a href='#' class='open-document-modal mark-edditable' data-string='@AppUtility.FolderNamesEnum.Files.ToString() "
+                                                + "data-id = '@Model.ReportID' "
+                                                + "id = '@AppUtility.FolderNamesEnum.Files.ToString()' parentFolder = '@AppUtility.ParentFolderName.Reports' data-val = '@true' show-switch= '@false' >" + addReportsFunctionViewModel.FileName + "</>";
+                            _context.Update(report);
+                            await _context.SaveChangesAsync();
+                            break;
+                    }
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Response.StatusCode = 500;
+                    await transaction.RollbackAsync();
+                }
             }
-            return RedirectToAction("CreateReport");
+            return PartialView("_ReportText", report);
         }
     }
 

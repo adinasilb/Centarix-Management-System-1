@@ -33,10 +33,11 @@
     </div>
 </div>
 <div class="row report-text-div" style="min-height:50px; width:100%">
-   @{
-       await Html.RenderPartialAsync("_ReportText", Model);
-   }
+    @{
+        await Html.RenderPartialAsync("_ReportText", Model.Report);
+    }
 </div>
 
 <script src="~/js/site.js"></script>
 <script src="~/js/function.js"></script>
+<script src="~/js/spanContentEditable.js"></script>

@@ -16,6 +16,8 @@
 
 		var fileName = filePath.split("\\")[2]
 		$(".document-name").text(fileName)
+		$(".document-name#FileName").val(fileName)
+
 
 		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
 		console.log("extn: " + extn);
