@@ -33,8 +33,12 @@ $(".saveFunction").click(function (e) {
     //else {
     //$('.activeSubmit').removeClass('disabled-submit')
     var formData = new FormData($(".addFunctionForm")[0]);
+    var functionName = "AddFunctionModal";
+    if ($("#masterPageType").val() == "ProtocolsReports") {
+        functionName = "AddReportFunctionModal";
+    }
     $.ajax({
-        url: "/Protocols/AddFunctionModal",
+        url: "/Protocols/" + functionName,
         traditional: true,
         data: formData,
         contentType: false,
