@@ -35,6 +35,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<ReportType> ReportTypes { get; set; }
+        public DbSet<FunctionReport> FunctionReports { get; set; }
         public DbSet<ReportSection> ReportSections { get; set; }
         public DbSet<Paragraph> Paragraphs { get; set; }
         public DbSet<RequestLink> RequestLinks { get; set; }
