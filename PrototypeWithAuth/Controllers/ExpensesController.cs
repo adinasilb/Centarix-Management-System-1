@@ -14,18 +14,16 @@ using Microsoft.CodeAnalysis;
 using Project = PrototypeWithAuth.Models.Project;
 using Request = PrototypeWithAuth.Models.Request;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class ExpensesController : SharedController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-        public ExpensesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context)
-        {
-            _context = context;
-            _userManager = userManager;
+        public ExpensesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+            : base(context, userManager, hostingEnvironment)
+        { 
         }
 
         [HttpGet]

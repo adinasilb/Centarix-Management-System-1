@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
@@ -22,10 +23,11 @@ namespace PrototypeWithAuth.Controllers
 {
     public class SharedController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly UserManager<ApplicationUser> _userManager;
-        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager = null, IHostingEnvironment hostingEnvironment = null)
+        protected readonly ApplicationDbContext _context;
+        protected readonly UserManager<ApplicationUser> _userManager;       
+        protected readonly IHostingEnvironment _hostingEnvironment;
+        
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
