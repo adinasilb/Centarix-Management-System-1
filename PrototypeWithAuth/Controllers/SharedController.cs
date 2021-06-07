@@ -166,7 +166,6 @@ namespace PrototypeWithAuth.Controllers
             {
                 HttpContext.Session.Remove(k); //will clear the session for the future
             }
-
         }
         protected decimal GetExchangeRate()
         {

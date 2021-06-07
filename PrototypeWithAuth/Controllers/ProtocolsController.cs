@@ -716,7 +716,7 @@ namespace PrototypeWithAuth.Controllers
 
         private List<ProtocolsLineViewModel> OrderLinesForView(int protocolID)
         {
-            var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID).ToList();
+            var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID).Include(fl=>fl.FunctionType).ToList();
             List<ProtocolsLineViewModel> refreshedLines = new List<ProtocolsLineViewModel>();
             Stack<TempLine> parentNodes = new Stack<TempLine>();
             var lineTypes = _context.LineTypes.ToList();
@@ -779,7 +779,8 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID, int functionLineID)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
-            var line = TurnTempLineToLine(_context.TempLines.Where(tl => tl.PermanentLineID == null ? tl.LineID == LineID : tl.PermanentLineID == LineID).FirstOrDefault());
+            var tempLine = _context.TempLines.Where(tl => tl.PermanentLineID ==  LineID).FirstOrDefault();
+            var line = TurnTempLineToLine(tempLine);
             FunctionLine functionLine = _context.FunctionLines.Where(fl => fl.FunctionLineID == functionLineID).FirstOrDefault();
             if(functionLine == null)
             {
@@ -823,6 +824,7 @@ namespace PrototypeWithAuth.Controllers
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
+                var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
                 try
                 {
                     addFunctionViewModel.FunctionLine.Product = null;
@@ -831,8 +833,7 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(addFunctionViewModel.FunctionLine);
                     await _context.SaveChangesAsync();
                     var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
-                    var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
-
+                 
                     switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
                     {
                         case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
@@ -862,7 +863,6 @@ namespace PrototypeWithAuth.Controllers
                     }
                     _context.Update(line);
                     await _context.SaveChangesAsync();
-
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -871,7 +871,7 @@ namespace PrototypeWithAuth.Controllers
                     await transaction.RollbackAsync();
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
-                return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(addFunctionViewModel.FunctionLine.Line.ProtocolID) });
+                return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(line.ProtocolID) });
             }           
         }
 
