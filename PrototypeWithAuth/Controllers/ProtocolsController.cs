@@ -473,7 +473,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await _context.SaveChangesAsync();
                     await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => fl.IsTemporary = false);
-                    await ClearTempLinesTableAsync();
+                    await CopySelectedLinesToTempLineTable(tempLines.FirstOrDefault().ProtocolID);
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -900,6 +900,7 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("AddMaterialModal", addMaterialViewModel);
                 }
             }
+            addMaterialViewModel.Material.Product = product;
             return redirectToMaterialTab(addMaterialViewModel.Material.ProtocolID);
         }
 
@@ -941,6 +942,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Modified;
                     }
+                    await _context.SaveChangesAsync();
                     foreach (var url in createProtocolsViewModel.Protocol.Urls)
                     {
                         if (url.LinkID == 0)
@@ -956,9 +958,9 @@ namespace PrototypeWithAuth.Controllers
                             await _context.SaveChangesAsync();
                         }
                     }
-
-                    createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
                     await transaction.CommitAsync();
+                    createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
+                  
                     return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
                 }
                 catch (Exception ex)
