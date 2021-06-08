@@ -70,45 +70,8 @@ $(".saveFunction").click(function (e) {
 
 $(".line").keydown(function (event) {
 
-    if (window.getSelection && event.which == 8) { // backspace
+    if (window.getSelection && (event.which == 8 ||event.which == 46)) { // backspace or delete
         var selection = window.getSelection();
         console.log(selection);
-        if (!selection.isCollapsed || !selection.rangeCount) {
-            return;
-        }
-        console.log("contains node"+selection.containsNode('<a'))
-        var curRange = selection.getRangeAt(selection.rangeCount - 1);
-        console.log(curRange)
-        if (curRange.commonAncestorContainer.nodeType == 3 && curRange.startOffset > 0) {
-            // we are in child selection. The characters of the text node is being deleted
-            return;
-        }
-
-        var range = document.createRange();
-        console.log(selection.anchorNode)
-        if (selection.anchorNode != this) {
-            // selection is in character mode. expand it to the whole editable field
-            range.selectNodeContents(this);
-            range.setEndBefore(selection.anchorNode);
-        } else if (selection.anchorOffset > 0) {
-            range.setEnd(this, selection.anchorOffset);
-        } else {
-            // reached the beginning of editable field
-            return;
-        }
-        range.setStart(this, range.endOffset - 1);
-
-
-        var previousNode = range.cloneContents().lastChild;
-        console.log(previousNode);
-        if (previousNode && previousNode.contentEditable == 'false') {
-            // this is some rich content, e.g. smile. We should help the user to delete it
-          //  range.deleteContents();
-            event.preventDefault();
-        }
-        }
-    else if (window.getSelection && event.which == 46)
-    {
-
-    }
+       }
     });
