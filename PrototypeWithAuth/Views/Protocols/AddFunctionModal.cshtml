@@ -21,14 +21,14 @@
                     </div>
                 </div>
                 <div class="modal-body m-0 p-0">
-                    @switch (Enum.Parse<AppUtility.FuctionTypes>(Model.FunctionLine.FunctionType.DescriptionEnum))
+                    @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionLine.FunctionType.DescriptionEnum))
                     {
-                        case AppUtility.FuctionTypes.AddComment:
-                        case AppUtility.FuctionTypes.AddTip:
-                        case AppUtility.FuctionTypes.AddWarning:
+                        case AppUtility.ProtocolFunctionTypes.AddComment:
+                        case AppUtility.ProtocolFunctionTypes.AddTip:
+                        case AppUtility.ProtocolFunctionTypes.AddWarning:
                             <textarea class="border form-control-plaintext " rows="6" asp-for="FunctionLine.Text"></textarea>
                             break;
-                        case AppUtility.FuctionTypes.AddFile:
+                        case AppUtility.ProtocolFunctionTypes.AddFile:
                             <div class="col">
                                 <button type="button" class="my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Files.ToString()"
                                         data-id="@Model.FunctionLine.FunctionLineID"
@@ -38,7 +38,7 @@
                                 <span class="document-name pl-2"></span>
                             </div>
                             break;
-                        case AppUtility.FuctionTypes.AddImage:
+                        case AppUtility.ProtocolFunctionTypes.AddImage:
                             <div class="col">
                                 <button type="button" class=" my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()"
                                         data-id="@Model.FunctionLine.FunctionLineID"
@@ -48,7 +48,7 @@
                                 <span class="document-name pl-2"></span>
                             </div>
                             break;
-                        case AppUtility.FuctionTypes.AddLinkToProduct:
+                        case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
@@ -114,7 +114,7 @@
                                 </div>
                             </div>
                             break;
-                        case AppUtility.FuctionTypes.AddLinkToProtocol:
+                        case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
@@ -177,13 +177,13 @@
                                 </div>
                             </div>
                             break;
-                        case AppUtility.FuctionTypes.AddStop:
+                        case AppUtility.ProtocolFunctionTypes.AddStop:
                             break;
-                        case AppUtility.FuctionTypes.AddTable:
+                        case AppUtility.ProtocolFunctionTypes.AddTable:
                             break;
-                        case AppUtility.FuctionTypes.AddTemplate:
+                        case AppUtility.ProtocolFunctionTypes.AddTemplate:
                             break;
-                        case AppUtility.FuctionTypes.AddTimer:
+                        case AppUtility.ProtocolFunctionTypes.AddTimer:
                             <div class="row">
                                 <div class="col-4 offset-4">
                                     <input class="border-bottom form-control-plaintext heading-1 " rows="6" asp-for="FunctionLine.Timer" />
@@ -203,44 +203,4 @@
         </div>
     </div>
 </div>
-<script>
-
-    $(".saveFunction").click(function (e) {
-        e.preventDefault();
-
-        //$('.materialForm').data("validator").settings.ignore = "";
-        //var valid = $('.materialForm').valid();
-        //console.log("valid form: " + valid)
-        //if (!valid) {
-        //    e.preventDefault();
-        //    if (!$('.activeSubmit').hasClass('disabled-submit')) {
-        //        $('.activeSubmit').addClass('disabled-submit')
-        //    }
-
-        //}
-        //else {
-            //$('.activeSubmit').removeClass('disabled-submit')
-            var formData = new FormData($(".addFunctionForm")[0]);
-            $.ajax({
-                url: "/Protocols/AddFunctionModal",
-                traditional: true,
-                data: formData,
-                contentType: false,
-                processData: false,
-                type: "POST",
-                success: function (data) {
-                    $("._Lines").html(data);
-                    $.fn.CloseModal('add-function');
-                },
-                error: function (jqxhr) {
-                    if (jqxhr.status == 500) {
-                        $.fn.OpenModal('modal', 'add-function', jqxhr.responseText);
-                    }
-                    return true;
-                }
-            });
-        //}
-        //$('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-    });
-
-</script>
+<script src="~/js/function.js"></script>

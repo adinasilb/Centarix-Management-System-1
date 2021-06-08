@@ -34,6 +34,14 @@ namespace PrototypeWithAuth.Data
         public DbSet<TagProtocol> TagProtocols { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<ReportType> ReportTypes { get; set; }
+        public DbSet<FunctionReport> FunctionReports { get; set; }
+        public DbSet<ReportSection> ReportSections { get; set; }
+        public DbSet<Paragraph> Paragraphs { get; set; }
+        public DbSet<RequestLink> RequestLinks { get; set; }
+        public DbSet<ProtocolLink> ProtocolLinks { get; set; }
+        public DbSet<ReportFile> ReportFiles { get; set; }
+        public DbSet<ReportImage> ReportImages { get; set; }
         public DbSet<ResourceType> ResourceTypes { get; set; }
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Material> Materials { get; set; }
@@ -111,6 +119,7 @@ namespace PrototypeWithAuth.Data
         public DbSet<LocationRoomInstance> LocationRoomInstances { get; set; }
         public DbSet<RequestLocationInstance> RequestLocationInstances { get; set; }
         public DbSet<TemporaryLocationInstance> TemporaryLocationInstances { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -336,9 +345,6 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<TagProtocol>()
               .HasKey(t => new { t.TagID, t.ProtocolID });
 
-            modelBuilder.Entity<FunctionLine>()
-              .HasKey(f => new { f.FunctionTypeID, f.LineID });
-
             modelBuilder.Entity<AuthorProtocol>()
                 .HasKey(a => new { a.AuthorID, a.ProtocolID });
 
@@ -354,20 +360,25 @@ namespace PrototypeWithAuth.Data
                .HasForeignKey(ltc => ltc.LineTypeChildID);
 
 
-            modelBuilder.Entity<TempLine>().HasIndex(tl => tl.PermanentLineID).IsUnique().HasFilter(null);
 
-            modelBuilder.Entity<TempLine>()
-               .HasOne(tl => tl.ParentLine)
-               .WithMany()
-               .HasForeignKey(tl => tl.ParentLineID);
-               //.HasPrincipalKey(tl => tl.PermanentLineID).IsRequired(false);--edditted migration directly
+            modelBuilder.Entity<TempLine>().Property(tl => tl.PermanentLineID).IsRequired(false);
+            modelBuilder.Entity<TempLine>(tl =>
+            {
+                tl.HasOne(tl => tl.ParentLine)
+                .WithMany(tl => tl.TempLines).IsRequired(false)
+                .HasForeignKey(tl => tl.ParentLineID).IsRequired(false);
+                //.HasPrincipalKey(tl => tl.PermanentLineID);
+                tl.Property(tl => tl.PermanentLineID).IsRequired(false);
+            });
+
+            modelBuilder.Entity<TempLine>().HasIndex(tl => tl.PermanentLineID).IsUnique().HasFilter(null);
 
             modelBuilder.Entity<TempLine>()
                .HasOne(tl => tl.PermanentLine)
                .WithOne()
                .HasForeignKey<TempLine>(tl => tl.PermanentLineID);
 
-            modelBuilder.Entity<Report>().Property(r => r.ReportDescription).HasColumnType("ntext");
+            modelBuilder.Entity<Report>().Property(r => r.ReportText).HasColumnType("ntext");
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
             modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");

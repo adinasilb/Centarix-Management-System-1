@@ -1,0 +1,17 @@
+﻿@model Report
+@using PrototypeWithAuth.AppData
+@{
+    Layout = null;
+}
+
+<div class="col-6">
+    <span role="textbox" contenteditable class="editable-span report-text form-control-plaintext h-100 text-transform-none">@Html.Raw(Model.TemporaryReportText)</span>
+    <input type="hidden" id="ReportText" name="Report.ReportText" value="@Model.TemporaryReportText" />
+</div>
+
+<script>
+    $(".report-text").on('change', function (e) {
+        console.log($(this).html())
+        $("#ReportText").val($(this).html())
+    })
+</script>
