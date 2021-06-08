@@ -1113,7 +1113,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (ps.PaymentStatusID != 7)//don't have standing orders as an option
                 {
-                    termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription });
+                    var selected = false;
+                    if (ps.PaymentStatusID == 2) { selected = true; }
+                    termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription, Selected = selected });
                 }
             });
             TermsViewModel termsViewModel = new TermsViewModel()
