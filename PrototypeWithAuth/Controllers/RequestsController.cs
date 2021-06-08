@@ -4775,6 +4775,10 @@ namespace PrototypeWithAuth.Controllers
             {
                 return new EmptyResult();
             }
+            else if(r.RedirectToActionResult.ActionName == "Index")
+            {
+                return new EmptyResult();
+            }
             return RedirectToAction(r.RedirectToActionResult.ActionName, r.RedirectToActionResult.ControllerName, r.RedirectToActionResult.RouteValues);
         }
 
