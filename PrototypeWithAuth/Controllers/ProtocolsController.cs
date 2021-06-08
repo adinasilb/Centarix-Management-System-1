@@ -1745,11 +1745,17 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID, string reportTempText)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
+            var functionReport = new FunctionReport()
+            {
+                ReportID = ReportID,
+                FunctionTypeID = functionType.FunctionTypeID,
+                FunctionType = functionType
+            };
             var viewmodel = new AddReportFunctionViewModel
             {
-                FunctionType = functionType,
                 ReportID = ReportID,
-                ReportTempText = reportTempText
+                ReportTempText = reportTempText,
+                FunctionReport = functionReport,
             };
 
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
@@ -1775,9 +1781,9 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddReportFunctionModal(AddReportFunctionViewModel addReportsFunctionViewModel)
         {
-            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addReportsFunctionViewModel.FunctionType.FunctionTypeID).FirstOrDefault();
+            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addReportsFunctionViewModel.FunctionReport.FunctionTypeID).FirstOrDefault();
             var report = _context.Reports.Where(r => r.ReportID == addReportsFunctionViewModel.ReportID).FirstOrDefault();
-            
+            var functionReport = addReportsFunctionViewModel.FunctionReport;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -1794,12 +1800,16 @@ namespace PrototypeWithAuth.Controllers
                         //    break;
                         case AppUtility.ProtocolFunctionTypes.AddFile:
                         case AppUtility.ProtocolFunctionTypes.AddImage:
-                            MoveDocumentsOutOfTempFolder(addReportsFunctionViewModel.ReportID, AppUtility.ParentFolderName.Reports);
-                            report.TemporaryReportText = addReportsFunctionViewModel.ReportTempText + " <a href='#' class='open-document-modal mark-edditable' data-string='@AppUtility.FolderNamesEnum.Files.ToString() "
-                                                + "data-id = '@Model.ReportID' "
-                                                + "id = '@AppUtility.FolderNamesEnum.Files.ToString()' parentFolder = '@AppUtility.ParentFolderName.Reports' data-val = '@true' show-switch= '@false' >" + addReportsFunctionViewModel.FileName + "</>";
+                            _context.Update(functionReport);
+                            await _context.SaveChangesAsync();
+
+                            MoveDocumentsOutOfTempFolder(functionReport.FunctionReportID, AppUtility.ParentFolderName.Reports);
+                            report.TemporaryReportText = addReportsFunctionViewModel.ReportTempText + "<br/> <a href='#' class='open-document-modal mark-edditable' data-string='"+AppUtility.FolderNamesEnum.Files.ToString()+"' "
+                                                + "data-id = '"+functionReport.FunctionReportID +"' "
+                                                + "id = '"+ AppUtility.FolderNamesEnum.Files.ToString()+ "' parentFolder ="+ AppUtility.ParentFolderName.Reports.ToString() +" data-val = 'true' show-switch= 'false' >" + addReportsFunctionViewModel.FileName + "</a> <br/>";
                             _context.Update(report);
                             await _context.SaveChangesAsync();
+
                             break;
                     }
                     await transaction.CommitAsync();
