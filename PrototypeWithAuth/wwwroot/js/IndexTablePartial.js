@@ -178,7 +178,7 @@ $(".approve-order").off('click').on("click", function (e) {
 	$("#loading").show();
 	console.log($(".order-type" + val).val())
 	if ($(".order-type" + val).val() == "1") {
-		console.log("terms")
+		console.log("confirm email")
 		$.ajax({
 			async: true,
 			url: "/Requests/Approve/?id=" + val,
@@ -186,7 +186,7 @@ $(".approve-order").off('click').on("click", function (e) {
 			type: "GET",
 			cache: false,
 			success: function (data) {
-				$.fn.OpenModal("termsModal", "terms", data)
+				$.fn.OpenModal("emailModal", "confirm-email", data)
 				$("#loading").hide();
 			}
 		})

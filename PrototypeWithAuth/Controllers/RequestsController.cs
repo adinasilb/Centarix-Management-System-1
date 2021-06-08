@@ -1185,7 +1185,7 @@ namespace PrototypeWithAuth.Controllers
                                 req.Product = _context.Products.Where(p => p.ProductID == req.ProductID).Include(p => p.ProductSubcategory).FirstOrDefault();
                             }
 
-                            if (req.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString())
+                            if (req.OrderType == AppUtility.OrderTypeEnum.AlreadyPurchased.ToString() || req.OrderType == AppUtility.OrderTypeEnum.SaveOperations.ToString() || needsToBeApproved)
                             {
                                 SaveUsingSessions = false;
                             }
@@ -1200,11 +1200,12 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 req.Installments = 1;
                             }
-                            if (SaveUsingSessions && !needsToBeApproved)
+                            if (SaveUsingSessions)
                             {
                                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
                                 HttpContext.Session.SetObject(requestName, req);
                             }
+
                             else
                             {
 
@@ -1313,7 +1314,7 @@ namespace PrototypeWithAuth.Controllers
                             }
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
-                            return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("Index", controller, termsViewModel.RequestIndexObject) };
+                            if (!needsToBeApproved) { return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("Index", controller, termsViewModel.RequestIndexObject) }; };
                         }
 
                     }
@@ -1328,9 +1329,9 @@ namespace PrototypeWithAuth.Controllers
                 //if (termsViewModel.ParentRequest.Requests.FirstOrDefault().RequestStatusID == 6 && request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
                 //{
                 //
-                if(!needsToBeApproved)
-                { 
-                   return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("ConfirmEmailModal", controller, termsViewModel.RequestIndexObject) };
+                if (!needsToBeApproved)
+                {
+                    return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("ConfirmEmailModal", controller, termsViewModel.RequestIndexObject) };
                 }
                 else
                 {
@@ -2396,38 +2397,63 @@ namespace PrototypeWithAuth.Controllers
                 OrderNumber = lastParentRequestOrderNum + 1,
                 OrderDate = DateTime.Now
             };
-            while (isRequests)
+            if (id != 0) //already has terms, being sent from approve order button
             {
-                var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                if (HttpContext.Session.GetObject<Request>(requestName) != null)
+                var request = _context.Requests.Where(r => r.RequestID == id).FirstOrDefault();
+                request.ParentRequest = _context.ParentRequests.Where(pr => pr.ParentRequestID == request.ParentRequestID).FirstOrDefault();
+                if (request.ParentRequest != null)
                 {
-                    var request = HttpContext.Session.GetObject<Request>(requestName);
-                    request.PaymentStatus = _context.PaymentStatuses.Where(ps => ps.PaymentStatusID == request.PaymentStatusID).FirstOrDefault();
-                    if (request.ParentRequest != null)
-                    {
-                        pr.Shipping = request.ParentRequest.Shipping;
-                    }
-                    request.ParentRequest = pr;
-                    if (request.Product == null)
-                    {
-                        request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
-                          .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
-                    }
-                    else
-                    {
-                        request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
-                        request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
-                    }
-                    HttpContext.Session.SetObject(requestName, request);
-                    allRequests.Add(request);
+                    pr.Shipping = request.ParentRequest.Shipping;
+                }
+                request.ParentRequest = pr;
+                if (request.Product == null)
+                {
+                    request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
+                      .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
                 }
                 else
                 {
-                    isRequests = false;
+                    request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
+                    request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                 }
-                RequestNum++;
+                HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum, request);
+                var payments = _context.Payments.Where(p => p.RequestID == id);
+                allRequests.Add(request);
             }
-
+            else
+            {
+                while (isRequests)
+                {
+                    var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
+                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
+                    {
+                        var request = HttpContext.Session.GetObject<Request>(requestName);
+                        request.PaymentStatus = _context.PaymentStatuses.Where(ps => ps.PaymentStatusID == request.PaymentStatusID).FirstOrDefault();
+                        if (request.ParentRequest != null)
+                        {
+                            pr.Shipping = request.ParentRequest.Shipping;
+                        }
+                        request.ParentRequest = pr;
+                        if (request.Product == null)
+                        {
+                            request.Product = _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor)
+                              .Include(p => p.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).FirstOrDefault();
+                        }
+                        else
+                        {
+                            request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
+                            request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
+                        }
+                        HttpContext.Session.SetObject(requestName, request);
+                        allRequests.Add(request);
+                    }
+                    else
+                    {
+                        isRequests = false;
+                    }
+                    RequestNum++;
+                }
+            }
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
             {
                 ParentRequest = pr,
@@ -2476,13 +2502,16 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var request = HttpContext.Session.GetObject<Request>(requestName);
                         requests.Add(request);
-                        for (int i = 0; i < request.Installments; i++)
-                        {
-                            var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
-                            var payment = HttpContext.Session.GetObject<Payment>(paymentName);
-                            payment.Request = request;
-                            payments.Add(payment);
-                            PaymentNum++;
+                        if (_context.Payments.Where(p => p.RequestID == request.RequestID) == null)
+                        { //has payments already from terms modal
+                            for (int i = 0; i < request.Installments; i++)
+                            {
+                                var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
+                                var payment = HttpContext.Session.GetObject<Payment>(paymentName);
+                                payment.Request = request;
+                                payments.Add(payment);
+                                PaymentNum++;
+                            }
                         }
                         //if (request.PaymentStatusID == 7)
                         //{
@@ -3644,9 +3673,9 @@ namespace PrototypeWithAuth.Controllers
                 switch (Enum.Parse(typeof(AppUtility.OrderTypeEnum), request.OrderType))
                 {
                     case AppUtility.OrderTypeEnum.OrderNow:
-                        var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                        HttpContext.Session.SetObject(requestNum, request);
-                        return RedirectToAction("TermsModal", requestIndex);
+                        //var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
+                        //HttpContext.Session.SetObject(requestNum, request);
+                        return RedirectToAction("ConfirmEmailModal", new { id = id });
                         break;
                     case AppUtility.OrderTypeEnum.AlreadyPurchased:
                         break;
@@ -4496,8 +4525,8 @@ namespace PrototypeWithAuth.Controllers
                 if ((request.RequestStatusID == 6 || request.RequestStatusID == 1) && request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
                 {
                     var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, request);
-                return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.RequestIndexObject);
+                    HttpContext.Session.SetObject(requestNum, request);
+                    return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.RequestIndexObject);
                 }
                 else
                 {
@@ -4729,9 +4758,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 return PartialView("TermsModal", r.TermsViewModel);
             }
-            else if(r.RedirectToActionResult.ActionName == "NeedsToBeApproved")
+            else if (r.RedirectToActionResult.ActionName == "NeedsToBeApproved")
             {
-                return PartialView("");
+                return new EmptyResult();
             }
             return RedirectToAction(r.RedirectToActionResult.ActionName, r.RedirectToActionResult.ControllerName, r.RedirectToActionResult.RouteValues);
         }
