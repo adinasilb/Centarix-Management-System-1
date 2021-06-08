@@ -4139,9 +4139,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("InvoiceID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsClarify")
                         .HasColumnType("bit");
 
@@ -4248,7 +4245,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("LocationInstanceID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsArchived")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<int?>("ParentLocationInstanceID")
