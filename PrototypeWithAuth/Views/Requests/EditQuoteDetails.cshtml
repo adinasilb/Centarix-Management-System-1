@@ -9,7 +9,8 @@
 
 <script src="~/js/InitializeDatePicker.js"></script>
 <script src="~/js/WarantySupplyDateCalc.js"></script>
-<script src="~/js/SubUnit.js"></script>
+<script src="~/js/editquotemodal.js"></script>
+@*<script src="~/js/SubUnit.js"></script>*@
 <div class="modal modal-view fader on-form-modal" id="myModal" role="dialog" aria-labelledby="Request" data-backdrop="false">
 
     <div class="modal-dialog-centered  mx-auto wide-modal " role="document">
@@ -21,18 +22,16 @@
             <form action="" method="post" id="myForm" enctype="multipart/form-data" style="height: 100%;" class="modal-padding editQuoteDetails">
 
                 @*
-        NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
-            they need the hiddenfors that are right underneath it
+                    NOTE: The select boxes are disabled as they cannot be edited, yet in order to pass the values into the controlller-
+                        they need the hiddenfors that are right underneath it
                 *@
                 @{
-                    var dollarDisabled = "disabled disabled-text";
-                    var shekelDisabledText = "";
-                    var shekelReadOnly = "";
+                    var hideDollar = "d-none";
+                    var hideShekel = "";
                     if (Model.Requests[0].Currency == "USD")
                     {
-                        dollarDisabled = "";
-                        shekelDisabledText = "disabled-text";
-                        shekelReadOnly = "readonly";
+                        hideDollar = "";
+                        hideShekel = "d-none";
                     }
                 }
                 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
@@ -43,61 +42,68 @@
                     <br />
                 }
 
-                    <div class="form-group">
+                <div class="form-group">
 
-                        <div class="row  modal-header-padding">
-                            <div class="col-3">
-                                <div class="heading-1">Update Quote</div>
+                    <div class="row  modal-header-padding">
+                        <div class="col-3">
+                            <div class="heading-1">Update Quote</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="top-menu">@Model.Requests[0].Product.Vendor.VendorEnName</div>
+                        </div>
+
+
+                        <input type="hidden" asp-for="@Model.Requests[0].Product.ProductSubcategoryID" />
+                        <input type="hidden" asp-for="@Model.ParentQuoteID" />
+                        <div class="col-3 offset-2">
+                            <div class="form-group d-inline-flex">
+                                <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
+                                <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
+                                <span asp-validation-for="@Model.QuoteNumber" class="text-danger-centarix"></span>
                             </div>
-                            <div class="col-3">
-                                <div class="top-menu">@Model.Requests[0].Product.Vendor.VendorEnName</div>
-                            </div>
+                        </div>
 
+                        @*<div class="col-3">
+                <div class="form-group d-inline-flex">
+                    <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                    <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
+                    <span asp-validation-for="@Model.QuoteDate" class="text-danger-centarix"></span>
+                </div>
+            </div>*@
 
-                            <input type="hidden" asp-for="@Model.Requests[0].Product.ProductSubcategoryID" />
-                            <input type="hidden" asp-for="@Model.ParentQuoteID" />
-                            <div class="col-3 offset-2">
-                                <div class="form-group d-inline-flex">
-                                    <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                    <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
-                                    <span asp-validation-for="@Model.QuoteNumber" class="text-danger-centarix"></span>
+                    </div>
+                    <div class="container p-0">
+                        <div class="row">
+                            <div class="col-12"><hr /></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 float-right py-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="control-label">Currency</label>
+                                    <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext">
+                                        <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
+                                        <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
+                                    </select>
                                 </div>
                             </div>
-
-                            @*<div class="col-3">
-                        <div class="form-group d-inline-flex">
-                            <label asp-for="@Model.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                            <input asp-for="@Model.QuoteDate" class="form-control-plaintext border-bottom for-supply-date-calc align-with-select m-0 ml-2 p-0" min="1" readonly />
-                            <span asp-validation-for="@Model.QuoteDate" class="text-danger-centarix"></span>
-                        </div>
-                    </div>*@
-
-                        </div>
-                        <div class="container p-0">
-                            <div class="row">
-                                <div class="col-12"><hr /></div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 float-right py-3">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Currency</label>
-                                        <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext">
-                                            <option value="@AppUtility.CurrencyEnum.USD.ToString()">&dollar; USD</option>
-                                            <option value="@AppUtility.CurrencyEnum.NIS.ToString()">&#8362; NIS</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label asp-for="Requests[0].ExchangeRate" class="control-label"></label>
-                                        <input asp-for="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
-                                        <span asp-validation-for="Requests[0].ExchangeRate" class="text-danger-centarix"></span>
-                                    </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label asp-for="Requests[0].ExchangeRate" class="control-label"></label>
+                                    <input asp-for="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
+                                    <span asp-validation-for="Requests[0].ExchangeRate" class="text-danger-centarix"></span>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-4 float-right py-3">
+                        <div class="custom-control custom-checkbox plain-form pt-1">
+                            <input type="checkbox" class="custom-control-input vat-check" asp-for="Requests[0].IncludeVAT" />
+                            <label class="custom-control-label" asp-for="Requests[0].IncludeVAT">Include VAT</label>
+                        </div>
+                    </div>
+
                         <table class="table table-headerspaced table-borderless">
                             <thead>
                                 <tr>
@@ -127,82 +133,80 @@
                                 @for (int i = 0; i < Model.Requests.Count(); i++)
                                 {
                                     @Html.HiddenFor(model => Model.Requests[i].RequestID)
-                                <tr class="">
-                                    <td class="" width="10%">
-                                        <input type="hidden" asp-for="@Model.Requests[i].RequestID" />
-                                        @if (Model.Requests[i].Product.ProductSubcategory.ImageURL != null)
-                                        {
-                                            var imageurl = Model.Requests[i].Product.ProductSubcategory.ImageURL;
-                                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
-                                        }
-                                        else
-                                        {
-                                            <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
-                                        }
-                                    </td>
-                                    <td width="15%">
-                                        @Model.Requests[i].Product.ProductName
-                                    </td>
-                                    <td width="15%">
-                                        @Model.Requests[i].Unit &nbsp;@Model.Requests[i].UnitType.UnitTypeDescription
-                                        @if (Model.Requests[i].SubUnitType != null)
-                                        {
-                                            <br />
-                                            @Model.Requests[i].SubUnit @Model.Requests[i].SubUnitType.UnitTypeDescription
-                                            @if (Model.Requests[i].SubSubUnitType != null)
+                                    <tr class="">
+                                        <td class="" width="10%">
+                                            <input type="hidden" asp-for="@Model.Requests[i].RequestID" />
+                                            @if (Model.Requests[i].Product.ProductSubcategory.ImageURL != null)
                                             {
-                                                <br />@Model.Requests[i].SubSubUnit @Model.Requests[i].SubSubUnitType.UnitTypeDescription
+                                                var imageurl = Model.Requests[i].Product.ProductSubcategory.ImageURL;
+                                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
                                             }
-                                        }
-                                    </td>
-                                    <td width="15%">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <span class="input-group-text request-cost-dollar-icon @dollarDisabled">&#36;</span>
-                                                <input class="form-control-plaintext border-bottom @dollarDisabled" id="sum-dollars" name="sum-dollars" value="@(Math.Round((Model.Requests[i].Cost ?? 0) / Model.Requests[i].ExchangeRate, 2))" />
-                                            </div>
-                                            <div class="input-group">
-                                                <span class="input-group-text request-cost-shekel-icon @shekelDisabledText">&#x20aa;</span>
-                                                @if (shekelDisabledText != "")
+                                            else
+                                            {
+                                                <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                                            }
+                                        </td>
+                                        <td width="15%">
+                                            @Model.Requests[i].Product.ProductName
+                                        </td>
+                                        <td width="15%">
+                                            @Model.Requests[i].Unit &nbsp;@Model.Requests[i].UnitType.UnitTypeDescription
+                                            @if (Model.Requests[i].SubUnitType != null)
+                                            {
+                                                <br />
+                                                @Model.Requests[i].SubUnit @Model.Requests[i].SubUnitType.UnitTypeDescription
+                                                @if (Model.Requests[i].SubSubUnitType != null)
                                                 {
-                                                    <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom  cost-validation @shekelDisabledText" min="1" readonly id="cost" />
+                                                    <br />@Model.Requests[i].SubSubUnit @Model.Requests[i].SubSubUnitType.UnitTypeDescription
                                                 }
-                                                else
-                                                {
-                                                    <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom" min="1" id="cost" />
+                                            }
+                                        </td>
+                                        <td width="15%">
+                                            <div class="form-group">
+                                                <div class="form-group @hideShekel shekel-group">
+                                                    <div class="input-group ">
+                                                        <span class="input-group-text request-cost-shekel-icon pr-1">P: &#x20aa;</span>
+                                                        <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom  cost-validation " min="1" id="cost" />
+                                                    </div>
+                                                    <div class="input-group ">
+                                                        <span class="input-group-text request-cost-shekel-icon disabled-text pr-1">T: &#x20aa;</span>
+                                                        <input class="form-control-plaintext border-bottom disabled-text price-with-vat-shekel" disabled />
+                                                    </div>
+                                                </div>
 
-                                                }
-                                                <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
+                                                <div class="form-group @hideDollar dollar-group">
+                                                    <div class="input-group ">
+                                                        <span class="input-group-text request-cost-dollar-icon pr-1">P: &#36;</span>
+                                                        <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
+                                                        <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
+                                                    </div>
+                                                    <div class="input-group ">
+                                                        <span class="input-group-text request-cost-dollar-icon pr-1 disabled-text">T: &#36;</span>
+                                                        <input class="form-control-plaintext border-bottom disabled-text price-with-vat-dollar" disabled/>
+                                                    </div>
+                                                </div>
+
                                             </div>
-                                            <div class="custom-control custom-checkbox plain-form pt-1">
-                                                @{
-                                                    var name = "Requests[" + i + "].IncludeVAT";
-                                                    var id = "Requests_" + i + "__IncludeVAT";
-                                                }
-                                                <input type="checkbox" class="custom-control-input vat-check" asp-for="Requests[i].IncludeVAT" />
-                                                <label class="custom-control-label" asp-for="Requests[i].IncludeVAT">Include VAT</label>
+                                        </td>
+                                        <td width="15%">
+                                            <div class="input-group">
+                                                <input asp-for="@Model.Requests[i].Discount" class="form-control-plaintext border-bottom  expected-supply-days" />
+                                                <div class="input-group-text">%</div>
+                                                <span asp-validation-for="@Model.Requests[i].Discount" class="text-danger-centarix"></span>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td width="15%">
-                                        <div class="input-group">
-                                            <input asp-for="@Model.Requests[i].Discount" class="form-control-plaintext border-bottom  expected-supply-days" />
-                                            <div class="input-group-text">%</div>
-                                            <span asp-validation-for="@Model.Requests[i].Discount" class="text-danger-centarix"></span>
-                                        </div>
-                                    </td>
-                                    <td width="15%">
-                                        <div class="form-group">
-                                            <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days" />
-                                            <span asp-validation-for="@Model.Requests[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
-                                        </div>
-                                    </td>
-                                    <td width="15%" class="border-right">
-                                        <div class="form-group">
-                                            <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value="@(Model.Requests[i].ExpectedSupplyDays==null ? "" : DateTime.Now.AddDays(Model.Requests[i].ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy"))" />
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td width="15%">
+                                            <div class="form-group">
+                                                <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days" />
+                                                <span asp-validation-for="@Model.Requests[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                            </div>
+                                        </td>
+                                        <td width="15%" class="border-right">
+                                            <div class="form-group">
+                                                <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value="@(Model.Requests[i].ExpectedSupplyDays==null ? "" : DateTime.Now.AddDays(Model.Requests[i].ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy"))" />
+                                            </div>
+                                        </td>
+                                    </tr>
                                 }
                                 <tr class="border-0  no-hover ">
                                     <td colspan="3" class="p-0">
@@ -231,47 +235,5 @@
 @*This will work for the EDIT (putting in the already loaded product subcategory)*@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
-<script>
-    $(".save-quote-details").click(function (e) {
-        e.preventDefault();
-        $("#myForm").data("validator").settings.ignore = "";
-        var valid = $("#myForm").valid();
-        console.log("valid form: " + valid)
-        if (!valid) {
-         
-            if (!$('.activeSubmit').hasClass('disabled-submit')) {
-                $('.activeSubmit').addClass('disabled-submit')
-            }
 
-        }
-        else {
-            $('.activeSubmit ').removeClass('disabled-submit')
-            var formData = new FormData($("#myForm")[0]);
-            $.ajax({
-                processData: false,
-                contentType: false,
-                async: true,
-                url: "/Requests/EditQuoteDetails",
-                type: 'POST',
-                data: formData,
-                cache: false,
-                success: function (data) {
-                    $.fn.CloseModal('edit-quote');
-                    $('._IndexTableDataByVendor').html(data);
-                },
-                error: function (jqxhr) {
-                    $.fn.OpenModal('modal', 'edit-quote', jqxhr.responseText)
-                    $('.mdb-select').materialSelect();
-                }
-            });
-        }
-        $(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-
-    })
-    $(".vat-check").click(function (e) {
-        console.log($(this).attr("checked"))
-        $(this).attr("checked", !$(this).prop("checked"));
-        $(this).val($(this).prop("checked"))
-    })
-</script>
+    }
