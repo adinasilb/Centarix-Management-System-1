@@ -331,6 +331,8 @@
     <Compile Remove="Data\Migrations\20210519071241_FunctionDescriptionEnum.Designer.cs" />
     <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.cs" />
     <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210601121013_AddArchive.cs" />
+    <Compile Remove="Data\Migrations\20210601121013_AddArchive.Designer.cs" />
     <Compile Remove="Data\Migrations\20210603070637_jlj.cs" />
     <Compile Remove="Data\Migrations\20210603070637_jlj.Designer.cs" />
     <Compile Remove="Data\Migrations\20210603083914_DownFunctionLineNullableFK.cs" />
@@ -367,6 +369,8 @@
     <Compile Remove="Data\Migrations\20210606104944_ParentLineLinqconfig2.Designer.cs" />
     <Compile Remove="Data\Migrations\20210606111514_ParentLineLinqconfig3.cs" />
     <Compile Remove="Data\Migrations\20210606111514_ParentLineLinqconfig3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210608062849_testmerge.cs" />
+    <Compile Remove="Data\Migrations\20210608062849_testmerge.Designer.cs" />
   </ItemGroup>
 
 

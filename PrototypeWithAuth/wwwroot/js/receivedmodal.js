@@ -243,6 +243,7 @@
 					$(this).children('div').first().children(".row-1").children("i").removeClass("icon-delete-24px");
 					$(this).removeClass('location-selected')
 					var hasLocationSelected = $('.liid[value="true"]').length;
+					console.log("locations selected " + hasLocationSelected)
 					if (hasLocationSelected <= 0) {
 						$(".submit-received").addClass("disabled-submit")
 						$('#locationSelected').val('');

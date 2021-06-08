@@ -212,5 +212,6 @@ namespace PrototypeWithAuth.Models
 
         public IEnumerable<ShareRequest> ShareRequests { get; set; }
         public IEnumerable<FavoriteRequest> FavoriteRequests { get; set; }
+        public bool IsArchived { get; set; }
     }
 }

@@ -13,6 +13,9 @@
     {
         Layout = null;
     }
+    var controller = this.Url.ActionContext.ActionDescriptor.RouteValues["Controller"];
+    Model.ControllerName = controller;
+
 }
 @if (Model.ErrorMessage != null)
 {

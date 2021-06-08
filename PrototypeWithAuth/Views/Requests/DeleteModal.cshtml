@@ -2,19 +2,19 @@
 @using PrototypeWithAuth.AppData
 @{
     Layout = null;
-    //var bcColor = "order-inv-background-color";
-    //if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
-    //{
-    //    bcColor = "oper-background-color";
-    //}
-    //else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
-    //{
-    //    bcColor = "lab-man-background-color";
-    //}
-    //else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
-    //{
-    //    bcColor = "order-inv-background-color";
-    //}
+    var bcColor = "order-inv-background-color";
+    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+    {
+        bcColor = "oper-background-color";
+    }
+    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
+    {
+        bcColor = "lab-man-background-color";
+    }
+    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
+    {
+        bcColor = "order-inv-background-color";
+    }
 }
 <script src="~/js/site.js" asp-append-version="true"></script>
 
@@ -30,7 +30,7 @@
                 @{ await Html.RenderPartialAsync("_DeleteModal", Model);}
                 <div class="modal-footer">
                     <div class="text-center mx-auto modal-footer-mt">
-                        <button type="submit" asp-action="DeleteModal" class="custom-button custom-button-font order-inv-background-color between-button-margin" value="@Model.Request.RequestID">Confirm</button>
+                        <button type="submit" asp-action="DeleteModal" class="custom-button custom-button-font @bcColor between-button-margin" value="@Model.Request.RequestID">Confirm</button>
                         <button type="button" class="custom-cancel custom-button " @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('delete-item');">Cancel</button>
                     </div>
                 </div>

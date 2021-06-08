@@ -52,6 +52,9 @@
                 <a class="@proprietaryClass countStatus" value="7" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@proprietaryText</label> </a>
             </li>
             <li class="list-inline-item m-0">@{ await Html.RenderPartialAsync("_IndexFilter", Model.InventoryFilterViewModel);}</li>
+            <li class="list-inline-item m-0 float-right">
+                <button class="custom-button custom-button-font order-inv-background-color countStatus archive-button" value="7">Archive</button>
+            </li>
         </ul>
     </div>
 </div>
