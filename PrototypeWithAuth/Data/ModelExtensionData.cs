@@ -2648,7 +2648,8 @@ namespace PrototypeWithAuth.Data
                     ResourceCategoryDescription = "Rejuvenation",
                     IsMain = true,
                     IsResourceType = false,
-                    ImageUrl = "rejuvenation_image.svg"
+                    ImageUrl = "rejuvenation_image.svg",
+                    IsReportsCategory = true
                 },
                 new ResourceCategory
                 {
@@ -2656,7 +2657,8 @@ namespace PrototypeWithAuth.Data
                     ResourceCategoryDescription = "Biomarkers",
                     IsMain = true,
                     IsResourceType = false,
-                    ImageUrl = "biomarkers_image.svg"
+                    ImageUrl = "biomarkers_image.svg",
+                    IsReportsCategory = true
                 },
                 new ResourceCategory
                 {
@@ -2664,7 +2666,8 @@ namespace PrototypeWithAuth.Data
                     ResourceCategoryDescription = "Delivery Systems",
                     IsMain = true,
                     IsResourceType = false,
-                    ImageUrl = "delivery_systems_image.svg"
+                    ImageUrl = "delivery_systems_image.svg",
+                    IsReportsCategory = true
                 },
                 new ResourceCategory
                 {
@@ -2771,7 +2774,23 @@ namespace PrototypeWithAuth.Data
                 }
                 );
 
-
+            modelBuilder.Entity<ReportType>().HasData(
+               new ReportType
+               {
+                   ReportTypeID = 1,
+                   ReportTypeDescription = "Daily"
+               },
+               new ReportType
+               {
+                   ReportTypeID = 2,
+                   ReportTypeDescription = "Weekly"
+               },
+               new ReportType
+               {
+                   ReportTypeID = 3,
+                   ReportTypeDescription = "Monthly"
+               }
+        );
             modelBuilder.Entity<MaterialCategory>().HasData(
                 new MaterialCategory
                 {

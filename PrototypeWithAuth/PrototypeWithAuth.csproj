@@ -333,6 +333,44 @@
     <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.Designer.cs" />
     <Compile Remove="Data\Migrations\20210601121013_AddArchive.cs" />
     <Compile Remove="Data\Migrations\20210601121013_AddArchive.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603070637_jlj.cs" />
+    <Compile Remove="Data\Migrations\20210603070637_jlj.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603083914_DownFunctionLineNullableFK.cs" />
+    <Compile Remove="Data\Migrations\20210603083914_DownFunctionLineNullableFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603084849_AddFunctionLineFK.cs" />
+    <Compile Remove="Data\Migrations\20210603084849_AddFunctionLineFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603085414_AddFunctionLineFK.cs" />
+    <Compile Remove="Data\Migrations\20210603085414_AddFunctionLineFK.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606050007_RemovePrimaryKeyFunctionLine.cs" />
+    <Compile Remove="Data\Migrations\20210606050007_RemovePrimaryKeyFunctionLine.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606063043_ReportWeekNumber.cs" />
+    <Compile Remove="Data\Migrations\20210606063043_ReportWeekNumber.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606084923_parentline.cs" />
+    <Compile Remove="Data\Migrations\20210606084923_parentline.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606092657_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606092657_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606093920_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606093920_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606094227_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606094227_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606094516_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606094516_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606095059_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606095059_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606095307_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606095307_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606101617_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606101617_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606101910_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606101910_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606102218_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606102218_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606104944_ParentLineLinqconfig2.cs" />
+    <Compile Remove="Data\Migrations\20210606104944_ParentLineLinqconfig2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210606111514_ParentLineLinqconfig3.cs" />
+    <Compile Remove="Data\Migrations\20210606111514_ParentLineLinqconfig3.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210608062849_testmerge.cs" />
+    <Compile Remove="Data\Migrations\20210608062849_testmerge.Designer.cs" />
   </ItemGroup>
 
 
@@ -384,6 +422,7 @@
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
     <Folder Include="wwwroot\Materials\" />
+    <Folder Include="wwwroot\FunctionLine\" />
     <Folder Include="wwwroot\Protocols\" />
   </ItemGroup>
 

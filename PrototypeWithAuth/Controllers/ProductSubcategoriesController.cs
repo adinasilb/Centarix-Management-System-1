@@ -10,16 +10,18 @@ using PrototypeWithAuth.Models;
 using PrototypeWithAuth.AppData;
 using Microsoft.AspNetCore.Authorization;
 using Abp.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class ProductSubcategoriesController : SharedController
     {
-        private readonly ApplicationDbContext _context;
-
-        public ProductSubcategoriesController(ApplicationDbContext context) : base(context)
+        public ProductSubcategoriesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+            : base(context, userManager, hostingEnvironment)
         {
-            _context = context;
         }
 
         // GET: ProductSubcategories

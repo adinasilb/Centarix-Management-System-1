@@ -45,24 +45,11 @@ namespace PrototypeWithAuth.Controllers
 {
     public class RequestsController : SharedController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        private ISession _session;
-        private ICompositeViewEngine _viewEngine;
-
-        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager)
+        protected ICompositeViewEngine _viewEngine;
+        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
+            : base(context, userManager, hostingEnvironment)
         {
-            //_Context = Context;
-            _context = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
-            //use the hosting environment for the file uploads
-            _hostingEnvironment = hostingEnvironment;
             _viewEngine = viewEngine;
-            //_session = httpContextAccessor.HttpContext.c
         }
 
         [HttpGet]

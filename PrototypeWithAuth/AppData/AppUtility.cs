@@ -90,8 +90,8 @@ namespace PrototypeWithAuth.AppData
         public enum EntryExitEnum { Entry1, Exit1, Entry2, Exit2, None }
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
-        public enum FolderNamesEnum { Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials }
+        public enum FolderNamesEnum {Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
+        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public static List<StringWithName> RequestRoleEnums()
         {
@@ -108,6 +108,17 @@ namespace PrototypeWithAuth.AppData
             {
                 new StringWithName(){StringName = "General", StringDefinition = "Operations"},
                 new StringWithName(){StringName = "Approve Orders", StringDefinition = "OperationsApproveOrders"}
+            };
+            return ore;
+        }
+        public static List<StringWithName> ProtocolRoleEnums()
+        {
+            List<StringWithName> ore = new List<StringWithName>()
+            {
+                new StringWithName(){StringName = "General", StringDefinition = "Protocols"},
+                new StringWithName(){StringName = "Biomarkers", StringDefinition = "ProtocolsBiomarkers"},
+                new StringWithName(){StringName = "Rejuvenation", StringDefinition = "ProtocolsRejuvenation"},
+                new StringWithName(){StringName = "Delivery Systems", StringDefinition = "ProtocolsDeliverySystems"}
             };
             return ore;
         }
@@ -138,7 +149,9 @@ namespace PrototypeWithAuth.AppData
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public enum FavoriteIconTitle { FilledIn, Empty }
-        public enum FuctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddTable, AddTemplate, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public enum ProtocolFunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddTable, AddTemplate, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public enum ReportsFunctionTypes {AddFile }
+        public enum ReportTypes {Daily, Weekly, Monthly}
         public static List<StringWithName> FavoriteIcons()
         {
             var StringsWithName = new List<StringWithName>(){
@@ -718,5 +731,14 @@ namespace PrototypeWithAuth.AppData
             previousPayment = currentInstallment;
             return currentInstallment;
         }
+
+        public static string GetWeekStartEndDates(DateTime date)
+        {
+            var startDate = date.AddDays(-(int)date.DayOfWeek);
+            var endDate = date.AddDays(6 - (int)date.DayOfWeek);
+            var dateRange = startDate.ToString("MMMM dd") + " - " + endDate.ToString("MMMM dd") + ", " + date.Year;
+            return dateRange;
+        }
+
     }
 }
