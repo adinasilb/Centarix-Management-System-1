@@ -45,10 +45,23 @@ namespace PrototypeWithAuth.Controllers
 {
     public class RequestsController : SharedController
     {
-        protected ICompositeViewEngine _viewEngine;
-        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
-            : base(context, userManager, hostingEnvironment)
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private ISession _session;
+        private ICompositeViewEngine _viewEngine;
+
+        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) 
+            : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager)
         {
+            //_Context = Context;
+            _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            //use the hosting environment for the file uploads
+            _hostingEnvironment = hostingEnvironment;
             _viewEngine = viewEngine;
         }
 
@@ -130,6 +143,7 @@ namespace PrototypeWithAuth.Controllers
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "#5F79E2", "request-favorite", "Favorite");
             var popoverMoreIcon = new IconColumnViewModel("More", "icon-more_vert-24px", "black", "More");
             var popoverPartialClarifyIcon = new IconColumnViewModel("PartialClarify");
+            var resendIcon = new IconColumnViewModel("Resend");
             string checkboxString = "Checkbox";
             string buttonText = "";
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
@@ -154,11 +168,13 @@ namespace PrototypeWithAuth.Controllers
                             }).ToLookup(c => c.Vendor);
                             break;
                         case AppUtility.SidebarEnum.Quotes:
-                            var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1).Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString()).Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
-            .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
-            .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
-            .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
-                            //iconList.Add(resendIcon);
+                            var quoteRequests = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
+                                .Where(r => r.OrderType == AppUtility.OrderTypeEnum.RequestPriceQuote.ToString())
+                                .Where(r => (r.ParentQuote.QuoteStatusID == 1 || r.ParentQuote.QuoteStatusID == 2) && r.RequestStatusID == 6)
+                                .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory)
+                                .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
+                                .Include(r => r.ParentQuote).Include(r => r.ApplicationUserCreator);
+                            iconList.Add(resendIcon);
                             iconList.Add(editQuoteDetailsIcon);
                             iconList.Add(deleteIcon);
                             viewModelByVendor.RequestsByVendor = quoteRequests.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.LabQuotes, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
@@ -636,7 +652,7 @@ namespace PrototypeWithAuth.Controllers
                                     await _context.SaveChangesAsync();
                                     if (receivedModalVisualViewModel.LocationInstancePlaces != null)
                                     {
-                                        await SaveLocations(receivedModalVisualViewModel, request);
+                                        await SaveLocations(receivedModalVisualViewModel, request, false);
                                     }
                                     if (i < requestItemViewModel.Requests.Count)
                                     {
@@ -717,7 +733,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        protected async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived)
+        protected async Task SaveLocations(ReceivedModalVisualViewModel receivedModalVisualViewModel, Request requestReceived, bool archiveOneRequest)
         {
             foreach (var place in receivedModalVisualViewModel.LocationInstancePlaces)
             {
@@ -748,6 +764,18 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(rli);
                     try
                     {
+                        if (archiveOneRequest)
+                        {
+                            requestReceived.IsArchived = true;
+                            _context.Update(requestReceived);
+                            await _context.SaveChangesAsync();
+                            rli.IsArchived = true;
+                            _context.Update(rli);
+                            await _context.SaveChangesAsync();
+                            MarkLocationAvailable(requestReceived.RequestID, place.LocationInstanceId);
+                            await _context.SaveChangesAsync();
+                            return;
+                        }
                         await _context.SaveChangesAsync();
                     }
                     catch (Exception ex)
@@ -1540,7 +1568,8 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(product);
                             await _context.SaveChangesAsync();
                         }
-                        foreach (var requestLocationInstance in request.RequestLocationInstances)
+                        var requestLocationInstances =  request.RequestLocationInstances.ToList();
+                        foreach (var requestLocationInstance in requestLocationInstances)
                         {
                             var locationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
                             locationInstance.IsFull = false;
@@ -1569,7 +1598,7 @@ namespace PrototypeWithAuth.Controllers
                     catch (Exception e)
                     {
                         transaction.Rollback();
-                        throw e;
+                        throw new Exception(AppUtility.GetExceptionMessage(e));
                     }
                 }
                 if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
@@ -2150,7 +2179,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                             }
                             await _context.SaveChangesAsync();
-                            await SaveLocations(receivedModalVisualViewModel, request);
+                            await SaveLocations(receivedModalVisualViewModel, request, false);
                         }
 
 
@@ -2285,7 +2314,7 @@ namespace PrototypeWithAuth.Controllers
                         {
                             transaction.Rollback();
                             base.RemoveRequestWithCommentsAndEmailSessions();
-                            throw ex;
+                            throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
                         }
                     }
 
@@ -2634,8 +2663,8 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 catch (Exception ex)
                                 {
-                                    ViewBag.ErrorMessage = ex.InnerException?.ToString();
-                                    throw ex;
+                                    ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                                    throw new Exception(AppUtility.GetExceptionMessage(ex)); 
                                 }
                                 client.Disconnect(true);
 
@@ -2736,7 +2765,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 transaction.Rollback();
                                 base.RemoveRequestWithCommentsAndEmailSessions();
-                                throw ex;
+                                throw new Exception(AppUtility.GetExceptionMessage(ex));
                             }
 
                         }
@@ -3394,7 +3423,7 @@ namespace PrototypeWithAuth.Controllers
                         }
                         else
                         {
-                            await SaveLocations(receivedModalVisualViewModel, requestReceived);
+                            await SaveLocations(receivedModalVisualViewModel, requestReceived, false);
                         }
                     }
                     if (receivedLocationViewModel.Clarify)
@@ -3493,18 +3522,15 @@ namespace PrototypeWithAuth.Controllers
                         }
                         receivedModalVisualViewModel.ParentLocationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == receivedModalVisualViewModel.ParentLocationInstance.LocationInstanceID).FirstOrDefault();
 
-                        await SaveLocations(receivedModalVisualViewModel, request);
+                        await SaveLocations(receivedModalVisualViewModel, request, false);
                         await transaction.CommitAsync();
                     }
-                    else
-                    {
-                        receivedModalVisualViewModel.DeleteTable = true;
-                    }
-
+                    
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    await transaction.RollbackAsync();
+                    throw new Exception(AppUtility.GetExceptionMessage(ex));
                 }
             }
             return PartialView(receivedModalVisualViewModel);
@@ -3695,7 +3721,7 @@ namespace PrototypeWithAuth.Controllers
                             catch (Exception ex)
                             {
                                 transaction.Rollback();
-                                throw ex;
+                                throw new Exception(AppUtility.GetExceptionMessage(ex));
                             }
                         }
                         break;
@@ -3779,6 +3805,7 @@ namespace PrototypeWithAuth.Controllers
                             request.Currency = quote.Currency;
                             request.IncludeVAT = quote.IncludeVAT;
                             request.ExpectedSupplyDays = quote.ExpectedSupplyDays;
+                            request.Discount = quote.Discount;
                             _context.Update(request);
                             _context.SaveChanges();
                             //save file
@@ -3796,7 +3823,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         transaction.RollbackAsync();
                         editQuoteDetailsViewModel.Requests.ForEach(r => DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests, r.RequestID));
-                        throw ex;
+                        throw new Exception(AppUtility.GetExceptionMessage(ex));
                     }
                 }
 
@@ -4455,20 +4482,17 @@ namespace PrototypeWithAuth.Controllers
         }
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(AppUtility.OrderTypeEnum OrderType)
+        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject)
         {
-            RequestIndexObject requestIndexObject = new RequestIndexObject();
             var uploadQuoteViewModel = new UploadQuoteViewModel();
 
-            uploadQuoteViewModel.OrderTypeEnum = OrderType;
+            uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
             uploadQuoteViewModel.RequestIndexObject = requestIndexObject;
-            uploadQuoteViewModel.IsReorder = requestIndexObject.IsReorder;
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
             string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
 
-            uploadQuoteViewModel = new UploadQuoteViewModel();
             if (Directory.Exists(uploadFolderQuotes))
             {
                 DirectoryInfo DirectoryToSearch = new DirectoryInfo(uploadFolderQuotes);
@@ -4552,7 +4576,7 @@ namespace PrototypeWithAuth.Controllers
                             catch (Exception ex)
                             {
                                 Directory.Move(requestFolderTo, requestFolderFrom);
-                                throw ex;
+                                throw new Exception(AppUtility.GetExceptionMessage(ex));
                             }
                             base.RemoveRequestWithCommentsAndEmailSessions();
 
@@ -4572,7 +4596,7 @@ namespace PrototypeWithAuth.Controllers
                         catch (Exception ex)
                         {
                             transaction.Rollback();
-                            throw ex;
+                            throw new Exception(AppUtility.GetExceptionMessage(ex));
                         }
                     }
                 }
@@ -4602,7 +4626,7 @@ namespace PrototypeWithAuth.Controllers
                 OrderNumber = lastParentRequestOrderNum + 1,
                 OrderDate = DateTime.Now
             };
-            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject, IsReorder = requestIndexObject.IsReorder };
+            var UploadQuoteViewModel = new UploadOrderViewModel() { ParentRequest = pr, RequestIndexObject = requestIndexObject };
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
@@ -4725,7 +4749,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(AppUtility.GetExceptionMessage(ex));
             }
 
         }
@@ -4835,16 +4859,8 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var request = _context.Requests.Where(r => r.RequestID == requestId).FirstOrDefault();
                         var requestLocations = _context.Requests.Where(r => r.RequestID == request.RequestID).Include(r => r.RequestLocationInstances).FirstOrDefault().RequestLocationInstances;
-                        request.IsArchived = true;
-                        _context.Update(request);
                         //archive one location and delete the rest
                         var iterator = requestLocations.GetEnumerator();
-                        iterator.MoveNext();
-                        var locationToArchive = iterator.Current;
-                        locationToArchive.IsArchived = true;
-                        _context.Update(locationToArchive);
-                        MarkLocationAvailable(requestId, locationToArchive.LocationInstanceID);
-
                         while (iterator.MoveNext())
                         {
                             var locationToDelete = iterator.Current;
@@ -4852,37 +4868,20 @@ namespace PrototypeWithAuth.Controllers
                             MarkLocationAvailable(requestId, locationToDelete.LocationInstanceID);
                         }
                         await _context.SaveChangesAsync();
+                        await SaveLocations(receivedModalVisualViewModel, request, true);
                         await transaction.CommitAsync();
                     }
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    await transaction.RollbackAsync();
+                    throw  new Exception(AppUtility.GetExceptionMessage(ex)); ;
                 }
             }
             return RedirectToAction("_LocationTab", new { id = requestId });
-
         }
 
-        //private void MarkLocationAvailable(int requestId, int locationInstanceID)
-        //{
-        //    var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceID == locationInstanceID).FirstOrDefault();
-        //    if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
-        //    {
-        //        locationInstance.IsFull = false;
-        //        _context.Update(locationInstance);
-        //    }
-        //    else if (locationInstance.IsEmptyShelf)
-        //    {
-        //        var duplicateLocations = _context.RequestLocationInstances.Where(rli => rli.LocationInstanceID == locationInstance.LocationInstanceID
-        //                                && rli.RequestID != requestId).ToList();
-        //        if (duplicateLocations.Count() == 0)
-        //        {
-        //            locationInstance.ContainsItems = false;
-        //            _context.Update(locationInstance);
-        //        }
-        //    }
-        //}
+        
 
         //public async Task<bool> PopulateProductSerialNumber()
         //{

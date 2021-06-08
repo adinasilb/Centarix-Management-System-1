@@ -27,9 +27,13 @@ namespace PrototypeWithAuth.Controllers
 {
     public class LocationsController : SharedController
     {
-        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-            : base(context, userManager, hostingEnvironment)
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager: userManager)
         {
+            _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]

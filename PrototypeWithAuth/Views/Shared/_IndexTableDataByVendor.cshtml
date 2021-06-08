@@ -133,7 +133,7 @@
                                                         <button class="confirm-quote-resend btn-icon lab-man-background-color" data-title="Resend" value="@col.AjaxID">Resend</button>
                                                     </div>
                                             }   
-                                            else if(icon.IconClass?.Equals("ResendPlaceholder") ?? false)
+                                            else if(icon.IconClass?.Equals("Placeholder") ?? false && Model.SidebarType == AppUtility.SidebarEnum.Quotes)
                                             {
                                                 <div class="px-5" style="min-width: 125px">&nbsp;</div>
                                             }
