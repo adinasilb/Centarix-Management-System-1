@@ -184,7 +184,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task<ReportsIndexViewModel> GetReportsIndexViewModel(ReportsIndexObject reportsIndexObject)
         {
-            if(reportsIndexObject.Years.Count == 0)
+            if (reportsIndexObject.Years.Count == 0)
             {
                 reportsIndexObject.Years.Add(DateTime.Now.Year);
             }
@@ -225,6 +225,13 @@ namespace PrototypeWithAuth.Controllers
             onePageOfReports = await GetReportsColumnsAndRows(reportsIndexObject, onePageOfReports, ReportsPassedInWithInclude);
 
             reportsIndexViewModel.PagedList = onePageOfReports;
+
+            var currentWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
+            var currentWeekReport = _context.Reports.Where(r => r.WeekNumber == currentWeek && r.DateCreated.Year == DateTime.Now.Year && r.ReportCategoryID == reportsIndexObject.ReportCategoryID).FirstOrDefault();
+            if (currentWeekReport != null)
+            {
+                reportsIndexViewModel.CurrentReportCreated = true;
+            }
 
             return reportsIndexViewModel;
         }
@@ -507,7 +514,7 @@ namespace PrototypeWithAuth.Controllers
                 _context.Remove(tempLine);
             }
             await _context.SaveChangesAsync();
-            await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => {  _context.Remove(fl); });
+            await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => { _context.Remove(fl); });
             await _context.SaveChangesAsync();
 
         }
@@ -582,12 +589,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    if(TempLines != null)
+                    if (TempLines != null)
                     {
                         //save all temp line data 
                         await UpdateLineContentAsync(TempLines);
-                    }              
-                
+                    }
+
                     var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Where(l => l.PermanentLineID == currentLineID).FirstOrDefault();
                     var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
                     var orderedLineTypes = GetOrderLineTypeFromParentToChild();
@@ -716,7 +723,7 @@ namespace PrototypeWithAuth.Controllers
 
         private List<ProtocolsLineViewModel> OrderLinesForView(int protocolID)
         {
-            var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID).Include(fl=>fl.FunctionType).ToList();
+            var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID).Include(fl => fl.FunctionType).ToList();
             List<ProtocolsLineViewModel> refreshedLines = new List<ProtocolsLineViewModel>();
             Stack<TempLine> parentNodes = new Stack<TempLine>();
             var lineTypes = _context.LineTypes.ToList();
@@ -733,7 +740,7 @@ namespace PrototypeWithAuth.Controllers
                     Index = count++,
                     LineNumberString = refreshedLines.Where(rl => rl.TempLine.PermanentLineID == node.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.LineNumber + ".",
                     Functions = functionLine.Where(fl => fl.LineID == node.PermanentLineID)
-                }); 
+                });
                 _context.TempLines.Where(c => c.ParentLineID == (node.PermanentLineID)).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
             }
             if (refreshedLines.Count == 0)
@@ -779,10 +786,10 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddFunctionModal(int FunctionTypeID, int LineID, int functionLineID)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
-            var tempLine = _context.TempLines.Where(tl => tl.PermanentLineID ==  LineID).FirstOrDefault();
+            var tempLine = _context.TempLines.Where(tl => tl.PermanentLineID == LineID).FirstOrDefault();
             var line = TurnTempLineToLine(tempLine);
             FunctionLine functionLine = _context.FunctionLines.Where(fl => fl.FunctionLineID == functionLineID).FirstOrDefault();
-            if(functionLine == null)
+            if (functionLine == null)
             {
                 functionLine = new FunctionLine
                 {
@@ -792,7 +799,7 @@ namespace PrototypeWithAuth.Controllers
                     LineID = LineID
                 };
             }
-          
+
             var viewmodel = new AddFunctionViewModel
             {
                 FunctionLine = functionLine
@@ -833,7 +840,7 @@ namespace PrototypeWithAuth.Controllers
                     _context.Add(addFunctionViewModel.FunctionLine);
                     await _context.SaveChangesAsync();
                     var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
-                 
+
                     switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
                     {
                         case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
@@ -872,7 +879,7 @@ namespace PrototypeWithAuth.Controllers
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
                 return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(line.ProtocolID) });
-            }           
+            }
         }
 
         [HttpPost]
@@ -1074,12 +1081,7 @@ namespace PrototypeWithAuth.Controllers
 
             };
             var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndexObject);
-            var currentWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
-            var currentWeekReport = _context.Reports.Where(r => r.WeekNumber == currentWeek && r.DateCreated.Year == DateTime.Now.Year && r.ReportCategoryID == ReportCategoryID).FirstOrDefault();
-            if (currentWeekReport != null)
-            {
-                reportsIndexViewModel.CurrentReportCreated = true;
-            }
+            
             return View(reportsIndexViewModel);
         }
 
@@ -1682,7 +1684,7 @@ namespace PrototypeWithAuth.Controllers
 
                     var reportNumber = "WR";
                     var lastReportNumber = _context.Reports.OrderByDescending(r => r.ReportNumber).FirstOrDefault()?.ReportNumber.Substring(2);
-                    if(lastReportNumber == null)
+                    if (lastReportNumber == null)
                     {
                         reportNumber += 1;
                     }
@@ -1739,6 +1741,23 @@ namespace PrototypeWithAuth.Controllers
             };
 
             return View(createReportViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> CreateReport(CreateReportViewModel createReportViewModel)
+        {
+            //add transaction
+            var report = _context.Reports.Where(r => r.ReportID == createReportViewModel.ReportID).FirstOrDefault();
+            report.TemporaryReportText = createReportViewModel.Report.ReportText;
+            _context.Update(report);
+            await _context.SaveChangesAsync();
+            var saveReportViewModel = new SaveReportViewModel()
+            {
+                ReportID = report.ReportID,
+                ReportTitle = createReportViewModel.Report.ReportTitle
+            };
+            return PartialView("SaveReportModal", saveReportViewModel);
         }
 
         [Authorize(Roles = "Protocols")]
@@ -1800,13 +1819,14 @@ namespace PrototypeWithAuth.Controllers
                         //    break;
                         case AppUtility.ProtocolFunctionTypes.AddFile:
                         case AppUtility.ProtocolFunctionTypes.AddImage:
+                            functionReport.IsTemporary = true;
                             _context.Update(functionReport);
                             await _context.SaveChangesAsync();
 
                             MoveDocumentsOutOfTempFolder(functionReport.FunctionReportID, AppUtility.ParentFolderName.Reports);
-                            report.TemporaryReportText = addReportsFunctionViewModel.ReportTempText + "<br/> <a href='#' class='open-document-modal mark-edditable' data-string='"+AppUtility.FolderNamesEnum.Files.ToString()+"' "
-                                                + "data-id = '"+functionReport.FunctionReportID +"' "
-                                                + "id = '"+ AppUtility.FolderNamesEnum.Files.ToString()+ "' parentFolder ="+ AppUtility.ParentFolderName.Reports.ToString() +" data-val = 'true' show-switch= 'false' >" + addReportsFunctionViewModel.FileName + "</a> <br/>";
+                            report.TemporaryReportText = addReportsFunctionViewModel.ReportTempText + "<br/> <a href='#' class='open-document-modal mark-edditable' data-string='" + AppUtility.FolderNamesEnum.Files.ToString() + "' "
+                                                + "data-id = '" + functionReport.FunctionReportID + "' "
+                                                + "id = '" + AppUtility.FolderNamesEnum.Files.ToString() + "' parentFolder =" + AppUtility.ParentFolderName.Reports.ToString() + " data-val = 'true' show-switch= 'false' >" + addReportsFunctionViewModel.FileName + "</a> <br/>";
                             _context.Update(report);
                             await _context.SaveChangesAsync();
 
@@ -1822,6 +1842,56 @@ namespace PrototypeWithAuth.Controllers
             }
             return PartialView("_ReportText", report);
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> SaveReportModal(SaveReportViewModel saveReportViewModel)
+        {
+            var report = _context.Reports.Where(r => r.ReportID == saveReportViewModel.ReportID).FirstOrDefault();
+            var reportTempFunctions = _context.FunctionReports.Where(fr => fr.ReportID == report.ReportID && fr.IsTemporary).ToList();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (saveReportViewModel.SaveReport)
+                    {
+                        report.ReportText = report.TemporaryReportText;
+                        report.ReportTitle = saveReportViewModel.ReportTitle;
+                        _context.Update(report);
+
+                        foreach (var functionReport in reportTempFunctions)
+                        {
+                            functionReport.IsTemporary = false;
+                            _context.Update(functionReport);
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        report.TemporaryReportText = null;
+                        _context.Update(report);
+
+                        foreach (var functionReport in reportTempFunctions)
+                        {
+                            _context.Remove(functionReport);
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            var reportsIndexObject = new ReportsIndexObject()
+            {
+                PageType = AppUtility.PageTypeEnum.ProtocolsReports,
+                ReportCategoryID = report.ReportCategoryID,
+                SidebarType = AppUtility.SidebarEnum.WeeklyReports
+            };
+            return RedirectToAction("_ReportsIndexTable", reportsIndexObject);
+        }
     }
 
-}
+    }
