@@ -6,7 +6,7 @@
             var subcategoryID = $("#sublist").val()
             var pageType = $("#masterPageType").val()
             var itemName = $("#Requests_0__Product_ProductName").val()
-            var isRequestQuote = $(".isRequest").is(":checked")
+            var isRequestQuote = false; //always false until put back in //$(".isRequest").is(":checked")
             console.log(isRequestQuote)
             console.log("subcategory " + subcategoryID)
             if (subcategoryID != "") {

@@ -1,4 +1,6 @@
-﻿$(".popover-more").off('click').click(function () {
+﻿//const { ajax } = require("jquery");
+
+$(".popover-more").off('click').click(function () {
 	var val = $(this).val();
 	$('[data-toggle="popover"]').popover('dispose');
 	$(this).popover({
@@ -37,7 +39,7 @@
 		}
 		shareNum = $(this).attr("data-share-resource-id");
 		var url = "/" + ControllersEnum + "/RemoveShare?ID=" + shareNum + "&ModelsEnum=" + $("#masterSectionType").val();
-		alert("url " + url);
+		alert("url: " + url)
 		$.ajax({
 			async: true,
 			url: url,

@@ -103,7 +103,7 @@
 
 @{ var request = Model.Requests[0];}
 <span class="heading-1 modal-tab-name">Item</span>
-@if (modalType == AppUtility.RequestModalType.Create && !Model.IsProprietary)
+@*@if (modalType == AppUtility.RequestModalType.Create && !Model.IsProprietary)
 {
     <div class="row">
         <div class="col-4 offset-8">
@@ -112,7 +112,7 @@
             <input type="hidden" value="@Model.IsRequestQuote.ToString().ToLower()" id="requestQuoteValue" />
         </div>
     </div>
-}
+}*@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
