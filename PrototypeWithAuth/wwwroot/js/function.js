@@ -67,11 +67,30 @@ $(".saveFunction").click(function (e) {
     //}
     //$('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 });
+var globalLine;
+$('.line').on('focusin', function(){
+    console.log("Saving value " + $(this).val());
+ $(this).attr('old-val', $(this).html());
+});
 
-$(".line").keydown(function (event) {
-
-    if (window.getSelection && (event.which == 8 ||event.which == 46)) { // backspace or delete
-        var selection = window.getSelection();
-        console.log(selection);
-       }
-    });
+$(".line").keyup(function (event) {
+  
+        var prev =$.trim($(this).attr('old-val'));
+        var current =$.trim(event.target.innerHTML);   
+        console.log("Prev value " + prev);
+        console.log("New value " +  current);
+        var firstIndex =prev.indexOf(current)
+        var lastIndex = firstIndex + current.length;
+  
+        var diff = prev.substr(0, firstIndex);
+        diff+= prev.substr(lastIndex, prev.length-1)
+        if(diff.includes("</a>"))
+        {
+            event.target.innerHTML = $(this).attr('old-val');
+        }
+         $(this).attr('old-val', $(this).html());
+        console.log(diff);
+        return;
+  
+    
+});
