@@ -34,7 +34,7 @@ namespace PrototypeWithAuth.Controllers
             _userManager = userManager;
         }
 
-        protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType)
+        protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
         {
             var user = await _userManager.GetUserAsync(User);
             bool Allowed = false;
@@ -51,7 +51,17 @@ namespace PrototypeWithAuth.Controllers
                 (SectionType.Equals(AppUtility.MenuItems.Users) && await _userManager.IsInRoleAsync(user, AppUtility.MenuItems.Users.ToString()))
                 )
             {
-                Allowed = true;
+                if (innerRole == null)
+                {
+                    Allowed = true;
+                }
+                else
+                {
+                    if (await _userManager.IsInRoleAsync(user, SectionType + innerRole))
+                    {
+                        Allowed = true;
+                    }
+                }
             }
             return Allowed;
         }
@@ -843,7 +853,10 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.RequestStatusID)
                     {
                         case 6:
-                            iconList.Add(approveIcon);
+                            if(await this.IsAuthorizedAsync(requestIndexObject.SectionType, "ApproveOrders"))
+                            {
+                                iconList.Add(approveIcon);
+                            }
                             iconList.Add(deleteIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Select(r =>
                                     new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Approved,
