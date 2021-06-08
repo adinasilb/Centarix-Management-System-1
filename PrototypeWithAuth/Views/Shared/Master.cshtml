@@ -529,6 +529,10 @@
                         case "materialInfo":
                             $.fn.OpenModal('modal', 'material-info', modal)
                             break;
+                        case "addFunction":
+                            $.fn.OpenModal('modal', 'add-function', modal)
+                            $(".add-function .mdb-select").materialSelect();
+                            break;
                         case "historyItem":
                             $.fn.OpenModal('historyModal', 'history-item', modal)
                             $.fn.LoadSummaryModal('.history-item');

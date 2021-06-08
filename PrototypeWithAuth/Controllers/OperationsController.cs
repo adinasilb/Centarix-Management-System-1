@@ -36,24 +36,10 @@ namespace PrototypeWithAuth.Controllers
 {
     public class OperationsController : SharedController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        //take this out?
-        private readonly IHostingEnvironment _hostingEnvironment;
-
-        private ICompositeViewEngine _viewEngine;
-
-        public OperationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/) : base(context, userManager:userManager)
+        public OperationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+            : base(context, userManager, hostingEnvironment)
         {
-            //_Context = Context;
-            _context = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
-            //use the hosting environment for the file uploads
-            _hostingEnvironment = hostingEnvironment;
-            _viewEngine = viewEngine;
+           
         }
 
         public async Task<IActionResult> Index(RequestIndexObject requestIndexObject)

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PrototypeWithAuth.Data;
 
@@ -9,11 +12,10 @@ namespace PrototypeWithAuth.Controllers
 {
     public class CompanyAccountsController : SharedController
     {
-        private readonly ApplicationDbContext _context;
 
-        public CompanyAccountsController(ApplicationDbContext context) : base(context)
+        public CompanyAccountsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+            : base(context, userManager, hostingEnvironment)
         {
-            _context = context;
         }
         public JsonResult GetAccountsByBank(int CompanyAccountID)
         {

@@ -333,6 +333,8 @@
     <Compile Remove="Data\Migrations\20210523113426_ProductQueryDeletedNotIncluded.Designer.cs" />
     <Compile Remove="Data\Migrations\20210601121013_AddArchive.cs" />
     <Compile Remove="Data\Migrations\20210601121013_AddArchive.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210603070637_jlj.cs" />
+    <Compile Remove="Data\Migrations\20210603070637_jlj.Designer.cs" />
   </ItemGroup>
 
 
@@ -384,6 +386,7 @@
     <Folder Include="wwwroot\images\css\SupplierIcons\" />
     <Folder Include="wwwroot\images\NewFolder1\" />
     <Folder Include="wwwroot\Materials\" />
+    <Folder Include="wwwroot\FunctionLine\" />
     <Folder Include="wwwroot\Protocols\" />
   </ItemGroup>
 
