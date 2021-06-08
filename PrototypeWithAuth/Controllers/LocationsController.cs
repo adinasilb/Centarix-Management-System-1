@@ -30,7 +30,7 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context, userManager: userManager, hostingEnvironment: hostingEnvironment)
+        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context: context, userManager: userManager, hostingEnvironment: hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
