@@ -136,7 +136,7 @@
                                 @Html.HiddenFor(model => Model.Requests[i].RequestID)
                                 <tr class="">
                                     <td class="" width="10%">
-                                        <input type="hidden" asp-for="@Model.Requests[i].RequestID" />
+                                        @*<input type="hidden" asp-for="@Model.Requests[i].RequestID" />*@
                                         @if (Model.Requests[i].Product.ProductSubcategory.ImageURL != null)
                                         {
                                             var imageurl = Model.Requests[i].Product.ProductSubcategory.ImageURL;

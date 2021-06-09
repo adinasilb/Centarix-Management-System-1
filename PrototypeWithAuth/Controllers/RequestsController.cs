@@ -2406,7 +2406,7 @@ namespace PrototypeWithAuth.Controllers
 
             PdfDocument doc = new PdfDocument();
             // create a new pdf document converting an url
-            doc = converter.ConvertHtmlString(renderedView, baseUrl);
+            doc = converter.ConvertHtmlString(renderedView, baseUrl); //this is what's taking long
 
             //save this as orderform
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());

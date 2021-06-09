@@ -53,12 +53,16 @@ $("#currency").change(function (e) {
         case "USD":
             $('.shekel-group').addClass('d-none');
             $('.dollar-group').removeClass('d-none');
-            $('shekel-group').find("input").val(0);
+            $('.dollar-group div input').each(function () {
+                $(this).val(0);
+            });
             break;
         case "NIS":
             $('.shekel-group').removeClass('d-none');
             $('.dollar-group').addClass('d-none');
-            $('dollar-group').find("input").val(0);
+            $('.shekel-group div input').each(function () {
+                $(this).val(0);
+            });
             break;
     }
 });
