@@ -36,9 +36,15 @@
 })
 
 $(".vat-check").click(function (e) {
-    console.log($(this).attr("checked"))
-    $(this).attr("checked", !$(this).prop("checked"));
-    $(this).val($(this).prop("checked"))
+    var checked = $(this).prop("checked");
+    console.log(checked)
+    $(this).attr("checked", !checked);
+    $(this).val(checked);
+    if ($('#currency').val() === "NIS") {
+        $.fn.CalculatePriceWithVAT('.price-with-vat-shekel', $('#cost').val());
+    } else {
+        $.fn.CalculatePriceWithVAT('.price-with-vat-dollar', $('#sum-dollars').val());
+    }
 })
 
 $("#currency").change(function (e) {
@@ -47,19 +53,32 @@ $("#currency").change(function (e) {
         case "USD":
             $('.shekel-group').addClass('d-none');
             $('.dollar-group').removeClass('d-none');
+            $('shekel-group').find("input").val(0);
             break;
         case "NIS":
             $('.shekel-group').removeClass('d-none');
             $('.dollar-group').addClass('d-none');
+            $('dollar-group').find("input").val(0);
             break;
     }
 });
 $('#sum-dollars').change(function (e) {
     var exchangeRate = $('#exchangeRate').val();
-    //console.log(exchangeRate);
-    var shekelPrice = $('#sum-dollars').val() * exchangeRate;
-    //console.log($('#sum-dollars').val());
-    console.log('shekel price: ' + shekelPrice)
+    var costDollars = $('#sum-dollars').val()
+    var shekelPrice = costDollars * exchangeRate;
+    //console.log('shekel price: ' + shekelPrice)
     $('#cost').val(shekelPrice);
-    //console.log('value: ' + $('#cost').val());
+    $.fn.CalculatePriceWithVAT('.price-with-vat-dollar', costDollars);
 });
+$.fn.CalculatePriceWithVAT = function (totalPriceClass, cost) {
+    var totalPrice = cost;
+    //console.log($('.vat-check').attr('value'));
+    if ($('.vat-check').attr('value') === 'true') {
+        totalPrice = cost * 1.17;
+    }
+    console.log(totalPrice)
+    $(totalPriceClass).val(totalPrice);
+}
+$('#cost').change(function (e) {
+    $.fn.CalculatePriceWithVAT('.price-with-vat-shekel', $('#cost').val());
+})
