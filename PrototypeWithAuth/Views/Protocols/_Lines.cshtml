@@ -53,9 +53,9 @@
     });
 
     $(".line").change(function () {
-        $("#" + $(this).attr("line-id")).val($(this).html());
+        var html = $(this).html()
+        $("#" + $(this).attr("line-id")).val(html);
     });
-    var lastText = $('#editable').text();
 
 
 </script>
