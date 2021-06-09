@@ -27,8 +27,8 @@ namespace PrototypeWithAuth.Controllers
 {
     public class LocationsController : SharedController
     {
-        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-            : base(context, userManager, hostingEnvironment)
+        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine)
         {
         }
 

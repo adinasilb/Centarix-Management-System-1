@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -26,7 +27,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using X.PagedList;
 
 namespace PrototypeWithAuth.Controllers
@@ -34,8 +37,8 @@ namespace PrototypeWithAuth.Controllers
     public class ProtocolsController : SharedController
     {
         public enum ProtocolIconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
-        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-            : base(context, userManager, hostingEnvironment)
+        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine)
         {
         }
 
@@ -1443,14 +1446,14 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public ActionResult DocumentsModal(int? id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
     AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
                 FolderName = RequestFolderNameEnum,
                 ParentFolderName = parentFolderName,
-                ObjectID = id ?? 0,
+                ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
                 IsEdittable = true
             };
@@ -1760,17 +1763,13 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID, string reportTempText)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
-            var functionReport = new FunctionReport()
-            {
-                ReportID = ReportID,
-                FunctionTypeID = functionType.FunctionTypeID,
-                FunctionType = functionType
-            };
+            var guid = Guid.NewGuid().ToString();
             var viewmodel = new AddReportFunctionViewModel
             {
                 ReportID = ReportID,
                 ReportTempText = reportTempText,
-                FunctionReport = functionReport,
+                FunctionType = functionType,
+                FunctionGuid = guid
             };
 
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
@@ -1796,9 +1795,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> AddReportFunctionModal(AddReportFunctionViewModel addReportsFunctionViewModel)
         {
-            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addReportsFunctionViewModel.FunctionReport.FunctionTypeID).FirstOrDefault();
+            var functionType = _context.FunctionTypes.FirstOrDefault();
             var report = _context.Reports.Where(r => r.ReportID == addReportsFunctionViewModel.ReportID).FirstOrDefault();
-            var functionReport = addReportsFunctionViewModel.FunctionReport;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -1815,14 +1813,23 @@ namespace PrototypeWithAuth.Controllers
                         //    break;
                         case AppUtility.ProtocolFunctionTypes.AddFile:
                         case AppUtility.ProtocolFunctionTypes.AddImage:
-                            functionReport.IsTemporary = true;
-                            _context.Update(functionReport);
-                            await _context.SaveChangesAsync();
 
-                            MoveDocumentsOutOfTempFolder(functionReport.FunctionReportID, AppUtility.ParentFolderName.Reports);
-                            report.TemporaryReportText = addReportsFunctionViewModel.ReportTempText + "<br/> <a href='#' class='open-document-modal mark-edditable' data-string='" + AppUtility.FolderNamesEnum.Files.ToString() + "' "
-                                                + "data-id = '" + functionReport.FunctionReportID + "' "
-                                                + "id = '" + AppUtility.FolderNamesEnum.Files.ToString() + "' parentFolder =" + AppUtility.ParentFolderName.Reports.ToString() + " data-val = 'true' show-switch= 'false' >" + addReportsFunctionViewModel.FileName + "</a> <br/>";
+                           // MoveDocumentsOutOfTempFolder(functionReport.FunctionReportID, AppUtility.ParentFolderName.Reports);
+
+                                DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+                                {
+                                    //FolderName = RequestFolderNameEnum,
+                                    ParentFolderName = AppUtility.ParentFolderName.Reports,
+                                    ObjectID = addReportsFunctionViewModel.FunctionGuid,
+                                    SectionType = AppUtility.MenuItems.Protocols,
+                                    IsEdittable = true
+                                };
+
+                                base.FillDocumentsViewModel(documentsModalViewModel);
+
+                                string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
+
+                            report.TemporaryReportText = addReportsFunctionViewModel.ReportTempText + "<br/>" + renderedView + "<br/>";
                             _context.Update(report);
                             await _context.SaveChangesAsync();
 
@@ -1838,6 +1845,8 @@ namespace PrototypeWithAuth.Controllers
             }
             return PartialView("_ReportText", report);
         }
+
+
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
