@@ -208,6 +208,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
 
     $(".saveLines").off("click").click(function (e) {
         e.preventDefault();
+        $(".saving-spinner").removeClass("d-none");
         $.ajax({
             processData: false,
             contentType: false,
@@ -216,6 +217,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             type: 'POST',
             success: function (data) {
                 //$("._Lines").html(data);
+                $(".saving-spinner").addClass("d-none");
             },
             error: function (jqxhr) {
                 //if(jqxhr.responst)

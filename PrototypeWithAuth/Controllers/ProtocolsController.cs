@@ -483,7 +483,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await _context.SaveChangesAsync();
                     await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => fl.IsTemporary = false);
-                    await ClearTempLinesTableAsync();
+                    await CopySelectedLinesToTempLineTable(tempLines.FirstOrDefault().ProtocolID);
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -497,6 +497,9 @@ namespace PrototypeWithAuth.Controllers
         private async Task ClearTempLinesTableAsync()
         {
             var lineTypes = GetOrderLineTypeFromChildToParent();
+
+            await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => { _context.Remove(fl); });
+            await _context.SaveChangesAsync();
             foreach (var lineType in lineTypes)
             {
                 var linesByType = _context.TempLines.Where(l => l.LineTypeID == lineType.LineTypeID);
@@ -505,16 +508,13 @@ namespace PrototypeWithAuth.Controllers
                     _context.Remove(line);
                 }
                 await _context.SaveChangesAsync();
-            }
-
-            var tempLines = _context.Lines.Where(tl => tl.IsTemporary);
-            foreach (var tempLine in tempLines)
-            {
-                _context.Remove(tempLine);
-            }
-            await _context.SaveChangesAsync();
-            await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => { _context.Remove(fl); });
-            await _context.SaveChangesAsync();
+                var tempLines = _context.Lines.Where(l => l.LineTypeID == lineType.LineTypeID).Where(tl => tl.IsTemporary);
+                foreach (var tempLine in tempLines)
+                {
+                    _context.Remove(tempLine);
+                }
+                await _context.SaveChangesAsync();
+            }         
 
         }
         private Dictionary<Material, List<DocumentFolder>> FillMaterialDocumentsModel(IEnumerable<Material> Materials, string uploadProtocolsFolder)
@@ -709,7 +709,6 @@ namespace PrototypeWithAuth.Controllers
         {
             foreach (var line in TempLines)
             {
-
                 var temp = _context.TempLines.Where(tl => tl.PermanentLineID == line.PermanentLineID).FirstOrDefault();
                 if (temp != null)
                 {
@@ -833,32 +832,31 @@ namespace PrototypeWithAuth.Controllers
                 var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
                 try
                 {
-                    addFunctionViewModel.FunctionLine.Product = null;
-                    addFunctionViewModel.FunctionLine.Protocol = null;
-                    addFunctionViewModel.FunctionLine.IsTemporary = true;
-                    _context.Add(addFunctionViewModel.FunctionLine);
-                    await _context.SaveChangesAsync();
+                   
                     var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
 
                     switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
                     {
                         case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                             var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                            line.Content += " <a href='#' contenteditable=false class='open-line-product'>" + product.ProductName + "</a> ";
+                            line.Content += " <a href='#' contenteditable=false class='open-line-product' value='" + product.ProductID + "'>" + product.ProductName + "</a> ";
                             break;
                         case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                             var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                            line.Content += " <a href='#' contenteditable=false class='open-line-protocol'>" + protocol.Name + "</a> ";
+                            line.Content += " <a href='#' contenteditable=false class='open-line-protocol' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> ";
                             break;
                         case AppUtility.ProtocolFunctionTypes.AddFile:
                         case AppUtility.ProtocolFunctionTypes.AddImage:
                             MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionLineID, AppUtility.ParentFolderName.FunctionLine);
+                            await SaveTempFunctionLineAsync(addFunctionViewModel);
                             break;
                         //case AppUtility.FuctionTypes.AddStop:
                         //    break;
                         case AppUtility.ProtocolFunctionTypes.AddTable:
+                            await SaveTempFunctionLineAsync(addFunctionViewModel);
                             break;
                         case AppUtility.ProtocolFunctionTypes.AddTemplate:
+                            await SaveTempFunctionLineAsync(addFunctionViewModel);
                             break;
                             //case AppUtility.FuctionTypes.AddTimer:
                             //    break;
@@ -878,7 +876,17 @@ namespace PrototypeWithAuth.Controllers
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
                 return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(line.ProtocolID) });
-            }
+          
+            }           
+        }
+
+        private async Task SaveTempFunctionLineAsync(AddFunctionViewModel addFunctionViewModel)
+        {
+            addFunctionViewModel.FunctionLine.Product = null;
+            addFunctionViewModel.FunctionLine.Protocol = null;
+            addFunctionViewModel.FunctionLine.IsTemporary = true;
+            _context.Add(addFunctionViewModel.FunctionLine);
+            await _context.SaveChangesAsync();
         }
 
         [HttpPost]
@@ -910,6 +918,7 @@ namespace PrototypeWithAuth.Controllers
                     return PartialView("AddMaterialModal", addMaterialViewModel);
                 }
             }
+            addMaterialViewModel.Material.Product = product;
             return redirectToMaterialTab(addMaterialViewModel.Material.ProtocolID);
         }
 
@@ -951,6 +960,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Modified;
                     }
+                    await _context.SaveChangesAsync();
                     foreach (var url in createProtocolsViewModel.Protocol.Urls)
                     {
                         if (url.LinkID == 0)
@@ -966,9 +976,9 @@ namespace PrototypeWithAuth.Controllers
                             await _context.SaveChangesAsync();
                         }
                     }
-
-                    createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
                     await transaction.CommitAsync();
+                    createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
+                  
                     return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
                 }
                 catch (Exception ex)

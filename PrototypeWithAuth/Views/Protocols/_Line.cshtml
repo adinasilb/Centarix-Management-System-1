@@ -38,7 +38,7 @@
 @if (Model.TempLine != null)
 {
     <input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine.Content" />
-   var typeClass = "";
+    var typeClass = "";
     switch (Model.TempLine?.LineTypeID)
     {
         case 1:
@@ -53,11 +53,11 @@
     }
 <div class="d-flex line-div
      @typeClass">
-    <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
-    <span role="textbox"
-          contenteditable line-id="@(dynamicID)Content" class="editable-span line input line-input text-transform-none" data-val="@Model.TempLine?.PermanentLineID">
+     <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
+    <div role="textbox"
+          contenteditable line-id="@(dynamicID)Content" class="editable-span line input line-input text-transform-none" data-val="@Model.TempLine?.PermanentLineID" old-val="@Html.Raw(Model.TempLine?.Content)">
         @Html.Raw(Model.TempLine?.Content)&ensp;&ensp;&ensp;
-    </span>
+    </div>
     @if (Model.Functions != null)
     {
         foreach (var function in Model.Functions)
