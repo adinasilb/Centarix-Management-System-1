@@ -4345,11 +4345,6 @@ namespace PrototypeWithAuth.Controllers
                         RequestToSave.Cost = request.Cost;
                         RequestToSave.Payments.FirstOrDefault().InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
                         RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
-                        if (RequestToSave.IncludeVAT)
-                        {
-                            RequestToSave.Cost = RequestToSave.Cost / (decimal)1.17;
-                        }
-
                         _context.Update(RequestToSave);
 
                         string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());

@@ -41,9 +41,9 @@ $(".vat-check").click(function (e) {
     $(this).attr("checked", !checked);
     $(this).val(checked);
     if ($('#currency').val() === "NIS") {
-        $.fn.CalculatePriceWithVAT('.price-with-vat-shekel', $('#cost').val());
+        $.fn.CalculatePriceWithVAT('.price-with-vat-shekel', $('.cost').val()); //do for each
     } else {
-        $.fn.CalculatePriceWithVAT('.price-with-vat-dollar', $('#sum-dollars').val());
+        $.fn.CalculatePriceWithVAT('.price-with-vat-dollar', $('.sum-dollars').val());
     }
 })
 
@@ -66,23 +66,26 @@ $("#currency").change(function (e) {
             break;
     }
 });
-$('#sum-dollars').change(function (e) {
+$('.sum-dollars').change(function (e) {
     var exchangeRate = $('#exchangeRate').val();
-    var costDollars = $('#sum-dollars').val()
+    var costDollars = $('.sum-dollars').val()
     var shekelPrice = costDollars * exchangeRate;
     //console.log('shekel price: ' + shekelPrice)
-    $('#cost').val(shekelPrice);
-    $.fn.CalculatePriceWithVAT('.price-with-vat-dollar', costDollars);
+    var index = $(this).attr("index");
+    $('.cost.' + index).val(shekelPrice);
+    $.fn.CalculatePriceWithVAT('.price-with-vat-dollar.' + index, costDollars);
 });
 $.fn.CalculatePriceWithVAT = function (totalPriceClass, cost) {
     var totalPrice = cost;
-    //console.log($('.vat-check').attr('value'));
-    if ($('.vat-check').attr('value') === 'true') {
+    console.log($('.include-vat').attr('value'));
+    if ($('.include-vat').attr('value').toLowerCase() === 'true') {
+        console.log('in if');
         totalPrice = cost * 1.17;
     }
     console.log(totalPrice)
-    $(totalPriceClass).val(totalPrice);
+    $(totalPriceClass).val(totalPrice.toFixed(2));
 }
-$('#cost').change(function (e) {
-    $.fn.CalculatePriceWithVAT('.price-with-vat-shekel', $('#cost').val());
+$('.cost').change(function (e) {
+    //console.log('shekel cost change function');
+    $.fn.CalculatePriceWithVAT('.price-with-vat-shekel.' + $(this).attr("index"), $(this).val());
 })
