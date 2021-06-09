@@ -17,6 +17,7 @@ using static PrototypeWithAuth.AppData.AppUtility;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PrototypeWithAuth.Controllers
@@ -24,8 +25,8 @@ namespace PrototypeWithAuth.Controllers
     public class ApplicationUsersController : SharedController
     {
 
-        public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-            : base(context, userManager, hostingEnvironment)
+        public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine)
         {
         }
         // GET: /<controller>/

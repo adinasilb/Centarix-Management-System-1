@@ -17,13 +17,14 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace PrototypeWithAuth.Controllers
 {
     public class CalibrationsController : SharedController
     {
-        public CalibrationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-            : base(context, userManager, hostingEnvironment)
+        public CalibrationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine)
         {
         }
 

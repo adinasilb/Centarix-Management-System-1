@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
@@ -27,11 +28,13 @@ namespace PrototypeWithAuth.Controllers
         protected readonly UserManager<ApplicationUser> _userManager;       
         protected readonly IHostingEnvironment _hostingEnvironment;
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
-        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+        protected ICompositeViewEngine _viewEngine;
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
             _userManager = userManager;
+            _viewEngine = viewEngine;
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType)
@@ -1151,6 +1154,34 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.PaymentTypes = paymenttypes;
             requestItemViewModel.CompanyAccounts = companyaccounts;
             return requestItemViewModel;
+        }
+
+        [Authorize(Roles = "Requests")]
+        protected async Task<string> RenderPartialViewToString(string viewName, object model)
+        {
+            if (string.IsNullOrEmpty(viewName))
+                viewName = ControllerContext.ActionDescriptor.ActionName;
+
+            ViewData.Model = model;
+
+            using (var writer = new StringWriter())
+            {
+                ViewEngineResult viewResult =
+                    _viewEngine.FindView(ControllerContext, viewName, false);
+
+                ViewContext viewContext = new ViewContext(
+                    ControllerContext,
+                    viewResult.View,
+                    ViewData,
+                    TempData,
+                    writer,
+                    new HtmlHelperOptions()
+                );
+
+                await viewResult.View.RenderAsync(viewContext);
+
+                return writer.GetStringBuilder().ToString();
+            }
         }
         //[HttpPost]
         //[Authorize(Roles = "Requests")]

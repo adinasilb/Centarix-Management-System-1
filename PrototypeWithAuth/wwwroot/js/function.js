@@ -34,6 +34,7 @@ $(".saveFunction").off('click').on('click',function (e) {
     //}
     //else {
     //$('.activeSubmit').removeClass('disabled-submit')
+
     var formData = new FormData($(".addFunctionForm")[0]);
     var functionName = "AddFunctionModal";
     if ($("#masterPageType").val() == "ProtocolsReports") {
