@@ -77,9 +77,9 @@
                             <div class="col-12"><hr /></div>
                         </div>
                     </div>
-                    <div class="col-md-4 float-right py-3">
-                        <div class="row">
-                            <div class="col-6">
+                   
+                        <div class="row p-3">
+                            <div class="col-2 offset-8">
                                 <div class="form-group">
                                     <label class="control-label">Currency</label>
                                     <select id="currency" asp-for="Requests[0].Currency" class="mdb-select custom select-dropdown form-control-plaintext">
@@ -88,7 +88,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-2">
                                 <div class="form-group">
                                     <label asp-for="Requests[0].ExchangeRate" class="control-label"></label>
                                     <input asp-for="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom " id="exchangeRate" />
@@ -96,133 +96,134 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4 float-right py-3">
-                        <div class="custom-control custom-checkbox plain-form pt-1">
-                            <input type="checkbox" class="custom-control-input vat-check" asp-for="Requests[0].IncludeVAT" />
-                            <label class="custom-control-label" asp-for="Requests[0].IncludeVAT">Include VAT</label>
+                    
+                    <div class="row pb-2">
+                        <div class="col-2 offset-10">
+                            <div class="custom-control custom-checkbox plain-form pt-1">
+                                <input type="checkbox" class="custom-control-input vat-check" asp-for="Requests[0].IncludeVAT" />
+                                <label class="custom-control-label" asp-for="Requests[0].IncludeVAT">Include VAT</label>
+                            </div>
                         </div>
                     </div>
+                    <table class="table table-headerspaced table-borderless">
+                        <thead>
+                            <tr>
+                                <td class="pb-0" width="10%"></td>
+                                <td class="pb-0" style="width:15%;">
+                                    Name
+                                </td>
+                                <td class="pb-0" style="width:15%;">
+                                    Units
+                                </td>
+                                <td class="pb-0" style="width:15%">
+                                    Total Price
+                                </td>
+                                <td class="pb-0" style="width:15%">
+                                    Discount
+                                </td>
+                                <td class="pb-0" style="width:15%">
+                                    Expected Supply<br /> Days
+                                </td>
+                                <td class="pb-0" style="width:15%">
+                                    Expected Supply<br /> Date
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                        <table class="table table-headerspaced table-borderless">
-                            <thead>
-                                <tr>
-                                    <td class="pb-0" width="10%"></td>
-                                    <td class="pb-0" style="width:15%;">
-                                        Name
+                            @for (int i = 0; i < Model.Requests.Count(); i++)
+                            {
+                                @Html.HiddenFor(model => Model.Requests[i].RequestID)
+                                <tr class="">
+                                    <td class="" width="10%">
+                                        <input type="hidden" asp-for="@Model.Requests[i].RequestID" />
+                                        @if (Model.Requests[i].Product.ProductSubcategory.ImageURL != null)
+                                        {
+                                            var imageurl = Model.Requests[i].Product.ProductSubcategory.ImageURL;
+                                            <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
+                                        }
                                     </td>
-                                    <td class="pb-0" style="width:15%;">
-                                        Units
+                                    <td width="15%">
+                                        @Model.Requests[i].Product.ProductName
                                     </td>
-                                    <td class="pb-0" style="width:15%">
-                                        Total Price
-                                    </td>
-                                    <td class="pb-0" style="width:15%">
-                                        Discount
-                                    </td>
-                                    <td class="pb-0" style="width:15%">
-                                        Expected Supply<br /> Days
-                                    </td>
-                                    <td class="pb-0" style="width:15%">
-                                        Expected Supply<br /> Date
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                @for (int i = 0; i < Model.Requests.Count(); i++)
-                                {
-                                    @Html.HiddenFor(model => Model.Requests[i].RequestID)
-                                    <tr class="">
-                                        <td class="" width="10%">
-                                            <input type="hidden" asp-for="@Model.Requests[i].RequestID" />
-                                            @if (Model.Requests[i].Product.ProductSubcategory.ImageURL != null)
+                                    <td width="15%">
+                                        @Model.Requests[i].Unit &nbsp;@Model.Requests[i].UnitType.UnitTypeDescription
+                                        @if (Model.Requests[i].SubUnitType != null)
+                                        {
+                                            <br />
+                                            @Model.Requests[i].SubUnit @Model.Requests[i].SubUnitType.UnitTypeDescription
+                                            @if (Model.Requests[i].SubSubUnitType != null)
                                             {
-                                                var imageurl = Model.Requests[i].Product.ProductSubcategory.ImageURL;
-                                                <img src="@imageurl" alt="Image" width="75" class="category-image" />
+                                                <br />@Model.Requests[i].SubSubUnit @Model.Requests[i].SubSubUnitType.UnitTypeDescription
                                             }
-                                            else
-                                            {
-                                                <img src="~/images/css/accounting/sample_image.png" alt="Image" width="75" class="category-image" />
-                                            }
-                                        </td>
-                                        <td width="15%">
-                                            @Model.Requests[i].Product.ProductName
-                                        </td>
-                                        <td width="15%">
-                                            @Model.Requests[i].Unit &nbsp;@Model.Requests[i].UnitType.UnitTypeDescription
-                                            @if (Model.Requests[i].SubUnitType != null)
-                                            {
-                                                <br />
-                                                @Model.Requests[i].SubUnit @Model.Requests[i].SubUnitType.UnitTypeDescription
-                                                @if (Model.Requests[i].SubSubUnitType != null)
-                                                {
-                                                    <br />@Model.Requests[i].SubSubUnit @Model.Requests[i].SubSubUnitType.UnitTypeDescription
-                                                }
-                                            }
-                                        </td>
-                                        <td width="15%">
-                                            <div class="form-group">
-                                                <div class="form-group @hideShekel shekel-group">
-                                                    <div class="input-group ">
-                                                        <span class="input-group-text request-cost-shekel-icon pr-1">P: &#x20aa;</span>
-                                                        <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom  cost-validation " min="1" id="cost" />
-                                                    </div>
-                                                    <div class="input-group ">
-                                                        <span class="input-group-text request-cost-shekel-icon disabled-text pr-1">T: &#x20aa;</span>
-                                                        <input class="form-control-plaintext border-bottom disabled-text price-with-vat-shekel" disabled />
-                                                    </div>
+                                        }
+                                    </td>
+                                    <td width="15%">
+                                        <div class="form-group">
+                                            <div class="form-group @hideShekel shekel-group">
+                                                <div class="input-group ">
+                                                    <span class="input-group-text request-cost-shekel-icon pr-1">P: &#x20aa;</span>
+                                                    <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom  cost-validation " min="1" id="cost" />
                                                 </div>
-
-                                                <div class="form-group @hideDollar dollar-group">
-                                                    <div class="input-group ">
-                                                        <span class="input-group-text request-cost-dollar-icon pr-1">P: &#36;</span>
-                                                        <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
-                                                        <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
-                                                    </div>
-                                                    <div class="input-group ">
-                                                        <span class="input-group-text request-cost-dollar-icon pr-1 disabled-text">T: &#36;</span>
-                                                        <input class="form-control-plaintext border-bottom disabled-text price-with-vat-dollar" disabled/>
-                                                    </div>
+                                                <div class="input-group ">
+                                                    <span class="input-group-text request-cost-shekel-icon disabled-text pr-1">T: &#x20aa;</span>
+                                                    <input class="form-control-plaintext border-bottom disabled-text price-with-vat-shekel" disabled />
                                                 </div>
+                                            </div>
 
+                                            <div class="form-group @hideDollar dollar-group">
+                                                <div class="input-group ">
+                                                    <span class="input-group-text request-cost-dollar-icon pr-1">P: &#36;</span>
+                                                    <input class="form-control-plaintext border-bottom " id="sum-dollars" name="sum-dollars" />
+                                                    <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
+                                                </div>
+                                                <div class="input-group ">
+                                                    <span class="input-group-text request-cost-dollar-icon pr-1 disabled-text">T: &#36;</span>
+                                                    <input class="form-control-plaintext border-bottom disabled-text price-with-vat-dollar" disabled />
+                                                </div>
                                             </div>
-                                        </td>
-                                        <td width="15%">
-                                            <div class="input-group">
-                                                <input asp-for="@Model.Requests[i].Discount" class="form-control-plaintext border-bottom  expected-supply-days" />
-                                                <div class="input-group-text">%</div>
-                                                <span asp-validation-for="@Model.Requests[i].Discount" class="text-danger-centarix"></span>
-                                            </div>
-                                        </td>
-                                        <td width="15%">
-                                            <div class="form-group">
-                                                <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days" />
-                                                <span asp-validation-for="@Model.Requests[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
-                                            </div>
-                                        </td>
-                                        <td width="15%" class="border-right">
-                                            <div class="form-group">
-                                                <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value="@(Model.Requests[i].ExpectedSupplyDays==null ? "" : DateTime.Now.AddDays(Model.Requests[i].ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy"))" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                                <tr class="border-0  no-hover ">
-                                    <td colspan="3" class="p-0">
-                                        <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1  modal-footer-mt">
-                                    </td>
-                                    <td colspan="4" class="p-0 ">
-                                        <div class="form-group text-center modal-footer-mt">
-                                            <input type="submit" @*asp-action="EditQuoteDetails" name="OrderType"*@ value="Save" class="custom-button between-button-margin custom-button-font lab-man-background-color save-quote-details" />
-                                            <button type="button" class="custom-cancel custom-button px-5" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('edit-quote');">Cancel</button>
+
                                         </div>
                                     </td>
-
+                                    <td width="15%">
+                                        <div class="input-group">
+                                            <input asp-for="@Model.Requests[i].Discount" class="form-control-plaintext border-bottom  expected-supply-days" />
+                                            <div class="input-group-text">%</div>
+                                            <span asp-validation-for="@Model.Requests[i].Discount" class="text-danger-centarix"></span>
+                                        </div>
+                                    </td>
+                                    <td width="15%">
+                                        <div class="form-group">
+                                            <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days" />
+                                            <span asp-validation-for="@Model.Requests[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
+                                        </div>
+                                    </td>
+                                    <td width="15%" class="border-right">
+                                        <div class="form-group">
+                                            <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value="@(Model.Requests[i].ExpectedSupplyDays==null ? "" : DateTime.Now.AddDays(Model.Requests[i].ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy"))" />
+                                        </div>
+                                    </td>
                                 </tr>
+                            }
+                            <tr class="border-0  no-hover ">
+                                <td colspan="5" class="p-0">
+                                    <input type="file" asp-for="@Model.QuoteFileUpload" class="  form-control-file-lab pt-1  modal-footer-mt">
+                                </td>
+                                <td colspan="2" class="p-0 ">
+                                    <div class="form-group text-center modal-footer-mt">
+                                        <input type="submit" @*asp-action="EditQuoteDetails" name="OrderType"*@ value="Save" class="custom-button between-button-margin custom-button-font lab-man-background-color save-quote-details" />
+                                        <button type="button" class="custom-cancel custom-button px-5" @*data-dismiss="modal"*@ onclick="$.fn.CloseModal('edit-quote');">Cancel</button>
+                                    </div>
+                                </td>
 
-                            </tbody>
-                        </table>
+                            </tr>
+
+                        </tbody>
+                    </table>
                     </div>
                 </div>
             </form>
