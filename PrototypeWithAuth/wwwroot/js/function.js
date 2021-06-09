@@ -5,8 +5,8 @@
         lineID =$(".focused-line").attr("data-val") 
     }
     var url = "";
-	if ($("#masterPageType").val() == "ProtocolsReports") {
-		url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
+    if ($("#masterPageType").val() == "ProtocolsReports") {
+        url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val() + "&reportTempText=" + $("#ReportText").val() ;
         	$.fn.CallPageRequest( url , "addFunction");
     }
 	/*if ($("#masterPageType").val() == "ProtocolsCreate")*/
@@ -17,11 +17,9 @@
         	$.fn.CallPageRequest( url , "addFunction"); 
         }
 	}
-	
-	
 });
 
-$(".saveFunction").click(function (e) {
+$(".saveFunction").off('click').on('click',function (e) {
     e.preventDefault();
 
     //$('.materialForm').data("validator").settings.ignore = "";
@@ -50,7 +48,7 @@ $(".saveFunction").click(function (e) {
         type: "POST",
         success: function (data) {
             if ($("#masterPageType").val() == "ProtocolsReports") {
-                $(".report-text").html(data);
+                $(".report-text-div").html(data);
             }
             else {
                 $("._Lines").html(data);

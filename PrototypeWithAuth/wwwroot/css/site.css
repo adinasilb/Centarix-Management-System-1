@@ -2056,6 +2056,9 @@ span.caret {
 .protocol-form .form-control-plaintext:focus {
     box-shadow: 0 2px 0 0 var(--protocol-color) !important;
 }
+.protocol-form.createReportForm .form-control-plaintext:focus {
+    box-shadow: none !important;
+}
 
 .dropdown .select, .dropdown-multiple .select {
     z-index: 2;

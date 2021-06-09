@@ -8,7 +8,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class AddReportFunctionViewModel : AddFunctionViewModel
     {
-        public FunctionType FunctionType { get; set; }
+        public FunctionReport  FunctionReport { get; set; }
         public int ReportID { get; set; }
         public string ReportTempText { get; set; }
         public string FileName { get; set; }

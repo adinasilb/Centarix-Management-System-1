@@ -19,5 +19,6 @@ namespace PrototypeWithAuth.Models
         public Protocol Protocol { get; set; }
         public int? ProductID { get; set; }
         public Product Product { get; set; }
+        public bool IsTemporary { get; set; }
     }
 }

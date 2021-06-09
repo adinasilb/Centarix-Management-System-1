@@ -10,30 +10,31 @@
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm">
                 <input type="hidden" asp-for="ReportID" />
                 <input type="hidden" asp-for="ReportTempText" />
-                <input type="hidden" asp-for="FunctionType.FunctionTypeID" />
+                <input type="hidden" asp-for="FunctionReport.FunctionTypeID" />
+                <input type="hidden" asp-for="FunctionReport.ReportID" />
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
                     <div class="container p-0">
 
                         <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
 
                         <div>
-                            <span class="heading-1"><i class="@Model.FunctionType.Icon"></i>&ensp;@Model.FunctionType.FunctionDescription</span>
+                            <span class="heading-1"><i class="@Model.FunctionReport.FunctionType.Icon"></i>&ensp;@Model.FunctionReport.FunctionType.FunctionDescription</span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-body m-0 p-0">
-                    @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionType.DescriptionEnum))
+                    @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionReport.FunctionType.DescriptionEnum))
                     {
                         case AppUtility.ProtocolFunctionTypes.AddFile:
-                    <div class="col">
-                        <button type="button" class="my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Files.ToString()"
-                                data-id="@Model.ReportID"
-                                id="@AppUtility.FolderNamesEnum.Files.ToString()" parentFolder="@AppUtility.ParentFolderName.Reports" data-val="@true" show-switch="@false">
-                            Select File
-                        </button>
-                        <span class="document-name pl-2" name="FileName"></span>
-                        <input type="hidden" class="document-name" asp-for="FileName"/>
-                    </div>
+                            <div class="col">
+                                <button type="button" class="my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Files.ToString()"
+                                        data-id="@Model.FunctionReport.FunctionReportID"
+                                        id="@AppUtility.FolderNamesEnum.Files.ToString()" parentFolder="@AppUtility.ParentFolderName.Reports" data-val="@true" show-switch="@false">
+                                    Select File
+                                </button>
+                                <span class="document-name pl-2" name="FileName"></span>
+                                <input type="hidden" class="document-name" asp-for="FileName" />
+                            </div>
                             break;
                             @*case AppUtility.ProtocolFunctionTypes.AddImage:
                         <div class="col">
