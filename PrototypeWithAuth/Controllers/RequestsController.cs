@@ -1653,7 +1653,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.IsProprietary = true;
             }
             requestItemViewModel = await FillRequestItemViewModel(requestItemViewModel, categoryType);
-
+            
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.SectionType = SectionType;
             RemoveRequestWithCommentsAndEmailSessions();
@@ -1684,7 +1684,7 @@ namespace PrototypeWithAuth.Controllers
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
 
             requestItemViewModel = await FillRequestItemViewModel(requestItemViewModel, categoryType, productSubCategoryId);
-
+            requestItemViewModel.Requests.FirstOrDefault().IncludeVAT = true;
             requestItemViewModel.SectionType = sectionType;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductName = itemName;
