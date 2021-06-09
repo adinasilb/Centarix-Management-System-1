@@ -197,6 +197,12 @@ namespace PrototypeWithAuth.ViewModels
                     newIconList.RemoveAt(forApprovalIconIndex);
                     newIconList.Insert(forApprovalIconIndex, placeholder);
                 }
+                var cantApproveIconIndex = newIconList.FindIndex(ni => ni.TooltipTitle?.Contains("Needs Approval") ?? false);
+                if (request.RequestStatusID != 1 && cantApproveIconIndex != -1)
+                {
+                    newIconList.RemoveAt(cantApproveIconIndex);
+                    newIconList.Insert(cantApproveIconIndex, placeholder);
+                }
                 //resend icon
                 var resendIconIndex = newIconList.FindIndex(ni => ni.IconClass.Equals("Resend"));
                 if (request.ParentQuote?.QuoteStatusID == 1)
