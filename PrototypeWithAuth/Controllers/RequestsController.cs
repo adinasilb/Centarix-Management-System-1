@@ -3664,9 +3664,11 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ParentQuote)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList();
+                var exchangeRate = GetExchangeRate();
                 foreach (var request in requests)
                 {
-                    request.ExchangeRate = GetExchangeRate();
+                    request.ExchangeRate = exchangeRate;
+                    request.IncludeVAT = true;
                 }
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
