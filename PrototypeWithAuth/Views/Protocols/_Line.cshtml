@@ -3,8 +3,12 @@
     var dynamicID = "TempLines_" + Model.Index + "__";
     var dynamicName = "TempLines[" + Model.Index + "].";
 }
-<input name="@(dynamicName)LineID" id="@(dynamicID)LineID" value="@Model.TempLine?.LineID" type="hidden" />
-<input name="@(dynamicName)PermanentLineID" id="@(dynamicID)PermanentLineID" value="@Model.TempLine?.PermanentLineID" type="hidden" />
+@if (Model.TempLine != null)
+{
+    <input name="@(dynamicName)LineID" id="@(dynamicID)LineID" value="@Model.TempLine.LineID" type="hidden" />
+    <input name="@(dynamicName)PermanentLineID" id="@(dynamicID)PermanentLineID" value="@Model.TempLine.PermanentLineID" type="hidden" />
+}
+
 <div class="position-absolute" style="right:91%;">
     <ul class="list-unstyled m-0">
         <li>
@@ -31,25 +35,41 @@
         </div>
     </ul>
 </div>
-<input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine?.Content" />
-@{var typeClass = "";}
-@switch (Model.TempLine?.LineTypeID)
+@if (Model.TempLine != null)
 {
-    case 1:
-        typeClass = " line-header ";
-        break;
-    case 2:
-        typeClass = " line-subheader ml-4";
-        break;
-    case 3:
-        typeClass = " line-step ml-6 ";
-        break;
-}
-<div class="d-flex line-div  
+    <input type="hidden" name="@(dynamicName)Content" id="@(dynamicID)Content" value="@Model.TempLine.Content" />
+   var typeClass = "";
+    switch (Model.TempLine?.LineTypeID)
+    {
+        case 1:
+            typeClass = " line-header ";
+            break;
+        case 2:
+            typeClass = " line-subheader ml-4";
+            break;
+        case 3:
+            typeClass = " line-step ml-6 ";
+            break;
+    }
+<div class="d-flex line-div
      @typeClass">
     <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
     <span role="textbox"
-          contenteditable line-id="@(dynamicID)Content" class="  line input line-input">
+          contenteditable line-id="@(dynamicID)Content" class="editable-span line input line-input text-transform-none" data-val="@Model.TempLine?.PermanentLineID">
         @Html.Raw(Model.TempLine?.Content)&ensp;&ensp;&ensp;
     </span>
+    @if (Model.Functions != null)
+    {
+        foreach (var function in Model.Functions)
+        {
+            <button class="function btn-link btn no-box-shadow p-0 m-0 " type="button" typeID="@function.FunctionTypeID" value="@function.FunctionLineID" lineID="@function.LineID"> <div functionID="@function.FunctionTypeID" class="@function.FunctionType?.IconActionClass line-function"><i class="@function.FunctionType?.Icon" data-toggle="popover" data-trigger="hover" data-placement="top" data-container="body"></i></div></button>
+            
+        }
+    }
+
 </div>
+
+<script>
+
+</script>
+}

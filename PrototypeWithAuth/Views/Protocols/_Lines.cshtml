@@ -47,32 +47,17 @@
     });
     $(".line").click(function () {
         $(".addLinePopover").addClass("d-none");
-        $("." + $(this).attr("id") + "LinePopoverButton").removeClass("d-none");
+        $("." + $(this).attr("line-id") + "LinePopoverButton").removeClass("d-none");
         $(".line").removeClass("focused-line");
         $(this).addClass("focused-line");
+    });
 
-    });
-    $(".function").click(function () {
-        $(".addLinePopover").addClass("d-none");
-        $("." + $(this).attr("id") + "LinePopoverButton").removeClass("d-none");
-        $(".focused-line").append($(this).html());
-    });
     $(".line").change(function () {
-       $("#"+$(this).attr("line-id")).val($(this).html());
+        $("#" + $(this).attr("line-id")).val($(this).html());
     });
     var lastText = $('#editable').text();
-    $('.line').on('focus', function () {
-        var $this = $(this);
-        $this.data('before', $this.html());
-        return $this;
-    }).on('blur keyup paste', function () {
-        var $this = $(this);
-        if ($this.data('before') !== $this.html()) {
-            $this.data('before', $this.html());
-            $this.trigger('change');
-        }
 
-        return $this;
-    });
-  
+
 </script>
+<script src="~/js/function.js"></script>
+<script src="~/js/spanContentEditable.js"></script>

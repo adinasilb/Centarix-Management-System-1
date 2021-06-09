@@ -862,6 +862,10 @@ a.bold-hover-effects {
     color: black !important;
 }
 
+.text-transform-none {
+    text-transform: none;
+}
+
 a.bold-hover-effects:hover,
 ul li button.bold-hover-effects:hover {
     /*color: black !important;*/
@@ -2261,7 +2265,7 @@ span.caret {
     border: 2px solid var(--expense-color) !important;
 }
 
-.expenses.reports-filters {
+.expenses.reports-filters, .protocols.reports-filters {
     width: 13rem;
 }
 /*end change to reports*/
@@ -2505,7 +2509,7 @@ span.caret {
     box-shadow: 6px 0px 10px #0000008C;
 }
 
-.add-invoice-modal {
+.wide-modal {
     width: 93.31rem;
 }
 

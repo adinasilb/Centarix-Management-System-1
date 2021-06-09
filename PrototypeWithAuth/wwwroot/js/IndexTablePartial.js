@@ -1,4 +1,6 @@
-﻿$(".popover-more").off('click').click(function () {
+﻿//const { ajax } = require("jquery");
+
+$(".popover-more").off('click').click(function () {
 	var val = $(this).val();
 	$('[data-toggle="popover"]').popover('dispose');
 	$(this).popover({
@@ -37,7 +39,7 @@
 		}
 		shareNum = $(this).attr("data-share-resource-id");
 		var url = "/" + ControllersEnum + "/RemoveShare?ID=" + shareNum + "&ModelsEnum=" + $("#masterSectionType").val();
-		alert("url " + url);
+		alert("url: " + url)
 		$.ajax({
 			async: true,
 			url: url,
@@ -178,7 +180,7 @@ $(".approve-order").off('click').on("click", function (e) {
 	$("#loading").show();
 	console.log($(".order-type" + val).val())
 	if ($(".order-type" + val).val() == "1") {
-		console.log("terms")
+		console.log("confirm email")
 		$.ajax({
 			async: true,
 			url: "/Requests/Approve/?id=" + val,
@@ -186,7 +188,7 @@ $(".approve-order").off('click').on("click", function (e) {
 			type: "GET",
 			cache: false,
 			success: function (data) {
-				$.fn.OpenModal("termsModal", "terms", data)
+				$.fn.OpenModal("emailModal", "confirm-email", data)
 				$("#loading").hide();
 			}
 		})
@@ -322,7 +324,7 @@ $(".load-terms-modal").on("click", function (e) {
 	return false;
 });
 
-function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years) {
+function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
 	console.log("in ajax partial index call" + url);
 	var selectedPriceSort = [];
 	$("#priceSortContent1 .priceSort:checked").each(function (e) {
@@ -344,7 +346,8 @@ function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClas
 			CategorySelected: $('#categorySortContent .select-category').is(":checked"),
 			SubCategorySelected: $('#categorySortContent .select-subcategory').is(":checked"),
 			months: months,
-			years: years
+			years: years,
+			IsArchive: isArchive
 		};
 		console.log(formdata);
 	}

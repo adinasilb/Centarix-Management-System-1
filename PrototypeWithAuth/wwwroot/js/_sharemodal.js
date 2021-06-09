@@ -19,4 +19,5 @@
 			contentType: false
 		})
 	});
+	$("#select-options-ApplicationUserIDs li.disabled").addClass("hidden");
 });

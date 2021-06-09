@@ -14,76 +14,8 @@
 
 <div class="text-center center-horizontally mt-3">
     <h2>Welcome @UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName!</h2>
-    <div class="container col-md-12" style="min-width:560px">
-        <div class="row mt-5 mb-2">
 
-            @{ var count = Model.Count();
-                var firstRow = Model.Count();
-                var isSecondRow = false;
-                if (count > 5)
-                {
-                    firstRow = 5;
-                    isSecondRow = true;
-                }
-            }
-            @for (int i = 0; i < firstRow; i++)
-            {
-                if (i > 0 && i % 8 == 0)
-                {
-                @:</div><div class="d-flex mt-5">
-                }
-                if (i == 0)
-                {
-                    <div class="px-2 pt-2 offset-1 col-2 module-button-div">
-                        <a class="module-button" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, Model.ElementAt(i).RouteValues)">
-                            <img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br />
-                            <span>@Model.ElementAt(i).MenuViewName</span>
-                        </a>
-                    </div>
-                }
-                else
-                {
-                    <div class="px-2 pt-2 col-2 module-button-div">
-                        <a class="module-button" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, Model.ElementAt(i).RouteValues)"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
-                    </div>
-                }
-
-
-            }
-        </div>
-        @if (isSecondRow)
-        {
-            <div class="row mt-4">
-
-                @for (int i = 5; i < Model.Count(); i++)
-                {
-                    if (i > 0 && i + 1 % 8 == 0)
-                    {
-                    @:</div><div class="d-flex mt-3">
-                    }
-                    if (i == 5)
-                    {
-                        <div class="px-2 pt-2 offset-1 col-2 module-button-div">
-                            <a class="module-button" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="px-2 pt-2 col-2 module-button-div">
-                            <a class="module-button" href="@Url.ActionLink(Model.ElementAt(i).ActionName, Model.ElementAt(i).ControllerName, new {})"><img class="main-btn-img px-3" src=@Model.ElementAt(i).MenuImageURL alt="Protocols" /><br /><span>@Model.ElementAt(i).MenuViewName</span></a>
-                        </div>
-                    }
-
-                }
-            </div>
-
-        }
-
-    </div>
-
-
-    <div class="row mt-6 text-center"><div class="col-12">Version: 0.0.7</div></div>
-
+    @{ await Html.RenderPartialAsync("_HomeButtons", Model);}
     @*<div class="mt-5">
             <button type="submit" class="btn btn-success module-buttons">Protocols</button>
             &nbsp;
@@ -99,11 +31,11 @@
 </div>
 @section Scripts{
     <script>
-      $(document).ready(function () {
+        $(document).ready(function () {
 
-          $.fn.GetNotifcationCount();
-          $.fn.GetNotifications();
-          $.fn.getMenuItems();
+            $.fn.GetNotifcationCount();
+            $.fn.GetNotifications();
+            $.fn.getMenuItems();
 
         });
     </script>

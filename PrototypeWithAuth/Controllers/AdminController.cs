@@ -36,25 +36,19 @@ namespace PrototypeWithAuth.Controllers
 {
     public class AdminController : SharedController
     {
-        private readonly ApplicationDbContext _context;
-        private SignInManager<ApplicationUser> _signManager;
-        private UserManager<ApplicationUser> _userManager;
-        private RoleManager<IdentityRole> _roleManager;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UrlEncoder _urlEncoder;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly SignInManager<ApplicationUser> _signInManager;
 
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
-        public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signManager, RoleManager<IdentityRole> roleManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder, IHttpContextAccessor httpContextAccessor) : base(context)
+        public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, SignInManager<ApplicationUser> signInManager, UrlEncoder urlEncoder, IHttpContextAccessor httpContextAccessor, RoleManager<IdentityRole> roleManager)
+            : base(context, userManager, hostingEnvironment)
         {
-            _context = context;
-            _userManager = userManager;
-            _signManager = signManager;
             _roleManager = roleManager;
-            _hostingEnvironment = hostingEnvironment;
             _urlEncoder = urlEncoder;
             _httpContextAccessor = httpContextAccessor;
+            _signInManager = signInManager;
             //CreateSingleRole();
         }
 
@@ -80,6 +74,8 @@ namespace PrototypeWithAuth.Controllers
             UserIndexViewModel userIndexViewModel = GetUserIndexViewModel();
             return PartialView(userIndexViewModel);
         }
+
+        [Authorize(Roles ="Users")]
         private UserIndexViewModel GetUserIndexViewModel()
         {
 
@@ -604,6 +600,7 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction("Index", new { errorMessage });
         }
 
+        [Authorize(Roles = "Users")]
         private async void SendConfimationEmail(ApplicationUser user)
         {
             string userId = await _userManager.GetUserIdAsync(user);
@@ -839,8 +836,11 @@ namespace PrototypeWithAuth.Controllers
                     {
                         await CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected);
                     }
-                    await CheckRoleAsync(rolesList, employeeEditted, AppUtility.MenuItems.Protocols.ToString(), registerUserViewModel.ProtocolRoles[0].Selected);
                     foreach (var role in registerUserViewModel.OperationRoles)
+                    {
+                        await CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected);
+                    }
+                    foreach (var role in registerUserViewModel.ProtocolRoles)
                     {
                         await CheckRoleAsync(rolesList, employeeEditted, role.StringWithName.StringDefinition, role.Selected);
                     }
@@ -911,6 +911,7 @@ namespace PrototypeWithAuth.Controllers
             return new EmptyResult();
         }
 
+        [Authorize(Roles = "Users")]
         public async Task CheckRoleAsync(IList<string> roleslist, Employee employee, string roleName, bool selected)
         {
             if (!roleslist.Contains(roleName) && selected)
@@ -1072,7 +1073,7 @@ namespace PrototypeWithAuth.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> TwoFactorSessionModal()
         {
-            var user = await _signManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
@@ -1086,7 +1087,7 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                var user = _signManager.GetTwoFactorAuthenticationUserAsync();
+                var user = _signInManager.GetTwoFactorAuthenticationUserAsync();
                 var appUser = await _context.Employees.Where(e => e.Email == user.Result.Email).FirstOrDefaultAsync();
                 if (rememberTwoFactor)
                 {
@@ -1197,17 +1198,12 @@ namespace PrototypeWithAuth.Controllers
                 }
                 registerUserViewModel.ProtocolRoles = new List<UserRoleViewModel>();
                 nextselected = rolesList.Contains(AppUtility.MenuItems.Protocols.ToString()) ? true : false;
-                registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel()
+                foreach (var role in AppUtility.ProtocolRoleEnums())
                 {
-                    MenuItemsID = counter,
-                    StringWithName = new StringWithName()
-                    {
-                        StringName = AppUtility.MenuItems.Protocols.ToString(),
-                        StringDefinition = AppUtility.MenuItems.Protocols.ToString()
-                    },
-                    Selected = nextselected
+                    nextselected = rolesList.Contains(role.StringDefinition) ? true : false;
+                    registerUserViewModel.ProtocolRoles.Add(new UserRoleViewModel() { MenuItemsID = counter, StringWithName = role, Selected = nextselected });
+                    counter++;
                 }
-                );
                 counter++;
                 registerUserViewModel.OperationRoles = new List<UserRoleViewModel>();
                 foreach (var role in AppUtility.OperationRoleEnums())

@@ -178,33 +178,39 @@ namespace PrototypeWithAuth.ViewModels
         {
             var newIconList = AppUtility.DeepClone(iconList);
             //favorite icon
-            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("request-favorite"));
+            var favIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("request-favorite") ?? false);
 
             if (favIconIndex != -1 && favoriteRequest != null) //check these checks
             {
                 var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "request-favorite request-unlike", "Unfavorite");
                 newIconList[favIconIndex] = unLikeIcon;
             }
-            //for approval icon
+            
             if (request != null)
             {
-                var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("approve-order"));
+                var placeholder = new IconColumnViewModel("Placeholder");
+
+                //for approval icon
+                var forApprovalIconIndex = newIconList.FindIndex(ni => ni.IconAjaxLink?.Contains("approve-order") ?? false);
                 if (request.RequestStatusID != 1 && forApprovalIconIndex != -1)
                 {
                     newIconList.RemoveAt(forApprovalIconIndex);
-                    needsPlaceholder = true;
+                    newIconList.Insert(forApprovalIconIndex, placeholder);
+                }
+                var cantApproveIconIndex = newIconList.FindIndex(ni => ni.TooltipTitle?.Contains("Needs Approval") ?? false);
+                if (request.RequestStatusID != 1 && cantApproveIconIndex != -1)
+                {
+                    newIconList.RemoveAt(cantApproveIconIndex);
+                    newIconList.Insert(cantApproveIconIndex, placeholder);
                 }
                 //resend icon
-                var resendIcon = new IconColumnViewModel("Resend");
-                var placeholder = new IconColumnViewModel("Placeholder");
-                if (request.ParentQuote?.QuoteStatusID == 2)
+                var resendIconIndex = newIconList.FindIndex(ni => ni.IconClass.Equals("Resend"));
+                if (request.ParentQuote?.QuoteStatusID == 1)
                 {
-                    newIconList.Insert(0, resendIcon);
+                    newIconList.RemoveAt(resendIconIndex);
+                    newIconList.Insert(resendIconIndex, placeholder);
                 }
-                else if (needsPlaceholder)
-                {
-                    newIconList.Insert(0, placeholder);
-                }
+
             }
             return newIconList;
         }
@@ -473,7 +479,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 15,
-                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, true),
+                Icons = GetIconsByIndividualRequest(r.RequestID, iconList, true, null, r),
                 AjaxID = r.RequestID
             };
         }

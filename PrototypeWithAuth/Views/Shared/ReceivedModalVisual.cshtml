@@ -9,7 +9,7 @@
     for (int p = 0; p < pCount; p++)
     {
         <input type="hidden" asp-for="LocationInstancePlaces[p].LocationInstanceId" />
-        <input type="hidden" asp-for="LocationInstancePlaces[p].Placed" class="liid @Model.LocationInstancePlaces[p].LocationInstanceId" />
+        <input type="hidden" asp-for="LocationInstancePlaces[p].Placed" value="@Model.LocationInstancePlaces[p].Placed.ToString().ToLower()" class="liid @Model.LocationInstancePlaces[p].LocationInstanceId" />
     }
 
 <table class="table p-0 m-0 visual-locations">
@@ -115,7 +115,7 @@
                                 </div>
                             </td>
                         }
-                        else if (locationsList[z].IsFull)
+                        else if (locationsList[z].IsFull || (!receive && Model.RequestChildrenLocationInstances[z].IsThisRequest/*for archived*/))
                         {
                             var backgroundClass = "graduated-table-background-color  ";
                             var iconRow = "d-none";
@@ -131,7 +131,7 @@
                                 <div class="">
                                     <input class="@classes @disabled" id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1">
-                                        <i class="@iconClass @iconRow"></i>
+                                        <i class="@iconClass @iconRow"></i> @*hide on load, show when turn edit on*@
                                     </div>
 
                                     <div class="row-2 text-left">
@@ -146,7 +146,7 @@
                             <td class="@outerClass @disabledEdit" style="padding:0px;">
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
-                                    <div class="row-1">
+                                    <div class="row-1"> @*hide on load, show when turn edit on*@
                                         <i class="@iconClass"></i>
                                     </div>
                                     <div class="row-2 text-left">
@@ -164,7 +164,30 @@
     }
 </table>
 }
-
+<script>
+    $("body, .modal").off('click', ".open-archive-modal").on('click', ".open-archive-modal", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        //alert('open archive modal.');
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (valid) {
+            $("#loading").show();
+            $.ajax({
+                async: true,
+                url: "/Requests/ConfirmArchiveModal?locationName=" + $('.locationFullName').text(),
+                type: 'GET',
+                cache: true,
+                success: function (data) {
+                    console.log('success!');
+                    $("#loading").hide();
+                    $.fn.OpenModal("confirm-archive-modal", 'confirm-archive', data);
+                }
+            });
+        }
+    });
+</script>
 @*<script type="text/javascript">
         $(function () {
             $("document").ready(function () {

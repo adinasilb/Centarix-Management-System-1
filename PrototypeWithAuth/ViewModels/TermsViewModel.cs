@@ -19,5 +19,6 @@ namespace PrototypeWithAuth.ViewModels
         public DateTime InstallmentDate_submit { get { return InstallmentDate; } set { InstallmentDate = value; } }
         public AppUtility.MenuItems SectionType { get; set; }
         public RequestIndexObject RequestIndexObject { get; set; }
+        public string RedirectAction { get; set; }
     }
 }

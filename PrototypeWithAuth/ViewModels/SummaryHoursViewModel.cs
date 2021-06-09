@@ -17,6 +17,8 @@ namespace PrototypeWithAuth.ViewModels
         public int TotalHolidaysInMonth { get; set; }
         public double VacationDayInThisMonth { get; set; }
         public double SickDayInThisMonth { get; set; }
+        public double TotalWorkingDaysInThisMonth { get; set; }
+        public double WorkingDays { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
         public Employee User { get; set; }
     }

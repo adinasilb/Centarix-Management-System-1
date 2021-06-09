@@ -43,7 +43,7 @@
 <div class="container-fluid div-tabs no-box-shadow p-0">
     <input type="hidden" value="@Model.ModalType" id="modalType" />
 
-    @if (Model.ModalType == AppUtility.RequestModalType.Edit)
+    @if (Model.ModalType == AppUtility.RequestModalType.Edit && Model.Requests[0].IsArchived == false)
     {
         <div class=" row text-right mb- ">
             <div class="switch col-12 switch-margin">

@@ -2,7 +2,7 @@
 @using System.Text;
 @using System.Globalization;
 @using PrototypeWithAuth.AppData
-
+<script src="~/js/accounting.js"></script>
 <form method="post" enctype="multipart/form-data" style="height: 100%;">
     @foreach (var vendor in Model.RequestsByVendor)
     {
@@ -108,13 +108,12 @@
 
                                                                     <div class="col-6 p-1">
                                                                         <a asp-action="HandleNotifications" asp-controller="Requests" asp-route-requestID="@col.AjaxID" asp-route-type="@Model.SidebarType"
-                                                                           class="rounded-pill small-text p-0 m-0 btn text-capitalize  handleNotification" 
-                                                                               style="        
+                                                                           class="rounded-pill small-text p-0 m-0 btn text-capitalize  handleNotification"
+                                                                           style="
                                                                                     width: 100%;
                                                                                     border: 1px solid var(--acc-color);
                                                                                     background-color: transparent;
-                                                                                    color: var(--acc-color);"
-                                                                           >Save</a>
+                                                                                    color: var(--acc-color);">Save</a>
                                                                     </div>
                                                                     <div class="col-6 p-1 ">
                                                                         <button class="rounded-pill p-0 m-0 small-text" style="background-color: transparent; border-width:1px !important; width: 100%;">
@@ -127,13 +126,13 @@
                                                     </ul>
                                                 </div>
                                             }
-                                            else if(icon.IconClass?.Equals("Resend") ?? false)
+                                            else if (icon.IconClass?.Equals("Resend") ?? false)
                                             {
-                                                    <div class="pr-2">
-                                                        <button class="confirm-quote-resend btn-icon lab-man-background-color" data-title="Resend" value="@col.AjaxID">Resend</button>
-                                                    </div>
-                                            }   
-                                            else if(icon.IconClass?.Equals("ResendPlaceholder") ?? false)
+                                                <div class="pr-2">
+                                                    <button class="confirm-quote-resend btn-icon lab-man-background-color" data-title="Resend" value="@col.AjaxID">Resend</button>
+                                                </div>
+                                            }
+                                            else if (icon.IconClass?.Equals("Placeholder") ?? false && Model.SidebarType == AppUtility.SidebarEnum.Quotes)
                                             {
                                                 <div class="px-5" style="min-width: 125px">&nbsp;</div>
                                             }
@@ -181,7 +180,14 @@
                     </tr>
                 }
                 <tr class="border-0 mb-5 no-hover">
-                    @for (int i = 0; i < requests.FirstOrDefault().Columns.Count() - 4; i++)
+                    @{ var startColumnsToSkip = 0;}
+                    @*@if (Model.PageType == AppUtility.PageTypeEnum.AccountingNotifications)
+                    {
+                        var addToSButton = "add-to-selected " + vendor.Key.VendorID;
+                        <td colspan="2"><button class="accounting-background-color custom-button-font custom-button px-2rem hidden @addToSButton">Add To Selected</button></td>
+                        startColumnsToSkip = 2;
+                    }*@
+                    @for (int i = startColumnsToSkip; i < requests.FirstOrDefault().Columns.Count() - 4; i++)
                     {
                         <td></td>
                     }
@@ -210,6 +216,7 @@
                 </tr>
 
         </table>
+
     }
 </form>
 <script src="~/js/accounting.js"></script>

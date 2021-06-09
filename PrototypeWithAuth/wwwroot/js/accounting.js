@@ -174,6 +174,7 @@
 	});
 
 	$("#add-to-selected").off("click").on("click", function (e) {
+		alert("add to selected")
 		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
 			return $(this).attr("id")
 		}).get()
