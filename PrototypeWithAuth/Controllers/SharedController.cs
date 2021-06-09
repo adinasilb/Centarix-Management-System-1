@@ -565,6 +565,7 @@ namespace PrototypeWithAuth.Controllers
                                   }
                               ).ToList()
             };
+            shareModalViewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" } );
 
             return shareModalViewModel;
         }
