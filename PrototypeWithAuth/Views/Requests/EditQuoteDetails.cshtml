@@ -167,24 +167,24 @@
                                             <div class="form-group @hideShekel shekel-group">
                                                 <div class="input-group ">
                                                     <span class="input-group-text pr-1">P: &#x20aa;</span>
-                                                    <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom cost cost-validation " min="1" />
+                                                    <input asp-for="@Model.Requests[i].Cost" class="form-control-plaintext border-bottom cost cost-validation " index="@i" min="1" />
                                                     <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
                                                 </div>
                                                 <div class="input-group ">
                                                     <span class="input-group-text disabled-text pr-1">T: &#x20aa;</span>
-                                                    <input class="form-control-plaintext border-bottom disabled-text price-with-vat-shekel" disabled />
+                                                    <input class="form-control-plaintext border-bottom disabled-text price-with-vat-shekel @i" disabled />
                                                 </div>
                                             </div>
 
                                             <div class="form-group @hideDollar dollar-group">
                                                 <div class="input-group ">
                                                     <span class="input-group-text pr-1">P: &#36;</span>
-                                                    <input class="form-control-plaintext border-bottom sum-dollars" id="sum-dollars" name="sum-dollars" />
+                                                    <input class="form-control-plaintext border-bottom sum-dollars" id="sum-dollars" index="@i" name="sum-dollars" />
                                                     <span class="text-danger-centarix" asp-validation-for="Requests[i].Cost"></span>
                                                 </div>
                                                 <div class="input-group ">
                                                     <span class="input-group-text pr-1 disabled-text">T: &#36;</span>
-                                                    <input class="form-control-plaintext border-bottom disabled-text price-with-vat-dollar" disabled />
+                                                    <input class="form-control-plaintext border-bottom disabled-text price-with-vat-dollar @i" disabled />
                                                 </div>
                                             </div>
 
