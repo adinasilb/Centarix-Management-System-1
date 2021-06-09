@@ -174,7 +174,7 @@
 	});
 
 	$("#add-to-selected").off("click").on("click", function (e) {
-		alert("add to selected")
+		//alert("add to selected")
 		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
 			return $(this).attr("id")
 		}).get()
@@ -221,7 +221,7 @@
 		$(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
 			var ModelsEnum = "";
 			var shareNum = "";
-			alert("in icon more popover remove share setup");
+			//alert("in icon more popover remove share setup");
 			if ($(this).hasClass("resources")) { //THIS IF IS NOT WORKING
 				ModelsEnum = "Resource";
 				shareNum = $(this).attr("data-share-resource-id");
