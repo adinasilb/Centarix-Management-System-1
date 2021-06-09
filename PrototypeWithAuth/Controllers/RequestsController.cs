@@ -3713,10 +3713,6 @@ namespace PrototypeWithAuth.Controllers
                             request.ParentQuote.QuoteStatusID = 4;
                             //request.ParentQuote.QuoteDate = quoteDate;
                             request.ParentQuote.QuoteNumber = quoteNumber.ToString();
-                            if (quote.IncludeVAT)
-                            {
-                                quote.Cost = quote.Cost / (decimal)1.17;
-                            }
                             request.Cost = quote.Cost;
                             request.Currency = quote.Currency;
                             request.IncludeVAT = quote.IncludeVAT;
