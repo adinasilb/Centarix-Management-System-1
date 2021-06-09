@@ -22,7 +22,7 @@
                     <div class="modal-body">
                         <div class="row ">
                             <div class="col-10 offset-1">
-                                @Html.DropDownListFor(vm => vm.ApplicationUserIDs, Model.ApplicationUsers,
+                                @Html.DropDownListFor(vm => vm.ApplicationUserIDs, Model.ApplicationUsers, "Select User",
         htmlAttributes: new { @class = "mdb-select custom-select-dropdown form-control-plaintext float-right", @searchable = "Search here...", @multiple = "multiple" })
                                 @*@Html.DropDownListFor(m => m.ApplicationUserID,
                                     Model.ApplicationUsers, "Select User",

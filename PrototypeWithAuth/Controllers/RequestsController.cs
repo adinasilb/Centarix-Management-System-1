@@ -4585,6 +4585,7 @@ namespace PrototypeWithAuth.Controllers
                             if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestRequest)
                             {
                                 action = "_IndexTableWithCounts";
+                                return RedirectToAction(action, "Requests", uploadQuoteOrderViewModel.RequestIndexObject);
                             }
                             else if (uploadQuoteOrderViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                             {

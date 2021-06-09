@@ -171,27 +171,27 @@
                     //console.log(data)
                     console.log("status code" + jqxhr.status)
                     console.log($("#OrderTypeEnum").val())
-                    //if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210") {
-                    //    $.fn.CloseModal("step-1");
-                    //    $.fn.CloseModal("edits");
-                    //    $.fn.CloseModal("reorder-item");
-                    //    console.log('remove save item')
-                    //    $(".save-item").removeClass("save-item").off('click')
-                    //    console.log("Index");
-                    //    if ($(".editModal").length > 0) {
-                    //        $(".render-body").html(data)
-                    //    }
-                    //    else if ($('#masterPageType').val() == "RequestSummary") {
-                    //        window.location.href = "/Requests/IndexInventory?" + $.fn.getRequestIndexString();
-                    //    }
-                    //    else {
-                    //        window.location.href = "/Requests/Index"
-                    //    }
-                    //    //$('.modal').modal('hide');
-                    //}
-                    //else {
+                    if ($("#OrderTypeEnum").val() == "AddToCart" || jqxhr.status == "210") {
+                        $.fn.CloseModal("step-1");
+                        $.fn.CloseModal("edits");
+                        $.fn.CloseModal("reorder-item");
+                        console.log('remove save item')
+                        $(".save-item").removeClass("save-item").off('click')
+                        console.log("Index");
+                        if ($(".editModal").length > 0) {
+                            $(".render-body").html(data)
+                        }
+                        else if ($('#masterPageType').val() == "RequestSummary") {
+                            window.location.href = "/Requests/IndexInventory?" + $.fn.getRequestIndexString();
+                        }
+                        else {
+                            window.location.href = "/Requests/Index"
+                        }
+                        //$('.modal').modal('hide');
+                    }
+                    else {
                         $.fn.OpenModal('termsModal', 'terms', data)
-                    //}
+                    }
 
                     $("#loading").hide();
                     return true;
