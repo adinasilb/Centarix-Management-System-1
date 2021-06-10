@@ -20,5 +20,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<ProtocolCategory> ProtocolCategories { get; set; }
         public List<ProtocolSubCategory> ProtocolSubCategories { get; set; }
         public List<Protocol> Protocols { get; set; }
+        public List<DocumentFolder> DocumentsInfo { get; set; }
     }
 }

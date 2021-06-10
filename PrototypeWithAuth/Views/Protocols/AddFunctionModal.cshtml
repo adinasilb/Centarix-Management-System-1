@@ -1,6 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel
 @using PrototypeWithAuth.AppData
 <script src="~/js/site.js"></script>
+@{ var filestring = "";}
 <div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class=" modal-dialog-centered mx-auto" style="width:30%">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
@@ -10,6 +11,7 @@
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm">
                 <input type="hidden" asp-for="FunctionLine.FunctionTypeID" />
                 <input type="hidden" asp-for="FunctionLine.LineID" />
+                <input type="hidden" asp-for="FunctionLine.FunctionLineID" />
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
                     <div class="container p-0">
 
@@ -35,7 +37,14 @@
                                         id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false">
                                     Select File
                                 </button>
-                                <span class="document-name pl-2"></span>
+                                @{
+
+                                    if (Model.DocumentsInfo.FirstOrDefault()?.FileStrings.Count == 0)
+                                    {
+                                        filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
+                                    }
+                                }
+                                <span class="document-name pl-2">@filestring</span>
                             </div>
                             break;
                         case AppUtility.ProtocolFunctionTypes.AddImage:
@@ -45,7 +54,13 @@
                                         id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false">
                                     Select File
                                 </button>
-                                <span class="document-name pl-2"></span>
+                                @{
+                                    if (Model.DocumentsInfo.FirstOrDefault()?.FileStrings.Count==0)
+                                    {
+                                        filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
+                                    }
+                                }
+                                <span class="document-name pl-2">@filestring</span>
                             </div>
                             break;
                         case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:

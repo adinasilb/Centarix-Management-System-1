@@ -22,7 +22,9 @@
 		success: (partialResult) => {
 			$.fn.CloseModal("documents-delete");
 			$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername);
-			//$.fn.ChangeColorsOfDocs($foldername);
+			//$.fn.ChangeColorsOfDocs($foldername);	
+			$(".document-name").text(fileName)
+			$(".document-name#FileName").val(fileName)
 		},
 		processData: false,
 		contentType: false

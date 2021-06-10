@@ -271,7 +271,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     dir.Delete(true);
                 }
-                Directory.Delete(requestFolder);
+                Directory.Delete(requestFolder, true);
             }
             Directory.CreateDirectory(requestFolder);
         }
@@ -1091,13 +1091,13 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (Directory.Exists(requestFolderTo))
                 {
-                    Directory.Delete(requestFolderTo);
+                    Directory.Delete(requestFolderTo, true);
                 }
                 if (additionalRequests)
                 {
                     AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
                 }
-                else
+                else if(requestFolderFrom != requestFolderTo)
                 {
                     Directory.Move(requestFolderFrom, requestFolderTo);
                 }

@@ -468,7 +468,7 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task SaveTempLines(List<TempLine> TempLines)
+        public async Task SaveTempLines(List<TempLine> TempLines, int ProtocolID)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -482,10 +482,10 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await _context.SaveChangesAsync();
                     await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => fl.IsTemporary = false);
-                    
-                    await CopySelectedLinesToTempLineTable(tempLines.FirstOrDefault().ProtocolID);
+
+                    await DeleteTemporaryDeletedLinesAsync();            
+                   
                     await transaction.CommitAsync();
-                    await DeleteTemporaryDeletedLinesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -494,6 +494,7 @@ namespace PrototypeWithAuth.Controllers
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
             }
+            await CopySelectedLinesToTempLineTable(ProtocolID);
         }
 
      
@@ -599,7 +600,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Where(l => l.PermanentLineID == currentLineID).FirstOrDefault();
+                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Include(tl=>tl.PermanentLine).Where(tl => tl.PermanentLineID == currentLineID).FirstOrDefault();
                     var orderedLineTypes = GetOrderLineTypeFromParentToChild();
                     if (TempLines != null)
                     {
@@ -783,7 +784,7 @@ namespace PrototypeWithAuth.Controllers
         }
         private async Task DeleteTempLineWithChildrenAsync(TempLine line)
         {
-            var siblingsAfter = _context.TempLines.Where(tl => tl.ParentLineID == line.ParentLineID && tl.LineNumber > line.LineNumber).ToList();
+            var siblingsAfter = _context.TempLines.Where(tl => tl.ParentLineID == line.ParentLineID && tl.LineNumber > line.LineNumber).Include(tl => tl.PermanentLine).ToList();
             Stack<TempLine> nodes = new Stack<TempLine>();
             List<TempLine> nodeInOrderOfChildrenToParent = new List<TempLine>();
             nodes.Push(line);
@@ -879,7 +880,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 FunctionLine = functionLine
             };
-
+            string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.FunctionLine.ToString());
+            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, functionLine.FunctionLineID.ToString());
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
@@ -894,6 +896,14 @@ namespace PrototypeWithAuth.Controllers
                     viewmodel.Creators = _context.Users.Select(u =>
                         new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
                     viewmodel.Protocols = _context.Protocols.ToList();
+                    break;
+                case AppUtility.ProtocolFunctionTypes.AddFile:
+                    viewmodel.DocumentsInfo = new List<DocumentFolder>();
+                    base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, uploadProtocolsFolder2);
+                    break;
+                case AppUtility.ProtocolFunctionTypes.AddImage:
+                    viewmodel.DocumentsInfo = new List<DocumentFolder>();
+                    base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadProtocolsFolder2);
                     break;
             }
             return PartialView(viewmodel);
@@ -924,8 +934,8 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case AppUtility.ProtocolFunctionTypes.AddFile:
                         case AppUtility.ProtocolFunctionTypes.AddImage:
-                            MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionLineID, AppUtility.ParentFolderName.FunctionLine);
                             await SaveTempFunctionLineAsync(addFunctionViewModel);
+                            MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionLineID, AppUtility.ParentFolderName.FunctionLine);
                             break;
                         //case AppUtility.FuctionTypes.AddStop:
                         //    break;
