@@ -309,7 +309,9 @@ $(function () {
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
 		var parentFolder = $(".active-document-modal").attr("parentfolder");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
+		var allowMultipleFiles = $(".active-document-modal").attr("multiple-files");
+		console.log(allowMultipleFiles)
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder, allowMultipleFiles);
 		return true;
 	});
 

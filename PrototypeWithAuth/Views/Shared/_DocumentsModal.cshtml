@@ -82,7 +82,7 @@
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
 
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding documentModalForm" id="myForm">
-                
+
                 <button type="button" class="close modal-close-padding modal-close-style close-document-modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -99,6 +99,7 @@
                 <input type="hidden" id="bcColor" class="@bcColor" />
                 <input type="hidden" id="color" class="@color" />
                 <input type="hidden" asp-for="ShowSwitch" />
+                <input type="hidden" asp-for="AllowMultipleFiles" />
                 <input type="hidden" asp-for="IsEdittable" class="@markDisabled isEdittable" />
                 <a href="" class="open-document-modal active-document-modal  @sectionType  withinDocModal" data-string="@Model.FolderName" data-id="@Model.ObjectID" style="display: none;" data-val="@Model.IsEdittable" showSwitch="@Model.ShowSwitch"></a>
                 <div class="modal-header modal-header-padding">
@@ -253,7 +254,7 @@
                                 }
                                 else
                                 {
-                                    <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf" multiple />
+                                    <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" multiple />
                                 }
 
                             </div>

@@ -10,6 +10,10 @@
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("upload file submitted");
+		var allowMultipleFiles = $("#AllowMultipleFiles").val();
+		if (allowMultipleFiles == false) {
+			console.log("disable more files")
+        }
 
 		var inputButton = $('#save-documents');
 		var filePath = $(".file-select")[0].value;
@@ -21,7 +25,7 @@
 
 		var extn = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
 		console.log("extn: " + extn);
-		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn !="") {
+		if (extn != "pdf" && extn != "png" && extn != "jpg" && extn != "jpeg" && extn != "docx" && extn != "doc" && extn != "ppt" && extn != "pptx" && extn !="") {
 			alert("invalid file extension");
 			return;
 		}
@@ -58,7 +62,7 @@
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
 				var parentFolder = $(".active-document-modal").attr("parentfolder");
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder);
+				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder, allowMultipleFiles);
 				return true;
 			},
 			processData: false,
@@ -85,8 +89,10 @@
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
+		var allowMultipleFiles = $(".active-document-modal").attr("multiple-files");
+		console.log(allowMultipleFiles)
 		var parentFolder = $(".active-document-modal").attr("parentFolder");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder);
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder, allowMultipleFiles);
 		return true;
 	});
 

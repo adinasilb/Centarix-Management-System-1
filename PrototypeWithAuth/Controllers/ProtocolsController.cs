@@ -1457,7 +1457,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Protocols")]
         public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
-    AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols)
+    AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols, bool allowMultipleFiles = true)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -1465,7 +1465,8 @@ namespace PrototypeWithAuth.Controllers
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
-                IsEdittable = true
+                IsEdittable = true, 
+                AllowMultipleFiles = allowMultipleFiles
             };
 
             base.FillDocumentsViewModel(documentsModalViewModel);
@@ -1837,8 +1838,8 @@ namespace PrototypeWithAuth.Controllers
                                 base.FillDocumentsViewModel(documentsModalViewModel);
 
                                 string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
-
-                            report.TemporaryReportText = createReportViewModel.Report.ReportText + "<br/>" + renderedView + "<br/>";
+                            var fileName = documentsModalViewModel.FileStrings[0].Split('/').Last();
+                            report.TemporaryReportText = createReportViewModel.Report.ReportText + "<br/>" + renderedView + "<div><br/>" + fileName + "<br/></div>";
                             _context.Update(report);
                             await _context.SaveChangesAsync();
 
