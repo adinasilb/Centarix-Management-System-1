@@ -32,6 +32,12 @@
                     </button><hr class="m-0" />
                 </div>
             }
+
+            <div class="row px-2 comment-btn">
+                <button type="button" value="-1" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine " style="font-size:1rem; font-weight:400;">
+                    Delete Current Line
+                </button><hr class="m-0" />
+            </div>
         </div>
     </ul>
 </div>
@@ -68,7 +74,7 @@
     }
 
 </div>
-
+<script src="~/js/function.js"></script>
 <script>
 
 </script>

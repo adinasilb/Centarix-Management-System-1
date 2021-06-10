@@ -371,6 +371,8 @@
     <Compile Remove="Data\Migrations\20210606111514_ParentLineLinqconfig3.Designer.cs" />
     <Compile Remove="Data\Migrations\20210608062849_testmerge.cs" />
     <Compile Remove="Data\Migrations\20210608062849_testmerge.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210610055638_TestMerge.cs" />
+    <Compile Remove="Data\Migrations\20210610055638_TestMerge.Designer.cs" />
   </ItemGroup>
 
 

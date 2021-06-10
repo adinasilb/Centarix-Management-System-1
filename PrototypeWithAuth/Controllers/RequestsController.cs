@@ -4464,7 +4464,7 @@ namespace PrototypeWithAuth.Controllers
                             string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
                             if (Directory.Exists(requestFolderTo))
                             {
-                                Directory.Delete(requestFolderTo);
+                                Directory.Delete(requestFolderTo, true);
                             }
                             Directory.Move(requestFolderFrom, requestFolderTo);
 

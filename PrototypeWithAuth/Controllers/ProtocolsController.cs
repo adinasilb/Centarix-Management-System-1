@@ -468,7 +468,7 @@ namespace PrototypeWithAuth.Controllers
                 await _context.SaveChangesAsync();
             }
         }
-        public async Task SaveTempLines(List<TempLine> TempLines)
+        public async Task SaveTempLines(List<TempLine> TempLines, int ProtocolID)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -476,14 +476,15 @@ namespace PrototypeWithAuth.Controllers
                 {
                     await UpdateLineContentAsync(TempLines);
                     var tempLines = _context.TempLines;
-                    var lines = _context.Lines.Where(l => l.ProtocolID == tempLines.FirstOrDefault().ProtocolID);
                     foreach (var line in tempLines)
                     {
                         _context.Update(TurnTempLineToLine(line));
                     }
                     await _context.SaveChangesAsync();
                     await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => fl.IsTemporary = false);
-                    await CopySelectedLinesToTempLineTable(tempLines.FirstOrDefault().ProtocolID);
+
+                    await DeleteTemporaryDeletedLinesAsync();            
+                   
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -493,7 +494,11 @@ namespace PrototypeWithAuth.Controllers
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
             }
+            await CopySelectedLinesToTempLineTable(ProtocolID);
         }
+
+     
+
         private async Task ClearTempLinesTableAsync()
         {
             var lineTypes = GetOrderLineTypeFromChildToParent();
@@ -512,6 +517,13 @@ namespace PrototypeWithAuth.Controllers
                 foreach (var tempLine in tempLines)
                 {
                     _context.Remove(tempLine);
+                }
+                await _context.SaveChangesAsync();
+                var tempDeletedLines = _context.Lines.Where(l => l.LineTypeID == lineType.LineTypeID).Where(tl => tl.IsTemporaryDeleted);
+                foreach (var tempDeleted in tempDeletedLines)
+                {
+                    tempDeleted.IsTemporaryDeleted = false;
+                    _context.Update(tempDeleted);
                 }
                 await _context.SaveChangesAsync();
             }         
@@ -588,99 +600,107 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
+                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Include(tl=>tl.PermanentLine).Where(tl => tl.PermanentLineID == currentLineID).FirstOrDefault();
+                    var orderedLineTypes = GetOrderLineTypeFromParentToChild();
                     if (TempLines != null)
                     {
                         //save all temp line data 
                         await UpdateLineContentAsync(TempLines);
                     }
-
-                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Where(l => l.PermanentLineID == currentLineID).FirstOrDefault();
-                    var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
-                    var orderedLineTypes = GetOrderLineTypeFromParentToChild();
-                    TempLine newLine = new TempLine();
-                    newLine.LineTypeID = lineTypeID;
-                    newLine.ProtocolID = protocolID;
-                    if (newLine.LineNumber == 0)
+                    if(lineTypeID ==-1)
                     {
-                        newLine.LineNumber = 1;
+                        await DeleteTempLineWithChildrenAsync(currentLine);
                     }
-                    _context.Add(newLine);
-                    await _context.SaveChangesAsync();
-                    _context.Add(new Line { LineID = newLine.LineID, LineTypeID = lineTypeID, ProtocolID = protocolID, IsTemporary = true });
-                    await _context.SaveChangesAsync();
-                    newLine.PermanentLineID = newLine.LineID;
-                    _context.Update(newLine);
-                    await _context.SaveChangesAsync();
-
-                    if (currentLine != null)
+                    else
                     {
-                        var currentLineTypeIndex = orderedLineTypes.IndexOf(currentLine.LineType);
-                        var newLineTypeIndex = orderedLineTypes.IndexOf(newLineType);
-                        if (newLineTypeIndex <= currentLineTypeIndex)
-                        {
-                            //new line is parent of child
-                            var parent = currentLine;
-
-                            newLine.LineTypeID = newLineType.LineTypeID;
-
-                            while (parent != null)
-                            {
-                                if (parent.LineTypeID == newLineType.LineTypeID)
-                                {
-                                    newLine.LineNumber = (parent.LineNumber + 1);
-                                    newLine.ParentLineID = parent.ParentLineID;
-                                    _context.Update(newLine);
-                                    //we have to increment all the sibling parents
-                                    var siblings = _context.TempLines.Where(tl => tl.LineNumber > parent.LineNumber && tl.ParentLineID == newLine.ParentLineID);
-                                    await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
-                                    await _context.SaveChangesAsync();
-
-                                    break;
-                                }
-                                parent = _context.TempLines.Where(tl => tl.PermanentLineID == parent.ParentLineID).FirstOrDefault();
-                            }
-
-
-                            if (newLineTypeIndex < currentLineTypeIndex)
-                            {
-                                //get currentline siblings and make their parent point to new line
-                                var currentLineSiblings = _context.TempLines.Where(lt => lt.ParentLineID == currentLine.PermanentLineID && lt.LineNumber > currentLine.LineNumber);
-                                await currentLineSiblings.ForEachAsync(tl =>
-                                {
-                                    tl.LineNumber -= currentLine.LineNumber;
-                                    tl.ParentLineID = newLine.LineID;
-                                    _context.Update(tl);
-                                });
-                                await _context.SaveChangesAsync();
-
-                                currentLine.ParentLine = _context.TempLines.Where(tl => tl.PermanentLineID == currentLine.ParentLineID).Include(tl => tl.LineType).FirstOrDefault();
-                                if (orderedLineTypes.IndexOf(currentLine.ParentLine.LineType) < newLineTypeIndex)
-                                {
-                                    //make new line currents parent
-                                    newLine.ParentLineID = currentLine.ParentLineID;
-                                    currentLine.ParentLineID = newLine.LineID;
-                                    _context.Update(currentLine);
-                                    _context.Update(newLine);
-                                    await _context.SaveChangesAsync();
-                                }
-                            }
-                            else // types are the same
-                            {
-                                //all curents children should pount to new line
-                                await _context.TempLines.Where(tl => tl.ParentLineID == currentLine.PermanentLineID).ForEachAsync(tl => { tl.ParentLineID = newLine.LineID; _context.Update(tl); });
-                                await _context.SaveChangesAsync();
-
-                            }
-
-                        }
-                        else
+                        var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
+            
+                        TempLine newLine = new TempLine();
+                        newLine.LineTypeID = lineTypeID;
+                        newLine.ProtocolID = protocolID;
+                        if (newLine.LineNumber == 0)
                         {
                             newLine.LineNumber = 1;
-                            newLine.ParentLineID = currentLine.PermanentLineID;
-                            _context.Update(newLine);
-                            var siblings = _context.TempLines.Where(tl => tl.ParentLineID == newLine.ParentLineID);
-                            await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
-                            await _context.SaveChangesAsync();
+                        }
+                        _context.Add(newLine);
+                        await _context.SaveChangesAsync();
+                        _context.Add(new Line { LineID = newLine.LineID, LineTypeID = lineTypeID, ProtocolID = protocolID, IsTemporary = true });
+                        await _context.SaveChangesAsync();
+                        newLine.PermanentLineID = newLine.LineID;
+                        _context.Update(newLine);
+                        await _context.SaveChangesAsync();
+
+                        if (currentLine != null)
+                        {
+                            var currentLineTypeIndex = orderedLineTypes.IndexOf(currentLine.LineType);
+                            var newLineTypeIndex = orderedLineTypes.IndexOf(newLineType);
+                            if (newLineTypeIndex <= currentLineTypeIndex)
+                            {
+                                //new line is parent of child
+                                var parent = currentLine;
+
+                                newLine.LineTypeID = newLineType.LineTypeID;
+
+                                while (parent != null)
+                                {
+                                    if (parent.LineTypeID == newLineType.LineTypeID)
+                                    {
+                                        newLine.LineNumber = (parent.LineNumber + 1);
+                                        newLine.ParentLineID = parent.ParentLineID;
+                                        _context.Update(newLine);
+                                        //we have to increment all the sibling parents
+                                        var siblings = _context.TempLines.Where(tl => tl.LineNumber > parent.LineNumber && tl.ParentLineID == newLine.ParentLineID);
+                                        await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
+                                        await _context.SaveChangesAsync();
+
+                                        break;
+                                    }
+                                    parent = _context.TempLines.Where(tl => tl.PermanentLineID == parent.ParentLineID).FirstOrDefault();
+                                }
+
+
+                                if (newLineTypeIndex < currentLineTypeIndex)
+                                {
+                                    //get currentline siblings and make their parent point to new line
+                                    var currentLineSiblings = _context.TempLines.Where(lt => lt.ParentLineID == currentLine.PermanentLineID && lt.LineNumber > currentLine.LineNumber);
+                                    await currentLineSiblings.ForEachAsync(tl =>
+                                    {
+                                        tl.LineNumber -= currentLine.LineNumber;
+                                        tl.ParentLineID = newLine.LineID;
+                                        _context.Update(tl);
+                                    });
+                                    await _context.SaveChangesAsync();
+
+                                    currentLine.ParentLine = _context.TempLines.Where(tl => tl.PermanentLineID == currentLine.ParentLineID).Include(tl => tl.LineType).FirstOrDefault();
+                                    if (orderedLineTypes.IndexOf(currentLine.ParentLine.LineType) < newLineTypeIndex)
+                                    {
+                                        //make new line currents parent
+                                        newLine.ParentLineID = currentLine.ParentLineID;
+                                        currentLine.ParentLineID = newLine.LineID;
+                                        _context.Update(currentLine);
+                                        _context.Update(newLine);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                }
+                                else // types are the same
+                                {
+                                    //all curents children should pount to new line
+                                    await _context.TempLines.Where(tl => tl.ParentLineID == currentLine.PermanentLineID).ForEachAsync(tl => { tl.ParentLineID = newLine.LineID; _context.Update(tl); });
+                                    await _context.SaveChangesAsync();
+
+                                }
+
+                            }
+                            else
+                            {
+                                newLine.LineNumber = 1;
+                                newLine.ParentLineID = currentLine.PermanentLineID;
+                                _context.Update(newLine);
+                                var siblings = _context.TempLines.Where(tl => tl.ParentLineID == newLine.ParentLineID);
+                                await siblings.ForEachAsync(tl => { tl.LineNumber += 1; _context.Update(tl); });
+                                await _context.SaveChangesAsync();
+                            }
+
                         }
 
                     }
@@ -747,6 +767,64 @@ namespace PrototypeWithAuth.Controllers
             }
             return refreshedLines;
         }
+        private async Task DeleteTemporaryDeletedLinesAsync()
+        {
+
+            var linesToDelete = await _context.Lines.Where(l => l.IsTemporaryDeleted).ToListAsync();
+            var lineTypes = GetOrderLineTypeFromChildToParent();
+            foreach (var lineType in lineTypes)
+            {
+                var linesByType = linesToDelete.Where(n => n.LineTypeID == lineType.LineTypeID);
+                foreach (var line in linesByType)
+                {
+                    _context.Remove(line);                 
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+        private async Task DeleteTempLineWithChildrenAsync(TempLine line)
+        {
+            var siblingsAfter = _context.TempLines.Where(tl => tl.ParentLineID == line.ParentLineID && tl.LineNumber > line.LineNumber).Include(tl => tl.PermanentLine).ToList();
+            Stack<TempLine> nodes = new Stack<TempLine>();
+            List<TempLine> nodeInOrderOfChildrenToParent = new List<TempLine>();
+            nodes.Push(line);
+            while (!nodes.IsEmpty())
+            {
+                var curr = nodes.Pop();
+                nodeInOrderOfChildrenToParent.Add(curr);
+                var children = await _context.TempLines.Where(tl => tl.ParentLineID == curr.PermanentLineID).Include(tl => tl.PermanentLine).ToListAsync();
+                children.ForEach(tl => { nodes.Push(tl); });
+            }
+            var lineTypes = GetOrderLineTypeFromChildToParent();
+            foreach(var lineType in lineTypes)
+            {
+                var nodesByType = nodeInOrderOfChildrenToParent.Where(n => n.LineTypeID == lineType.LineTypeID);
+                foreach(var node in nodesByType)
+                {
+                    var permanentLine = node.PermanentLine;
+                    _context.Remove(node);
+                    if(node.PermanentLine !=null)
+                    {
+                        if (node.PermanentLine.IsTemporary)
+                        {
+                            _context.Remove(permanentLine);
+                        }
+                        else
+                        {
+                            permanentLine.IsTemporaryDeleted = true;
+                            _context.Update(permanentLine);
+                        }
+
+                    }
+                 
+                }
+                await _context.SaveChangesAsync();
+            }
+
+            //update all the siblings after number--
+            siblingsAfter.ForEach(sa => { sa.LineNumber--; _context.Update(sa); });
+            await _context.SaveChangesAsync();
+        }
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> DeleteMaterial(int materialID)
@@ -802,7 +880,8 @@ namespace PrototypeWithAuth.Controllers
             {
                 FunctionLine = functionLine
             };
-
+            string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.FunctionLine.ToString());
+            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, functionLine.FunctionLineID.ToString());
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
@@ -818,6 +897,14 @@ namespace PrototypeWithAuth.Controllers
                         new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
                     viewmodel.Protocols = _context.Protocols.ToList();
                     break;
+                case AppUtility.ProtocolFunctionTypes.AddFile:
+                    viewmodel.DocumentsInfo = new List<DocumentFolder>();
+                    base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, uploadProtocolsFolder2);
+                    break;
+                case AppUtility.ProtocolFunctionTypes.AddImage:
+                    viewmodel.DocumentsInfo = new List<DocumentFolder>();
+                    base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Pictures, uploadProtocolsFolder2);
+                    break;
             }
             return PartialView(viewmodel);
         }
@@ -832,42 +919,49 @@ namespace PrototypeWithAuth.Controllers
                 var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
                 try
                 {
-                   
-                    var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
-
-                    switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+                    if(addFunctionViewModel.IsRemove)
                     {
-                        case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                            var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                            line.Content += " <a href='#' contenteditable=false class='open-line-product' value='" + product.ProductID + "'>" + product.ProductName + "</a> ";
-                            break;
-                        case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                            var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                            line.Content += " <a href='#' contenteditable=false class='open-line-protocol' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> ";
-                            break;
-                        case AppUtility.ProtocolFunctionTypes.AddFile:
-                        case AppUtility.ProtocolFunctionTypes.AddImage:
-                            MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionLineID, AppUtility.ParentFolderName.FunctionLine);
-                            await SaveTempFunctionLineAsync(addFunctionViewModel);
-                            break;
-                        //case AppUtility.FuctionTypes.AddStop:
-                        //    break;
-                        case AppUtility.ProtocolFunctionTypes.AddTable:
-                            await SaveTempFunctionLineAsync(addFunctionViewModel);
-                            break;
-                        case AppUtility.ProtocolFunctionTypes.AddTemplate:
-                            await SaveTempFunctionLineAsync(addFunctionViewModel);
-                            break;
-                            //case AppUtility.FuctionTypes.AddTimer:
-                            //    break;
-                            //case AppUtility.FuctionTypes.AddTip:
-                            //case AppUtility.FuctionTypes.AddWarning:
-                            //case AppUtility.FuctionTypes.AddComment:
-                            //    break;
+                        _context.Remove(addFunctionViewModel.FunctionLine);
                     }
-                    _context.Update(line);
+                    else
+                    {
+                        var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
+
+                        switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+                        {
+                            case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
+                                var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
+                                line.Content += " <a href='#' contenteditable=false class='open-line-product' value='" + product.ProductID + "'>" + product.ProductName + "</a> ";
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
+                                var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
+                                line.Content += " <a href='#' contenteditable=false class='open-line-protocol' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> ";
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddFile:
+                            case AppUtility.ProtocolFunctionTypes.AddImage:
+                                await SaveTempFunctionLineAsync(addFunctionViewModel);
+                                MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionLineID, AppUtility.ParentFolderName.FunctionLine);
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddStop:
+                            case AppUtility.ProtocolFunctionTypes.AddTable:
+                                await SaveTempFunctionLineAsync(addFunctionViewModel);
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddTemplate:
+                                await SaveTempFunctionLineAsync(addFunctionViewModel);
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddTimer:
+                            case AppUtility.ProtocolFunctionTypes.AddTip:
+                            case AppUtility.ProtocolFunctionTypes.AddWarning:
+                            case AppUtility.ProtocolFunctionTypes.AddComment:
+                                await SaveTempFunctionLineAsync(addFunctionViewModel);
+                                break;
+                        }
+                        _context.Update(line);
+                      
+                    }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+
                 }
                 catch (Exception ex)
                 {
