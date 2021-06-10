@@ -23,8 +23,8 @@
 			$.fn.CloseModal("documents-delete");
 			$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername);
 			//$.fn.ChangeColorsOfDocs($foldername);	
-			$(".document-name").text(fileName)
-			$(".document-name#FileName").val(fileName)
+			$(".document-name").text('')
+			$(".document-name#FileName").val('')
 		},
 		processData: false,
 		contentType: false

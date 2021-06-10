@@ -19,9 +19,12 @@
 	}
 });
 
-$(".saveFunction").off('click').on('click',function (e) {
+$(".saveFunction, .removeFunction").off('click').on('click',function (e) {
     e.preventDefault();
-
+    if($(this).hasClass("removeFunction"))
+    {
+        $("#IsRemove").val(true);
+    }
     //$('.materialForm').data("validator").settings.ignore = "";
     //var valid = $('.materialForm').valid();
     //console.log("valid form: " + valid)
@@ -63,6 +66,7 @@ $(".saveFunction").off('click').on('click',function (e) {
             return true;
         }
     });
+
     //}
     //$('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 });

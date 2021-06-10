@@ -919,42 +919,49 @@ namespace PrototypeWithAuth.Controllers
                 var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
                 try
                 {
-                   
-                    var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
-
-                    switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+                    if(addFunctionViewModel.IsRemove)
                     {
-                        case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                            var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                            line.Content += " <a href='#' contenteditable=false class='open-line-product' value='" + product.ProductID + "'>" + product.ProductName + "</a> ";
-                            break;
-                        case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                            var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                            line.Content += " <a href='#' contenteditable=false class='open-line-protocol' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> ";
-                            break;
-                        case AppUtility.ProtocolFunctionTypes.AddFile:
-                        case AppUtility.ProtocolFunctionTypes.AddImage:
-                            await SaveTempFunctionLineAsync(addFunctionViewModel);
-                            MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionLineID, AppUtility.ParentFolderName.FunctionLine);
-                            break;
-                        //case AppUtility.FuctionTypes.AddStop:
-                        //    break;
-                        case AppUtility.ProtocolFunctionTypes.AddTable:
-                            await SaveTempFunctionLineAsync(addFunctionViewModel);
-                            break;
-                        case AppUtility.ProtocolFunctionTypes.AddTemplate:
-                            await SaveTempFunctionLineAsync(addFunctionViewModel);
-                            break;
-                        case AppUtility.ProtocolFunctionTypes.AddTimer:
-                        case AppUtility.ProtocolFunctionTypes.AddTip:
-                        case AppUtility.ProtocolFunctionTypes.AddWarning:
-                        case AppUtility.ProtocolFunctionTypes.AddComment:
-                            await SaveTempFunctionLineAsync(addFunctionViewModel);
-                            break;
+                        _context.Remove(addFunctionViewModel.FunctionLine);
                     }
-                    _context.Update(line);
+                    else
+                    {
+                        var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
+
+                        switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+                        {
+                            case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
+                                var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
+                                line.Content += " <a href='#' contenteditable=false class='open-line-product' value='" + product.ProductID + "'>" + product.ProductName + "</a> ";
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
+                                var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
+                                line.Content += " <a href='#' contenteditable=false class='open-line-protocol' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> ";
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddFile:
+                            case AppUtility.ProtocolFunctionTypes.AddImage:
+                                await SaveTempFunctionLineAsync(addFunctionViewModel);
+                                MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionLineID, AppUtility.ParentFolderName.FunctionLine);
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddStop:
+                            case AppUtility.ProtocolFunctionTypes.AddTable:
+                                await SaveTempFunctionLineAsync(addFunctionViewModel);
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddTemplate:
+                                await SaveTempFunctionLineAsync(addFunctionViewModel);
+                                break;
+                            case AppUtility.ProtocolFunctionTypes.AddTimer:
+                            case AppUtility.ProtocolFunctionTypes.AddTip:
+                            case AppUtility.ProtocolFunctionTypes.AddWarning:
+                            case AppUtility.ProtocolFunctionTypes.AddComment:
+                                await SaveTempFunctionLineAsync(addFunctionViewModel);
+                                break;
+                        }
+                        _context.Update(line);
+                      
+                    }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+
                 }
                 catch (Exception ex)
                 {
