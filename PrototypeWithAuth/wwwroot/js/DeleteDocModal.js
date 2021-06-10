@@ -21,8 +21,15 @@
 		data: formData,
 		success: (partialResult) => {
 			$.fn.CloseModal("documents-delete");
-			$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername);
-			//$.fn.ChangeColorsOfDocs($foldername);
+			if ($(".report-file-card.delete-card").length > 0) {
+				$(".report-file-card.delete-card").prev().remove();
+				$(".report-file-card.delete-card").next().remove();
+				$(".report-file-card.delete-card").remove();
+			}
+			else {
+				$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername);
+				//$.fn.ChangeColorsOfDocs($foldername);
+			}
 		},
 		processData: false,
 		contentType: false

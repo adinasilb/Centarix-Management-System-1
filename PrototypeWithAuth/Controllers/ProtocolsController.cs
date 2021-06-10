@@ -1770,14 +1770,13 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID, string reportTempText)
+        public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var guid = Guid.NewGuid().ToString();
             var viewmodel = new AddReportFunctionViewModel
             {
                 ReportID = ReportID,
-                ReportTempText = reportTempText,
                 FunctionType = functionType,
                 FunctionGuid = guid
             };
@@ -1803,7 +1802,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddReportFunctionModal(AddReportFunctionViewModel addReportsFunctionViewModel)
+        public async Task<IActionResult> AddReportFunctionModal(AddReportFunctionViewModel addReportsFunctionViewModel, CreateReportViewModel createReportViewModel)
         {
             var functionType = _context.FunctionTypes.FirstOrDefault();
             var report = _context.Reports.Where(r => r.ReportID == addReportsFunctionViewModel.ReportID).FirstOrDefault();
@@ -1839,7 +1838,7 @@ namespace PrototypeWithAuth.Controllers
 
                                 string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
 
-                            report.TemporaryReportText = addReportsFunctionViewModel.ReportTempText + "<br/>" + renderedView + "<br/>";
+                            report.TemporaryReportText = createReportViewModel.Report.ReportText + "<br/>" + renderedView + "<br/>";
                             _context.Update(report);
                             await _context.SaveChangesAsync();
 

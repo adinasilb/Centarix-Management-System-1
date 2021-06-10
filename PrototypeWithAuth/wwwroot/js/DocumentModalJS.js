@@ -134,9 +134,15 @@
 		}
 	};
 
-	$(".modal").on("click",".delete-document", function (e) {
+	$("body, .modal").off("click").on("click",".delete-document", function (e) {
 		e.preventDefault();
 		var hasClass = $(this).hasClass("delete-file-document");
+		var reportFile = $(this).hasClass("report-file");
+		console.log(reportFile)
+		if (reportFile == true) {
+			console.log($(this).parent())
+			$(this).parent().parent(".report-file-card").addClass("delete-card");
+        }
 		if (hasClass ==true) {
 			console.log("delete doc clicked");
 			var link = $(this).attr("url");
@@ -148,7 +154,6 @@
 				cache: false,
 				success: function (data) {
 					$.fn.OpenModal('modal-document-delete', "documents-delete", data)
-					
 				}
 			});
 		}

@@ -6,7 +6,7 @@
     }
     var url = "";
     if ($("#masterPageType").val() == "ProtocolsReports") {
-        url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val() + "&reportTempText=" + $("#ReportText").val() ;
+        url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
         	$.fn.CallPageRequest( url , "addFunction");
     }
 	/*if ($("#masterPageType").val() == "ProtocolsCreate")*/
@@ -35,7 +35,13 @@ $(".saveFunction").off('click').on('click',function (e) {
     //else {
     //$('.activeSubmit').removeClass('disabled-submit')
 
-    var formData = new FormData($(".addFunctionForm")[0]);
+    var functionFormData = new FormData($(".addFunctionForm")[0]);
+    var reportFormData = new FormData($(".createReportForm")[0]);
+
+    for (var pair of reportFormData.entries()) {
+        functionFormData.append(pair[0], pair[1]);
+    }
+    console.log(...functionFormData)
     var functionName = "AddFunctionModal";
     if ($("#masterPageType").val() == "ProtocolsReports") {
         functionName = "AddReportFunctionModal";
@@ -43,7 +49,7 @@ $(".saveFunction").off('click').on('click',function (e) {
     $.ajax({
         url: "/Protocols/" + functionName,
         traditional: true,
-        data: formData,
+        data: functionFormData,
         contentType: false,
         processData: false,
         type: "POST",
