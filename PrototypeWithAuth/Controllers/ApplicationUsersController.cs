@@ -529,7 +529,7 @@ namespace PrototypeWithAuth.Controllers
                     EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID,
                     IsRead = false,
                     ApplicationUserID = employeeHoursBeingApproved.EmployeeID,
-                    Description = "update hours request denied for " + employeeHoursBeingApproved.Date.ToString("dd/MM/yyyy"),
+                    Description = "update hours request denied for " + AppUtility.FormatDate(employeeHoursBeingApproved.Date),
                     NotificationStatusID = 5,
                     TimeStamp = DateTime.Now,
                     Controller = "Timekeeper",

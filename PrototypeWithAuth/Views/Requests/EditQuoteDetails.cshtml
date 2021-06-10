@@ -205,7 +205,14 @@
                                     </td>
                                     <td width="15%" class="border-right">
                                         <div class="form-group">
-                                            <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value="@(Model.Requests[i].ExpectedSupplyDays==null ? "" : DateTime.Now.AddDays(Model.Requests[i].ExpectedSupplyDays ?? 0).ToString("dd'/'MM'/'yyyy"))" />
+                                            @{ 
+                                                DateTime? expectedSupplyDate = null;
+                                                if (Model.Requests[i].ExpectedSupplyDays != null)
+                                                {
+                                                    expectedSupplyDate = DateTime.Now.AddDays(Model.Requests[i].ExpectedSupplyDays ?? 0);
+                                                }
+                                            }
+                                            <input class="form-control-plaintext border-bottom datepicker " type="text" name="expected-supply-days" id="expected-supply-date" value="@AppUtility.FormatDate(expectedSupplyDate)" />
                                         </div>
                                     </td>
                                 </tr>

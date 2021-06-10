@@ -718,5 +718,16 @@ namespace PrototypeWithAuth.AppData
             previousPayment = currentInstallment;
             return currentInstallment;
         }
+        public static string FormatDate(DateTime? date)
+        {
+            if(date != null)
+            {
+                return date?.ToString("d MMM yyyy");
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
 }

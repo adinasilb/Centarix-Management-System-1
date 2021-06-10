@@ -3910,7 +3910,7 @@ namespace PrototypeWithAuth.Controllers
 
             //body
             builder.TextBody = $"Hello,\n\nOrder number {request.ParentRequest.OrderNumber} for {request.Product.ProductName}" +
-                $" which was scheduled to arrive on {request.ParentRequest.OrderDate.AddDays((double)request.ExpectedSupplyDays).ToString("dd/MM/yyyy")}, " +
+                $" which was scheduled to arrive on {AppUtility.FormatDate(request.ParentRequest.OrderDate.AddDays((double)request.ExpectedSupplyDays))}, " +
                 $"has not arrived yet. \n" +
                     $"Please update us on the matter.\n\n" +
                     $"Best regards,\n" +
