@@ -41,12 +41,12 @@
                             <label asp-for="EmployeeHour.Date" class="control-label"></label>
                             @if (disabled)
                             {
-                                <input asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" disabled />
+                                <input asp-for="EmployeeHour.Date" asp-format="@AppUtility.AspDateFormatString" class="form-control-plaintext  border-bottom update-hour-date datepicker " type="text" disabled />
                                 <input type="hidden" asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" />
                             }
                             else
                             {
-                                <input asp-for="EmployeeHour.Date" asp-format="{0:dd/MM/yyyy}" type="text" data-workday="@Model.AutoFillEntry1Type" class="form-control-plaintext  border-bottom update-hour-date datepicker " />
+                                <input asp-for="EmployeeHour.Date" asp-format="@AppUtility.AspDateFormatString" type="text" data-workday="@Model.AutoFillEntry1Type" class="form-control-plaintext  border-bottom update-hour-date datepicker " />
                             }
 
                             <span asp-validation-for="EmployeeHour.Date" class="text-danger-centarix " />
