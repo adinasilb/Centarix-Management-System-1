@@ -3962,29 +3962,29 @@ namespace PrototypeWithAuth.Controllers
                   .Include(r => r.Product).ThenInclude(p => p.Vendor)
                   .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                   .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
-                  .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => p.IsPaid == false).Count() > 0);
+                  .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
                     requests = requests
-                    .Where(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice);
+                    .Where(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.PayNow:
                     requests = requests
                     //.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                    .Where(r => r.PaymentStatusID == 3);
+                    .Where(r => r.PaymentStatusID == 3 && r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.PayLater:
                     requests = requests
-                .Where(r => r.PaymentStatusID == 4);
+                .Where(r => r.PaymentStatusID == 4 && r.Payments.FirstOrDefault().IsPaid == false);
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     requests = requests
-                        .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                        .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
                     var requestList = requests.ToList();
                     foreach (var request in requests)
                     {
-                        var currentInstallments = request.Payments.Where(p => p.PaymentDate < DateTime.Now.AddDays(5));
+                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5));
                         if (currentInstallments.Count() > 0)
                         {
                             for (var i = 1; i < currentInstallments.Count(); i++)
