@@ -3980,11 +3980,11 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     requests = requests
-                        .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                        .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
                     var requestList = requests.ToList();
                     foreach (var request in requests)
                     {
-                        var currentInstallments = request.Payments.Where(p.PaymentDate < DateTime.Now.AddDays(5));
+                        var currentInstallments = request.Payments.Where(p => p.PaymentDate < DateTime.Now.AddDays(5));
                         if (currentInstallments.Count() > 0)
                         {
                             for (var i = 1; i < currentInstallments.Count(); i++)
