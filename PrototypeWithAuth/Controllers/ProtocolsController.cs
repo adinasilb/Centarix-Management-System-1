@@ -481,9 +481,10 @@ namespace PrototypeWithAuth.Controllers
                         _context.Update(TurnTempLineToLine(line));
                     }
                     await _context.SaveChangesAsync();
-                    await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => fl.IsTemporary = false);
-
-                    await DeleteTemporaryDeletedLinesAsync();            
+                    await _context.FunctionLines.Where(fl => fl.IsTemporary &&fl.Line.IsTemporaryDeleted==false).ForEachAsync(fl => fl.IsTemporary = false);
+                    await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted==true).ForEachAsync(fl => { _context.Remove(fl); });
+                    await _context.SaveChangesAsync();
+                    await DeleteTemporaryDeletedLinesAsync();           
                    
                     await transaction.CommitAsync();
                 }
@@ -504,6 +505,7 @@ namespace PrototypeWithAuth.Controllers
             var lineTypes = GetOrderLineTypeFromChildToParent();
 
             await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => { _context.Remove(fl); });
+            await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted).ForEachAsync(fl => { fl.IsTemporaryDeleted = false; _context.Update(fl); });
             await _context.SaveChangesAsync();
             foreach (var lineType in lineTypes)
             {
@@ -687,9 +689,7 @@ namespace PrototypeWithAuth.Controllers
                                     //all curents children should pount to new line
                                     await _context.TempLines.Where(tl => tl.ParentLineID == currentLine.PermanentLineID).ForEachAsync(tl => { tl.ParentLineID = newLine.LineID; _context.Update(tl); });
                                     await _context.SaveChangesAsync();
-
                                 }
-
                             }
                             else
                             {
@@ -741,7 +741,7 @@ namespace PrototypeWithAuth.Controllers
 
         private List<ProtocolsLineViewModel> OrderLinesForView(int protocolID)
         {
-            var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID).Include(fl => fl.FunctionType).ToList();
+            var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID && fl.IsTemporaryDeleted==false).Include(fl => fl.FunctionType).ToList();
             List<ProtocolsLineViewModel> refreshedLines = new List<ProtocolsLineViewModel>();
             Stack<TempLine> parentNodes = new Stack<TempLine>();
             var lineTypes = _context.LineTypes.ToList();
@@ -922,21 +922,23 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if(addFunctionViewModel.IsRemove)
                     {
-                        _context.Remove(addFunctionViewModel.FunctionLine);
+                        addFunctionViewModel.FunctionLine.IsTemporaryDeleted = true;
+                        _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Modified;
                     }
                     else
                     {
+                        await SaveTempFunctionLineAsync(addFunctionViewModel);
                         var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == addFunctionViewModel.FunctionLine.FunctionTypeID).FirstOrDefault();
 
                         switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
                         {
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                                 var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                                line.Content += " <a href='#' class='open-line-product' value='" + product.ProductID + "'>" + product.ProductName + "</a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
+                                line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionLine.FunctionLineID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                                 var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                                line.Content += " <a href='#' class='open-line-protocol' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
+                                line.Content += " <a href='#' functionline='"+addFunctionViewModel.FunctionLine.FunctionLineID+ "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddFile:
                             case AppUtility.ProtocolFunctionTypes.AddImage:
@@ -953,7 +955,6 @@ namespace PrototypeWithAuth.Controllers
                             case AppUtility.ProtocolFunctionTypes.AddComment:
                                 break;
                         }
-                        await SaveTempFunctionLineAsync(addFunctionViewModel);
                         _context.Update(line);
                       
                     }
@@ -973,10 +974,11 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task SaveTempFunctionLineAsync(AddFunctionViewModel addFunctionViewModel)
         {
-            addFunctionViewModel.FunctionLine.Product = null;
-            addFunctionViewModel.FunctionLine.Protocol = null;
-            addFunctionViewModel.FunctionLine.IsTemporary = true;
-            _context.Add(addFunctionViewModel.FunctionLine);
+            if(addFunctionViewModel.FunctionLine.FunctionLineID==0)
+            {
+                addFunctionViewModel.FunctionLine.IsTemporary = true;
+            }
+            _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Added;
             await _context.SaveChangesAsync();
         }
 

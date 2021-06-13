@@ -22,5 +22,6 @@ namespace PrototypeWithAuth.Models
         public int? ProductID { get; set; }
         public Product Product { get; set; }
         public bool IsTemporary { get; set; }
+        public bool IsTemporaryDeleted { get; set; }
     }
 }
