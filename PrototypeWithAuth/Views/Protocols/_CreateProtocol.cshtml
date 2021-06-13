@@ -3,7 +3,8 @@
 
 <form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
     <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
-    <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
+    <div class="row text-danger-centarix error-message d-none"> @Model.ErrorMessage </div>
+
     <div class="item-table">
         <ul class=" pl-0 nav" style="">
             <li class="list-inline-item m-0 nav-item">
@@ -42,7 +43,9 @@
                     <span class="sr-only"></span>Saving...
                 </div>
             </li>
-
+            <li class="saving-done  d-none">
+                <span class="protocols-color pt-3"> Saved</span>
+            </li>
         </ul>
     </div>
     <div class="tab-content _CreateProtocolTabs">

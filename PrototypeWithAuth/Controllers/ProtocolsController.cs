@@ -470,32 +470,40 @@ namespace PrototypeWithAuth.Controllers
         }
         public async Task SaveTempLines(List<TempLine> TempLines, int ProtocolID)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            try
             {
-                try
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    await UpdateLineContentAsync(TempLines);
-                    var tempLines = _context.TempLines;
-                    foreach (var line in tempLines)
+                    try
                     {
-                        _context.Update(TurnTempLineToLine(line));
+                        await UpdateLineContentAsync(TempLines);
+                        var tempLines = _context.TempLines;
+                        foreach (var line in tempLines)
+                        {
+                            _context.Update(TurnTempLineToLine(line));
+                        }
+                        await _context.SaveChangesAsync();
+                        await _context.FunctionLines.Where(fl => fl.IsTemporary && fl.Line.IsTemporaryDeleted == false).ForEachAsync(fl => fl.IsTemporary = false);
+                        await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
+                        await _context.SaveChangesAsync();
+                        await DeleteTemporaryDeletedLinesAsync();
+
+                        await transaction.CommitAsync();
                     }
-                    await _context.SaveChangesAsync();
-                    await _context.FunctionLines.Where(fl => fl.IsTemporary &&fl.Line.IsTemporaryDeleted==false).ForEachAsync(fl => fl.IsTemporary = false);
-                    await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted==true).ForEachAsync(fl => { _context.Remove(fl); });
-                    await _context.SaveChangesAsync();
-                    await DeleteTemporaryDeletedLinesAsync();           
-                   
-                    await transaction.CommitAsync();
+                    catch (Exception ex)
+                    {
+                        Response.StatusCode = 500;
+                        await transaction.RollbackAsync();
+                        //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Response.StatusCode = 500;
-                    await transaction.RollbackAsync();
-                    //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
-                }
+                await CopySelectedLinesToTempLineTable(ProtocolID);
             }
-            await CopySelectedLinesToTempLineTable(ProtocolID);
+            catch (Exception ex)
+            {
+                Response.StatusCode = 500;
+                await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
+            }
         }
 
      
@@ -996,7 +1004,6 @@ namespace PrototypeWithAuth.Controllers
                     {
                         addMaterialViewModel.Material.ProductID = product.ProductID;
                     }
-
                     _context.Entry(addMaterialViewModel.Material).State = EntityState.Added;
                     await _context.SaveChangesAsync();
                     base.MoveDocumentsOutOfTempFolder(addMaterialViewModel.Material.MaterialID, AppUtility.ParentFolderName.Materials);

@@ -213,14 +213,20 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
             processData: false,
             contentType: false,
             data: new FormData($("#myForm")[0]),
-            url: "/Protocols/SaveTempLines",
+            url: "/Protocols/SaveTempLines?ProtocolID=" + $(".createProtocolMasterProtocolID").val(),
             type: 'POST',
             success: function (data) {
                 //$("._Lines").html(data);
                 $(".saving-spinner").addClass("d-none");
+                $(".saving-done").removeClass("d-none");
+                setTimeout(function () {
+                    $(".saving-done").addClass("d-none");
+                }, 1000*30);
             },
             error: function (jqxhr) {
-                //if(jqxhr.responst)
+                $(".error-message").html(jqxhr.responseText);
+                $(".error-message").removeClass("d-none");
+                $(".saving-spinner").addClass("d-none");
             }
         });
     });
