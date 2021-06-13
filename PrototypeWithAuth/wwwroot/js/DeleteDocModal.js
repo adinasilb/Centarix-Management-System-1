@@ -11,9 +11,11 @@
 	$parentfoldername = $("#ParentFolderName").val();
 	$objectId = $("#ObjectID").val();
 	var $SectionType = $("#masterSectionType").val();
-	console.log($SectionType);
-		var $isEdittable = $('.active-document-modal').attr("data-val");
-		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
+	
+	var $isEdittable = $('.active-document-modal').attr("data-val");
+	var $showSwitch = $('.active-document-modal').attr("showSwitch");
+	var allowMultipleFiles = $("input.active-document-modal").attr("multiple-files");
+	console.log("allowmultiple " + allowMultipleFiles);
 	console.log("$requestId: " + $objectId);
 	$.ajax({
 		url: link,
@@ -21,16 +23,17 @@
 		data: formData,
 		success: (partialResult) => {
 			$.fn.CloseModal("documents-delete");
-			if ($(".report-file-card.delete-card").length > 0) {
-				$(".report-file-card.delete-card").prev().remove();
-				$(".report-file-card.delete-card").next().remove();
-				$(".report-file-card.delete-card").remove();
+			var deletedReportFile = $(".report-file-card.delete-card");
+			if (deletedReportFile.length > 0) {
+				deletedReportFile.prev().remove();
+				deletedReportFile.next().remove();
+				deletedReportFile.remove();
+				$(".report-text").trigger("change");
 			}
 			else {
-				$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername);
-				//$.fn.ChangeColorsOfDocs($foldername);
-
+				$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername, allowMultipleFiles);
 			}
+			//$.fn.ChangeColorsOfDocs($foldername);
 			$(".document-name").text('')
 			$(".document-name#FileName").val('')
 		},

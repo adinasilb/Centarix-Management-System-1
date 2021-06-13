@@ -3494,7 +3494,6 @@ namespace PrototypeWithAuth.Controllers
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 SectionType = SectionType,
-
             };
             return PartialView(deleteDocumentsViewModel);
         }

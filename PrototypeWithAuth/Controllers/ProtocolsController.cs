@@ -1843,6 +1843,7 @@ namespace PrototypeWithAuth.Controllers
                 functionTypes.Add(_context.FunctionTypes.Where(ft => ft.DescriptionEnum == functionType.ToString()).FirstOrDefault());
             }
             var report = _context.Reports.Where(r => r.ReportID == reportID).FirstOrDefault();
+            report.TemporaryReportText = report.ReportText;
             var createReportViewModel = new CreateReportViewModel()
             {
                 Report = report,
@@ -1874,12 +1875,15 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
-            var guid = Guid.NewGuid().ToString();
+            var functionReport = new FunctionReport()
+            {
+                FunctionType = functionType,
+                FunctionTypeID = functionType.FunctionTypeID
+            };
             var viewmodel = new AddReportFunctionViewModel
             {
                 ReportID = ReportID,
-                FunctionType = functionType,
-                FunctionGuid = guid
+                FunctionReport = functionReport
             };
 
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
@@ -1906,7 +1910,11 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddReportFunctionModal(AddReportFunctionViewModel addReportsFunctionViewModel, CreateReportViewModel createReportViewModel)
         {
             var functionType = _context.FunctionTypes.FirstOrDefault();
+
             var report = _context.Reports.Where(r => r.ReportID == addReportsFunctionViewModel.ReportID).FirstOrDefault();
+            var functionReport = addReportsFunctionViewModel.FunctionReport;
+            functionReport.IsTemporary = true;
+            functionReport.ReportID = report.ReportID;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -1923,23 +1931,23 @@ namespace PrototypeWithAuth.Controllers
                         //    break;
                         case AppUtility.ProtocolFunctionTypes.AddFile:
                         case AppUtility.ProtocolFunctionTypes.AddImage:
+                            _context.Entry(functionReport).State = EntityState.Added;
+                            await _context.SaveChangesAsync();
+                            MoveDocumentsOutOfTempFolder(functionReport.FunctionReportID, AppUtility.ParentFolderName.Reports);
 
-                           // MoveDocumentsOutOfTempFolder(functionReport.FunctionReportID, AppUtility.ParentFolderName.Reports);
+                            DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+                            {
+                                ObjectID = functionReport.FunctionReportID.ToString(),
+                                ParentFolderName = AppUtility.ParentFolderName.Reports,
+                                SectionType = AppUtility.MenuItems.Protocols,
+                                IsEdittable = true
+                            };
 
-                                DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
-                                {
-                                    //FolderName = RequestFolderNameEnum,
-                                    ParentFolderName = AppUtility.ParentFolderName.Reports,
-                                    ObjectID = addReportsFunctionViewModel.FunctionGuid,
-                                    SectionType = AppUtility.MenuItems.Protocols,
-                                    IsEdittable = true
-                                };
+                            base.FillDocumentsViewModel(documentsModalViewModel);
 
-                                base.FillDocumentsViewModel(documentsModalViewModel);
-
-                                string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
-                            var fileName = documentsModalViewModel.FileStrings[0].Split('/').Last();
-                            report.TemporaryReportText = createReportViewModel.Report.ReportText + "<br/>" + renderedView + "<div><br/>" + fileName + "<br/></div>";
+                            string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
+                            var fileName = documentsModalViewModel.FileStrings[0].Split("\\").Last();
+                            report.TemporaryReportText = createReportViewModel.Report.ReportText + "<br/>" + renderedView + "<div class='small'>" + fileName + "<br/></div>" + " <div contenteditable='true' class= 'editable-span report-text form-control-plaintext text-transform-none'></div>";
                             _context.Update(report);
                             await _context.SaveChangesAsync();
 
@@ -1989,6 +1997,13 @@ namespace PrototypeWithAuth.Controllers
                         foreach (var functionReport in reportTempFunctions)
                         {
                             _context.Remove(functionReport);
+
+                            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Reports.ToString());
+                            string uploadFolder2 = Path.Combine(uploadFolder1, report.ReportID.ToString());
+                            if (Directory.Exists(uploadFolder2))
+                            {
+                                Directory.Delete(uploadFolder2, true);
+                            }
                         }
                         await _context.SaveChangesAsync();
                     }

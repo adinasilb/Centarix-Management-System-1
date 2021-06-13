@@ -5,7 +5,7 @@
         var rootPath = $"{Context.Request.Scheme}://{Context.Request.Host.Value}{Context.Request.PathBase.Value.ToString()}";
     }
     <div class="card-body responsive-iframe-container p-0">
-        <iframe src="\@Model.FileStrings[0]" title="View" class="responsive-iframe" marginheight="0" frameborder="0" marginwidth="0"
+        <iframe src="@rootPath\/@Model.FileStrings[0]" title="View" class="responsive-iframe" marginheight="0" frameborder="0" marginwidth="0"
                  scrolling="no"></iframe>
     </div>
     <div class="card-body d-flex text-center align-items-center justify-content-center p-0">
