@@ -2401,7 +2401,7 @@ namespace PrototypeWithAuth.Controllers
             string renderedView = await RenderPartialViewToString("OrderEmailView", confirm);
 
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-            string fileName = Path.Combine(path1, "Order" + ".txt");
+            string fileName = Path.Combine(path1, "Order.txt");
 
             using (StreamWriter writer = new StreamWriter(fileName))
             {
@@ -2484,11 +2484,12 @@ namespace PrototypeWithAuth.Controllers
                     }
                     emailNum++;
                 }
-                string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-                string fileName = Path.Combine(path1, "Order" + ".txt");
+                string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+                string fileName = Path.Combine(uploadFolder, "Order.txt");
                 //read the text file to convert to pdf
                 string renderedView = System.IO.File.ReadAllText(fileName);
-
+                //delete file
+                System.IO.File.Delete(fileName);
                 //base url needs to be declared - perhaps should be getting from js?
                 //once deployed need to take base url and put in the parameter for converter.convertHtmlString
                 var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
@@ -2501,7 +2502,6 @@ namespace PrototypeWithAuth.Controllers
                 doc = converter.ConvertHtmlString(renderedView, baseUrl); 
 
                 //save this as orderform
-                string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
                 string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
                 doc.Save(uploadFile);
                 doc.Close();
@@ -2561,6 +2561,7 @@ namespace PrototypeWithAuth.Controllers
                     ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
                     + ownerUsername + "\nCentarix";
                 builder.Attachments.Add(uploadFile);
+                
 
                 message.Body = builder.ToMessageBody();
 
@@ -2681,6 +2682,10 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 await _context.SaveChangesAsync();
                             }
+                            if (System.IO.File.Exists(uploadFile))
+                            {
+                                System.IO.File.Delete(uploadFile);
+                            }
                             //throw new Exception();
                             await transaction.CommitAsync();
                             base.RemoveRequestWithCommentsAndEmailSessions();
@@ -2700,8 +2705,6 @@ namespace PrototypeWithAuth.Controllers
 
                 }
 
-
-                return RedirectToAction(action, confirmEmailViewModel.RequestIndexObject);
 
                 return RedirectToAction(action, confirmEmailViewModel.RequestIndexObject);
             }
@@ -2774,15 +2777,13 @@ namespace PrototypeWithAuth.Controllers
             // create a new pdf document converting an url
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
-            /*foreach (var request in requests) //this seems to be doing the exact same thing for each request -> overwriting previously saved one. what should be happening here???
-            {*/
             //creating the path for the file to be saved
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
             string uniqueFileName = "PriceQuoteRequest.pdf";
             string filePath = Path.Combine(path1, uniqueFileName);
             // save pdf document
             doc.Save(filePath);
-            //}
+
             // close pdf document
             doc.Close();
 
@@ -3961,29 +3962,29 @@ namespace PrototypeWithAuth.Controllers
                   .Include(r => r.Product).ThenInclude(p => p.Vendor)
                   .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                   .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
-                  .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
+                  .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => p.IsPaid == false).Count() > 0);
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
                     requests = requests
-                    .Where(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false);
+                    .Where(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice);
                     break;
                 case AppUtility.SidebarEnum.PayNow:
                     requests = requests
                     //.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
-                    .Where(r => r.PaymentStatusID == 3 && r.Payments.FirstOrDefault().IsPaid == false);
+                    .Where(r => r.PaymentStatusID == 3);
                     break;
                 case AppUtility.SidebarEnum.PayLater:
                     requests = requests
-                .Where(r => r.PaymentStatusID == 4 && r.Payments.FirstOrDefault().IsPaid == false);
+                .Where(r => r.PaymentStatusID == 4);
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     requests = requests
-                        .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
+                        .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
                     var requestList = requests.ToList();
                     foreach (var request in requests)
                     {
-                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5));
+                        var currentInstallments = request.Payments.Where(p.PaymentDate < DateTime.Now.AddDays(5));
                         if (currentInstallments.Count() > 0)
                         {
                             for (var i = 1; i < currentInstallments.Count(); i++)
