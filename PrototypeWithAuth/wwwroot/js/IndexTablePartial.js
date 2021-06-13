@@ -39,7 +39,7 @@ $(".popover-more").off('click').click(function () {
 		}
 		shareNum = $(this).attr("data-share-resource-id");
 		var url = "/" + ControllersEnum + "/RemoveShare?ID=" + shareNum + "&ModelsEnum=" + $("#masterSectionType").val();
-		alert("url: " + url)
+		
 		$.ajax({
 			async: true,
 			url: url,
@@ -151,7 +151,7 @@ $(".load-product-details-summary").off('click').on("click", function (e) {
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
 	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
 	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val() + "&isProprietary=" + isProprietary;
-	alert("$itemurl: " + $itemurl);
+	/*alert("$itemurl: " + $itemurl);*/
 	$.fn.CallPageRequest($itemurl, "summary");
 	return false;
 });

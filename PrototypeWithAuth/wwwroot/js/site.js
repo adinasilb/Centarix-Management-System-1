@@ -552,7 +552,6 @@ $(function () {
 		//fill up col three with the visual
 		var visualDiv = $(".VisualBoxColumn");
 		var visualContainerId = val;
-		alert("visualContainerID: " + visualContainerId);
 		//console.log("about to call ajax with a visual container id of: " + visualContainerId);
 		$.ajax({
 			url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,
@@ -1439,8 +1438,10 @@ $(function () {
 			section = "Requests";
 		}
 		else if ($(this).hasClass('locations')) {
+			console.log("has locations");
 			url = "/Requests/ReceivedModalVisual";
-			section = "Requests";
+			section = $(".turn-edit-on-off").attr("section-type"); //"Requests";
+			console.log("section: " + section);
         }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
 			url = "/Requests/EditModalView";

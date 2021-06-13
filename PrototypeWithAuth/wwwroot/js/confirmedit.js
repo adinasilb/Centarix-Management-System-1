@@ -30,18 +30,20 @@
 			url = "/Requests/EditModalView";
 		}
 		else if ($('.turn-edit-on-off').hasClass('locations')) {
+			//console.log("has class locations");
 			if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
-				console.log("has class locations in labmanage");
-				var visualContainerId = $(".hasVisual").attr("parent-id");
-				url = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
-				alert("url: " + url)
-				visualDiv = $(".VisualBoxColumn");
+				$("#loading").show();
+			//	console.log("has class locations in labmanage");
+			//	var visualContainerId = $(".hasVisual").attr("parent-id");
+			//	url = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
+				
+			//	visualDiv = $(".VisualBoxColumn");
 			}
-			else {
-				console.log("has class locations in requests");
+			//else {
+				//console.log("has class locations in requests");
 				url = "/Requests/ReceivedModalVisual";
 				visualDiv = $(".visualView");
-            }
+            //}
 		}
 		else {
 			alert("didn't go into any edits");
@@ -58,9 +60,25 @@
 			cache: false,
 			success: function (data) {
 				if ($('.turn-edit-on-off').hasClass('locations')) {
-					alert("got data for locations");
+					//alert("got data for locations");
 					//console.log(data)
 					visualDiv.html(data);
+					if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
+						console.log("about to reload visual of labmanagement");
+						//Reload visual of labmanagement
+						var visualContainerId = $(".hasVisual").attr("parent-id");
+						var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
+						$.ajax({
+							async: true,
+							url: urlLocations,
+							type: 'GET',
+							cache: true,
+							success: function (data) {
+								$(".hasVisual").html(data);
+								$("#loading").hide();
+							}
+						});
+					}
 				}
 				else {
 					$.fn.getMenuItems();
