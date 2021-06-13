@@ -5,7 +5,16 @@
 }
 
 <div class="col-6">
-    <span role="textbox" contenteditable class="editable-span report-text form-control-plaintext h-100 text-transform-none">@Html.Raw(Model.TemporaryReportText)</span>
+    <span role="textbox" contenteditable="false" class="editable-span report-text form-control-plaintext h-100 text-transform-none">
+    @if (Model.TemporaryReportText == null)
+    {
+        <div contenteditable="true" class="editable-span report-text form-control-plaintext text-transform-none"></div>
+    }
+    else
+    {
+        @Html.Raw(Model.TemporaryReportText)
+    }
+    </span>
     <input type="hidden" id="ReportText" name="Report.ReportText" value="@Model.TemporaryReportText" />
 </div>
 

@@ -1104,13 +1104,16 @@
                 success: function (data) {
                     $('#loading').hide();
                     $.fn.OpenModal('documentsModal', 'documents', data)
-                    var length = $('.iframe-container').length;
-                    console.log(length)
-                    if (length < 1) {
+                    var numCards = $(".documentsModal .card.document-border").length;
+                    console.log("numcards: " + numCards);
+                    if (numCards < 1) {
                         $.fn.RemoveColorsOfDocs(enumString);
                     }
-                    else if (allowMultipleFiles == false) {
+                    else if (allowMultipleFiles == 'false') {
                         console.log("don't allow multiples")
+                        $(".upload-file").attr('disabled', true)
+                        $(".upload-file").addClass('disabled-background-color')   
+                        $(".upload-file").removeClass('protocols-background-color')  
                         $(".file-select").attr('disabled', true)
                     }
                     return true;

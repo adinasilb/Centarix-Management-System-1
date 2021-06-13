@@ -89,7 +89,7 @@
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		var allowMultipleFiles = $(".active-document-modal").attr("multiple-files");
+		var allowMultipleFiles = $("input .active-document-modal").attr("multiple-files");
 		console.log(allowMultipleFiles)
 		var parentFolder = $(".active-document-modal").attr("parentFolder");
 		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder, allowMultipleFiles);
@@ -109,7 +109,7 @@
 	$.fn.ChangeColorsOfModal = function ($foldername, section) {
 		//alert("section: " + section)
 		console.log("foldername: " + $foldername);
-		var numCards = $(".card.document-border").length;
+		var numCards = $(".documentsModal .card.document-border").length;
 		console.log("numcards: " + numCards);
 		var folder = "#" + $foldername + ".active-document-modal";
 		var div = $(folder + " i");

@@ -121,7 +121,7 @@
                         @{
                             var switchDescription = Model.IsEdittable ? "Edit Mode On" : "Edit Mode Off";
                         }
-                        <label class="edit-mode-switch-description"> @switchDescription</label>
+                        <label class="edit-mode-switch-description disa"> @switchDescription</label>
                         <input type="checkbox" class="turn-edit-doc-on-off operations" @isChecked @*value="@Model.Request.RequestID"*@>
                         <span class="lever"></span>
                     </label>
