@@ -912,10 +912,11 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddFunctionModal(AddFunctionViewModel addFunctionViewModel)
+        public async Task<IActionResult> AddFunctionModal(AddFunctionViewModel addFunctionViewModel, List<TempLine> TempLines)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
+                await UpdateLineContentAsync(TempLines);
                 var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
                 try
                 {
@@ -931,37 +932,33 @@ namespace PrototypeWithAuth.Controllers
                         {
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                                 var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                                line.Content += " <a href='#' contenteditable=false class='open-line-product' value='" + product.ProductID + "'>" + product.ProductName + "</a> ";
+                                line.Content += " <a href='#' class='open-line-product' value='" + product.ProductID + "'>" + product.ProductName + "</a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                                 var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                                line.Content += " <a href='#' contenteditable=false class='open-line-protocol' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> ";
+                                line.Content += " <a href='#' class='open-line-protocol' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddFile:
                             case AppUtility.ProtocolFunctionTypes.AddImage:
-                                await SaveTempFunctionLineAsync(addFunctionViewModel);
                                 MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionLineID, AppUtility.ParentFolderName.FunctionLine);
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddStop:
                             case AppUtility.ProtocolFunctionTypes.AddTable:
-                                await SaveTempFunctionLineAsync(addFunctionViewModel);
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddTemplate:
-                                await SaveTempFunctionLineAsync(addFunctionViewModel);
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddTimer:
                             case AppUtility.ProtocolFunctionTypes.AddTip:
                             case AppUtility.ProtocolFunctionTypes.AddWarning:
                             case AppUtility.ProtocolFunctionTypes.AddComment:
-                                await SaveTempFunctionLineAsync(addFunctionViewModel);
                                 break;
                         }
+                        await SaveTempFunctionLineAsync(addFunctionViewModel);
                         _context.Update(line);
                       
                     }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
-
                 }
                 catch (Exception ex)
                 {

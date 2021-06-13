@@ -332,6 +332,8 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUserReceiver)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
+            
+          
             if (request.RequestStatusID == 7)
             {
                 isProprietary = true;

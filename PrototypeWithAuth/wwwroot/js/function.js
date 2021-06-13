@@ -1,4 +1,4 @@
-﻿$(".function").off("click").click(function (e) {
+﻿$("body").on("click", ".function", function (e) {
 	e.preventDefault();
     var lineID =$(this).attr("lineID");
     if($(this).attr("lineID")==undefined){
@@ -40,15 +40,24 @@ $(".saveFunction, .removeFunction").off('click').on('click',function (e) {
 
     var functionFormData = new FormData($(".addFunctionForm")[0]);
     var reportFormData = new FormData($(".createReportForm")[0]);
+    var protocolFormData = new FormData($(".createProtocolForm")[0]);
 
-    for (var pair of reportFormData.entries()) {
-        functionFormData.append(pair[0], pair[1]);
-    }
-    console.log(...functionFormData)
     var functionName = "AddFunctionModal";
     if ($("#masterPageType").val() == "ProtocolsReports") {
         functionName = "AddReportFunctionModal";
+        for (var pair of reportFormData.entries())
+        {
+            functionFormData.append(pair[0], pair[1]);
+        }
+        console.log(...functionFormData)
     }
+    else{
+         for (var pair of protocolFormData.entries())
+        {
+            functionFormData.append(pair[0], pair[1]);
+        }
+          console.log(...protocolFormData)
+        }
     $.ajax({
         url: "/Protocols/" + functionName,
         traditional: true,
