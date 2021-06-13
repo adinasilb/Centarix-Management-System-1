@@ -1,4 +1,4 @@
-﻿$(".function").off("click").click(function (e) {
+﻿$("body").off("click", ".function").on("click", ".function", function (e) {
 	e.preventDefault();
     var lineID =$(this).attr("lineID");
     if($(this).attr("lineID")==undefined){
@@ -24,6 +24,9 @@ $(".saveFunction, .removeFunction").off('click').on('click',function (e) {
     if($(this).hasClass("removeFunction"))
     {
         $("#IsRemove").val(true);
+        console.log(    $("div.line-input[data-val="+$("#FunctionLine_LineID").val()+"]").find("a.function-line-node[functionline="+$("#FunctionLine_FunctionLineID").val()+"]"))
+         $("div.line-input[data-val="+$("#FunctionLine_LineID").val()+"]").find("a.function-line-node[functionline="+$("#FunctionLine_FunctionLineID").val()+"]").remove();
+         $("div.line-input[data-val="+$("#FunctionLine_LineID").val()+"]").trigger("change")
     }
     //$('.materialForm').data("validator").settings.ignore = "";
     //var valid = $('.materialForm').valid();
@@ -40,15 +43,22 @@ $(".saveFunction, .removeFunction").off('click').on('click',function (e) {
 
     var functionFormData = new FormData($(".addFunctionForm")[0]);
     var reportFormData = new FormData($(".createReportForm")[0]);
+    var protocolFormData = new FormData($(".createProtocolForm")[0]);
 
-    for (var pair of reportFormData.entries()) {
-        functionFormData.append(pair[0], pair[1]);
-    }
-    console.log(...functionFormData)
     var functionName = "AddFunctionModal";
     if ($("#masterPageType").val() == "ProtocolsReports") {
         functionName = "AddReportFunctionModal";
+        for (var pair of reportFormData.entries())
+        {
+            functionFormData.append(pair[0], pair[1]);
+        }
     }
+    else{
+         for (var pair of protocolFormData.entries())
+        {
+            functionFormData.append(pair[0], pair[1]);
+        }
+        }
     $.ajax({
         url: "/Protocols/" + functionName,
         traditional: true,
