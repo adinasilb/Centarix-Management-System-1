@@ -67,7 +67,8 @@
                         var link = "";
                         var classes = "css-checkbox " + locationsList[z].LocationInstanceID;
                         var outerClass = "visual-shelf";
-                        var iconClass = "icon-add_circle_outline-24px1 add-location";
+                        var iconClass = "icon-add_circle_outline-24px1 add-location location-icon d-none tga";
+                        var hideIcon = "";
                         var description = locationsList[z].LocationInstanceAbbrev;
                         var id = "ChildrenLocationInstances_" + z;
                         var name = "ChildrenLocationInstances[" + z + "]";
@@ -89,12 +90,13 @@
                             if (!receive && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 outerClass += " location-selected";
-                                iconClass = "icon-delete-24px";
+                                iconClass = "icon-delete-24px ";
+                                hideIcon = "location-icon d-none";
                             }
                             <td class="@outerClass @disabledEdit" style="padding:0px;" id="@locationsList[z].LocationInstanceID">
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
-                                    <div class="row-1"><i class="@iconClass"></i></div>
+                                    <div class="row-1"><i class="@iconClass @hideIcon"></i></div>@*hide till edit on*@
                                     <div class="row-2 text-left">
                                         <label class="@labelClass">@locationsList[z].LocationInstanceAbbrev</label>
                                     </div>
@@ -118,20 +120,20 @@
                         else if (locationsList[z].IsFull || (!receive && Model.RequestChildrenLocationInstances[z].IsThisRequest/*for archived*/))
                         {
                             var backgroundClass = "graduated-table-background-color  ";
-                            var iconRow = "d-none";
+                            hideIcon = "d-none"; //always hide
                             var disabled = "disabled";
                             if (!receive && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 backgroundClass = "";
                                 iconClass = "icon-delete-24px";
-                                iconRow = "";
+                                hideIcon = "location-icon d-none"; //hide now, show when edit mode on
                                 disabled = "";
                             }
                             <td class="@outerClass @disabledEdit location-selected @backgroundClass" style="padding:0px;  ">
                                 <div class="">
                                     <input class="@classes @disabled" id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1">
-                                        <i class="@iconClass @iconRow"></i> @*hide on load, show when turn edit on*@
+                                        <i class="@iconClass @hideIcon"></i> @*hide on load, show when turn edit on*@
                                     </div>
 
                                     <div class="row-2 text-left">
@@ -147,7 +149,7 @@
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1"> @*hide on load, show when turn edit on*@
-                                        <i class="@iconClass"></i>
+                                        <i class="@iconClass @hideIcon"></i>
                                     </div>
                                     <div class="row-2 text-left">
                                         <label class="@labelClass">@locationsList[z].LocationInstanceAbbrev</label>

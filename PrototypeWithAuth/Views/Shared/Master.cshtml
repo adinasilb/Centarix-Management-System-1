@@ -414,6 +414,7 @@
             $('.mark-edditable').data("val", true);
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
+            $('.location-icon').removeClass('d-none');
 
             //turn off document modals
             if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
@@ -560,6 +561,8 @@
             $('.edit-mode-switch-description').text("Edit Mode Off");
             $('.turn-edit-on-off').attr('name', 'details')
             $('.open-document-modal').attr("data-val", false);
+            $('.location-icon').addClass('d-none');
+
         };
 
         $.fn.LoadEditModalDetails = function () {
