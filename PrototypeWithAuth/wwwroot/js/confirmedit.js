@@ -162,7 +162,7 @@
 				$('.partial-div').html(data);
 				
 				$('.name').val($('.old-name').val())
-				if ($('.turn-edit-on-off').hasClass('orders')) {
+				if ($('.turn-edit-on-off').hasClass('orders') || $('.turn-edit-on-off').hasClass('locations')) {
 					$.fn.LoadEditModalDetails();
 				}
 			}
