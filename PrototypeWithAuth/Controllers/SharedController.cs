@@ -371,6 +371,11 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.ModalType = AppUtility.RequestModalType.Summary;
             }
 
+            if (_context.Requests.Where(r => r.ProductID == request.ProductID).Count() > 1)
+            {
+                requestItemViewModel.IsReorder = true;
+            }
+
             ModalViewType = "Edit";
             requestItemViewModel.Requests.Add(request);
 

@@ -130,8 +130,8 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(sublocationIndexViewModel);
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Requests")]
+        [HttpGet][HttpPost]
+        [Authorize(Roles = "Requests, LabManagement")]
         public IActionResult VisualLocations(int VisualContainerId)
         {
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()

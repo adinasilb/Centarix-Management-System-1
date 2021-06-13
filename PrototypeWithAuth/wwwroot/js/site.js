@@ -552,6 +552,7 @@ $(function () {
 		//fill up col three with the visual
 		var visualDiv = $(".VisualBoxColumn");
 		var visualContainerId = val;
+		alert("visualContainerID: " + visualContainerId);
 		//console.log("about to call ajax with a visual container id of: " + visualContainerId);
 		$.ajax({
 			url: "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId,

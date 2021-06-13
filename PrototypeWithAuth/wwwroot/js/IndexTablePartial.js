@@ -142,7 +142,7 @@ $(".load-product-details").off('click').on("click", function (e) {
 
 //$("body, .modal").off('click', ".load-product-details-summary").on("click", ".load-product-details-summary", function (e) {
 
-$(".load-product-details-summary").off('click').on("click", function (e) { //why is it being called twice if there's an off click??
+$(".load-product-details-summary").off('click').on("click", function (e) { 
 
 	e.preventDefault();
 	e.stopPropagation();
@@ -151,6 +151,7 @@ $(".load-product-details-summary").off('click').on("click", function (e) { //why
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
 	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
 	var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr("value") + "&isEditable=false" + "&SectionType=" + $("#masterSectionType").val() + "&isProprietary=" + isProprietary;
+	alert("$itemurl: " + $itemurl);
 	$.fn.CallPageRequest($itemurl, "summary");
 	return false;
 });
