@@ -26,7 +26,15 @@ $(".saveFunction, .removeFunction").off('click').on('click',function (e) {
         $("#IsRemove").val(true);
         console.log(    $("div.line-input[data-val="+$("#FunctionLine_LineID").val()+"]").find("a.function-line-node[functionline="+$("#FunctionLine_FunctionLineID").val()+"]"))
          $("div.line-input[data-val="+$("#FunctionLine_LineID").val()+"]").find("a.function-line-node[functionline="+$("#FunctionLine_FunctionLineID").val()+"]").remove();
-         $("div.line-input[data-val="+$("#FunctionLine_LineID").val()+"]").trigger("change")
+         $("div.line-input").each(function(){  
+             console.log("this is html:"+   $(this).html+"thisis the end")
+            if($.trim($(this).html())=='')
+            {
+                $(this).remove();
+            }
+         });
+         $("div.line-input[data-val="+$("#FunctionLine_LineID").val()+"]").trigger("change");
+    
     }
     //$('.materialForm').data("validator").settings.ignore = "";
     //var valid = $('.materialForm').valid();

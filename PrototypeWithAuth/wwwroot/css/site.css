@@ -2967,7 +2967,7 @@ body.modal-open .popover {
 .line-input:focus {
     outline-width: 0px !important;
     outline-color: none !important;
-    border-bottom: 2px solid var(--protocol-color) !important;
+  
 }
 .line-header {
     font-size: 1.40rem;
@@ -2998,4 +2998,7 @@ body.modal-open .popover {
 
 .gray-background {
     background-color: rgba(0, 0, 0, 0.075) !important;
+}
+.focused-line {
+    border-bottom: 2px solid var(--protocol-color) !important;
 }
