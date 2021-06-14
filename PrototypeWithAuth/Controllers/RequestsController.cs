@@ -418,14 +418,14 @@ namespace PrototypeWithAuth.Controllers
                 newRequestStatusIds[1] = 6;
             }
             requestStatusIds = requestStatusIds.Where(id => !newRequestStatusIds.Contains(id)).ToArray();
-            foreach (int statusId in requestStatusIds)
-            {
-                SetCountByStatusId(requestIndexObject, viewmodel, fullRequestsList, statusId);
-            }
-            foreach (int statusId in newRequestStatusIds)
-            {
-                SetCountByStatusId(requestIndexObject, viewmodel, changingList, statusId);
-            }
+            //foreach (int statusId in requestStatusIds)
+            //{
+            //    SetCountByStatusId(requestIndexObject, viewmodel, fullRequestsList, statusId);
+            //}
+            //foreach (int statusId in newRequestStatusIds)
+            //{
+            //    SetCountByStatusId(requestIndexObject, viewmodel, changingList, statusId);
+            //}
 
             /*int newCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 1, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
             int orderedCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 2, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
@@ -532,10 +532,10 @@ namespace PrototypeWithAuth.Controllers
                 fullRequestsList = fullRequestsList.Where(r => r.Product.ProductName.Contains(searchText ?? ""));
             }
 
-            int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsListProprietary, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
-            viewmodel.ProprietaryCount = proprietaryCount;
-            viewmodel.NonProprietaryCount = nonProprietaryCount;
+            //int nonProprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsList, 3, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            //int proprietaryCount = AppUtility.GetCountOfRequestsByRequestStatusIDVendorIDSubcategoryIDApplicationUserID(fullRequestsListProprietary, 7, requestIndexObject.SidebarType, requestIndexObject.SidebarFilterID);
+            //viewmodel.ProprietaryCount = proprietaryCount;
+            //viewmodel.NonProprietaryCount = nonProprietaryCount;
         }
 
 

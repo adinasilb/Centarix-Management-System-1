@@ -1142,6 +1142,12 @@
             $('.' + modalDivClass + ' button[type="submit"]').addClass("activeSubmit");
 
         }
+
+        $.fn.removeOpenPopovers = function () {
+            console.log("remove open popovers");
+            $('.popover').remove();
+        }
+
         $.fn.CloseModal = function (modalDivClass) {
             $('.' + modalDivClass).html('');
             if ($('.modal').length == 0) {
