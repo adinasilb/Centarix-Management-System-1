@@ -95,11 +95,13 @@ namespace PrototypeWithAuth
                 config.Filters.Add(new AuthorizeFilter(policy));
                 // config.AllowValidatingTopLevelNodes = true;
             });
-            services.AddSession(/*opts =>
+            services.AddSession(opts =>
             {
                 opts.Cookie.IsEssential = false;
+                opts.Cookie.HttpOnly = false;
+                opts.Cookie.Name = "Sessions" + Guid.NewGuid().ToString();
 
-            }*/);
+            });
 
             ////allow for data anotations validations
             //services.AddMvcCore()
