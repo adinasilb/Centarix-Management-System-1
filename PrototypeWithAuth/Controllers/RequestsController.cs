@@ -1674,7 +1674,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.IsProprietary = true;
             }
             requestItemViewModel = await FillRequestItemViewModel(requestItemViewModel, categoryType);
-            
+            requestItemViewModel.Requests[0].IncludeVAT = true;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.SectionType = SectionType;
             RemoveRequestWithCommentsAndEmailSessions();
@@ -1853,9 +1853,9 @@ namespace PrototypeWithAuth.Controllers
                 ParentCategories = _context.ParentCategories.Where(pc => pc.CategoryTypeID == 2).ToList(),
                 ProductSubcategories = new List<ProductSubcategory>()
             };
+            operationsItemViewModel.Request = new Request() { IncludeVAT = true };
             if (subcategoryID > 0)
-            {
-                operationsItemViewModel.Request = new Request();
+            {                
                 operationsItemViewModel.Request.Product = new Product();
                 operationsItemViewModel.Request.Product.ProductSubcategoryID = subcategoryID;
                 operationsItemViewModel.Request.Product.ProductSubcategory =
