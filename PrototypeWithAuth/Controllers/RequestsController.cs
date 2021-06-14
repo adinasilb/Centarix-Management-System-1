@@ -1674,7 +1674,7 @@ namespace PrototypeWithAuth.Controllers
                 requestItemViewModel.IsProprietary = true;
             }
             requestItemViewModel = await FillRequestItemViewModel(requestItemViewModel, categoryType);
-
+            
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.SectionType = SectionType;
             RemoveRequestWithCommentsAndEmailSessions();
@@ -1742,7 +1742,7 @@ namespace PrototypeWithAuth.Controllers
             RequestItemViewModel requestItemViewModel = new RequestItemViewModel();
 
             requestItemViewModel = await FillRequestItemViewModel(requestItemViewModel, categoryType, productSubCategoryId);
-
+            requestItemViewModel.Requests.FirstOrDefault().IncludeVAT = true;
             requestItemViewModel.SectionType = sectionType;
             requestItemViewModel.PageType = PageType;
             requestItemViewModel.Requests.FirstOrDefault().Product.ProductName = itemName;
@@ -2052,6 +2052,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> EditModalView(RequestItemViewModel requestItemViewModel, ReceivedModalVisualViewModel receivedModalVisualViewModel)
         {
@@ -2478,24 +2479,18 @@ namespace PrototypeWithAuth.Controllers
                 Requests = allRequests,
                 RequestIndexObject = requestIndexObject
             };
-            //base url needs to be declared - perhaps should be getting from js?
-            //once deployed need to take base url and put in the parameter for converter.convertHtmlString
-            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
-
+            
             //render the purchase order view into a string using a the confirmEmailViewModel
             string renderedView = await RenderPartialViewToString("OrderEmailView", confirm);
-            //instantiate a html to pdf converter object
-            HtmlToPdf converter = new HtmlToPdf();
 
-            PdfDocument doc = new PdfDocument();
-            // create a new pdf document converting an url
-            doc = converter.ConvertHtmlString(renderedView, baseUrl);
-
-            //save this as orderform
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
-            string fileName = Path.Combine(path1, "CentarixOrder#" + allRequests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
-            doc.Save(fileName);
-            doc.Close();
+            string fileName = Path.Combine(path1, "Order.txt");
+
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                await writer.WriteAsync(renderedView);
+            }
+            
             confirm.RequestIndexObject = requestIndexObject;
             return PartialView(confirm);
         }
@@ -2575,215 +2570,233 @@ namespace PrototypeWithAuth.Controllers
                     }
                     emailNum++;
                 }
-
                 string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+                string fileName = Path.Combine(uploadFolder, "Order.txt");
+                //read the text file to convert to pdf
+                string renderedView = System.IO.File.ReadAllText(fileName);
+                //delete file
+                System.IO.File.Delete(fileName);
+                //base url needs to be declared - perhaps should be getting from js?
+                //once deployed need to take base url and put in the parameter for converter.convertHtmlString
+                var baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value}{this.Request.PathBase.Value.ToString()}";
+
+                //instantiate a html to pdf converter object
+                HtmlToPdf converter = new HtmlToPdf();
+
+                PdfDocument doc = new PdfDocument();
+                // create a new pdf document converting an url
+                doc = converter.ConvertHtmlString(renderedView, baseUrl); 
+
+                //save this as orderform
                 string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
+                doc.Save(uploadFile);
+                doc.Close();
 
-                if (System.IO.File.Exists(uploadFile))
+                /*string uploadFolder = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
+                string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
+                */
+
+               
+                //instatiate mimemessage
+                var message = new MimeMessage();
+
+                //instantiate the body builder
+                var builder = new BodyBuilder();
+
+                var userId = requests.FirstOrDefault().ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
+                                                                                                                    //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                var currentUser = _context.Users.FirstOrDefault(u => u.Id == userId);
+                //var users = _context.Users.ToList();
+                //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
+                string ownerEmail = currentUser.Email;
+                string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
+                string ownerPassword = currentUser.SecureAppPass;
+                string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ emails.Count() < 1 ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : emails[0];
+                string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
+
+                //add a "From" Email
+                message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
+
+                // add a "To" Email
+                message.To.Add(new MailboxAddress(vendorName, vendorEmail));
+
+                //add CC's to email
+                if (emails.Count >= 2)
                 {
-                    //instatiate mimemessage
-                    var message = new MimeMessage();
+                    message.Cc.Add(new MailboxAddress(emails[1]));
+                }
+                if (emails.Count >= 3)
+                {
+                    message.Cc.Add(new MailboxAddress(emails[2]));
+                }
+                if (emails.Count >= 4)
+                {
+                    message.Cc.Add(new MailboxAddress(emails[3]));
+                }
+                if (emails.Count >= 5)
+                {
+                    message.Cc.Add(new MailboxAddress(emails[4]));
+                }
 
-                    //instantiate the body builder
-                    var builder = new BodyBuilder();
+                //subject
+                message.Subject = "Order from Centarix to " + vendorName;
 
-                    var userId = requests.FirstOrDefault().ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
-                                                                                                                     //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
-                    var currentUser = _context.Users.FirstOrDefault(u => u.Id == userId);
-                    //var users = _context.Users.ToList();
-                    //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
-                    string ownerEmail = currentUser.Email;
-                    string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
-                    string ownerPassword = currentUser.SecureAppPass;
-                    string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ emails.Count() < 1 ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : emails[0];
-                    string vendorName = requests.FirstOrDefault().Product.Vendor.VendorEnName;
+                var quoteNumber = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requests.FirstOrDefault().ParentQuoteID).Select(pq => pq.QuoteNumber).FirstOrDefault();
+                //body
+                builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number " + quoteNumber +
+                    ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
+                    + ownerUsername + "\nCentarix";
+                builder.Attachments.Add(uploadFile);
+                
 
-                    //add a "From" Email
-                    message.From.Add(new MailboxAddress(ownerUsername, ownerEmail));
+                message.Body = builder.ToMessageBody();
 
-                    // add a "To" Email
+                bool wasSent = false;
 
-                    message.To.Add(new MailboxAddress(vendorName, vendorEmail));
-                    if (emails.Count >= 2)
+                using (var client = new SmtpClient())
+                {
+
+                    client.Connect("smtp.gmail.com", 587, false);
+                    //var SecureAppPass = _context.Users.Where(u => u.Id == confirmEmail.ParentRequest.ApplicationUserID).FirstOrDefault().SecureAppPass;
+                    client.Authenticate(ownerEmail, ownerPassword);// ownerPassword);//
+
+                    /*
+                    * SAVE THE INFORMATION HERE
+                    */
+                    using (var transaction = _context.Database.BeginTransaction())
                     {
-                        message.Cc.Add(new MailboxAddress(emails[1]));
-                    }
-                    if (emails.Count >= 3)
-                    {
-                        message.Cc.Add(new MailboxAddress(emails[2]));
-                    }
-                    if (emails.Count >= 4)
-                    {
-                        message.Cc.Add(new MailboxAddress(emails[3]));
-                    }
-                    if (emails.Count >= 5)
-                    {
-                        message.Cc.Add(new MailboxAddress(emails[4]));
-                    }
-                    //add CC's to email
-
-
-
-
-
-                    //subject
-                    message.Subject = "Order from Centarix to " + vendorName;
-
-                    var quoteNumber = _context.ParentQuotes.Where(pq => pq.ParentQuoteID == requests.FirstOrDefault().ParentQuoteID).Select(pq => pq.QuoteNumber).FirstOrDefault();
-                    //body
-                    builder.TextBody = @"Hello," + "\n\n" + "Please see the attached order for quote number " + quoteNumber +
-                        ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
-                        + ownerUsername + "\nCentarix";
-                    builder.Attachments.Add(uploadFile);
-
-                    message.Body = builder.ToMessageBody();
-
-                    bool wasSent = false;
-
-                    using (var client = new SmtpClient())
-                    {
-
-                        client.Connect("smtp.gmail.com", 587, false);
-                        //var SecureAppPass = _context.Users.Where(u => u.Id == confirmEmail.ParentRequest.ApplicationUserID).FirstOrDefault().SecureAppPass;
-                        client.Authenticate(ownerEmail, ownerPassword);// ownerPassword);//
-
-
-                        /*
-                         * SAVE THE INFORMATION HERE
-                         */
-                        using (var transaction = _context.Database.BeginTransaction())
+                        try
                         {
+
                             try
                             {
-
-                                try
-                                {
-                                    client.Send(message);
-                                    wasSent = true;
-                                }
-                                catch (Exception ex)
-                                {
-                                    ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                                    throw new Exception(AppUtility.GetExceptionMessage(ex)); 
-                                }
-                                client.Disconnect(true);
-
-                                if (wasSent)
-                                {
-                                    foreach (var r in requests)
-                                    {
-                                        r.RequestStatusID = 2;
-                                        if (r.RequestID == 0)
-                                        {
-                                            if (r.Product.ProductID == 0)
-                                            {
-                                                _context.Entry(r.Product).State = EntityState.Added;
-                                            }
-                                            _context.Entry(r).State = EntityState.Added;
-                                            _context.Entry(r.ParentRequest).State = EntityState.Added;
-                                            _context.Entry(r.ParentQuote).State = EntityState.Added;
-                                        }
-                                        else
-                                        {
-                                            _context.Entry(r).State = EntityState.Modified;
-                                            _context.Entry(r.ParentRequest).State = EntityState.Added;
-                                        }
-                                        await _context.SaveChangesAsync();
-                                    }
-
-                                    foreach (var p in payments)
-                                    {
-                                        _context.Entry(p).State = EntityState.Added;
-                                        await _context.SaveChangesAsync();
-                                    }
-
-                                    var commentExists = true;
-                                    var n = 1;
-                                    do
-                                    {
-                                        var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                                        var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
-                                        if (comment != null)
-                                        //will only go in here if there are comments so will only work if it's there
-                                        //IMPT look how to clear the session information if it fails somewhere...
-                                        {
-                                            comment.RequestID = requests.FirstOrDefault().RequestID;
-                                            _context.Add(comment);
-                                        }
-                                        else
-                                        {
-                                            commentExists = false;
-                                        }
-                                        n++;
-                                    } while (commentExists);
-                                    await _context.SaveChangesAsync();
-                                    if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
-                                    {
-                                        MoveDocumentsOutOfTempFolder(requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
-                                    }
-
-                                    //save the document
-                                    foreach (var request in requests)
-                                    {
-
-                                        string NewFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
-                                        string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
-                                        Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
-
-                                        string uniqueFileName = 1 + "OrderEmail.pdf";
-                                        string filePath = Path.Combine(folderPath, uniqueFileName);
-                                        if (System.IO.File.Exists(filePath))
-                                        {
-                                            System.IO.File.Delete(filePath);
-                                        }
-
-                                        System.IO.File.Copy(uploadFile, filePath); //make sure this works for each of them
-
-                                        request.Product = await _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
-                                        RequestNotification requestNotification = new RequestNotification();
-                                        requestNotification.RequestID = request.RequestID;
-                                        requestNotification.IsRead = false;
-                                        requestNotification.RequestName = request.Product.ProductName;
-                                        requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                                        requestNotification.Description = "item ordered";
-                                        requestNotification.NotificationStatusID = 2;
-                                        requestNotification.TimeStamp = DateTime.Now;
-                                        requestNotification.Controller = "Requests";
-                                        requestNotification.Action = "NotificationsView";
-                                        requestNotification.OrderDate = DateTime.Now;
-                                        requestNotification.Vendor = request.Product.Vendor.VendorEnName;
-                                        _context.Add(requestNotification);
-                                    }
-                                    await _context.SaveChangesAsync();
-                                }
-                                //throw new Exception();
-                                await transaction.CommitAsync();
-                                base.RemoveRequestWithCommentsAndEmailSessions();
-
+                                client.Send(message);
+                                wasSent = true;
                             }
                             catch (Exception ex)
                             {
-                                transaction.Rollback();
-                                base.RemoveRequestWithCommentsAndEmailSessions();
-                                throw new Exception(AppUtility.GetExceptionMessage(ex));
+                                ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                                throw new Exception(AppUtility.GetExceptionMessage(ex)); 
                             }
+                            client.Disconnect(true);
+
+                            if (wasSent)
+                            {
+                                foreach (var r in requests)
+                                {
+                                    r.RequestStatusID = 2;
+                                    if (r.RequestID == 0)
+                                    {
+                                        if (r.Product.ProductID == 0)
+                                        {
+                                            _context.Entry(r.Product).State = EntityState.Added;
+                                        }
+                                        _context.Entry(r).State = EntityState.Added;
+                                        _context.Entry(r.ParentRequest).State = EntityState.Added;
+                                        _context.Entry(r.ParentQuote).State = EntityState.Added;
+                                    }
+                                    else
+                                    {
+                                        _context.Entry(r).State = EntityState.Modified;
+                                        _context.Entry(r.ParentRequest).State = EntityState.Added;
+                                    }
+                                    await _context.SaveChangesAsync();
+                                }
+
+                                foreach (var p in payments)
+                                {
+                                    _context.Entry(p).State = EntityState.Added;
+                                    await _context.SaveChangesAsync();
+                                }
+
+                                var commentExists = true;
+                                var n = 1;
+                                do
+                                {
+                                    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
+                                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                                    if (comment != null)
+                                    //will only go in here if there are comments so will only work if it's there
+                                    //IMPT look how to clear the session information if it fails somewhere...
+                                    {
+                                        comment.RequestID = requests.FirstOrDefault().RequestID;
+                                        _context.Add(comment);
+                                    }
+                                    else
+                                    {
+                                        commentExists = false;
+                                    }
+                                    n++;
+                                } while (commentExists);
+                                await _context.SaveChangesAsync();
+                                if (requests.FirstOrDefault().OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
+                                {
+                                    MoveDocumentsOutOfTempFolder(requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
+                                }
+
+                                //save the document
+                                foreach (var request in requests)
+                                {
+
+                                    string NewFolder = Path.Combine(uploadFolder, request.RequestID.ToString());
+                                    string folderPath = Path.Combine(NewFolder, AppUtility.FolderNamesEnum.Orders.ToString());
+                                    Directory.CreateDirectory(folderPath); //make sure we don't need one above also??
+
+                                    string uniqueFileName = 1 + "OrderEmail.pdf";
+                                    string filePath = Path.Combine(folderPath, uniqueFileName);
+                                    if (System.IO.File.Exists(filePath))
+                                    {
+                                        System.IO.File.Delete(filePath);
+                                    }
+
+                                    System.IO.File.Copy(uploadFile, filePath); //make sure this works for each of them
+
+                                    request.Product = await _context.Products.Where(p => p.ProductID == request.ProductID).Include(p => p.Vendor).FirstOrDefaultAsync();
+                                    RequestNotification requestNotification = new RequestNotification();
+                                    requestNotification.RequestID = request.RequestID;
+                                    requestNotification.IsRead = false;
+                                    requestNotification.RequestName = request.Product.ProductName;
+                                    requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
+                                    requestNotification.Description = "item ordered";
+                                    requestNotification.NotificationStatusID = 2;
+                                    requestNotification.TimeStamp = DateTime.Now;
+                                    requestNotification.Controller = "Requests";
+                                    requestNotification.Action = "NotificationsView";
+                                    requestNotification.OrderDate = DateTime.Now;
+                                    requestNotification.Vendor = request.Product.Vendor.VendorEnName;
+                                    _context.Add(requestNotification);
+                                }
+                                await _context.SaveChangesAsync();
+                            }
+                            if (System.IO.File.Exists(uploadFile))
+                            {
+                                System.IO.File.Delete(uploadFile);
+                            }
+                            //throw new Exception();
+                            await transaction.CommitAsync();
+                            base.RemoveRequestWithCommentsAndEmailSessions();
 
                         }
-                        /*
-                         * END SAVE THE INFORMATION HERE
-                         */
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            base.RemoveRequestWithCommentsAndEmailSessions();
+                            throw new Exception(AppUtility.GetExceptionMessage(ex));
+                        }
 
                     }
-
-
-                    return RedirectToAction(action, confirmEmailViewModel.RequestIndexObject);
+                    /*
+                        * END SAVE THE INFORMATION HERE
+                        */
 
                 }
+
+
                 return RedirectToAction(action, confirmEmailViewModel.RequestIndexObject);
             }
             catch (Exception ex)
             {
-                confirmEmailViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex);
+                confirmEmailViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex); //not being used - pass it in....
                 Response.StatusCode = 500;
                 if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -2850,15 +2863,13 @@ namespace PrototypeWithAuth.Controllers
             // create a new pdf document converting an url
             doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
-            /*foreach (var request in requests) //this seems to be doing the exact same thing for each request -> overwriting previously saved one. what should be happening here???
-            {*/
             //creating the path for the file to be saved
             string path1 = Path.Combine("wwwroot", AppUtility.ParentFolderName.Requests.ToString());
             string uniqueFileName = "PriceQuoteRequest.pdf";
             string filePath = Path.Combine(path1, uniqueFileName);
             // save pdf document
             doc.Save(filePath);
-            //}
+
             // close pdf document
             doc.Close();
 
@@ -3750,9 +3761,11 @@ namespace PrototypeWithAuth.Controllers
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.ParentQuote)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).ToList();
+                var exchangeRate = GetExchangeRate();
                 foreach (var request in requests)
                 {
-                    request.ExchangeRate = GetExchangeRate();
+                    request.ExchangeRate = exchangeRate;
+                    request.IncludeVAT = true;
                 }
                 EditQuoteDetailsViewModel editQuoteDetailsViewModel = new EditQuoteDetailsViewModel()
                 {
@@ -3797,10 +3810,6 @@ namespace PrototypeWithAuth.Controllers
                             request.ParentQuote.QuoteStatusID = 4;
                             //request.ParentQuote.QuoteDate = quoteDate;
                             request.ParentQuote.QuoteNumber = quoteNumber.ToString();
-                            if (quote.IncludeVAT)
-                            {
-                                quote.Cost = quote.Cost / (decimal)1.17;
-                            }
                             request.Cost = quote.Cost;
                             request.Currency = quote.Currency;
                             request.IncludeVAT = quote.IncludeVAT;
@@ -3989,7 +3998,7 @@ namespace PrototypeWithAuth.Controllers
 
             //body
             builder.TextBody = $"Hello,\n\nOrder number {request.ParentRequest.OrderNumber} for {request.Product.ProductName}" +
-                $" which was scheduled to arrive on {request.ParentRequest.OrderDate.AddDays((double)request.ExpectedSupplyDays).ToString("dd/MM/yyyy")}, " +
+                $" which was scheduled to arrive on {AppUtility.FormatDate(request.ParentRequest.OrderDate.AddDays((double)request.ExpectedSupplyDays))}, " +
                 $"has not arrived yet. \n" +
                     $"Please update us on the matter.\n\n" +
                     $"Best regards,\n" +
@@ -4433,11 +4442,6 @@ namespace PrototypeWithAuth.Controllers
                         RequestToSave.Cost = request.Cost;
                         RequestToSave.Payments.FirstOrDefault().InvoiceID = addInvoiceViewModel.Invoice.InvoiceID;
                         RequestToSave.Payments.FirstOrDefault().HasInvoice = true;
-                        if (RequestToSave.IncludeVAT)
-                        {
-                            RequestToSave.Cost = RequestToSave.Cost / (decimal)1.17;
-                        }
-
                         _context.Update(RequestToSave);
 
                         string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());

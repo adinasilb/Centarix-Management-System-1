@@ -959,7 +959,7 @@ namespace PrototypeWithAuth.Controllers
                                     EmployeeHoursID = employeeHoursID,
                                     IsRead = false,
                                     ApplicationUserID = newEmployeeHour.EmployeeID,
-                                    Description = "no hours reported for " + newEmployeeHour.Date.ToString("dd/MM/yyyy"),
+                                    Description = "no hours reported for " + AppUtility.FormatDate(newEmployeeHour.Date),
                                     NotificationStatusID = 5,
                                     TimeStamp = DateTime.Now,
                                     Controller = "Timekeeper",
