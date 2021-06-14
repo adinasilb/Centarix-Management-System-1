@@ -10,8 +10,8 @@
             </button>
             <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm">
                 <input type="hidden" asp-for="FunctionLine.FunctionTypeID" />
-                <input type="hidden" asp-for="FunctionLine.LineID" />
-                <input type="hidden" asp-for="FunctionLine.FunctionLineID" />
+                <input type="hidden" asp-for="FunctionLine.TextID" />
+                <input type="hidden" asp-for="FunctionLine.FunctionTextID" />
                 <input type="hidden" asp-for="IsRemove" />
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
                     <div class="container p-0">
@@ -29,12 +29,12 @@
                         case AppUtility.ProtocolFunctionTypes.AddComment:
                         case AppUtility.ProtocolFunctionTypes.AddTip:
                         case AppUtility.ProtocolFunctionTypes.AddWarning:
-                            <textarea class="border form-control-plaintext " rows="6" asp-for="FunctionLine.Text"></textarea>
+                            <textarea class="border form-control-plaintext " rows="6" asp-for="FunctionLine.Description"></textarea>
                             break;
                         case AppUtility.ProtocolFunctionTypes.AddFile:
                             <div class="col">
                                 <button type="button" class="my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Files.ToString()"
-                                        data-id="@Model.FunctionLine.FunctionLineID"
+                                        data-id="@Model.FunctionLine.FunctionTextID"
                                         id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false">
                                     Select File
                                 </button>
@@ -51,7 +51,7 @@
                         case AppUtility.ProtocolFunctionTypes.AddImage:
                             <div class="col">
                                 <button type="button" class=" my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()"
-                                        data-id="@Model.FunctionLine.FunctionLineID"
+                                        data-id="@Model.FunctionLine.FunctionTextID"
                                         id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false"  multiple-files="false">
                                     Select File
                                 </button>
@@ -212,7 +212,7 @@
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
                         <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
-                        @if (Model.FunctionLine.FunctionLineID != 0)
+                        @if (Model.FunctionLine.FunctionTextID != 0)
                         {
                             <input type="submit" class="custom-button custom-cancel removeFunction" value="Remove"/>
                         }

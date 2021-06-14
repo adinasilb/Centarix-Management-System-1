@@ -27,7 +27,7 @@
                         case AppUtility.ProtocolFunctionTypes.AddFile:
                             <div class="col">
                                 <input type="button" class="my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Files.ToString()"
-                                        data-id="@Model.FunctionReport.FunctionReportID" id="@AppUtility.FolderNamesEnum.Files.ToString()" parentFolder="@AppUtility.ParentFolderName.Reports" data-val="@true" show-switch="false" multiple-files="false"
+                                        data-id="@Model.FunctionReport.FunctionTextID" id="@AppUtility.FolderNamesEnum.Files.ToString()" parentFolder="@AppUtility.ParentFolderName.Reports" data-val="@true" show-switch="false" multiple-files="false"
                                        value="Select File"/>
                                 <span class="document-name pl-2" name="FileName"></span>
                                 <input type="hidden" class="document-name" asp-for="FileName" />
