@@ -69,7 +69,7 @@
                         var outerClass = "visual-shelf";
                         var iconClass = "icon-add_circle_outline-24px1 add-location tga";
                         var hideIcon = "";
-                        if(!inReceivedModal)
+                        if(!inReceivedModal && !Model.ShowIcons)
                         {
                             hideIcon = "location-icon d-none";
                         }
@@ -91,7 +91,7 @@
 
                         if (locationsList[z].IsEmptyShelf)
                         {
-                            if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            if (!Model.ShowIcons && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 outerClass += " location-selected";
                                 iconClass = "icon-delete-24px ";
@@ -126,7 +126,7 @@
                             var backgroundClass = "graduated-table-background-color  ";
                             hideIcon = "d-none"; //always hide
                             var disabled = "disabled";
-                            if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            if (!Model.ShowIcons && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 backgroundClass = "";
                                 iconClass = "icon-delete-24px";

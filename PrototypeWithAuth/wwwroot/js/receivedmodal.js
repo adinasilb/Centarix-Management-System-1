@@ -114,7 +114,7 @@
 				var oldSelected = $("." + oldSelect).children("option:selected").val();
 				console.log("oldSelected: " + oldSelected);
 				$.ajax({
-					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected + "&RequestID=" + requestID,
+					url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + oldSelected + "&RequestID=" + requestID + "&ShowIcons=true",
 					type: 'GET',
 					cache: false,
 					context: myDiv,
@@ -132,7 +132,7 @@
 		
 			console.log("regular visual");
 			$.ajax({
-				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId + "&RequestID=" + requestID,
+				url: "/Requests/ReceivedModalVisual/?LocationInstanceID=" + locationInstanceParentId + "&RequestID=" + requestID + "&ShowIcons=true",
 				type: 'GET',
 				cache: false,
 				context: myDiv,
