@@ -916,7 +916,8 @@ namespace PrototypeWithAuth.Controllers
                     break;
             }
             return PartialView(viewmodel);
-        }
+        }    
+
 
 
         [HttpPost]
@@ -990,6 +991,30 @@ namespace PrototypeWithAuth.Controllers
             _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Added;
             await _context.SaveChangesAsync();
         }
+
+        //[HttpGet]
+        //[Authorize(Roles = "Requests, Operations")]
+        //public JsonResult FilterLinkToProduct(List<int> SelectedCategoryTypes)
+        //{
+        //    var requests = _context.Requests.Where(r => SelectedCategoryTypes.Contains(r.Product.ProductSubcategory.ParentCategory.CategoryTypeID)).Include(r => r.Product).ThenInclude(p => p.Vendor).Include(p => p.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).Include(r => r.ApplicationUserCreator);
+        //    var parentCategories = _context.ParentCategories.Where(pc => SelectedCategoryTypes.Contains(pc.CategoryTypeID)).Include(pc => pc.ProductSubcategories);
+        //    var parentCategoriesJson = parentCategories.Select(pc => new { parentCategoryID = pc.ParentCategoryID, parentCategoryDescription = pc.ParentCategoryDescription });
+        //    var vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vct => vct.CategoryTypeID).Where(cti => SelectedCategoryTypes.Contains(cti)).Any()).Select(v => new { vendorID = v.VendorID, vendorName = v.VendorEnName });
+        //    var subCategoryList = parentCategories.SelectMany(pc => pc.ProductSubcategories).Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription });
+        //    var workers = requests.Select(r => r.ApplicationUserCreator).Select(e => new { workerID = e.Id, workerName = e.FirstName + " " + e.LastName }).Distinct();
+        //    return Json(new { Vendors = vendors, ProductSubcategories = subCategoryList, ParentCategories = parentCategoriesJson, Employees = workers });
+        //}
+
+        //[HttpGet]
+        //[Authorize(Roles = "Requests, Operations")]
+        //public JsonResult FilterLinkToProtocol(int parentCategoryID, int subCategoryID, int vendorID)
+        //{
+        //    var parentCategories = _context.ParentCategories.Where(pc => SelectedCategoryTypes.Contains(pc.CategoryTypeID)).Include(pc => pc.ProductSubcategories);
+        //    var parentCategoriesJson = parentCategories.Select(pc => new { parentCategoryID = pc.ParentCategoryID, parentCategoryDescription = pc.ParentCategoryDescription });
+        //    var vendors = _context.Vendors.Where(v => v.VendorCategoryTypes.Select(vct => vct.CategoryTypeID).Where(cti => SelectedCategoryTypes.Contains(cti)).Any()).Select(v => new { vendorID = v.VendorID, vendorName = v.VendorEnName });
+        //    var subCategoryList = parentCategories.SelectMany(pc => pc.ProductSubcategories).Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription });
+        //    return Json(new { Vendors = vendors, ProductSubcategories = subCategoryList, ParentCategories = parentCategoriesJson, Employees = workers });
+        //}
 
         [HttpPost]
         [Authorize(Roles = "Protocols")]
