@@ -14,8 +14,8 @@
 	
 	var $isEdittable = $('.active-document-modal').attr("data-val");
 	var $showSwitch = $('.active-document-modal').attr("showSwitch");
-	var allowMultipleFiles = $("input.active-document-modal").attr("multiple-files");
-	console.log("allowmultiple " + allowMultipleFiles);
+	var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
+	console.log("allowmultiple " + dontAllowMultipleFiles);
 	console.log("$requestId: " + $objectId);
 	$.ajax({
 		url: link,
@@ -31,7 +31,7 @@
 				$(".report-text").trigger("change");
 			}
 			else {
-				$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername, allowMultipleFiles);
+				$.fn.OpenDocumentsModal($foldername, $objectId, $isEdittable, $SectionType, $showSwitch, $parentfoldername, dontAllowMultipleFiles);
 			}
 			//$.fn.ChangeColorsOfDocs($foldername);
 			$(".document-name").text('')

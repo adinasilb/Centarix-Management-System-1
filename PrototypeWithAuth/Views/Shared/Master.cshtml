@@ -1081,21 +1081,21 @@
         }
 
 
-        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch, parentFolder, allowMultipleFiles) {
+        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
             $('#loading').show();
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
             //alert(parentFolder)
             var urltogo = $("#documentSubmit").attr("url");
             if (urltogo == "") {
-                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&allowMultipleFiles=" + allowMultipleFiles;
+                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
 	        }
             else {
                 //var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
                 console.log("urltogo: " + urltogo);
-                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&allowMultipleFiles=" + allowMultipleFiles;
+                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
             }
-
+            console.log(urltogo);
             $.ajax({
                 async: true,
                 url: urltogo,
@@ -1109,7 +1109,7 @@
                     if (numCards < 1) {
                         $.fn.RemoveColorsOfDocs(enumString);
                     }
-                    else if (allowMultipleFiles == 'false') {
+                    else if (dontAllowMultipleFiles == 'True' || dontAllowMultipleFiles == 'true') {
                         console.log("don't allow multiples")
                         $(".upload-file").attr('disabled', true)
                         $(".upload-file").addClass('disabled-background-color')   
