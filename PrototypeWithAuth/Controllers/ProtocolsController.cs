@@ -512,8 +512,9 @@ namespace PrototypeWithAuth.Controllers
         {
             var lineTypes = GetOrderLineTypeFromChildToParent();
 
-            await _context.FunctionLines.Where(fl => fl.IsTemporary).ForEachAsync(fl => { _context.Remove(fl); });
+            await _context.FunctionLines.Where(fl => fl.IsTemporary || fl.Line.IsTemporary).ForEachAsync(fl => { _context.Remove(fl); });
             await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted).ForEachAsync(fl => { fl.IsTemporaryDeleted = false; _context.Update(fl); });
+         
             await _context.SaveChangesAsync();
             foreach (var lineType in lineTypes)
             {
