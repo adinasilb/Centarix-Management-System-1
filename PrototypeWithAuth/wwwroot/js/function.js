@@ -1,5 +1,6 @@
-﻿$("body").off("click", ".function, .remove-function").on("click", ".function, .remove-function", function (e) {
-	e.preventDefault();
+﻿$("form").off("click", ".function, .remove-function").on("click", ".function, .remove-function", function (e) {
+    e.preventDefault();
+    console.log("function")
     var lineID =$(this).attr("lineID");
     if($(this).attr("lineID")==undefined){
         lineID =$(".focused-line").attr("data-val") 
@@ -19,14 +20,18 @@
 	}
 });
 
-$(".saveFunction, .removeFunction").off('click').on('click',function (e) {
+$(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click', ".saveFunction, .removeFunction",function (e) {
     e.preventDefault();
     if($(this).hasClass("removeFunction"))
     {
         $(".isRemove").val(true);
          var functionSelect;
-         var changeToTriggerSelect
-         if ($("#masterPageType").val() == "ProtocolsReports") {
+        var changeToTriggerSelect;
+        if ($("#masterPageType").val() == "ProtocolsReports") {
+            var functionReportID = $(".function-reportID")
+            functionSelect = $(".report-function[functionReportID=" + functionReportID + "]")
+            console.log(functionSelect)
+            changeToTriggerSelect = $(".report-text")
          }
          else {
 	        functionSelect =$("div.line-input[data-val="+$(".lineID").val()+"]").find("a.function-line-node[functionline="+$(".function-lineID").val()+"]");   

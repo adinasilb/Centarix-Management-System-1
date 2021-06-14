@@ -11,6 +11,7 @@
                 <input type="hidden" asp-for="ReportID" />
                 <input type="hidden" asp-for="ReportTempText" />
                 <input type="hidden" asp-for="FunctionReport.FunctionTypeID" />
+                <input type="hidden" asp-for="FunctionReport.ID" class="function-reportID" />
                 <input type="hidden" asp-for="IsRemove" />
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
                     <div class="container p-0">
@@ -178,10 +179,10 @@
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
+                        <input type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
                         @if (Model.FunctionReport.ID != 0)
                         {
-                            <input type="submit" class="custom-button custom-cancel removeFunction" value="Remove" />
+                            <input type="button" class="custom-button custom-cancel removeFunction" value="Remove" />
                         }
                         else
                         {
@@ -193,4 +194,3 @@
         </div>
     </div>
 </div>
-<script src="~/js/function.js"></script>
