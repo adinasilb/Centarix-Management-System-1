@@ -100,7 +100,7 @@ $(function () {
 		
 	var val = $(el).val();
 	console.log('val: ' + val);
-	val = val.split("/").reverse().join("-");
+	//val = val.split("/").reverse().join("-");
 	var selectedDate = moment(val, "D MMM YYYY").toDate();
 	console.log("selected date"+selectedDate)
 	minDate = new Date(minDate.setHours(0));
