@@ -1259,7 +1259,7 @@ namespace PrototypeWithAuth.Controllers
                                     payment.PaymentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
                                     payment.Sum = req.Cost ?? 0;
                                 }
-                                if (SaveUsingSessions)
+                                if (SaveUsingSessions) //if not approved
                                 {
                                     var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
                                     HttpContext.Session.SetObject(paymentName, payment);
@@ -2515,7 +2515,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var request = HttpContext.Session.GetObject<Request>(requestName);
                         requests.Add(request);
-                        if (_context.Payments.Where(p => p.RequestID == request.RequestID) == null)
+                        if (_context.Payments.Where(p => p.RequestID == request.RequestID) != null)
                         { //has payments already from terms modal
                             for (int i = 0; i < request.Installments; i++)
                             {
