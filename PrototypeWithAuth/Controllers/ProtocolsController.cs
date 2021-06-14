@@ -1558,7 +1558,7 @@ namespace PrototypeWithAuth.Controllers
         [HttpGet]
         [Authorize(Roles = "Protocols")]
         public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
-    AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols, bool allowMultipleFiles = true)
+    AppUtility.MenuItems SectionType = AppUtility.MenuItems.Protocols, AppUtility.ParentFolderName parentFolderName = AppUtility.ParentFolderName.Protocols, bool dontAllowMultipleFiles = true)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
             {
@@ -1567,7 +1567,7 @@ namespace PrototypeWithAuth.Controllers
                 ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
                 IsEdittable = true, 
-                AllowMultipleFiles = allowMultipleFiles
+                DontAllowMultiple = dontAllowMultipleFiles
             };
 
             base.FillDocumentsViewModel(documentsModalViewModel);

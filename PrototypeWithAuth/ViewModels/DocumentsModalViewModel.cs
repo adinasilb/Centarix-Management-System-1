@@ -22,6 +22,6 @@ namespace PrototypeWithAuth.ViewModels
         public AppUtility.MenuItems SectionType { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
         public bool ShowSwitch { get; set; }
-        public bool AllowMultipleFiles { get; set; }
+        public bool DontAllowMultiple { get; set; }
     }
 }

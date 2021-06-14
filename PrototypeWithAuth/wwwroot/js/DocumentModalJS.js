@@ -10,8 +10,8 @@
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("upload file submitted");
-		var allowMultipleFiles = $("#AllowMultipleFiles").val();
-		if (allowMultipleFiles == false) {
+		var dontAllowMultipleFiles = $("#DontAllowMultiple").val();
+		if (dontAllowMultipleFiles == false) {
 			console.log("disable more files")
         }
 
@@ -37,9 +37,9 @@
 		//var url = $("#documentModalForm").data('string');
 		console.log("input button: " + inputButton);
 		var url = inputButton.attr("href");
-		var $isEdittable = $('.active-document-modal.withinDocModal').data("val");
+		var $isEdittable = $('.active-document-modal').data("val");
 		//alert($isEdittable)
-		var $showSwitch =  $('.active-document-modal.withinDocModal').attr("showSwitch");
+		var $showSwitch =  $('.active-document-modal').attr("showSwitch");
 		console.log("url : " + url);
 		var formData = new FormData($(".documentModalForm")[0]);
 		$.ajax({
@@ -62,7 +62,7 @@
 				}
 				$.fn.ChangeColorsOfModal($enumString, section);
 				var parentFolder = $(".active-document-modal").attr("parentfolder");
-				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder, allowMultipleFiles);
+				$.fn.OpenDocumentsModal($enumString, $requestId, $isEdittable, section, $showSwitch, parentFolder, dontAllowMultipleFiles);
 				return true;
 			},
 			processData: false,
@@ -89,10 +89,10 @@
 		var isEdittable = $(".active-document-modal").attr("data-val");
 		console.log($("#masterSidebarType").val())
 		var showSwitch = $(".active-document-modal").attr("showSwitch");
-		var allowMultipleFiles = $("input .active-document-modal").attr("multiple-files");
-		console.log(allowMultipleFiles)
+		var dontAllowMultipleFiles = $(".active-document-modal").attr("no-multiple-files");
+		console.log(dontAllowMultipleFiles)
 		var parentFolder = $(".active-document-modal").attr("parentFolder");
-		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder, allowMultipleFiles);
+		$.fn.OpenDocumentsModal(enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles);
 		return true;
 	});
 
@@ -212,7 +212,7 @@
 			$(".documents-delete-icon.icon-delete-24px").addClass($color);
 		    $(".view-img i").removeClass("disabled-filter");
 			$(".view-img i").addClass($color);
-			$(".active-document-modal.withinDocModal").attr("data-val", true);
+			$(".active-document-modal").attr("data-val", true);
 			$(".delete-document").addClass("delete-file-document");
 			$(this).prev('.edit-mode-switch-description').text("Edit Mode On");
 		}
@@ -226,7 +226,7 @@
 			$(".file-select").attr("disabled", true);
 			$(".document-modal-cancel").removeClass("d-none");
 			$(".document-modal-save").addClass("d-none");
-			$(".active-document-modal.withinDocModal").attr("data-val", false);
+			$(".active-document-modal").attr("data-val", false);
 			$(".documents-delete-icon.icon-delete-24px").addClass("disabled-filter");
 			$(".documents-delete-icon.icon-delete-24px").removeClass($color);
 			$("i.view-img").addClass("disabled-filter");
