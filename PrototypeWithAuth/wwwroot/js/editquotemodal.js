@@ -31,7 +31,7 @@
             }
         });
     }
-    $(this).data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+    $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 
 })
 
@@ -70,7 +70,7 @@ $('.sum-dollars').change(function (e) {
     var exchangeRate = $('#exchangeRate').val();
     var costDollars = $('.sum-dollars').val()
     var shekelPrice = costDollars * exchangeRate;
-    //console.log('shekel price: ' + shekelPrice)
+    console.log('shekel price: ' + shekelPrice)
     var index = $(this).attr("index");
     $('.cost.' + index).val(shekelPrice);
     $.fn.CalculatePriceWithVAT('.price-with-vat-dollar.' + index, costDollars);

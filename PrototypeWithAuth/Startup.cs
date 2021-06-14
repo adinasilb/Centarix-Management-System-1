@@ -97,7 +97,7 @@ namespace PrototypeWithAuth
             });
             services.AddSession(/*opts =>
             {
-                opts.Cookie.IsEssential = true;
+                opts.Cookie.IsEssential = false;
 
             }*/);
 
