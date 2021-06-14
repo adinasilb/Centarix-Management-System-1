@@ -14,6 +14,7 @@
     var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
     var isArchive = $(this).hasClass('archive-button');
     console.log(isArchive)
+    console.log("viewclass: " + viewClass);
     ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, "GET", null, "", null, null, isArchive)
 });
 
