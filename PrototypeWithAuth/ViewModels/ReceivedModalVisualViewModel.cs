@@ -15,6 +15,7 @@ namespace PrototypeWithAuth.ViewModels
         public List<LocationInstancePlace> LocationInstancePlaces { get; set; }
         public bool DeleteTable { get; set; } //set this option to true if the "select" option is selected and we don't want to show anything
         public bool IsEditModalTable { get; set; }
+        public bool ShowIcons { get; set; }
         //public List<bool> CheckedLocations { get; set; }
     }
 }

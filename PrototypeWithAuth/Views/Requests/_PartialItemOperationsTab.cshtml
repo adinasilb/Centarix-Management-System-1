@@ -60,7 +60,7 @@
                 }
                 <label class="control-label">Category</label>
                 <select id="@parentCategoryID" name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" searchable="Select Category">
-                    @if (Model.Request?.Product.ProductSubcategory.ParentCategoryID == 0 || Model.Request?.Product.ProductSubcategory.ParentCategoryID == null)
+                    @if (Model.Request.Product?.ProductSubcategory.ParentCategoryID == 0 || Model.Request.Product?.ProductSubcategory.ParentCategoryID == null)
                     {
                         <option class="disabled-color" disabled selected>Select Category</option>
                     }
@@ -71,7 +71,7 @@
 
                     @foreach (var category in Model.ParentCategories)
                     {
-                        if (category.ParentCategoryID == Model.Request?.Product.ProductSubcategory.ParentCategoryID)
+                        if (category.ParentCategoryID == Model.Request.Product?.ProductSubcategory.ParentCategoryID)
                         {
                             <option value="@category.ParentCategoryID" selected>@category.ParentCategoryDescription</option>
                         }
@@ -110,7 +110,7 @@
                     }
                 }
                 <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" searchable="Select Subcategory">
-                    @if (Model.Request?.Product.ProductSubcategoryID == 0 || Model.Request?.Product.ProductSubcategoryID == null)
+                    @if (Model.Request.Product?.ProductSubcategoryID == 0 || Model.Request.Product?.ProductSubcategoryID == null)
                     {
                         <option class="disabled-color" disabled selected>Select Subcategory</option>
                     }
@@ -120,7 +120,7 @@
                     }
                     @foreach (var category in Model.ProductSubcategories)
                     {
-                        if (category.ProductSubcategoryID == Model.Request?.Product.ProductSubcategoryID)
+                        if (category.ProductSubcategoryID == Model.Request.Product?.ProductSubcategoryID)
                         {
                             <option value="@category.ProductSubcategoryID" selected>@category.ProductSubcategoryDescription</option>
                         }
@@ -148,7 +148,7 @@
     <div class="row">
         <div class="col-12">
             <label class="control-label">Item Name</label>
-            <input id="@(dynamicID)Product_ProductName" name="@(dynamicName)Product.ProductName" class="form-control-plaintext border-bottom product-name  @markReadOnlyClass" value="@Model.Request?.Product.ProductName" />
+            <input id="@(dynamicID)Product_ProductName" name="@(dynamicName)Product.ProductName" class="form-control-plaintext border-bottom product-name  @markReadOnlyClass" value="@Model.Request.Product?.ProductName" />
             <span for="@(dynamicID)Product_ProductName" class="text-danger-centarix"></span>
         </div>
     </div>
@@ -156,7 +156,7 @@
     <div class="row">
         <div class="col-12">
             <label class="control-label">Item Hebrew Name</label>
-            <input id="@(dynamicID)Product_ProductHebrewName" name="@(dynamicName)Product.ProductHebrewName" class="form-control-plaintext border-bottom product-hebrew-name  @markReadOnlyClass" value="@Model.Request?.Product.ProductHebrewName" />
+            <input id="@(dynamicID)Product_ProductHebrewName" name="@(dynamicName)Product.ProductHebrewName" class="form-control-plaintext border-bottom product-hebrew-name  @markReadOnlyClass" value="@Model.Request.Product?.ProductHebrewName" />
             <span for="@(dynamicID)Product_ProductHebrewName" class="text-danger-centarix"></span>
         </div>
     </div>
@@ -165,7 +165,7 @@
     <div class="row">
         <div class="col-md-6">
             <label class="control-label">Catalog Number</label>
-            <input id="@(dynamicID)Product_CatalogNumber" name="@(dynamicName)Product.CatalogNumber" class="form-control-plaintext border-bottom  @markReadOnlyClass catalog-number" value="@Model.Request?.Product.CatalogNumber" />
+            <input id="@(dynamicID)Product_CatalogNumber" name="@(dynamicName)Product.CatalogNumber" class="form-control-plaintext border-bottom  @markReadOnlyClass catalog-number" value="@Model.Request.Product?.CatalogNumber" />
             <span for="@(dynamicID)Product_CatalogNumber" class="text-danger-centarix"></span>
         </div>
         @if (Model.ModalType == AppUtility.RequestModalType.Create)
@@ -177,7 +177,7 @@
                 <input type="hidden" id="@(dynamicID)IsReceived" name="@(dynamicName)IsReceived" />
             </div>
         }
-        @if (Model.Request?.RequestStatusID == 3)
+        @if (Model.Request.RequestStatusID == 3)
         {
             <div class="col-md-3 ">
                 <label asp-for="Request.ArrivalDate" class="control-label"></label>
@@ -194,7 +194,7 @@
 
         <div class="col-md-2 form-group">
             <label class="control-label">Amount</label>
-            <input type="number" id="@(dynamicID)Unit" name="@(dynamicName)Unit" class="form-control-plaintext border-bottom @markReadOnlyClass unit" value="@Model.Request?.Unit" />
+            <input type="number" id="@(dynamicID)Unit" name="@(dynamicName)Unit" class="form-control-plaintext border-bottom @markReadOnlyClass unit" value="@Model.Request.Unit?" />
             <span for="@(dynamicID)Unit" class="text-danger-centarix"></span>
         </div>
         <input type="hidden" id="@(dynamicID)UnitTypeID" name="@(dynamicName)UnitTypeID" value="5" />
@@ -238,7 +238,7 @@
     </div>
     @{
         var includeVat = "";
-        if (Model.Request?.IncludeVAT == false)
+        if (Model.Request.IncludeVAT == false)
         {
             includeVat = "d-none";
         }
