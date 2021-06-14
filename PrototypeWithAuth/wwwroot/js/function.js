@@ -23,18 +23,20 @@ $(".saveFunction, .removeFunction").off('click').on('click',function (e) {
     e.preventDefault();
     if($(this).hasClass("removeFunction"))
     {
-        $("#IsRemove").val(true);
-        console.log(    $("div.line-input[data-val="+$("#FunctionLine_LineID").val()+"]").find("a.function-line-node[functionline="+$("#FunctionLine_FunctionLineID").val()+"]"))
-         $("div.line-input[data-val="+$("#FunctionLine_LineID").val()+"]").find("a.function-line-node[functionline="+$("#FunctionLine_FunctionLineID").val()+"]").remove();
-         $("div.line-input").each(function(){  
-             console.log("this is html:"+   $(this).html+"thisis the end")
-            if($.trim($(this).html())=='')
-            {
-                $(this).remove();
-            }
-         });
-         $("div.line-input[data-val="+$("#FunctionLine_LineID").val()+"]").trigger("change");
-    
+        $(".isRemove").val(true);
+         if ($("#masterPageType").val() == "ProtocolsReports") {
+         }
+         else {
+	         select =$("div.line-input[data-val="+$(".lineID").val()+"]").find("a.function-line-node[functionline="+$(".function-lineID").val()+"]").remove()
+             $("div.line-input[data-val="+$(".lineID").val()+"]").trigger("change");
+         }
+         //$("div.line-input").each(function(){  
+         //    console.log("this is html:"+   $(this).html+"thisis the end")
+         //   if($.trim($(this).html())=='')
+         //   {
+         //       $(this).remove();
+         //   }
+         //});    
     }
     //$('.materialForm').data("validator").settings.ignore = "";
     //var valid = $('.materialForm').valid();
