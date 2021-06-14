@@ -9,10 +9,11 @@ namespace PrototypeWithAuth.Models
 {
     public class FunctionLine: FunctionBase
     {
-        [ForeignKey("TextID")]
+        public int LineID { get; set; }
         public Line Line { get; set; }
         public TimeSpan Timer { get; set; }
         public string Description {get; set;}
+        
         
     }
 }

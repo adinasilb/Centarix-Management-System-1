@@ -765,7 +765,7 @@ namespace PrototypeWithAuth.Controllers
                     TempLine = node,
                     Index = count++,
                     LineNumberString = refreshedLines.Where(rl => rl.TempLine.PermanentLineID == node.ParentLineID)?.FirstOrDefault()?.LineNumberString + node.LineNumber + ".",
-                    Functions = functionLine.Where(fl => fl.TextID == node.PermanentLineID)
+                    Functions = functionLine.Where(fl => fl.LineID == node.PermanentLineID)
                 });
                 _context.TempLines.Where(c => c.ParentLineID == (node.PermanentLineID)).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
             }
@@ -872,7 +872,7 @@ namespace PrototypeWithAuth.Controllers
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             var tempLine = _context.TempLines.Where(tl => tl.PermanentLineID == LineID).FirstOrDefault();
             var line = TurnTempLineToLine(tempLine);
-            FunctionLine functionLine = _context.FunctionLines.Where(fl => fl.FunctionTextID == functionLineID).FirstOrDefault();
+            FunctionLine functionLine = _context.FunctionLines.Where(fl => fl.ID == functionLineID).FirstOrDefault();
             if (functionLine == null)
             {
                 functionLine = new FunctionLine
@@ -880,7 +880,7 @@ namespace PrototypeWithAuth.Controllers
                     FunctionType = functionType,
                     FunctionTypeID = FunctionTypeID,
                     Line = line,
-                    TextID = LineID
+                    LineID = LineID
                 };
             }
 
@@ -889,7 +889,7 @@ namespace PrototypeWithAuth.Controllers
                 FunctionLine = functionLine
             };
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.FunctionLine.ToString());
-            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, functionLine.FunctionTextID.ToString());
+            string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, functionLine.ID.ToString());
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
@@ -925,7 +925,7 @@ namespace PrototypeWithAuth.Controllers
             using (var transaction = _context.Database.BeginTransaction())
             {
                 await UpdateLineContentAsync(TempLines);
-                var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.TextID).FirstOrDefault();
+                var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
                 try
                 {
                     if(addFunctionViewModel.IsRemove)
@@ -942,15 +942,15 @@ namespace PrototypeWithAuth.Controllers
                         {
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                                 var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                                line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionLine.FunctionTextID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
+                                line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionLine.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                                 var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                                line.Content += " <a href='#' functionline='"+addFunctionViewModel.FunctionLine.FunctionTextID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
+                                line.Content += " <a href='#' functionline='"+addFunctionViewModel.FunctionLine.ID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddFile:
                             case AppUtility.ProtocolFunctionTypes.AddImage:
-                                MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.FunctionTextID, AppUtility.ParentFolderName.FunctionLine);
+                                MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.ID, AppUtility.ParentFolderName.FunctionLine);
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddStop:
                             case AppUtility.ProtocolFunctionTypes.AddTable:
@@ -982,7 +982,7 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task SaveTempFunctionLineAsync(AddFunctionViewModel addFunctionViewModel)
         {
-            if(addFunctionViewModel.FunctionLine.FunctionTextID == 0)
+            if(addFunctionViewModel.FunctionLine.ID == 0)
             {
                 addFunctionViewModel.FunctionLine.IsTemporary = true;
             }
@@ -1914,7 +1914,7 @@ namespace PrototypeWithAuth.Controllers
             var report = _context.Reports.Where(r => r.ReportID == addReportsFunctionViewModel.ReportID).FirstOrDefault();
             var functionReport = addReportsFunctionViewModel.FunctionReport;
             functionReport.IsTemporary = true;
-            functionReport.TextID = report.ReportID;
+            functionReport.ReportID = report.ReportID;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -1933,11 +1933,11 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.ProtocolFunctionTypes.AddImage:
                             _context.Entry(functionReport).State = EntityState.Added;
                             await _context.SaveChangesAsync();
-                            MoveDocumentsOutOfTempFolder(functionReport.FunctionTextID, AppUtility.ParentFolderName.Reports);
+                            MoveDocumentsOutOfTempFolder(functionReport.ID, AppUtility.ParentFolderName.Reports);
 
                             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
                             {
-                                ObjectID = functionReport.FunctionTextID.ToString(),
+                                ObjectID = functionReport.ID.ToString(),
                                 ParentFolderName = AppUtility.ParentFolderName.Reports,
                                 SectionType = AppUtility.MenuItems.Protocols,
                                 IsEdittable = true
@@ -1971,7 +1971,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> SaveReportModal(SaveReportViewModel saveReportViewModel)
         {
             var report = _context.Reports.Where(r => r.ReportID == saveReportViewModel.ReportID).FirstOrDefault();
-            var reportTempFunctions = _context.FunctionReports.Where(fr => fr.TextID == report.ReportID && fr.IsTemporary).ToList();
+            var reportTempFunctions = _context.FunctionReports.Where(fr => fr.ReportID == report.ReportID && fr.IsTemporary).ToList();
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
