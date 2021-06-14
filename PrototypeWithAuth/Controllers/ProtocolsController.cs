@@ -1913,45 +1913,53 @@ namespace PrototypeWithAuth.Controllers
 
             var report = _context.Reports.Where(r => r.ReportID == addReportsFunctionViewModel.ReportID).FirstOrDefault();
             var functionReport = addReportsFunctionViewModel.FunctionReport;
+
             functionReport.IsTemporary = true;
             functionReport.ReportID = report.ReportID;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+                    if (addReportsFunctionViewModel.IsRemove)
                     {
-                        //case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                        //    var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                        //    line.Content += "<a href='#' class='open-line-product'>" + product.ProductName + "</>";
-                        //    break;
-                        //case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                        //    var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                        //    line.Content += "<a href='#' class='open-line-protocol'>" + protocol.Name + "</>";
-                        //    break;
-                        case AppUtility.ProtocolFunctionTypes.AddFile:
-                        case AppUtility.ProtocolFunctionTypes.AddImage:
-                            _context.Entry(functionReport).State = EntityState.Added;
-                            await _context.SaveChangesAsync();
-                            MoveDocumentsOutOfTempFolder(functionReport.ID, AppUtility.ParentFolderName.Reports);
+                        addReportsFunctionViewModel.FunctionReport.IsTemporaryDeleted = true;
+                        _context.Entry(addReportsFunctionViewModel.FunctionReport).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+                        {
+                            //case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
+                            //    var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
+                            //    line.Content += "<a href='#' class='open-line-product'>" + product.ProductName + "</>";
+                            //    break;
+                            //case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
+                            //    var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
+                            //    line.Content += "<a href='#' class='open-line-protocol'>" + protocol.Name + "</>";
+                            //    break;
+                            case AppUtility.ProtocolFunctionTypes.AddFile:
+                            case AppUtility.ProtocolFunctionTypes.AddImage:
+                                _context.Entry(functionReport).State = EntityState.Added;
+                                await _context.SaveChangesAsync();
+                                MoveDocumentsOutOfTempFolder(functionReport.ID, AppUtility.ParentFolderName.Reports);
 
-                            DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
-                            {
-                                ObjectID = functionReport.ID.ToString(),
-                                ParentFolderName = AppUtility.ParentFolderName.Reports,
-                                SectionType = AppUtility.MenuItems.Protocols,
-                                IsEdittable = true
-                            };
+                                DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
+                                {
+                                    ObjectID = functionReport.ID.ToString(),
+                                    ParentFolderName = AppUtility.ParentFolderName.Reports,
+                                    SectionType = AppUtility.MenuItems.Protocols,
+                                    IsEdittable = true
+                                };
 
-                            base.FillDocumentsViewModel(documentsModalViewModel);
+                                base.FillDocumentsViewModel(documentsModalViewModel);
 
-                            string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
-                            var fileName = documentsModalViewModel.FileStrings[0].Split("\\").Last();
-                            report.TemporaryReportText = createReportViewModel.Report.ReportText + "<br/>" + renderedView + "<div class='small'>" + fileName + "<br/></div>" + " <div contenteditable='true' class= 'editable-span report-text form-control-plaintext text-transform-none'></div>";
-                            _context.Update(report);
-                            await _context.SaveChangesAsync();
+                                string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
+                                report.TemporaryReportText = createReportViewModel.Report.ReportText + renderedView + " <div contenteditable='true' class= 'editable-span report-text form-control-plaintext text-transform-none'></div>";
+                                _context.Update(report);
+                                await _context.SaveChangesAsync();
 
-                            break;
+                                break;
+                        }
                     }
                     await transaction.CommitAsync();
                 }

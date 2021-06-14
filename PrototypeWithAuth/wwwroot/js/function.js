@@ -1,4 +1,4 @@
-﻿$("body").off("click", ".function").on("click", ".function", function (e) {
+﻿$("body").off("click", ".function, .remove-function").on("click", ".function, .remove-function", function (e) {
 	e.preventDefault();
     var lineID =$(this).attr("lineID");
     if($(this).attr("lineID")==undefined){
