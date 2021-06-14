@@ -9,7 +9,7 @@ namespace PrototypeWithAuth.Models
     public abstract class FunctionBase
     {
         [Key]
-        public int FunctionTextID { get; set; }
+        public int ID { get; set; }
         public int FunctionTypeID { get; set; }
         public FunctionType FunctionType { get; set; }
         public int? ProtocolID { get; set; }
@@ -18,6 +18,5 @@ namespace PrototypeWithAuth.Models
         public Product Product { get; set; }
         public bool IsTemporary { get; set; }
         public bool IsTemporaryDeleted { get; set; }
-        public int TextID { get; set; }
     }
 }

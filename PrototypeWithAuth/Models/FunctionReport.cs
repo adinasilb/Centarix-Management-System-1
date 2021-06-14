@@ -9,7 +9,7 @@ namespace PrototypeWithAuth.Models
 {
     public class FunctionReport: FunctionBase
     {
-        [ForeignKey ("TextID")]
+        public int ReportID { get; set; }
         public Report Report { get; set; }
     }
 }
