@@ -1160,10 +1160,6 @@ namespace PrototypeWithAuth.Controllers
         public async Task<RedirectAndModel> SaveTermsModalAsync(TermsViewModel termsViewModel)
         {
             var controller = "Requests";
-            if (termsViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
-            {
-                controller = "Operations";
-            }
             var needsToBeApproved = false;
             try
             {
@@ -2515,7 +2511,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         var request = HttpContext.Session.GetObject<Request>(requestName);
                         requests.Add(request);
-                        if (_context.Payments.Where(p => p.RequestID == request.RequestID) != null)
+                        if (!_context.Payments.Where(p => p.RequestID == request.RequestID).Any())
                         { //has payments already from terms modal
                             for (int i = 0; i < request.Installments; i++)
                             {
