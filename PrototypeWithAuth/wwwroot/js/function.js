@@ -1,13 +1,12 @@
-﻿$("form").off("click", ".function, .remove-function").on("click", ".function, .remove-function", function (e) {
+﻿$("form").off("click", ".function").on("click", ".function", function (e) {
     e.preventDefault();
-    console.log("function")
     var lineID =$(this).attr("lineID");
     if($(this).attr("lineID")==undefined){
         lineID =$(".focused-line").attr("data-val") 
     }
     var url = "";
     if ($("#masterPageType").val() == "ProtocolsReports") {
-        url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
+            url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
         	$.fn.CallPageRequest( url , "addFunction");
     }
 	/*if ($("#masterPageType").val() == "ProtocolsCreate")*/
@@ -20,7 +19,14 @@
 	}
 });
 
-$(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click', ".saveFunction, .removeFunction",function (e) {
+$(".remove-function").click(function (e) {
+    e.preventDefault();
+    console.log("remove file")
+    url = $(this).attr("url");
+    $.fn.CallPageRequest(url, "addFunction"); 
+})
+
+$(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".saveFunction, .removeFunction",function (e) {
     e.preventDefault();
     if($(this).hasClass("removeFunction"))
     {
@@ -28,7 +34,7 @@ $(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click',
          var functionSelect;
         var changeToTriggerSelect;
         if ($("#masterPageType").val() == "ProtocolsReports") {
-            var functionReportID = $(".function-reportID")
+            var functionReportID = $(".function-reportID").val()
             functionSelect = $(".report-function[functionReportID=" + functionReportID + "]")
             console.log(functionSelect)
             changeToTriggerSelect = $(".report-text")
@@ -39,7 +45,8 @@ $(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click',
          }
          var prev = functionSelect.prev();
          var next = functionSelect.next();
-         var html = prev.html()+next.html();
+        var html = prev.html() + next.html();
+        console.log("next "+ next.html())
          prev.html(html);
          next.remove();
          functionSelect.remove();
@@ -71,9 +78,14 @@ $(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click',
 
     var functionName = "AddFunctionModal";
     if ($("#masterPageType").val() == "ProtocolsReports") {
-        functionName = "AddReportFunctionModal";
-        for (var pair of reportFormData.entries())
-        {
+        if ($(this).hasClass("removeFunction")) {
+            functionName = "DeleteReportDocumentModal"
+            functionFormData = new FormData($(".deleteFunctionForm")[0]);
+        }
+        else {
+            functionName = "AddReportFunctionModal";
+        }
+        for (var pair of reportFormData.entries()) {
             functionFormData.append(pair[0], pair[1]);
         }
     }

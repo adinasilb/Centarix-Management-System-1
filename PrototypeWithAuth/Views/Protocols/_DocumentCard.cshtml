@@ -16,7 +16,7 @@
             </a>
             @if (Model.ShowSwitch || Model.IsEdittable)
             {
-                <a href="" class="remove-function report-file @Model.SectionType.ToString() mx-1" url="@Url.Action("DeleteDocumentModal", "Requests", new { FileString = Model.FileStrings[0], id = Model.ObjectID, RequestFolderNameEnum = Model.FolderName, IsEdittable = true, SectionType = Model.SectionType, ParentFolderName = Model.ParentFolderName })">
+                <a href="" class="remove-function report-file @Model.SectionType.ToString() mx-1" url="@Url.Action("DeleteReportDocumentModal", "Protocols", new { FunctionReportID = Model.ObjectID })">
                     <i style="font-size:1rem;" class="icon-delete-24px documents-delete-icon hover-bold protocols-color"></i>
                 </a>
             }
