@@ -1271,6 +1271,19 @@ namespace PrototypeWithAuth.Controllers
             return View(resourceLibraryViewModel);
         }
 
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _Library(int? CategoryType = 1)
+        {
+            //TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            //TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
+            //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
+
+            var resourceLibraryViewModel = new ResourceLibraryViewModel();
+
+            resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories;
+            return PartialView(resourceLibraryViewModel);
+        }
+
         [HttpGet]
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ResourcesList(int? ResourceCategoryID)
@@ -1457,7 +1470,7 @@ namespace PrototypeWithAuth.Controllers
                 }
 
             }
-            return RedirectToAction("Library");
+            return RedirectToAction("_Library");
         }
 
         [Authorize(Roles = "Protocols")]

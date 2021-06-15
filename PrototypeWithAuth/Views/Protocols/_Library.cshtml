@@ -1,0 +1,88 @@
+﻿@model PrototypeWithAuth.ViewModels.ResourceLibraryViewModel;
+
+<script src="~/js/ResourcesLibrary.js"></script>
+<div class="item-table">
+    <ul class=" pl-0 nav float-left overflow-auto" style="width:90%;">
+        <li class="list-inline-item m-0 nav-item float-left">
+            <a data-toggle="tab" href="#Articles" class="next-tab nav-link active new-button new-protocols-button articles">
+                <i class="new-icon icon-theory-tab-24px"></i>
+                <label class="new-button-text">Articles and Links</label>
+            </a>
+        </li>
+        <li class="list-inline-item m-0 nav-item float-left">
+            <a data-toggle="tab" href="#Resources" class="next-tab nav-link new-button  new-protocols-button resources">
+                <i class=" new-icon icon-resources-tab-24px"></i>
+                <label class="new-button-text">Resources</label>
+            </a>
+        </li>
+    </ul>
+    <div class="list-inline-item m-0 float-right" style="width:10%;">
+        <div class="add-resource" style="padding-bottom: 2.25rem; padding-top: 2.25rem;">
+            <i class="icon-add_circle-24px protocols-filter" style="font-size: 2.688rem;"></i>
+        </div>
+    </div>
+</div>
+<div class="tab-content">
+
+    <div id="Articles" class="tab-pane fade in active show">
+        <div class="container-fluid">
+            <div class="under-row-margin row text-center">
+                @foreach (var maincategory in Model.ResourceCategories.Where(rc => rc.IsMain))
+                {
+                    <div class="type-div">
+                        <a href='@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID = maincategory.ResourceCategoryID })' class="text text-dark">
+                            <fieldset class=" main-type-fieldset">
+                                @{
+                                    var imageUrl = "/images/protocol_images/" + maincategory.ImageUrl;
+                                    var altImage = maincategory.ResourceCategoryDescription;
+                                }
+
+                                @*<img class=" main-type-img" src="@imageUrl" alt="@altImage" />*@
+                                <img class=" main-type-img" src="@imageUrl" alt="@altImage" />
+                                @*  }*@
+                                <label class="main-type-label top-menu protocols-filter text-center"> @maincategory.ResourceCategoryDescription</label>
+                            </fieldset>
+                        </a>
+                    </div>
+                }
+                @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain && !rc.IsResourceType))
+                {
+                    <div class="type-div">
+                        <a href="@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID=category.ResourceCategoryID })" class="text text-dark">
+                            <fieldset class="small-type-fieldset">
+                                <label class="small-type-label top-menu protocols-filter text-center">
+                                    @category.ResourceCategoryDescription
+                                </label>
+                            </fieldset>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div id="Resources" class="tab-pane fade in ">
+        <div class="container-fluid">
+            <div class="under-row-margin row text-center">
+                @foreach (var maincategory in Model.ResourceCategories.Where(rc => rc.IsResourceType))
+                {
+                    <div class="type-div">
+                        <a href='@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID = maincategory.ResourceCategoryID })' class="text text-dark">
+                            <fieldset class=" main-type-fieldset">
+                                @{
+                                    var imageUrl = "/images/protocol_images/" + maincategory.ImageUrl;
+                                    var altImage = maincategory.ResourceCategoryDescription;
+                                }
+
+                                @*<img class=" main-type-img" src="@imageUrl" alt="@altImage" />*@
+                                <img class=" main-type-img" src="@imageUrl" alt="@altImage" />
+                                @*  }*@
+                                <label class="main-type-label top-menu protocols-filter text-center"> @maincategory.ResourceCategoryDescription</label>
+                            </fieldset>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
