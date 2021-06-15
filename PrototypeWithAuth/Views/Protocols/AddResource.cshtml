@@ -15,6 +15,8 @@
             break;
     }
 
+    var hiddenElementClass = "ResourceTagsHidden HiddenCategoryBool";
+
 }
 <script src="~/js/AddResource.js"></script>
 <div class="modal modal-view fader on-form-modal add-resource-modal protocol-form" id="myModal" data-backdrop="false">
@@ -29,7 +31,6 @@
                     <div class="row top-menu under-row-margin">
                         <div class="col-12 heading-1">
                             @Heading
-                            <input type="hidden" asp-for="Resource.ResourceTypeID" />
                         </div>
                     </div>
                     <div class="row under-row-margin">
@@ -83,6 +84,7 @@
                 <div class="row under-row-margin top-menu">
                     <div class="col-12">
                         Select Tags
+                        <input type="hidden" asp-for="Resource.ResourceTypeID" />
                     </div>
                 </div>
                 <div class="row mb-1 text-center">
@@ -93,7 +95,7 @@
                     @foreach (var mainCategory in Model.ResourceCategories.Where(rc => rc.IsMain))
                     {
                         counter++;
-                        var hiddenElementClass = "HiddenCategoryBool" + mainCategory.ResourceCategoryID;
+                        hiddenElementClass += mainCategory.ResourceCategoryID;
                         <div class="col-3">
                             <span class="resources-tags-big light-gray-background-color add-padding w-100" id="@mainCategory.ResourceCategoryID">
                                 @mainCategory.ResourceCategoryDescription
@@ -108,7 +110,7 @@
                         @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain))
                         {
                             counter++;
-                            var hiddenElementClass = "HiddenCategoryBool" + category.ResourceCategoryID;
+                            hiddenElementClass += category.ResourceCategoryID;
                             <span class="resources-tags-big light-gray-background-color mx-2 my-1" id="@category.ResourceCategoryID">
                                 @category.ResourceCategoryDescription
                             </span>
