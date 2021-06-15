@@ -26,12 +26,14 @@ namespace PrototypeWithAuth.Controllers
         protected readonly ApplicationDbContext _context;
         protected readonly UserManager<ApplicationUser> _userManager;
         protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
-        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
             _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
@@ -199,12 +201,12 @@ namespace PrototypeWithAuth.Controllers
         protected void RemoveRequestWithCommentsAndEmailSessions()
         {
             var sessionNames = Enum.GetNames(typeof(AppData.SessionExtensions.SessionNames)).Cast<string>().Select(x => x.ToString()).ToList();
-            var allKeys = HttpContext.Session.Keys;
+            var allKeys = _httpContextAccessor.HttpContext.Session.Keys;
             //the following will work as long as all #s are less than 1000 (b/c they only allow for 3 digits, meaning less than 1000 of each type at a time)
             var requiredKeys = allKeys.Where(ak => sessionNames.Contains(ak.Substring(0, ak.Length - 1)) || sessionNames.Contains(ak.Substring(0, ak.Length - 2)) || sessionNames.Contains(ak.Substring(0, ak.Length - 3)));
             foreach (var k in requiredKeys)
             {
-                HttpContext.Session.Remove(k); //will clear the session for the future
+                _httpContextAccessor.HttpContext.Session.Remove(k); //will clear the session for the future
             }
         }
         protected decimal GetExchangeRate()

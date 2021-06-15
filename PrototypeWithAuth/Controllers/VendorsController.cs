@@ -27,8 +27,8 @@ namespace PrototypeWithAuth.Controllers
 {
     public class VendorsController : SharedController
     {
-        public VendorsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-            : base(context, userManager, hostingEnvironment)
+        public VendorsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
+            : base(context, userManager, hostingEnvironment, httpContextAccessor)
         {
         }
         // GET: Vendors

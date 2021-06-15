@@ -53,8 +53,8 @@ namespace PrototypeWithAuth.Controllers
         private ICompositeViewEngine _viewEngine;
 
         public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine /*IHttpContextAccessor Context*/, IHttpContextAccessor httpContextAccessor) 
-            : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager)
+            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+            : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager, httpContextAccessor: httpContextAccessor)
         {
             //_Context = Context;
             _context = context;
@@ -619,7 +619,7 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestNum: RequestNum);
                                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                                var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
+                                var isSavedUsingSession = _httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName) != null;
 
                                 if (requestItemViewModel.Comments != null)
                                 {
@@ -640,7 +640,7 @@ namespace PrototypeWithAuth.Controllers
                                             else
                                             {
                                                 var SessionCommentName = AppData.SessionExtensions.SessionNames.Comment.ToString() + x;
-                                                HttpContext.Session.SetObject(SessionCommentName, comment);
+                                                _httpContextAccessor.HttpContext.Session.SetObject(SessionCommentName, comment);
                                             }
                                         }
 
@@ -672,7 +672,7 @@ namespace PrototypeWithAuth.Controllers
                                     foreach (var e in requestItemViewModel.EmailAddresses)
                                     {
                                         var SessionEmailName = AppData.SessionExtensions.SessionNames.Email.ToString() + emailNum;
-                                        HttpContext.Session.SetObject(SessionEmailName, e);
+                                        _httpContextAccessor.HttpContext.Session.SetObject(SessionEmailName, e);
                                         emailNum++;
                                     }
 
@@ -919,7 +919,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
                 var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, request);
+                _httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
                 return true;
             }
             catch (Exception ex)
@@ -935,7 +935,7 @@ namespace PrototypeWithAuth.Controllers
                 request.ParentQuoteID = null;
                 request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
                 var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, request);
+                _httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
             }
             catch (Exception ex)
             {
@@ -956,7 +956,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 request.OrderType = AppUtility.OrderTypeEnum.OrderNow.ToString();
                 var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                HttpContext.Session.SetObject(requestNum, request);
+                _httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
             }
             catch (Exception ex)
             {
@@ -1011,7 +1011,7 @@ namespace PrototypeWithAuth.Controllers
                 //do
                 //{
                 //    var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                //    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                //    var comment = _httpContextAccessor.HttpContext.Session.GetObject<Comment>(commentNumber);
                 //    if (comment != null)
                 //    //will only go in here if there are comments so will only work if it's there
                 //    //IMPT look how to clear the session information if it fails somewhere...
@@ -1071,7 +1071,7 @@ namespace PrototypeWithAuth.Controllers
                 request.UnitTypeID = 5;
                 request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
-                HttpContext.Session.SetObject(requestName, request);
+                _httpContextAccessor.HttpContext.Session.SetObject(requestName, request);
             }
             catch (DbUpdateException ex)
             {
@@ -1088,7 +1088,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Operations")]
         public async Task<TermsViewModel> GetTermsViewModelAsync(int vendorID, RequestIndexObject requestIndexObject)
         {
-            var requ = HttpContext.Session.GetObject<Request>("Request1");
+            var requ = _httpContextAccessor.HttpContext.Session.GetObject<Request>("Request1");
             List<Request> requests = new List<Request>();
             if (vendorID != 0)
             {
@@ -1116,9 +1116,9 @@ namespace PrototypeWithAuth.Controllers
                 while (isRequests)
                 {
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
+                    if (_httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
-                        requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                        requests.Add(_httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName));
 
                     }
                     else
@@ -1133,7 +1133,7 @@ namespace PrototypeWithAuth.Controllers
             foreach (var req in requests)
             {
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + requestNum;
-                HttpContext.Session.SetObject(requestName, req);
+                _httpContextAccessor.HttpContext.Session.SetObject(requestName, req);
                 requestNum++;
             }
             var termsList = new List<SelectListItem>() { };
@@ -1169,9 +1169,9 @@ namespace PrototypeWithAuth.Controllers
                 while (isRequests)
                 {
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
+                    if (_httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
-                        requests.Add(HttpContext.Session.GetObject<Request>(requestName));
+                        requests.Add(_httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName));
                     }
                     else
                     {
@@ -1216,7 +1216,7 @@ namespace PrototypeWithAuth.Controllers
                             if (SaveUsingSessions)
                             {
                                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                                HttpContext.Session.SetObject(requestName, req);
+                                _httpContextAccessor.HttpContext.Session.SetObject(requestName, req);
                             }
 
                             else
@@ -1258,7 +1258,7 @@ namespace PrototypeWithAuth.Controllers
                                 if (SaveUsingSessions) //if not approved
                                 {
                                     var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
-                                    HttpContext.Session.SetObject(paymentName, payment);
+                                    _httpContextAccessor.HttpContext.Session.SetObject(paymentName, payment);
                                 }
                                 else
                                 {
@@ -1282,7 +1282,7 @@ namespace PrototypeWithAuth.Controllers
                                 do
                                 {
                                     var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                                    var comment = _httpContextAccessor.HttpContext.Session.GetObject<Comment>(commentNumber);
                                     if (comment != null)
                                     //will only go in here if there are comments so will only work if it's there
                                     //IMPT look how to clear the session information if it fails somewhere...
@@ -1564,7 +1564,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(product);
                             await _context.SaveChangesAsync();
                         }
-                        var requestLocationInstances =  request.RequestLocationInstances.ToList();
+                        var requestLocationInstances = request.RequestLocationInstances.ToList();
                         foreach (var requestLocationInstance in requestLocationInstances)
                         {
                             var locationInstance = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationInstanceID == requestLocationInstance.LocationInstanceID).FirstOrDefault();
@@ -1851,7 +1851,7 @@ namespace PrototypeWithAuth.Controllers
             };
             operationsItemViewModel.Request = new Request() { IncludeVAT = true };
             if (subcategoryID > 0)
-            {                
+            {
                 operationsItemViewModel.Request.Product = new Product();
                 operationsItemViewModel.Request.Product.ProductSubcategoryID = subcategoryID;
                 operationsItemViewModel.Request.Product.ProductSubcategory =
@@ -2299,7 +2299,7 @@ namespace PrototypeWithAuth.Controllers
 
                             await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget);
                             var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                            var isSavedUsingSession = HttpContext.Session.GetObject<Request>(requestName) != null;
+                            var isSavedUsingSession = _httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName) != null;
                             if (!isSavedUsingSession)
                             {
                                 MoveDocumentsOutOfTempFolder(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault().RequestID, AppUtility.ParentFolderName.Requests);
@@ -2431,7 +2431,7 @@ namespace PrototypeWithAuth.Controllers
                     request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
                     request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                 }
-                HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum, request);
+                _httpContextAccessor.HttpContext.Session.SetObject(AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum, request);
                 var payments = _context.Payments.Where(p => p.RequestID == id);
                 allRequests.Add(request);
             }
@@ -2440,9 +2440,9 @@ namespace PrototypeWithAuth.Controllers
                 while (isRequests)
                 {
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
+                    if (_httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
-                        var request = HttpContext.Session.GetObject<Request>(requestName);
+                        var request = _httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName);
                         request.PaymentStatus = _context.PaymentStatuses.Where(ps => ps.PaymentStatusID == request.PaymentStatusID).FirstOrDefault();
                         if (request.ParentRequest != null)
                         {
@@ -2459,7 +2459,7 @@ namespace PrototypeWithAuth.Controllers
                             request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
                             request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                         }
-                        HttpContext.Session.SetObject(requestName, request);
+                        _httpContextAccessor.HttpContext.Session.SetObject(requestName, request);
                         allRequests.Add(request);
                     }
                     else
@@ -2475,7 +2475,7 @@ namespace PrototypeWithAuth.Controllers
                 Requests = allRequests,
                 RequestIndexObject = requestIndexObject
             };
-            
+
             //render the purchase order view into a string using a the confirmEmailViewModel
             string renderedView = await RenderPartialViewToString("OrderEmailView", confirm);
 
@@ -2486,7 +2486,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 await writer.WriteAsync(renderedView);
             }
-            
+
             confirm.RequestIndexObject = requestIndexObject;
             return PartialView(confirm);
         }
@@ -2507,16 +2507,16 @@ namespace PrototypeWithAuth.Controllers
                 {
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
 
-                    if (HttpContext.Session.GetObject<Request>(requestName) != null)
+                    if (_httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
-                        var request = HttpContext.Session.GetObject<Request>(requestName);
+                        var request = _httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName);
                         requests.Add(request);
                         if (!_context.Payments.Where(p => p.RequestID == request.RequestID).Any())
                         { //has payments already from terms modal
                             for (int i = 0; i < request.Installments; i++)
                             {
                                 var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + (PaymentNum);
-                                var payment = HttpContext.Session.GetObject<Payment>(paymentName);
+                                var payment = _httpContextAccessor.HttpContext.Session.GetObject<Payment>(paymentName);
                                 payment.Request = request;
                                 payments.Add(payment);
                                 PaymentNum++;
@@ -2525,7 +2525,7 @@ namespace PrototypeWithAuth.Controllers
                         //if (request.PaymentStatusID == 7)
                         //{
                         //    var paymentName = AppData.SessionExtensions.SessionNames.Payment.ToString() + 1;
-                        //    var payment = HttpContext.Session.GetObject<Payment>(paymentName);
+                        //    var payment = _httpContextAccessor.HttpContext.Session.GetObject<Payment>(paymentName);
                         //    payment.Request = request;
                         //    payments.Add(payment);
                         //}
@@ -2555,7 +2555,7 @@ namespace PrototypeWithAuth.Controllers
                 while (isEmail)
                 {
                     var emailName = AppData.SessionExtensions.SessionNames.Email.ToString() + emailNum;
-                    var email = HttpContext.Session.GetObject<string>(emailName);
+                    var email = _httpContextAccessor.HttpContext.Session.GetObject<string>(emailName);
                     if (email != null)
                     {
                         emails.Add(email);
@@ -2581,7 +2581,7 @@ namespace PrototypeWithAuth.Controllers
 
                 PdfDocument doc = new PdfDocument();
                 // create a new pdf document converting an url
-                doc = converter.ConvertHtmlString(renderedView, baseUrl); 
+                doc = converter.ConvertHtmlString(renderedView, baseUrl);
 
                 //save this as orderform
                 string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
@@ -2592,7 +2592,7 @@ namespace PrototypeWithAuth.Controllers
                 string uploadFile = Path.Combine(uploadFolder, "CentarixOrder#" + requests.FirstOrDefault().ParentRequest.OrderNumber + ".pdf");
                 */
 
-               
+
                 //instatiate mimemessage
                 var message = new MimeMessage();
 
@@ -2600,7 +2600,7 @@ namespace PrototypeWithAuth.Controllers
                 var builder = new BodyBuilder();
 
                 var userId = requests.FirstOrDefault().ApplicationUserCreatorID ?? _userManager.GetUserId(User); //do we need to do this? (will it ever be null?)
-                                                                                                                    //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
+                                                                                                                 //var currentUser = _context.Users.FirstOrDefault(u => u.Id == _userManager.GetUserId(User));
                 var currentUser = _context.Users.FirstOrDefault(u => u.Id == userId);
                 //var users = _context.Users.ToList();
                 //currentUser = _context.Users.Where(u => u.Id == "702fe06c-22e1-4be8-a515-ea89d6e5ee00").FirstOrDefault();
@@ -2643,7 +2643,7 @@ namespace PrototypeWithAuth.Controllers
                     ". \n\nPlease confirm that you received the order. \n\nThank you.\n"
                     + ownerUsername + "\nCentarix";
                 builder.Attachments.Add(uploadFile);
-                
+
 
                 message.Body = builder.ToMessageBody();
 
@@ -2672,7 +2672,7 @@ namespace PrototypeWithAuth.Controllers
                             catch (Exception ex)
                             {
                                 ViewBag.ErrorMessage = AppUtility.GetExceptionMessage(ex);
-                                throw new Exception(AppUtility.GetExceptionMessage(ex)); 
+                                throw new Exception(AppUtility.GetExceptionMessage(ex));
                             }
                             client.Disconnect(true);
 
@@ -2710,7 +2710,7 @@ namespace PrototypeWithAuth.Controllers
                                 do
                                 {
                                     var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                                    var comment = _httpContextAccessor.HttpContext.Session.GetObject<Comment>(commentNumber);
                                     if (comment != null)
                                     //will only go in here if there are comments so will only work if it's there
                                     //IMPT look how to clear the session information if it fails somewhere...
@@ -3533,7 +3533,7 @@ namespace PrototypeWithAuth.Controllers
                         await SaveLocations(receivedModalVisualViewModel, request, false);
                         await transaction.CommitAsync();
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -3697,7 +3697,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     case AppUtility.OrderTypeEnum.OrderNow:
                         //var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                        //HttpContext.Session.SetObject(requestNum, request);
+                        //_httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
                         return RedirectToAction("ConfirmEmailModal", new { id = id });
                         break;
                     case AppUtility.OrderTypeEnum.AlreadyPurchased:
@@ -4524,7 +4524,7 @@ namespace PrototypeWithAuth.Controllers
             {
 
                 var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                var request = HttpContext.Session.GetObject<Request>(requestName);
+                var request = _httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName);
                 uploadQuoteOrderViewModel.ParentQuote.QuoteStatusID = 4;
                 request.ParentQuote = uploadQuoteOrderViewModel.ParentQuote;
                 if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
@@ -4539,7 +4539,7 @@ namespace PrototypeWithAuth.Controllers
                 if ((request.RequestStatusID == 6 || request.RequestStatusID == 1) && request.OrderType != AppUtility.OrderTypeEnum.AddToCart.ToString())
                 {
                     var requestNum = AppData.SessionExtensions.SessionNames.Request.ToString() + 1;
-                    HttpContext.Session.SetObject(requestNum, request);
+                    _httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
                     return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.RequestIndexObject);
                 }
                 else
@@ -4667,7 +4667,7 @@ namespace PrototypeWithAuth.Controllers
                 while (isRequests)
                 {
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
-                    var req = HttpContext.Session.GetObject<Request>(requestName);
+                    var req = _httpContextAccessor.HttpContext.Session.GetObject<Request>(requestName);
                     if (req != null)
                     {
                         if (uploadQuoteOrderViewModel.ExpectedSupplyDays != null)
@@ -4690,7 +4690,7 @@ namespace PrototypeWithAuth.Controllers
 
                     var requestName = AppData.SessionExtensions.SessionNames.Request.ToString() + RequestNum;
 
-                    HttpContext.Session.SetObject(requestName, request);
+                    _httpContextAccessor.HttpContext.Session.SetObject(requestName, request);
                     RequestNum++;
                 }
                 string action;
@@ -4733,7 +4733,7 @@ namespace PrototypeWithAuth.Controllers
                 do
                 {
                     var commentNumber = AppData.SessionExtensions.SessionNames.Comment.ToString() + n;
-                    var comment = HttpContext.Session.GetObject<Comment>(commentNumber);
+                    var comment = _httpContextAccessor.HttpContext.Session.GetObject<Comment>(commentNumber);
                     if (comment != null)
                     //will only go in here if there are comments so will only work if it's there
                     //IMPT look how to clear the session information if it fails somewhere...
@@ -4777,7 +4777,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 return new EmptyResult();
             }
-            else if(r.RedirectToActionResult.ActionName == "Index")
+            else if (r.RedirectToActionResult.ActionName == "Index")
             {
                 return new EmptyResult();
             }
@@ -4881,13 +4881,13 @@ namespace PrototypeWithAuth.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    throw  new Exception(AppUtility.GetExceptionMessage(ex)); ;
+                    throw new Exception(AppUtility.GetExceptionMessage(ex)); ;
                 }
             }
             return RedirectToAction("_LocationTab", new { id = requestId });
         }
 
-        
+
 
         //public async Task<bool> PopulateProductSerialNumber()
         //{

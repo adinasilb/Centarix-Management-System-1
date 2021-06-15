@@ -34,8 +34,8 @@ namespace PrototypeWithAuth.Controllers
     public class ProtocolsController : SharedController
     {
         public enum ProtocolIconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
-        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-            : base(context, userManager, hostingEnvironment)
+        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
+            : base(context, userManager, hostingEnvironment, httpContextAccessor)
         {
         }
 
