@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrototypeWithAuth.Data;
 
 namespace PrototypeWithAuth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210615170150_MadeShareBase")]
+    partial class MadeShareBase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4651,36 +4653,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("SalariedEmployees");
                 });
 
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareProtocol", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FromApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ProtocolID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ToApplicationUserID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("FromApplicationUserID");
-
-                    b.HasIndex("ProtocolID");
-
-                    b.HasIndex("ToApplicationUserID");
-
-                    b.ToTable("ShareProtocols");
-                });
-
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
                 {
                     b.Property<int>("ID")
@@ -6653,25 +6625,6 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
                         .WithOne("SalariedEmployee")
                         .HasForeignKey("PrototypeWithAuth.Models.SalariedEmployee", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PrototypeWithAuth.Models.ShareProtocol", b =>
-                {
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("FromApplicationUserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
-                        .WithMany()
-                        .HasForeignKey("ProtocolID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

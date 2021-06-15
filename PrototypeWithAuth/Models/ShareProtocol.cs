@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ShareResource :SharedBase
+    public class ShareProtocol :SharedBase
     {        
-        public int ResourceID { get; set; }
-        public Resource Resource { get; set; }
+        public int ProtocolID { get; set; }
+        public Protocol Protocol { get; set; }
     }
 }

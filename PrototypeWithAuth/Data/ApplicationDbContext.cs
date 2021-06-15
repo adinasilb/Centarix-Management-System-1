@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<ShareProtocol> ShareProtocols { get; set; }
         public DbSet<ShareResource> ShareResources { get; set; }
         public DbSet<FavoriteResource> FavoriteResources { get; set; }
         public DbSet<FavoriteProtocol> FavoriteProtocols { get; set; }
