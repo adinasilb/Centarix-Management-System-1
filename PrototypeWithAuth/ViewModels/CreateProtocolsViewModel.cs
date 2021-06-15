@@ -20,5 +20,6 @@ namespace PrototypeWithAuth.ViewModels
         public List<LineType> LineTypes { get; set; }
         public IEnumerable<ProtocolsLineViewModel> TempLines { get; set; }
         public IEnumerable<FunctionType> FunctionTypes {get ;set;}
+        public int Tab { get; set; } = 1;
     }
 }

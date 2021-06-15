@@ -385,7 +385,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 protocol.ProtocolTypeID = typeID;
             }
-
+            List<FunctionType> functionTypes = new List<FunctionType>();
             var viewmodel = new CreateProtocolsViewModel()
             {
                 Protocol = protocol,
@@ -393,8 +393,12 @@ namespace PrototypeWithAuth.Controllers
                 ProtocolSubCategories = _context.ProtocolSubCategories,
                 MaterialCategories = _context.MaterialCategories,
                 LineTypes = _context.LineTypes.ToList(),
-                FunctionTypes = _context.FunctionTypes
             };
+            foreach (var functionType in Enum.GetValues(typeof(AppUtility.ProtocolFunctionTypes)))
+            {
+                functionTypes.Add(_context.FunctionTypes.Where(ft => ft.DescriptionEnum == functionType.ToString()).FirstOrDefault());
+            }
+            viewmodel.FunctionTypes = functionTypes;
             await CopySelectedLinesToTempLineTable(protocol.ProtocolID);
             viewmodel.TempLines = OrderLinesForView(protocolID);
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
@@ -1000,10 +1004,6 @@ namespace PrototypeWithAuth.Controllers
                                 MoveDocumentsOutOfTempFolder(addFunctionViewModel.FunctionLine.ID, AppUtility.ParentFolderName.FunctionLine);
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddStop:
-                            case AppUtility.ProtocolFunctionTypes.AddTable:
-                                break;
-                            case AppUtility.ProtocolFunctionTypes.AddTemplate:
-                                break;
                             case AppUtility.ProtocolFunctionTypes.AddTimer:
                             case AppUtility.ProtocolFunctionTypes.AddTip:
                             case AppUtility.ProtocolFunctionTypes.AddWarning:
