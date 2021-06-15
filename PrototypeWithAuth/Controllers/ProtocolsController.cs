@@ -2216,6 +2216,48 @@ namespace PrototypeWithAuth.Controllers
             };
             return RedirectToAction("_ReportsIndexTable", reportsIndexObject);
         }
-    }
+
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> FavoriteProtocol(int ProtocolID, bool Favorite = true)
+        {
+            //The system for checks is strict b/c the calls are dependent upon icon names in code and jquery that can break or be changed one day
+            string retString = null;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (Favorite)
+                    {
+                        FavoriteProtocol favoriteProtocol = _context.FavoriteProtocols.Where(fr => fr.ProtocolID == ProtocolID && fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
+                        if (favoriteProtocol != null) { _context.Remove(favoriteProtocol); } //check is here so it doesn't crash
+                                                                                             //if it doesn't exist the jquery will then cont and leave an empty icon which is ok b/c its empty
+                    }
+                    else
+                    {
+                        //check for favorite
+                        if (_context.FavoriteProtocols.Where(fr => fr.ProtocolID == ProtocolID && fr.ApplicationUserID == _userManager.GetUserId(User)) != null)
+                        {
+                            FavoriteProtocol favoriteProtocol = new FavoriteProtocol()
+                            {
+                                ProtocolID = ProtocolID,
+                                ApplicationUserID = _userManager.GetUserId(User)
+                            };
+                            _context.Update(favoriteProtocol);
+                        }
+                        //if the favorite exists the jquery will then cont and leave a full icon which is ok b/c its full
+                    }
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                }
+            }
+            return new EmptyResult();
+        }
 
     }
+
+}
