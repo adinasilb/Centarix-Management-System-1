@@ -4179,6 +4179,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? requestid, int[] requestIds, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
+            string test = "test";
             List<Request> requestsToPay = new List<Request>();
             var requestsList = GetPaymentRequests(accountingPaymentsEnum);
 
