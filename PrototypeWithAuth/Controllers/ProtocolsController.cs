@@ -1943,7 +1943,7 @@ namespace PrototypeWithAuth.Controllers
         {
             //add transaction
             var report = _context.Reports.Where(r => r.ReportID == createReportViewModel.ReportID).FirstOrDefault();
-            report.TemporaryReportText = createReportViewModel.Report.ReportText;
+            report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText;
             _context.Update(report);
             await _context.SaveChangesAsync();
             var saveReportViewModel = new SaveReportViewModel()
@@ -1955,19 +1955,22 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID)
+        public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID, int FunctionReportID)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
+            
             var functionReport = new FunctionReport()
-            {
-                FunctionType = functionType,
-                FunctionTypeID = functionType.FunctionTypeID
-            };
+                {
+                    FunctionType = functionType,
+                    FunctionTypeID = functionType.FunctionTypeID
+                };
             var viewmodel = new AddReportFunctionViewModel
             {
                 ReportID = ReportID,
                 FunctionReport = functionReport
             };
+            string uploadReportsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Reports.ToString());
+            string uploadReportsFolder2 = Path.Combine(uploadReportsFolder, functionReport.ID.ToString());
 
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
@@ -1983,6 +1986,10 @@ namespace PrototypeWithAuth.Controllers
                     viewmodel.Creators = _context.Users.Select(u =>
                         new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
                     viewmodel.Protocols = _context.Protocols.ToList();
+                    break;
+                case AppUtility.ProtocolFunctionTypes.AddFile:
+                    viewmodel.DocumentsInfo = new List<DocumentFolder>();
+                    base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, uploadReportsFolder2);
                     break;
             }
             return PartialView(viewmodel);
@@ -2007,6 +2014,8 @@ namespace PrototypeWithAuth.Controllers
                     {
                         addReportsFunctionViewModel.FunctionReport.IsTemporaryDeleted = true;
                         _context.Entry(addReportsFunctionViewModel.FunctionReport).State = EntityState.Modified;
+                        report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText;
+                        _context.Update(report);
                     }
                     else
                     {
@@ -2037,13 +2046,20 @@ namespace PrototypeWithAuth.Controllers
                                 base.FillDocumentsViewModel(documentsModalViewModel);
 
                                 string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
-                                report.TemporaryReportText = createReportViewModel.Report.ReportText + renderedView + " <div contenteditable='true' class= 'editable-span report-text form-control-plaintext text-transform-none'></div>";
+                                var replaceableText = "<span class=\"focusedText\"></span>";
+                                var position = createReportViewModel.Report.TemporaryReportText.IndexOf(replaceableText) + replaceableText.Length;
+                                var addedText = "</div>"+renderedView;
+                                if (position == createReportViewModel.Report.TemporaryReportText.Length)
+                                {
+                                    addedText += " <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none'></div>";
+                                }
+                                report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText.Replace(replaceableText, addedText);
                                 _context.Update(report);
-                                await _context.SaveChangesAsync();
 
                                 break;
                         }
                     }
+                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -2055,6 +2071,50 @@ namespace PrototypeWithAuth.Controllers
             return PartialView("_ReportText", report);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> DeleteReportDocumentModal(int FunctionReportID)
+        {
+            var functionReport = _context.FunctionReports.Where(fr => fr.ID == FunctionReportID).FirstOrDefault();
+            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionReport.FunctionTypeID).FirstOrDefault();
+            string uploadReportsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Reports.ToString());
+            string uploadReportsFolder2 = Path.Combine(uploadReportsFolder, functionReport.ID.ToString());
+
+            var deleteDocumentViewModel = new DeleteReportDocumentViewModel()
+            {
+                FunctionReport = functionReport,
+                ReportID = functionReport.ReportID
+            };
+
+            deleteDocumentViewModel.DocumentsInfo = new List<DocumentFolder>();
+            base.GetExistingFileStrings(deleteDocumentViewModel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, uploadReportsFolder2);
+            return PartialView(deleteDocumentViewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> DeleteReportDocumentModal(DeleteReportDocumentViewModel deleteDocumentViewModel, CreateReportViewModel createReportViewModel)
+        {
+            var report = _context.Reports.Where(r => r.ReportID == deleteDocumentViewModel.ReportID).FirstOrDefault();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    deleteDocumentViewModel.FunctionReport.IsTemporaryDeleted = true;
+                    _context.Entry(deleteDocumentViewModel.FunctionReport).State = EntityState.Modified;
+                    report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText;
+                    _context.Update(report);
+
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+                    return PartialView("_ReportText", report);
+        }
 
 
         [HttpPost]
@@ -2063,6 +2123,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var report = _context.Reports.Where(r => r.ReportID == saveReportViewModel.ReportID).FirstOrDefault();
             var reportTempFunctions = _context.FunctionReports.Where(fr => fr.ReportID == report.ReportID && fr.IsTemporary).ToList();
+            var deletedReportFunctions = _context.FunctionReports.Where(fr => fr.ReportID == report.ReportID && fr.IsTemporaryDeleted).ToList();
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -2070,6 +2131,7 @@ namespace PrototypeWithAuth.Controllers
                     if (saveReportViewModel.SaveReport)
                     {
                         report.ReportText = report.TemporaryReportText;
+                        report.TemporaryReportText = null;
                         report.ReportTitle = saveReportViewModel.ReportTitle;
                         _context.Update(report);
 
@@ -2077,6 +2139,10 @@ namespace PrototypeWithAuth.Controllers
                         {
                             functionReport.IsTemporary = false;
                             _context.Update(functionReport);
+                        }
+                        foreach (var functionReport in deletedReportFunctions)
+                        {
+                            _context.Remove(functionReport);
                         }
                         await _context.SaveChangesAsync();
                     }
@@ -2095,6 +2161,11 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 Directory.Delete(uploadFolder2, true);
                             }
+                        }
+                        foreach (var functionReport in deletedReportFunctions)
+                        {
+                            functionReport.IsTemporaryDeleted = false;
+                            _context.Update(functionReport);
                         }
                         await _context.SaveChangesAsync();
                     }
