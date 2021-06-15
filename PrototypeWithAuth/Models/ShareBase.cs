@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public abstract class SharedBase
+    public abstract class ShareBase
     {
         private DateTime _timestamp { get; set; }
         [Key]
-        public int ID { get; set; }
+        public int ShareID { get; set; }
         public string FromApplicationUserID { get; set; }
         [ForeignKey("FromApplicationUserID")]
         public ApplicationUser FromApplicationUser { get; set; }

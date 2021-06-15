@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ShareRequest : SharedBase
+    public class ShareRequest : ShareBase
     {
         public int RequestID { get; set; }
         public Request Request { get; set; }

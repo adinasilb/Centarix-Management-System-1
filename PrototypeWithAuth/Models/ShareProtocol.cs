@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.Models
 {
-    public class ShareProtocol :SharedBase
+    public class ShareProtocol :ShareBase
     {        
         public int ProtocolID { get; set; }
         public Protocol Protocol { get; set; }

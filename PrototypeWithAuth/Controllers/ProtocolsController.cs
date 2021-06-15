@@ -1553,7 +1553,7 @@ namespace PrototypeWithAuth.Controllers
 
             var shareresourcesreceivedResoureid = _context.Users.Include(u => u.ShareResourcesReceived)
                 .Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault()
-                .ShareResourcesReceived.Select(srr => srr.ID).ToList();
+                .ShareResourcesReceived.Select(srr => srr.ShareID).ToList();
 
             var testNew = _context.Resources
             .Include(r => r.FavoriteResources)
@@ -1572,7 +1572,7 @@ namespace PrototypeWithAuth.Controllers
                                              join fr in _context.FavoriteResources on r.ResourceID equals fr.ResourceID into g
                                              from fr in g.DefaultIfEmpty()
                                              where sr.ToApplicationUserID == _userManager.GetUserId(User)
-                                             select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteResourceID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser, ShareResourceID = sr.ID };
+                                             select new ResourceWithFavorite { Resource = r, IsFavorite = fr.FavoriteID == null ? false : true, SharedByApplicationUser = sr.FromApplicationUser, ShareResourceID = sr.ShareID };
 
             ResourcesListIndexViewModel.ResourcesWithFavorites = tempResourcesWithFavorites.ToList();
             ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
@@ -1707,7 +1707,7 @@ namespace PrototypeWithAuth.Controllers
                     switch (modelsEnum)
                     {
                         case AppUtility.ModelsEnum.Resource:
-                            var sharedResource = _context.ShareResources.Where(sr => sr.ID == ShareID).FirstOrDefault();
+                            var sharedResource = _context.ShareResources.Where(sr => sr.ShareID == ShareID).FirstOrDefault();
                             _context.Remove(sharedResource);
                             break;
                     }
