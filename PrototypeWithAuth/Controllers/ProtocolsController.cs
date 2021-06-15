@@ -940,17 +940,25 @@ namespace PrototypeWithAuth.Controllers
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                    GetLinkToProductDDls(viewmodel);
-                    var product = _context.Products.Where(p => p.ProductID == objectID).FirstOrDefault();
+                    var product = _context.Products.Where(p => p.ProductID == objectID)
+                        .Include(p=>p.ProductSubcategory).FirstOrDefault();
                     viewmodel.FunctionLine.Product = product;
                     viewmodel.FunctionLine.ProductID = objectID;
-               
+                    viewmodel.ParentCategories = _context.ParentCategories.ToList();
+                    viewmodel.ProductSubcategories = _context.ProductSubcategories.Where(ps=>ps.ParentCategoryID==product.ProductSubcategory.ParentCategoryID).ToList();
+                    viewmodel.Products = _context.Products.Where(p=>p.ProductSubcategoryID==product.ProductSubcategoryID && product.VendorID ==p.VendorID).ToList();
+                    viewmodel.Vendors = _context.Vendors.ToList();
+
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                    GetLineToProtocolDDLs(viewmodel);
-                    var protocol = _context.Protocols.Where(p => p.ProtocolID == objectID).FirstOrDefault();
+                    var protocol = _context.Protocols.Where(p => p.ProtocolID == objectID).Include(ps=>ps.ProtocolSubCategory).FirstOrDefault();
                     viewmodel.FunctionLine.Protocol = protocol;
                     viewmodel.FunctionLine.ProtocolID = objectID;
+                    viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
+                    viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID ==protocol.ProtocolSubCategory.ProtocolCategoryTypeID).ToList();
+                    viewmodel.Creators = _context.Users.Select(u =>
+                        new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
+                    viewmodel.Protocols = _context.Protocols.Where(p=>p.ProtocolSubCategoryID ==protocol.ProtocolSubCategoryID && p.ApplicationUserCreatorID == protocol.ApplicationUserCreatorID).ToList();
                     break;
             }
             return PartialView(viewmodel);
