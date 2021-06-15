@@ -1,6 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
 @using PrototypeWithAuth.ViewModels
-@{ 
+@{
     string theory = "";
     string material = "";
     string protocols = "";
@@ -14,7 +14,7 @@
             break;
         case 3:
             protocols = " active show ";
-            break;       
+            break;
 
     }
 }
@@ -69,16 +69,7 @@
         @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}
     </div>
 </form>
+
+<script src="~/js/Validation/CreateProtocolValidation.js"></script>
+<script src="~/js/validate.js"></script>
 <script src="~/js/function.js"></script>
-<script>
-    $(".protocol-tab").click(function () {
-
-        if ($(this).hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
-            $(".only-protocol-tab.li-function-bar").removeClass("d-none");
-        }
-        else {
-            $(".only-protocol-tab").addClass("d-none");
-        }
-    })
-
-</script>

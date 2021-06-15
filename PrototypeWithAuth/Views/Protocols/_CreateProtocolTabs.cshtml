@@ -207,6 +207,12 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
                 success: function (data) {
                     $("._CreateProtocolTabs").html(data)
                     $(".mdb-select").materialSelect();
+                    if ($(this).hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
+                        $(".only-protocol-tab.li-function-bar").removeClass("d-none");
+                    }
+                    else {
+                        $(".only-protocol-tab").addClass("d-none");
+                    }
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {

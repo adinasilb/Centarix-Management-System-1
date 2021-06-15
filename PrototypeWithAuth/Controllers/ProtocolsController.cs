@@ -370,7 +370,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var protocol = _context.Protocols
                 .Include(p => p.Urls).Include(p => p.Materials)
-                .ThenInclude(m => m.Product).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
+                .ThenInclude(m => m.Product).Include(p=>p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
             protocol.Urls ??= new List<Link>();
             protocol.Materials ??= new List<Material>();
 
