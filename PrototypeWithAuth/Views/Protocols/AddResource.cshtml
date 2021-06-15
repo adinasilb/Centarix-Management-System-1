@@ -1,5 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddResourceViewModel;
 
+<script src="~/js/Validation/AddResourceFormValidation.js"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
+
 @{
     var Heading = "";
     switch (Model.Resource.ResourceTypeID)
@@ -21,7 +24,7 @@
             <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('add-resources')">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" id="myForm" class="modal-padding" enctype="multipart/form-data">
+            <form action="" method="post" id="myForm" class="modal-padding add-resource-form" enctype="multipart/form-data">
                 <div class="form-element-border-bottom under-row-margin">
                     <div class="row top-menu under-row-margin">
                         <div class="col-12 heading-1">
@@ -135,7 +138,7 @@
                 </div>
                 <div class="row">
                     <div class="modal-footer-mt mx-auto">
-                        <input type="submit" class="custom-button custom-cancel protocols-filter" asp-action="AddResource" />
+                        <input type="submit" class="custom-button custom-cancel protocols-filter activeSubmit addResourceSubmit" @*asp-action="AddResource"*@ />
                         <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('add-resources')">Cancel</button>
                     </div>
                 </div>
@@ -145,3 +148,49 @@
         </div>
     </div>
 </div>
+<script>
+    $(".addResourceSubmit").click(function (e) {
+        console.log("in add resource submit click");
+        e.preventDefault();
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+            e.preventDefault();
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $("#loading").show();
+            $('.activeSubmit ').removeClass('disabled-submit')
+            var formData = new FormData($("#myForm")[0]);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Protocols/AddResource",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                timeout: 540000,
+                cache: false,
+                success: function (data) {
+                    $("#loading").hide();
+                    $.fn.CloseModal('add-resources');
+                    $('.render-body').html(data);
+                    return true;
+                },
+                error: function (x, t, m) {
+                    if (t === "timeout") {
+                        alert("browser timed out. you may not see resource for another couple minutes")
+                        $.fn.CloseModal('add-resources');
+                    }
+                }
+            })
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+    })
+</script>
