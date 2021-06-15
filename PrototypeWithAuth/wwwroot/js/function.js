@@ -110,50 +110,118 @@ $(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click',
     //}
     //$('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 });
-//var globalLine;
-////$('.line').on('focusin', function(){
-////    console.log("Saving value " + $(this).val());
-//// $(this).attr('old-val', $(this).html());
-////    return;
-////});
 
-//$(".line").keyup(function (event) {
-  
-//        var prev =$.trim($(this).attr('old-val'));
-//        var current =$.trim(event.target.innerHTML);   
-//        console.log("Prev value " + prev);
-//        console.log("New value " +  current);
-//    if(prev > current)
-//    {
-//        var firstIndex =prev.indexOf(current)
-//        var lastIndex = firstIndex + current.length;
-  
-//        var diff = prev.substr(0, firstIndex);
-//        diff+= prev.substr(lastIndex, prev.length-1)
-//        if(diff.includes("</a>"))
-//        {
-//            event.target.innerHTML = $(this).attr('old-val');
-//        }
-//        $(this).attr('old-val', $(this).html());
-//        console.log(diff);
-//        return;
-//    }
-//    else{
-//        var firstIndex =current.indexOf(current)
-//        var lastIndex = firstIndex + prev.length;
-  
-//        var diff = current.substr(0, firstIndex);
-//        diff+= current.substr(lastIndex, current.length-1)
-//        if(diff.includes("</a>"))
-//        {
-//            event.target.innerHTML = $(this).attr('old-val');
-//        }
-//            $(this).attr('old-val', $(this).html());
-//        console.log(diff);
-//        return;
+$(".link-product-dropdown").change(function(){
+    var productSelector = $("select.product");
+    var subCategorySelector = $("select.subCategory");
+    var parentCategoryID = $("select.parentCategory").val();
+    var subCategoryID = $("select.subCategory").val();
+    var vendorCategoryID = $("select.vendor").val();
+    var isCategoryChange= false;
+    if($(this).hasClass("parentCategory"))
+    {
+        isCategoryChange=true;
+    }
+    var url = "/Protocols/FilterLinkToProduct"
+    $.getJSON(url, { ParentCategoryID: parentCategoryID,  SubCategoryID :subCategoryID,  VendorID: vendorCategoryID}, function (data) {
+		   console.log(data)
+            productSelector.children("option").each(function (i, option) {
+				option.remove();
+			});
+			var productItem1 = '<option value="">Select Product</option>';
+            productSelector.append(productItem1);
+            if(isCategoryChange)
+            {
+                subCategorySelector.children("option").each(function (i, option) {
+				    option.remove();
+		        });
+                var firstitem1 = '<option value="">Select SubCategory</option>';			
+		        subCategorySelector.append(firstitem1);
+            }		        
+          
+			$.each(data.products, function (i, product) {
+                var newitem1 = '<option value="' + product.productID + '">' + product.name + '</option>'
+				productSelector.append(newitem1);
+            });		             			  
+            if(isCategoryChange)
+            {
+                $.each(data.productSubCategories, function (i, subCat) {
+                var newitem1 = '<option value="' + subCat.subCategoryID + '">' + subCat.subCategoryDescription + '</option>'
+			    subCategorySelector.append(newitem1);
+                });
+                subCategorySelector.materialSelect({destroy: true});
+                subCategorySelector.materialSelect();
+            }	
+			
+            productSelector.materialSelect({destroy: true});  
+            productSelector.materialSelect();   
+         
+			return false;
+	    });
 
-//     }
-       
-  
-    
-//});
+});
+$(".link-protocol-dropdown").change(function(){
+    var protocolSelector = $("select.protocol");
+    var subCategorySelector = $("select.protocolSubCategory");
+    var parentCategoryID = $("select.protocolParentCategory").val();
+    var subCategoryID = $("select.protocolSubCategory").val();
+    var creatorID = $("select.creator").val();
+    var isCategoryChange= false;
+    if($(this).hasClass("protocolParentCategory"))
+    {
+        isCategoryChange=true;
+    }
+
+    var url = "/Protocols/FilterLinkToProtocol"
+    $.getJSON(url, { ParentCategoryID: parentCategoryID,  SubCategoryID :subCategoryID,  creatorID: creatorID}, function (data) {
+		   console.log(data)
+            protocolSelector.children("option").each(function (i, option) {
+				option.remove();
+			});
+			var productItem1 = '<option value="">Select Protocol</option>';
+            protocolSelector.append(productItem1);
+            if(isCategoryChange)
+            {
+                subCategorySelector.children("option").each(function (i, option) {
+				    option.remove();
+		        });
+                var firstitem1 = '<option value="">Select SubCategory</option>';			
+		        subCategorySelector.append(firstitem1);
+            }		        
+          
+			$.each(data.protocols, function (i, protocol) {
+                var newitem1 = '<option value="' + protocol.protocolID + '">' + protocol.name + '</option>'
+				protocolSelector.append(newitem1);
+            });		             			  
+            if(isCategoryChange)
+            {
+                $.each(data.protocolSubCategories, function (i, subCat) {
+                var newitem1 = '<option value="' + subCat.subCategoryID + '">' + subCat.subCategoryDescription + '</option>'
+			    subCategorySelector.append(newitem1);
+                });
+                subCategorySelector.materialSelect({destroy: true});
+                subCategorySelector.materialSelect();
+            }	
+			
+            protocolSelector.materialSelect({destroy: true});  
+            protocolSelector.materialSelect();   
+         
+			return false;
+	    });
+
+});
+
+$(".add-function").off("change", ".protocol, .product").on("change", ".protocol, .product", function(){
+     $.ajax({
+            async: true,
+            url: "/Protocols/_AddFunctionModal?objectID="+$(this).val()+"&functionTypeID="+$(".function-typeID").val(),
+            type: 'GET',
+            cache: true,
+            success: function (data) {
+               $("._AddFunctionModal").html(data)
+               $("._AddFunctionModal .mdb-select").materialSelect();
+               return;
+            }
+       });
+    return;
+});

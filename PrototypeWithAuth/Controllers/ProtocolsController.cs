@@ -894,17 +894,10 @@ namespace PrototypeWithAuth.Controllers
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                    viewmodel.ParentCategories = _context.ParentCategories.ToList();
-                    viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();
-                    viewmodel.Products = _context.Products.ToList();
-                    viewmodel.Vendors = _context.Vendors.ToList();
+                    GetLinkToProductDDls(viewmodel);
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                    viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
-                    viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
-                    viewmodel.Creators = _context.Users.Select(u =>
-                        new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
-                    viewmodel.Protocols = _context.Protocols.ToList();
+                    GetLineToProtocolDDLs(viewmodel);
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddFile:
                     viewmodel.DocumentsInfo = new List<DocumentFolder>();
@@ -916,8 +909,52 @@ namespace PrototypeWithAuth.Controllers
                     break;
             }
             return PartialView(viewmodel);
-        }    
+        }
 
+        private void GetLineToProtocolDDLs(AddFunctionViewModel viewmodel)
+        {
+            viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
+            viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.ToList();
+            viewmodel.Creators = _context.Users.Select(u =>
+                new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
+            viewmodel.Protocols = _context.Protocols.ToList();
+        }
+
+        private void GetLinkToProductDDls(AddFunctionViewModel viewmodel)
+        {
+            viewmodel.ParentCategories = _context.ParentCategories.ToList();
+            viewmodel.ProductSubcategories = _context.ProductSubcategories.ToList();
+            viewmodel.Products = _context.Products.ToList();
+            viewmodel.Vendors = _context.Vendors.ToList();
+        }
+
+        public async Task<IActionResult> _AddFunctionModal(int objectID, int functionTypeID)
+        {
+            var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionTypeID).FirstOrDefault();
+
+            var viewmodel = new AddFunctionViewModel
+            {
+                FunctionLine = new FunctionLine()
+            };
+            viewmodel.FunctionLine.FunctionType = functionType;
+            switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
+            {
+                case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
+                    GetLinkToProductDDls(viewmodel);
+                    var product = _context.Products.Where(p => p.ProductID == objectID).FirstOrDefault();
+                    viewmodel.FunctionLine.Product = product;
+                    viewmodel.FunctionLine.ProductID = objectID;
+               
+                    break;
+                case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
+                    GetLineToProtocolDDLs(viewmodel);
+                    var protocol = _context.Protocols.Where(p => p.ProtocolID == objectID).FirstOrDefault();
+                    viewmodel.FunctionLine.Protocol = protocol;
+                    viewmodel.FunctionLine.ProtocolID = objectID;
+                    break;
+            }
+            return PartialView(viewmodel);
+        }
 
 
         [HttpPost]
@@ -993,8 +1030,8 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Requests, Operations")]
-        public JsonResult FilterLinkToProtocol(int parentCategoryID, int subCategoryID, string creatorID)
+        [Authorize(Roles = "Protocols")]
+        public async Task<JsonResult> FilterLinkToProtocol(int parentCategoryID, int subCategoryID, string creatorID)
         {
             IQueryable<Protocol> protocolsList = _context.Protocols;
             if(subCategoryID!=0)
@@ -1005,18 +1042,18 @@ namespace PrototypeWithAuth.Controllers
             {
                 protocolsList = protocolsList.Where(p => p.ProtocolSubCategory.ProtocolCategoryTypeID == parentCategoryID);
             }
-            if(creatorID!="")
+            if(creatorID!=null)
             {
                 protocolsList = protocolsList.Where(p => p.ApplicationUserCreatorID == creatorID);
             }
-            var protocolListJson =protocolsList.Select(p => new { protocolID = p.ProtocolID, name = p.Name });
-            var subCategoryList = _context.ProtocolSubCategories.Where(ps=>ps.ProtocolCategoryTypeID==subCategoryID).Select(ps => new { subCategoryID = ps.ProtocolCategoryTypeID, subCategoryDescription = ps.ProtocolSubCategoryTypeDescription });
+            var protocolListJson =await protocolsList.Select(p => new { protocolID = p.ProtocolID, name = p.Name }).ToListAsync();
+            var subCategoryList =await  _context.ProtocolSubCategories.Where(ps=>ps.ProtocolCategoryTypeID==parentCategoryID).Select(ps => new { subCategoryID = ps.ProtocolCategoryTypeID, subCategoryDescription = ps.ProtocolSubCategoryTypeDescription }).ToListAsync();
             return Json(new { ProtocolSubCategories = subCategoryList, Protocols = protocolListJson });
         }
 
         [HttpGet]
-        [Authorize(Roles = "Requests, Operations")]
-        public JsonResult FilterLinkToProtocol(int parentCategoryID, int subCategoryID, int vendorID)
+        [Authorize(Roles = "Protocols")]
+        public async Task<JsonResult> FilterLinkToProduct(int parentCategoryID, int subCategoryID, int vendorID)
         {
             IQueryable<Product> products = _context.Products;
             if (subCategoryID != 0)
@@ -1031,9 +1068,9 @@ namespace PrototypeWithAuth.Controllers
             {
                 products = products.Where(p => p.VendorID == vendorID);
             }
-            var productsJson = products.Select(p => new { productID = p.ProductID, name = p.ProductName });
-            var subCategoryList = _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == subCategoryID).Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription });
-            return Json(new { ProtocolSubCategories = subCategoryList, Products = products });
+            var productsJson = await products.Select(p => new { productID = p.ProductID, name = p.ProductName }).ToListAsync();
+            var subCategoryList = await _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == parentCategoryID).Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription }).ToListAsync();
+            return Json(new { ProductSubCategories = subCategoryList, Products = productsJson });
         }
 
         [HttpPost]
