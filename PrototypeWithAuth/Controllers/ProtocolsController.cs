@@ -1737,6 +1737,9 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.ModelsEnum.Resource:
                     shareModalViewModel.ObjectDescription = _context.Resources.Where(r => r.ResourceID == ID).FirstOrDefault().Title;
                     break;
+                case AppUtility.ModelsEnum.Protocol:
+                    shareModalViewModel.ObjectDescription = _context.Protocols.Where(r => r.ProtocolID == ID).FirstOrDefault().Name;
+                    break;
             }
             return PartialView(shareModalViewModel);
         }
@@ -1774,6 +1777,26 @@ namespace PrototypeWithAuth.Controllers
                                         TimeStamp = DateTime.Now
                                     };
                                     _context.Update(shareResource);
+                                }
+                                break;
+                            case AppUtility.ModelsEnum.Protocol:
+                                var PrevSharedProtocol = _context.ShareProtocols
+                                    .Where(sr => sr.ProtocolID == shareModalViewModel.ID && sr.FromApplicationUserID == currentUserID && sr.ToApplicationUserID == userID).FirstOrDefault();
+                                if (PrevSharedProtocol != null)
+                                {
+                                    PrevSharedProtocol.TimeStamp = DateTime.Now;
+                                    _context.Update(PrevSharedProtocol);
+                                }
+                                else
+                                {
+                                    var shareProtocol = new ShareProtocol()
+                                    {
+                                        ProtocolID = shareModalViewModel.ID,
+                                        FromApplicationUserID = currentUserID,
+                                        ToApplicationUserID = userID,
+                                        TimeStamp = DateTime.Now
+                                    };
+                                    _context.Update(shareProtocol);
                                 }
                                 break;
                         }
