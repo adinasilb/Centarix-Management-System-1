@@ -916,7 +916,8 @@ namespace PrototypeWithAuth.Controllers
                     break;
             }
             return PartialView(viewmodel);
-        }
+        }    
+
 
 
         [HttpPost]
@@ -989,6 +990,50 @@ namespace PrototypeWithAuth.Controllers
             }
             _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Added;
             await _context.SaveChangesAsync();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests, Operations")]
+        public JsonResult FilterLinkToProtocol(int parentCategoryID, int subCategoryID, string creatorID)
+        {
+            IQueryable<Protocol> protocolsList = _context.Protocols;
+            if(subCategoryID!=0)
+            {
+                protocolsList = protocolsList.Where(p => p.ProtocolSubCategoryID == subCategoryID);
+            }
+            else if (parentCategoryID != 0)
+            {
+                protocolsList = protocolsList.Where(p => p.ProtocolSubCategory.ProtocolCategoryTypeID == parentCategoryID);
+            }
+            if(creatorID!="")
+            {
+                protocolsList = protocolsList.Where(p => p.ApplicationUserCreatorID == creatorID);
+            }
+            var protocolListJson =protocolsList.Select(p => new { protocolID = p.ProtocolID, name = p.Name });
+            var subCategoryList = _context.ProtocolSubCategories.Where(ps=>ps.ProtocolCategoryTypeID==subCategoryID).Select(ps => new { subCategoryID = ps.ProtocolCategoryTypeID, subCategoryDescription = ps.ProtocolSubCategoryTypeDescription });
+            return Json(new { ProtocolSubCategories = subCategoryList, Protocols = protocolListJson });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Requests, Operations")]
+        public JsonResult FilterLinkToProtocol(int parentCategoryID, int subCategoryID, int vendorID)
+        {
+            IQueryable<Product> products = _context.Products;
+            if (subCategoryID != 0)
+            {
+                products = products.Where(p => p.ProductSubcategoryID == subCategoryID);
+            }
+            else if (parentCategoryID != 0)
+            {
+                products = products.Where(p => p.ProductSubcategory.ParentCategoryID == parentCategoryID);
+            }
+            if (vendorID !=0)
+            {
+                products = products.Where(p => p.VendorID == vendorID);
+            }
+            var productsJson = products.Select(p => new { productID = p.ProductID, name = p.ProductName });
+            var subCategoryList = _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == subCategoryID).Select(ps => new { subCategoryID = ps.ProductSubcategoryID, subCategoryDescription = ps.ProductSubcategoryDescription });
+            return Json(new { ProtocolSubCategories = subCategoryList, Products = products });
         }
 
         [HttpPost]
