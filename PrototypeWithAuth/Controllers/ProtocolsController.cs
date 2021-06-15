@@ -81,7 +81,7 @@ namespace PrototypeWithAuth.Controllers
             IQueryable<Protocol> ProtocolsPassedIn = Enumerable.Empty<Protocol>().AsQueryable();
             IQueryable<Protocol> fullProtocolsList = _context.Protocols.Include(p => p.ApplicationUserCreator).Include(p => p.ProtocolSubCategory)
                 .ThenInclude(p => p.ProtocolCategoryType).Include(p => p.ProtocolType);
-
+            var user = await _userManager.GetUserAsync(User);
             switch (protocolsIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.ProtocolsProtocols:
@@ -90,6 +90,7 @@ namespace PrototypeWithAuth.Controllers
                         case AppUtility.SidebarEnum.List:
                             break;
                         case AppUtility.SidebarEnum.MyProtocols:
+                            fullProtocolsList.Where(fl => fl.ApplicationUserCreatorID == user.Id);
                             break;
                         case AppUtility.SidebarEnum.Favorites:
                             break;
@@ -105,7 +106,7 @@ namespace PrototypeWithAuth.Controllers
             protocolsIndexViewModel.PageNumber = protocolsIndexObject.PageNumber;
             protocolsIndexViewModel.PageType = protocolsIndexObject.PageType;
             protocolsIndexViewModel.ErrorMessage = protocolsIndexObject.ErrorMessage;
-            var onePageOfProducts = Enumerable.Empty<RequestIndexPartialRowViewModel>().ToPagedList();
+            var onePageOfProducts = Enumerable.Empty<ProtocolsIndexPartialRowViewModel>().ToPagedList();
 
 
             var ProtocolsPassedInWithInclude = filterListBySelectFilters(selectedFilters, fullProtocolsList);
@@ -156,7 +157,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        private async Task<IPagedList<RequestIndexPartialRowViewModel>> GetProtocolsColumnsAndRows(ProtocolsIndexObject protocolsIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProtocols, IQueryable<Protocol> ProtocolPassedInWithInclude)
+        private async Task<IPagedList<ProtocolsIndexPartialRowViewModel>> GetProtocolsColumnsAndRows(ProtocolsIndexObject protocolsIndexObject, IPagedList<ProtocolsIndexPartialRowViewModel> onePageOfProtocols, IQueryable<Protocol> ProtocolPassedInWithInclude)
         {
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
@@ -166,9 +167,13 @@ namespace PrototypeWithAuth.Controllers
                     switch (protocolsIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.List:
-                            onePageOfProtocols = await GetProtocolListRows(protocolsIndexObject, onePageOfProtocols, ProtocolPassedInWithInclude, iconList, defaultImage);
+                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
+    .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);
                             break;
                         case AppUtility.SidebarEnum.MyProtocols:
+                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
+  .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, protocolsIndexObject)).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);
+
                             break;
                         case AppUtility.SidebarEnum.Favorites:
                             break;
@@ -261,30 +266,9 @@ namespace PrototypeWithAuth.Controllers
             return onePageOfReports;
         }
 
-        [Authorize(Roles = "Protocols")]
-        private static async Task<IPagedList<RequestIndexPartialRowViewModel>> GetProtocolListRows(ProtocolsIndexObject requestIndexObject, IPagedList<RequestIndexPartialRowViewModel> onePageOfProtocols, IQueryable<Protocol> ProtocolPassedInWithInclude, List<IconColumnViewModel> iconList, string defaultImage)
-        {
-            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(r => r.CreationDate).ToList().Select(p => new RequestIndexPartialRowViewModel()
-            {
-                Columns = new List<RequestIndexPartialColumnViewModel>()
-                            {
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Image = defaultImage},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Name", AjaxLink=" load-protocol ", AjaxID=p.ProtocolID, Width=15, Value = new List<string>(){ p.Name}},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Version", Width=10, Value = new List<string>(){ p.VersionNumber} },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Creator", Width=10, Value = new List<string>(){p.ApplicationUserCreator.FirstName + " " + p.ApplicationUserCreator.LastName}},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Time", Width=11, Value = new List<string>(){ } },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Date Created", Width=12, Value = new List<string>(){ p.CreationDate.ToString("dd'/'MM'/'yyyy") }},
-                                 new RequestIndexPartialColumnViewModel() { Title = "Type", Width=10, Value = new List<string>(){ p.ProtocolType.ProtocolTypeDescription } },
-                                 new RequestIndexPartialColumnViewModel() { Title = "Category", Width=12, Value = new List<string>(){ p.ProtocolSubCategory.ProtocolSubCategoryTypeDescription } },
-                                 new RequestIndexPartialColumnViewModel() { Title = "", Width=10, Icons = iconList, AjaxID = p.ProtocolID }
-                            }
-            }).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
-            return onePageOfProtocols;
-        }
-
         private static async Task<IPagedList<ReportIndexPartialRowViewModel>> GetReportListRows(ReportsIndexObject reportsIndexObject, IPagedList<ReportIndexPartialRowViewModel> onePageOfReports, IQueryable<Report> ReportPassedInWithInclude)
         {
-            var reports = ReportPassedInWithInclude.OrderByDescending(r => r.DateCreated).ToList();
+            var reports = ReportPassedInWithInclude.OrderByDescending(r => r.DateCreated);
             onePageOfReports = await ReportPassedInWithInclude.OrderByDescending(r => r.DateCreated).ToList().Select(r => new ReportIndexPartialRowViewModel(AppUtility.ReportTypes.Weekly, r, r.ReportCategory, reportsIndexObject)
             ).ToPagedListAsync(reportsIndexObject.PageNumber == 0 ? 1 : reportsIndexObject.PageNumber, 25);
             return onePageOfReports;
@@ -328,7 +312,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyProtocols;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            return View();
+            var viewmodel = await GetProtocolsIndexViewModel(
+                new ProtocolsIndexObject() {SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.MyProtocols, PageType= AppUtility.PageTypeEnum.ProtocolsProtocols });
+
+            return View(viewmodel);
         }
 
         [Authorize(Roles = "Protocols")]
@@ -337,7 +324,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyProtocols;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            return View();
+            var viewmodel = await GetProtocolsIndexViewModel(
+                new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.Favorites, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
+
+            return View(viewmodel);
         }
 
         [Authorize(Roles = "Protocols")]
@@ -346,7 +336,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SharedWithMe;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            return View();
+            var viewmodel = await GetProtocolsIndexViewModel(
+                 new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.SharedWithMe, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
+
+            return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> LastProtocol()
@@ -354,7 +347,9 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.LastProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
-            return View();
+            var viewmodel = await GetProtocolsIndexViewModel(new ProtocolsIndexObject() { });
+
+            return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ResearchProtocol()
