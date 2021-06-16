@@ -8,11 +8,12 @@
     <span role="textbox" contenteditable="false" class="editable-span report-text form-control-plaintext h-100 text-transform-none">
     @if (Model.TemporaryReportText == null)
     {
-        <div contenteditable="true" class="editable-span form-control-plaintext text-transform-none"></div>
+        <div contenteditable="true" class="editable-span form-control-plaintext text-transform-none"><span class='focusedText'></span></div>
     }
     else
     {
         @Html.Raw(Model.TemporaryReportText)
+                <span class='focusedText'></span>
     }
     </span>
     <input type="hidden" id="TemporaryReportText" name="Report.TemporaryReportText" value="@Model.TemporaryReportText" />
@@ -63,7 +64,13 @@
     }
     $(document).ready(function (e) {
         $(".report-text").trigger("change")
+        $(".report-text").trigger("focus")
     })
+    $('.reports-iframe').on("load", function () {
+        console.log("iframe")
+        $(this).contents().find('img').css({ maxHeight: '100%' });
+
+    });
 </script>
 <script src="~/js/function.js"></script>
 <script src="~/js/spanContentEditable.js"></script>

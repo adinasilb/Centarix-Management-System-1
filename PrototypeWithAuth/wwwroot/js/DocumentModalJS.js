@@ -70,7 +70,7 @@
 		});
 		return true;
 
-	});
+	})
 
 	
 	//seems to not be used. only diff is that other one has $(".open-document-modal").removeClass("active-document-modal");
@@ -117,7 +117,6 @@
 		if (div.hasClass("order-inv-filter") || div.hasClass("oper-filter") || div.hasClass("lab-man-filter") || div.hasClass("contains-file" || $(".active-document-modal .material-image-icon").hasClass("protocols-filter"))) {
 			console.log("has class already");
 		} else {
-			console.log("does not class already");
 			console.log("does not class already");
 			$(folder +".active-document-modal" + " div.card.document-border").addClass("hasFile");
 			if (section=="Operations") {

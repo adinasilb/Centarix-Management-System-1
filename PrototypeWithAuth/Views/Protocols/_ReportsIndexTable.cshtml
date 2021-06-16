@@ -7,7 +7,13 @@
 }
 
 @Html.HiddenFor(m => m.ReportsIndexObject.ReportCategoryID)
-
+<div class="col-5">
+    <a style="z-index:2000" href="@Url.Action("ReportsCategories", "Protocols")""
+       class="title-label btn-link heading-1 ">
+        <i class="icon-arrow_back_ios-24px-1" style="font-size:1.4rem;"></i>
+        <label class="px-2 ">Report Categories</label>
+    </a>
+</div>
 @*@Html.DropDownListFor(vm => vm.ReportsIndexObject.Years, years.Select(x =>
         new SelectListItem
         {
@@ -37,7 +43,7 @@
 @if (Model.PagedList.Count() > 0)
 {
 
-    <table class="table table-headerspaced table-noheaderlines">
+    <table class="table table-headerspaced table-noheaderlines m-0">
         <thead>
             <tr class="text-center">
                 @foreach (var col in Model.PagedList[0].Columns)
