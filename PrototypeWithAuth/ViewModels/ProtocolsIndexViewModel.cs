@@ -10,7 +10,7 @@ namespace PrototypeWithAuth.ViewModels
 {
     public class ProtocolsIndexViewModel : ViewModelBase
     {
-        public IPagedList<RequestIndexPartialRowViewModel> PagedList { get; set; }
+        public IPagedList<ProtocolsIndexPartialRowViewModel> PagedList { get; set; }
         public AppUtility.PageTypeEnum PageType { get; set; }
         public PricePopoverViewModel PricePopoverViewModel { get; set; }
         public int? PageNumber { get; set; }

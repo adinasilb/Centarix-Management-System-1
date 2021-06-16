@@ -2370,33 +2370,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(reorderViewModel);
         }
 
-        [Authorize(Roles = "Requests")]
-        private async Task<string> RenderPartialViewToString(string viewName, object model)
-        {
-            if (string.IsNullOrEmpty(viewName))
-                viewName = ControllerContext.ActionDescriptor.ActionName;
-
-            ViewData.Model = model;
-
-            using (var writer = new StringWriter())
-            {
-                ViewEngineResult viewResult =
-                    _viewEngine.FindView(ControllerContext, viewName, false);
-
-                ViewContext viewContext = new ViewContext(
-                    ControllerContext,
-                    viewResult.View,
-                    ViewData,
-                    TempData,
-                    writer,
-                    new HtmlHelperOptions()
-                );
-
-                await viewResult.View.RenderAsync(viewContext);
-
-                return writer.GetStringBuilder().ToString();
-            }
-        }
+        
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(int id, RequestIndexObject requestIndexObject)
@@ -2513,7 +2487,7 @@ namespace PrototypeWithAuth.Controllers
 
                     if (HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
-                        var request = HttpContext.Session.GetObject<Request>(requestName);
+                        var request = HttpContext.Session.GetObject<Request>(requestName); 
                         requests.Add(request);
                         if (_context.Payments.Where(p => p.RequestID == request.RequestID) != null)
                         { //has payments already from terms modal
@@ -3553,7 +3527,7 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(int? id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -3561,7 +3535,7 @@ namespace PrototypeWithAuth.Controllers
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 ParentFolderName = AppUtility.ParentFolderName.Requests,
-                ObjectID = id ?? 0,
+                ObjectID = id =="" ? "0" : id,
                 SectionType = SectionType,
                 ShowSwitch = showSwitch
             };
@@ -3609,7 +3583,6 @@ namespace PrototypeWithAuth.Controllers
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 SectionType = SectionType,
-
             };
             return PartialView(deleteDocumentsViewModel);
         }
@@ -4571,7 +4544,7 @@ namespace PrototypeWithAuth.Controllers
                             string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
                             if (Directory.Exists(requestFolderTo))
                             {
-                                Directory.Delete(requestFolderTo);
+                                Directory.Delete(requestFolderTo, true);
                             }
                             Directory.Move(requestFolderFrom, requestFolderTo);
 

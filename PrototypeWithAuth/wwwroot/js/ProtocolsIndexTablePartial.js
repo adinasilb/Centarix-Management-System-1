@@ -47,6 +47,7 @@ $(".load-protocol").click(function(e){
 		type: "GET",
 		success: function (data) {
 			$("._IndexTable").html(data);
+			$(".mdb-select").materialSelect();
 			return true;
 		}
 	});
