@@ -1,21 +1,23 @@
-﻿$('.createProtocolForm').validate({
-
-		normalizer: function( value ) {
-			 return $.trim( value );
+﻿$(function () {
+	$('.createProtocolForm').validate({
+		normalizer: function (value) {
+			return $.trim(value);
 		},
-		rules:{
+		rules: {
 
-		   "Protocol.Name":{
-			   required:true			   
+			"Protocol.Name": {
+				required: true
 			},
-			"Protocol.UniqueCode":{
-			   required:true			   
+			"Protocol.UniqueCode": {
+				required: true
 			},
-			"Protocol.ProtocolSubCategory.ProtocolCategoryTypeID":{
-				selectRequired:true	
+			"Protocol.ProtocolSubCategory.ProtocolCategoryTypeID": {
+				selectRequired: true
 			},
-			"Protocol.ProtocolSubCategoryID":{
-				selectRequired:true	
+			"Protocol.ProtocolSubCategoryID": {
+				selectRequired: true
 			}
 		}
+	});
 });
+
