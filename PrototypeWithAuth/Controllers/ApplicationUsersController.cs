@@ -26,7 +26,7 @@ namespace PrototypeWithAuth.Controllers
     {
 
         public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
-            : base(context, userManager, hostingEnvironment, httpContextAccessor, viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
         }
         // GET: /<controller>/

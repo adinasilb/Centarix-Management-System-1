@@ -52,8 +52,8 @@ namespace PrototypeWithAuth.Controllers
         private ISession _session;
         private ICompositeViewEngine _viewEngine;
 
-        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
-           : base(context, userManager, hostingEnvironment, httpContextAccessor, viewEngine)
+        public RequestsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
             //_Context = Context;
             _context = context;

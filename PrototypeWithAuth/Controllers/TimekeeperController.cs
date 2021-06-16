@@ -19,8 +19,8 @@ namespace PrototypeWithAuth.Controllers
     public class TimekeeperController : SharedController
     {
 
-        public TimekeeperController((ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
-           : base(context, userManager, hostingEnvironment, httpContextAccessor, viewEngine)
+        public TimekeeperController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
         }
         public IActionResult Index()

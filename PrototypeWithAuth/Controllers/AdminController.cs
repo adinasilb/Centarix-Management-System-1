@@ -44,7 +44,7 @@ namespace PrototypeWithAuth.Controllers
 
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, SignInManager<ApplicationUser> signInManager, UrlEncoder urlEncoder, IHttpContextAccessor httpContextAccessor, RoleManager<IdentityRole> roleManager, ICompositeViewEngine viewEngine)
-            : base(context, userManager, hostingEnvironment, viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
             _roleManager = roleManager;
             _urlEncoder = urlEncoder;

@@ -15,7 +15,7 @@ namespace PrototypeWithAuth.Controllers
     {
 
         public CompanyAccountsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
-            : base(context, userManager, hostingEnvironment, httpContextAccessor, viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
         }
         public JsonResult GetAccountsByBank(int CompanyAccountID)
