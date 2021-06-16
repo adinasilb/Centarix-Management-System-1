@@ -65,7 +65,7 @@
  
      <div role='textbox'
           contenteditable='false' line-id='@(dynamicID)Content' class='editable-span line input line-input text-transform-none p-0' data-val='@Model.TempLine?.PermanentLineID'>
-         @if (Model.TempLine?.Content ==null)
+         @if (Model.TempLine?.Content ==null || Model.TempLine?.Content=="")
          {
              <div role='textbox'
                   contenteditable class='editable-span line input line-input text-transform-none p-0'>

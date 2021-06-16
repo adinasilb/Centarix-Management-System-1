@@ -2415,7 +2415,7 @@ namespace PrototypeWithAuth.Controllers
 
                     if (HttpContext.Session.GetObject<Request>(requestName) != null)
                     {
-                        var request = HttpContext.Session.GetObject<Request>(requestName);
+                        var request = HttpContext.Session.GetObject<Request>(requestName); 
                         requests.Add(request);
                         for (int i = 0; i < request.Installments; i++)
                         {
