@@ -6,19 +6,19 @@ namespace PrototypeWithAuth.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "WeekNumber",
-                table: "Reports");
+            //migrationBuilder.DropColumn(
+            //    name: "WeekNumber",
+            //    table: "Reports");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "WeekNumber",
-                table: "Reports",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+            //migrationBuilder.AddColumn<int>(
+            //    name: "WeekNumber",
+            //    table: "Reports",
+            //    type: "int",
+            //    nullable: false,
+            //    defaultValue: 0);
         }
     }
 }
