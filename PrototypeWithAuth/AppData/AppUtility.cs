@@ -149,7 +149,7 @@ namespace PrototypeWithAuth.AppData
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public enum FavoriteIconTitle { FilledIn, Empty }
-        public enum ProtocolFunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddTable, AddTemplate, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public enum ProtocolFunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
         public enum ReportsFunctionTypes {AddFile }
         public enum ReportTypes {Daily, Weekly, Monthly}
         public static List<StringWithName> FavoriteIcons()

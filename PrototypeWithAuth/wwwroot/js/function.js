@@ -1,13 +1,12 @@
-﻿$("form").off("click", ".function, .remove-function").on("click", ".function, .remove-function", function (e) {
+﻿$("form").off("click", ".function").on("click", ".function", function (e) {
     e.preventDefault();
-    console.log("function")
     var lineID =$(this).attr("lineID");
     if($(this).attr("lineID")==undefined){
         lineID =$(".focused-line").attr("data-val") 
     }
     var url = "";
     if ($("#masterPageType").val() == "ProtocolsReports") {
-        url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
+            url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
         	$.fn.CallPageRequest( url , "addFunction");
     }
 	/*if ($("#masterPageType").val() == "ProtocolsCreate")*/
@@ -20,7 +19,14 @@
 	}
 });
 
-$(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click', ".saveFunction, .removeFunction",function (e) {
+$(".remove-function").click(function (e) {
+    e.preventDefault();
+    console.log("remove file")
+    url = $(this).attr("url");
+    $.fn.CallPageRequest(url, "addFunction"); 
+})
+
+$(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".saveFunction, .removeFunction",function (e) {
     e.preventDefault();
     if($(this).hasClass("removeFunction"))
     {
@@ -28,7 +34,7 @@ $(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click',
          var functionSelect;
         var changeToTriggerSelect;
         if ($("#masterPageType").val() == "ProtocolsReports") {
-            var functionReportID = $(".function-reportID")
+            var functionReportID = $(".function-reportID").val()
             functionSelect = $(".report-function[functionReportID=" + functionReportID + "]")
             console.log(functionSelect)
             changeToTriggerSelect = $(".report-text")
@@ -39,7 +45,8 @@ $(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click',
          }
          var prev = functionSelect.prev();
          var next = functionSelect.next();
-         var html = prev.html()+next.html();
+        var html = prev.html() + next.html();
+        console.log("next "+ next.html())
          prev.html(html);
          next.remove();
          functionSelect.remove();
@@ -71,9 +78,14 @@ $(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click',
 
     var functionName = "AddFunctionModal";
     if ($("#masterPageType").val() == "ProtocolsReports") {
-        functionName = "AddReportFunctionModal";
-        for (var pair of reportFormData.entries())
-        {
+        if ($(this).hasClass("removeFunction")) {
+            functionName = "DeleteReportDocumentModal"
+            functionFormData = new FormData($(".deleteFunctionForm")[0]);
+        }
+        else {
+            functionName = "AddReportFunctionModal";
+        }
+        for (var pair of reportFormData.entries()) {
             functionFormData.append(pair[0], pair[1]);
         }
     }
@@ -110,50 +122,4 @@ $(".addFunctionForm").off('click', ".saveFunction, .removeFunction").on('click',
     //}
     //$('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 });
-//var globalLine;
-////$('.line').on('focusin', function(){
-////    console.log("Saving value " + $(this).val());
-//// $(this).attr('old-val', $(this).html());
-////    return;
-////});
 
-//$(".line").keyup(function (event) {
-  
-//        var prev =$.trim($(this).attr('old-val'));
-//        var current =$.trim(event.target.innerHTML);   
-//        console.log("Prev value " + prev);
-//        console.log("New value " +  current);
-//    if(prev > current)
-//    {
-//        var firstIndex =prev.indexOf(current)
-//        var lastIndex = firstIndex + current.length;
-  
-//        var diff = prev.substr(0, firstIndex);
-//        diff+= prev.substr(lastIndex, prev.length-1)
-//        if(diff.includes("</a>"))
-//        {
-//            event.target.innerHTML = $(this).attr('old-val');
-//        }
-//        $(this).attr('old-val', $(this).html());
-//        console.log(diff);
-//        return;
-//    }
-//    else{
-//        var firstIndex =current.indexOf(current)
-//        var lastIndex = firstIndex + prev.length;
-  
-//        var diff = current.substr(0, firstIndex);
-//        diff+= current.substr(lastIndex, current.length-1)
-//        if(diff.includes("</a>"))
-//        {
-//            event.target.innerHTML = $(this).attr('old-val');
-//        }
-//            $(this).attr('old-val', $(this).html());
-//        console.log(diff);
-//        return;
-
-//     }
-       
-  
-    
-//});

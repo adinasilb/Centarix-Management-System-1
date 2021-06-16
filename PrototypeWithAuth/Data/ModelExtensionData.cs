@@ -2840,7 +2840,7 @@ namespace PrototypeWithAuth.Data
                 {
                     FunctionTypeID = 1,
                     FunctionDescription = "Add Image",
-                    Icon = "",
+                    Icon = "icon-account_box-24px1",
                     IconActionClass = "add-image-to-line",
                     DescriptionEnum ="AddImage"
                 },

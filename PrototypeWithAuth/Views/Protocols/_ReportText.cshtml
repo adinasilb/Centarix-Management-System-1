@@ -8,20 +8,77 @@
     <span role="textbox" contenteditable="false" class="editable-span report-text form-control-plaintext h-100 text-transform-none">
     @if (Model.TemporaryReportText == null)
     {
-        <div contenteditable="true" class="editable-span report-text form-control-plaintext text-transform-none"></div>
+        <div contenteditable="true" class="editable-span form-control-plaintext text-transform-none"></div>
     }
     else
     {
         @Html.Raw(Model.TemporaryReportText)
     }
     </span>
-    <input type="hidden" id="ReportText" name="Report.ReportText" value="@Model.TemporaryReportText" />
+    <input type="hidden" id="TemporaryReportText" name="Report.TemporaryReportText" value="@Model.TemporaryReportText" />
 </div>
 
 <script>
     $(".report-text").on('change', function (e) {
-        console.log($(this).html())
-        $("#ReportText").val($(this).html())
+        $("#TemporaryReportText").val($(this).html())
+    })
+    $(".report-text").on('click', function (e) {
+        console.log("focus")
+        $(".focusedText").remove()
+        pasteHtmlAtCaret("<span class='focusedText'></span>")
+        $(".report-text").trigger("change")
+    })
+    function pasteHtmlAtCaret(html) {
+        var sel, range;
+        if (window.getSelection) {
+            // IE9 and non-IE
+            sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                range.deleteContents();
+
+                // Range.createContextualFragment() would be useful here but is
+                // non-standard and not supported in all browsers (IE9, for one)
+                var el = document.createElement("div");
+                el.innerHTML = html;
+                var frag = document.createDocumentFragment(), node, lastNode;
+                while ((node = el.firstChild)) {
+                    lastNode = frag.appendChild(node);
+                }
+                range.insertNode(frag);
+
+                // Preserve the selection
+                if (lastNode) {
+                    range = range.cloneRange();
+                    range.setStartAfter(lastNode);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }
+        } else if (document.selection && document.selection.type != "Control") {
+            // IE < 9
+            document.selection.createRange().pasteHTML(html);
+        }
+    }
+
+    function getCaretIndex(element) {
+        let position = 0;
+        const isSupported = typeof window.getSelection !== "undefined";
+        if (isSupported) {
+            const selection = window.getSelection();
+            if (selection.rangeCount !== 0) {
+                const range = window.getSelection().getRangeAt(0);
+                const preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(element);
+                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                position = preCaretRange.toString().length;
+            }
+        }
+        return position;
+    }
+    $(document).ready(function (e) {
+        $(".report-text").trigger("change")
     })
 </script>
 <script src="~/js/function.js"></script>

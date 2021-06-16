@@ -53,7 +53,7 @@
                  "ParentCategoryID",
                  "ParentCategoryDescription"
                  ), "Select Category",
-                 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "parentlist", @searchable = "Select Category" })
+                 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext parentCategory link-product-dropdown", @searchable = "Select Category", @dataStopRefresh = "true" })
                 </div>
             </div>
             <div class="col-6">
@@ -65,7 +65,7 @@
                         dataValueField: "ProductSubcategoryID",
                         dataTextField: "ProductSubcategoryDescription"
                         ), "Select Sub Category",
-                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "sublist", @searchable = "Select Sub Category" })
+                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext subCategory link-product-dropdown", @searchable = "Select Sub Category", @dataStopRefresh = "true" })
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
         dataTextField: "VendorEnName"),
         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
         "Select a Vendor",
-        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext ", @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
+        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext vendor link-product-dropdown", @id = "vendorList", @size = 1, @searchable = "Select A Vendor", @dataStopRefresh = "true" }
         )
                 </div>
             </div>
@@ -96,7 +96,7 @@
         dataTextField: "ProductName"),
         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
         "Select a Product",
-        htmlAttributes: new { @class = " productList mdb-select custom select-dropdown form-control-plaintext ", @id = "prodictList", @size = 1, @searchable = "Select A Product" }
+        htmlAttributes: new { @class = " productList mdb-select custom select-dropdown form-control-plaintext product mdb-select-sublist", @id = "productList", @size = 1, @searchable = "Select A Product", @dataStopRefresh = "true" }
         )
                 </div>
             </div>
@@ -119,7 +119,7 @@
                  dataValueField: "ProtocolCategoryTypeID",
                  dataTextField: "ProtocolCategoryDescription"
                  ), "Select Category",
-                 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocol-categories", @searchable = "Select Category" })
+                 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext protocolParentCategory link-protocol-dropdown", @id = "protocol-categories", @searchable = "Select Category", @dataStopRefresh = "true" })
                 </div>
             </div>
             <div class="col-6">
@@ -131,7 +131,7 @@
                         dataValueField: "ProtocolSubCategoryTypeID",
                         dataTextField: "ProtocolSubCategoryTypeDescription"
                         ), "Select Sub Category",
-                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocol-subCategory", @searchable = "Select Sub Category" })
+                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext protocolSubCategory link-protocol-dropdown", @id = "protocol-subCategory", @searchable = "Select Sub Category", @dataStopRefresh = "true" })
                 </div>
             </div>
         </div>
@@ -144,7 +144,7 @@
        Model.Creators,
         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
         "Select a Creator",
-        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext ", @id = "creatorsList", @size = 1, @searchable = "Select A Creator" }
+        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext  creator link-protocol-dropdown", @id = "creatorsList", @size = 1, @searchable = "Select A Creator", @dataStopRefresh = "true" }
         )
                 </div>
             </div>
@@ -159,7 +159,7 @@
         dataTextField: "Name"),
         //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
         "Select a Protocol",
-        htmlAttributes: new { @class = "  mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolList", @size = 1, @searchable = "Select A Protocol" }
+        htmlAttributes: new { @class = "  mdb-select custom select-dropdown form-control-plaintext protocol mdb-select-sublist", @id = "protocolList", @size = 1, @searchable = "Select A Protocol", @dataStopRefresh = "true" }
         )
                 </div>
             </div>
@@ -173,10 +173,6 @@
         break;
     case AppUtility.ProtocolFunctionTypes.AddStop:
         break;
-    case AppUtility.ProtocolFunctionTypes.AddTable:
-        break;
-    case AppUtility.ProtocolFunctionTypes.AddTemplate:
-        break;
     case AppUtility.ProtocolFunctionTypes.AddTimer:
         <div class="row">
             <div class="col-4 offset-4">
@@ -186,3 +182,5 @@
         break;
 
 }
+
+<script src="~/js/AddFunctionModal.js"></script>
