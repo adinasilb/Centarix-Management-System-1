@@ -4,6 +4,7 @@ namespace PrototypeWithAuth.AppData.UtilityModels
 {
     public class SelectedFilters
     {
+        public bool Archived { get; set; }
         //public List<int> SelectedTypesIDs { get; set; }
         private List<int> _selectedVendorsIDs;
         public List<int> SelectedVendorsIDs 

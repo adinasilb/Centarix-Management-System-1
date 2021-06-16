@@ -64,43 +64,46 @@
                         @*@Html.HiddenFor(vm => vm.ChildrenLocationInstances[z].LocationInstanceName, @class="LocationInstanceName");*@
                         @*<input type="hidden" asp-for="ChildrenLocationInstances[z].LocationInstanceName" class="LocationInstanceName" />*@
 
-                        var link = "";
-                        var classes = "css-checkbox " + locationsList[z].LocationInstanceID;
-                        var outerClass = "visual-shelf";
-                        var iconClass = "icon-add_circle_outline-24px1 add-location tga";
-                        var hideIcon = "";
-                        if(!inReceivedModal && !Model.ShowIcons)
-                        {
-                            hideIcon = "location-icon d-none";
-                        }
-                        var description = locationsList[z].LocationInstanceAbbrev;
-                        var id = "ChildrenLocationInstances_" + z;
-                        var name = "ChildrenLocationInstances[" + z + "]";
-                        if (Model.ChildrenLocationInstances == null)
-                        {
-                            id = "Request" + id + "__LocationInstance";
-                            name = "Request" + name + ".LocationInstance";
-                        }
+                    var link = "";
+                    var classes = "css-checkbox " + locationsList[z].LocationInstanceID;
+                    var outerClass = "visual-shelf";
+                    var iconClass = "icon-add_circle_outline-24px1 add-location tga";
+                    var hideIcon = "";
+                    if(!inReceivedModal && !Model.ShowIcons)
+                    {
+                        hideIcon = "d-none";
+                    }
+                    var description = locationsList[z].LocationInstanceAbbrev;
+                    var id = "ChildrenLocationInstances_" + z;
+                    var name = "ChildrenLocationInstances[" + z + "]";
+                    if (Model.ChildrenLocationInstances == null)
+                    {
+                        id = "Request" + id + "__LocationInstance";
+                        name = "Request" + name + ".LocationInstance";
+                    }
 
-                        var liID = locationsList[z].LocationInstanceID;
-                        if (locationsList[z].LocationTypeID == 103 || locationsList[z].LocationTypeID == 204)
-                        {
-                            outerClass = "visual-box " + is12X12Class;
-                        }
-                        var labelClass = "tiny-label-font-size m-0";
+                    var liID = locationsList[z].LocationInstanceID;
+                    if (locationsList[z].LocationTypeID == 103 || locationsList[z].LocationTypeID == 204)
+                    {
+                        outerClass = "visual-box " + is12X12Class;
+                    }
+                    var labelClass = "tiny-label-font-size m-0";
 
-                        if (locationsList[z].IsEmptyShelf)
+                    if (locationsList[z].IsEmptyShelf)
+                    {
+                        if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                         {
-                            if (!Model.ShowIcons && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            outerClass += " location-selected";
+                            iconClass = "icon-delete-24px ";
+                            if (!Model.ShowIcons)
                             {
-                                outerClass += " location-selected";
-                                iconClass = "icon-delete-24px ";
-                                hideIcon = "location-icon d-none";
+                                hideIcon = "d-none";
                             }
+                        }
                             <td class="@outerClass @disabledEdit" style="padding:0px;" id="@locationsList[z].LocationInstanceID">
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
-                                    <div class="row-1"><i class="@iconClass @hideIcon"></i></div>@*hide till edit on*@
+                                    <div class="row-1"><i class="@iconClass @hideIcon location-icon "></i></div>@*hide till edit on*@
                                     <div class="row-2 text-left">
                                         <label class="@labelClass">@locationsList[z].LocationInstanceAbbrev</label>
                                     </div>
@@ -124,20 +127,19 @@
                         else if (locationsList[z].IsFull || (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest/*for archived*/))
                         {
                             var backgroundClass = "graduated-table-background-color  ";
-                            hideIcon = "d-none"; //always hide
+                            hideIcon = "d-none"; 
                             var disabled = "disabled";
-                            if (!Model.ShowIcons && Model.RequestChildrenLocationInstances[z].IsThisRequest)
+                            if (!inReceivedModal && Model.RequestChildrenLocationInstances[z].IsThisRequest)
                             {
                                 backgroundClass = "";
-                                iconClass = "icon-delete-24px";
-                                hideIcon = "location-icon d-none"; //hide now, show when edit mode on
                                 disabled = "";
+                                iconClass = "icon-delete-24px";
                             }
                             <td class="@outerClass @disabledEdit location-selected @backgroundClass" style="padding:0px;  ">
                                 <div class="">
                                     <input class="@classes @disabled" id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1">
-                                        <i class="@iconClass @hideIcon"></i> @*hide on load, show when turn edit on*@
+                                        <i class="@iconClass @hideIcon location-icon "></i> @*hide on load, show when turn edit on*@
                                     </div>
 
                                     <div class="row-2 text-left">
@@ -153,7 +155,7 @@
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1"> @*hide on load, show when turn edit on*@
-                                        <i class="@iconClass @hideIcon"></i>
+                                        <i class="@iconClass @hideIcon location-icon "></i>
                                     </div>
                                     <div class="row-2 text-left">
                                         <label class="@labelClass">@locationsList[z].LocationInstanceAbbrev</label>

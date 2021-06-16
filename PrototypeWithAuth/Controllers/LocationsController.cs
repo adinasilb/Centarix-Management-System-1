@@ -30,9 +30,10 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor) 
-            : base(context: context, userManager: userManager, hostingEnvironment: hostingEnvironment, httpContextAccessor: httpContextAccessor)
+        public CompanyAccountsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, httpContextAccessor, viewEngine)
         {
+
             _context = context;
             _userManager = userManager;
         }
@@ -131,7 +132,8 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(sublocationIndexViewModel);
         }
 
-        [HttpGet][HttpPost]
+        [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Requests, LabManagement")]
         public IActionResult VisualLocations(int VisualContainerId)
         {

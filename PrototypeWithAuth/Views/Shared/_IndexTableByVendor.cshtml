@@ -3,21 +3,7 @@
 @if (Model.RequestsByVendor.Count() > 0)
 {
     <input type="hidden" class="activeVendor" value="" />
-    @if (Model.PageType == AppUtility.PageTypeEnum.AccountingNotifications)
-    {
-        <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" id="add-to-selected">Add To Selected</button>
-    }
-    else
-    {
-        @if (Model.SidebarType == AppUtility.SidebarEnum.Installments)
-        {
-            <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" type="@Model.SidebarType" id="pay-invoice-selected">Pay Selected</button>
-        }
-        else
-        {
-            <button class="float-right accounting-background-color custom-button-font custom-button px-2rem hidden" type="@Model.SidebarType" id="pay-selected">Pay Selected</button>
-        }
-    }
+    
 
     <table class="table table-headerspaced table-noheaderlines table-hover ">
         <thead>

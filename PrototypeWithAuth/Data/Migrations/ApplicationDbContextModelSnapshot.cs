@@ -1061,7 +1061,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteProtocol", b =>
                 {
-                    b.Property<int>("FavoriteProtocolID")
+                    b.Property<int>("FavoriteID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -1072,16 +1072,18 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
-                    b.HasKey("FavoriteProtocolID");
+                    b.HasKey("FavoriteID");
 
                     b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("ProtocolID");
 
                     b.ToTable("FavoriteProtocols");
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteRequest", b =>
                 {
-                    b.Property<int>("FavoriteRequestID")
+                    b.Property<int>("FavoriteID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -1092,7 +1094,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
 
-                    b.HasKey("FavoriteRequestID");
+                    b.HasKey("FavoriteID");
 
                     b.HasIndex("ApplicationUserID");
 
@@ -1103,7 +1105,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteResource", b =>
                 {
-                    b.Property<int>("FavoriteResourceID")
+                    b.Property<int>("FavoriteID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -1114,7 +1116,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ResourceID")
                         .HasColumnType("int");
 
-                    b.HasKey("FavoriteResourceID");
+                    b.HasKey("FavoriteID");
 
                     b.HasIndex("ApplicationUserID");
 
@@ -1144,15 +1146,21 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FunctionLine", b =>
                 {
-                    b.Property<int>("FunctionLineID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FunctionTypeID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsTemporary")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTemporaryDeleted")
                         .HasColumnType("bit");
 
                     b.Property<int>("LineID")
@@ -1164,13 +1172,10 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("ProtocolID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<TimeSpan>("Timer")
                         .HasColumnType("time");
 
-                    b.HasKey("FunctionLineID");
+                    b.HasKey("ID");
 
                     b.HasIndex("FunctionTypeID");
 
@@ -1185,13 +1190,19 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FunctionReport", b =>
                 {
-                    b.Property<int>("FunctionReportID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("FunctionTypeID")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsTemporary")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTemporaryDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("ProductID")
                         .HasColumnType("int");
@@ -1202,10 +1213,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("ReportID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("FunctionReportID");
+                    b.HasKey("ID");
 
                     b.HasIndex("FunctionTypeID");
 
@@ -1247,7 +1255,7 @@ namespace PrototypeWithAuth.Data.Migrations
                             FunctionTypeID = 1,
                             DescriptionEnum = "AddImage",
                             FunctionDescription = "Add Image",
-                            Icon = "",
+                            Icon = "icon-account_box-24px1",
                             IconActionClass = "add-image-to-line"
                         },
                         new
@@ -1903,6 +1911,9 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsTemporary")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTemporaryDeleted")
                         .HasColumnType("bit");
 
                     b.Property<int>("LineNumber")
@@ -4139,6 +4150,9 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int?>("InvoiceID")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsClarify")
                         .HasColumnType("bit");
 
@@ -4245,7 +4259,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<int>("LocationInstanceID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
 
                     b.Property<int?>("ParentLocationInstanceID")
@@ -4639,9 +4653,39 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.ToTable("SalariedEmployees");
                 });
 
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareProtocol", b =>
+                {
+                    b.Property<int>("ShareID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FromApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProtocolID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ToApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ShareID");
+
+                    b.HasIndex("FromApplicationUserID");
+
+                    b.HasIndex("ProtocolID");
+
+                    b.HasIndex("ToApplicationUserID");
+
+                    b.ToTable("ShareProtocols");
+                });
+
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareRequest", b =>
                 {
-                    b.Property<int>("ShareRequestID")
+                    b.Property<int>("ShareID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -4658,7 +4702,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ShareRequestID");
+                    b.HasKey("ShareID");
 
                     b.HasIndex("FromApplicationUserID");
 
@@ -4671,7 +4715,7 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.ShareResource", b =>
                 {
-                    b.Property<int>("ShareResourceID")
+                    b.Property<int>("ShareID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -4688,7 +4732,7 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<string>("ToApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ShareResourceID");
+                    b.HasKey("ShareID");
 
                     b.HasIndex("FromApplicationUserID");
 
@@ -6072,6 +6116,12 @@ namespace PrototypeWithAuth.Data.Migrations
                         .WithMany("FavoriteProtocols")
                         .HasForeignKey("ApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                        .WithMany()
+                        .HasForeignKey("ProtocolID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PrototypeWithAuth.Models.FavoriteRequest", b =>
@@ -6611,6 +6661,25 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.HasOne("PrototypeWithAuth.Models.Employee", "Employee")
                         .WithOne("SalariedEmployee")
                         .HasForeignKey("PrototypeWithAuth.Models.SalariedEmployee", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PrototypeWithAuth.Models.ShareProtocol", b =>
+                {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "FromApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("FromApplicationUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PrototypeWithAuth.Models.Protocol", "Protocol")
+                        .WithMany()
+                        .HasForeignKey("ProtocolID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ToApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ToApplicationUserID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

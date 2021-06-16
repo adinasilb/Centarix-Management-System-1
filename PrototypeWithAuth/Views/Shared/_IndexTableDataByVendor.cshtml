@@ -180,6 +180,23 @@
                     </tr>
                 }
                 <tr class="border-0 mb-5 no-hover">
+                    <td colspan="2">
+                        @if (Model.PageType == AppUtility.PageTypeEnum.AccountingNotifications)
+                        {
+                            <button class="float-left accounting-background-color custom-button-font custom-button px-2rem hidden add-to-selected">Add To Selected</button>
+                        }
+                        else
+                        {
+                            @if (Model.SidebarType == AppUtility.SidebarEnum.Installments)
+                            {
+                                <button class="float-left accounting-background-color custom-button-font custom-button px-2rem hidden pay-invoice-selected" type="@Model.SidebarType" >Pay Selected</button>
+                            }
+                            else
+                            {
+                                <button class="float-left accounting-background-color custom-button-font custom-button px-2rem hidden pay-selected" type="@Model.SidebarType">Pay Selected</button>
+                            }
+                        }
+                    </td>
                     @{ var startColumnsToSkip = 0;}
                     @*@if (Model.PageType == AppUtility.PageTypeEnum.AccountingNotifications)
                     {
@@ -187,7 +204,7 @@
                         <td colspan="2"><button class="accounting-background-color custom-button-font custom-button px-2rem hidden @addToSButton">Add To Selected</button></td>
                         startColumnsToSkip = 2;
                     }*@
-                    @for (int i = startColumnsToSkip; i < requests.FirstOrDefault().Columns.Count() - 4; i++)
+                    @for (int i = startColumnsToSkip; i < requests.FirstOrDefault().Columns.Count() - 6; i++)
                     {
                         <td></td>
                     }

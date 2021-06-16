@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
@@ -28,11 +29,13 @@ namespace PrototypeWithAuth.Controllers
         protected readonly IHostingEnvironment _hostingEnvironment;
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
-        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
+        protected ICompositeViewEngine _viewEngine;
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
             _userManager = userManager;
+            _viewEngine = viewEngine;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -281,7 +284,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     dir.Delete(true);
                 }
-                Directory.Delete(requestFolder);
+                Directory.Delete(requestFolder, true);
             }
             Directory.CreateDirectory(requestFolder);
         }
@@ -342,6 +345,8 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUserReceiver)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
+            
+          
             if (request.RequestStatusID == 7)
             {
                 isProprietary = true;
@@ -631,7 +636,7 @@ namespace PrototypeWithAuth.Controllers
             }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             IQueryable<Request> fullRequestsList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText ?? "")).Include(r => r.ApplicationUserCreator)
-         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Where(r => r.IsArchived == requestIndexObject.IsArchive);
+         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == requestIndexObject.IsArchive)*/;
 
             int sideBarID = 0;
             if (requestIndexObject.SidebarType != AppUtility.SidebarEnum.Owner)
@@ -833,8 +838,16 @@ namespace PrototypeWithAuth.Controllers
                 {
                     fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
                 }
+                
             }
-
+            if (selectedFilters?.Archived == true)
+            {
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.IsArchived == true);
+            }
+            else
+            {
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.IsArchived == false);
+            }
             return fullRequestsListProprietary;
         }
 
@@ -1056,7 +1069,9 @@ namespace PrototypeWithAuth.Controllers
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
-                    SectionType = sectionType
+                    SectionType = sectionType,
+                    Archive = selectedFilters.Archived, 
+                    IsProprietary = isProprietary
                 };
                 if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
                 {
@@ -1085,7 +1100,8 @@ namespace PrototypeWithAuth.Controllers
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
-                    SectionType = sectionType
+                    SectionType = sectionType,
+                    IsProprietary = isProprietary
                 };
             }
         }
@@ -1128,13 +1144,13 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (Directory.Exists(requestFolderTo))
                 {
-                    Directory.Delete(requestFolderTo);
+                    Directory.Delete(requestFolderTo, true);
                 }
                 if (additionalRequests)
                 {
                     AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
                 }
-                else
+                else if(requestFolderFrom != requestFolderTo)
                 {
                     Directory.Move(requestFolderFrom, requestFolderTo);
                 }
@@ -1191,6 +1207,34 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.PaymentTypes = paymenttypes;
             requestItemViewModel.CompanyAccounts = companyaccounts;
             return requestItemViewModel;
+        }
+
+        [Authorize(Roles = "Requests")]
+        protected async Task<string> RenderPartialViewToString(string viewName, object model)
+        {
+            if (string.IsNullOrEmpty(viewName))
+                viewName = ControllerContext.ActionDescriptor.ActionName;
+
+            ViewData.Model = model;
+
+            using (var writer = new StringWriter())
+            {
+                ViewEngineResult viewResult =
+                    _viewEngine.FindView(ControllerContext, viewName, false);
+
+                ViewContext viewContext = new ViewContext(
+                    ControllerContext,
+                    viewResult.View,
+                    ViewData,
+                    TempData,
+                    writer,
+                    new HtmlHelperOptions()
+                );
+
+                await viewResult.View.RenderAsync(viewContext);
+
+                return writer.GetStringBuilder().ToString();
+            }
         }
         //[HttpPost]
         //[Authorize(Roles = "Requests")]

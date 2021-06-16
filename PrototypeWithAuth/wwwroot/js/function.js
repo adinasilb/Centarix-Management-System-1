@@ -1,12 +1,12 @@
-﻿$(".function").click(function (e) {
-	e.preventDefault();
+﻿$("form").off("click", ".function").on("click", ".function", function (e) {
+    e.preventDefault();
     var lineID =$(this).attr("lineID");
     if($(this).attr("lineID")==undefined){
         lineID =$(".focused-line").attr("data-val") 
     }
     var url = "";
-	if ($("#masterPageType").val() == "ProtocolsReports") {
-		url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
+    if ($("#masterPageType").val() == "ProtocolsReports") {
+            url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
         	$.fn.CallPageRequest( url , "addFunction");
     }
 	/*if ($("#masterPageType").val() == "ProtocolsCreate")*/
@@ -17,13 +17,48 @@
         	$.fn.CallPageRequest( url , "addFunction"); 
         }
 	}
-	
-	
 });
 
-$(".saveFunction").click(function (e) {
+$(".remove-function").click(function (e) {
     e.preventDefault();
+    console.log("remove file")
+    url = $(this).attr("url");
+    $.fn.CallPageRequest(url, "addFunction"); 
+})
 
+$(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".saveFunction, .removeFunction",function (e) {
+    e.preventDefault();
+    if($(this).hasClass("removeFunction"))
+    {
+        $(".isRemove").val(true);
+         var functionSelect;
+        var changeToTriggerSelect;
+        if ($("#masterPageType").val() == "ProtocolsReports") {
+            var functionReportID = $(".function-reportID").val()
+            functionSelect = $(".report-function[functionReportID=" + functionReportID + "]")
+            console.log(functionSelect)
+            changeToTriggerSelect = $(".report-text")
+         }
+         else {
+	        functionSelect =$("div.line-input[data-val="+$(".lineID").val()+"]").find("a.function-line-node[functionline="+$(".function-lineID").val()+"]");   
+            changeToTriggerSelect=$("div.line-input[data-val="+$(".lineID").val()+"]")
+         }
+         var prev = functionSelect.prev();
+         var next = functionSelect.next();
+        var html = prev.html() + next.html();
+        console.log("next "+ next.html())
+         prev.html(html);
+         next.remove();
+         functionSelect.remove();
+         changeToTriggerSelect.trigger("change");
+         //$("div.line-input").each(function(){  
+         //    console.log("this is html:"+   $(this).html+"thisis the end")
+         //   if($.trim($(this).html())=='')
+         //   {
+         //       $(this).remove();
+         //   }
+         //});    
+    }
     //$('.materialForm').data("validator").settings.ignore = "";
     //var valid = $('.materialForm').valid();
     //console.log("valid form: " + valid)
@@ -36,21 +71,40 @@ $(".saveFunction").click(function (e) {
     //}
     //else {
     //$('.activeSubmit').removeClass('disabled-submit')
-    var formData = new FormData($(".addFunctionForm")[0]);
+
+    var functionFormData = new FormData($(".addFunctionForm")[0]);
+    var reportFormData = new FormData($(".createReportForm")[0]);
+    var protocolFormData = new FormData($(".createProtocolForm")[0]);
+
     var functionName = "AddFunctionModal";
     if ($("#masterPageType").val() == "ProtocolsReports") {
-        functionName = "AddReportFunctionModal";
+        if ($(this).hasClass("removeFunction")) {
+            functionName = "DeleteReportDocumentModal"
+            functionFormData = new FormData($(".deleteFunctionForm")[0]);
+        }
+        else {
+            functionName = "AddReportFunctionModal";
+        }
+        for (var pair of reportFormData.entries()) {
+            functionFormData.append(pair[0], pair[1]);
+        }
     }
+    else{
+         for (var pair of protocolFormData.entries())
+        {
+            functionFormData.append(pair[0], pair[1]);
+        }
+        }
     $.ajax({
         url: "/Protocols/" + functionName,
         traditional: true,
-        data: formData,
+        data: functionFormData,
         contentType: false,
         processData: false,
         type: "POST",
         success: function (data) {
             if ($("#masterPageType").val() == "ProtocolsReports") {
-                $(".report-text").html(data);
+                $(".report-text-div").html(data);
             }
             else {
                 $("._Lines").html(data);
@@ -64,51 +118,8 @@ $(".saveFunction").click(function (e) {
             return true;
         }
     });
+
     //}
     //$('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 });
 
-$(".line").keydown(function (event) {
-
-    if (window.getSelection && event.which == 8) { // backspace
-        var selection = window.getSelection();
-        console.log(selection);
-        if (!selection.isCollapsed || !selection.rangeCount) {
-            return;
-        }
-        console.log("contains node"+selection.containsNode('<a'))
-        var curRange = selection.getRangeAt(selection.rangeCount - 1);
-        console.log(curRange)
-        if (curRange.commonAncestorContainer.nodeType == 3 && curRange.startOffset > 0) {
-            // we are in child selection. The characters of the text node is being deleted
-            return;
-        }
-
-        var range = document.createRange();
-        console.log(selection.anchorNode)
-        if (selection.anchorNode != this) {
-            // selection is in character mode. expand it to the whole editable field
-            range.selectNodeContents(this);
-            range.setEndBefore(selection.anchorNode);
-        } else if (selection.anchorOffset > 0) {
-            range.setEnd(this, selection.anchorOffset);
-        } else {
-            // reached the beginning of editable field
-            return;
-        }
-        range.setStart(this, range.endOffset - 1);
-
-
-        var previousNode = range.cloneContents().lastChild;
-        console.log(previousNode);
-        if (previousNode && previousNode.contentEditable == 'false') {
-            // this is some rich content, e.g. smile. We should help the user to delete it
-          //  range.deleteContents();
-            event.preventDefault();
-        }
-        }
-    else if (window.getSelection && event.which == 46)
-    {
-
-    }
-    });

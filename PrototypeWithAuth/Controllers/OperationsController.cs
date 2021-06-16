@@ -36,9 +36,10 @@ namespace PrototypeWithAuth.Controllers
 {
     public class OperationsController : SharedController
     {
-        public OperationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
-            : base(context, userManager, hostingEnvironment, httpContextAccessor)
-        {
+        public OperationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, httpContextAccessor, viewEngine)
+        
+            {
            
         }
 

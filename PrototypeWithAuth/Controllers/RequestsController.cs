@@ -52,9 +52,8 @@ namespace PrototypeWithAuth.Controllers
         private ISession _session;
         private ICompositeViewEngine _viewEngine;
 
-        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
-            : base(context, hostingEnvironment: hostingEnvironment, userManager: userManager, httpContextAccessor: httpContextAccessor)
+        public RequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, httpContextAccessor, viewEngine)
         {
             //_Context = Context;
             _context = context;
@@ -62,7 +61,7 @@ namespace PrototypeWithAuth.Controllers
             _signInManager = signInManager;
             //use the hosting environment for the file uploads
             _hostingEnvironment = hostingEnvironment;
-            _viewEngine = viewEngine;
+            //_viewEngine = viewEngine;
         }
 
         [HttpGet]
@@ -519,7 +518,7 @@ namespace PrototypeWithAuth.Controllers
             }
             IQueryable<Request> fullRequestsList = _context.Requests.Include(r => r.ApplicationUserCreator).Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)
                 .Where(r => r.RequestStatus.RequestStatusID == 3).Include(r => r.Product).ThenInclude(p => p.Vendor).ToList().GroupBy(r => r.ProductID).Select(e => e.First()).AsQueryable();
-            IQueryable<Request> fullRequestsListProprietary = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Where(r => r.IsArchived == false)
+            IQueryable<Request> fullRequestsListProprietary = _context.Requests.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == false)*/
                 .Include(r => r.ApplicationUserCreator).Include(r => r.Product).ThenInclude(p => p.Vendor);
             if (requestIndexObject.RequestStatusID == 7)
             {
@@ -2366,33 +2365,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(reorderViewModel);
         }
 
-        [Authorize(Roles = "Requests")]
-        private async Task<string> RenderPartialViewToString(string viewName, object model)
-        {
-            if (string.IsNullOrEmpty(viewName))
-                viewName = ControllerContext.ActionDescriptor.ActionName;
-
-            ViewData.Model = model;
-
-            using (var writer = new StringWriter())
-            {
-                ViewEngineResult viewResult =
-                    _viewEngine.FindView(ControllerContext, viewName, false);
-
-                ViewContext viewContext = new ViewContext(
-                    ControllerContext,
-                    viewResult.View,
-                    ViewData,
-                    TempData,
-                    writer,
-                    new HtmlHelperOptions()
-                );
-
-                await viewResult.View.RenderAsync(viewContext);
-
-                return writer.GetStringBuilder().ToString();
-            }
-        }
+        
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(int id, RequestIndexObject requestIndexObject)
@@ -3549,7 +3522,7 @@ namespace PrototypeWithAuth.Controllers
          */
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public ActionResult DocumentsModal(int? id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
+        public ActionResult DocumentsModal(string id, AppUtility.FolderNamesEnum RequestFolderNameEnum, bool IsEdittable, bool showSwitch,
             AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             DocumentsModalViewModel documentsModalViewModel = new DocumentsModalViewModel()
@@ -3557,7 +3530,7 @@ namespace PrototypeWithAuth.Controllers
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 ParentFolderName = AppUtility.ParentFolderName.Requests,
-                ObjectID = id ?? 0,
+                ObjectID = id =="" ? "0" : id,
                 SectionType = SectionType,
                 ShowSwitch = showSwitch
             };
@@ -3605,7 +3578,6 @@ namespace PrototypeWithAuth.Controllers
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 SectionType = SectionType,
-
             };
             return PartialView(deleteDocumentsViewModel);
         }
@@ -4175,6 +4147,7 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> PaymentsPayModal(int? vendorid, int? requestid, int[] requestIds, AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
+            string test = "test";
             List<Request> requestsToPay = new List<Request>();
             var requestsList = GetPaymentRequests(accountingPaymentsEnum);
 
@@ -4566,7 +4539,7 @@ namespace PrototypeWithAuth.Controllers
                             string requestFolderTo = Path.Combine(uploadFolder, request.RequestID.ToString());
                             if (Directory.Exists(requestFolderTo))
                             {
-                                Directory.Delete(requestFolderTo);
+                                Directory.Delete(requestFolderTo, true);
                             }
                             Directory.Move(requestFolderFrom, requestFolderTo);
 
