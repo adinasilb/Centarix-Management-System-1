@@ -8,6 +8,8 @@ $('#invFilterPopover').on('shown.bs.popover', function () {
 })
 $('body').off('click').on('click', '.btn-filter', function () {
 	//alert("in filter function")
+	//var archived = $('.archive-check').val();
+	//console.log('archived ' + archived);
 	var data = $.fn.BindSelectedFilters();
 	var id = $(this).val();
 	var col = $(this).parent().parent();
@@ -31,6 +33,7 @@ $('body').off('click').on('click', '.btn-filter', function () {
 		arr.splice($.inArray(id, arr), 1);
 		numFilters = Number($('.numFilters').attr("value")) - 1;
 	}
+	//console.log('archived ' + archived);
 	$.fn.ReloadFilterDiv(numFilters, data);
 });
 $.fn.ReloadFilterDiv = function (numFilters, data) {
@@ -153,13 +156,16 @@ $('body').on('click', '.clear-filters', function () {
 	$.fn.ClearFilter(sectionType, isProprietary);
 });
 $(".popover").off("click").on("click", ".archive-button", function (e) {
-	//alert('check archive!')
-	var checked = $("#archive-check").prop("checked");
-	$("#archive-check").attr("checked", !checked);
-	$("#archive-check").val(!checked);
-	var numFilters = $('.numFilters').attr("value");
-	var data = $.fn.BindSelectedFilters();
-	$.fn.ReloadFilterDiv(numFilters, data);
+	console.log('check archive!')
+	$(".archive-check").each(function () {
+		console.log(this);
+		var checked = $(this).prop("checked");
+		$(this).attr("checked", !checked);
+		$(this).val(!checked);
+		/*var numFilters = $('.numFilters').attr("value");
+		var data = $.fn.BindSelectedFilters();
+		$.fn.ReloadFilterDiv(numFilters, data);*/
+	})
 });
 $('body').on('click', "#applyFilter", function () {
 	console.log('clicked!')

@@ -36,7 +36,7 @@
         @if (/*Model.RequestStatusId == 7 or should we do isProprietary?*/ true)
         {
             <div class="col-1 custom-control custom-checkbox plain-form archive-button">
-                <input type="checkbox" class=" custom-control-input" id="archive-check" asp-for="Archive"/>
+                <input type="checkbox" class=" custom-control-input archive-check" asp-for="Archive" value=" @Model.Archive"/>
                 <label class="custom-control-label ">Archived</label>
             </div>
         }
