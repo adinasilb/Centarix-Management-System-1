@@ -86,20 +86,20 @@ namespace PrototypeWithAuth
             //services.AddApplicationInsightsTelemetry();
 
             // in order to be able to customize the aspnetcore identity
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => false; // consent required
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    options.CheckConsentNeeded = context => false; // consent required
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
 
-            services.AddSession(opts =>
-            {
-                opts.Cookie.IsEssential = true;
-                opts.IdleTimeout = TimeSpan.FromHours(10);
-                opts.IOTimeout = TimeSpan.FromHours(10);
-                //opts.Cookie.HttpOnly = false;
-                //opts.Cookie.Name = "Sessions" + Guid.NewGuid().ToString();
-            });
+            //services.AddSession(opts =>
+            //{
+            //    opts.Cookie.IsEssential = true;
+            //    opts.IdleTimeout = TimeSpan.FromHours(10);
+            //    opts.IOTimeout = TimeSpan.FromHours(10);
+            //    //opts.Cookie.HttpOnly = false;
+            //    //opts.Cookie.Name = "Sessions" + Guid.NewGuid().ToString();
+            //});
             services.AddMvc(config => //this creates a global authorzation - meaning only registered users can use view the application
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -108,7 +108,10 @@ namespace PrototypeWithAuth
                 config.Filters.Add(new AuthorizeFilter(policy));
                 // config.AllowValidatingTopLevelNodes = true;
             });
-
+            services.AddSession(/*opts =>
+            {
+                opts.Cookie.IsEssential = true;
+            }*/);
             ////allow for data anotations validations
             //services.AddMvcCore()
             //   .AddDataAnnotations();
