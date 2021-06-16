@@ -11,9 +11,6 @@ $('body').off('click').on('click', '.btn-filter', function () {
 	var data = $.fn.BindSelectedFilters();
 	var id = $(this).val();
 	var col = $(this).parent().parent();
-	var sectionType = $('#masterSectionType').val();
-	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
-	console.log('status ' + $(".request-status-id").attr("value"));
 	var arr;
 	if (col.hasClass('vendor-col')) {
 			arr = data.SelectedVendorsIDs;
@@ -34,23 +31,29 @@ $('body').off('click').on('click', '.btn-filter', function () {
 		arr.splice($.inArray(id, arr), 1);
 		numFilters = Number($('.numFilters').attr("value")) - 1;
 	}
+	$.fn.ReloadFilterDiv(numFilters, data);
+});
+$.fn.ReloadFilterDiv = function (numFilters, data) {
+	console.log('in reload filter function');
+	var sectionType = $('#masterSectionType').val();
+	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
+	console.log('status ' + $(".request-status-id").attr("value"));
 	//console.log(data);
-    $.ajax({
+	$.ajax({
 		//processData: false,
 		//contentType: false,
 		data: data,
-		traditional:true,
+		traditional: true,
 		async: true,
-		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType + "&isProprietary="+ isProprietary,
+		url: "/Requests/_InventoryFilterResults?numFilters=" + numFilters + "&sectionType=" + sectionType + "&isProprietary=" + isProprietary,
 		type: 'POST',
 		cache: false,
 		success: function (newData) {
 			$('#inventoryFilterContent').html(newData);
 			$('#inventoryFilterContentDiv .popover-body').html($('#inventoryFilterContent').html());
-        }
-     });
-
-});
+		}
+	});
+}
 $('.search-requests').on('change', function () {
 	var searchText = $(this).val().toLowerCase();
 	console.log(searchText);
@@ -148,6 +151,15 @@ $('body').on('click', '.clear-filters', function () {
 	var isProprietary = $(".request-status-id").attr("value") == 7 ? true : false;
 	var sectionType = $('#masterSectionType').val();
 	$.fn.ClearFilter(sectionType, isProprietary);
+});
+$(".popover").off("click").on("click", ".archive-button", function (e) {
+	//alert('check archive!')
+	var checked = $("#archive-check").prop("checked");
+	$("#archive-check").attr("checked", !checked);
+	$("#archive-check").val(!checked);
+	var numFilters = $('.numFilters').attr("value");
+	var data = $.fn.BindSelectedFilters();
+	$.fn.ReloadFilterDiv(numFilters, data);
 });
 $('body').on('click', "#applyFilter", function () {
 	console.log('clicked!')

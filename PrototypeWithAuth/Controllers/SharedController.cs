@@ -628,7 +628,7 @@ namespace PrototypeWithAuth.Controllers
             }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             IQueryable<Request> fullRequestsList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText ?? "")).Include(r => r.ApplicationUserCreator)
-         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Where(r => r.IsArchived == requestIndexObject.IsArchive);
+         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == requestIndexObject.IsArchive)*/;
 
             int sideBarID = 0;
             if (requestIndexObject.SidebarType != AppUtility.SidebarEnum.Owner)
@@ -830,8 +830,16 @@ namespace PrototypeWithAuth.Controllers
                 {
                     fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
                 }
+                
             }
-
+            if (selectedFilters?.Archived == true)
+            {
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.IsArchived == true);
+            }
+            else
+            {
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.IsArchived == false);
+            }
             return fullRequestsListProprietary;
         }
 
@@ -1053,7 +1061,8 @@ namespace PrototypeWithAuth.Controllers
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
-                    SectionType = sectionType
+                    SectionType = sectionType,
+                    Archive = selectedFilters.Archived
                 };
                 if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
                 {

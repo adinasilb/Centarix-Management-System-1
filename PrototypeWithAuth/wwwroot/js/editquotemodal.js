@@ -3,6 +3,7 @@
     $("#myForm").data("validator").settings.ignore = "";
     var valid = $("#myForm").valid();
     console.log("valid form: " + valid)
+    console.log(formdata);
     if (!valid) {
 
         if (!$('.activeSubmit').hasClass('disabled-submit')) {

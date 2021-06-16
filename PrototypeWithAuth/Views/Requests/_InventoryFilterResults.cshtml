@@ -32,7 +32,14 @@
         <div class="col-3">
             <input type="text" placeholder="Search" class="mb-2 w-100 form-control-plaintext border-bottom search-requests-in-filter" />
         </div>
-        <div class="col-4"></div>
+        <div class="col-3"></div>
+        @if (/*Model.RequestStatusId == 7 or should we do isProprietary?*/ true)
+        {
+            <div class="col-1 custom-control custom-checkbox plain-form archive-button">
+                <input type="checkbox" class=" custom-control-input" id="archive-check" asp-for="Archive"/>
+                <label class="custom-control-label ">Archived</label>
+            </div>
+        }
         <div class="col ">
             <button class="text text-right font-weight-bold clear-filters" style="border: none; background: none">Clear All</button>
         </div>
