@@ -1,6 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel
 @using PrototypeWithAuth.AppData
-
+<script src="~/js/Validation/AddFunctionValidation.js"></script>
+<script src="~/js/validate.js"></script>
 @{ var filestring = "";}
 @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionLine.FunctionType.DescriptionEnum))
 {
@@ -104,7 +105,7 @@
         <div class="row">
             <div class="col-6">
                 <label asp-for="FunctionLine.Product.SerialNumber" class="control-label"></label>
-                <input class="border-bottom form-control-plaintext " rows="6" asp-for="FunctionLine.Product.SerialNumber" />
+                <input class="border-bottom form-control-plaintext unique-number" rows="6" asp-for="FunctionLine.Product.SerialNumber" />
             </div>
         </div>
         break;
@@ -167,7 +168,7 @@
         <div class="row">
             <div class="col-6">
                 <label asp-for="FunctionLine.Protocol.UniqueCode" class="control-label"></label>
-                <input class="border-bottom form-control-plaintext " rows="6" asp-for="FunctionLine.Protocol.UniqueCode" />
+                <input class="border-bottom form-control-plaintext unique-number " rows="6" asp-for="FunctionLine.Protocol.UniqueCode" />
             </div>
         </div>
         break;

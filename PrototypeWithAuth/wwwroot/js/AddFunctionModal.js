@@ -1,7 +1,10 @@
-﻿    $(".protocol, .product").change(function () {
+﻿ $(function(){
+     $(".protocol, .product, input.unique-number").change(function () {
+         if($(".unique-number").valid())
+             {
         $.ajax({
             async: true,
-            url: "/Protocols/_AddFunctionModal?objectID=" + $(this).val() + "&functionTypeID=" + $(".function-typeID").val(),
+            url: "/Protocols/_AddFunctionModal?objectID=" + $(this).val() + "&functionTypeID=" + $(".function-typeID").val()+"&uniqueNumber="+$(".unique-number").val(),
             type: 'GET',
             cache: true,
             success: function (data) {
@@ -10,6 +13,7 @@
                 return;
             }
         });
+             }
         return;
     });
 
@@ -112,3 +116,4 @@ $(".link-protocol-dropdown").change(function(){
 	    });
 
 });
+     });
