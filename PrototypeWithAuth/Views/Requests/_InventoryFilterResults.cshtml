@@ -33,7 +33,7 @@
             <input type="text" placeholder="Search" class="mb-2 w-100 form-control-plaintext border-bottom search-requests-in-filter" />
         </div>
         <div class="col-3"></div>
-        @if (/*Model.RequestStatusId == 7 or should we do isProprietary?*/ true)
+        @if (Model.IsProprietary)
         {
             <div class="col-1 custom-control custom-checkbox plain-form archive-button">
                 <input type="checkbox" class=" custom-control-input archive-check" asp-for="Archive" value=" @Model.Archive"/>
@@ -63,21 +63,24 @@
                     }
                 </div>
             </div>*@
-        <div class="border-right col filter-col vendor-col">
-            <input placeholder="Vendor" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom vendor-search" />
-            <div class="inventory-filter-col not-selected ">
-                @foreach (var type in Model.Vendors)
-                {
-                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left" labelName="@type.VendorEnName" value="@type.VendorID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.VendorEnName</span></button>
-                }
+        @if (!Model.IsProprietary)
+        {
+            <div class="border-right col filter-col vendor-col">
+                <input placeholder="Vendor" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom vendor-search" />
+                <div class="inventory-filter-col not-selected ">
+                    @foreach (var type in Model.Vendors)
+                    {
+                        <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left" labelName="@type.VendorEnName" value="@type.VendorID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.VendorEnName</span></button>
+                    }
+                </div>
+                <div class="inventory-filter-col selected">
+                    @foreach (var type in Model.SelectedVendors)
+                    {
+                        <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left filter-btn-select" value="@type.VendorID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.VendorEnName</span></button>
+                    }
+                </div>
             </div>
-            <div class="inventory-filter-col selected">
-                @foreach (var type in Model.SelectedVendors)
-                {
-                    <button id="" type="button" class="table-button btn-filter my-1 w-100 text-left filter-btn-select" value="@type.VendorID" style="border-radius:0.5rem;"><span class="filter-button-description">@type.VendorEnName</span></button>
-                }
-            </div>
-        </div>
+        }
         <div class="border-right col filter-col owner-col">
             <input placeholder="Owner" class="mb-2 disabled-text w-100 form-control-plaintext border-bottom owner-search" />
             <div class="inventory-filter-col not-selected">

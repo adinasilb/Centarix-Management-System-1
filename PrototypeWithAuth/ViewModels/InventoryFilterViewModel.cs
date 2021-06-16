@@ -25,6 +25,7 @@ namespace PrototypeWithAuth.ViewModels
         public int NumFilters { get; set; }
         public AppUtility.MenuItems SectionType { get; set; }
         public bool Archive { get; set; }
+        public bool IsProprietary { get; set; }
         //public List<Project> Projects { get; set; }
         //public List<int> SelectedProjects { get; set; }
         //public List<SubProject> SubProjects { get; set; }

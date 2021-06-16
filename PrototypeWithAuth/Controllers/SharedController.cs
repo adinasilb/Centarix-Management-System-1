@@ -1067,7 +1067,8 @@ namespace PrototypeWithAuth.Controllers
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
                     SectionType = sectionType,
-                    Archive = selectedFilters.Archived
+                    Archive = selectedFilters.Archived, 
+                    IsProprietary = isProprietary
                 };
                 if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
                 {
@@ -1096,7 +1097,8 @@ namespace PrototypeWithAuth.Controllers
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
-                    SectionType = sectionType
+                    SectionType = sectionType,
+                    IsProprietary = isProprietary
                 };
             }
         }
