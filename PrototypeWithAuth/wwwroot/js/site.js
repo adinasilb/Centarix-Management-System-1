@@ -1440,8 +1440,10 @@ $(function () {
 			section = "Requests";
 		}
 		else if ($(this).hasClass('locations')) {
+			console.log("has locations");
 			url = "/Requests/ReceivedModalVisual";
-			section = "Requests";
+			section = $(".turn-edit-on-off").attr("section-type"); //"Requests";
+			console.log("section: " + section);
         }
 		if ($(this).hasClass('orders') && $(this).hasClass('equipment')) {
 			url = "/Requests/EditModalView";
@@ -1468,11 +1470,13 @@ $(function () {
 		}
 		else if (type == 'details') {
 			if ($(this).hasClass('locations')) {
+				console.log('locations');
 				$(".disable-custom-mdbselect").removeClass("disable-custom-mdbselect")
 				$('#location .mark-readonly').removeClass("disabled")
 				$('#location .mark-readonly').attr("disabled", false);
 				$('.edit-mode-switch-description').text("Edit Mode On");
 				$('.turn-edit-on-off').attr('name', 'edit');
+				$('.location-icon').removeClass('d-none');
 			}
 			else {
 				enableMarkReadonly($(this));

@@ -6,18 +6,23 @@ $('.ordersItemForm').validate({
   },
 	rules: {
 		"Requests[0].Product.ProductName": "required",
+		/*"Requests[0].Product.ProductName": "required",*/ //insert val here?? has there
 		"Requests[0].Product.CatalogNumber": {
 			required: true,
-				remote:{
-		url: '/Requests/CheckUniqueVendorAndCatalogNumber',
-		type: 'POST',
-		data: { "VendorID":function(){ return $("#vendorList").val()}, "CatalogNumber": function(){return $("#Requests_0__Product_CatalogNumber").val() } , "ProductID": function(){if ($(".turn-edit-on-off").length > 0) {
-		return $(".turn-edit-on-off").attr("productID");
-	}else{return null}}},
+			remote:{
+				url: '/Requests/CheckUniqueVendorAndCatalogNumber',
+				type: 'POST',
+				data: {
+					"VendorID": function () { return $("#vendorList").val() },
+					"CatalogNumber": function () { return $("#Requests_0__Product_CatalogNumber").val() },
+					"ProductID": function () {
+						if ($(".turn-edit-on-off").length > 0) {
+							return $(".turn-edit-on-off").attr("productID");
+						}else{return null}}},
 			},
 		},
 		"Requests[0].Product.ProductSubcategory.ParentCategoryID": "selectRequired",
-		"Requests[0].Product.ProductSubcategoryID": "selectRequired",
+		"Requests[0].Product.ProductSubcategory.ProductSubcategoryID": "selectRequired",
 		"Requests[0].Product.VendorID": {
 			"selectRequired" : true,				
 		},
@@ -81,7 +86,7 @@ $('.ordersItemForm').validate({
 		"Requests[0].SubSubUnitTypeID": "selectRequired",
 		"locationSelected": {
 			required: true
-			}
+		}
 
 	},
 	messages:{

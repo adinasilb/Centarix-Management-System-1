@@ -23,8 +23,8 @@ namespace PrototypeWithAuth.Controllers
 {
     public class CalibrationsController : SharedController
     {
-        public CalibrationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
-            : base(context, userManager, hostingEnvironment, viewEngine)
+        public CalibrationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
         }
 

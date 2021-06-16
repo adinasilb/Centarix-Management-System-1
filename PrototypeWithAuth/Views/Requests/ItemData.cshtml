@@ -74,7 +74,7 @@
                 @{await Html.RenderPartialAsync("~/Views/Requests/_LocationTab.cshtml", Model); }
             </div>
         }
-        @if (!Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.IsProprietary && Model.SectionType != AppUtility.MenuItems.Operations && requestCategoryType!=2)
+        @if (!Model.Requests.FirstOrDefault().Product.ProductSubcategory.ParentCategory.IsProprietary && Model.SectionType != AppUtility.MenuItems.Operations && requestCategoryType != 2)
         {
             <div id="price" class="tab-pane fade @showPrice" value="3">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_PriceTab.cshtml", Model); }
@@ -86,7 +86,7 @@
         <div id="comments" class="tab-pane fade @showComments" value="5">
             @{await Html.RenderPartialAsync("~/Views/Requests/_CommentsTab.cshtml", Model); }
         </div>
-        @if (Model.ModalType.Equals(AppUtility.RequestModalType.Summary) && Model.RequestStatusID != 7 && Model.IsHistory == false)
+        @if (Model.IsHistory == false && ((Model.ModalType.Equals(AppUtility.RequestModalType.Summary) && (Model.RequestStatusID != 7 && !Model.IsProprietary)) || Model.IsReorder))
         {<div id="history" class="tab-pane fade @showHistory" value="6">
                 @{await Html.RenderPartialAsync("~/Views/Requests/_HistoryTab.cshtml", Model); }
             </div>

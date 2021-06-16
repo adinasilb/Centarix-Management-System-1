@@ -24,8 +24,7 @@ else
     @if (Model.IsSmallestChild || Model.CurrentEmptyChild.LocationInstanceID > 0)
     {
        
-<div class="container pr-0 float-right hasVisual
-          ">
+<div class="container pr-0 float-right hasVisual" parent-id="@Model.ParentLocationInstance.LocationInstanceID">
     @if((Model.ParentLocationInstance.Width==9 && Model.ParentLocationInstance.Height == 9) || (Model.ParentLocationInstance.Width==12&& Model.ParentLocationInstance.Height == 12))
     {
     <div class="row">

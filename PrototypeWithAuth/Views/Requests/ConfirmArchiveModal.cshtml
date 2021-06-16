@@ -40,7 +40,7 @@
     $('body, .modal').off('click', '.archive-request').on('click', '.archive-request', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        console.log('archive request.');
+        console.log('archive request.'); 
         var formData = new FormData($("#myForm")[0]);
         console.log(...formData);
         $("#loading").show();
@@ -57,8 +57,10 @@
                 $("#loading").hide();
                 $.fn.CloseModal('confirm-archive');
                 $('#location').html(data);
+                ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/_IndexTableWithProprietaryTabs/', "._IndexTableWithProprietaryTabs", "GET", undefined);
             }
         });
+
     });
 
 </script>

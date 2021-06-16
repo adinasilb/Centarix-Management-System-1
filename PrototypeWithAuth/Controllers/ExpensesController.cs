@@ -22,9 +22,9 @@ namespace PrototypeWithAuth.Controllers
 {
     public class ExpensesController : SharedController
     {
-        public ExpensesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
-            : base(context, userManager, hostingEnvironment, viewEngine)
-        { 
+        public ExpensesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
+        {
         }
 
         [HttpGet]
