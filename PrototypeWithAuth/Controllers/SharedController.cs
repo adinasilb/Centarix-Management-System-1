@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Aspose.Slides;
+using Aspose.Slides.Export;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -290,7 +292,8 @@ namespace PrototypeWithAuth.Controllers
                 documentsModalViewModel.FileStrings = new List<String>();
                 foreach (var docfile in docfilesfound)
                 {
-                    string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);
+
+                    string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);                    
                     documentsModalViewModel.FileStrings.Add(newFileString);
                     //documentsModalViewModel.Files.Add(docfile);
                 }

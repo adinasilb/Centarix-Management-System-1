@@ -29,9 +29,15 @@
                         <div class="card iframe-container document-border m-0 report-file-card" contenteditable="false">
                             @{
                                 var rootPath = $"{Context.Request.Scheme}://{Context.Request.Host.Value}{Context.Request.PathBase.Value.ToString()}";
-                            }
+                                var iframeFilestring = Model.DocumentsInfo.FirstOrDefault()?.FileStrings[0];
+                                var ext = iframeFilestring.Split(".").Last();
+                                if (ext == "pptx" || ext == "ppt")
+                                {
+                                    iframeFilestring = "";
+                                }
+                              }
                             <div class="card-body responsive-iframe-container p-0">
-                                <iframe src="@rootPath\/@Model.DocumentsInfo.FirstOrDefault()?.FileStrings[0]" title="View" class="responsive-iframe" marginheight="0" frameborder="0" marginwidth="0"
+                                <iframe src="@rootPath\/@iframeFilestring" title="View" class="responsive-iframe" marginheight="0" frameborder="0" marginwidth="0"
                                         scrolling="no"></iframe>
                             </div>
                             <div class="card-body d-flex text-center align-items-center justify-content-center p-0">
