@@ -1,8 +1,14 @@
 ﻿@model PrototypeWithAuth.ViewModels.ResourceLibraryViewModel;
+@using PrototypeWithAuth.AppData; 
 @{
     ViewData["Title"] = "Library";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 
-    await Html.RenderPartialAsync("_Library", Model);
 }
+<input type="hidden" id="SectionType" value="@TempData[AppUtility.TempDataTypes.SidebarType.ToString()]" />
+<div class="resources-main">
+    @{
+        await Html.RenderPartialAsync("_Library", Model);
+    }
+</div>
 

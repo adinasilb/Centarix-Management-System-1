@@ -1,5 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.ResourceLibraryViewModel;
 
+@using PrototypeWithAuth.AppData;
+
 <script src="~/js/ResourcesLibrary.js"></script>
 <div class="item-table">
     <ul class=" pl-0 nav float-left overflow-auto" style="width:90%;">
@@ -30,7 +32,8 @@
                 @foreach (var maincategory in Model.ResourceCategories.Where(rc => rc.IsMain))
                 {
                     <div class="type-div">
-                        <a href='@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID = maincategory.ResourceCategoryID })' class="text text-dark">
+                        @*<a href='@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID = maincategory.ResourceCategoryID, IsPersonal = @sectionType })' class="text text-dark">*@
+                        <a class="text text-dark open-resources-list" main-category-id="@maincategory.ResourceCategoryID">
                             <fieldset class=" main-type-fieldset">
                                 @{
                                     var imageUrl = "/images/protocol_images/" + maincategory.ImageUrl;
@@ -48,7 +51,7 @@
                 @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain && !rc.IsResourceType))
                 {
                     <div class="type-div">
-                        <a href="@Url.Action("ResourcesList", "Protocols", new { ResourceCategoryID=category.ResourceCategoryID })" class="text text-dark">
+                        <a class="text text-dark open-resources-list" main-category-id="@category.ResourceCategoryID">
                             <fieldset class="small-type-fieldset">
                                 <label class="small-type-label top-menu protocols-filter text-center">
                                     @category.ResourceCategoryDescription
@@ -86,3 +89,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(".open-resources-list").off("click").on("click", function (e) {
+        var url = "/Protocols/_ResourcesList?ResourceCategoryID=" + $(this).attr("main-category-id") + "&IsPersonal=";
+        if ($("#SectionType").val() == "Personal") {
+            url += "True";
+        }
+        else {
+            url += "False";
+        }
+        $.ajax({
+            async: true,
+            url: url,
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                console.log("loading resources list...");
+                $(".resources-main").html(data);
+            }
+        });
+    });
+</script>

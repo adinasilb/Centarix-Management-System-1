@@ -29,8 +29,14 @@
             <form action="" method="post" id="myForm" class="modal-padding add-resource-form" enctype="multipart/form-data">
                 <div class="form-element-border-bottom under-row-margin">
                     <div class="row top-menu under-row-margin">
-                        <div class="col-12 heading-1">
+                        <div class="col-10 heading-1">
                             @Heading
+                        </div>
+                        <div class="col-2 float-right text">
+                            <div class="custom-control custom-radio mr-4  personal-type">
+                                @Html.CheckBoxFor(model => model.Resource.IsPersonal, htmlAttributes: new { @class = "custom-control-input personal-radio", @name="personal-group", @checked = "checked" })
+                                <label class="radio-button custom-control-label pt-1 pl-2" for="Resource_IsPersonal">Personal</label>
+                            </div>
                         </div>
                     </div>
                     <div class="row under-row-margin">

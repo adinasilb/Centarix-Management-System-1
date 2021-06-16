@@ -1352,15 +1352,16 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> ResourcesList(int? ResourceCategoryID)
+        public async Task<IActionResult> _ResourcesList(int? ResourceCategoryID, bool IsPersonal = false)
         {
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
+            //TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            //TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
+            //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
             ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
 
             ResourcesListIndexViewModel.ResourcesWithFavorites = _context.Resources
+                .Where(r => IsPersonal ? r.ApplicationUserCreatorID == _userManager.GetUserId(User) && r.IsPersonal == true : r.IsPersonal == false)
                 .Include(r => r.FavoriteResources)
                 .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
                 .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
@@ -1369,6 +1370,12 @@ namespace PrototypeWithAuth.Controllers
                     Resource = r,
                     IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
                 }).ToList();
+
+            //if (IsPersonal)
+            //{
+            //    ResourcesListIndexViewModel.ResourcesWithFavorites = ResourcesListIndexViewModel.ResourcesWithFavorites.Where(r => r.Resource.ApplicationUserCreatorID == _userManager.GetUserId(User)).ToList();
+            //}
+
             ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Library;
             ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
             {
@@ -1383,7 +1390,7 @@ namespace PrototypeWithAuth.Controllers
             };
 
 
-            return View(resourcesListViewModel);
+            return PartialView(resourcesListViewModel);
         }
 
         [HttpGet]
@@ -1500,6 +1507,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
+                    addResourceViewModel.Resource.ApplicationUserCreatorID = _userManager.GetUserId(User);
                     _context.Update(addResourceViewModel.Resource);
                     await _context.SaveChangesAsync();
 
@@ -1552,7 +1560,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Personal;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+            var resourceLibraryViewModel = new ResourceLibraryViewModel();
+
+            resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories;
+            return View(resourceLibraryViewModel);
         }
 
         [Authorize(Roles = "Protocols")]
