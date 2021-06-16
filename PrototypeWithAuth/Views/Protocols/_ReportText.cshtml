@@ -4,7 +4,7 @@
     Layout = null;
 }
 
-<div class="col-6">
+<div class="col-12">
     <span role="textbox" contenteditable="false" class="editable-span report-text form-control-plaintext h-100 text-transform-none">
     @if (Model.TemporaryReportText == null)
     {
@@ -35,7 +35,7 @@
             sel = window.getSelection();
             if (sel.getRangeAt && sel.rangeCount) {
                 range = sel.getRangeAt(0);
-                range.deleteContents();
+                //range.deleteContents();
 
                 // Range.createContextualFragment() would be useful here but is
                 // non-standard and not supported in all browsers (IE9, for one)
@@ -60,22 +60,6 @@
             // IE < 9
             document.selection.createRange().pasteHTML(html);
         }
-    }
-
-    function getCaretIndex(element) {
-        let position = 0;
-        const isSupported = typeof window.getSelection !== "undefined";
-        if (isSupported) {
-            const selection = window.getSelection();
-            if (selection.rangeCount !== 0) {
-                const range = window.getSelection().getRangeAt(0);
-                const preCaretRange = range.cloneRange();
-                preCaretRange.selectNodeContents(element);
-                preCaretRange.setEnd(range.endContainer, range.endOffset);
-                position = preCaretRange.toString().length;
-            }
-        }
-        return position;
     }
     $(document).ready(function (e) {
         $(".report-text").trigger("change")

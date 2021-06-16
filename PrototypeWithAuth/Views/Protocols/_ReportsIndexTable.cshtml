@@ -8,7 +8,7 @@
 
 @Html.HiddenFor(m => m.ReportsIndexObject.ReportCategoryID)
 
-@Html.DropDownListFor(vm => vm.ReportsIndexObject.Years, years.Select(x =>
+@*@Html.DropDownListFor(vm => vm.ReportsIndexObject.Years, years.Select(x =>
         new SelectListItem
         {
         Text = x.ToString(),
@@ -32,7 +32,7 @@
         Value = m.ToString(),
         Selected = (Model.ReportsIndexObject.Months.Contains(m))
     }),
-    htmlAttributes: new { @class = "protocols mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })
+    htmlAttributes: new { @class = "protocols mdb-select  custom select-dropdown form-control-plaintext reports-filters float-right mr-3 change-month", @searchable = "Search here...", @multiple = "multiple" })*@
 
 @if (Model.PagedList.Count() > 0)
 {

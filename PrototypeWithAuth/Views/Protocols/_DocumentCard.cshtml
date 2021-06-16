@@ -1,6 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.DocumentsModalViewModel 
 
-<div class="report-function" functionReportID="@Model.ObjectID">
+<div class="report-function" functionReportid="@Model.ObjectID">
     <div class="card iframe-container document-border m-0 report-file-card" contenteditable="false" style="width:90px; height:150px;">
         @{
             var rootPath = $"{Context.Request.Scheme}://{Context.Request.Host.Value}{Context.Request.PathBase.Value.ToString()}";

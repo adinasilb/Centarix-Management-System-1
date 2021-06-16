@@ -28,14 +28,15 @@ $(".remove-function").click(function (e) {
 
 $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".saveFunction, .removeFunction",function (e) {
     e.preventDefault();
-    if($(this).hasClass("removeFunction"))
+    var removing = $(this).hasClass("removeFunction");
+    if(removing)
     {
         $(".isRemove").val(true);
          var functionSelect;
         var changeToTriggerSelect;
         if ($("#masterPageType").val() == "ProtocolsReports") {
             var functionReportID = $(".function-reportID").val()
-            functionSelect = $(".report-function[functionReportID=" + functionReportID + "]")
+            functionSelect = $(".report-function[functionReportid=" + functionReportID + "]")
             console.log(functionSelect)
             changeToTriggerSelect = $(".report-text")
          }
@@ -46,7 +47,6 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
          var prev = functionSelect.prev();
          var next = functionSelect.next();
         var html = prev.html() + next.html();
-        console.log("next "+ next.html())
          prev.html(html);
          next.remove();
          functionSelect.remove();
@@ -105,6 +105,19 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
         success: function (data) {
             if ($("#masterPageType").val() == "ProtocolsReports") {
                 $(".report-text-div").html(data);
+                if (!removing) {
+                    var newDiv = $(".added-div");
+
+                    var newDivText = newDiv.next().html();
+                    if (newDivText == null && newDiv[0].nextSibling) {
+                        console.log("no div")
+                        newDivText = newDiv[0].nextSibling.textContent;
+                    }
+                    newDiv.html(newDivText)
+                    newDiv[0].nextSibling?.remove();
+                    newDiv.removeClass("added-div");
+                }
+                //functionSelect.append(" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none'></div>")
             }
             else {
                 $("._Lines").html(data);
