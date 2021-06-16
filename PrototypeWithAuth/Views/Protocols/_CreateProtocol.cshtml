@@ -18,6 +18,7 @@
 
     }
 }
+
 <form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
     <input type="hidden" asp-for="Protocol.ProtocolTypeID" />
     <div class="row text-danger-centarix error-message d-none"> @Model.ErrorMessage </div>
@@ -69,7 +70,3 @@
         @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}
     </div>
 </form>
-
-<script src="~/js/Validation/CreateProtocolValidation.js"></script>
-<script src="~/js/validate.js"></script>
-<script src="~/js/function.js"></script>

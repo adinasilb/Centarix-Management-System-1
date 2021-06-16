@@ -1195,8 +1195,9 @@ namespace PrototypeWithAuth.Controllers
                         }
                     }
                     await transaction.CommitAsync();
+                    var tab = createProtocolsViewModel.Tab;
                     createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
-                  
+                    createProtocolsViewModel.Tab = tab;
                     return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
                 }
                 catch (Exception ex)
