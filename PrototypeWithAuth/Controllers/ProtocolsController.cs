@@ -2105,12 +2105,9 @@ namespace PrototypeWithAuth.Controllers
 
                                 string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
                                 var replaceableText = "<span class=\"focusedText\"></span>";
-                                var position = createReportViewModel.Report.TemporaryReportText.IndexOf(replaceableText) + replaceableText.Length;
-                                var addedText = "</div>"+renderedView;
-                                if (position == createReportViewModel.Report.TemporaryReportText.Length)
-                                {
-                                    addedText += " <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none'></div>";
-                                }
+                                var currentSpot = createReportViewModel.Report.TemporaryReportText.IndexOf("<span class=\"focusedText\"></span>");
+                                
+                                var addedText = "</div>"+renderedView+ " <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none added-div'></div>";
                                 report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText.Replace(replaceableText, addedText);
                                 _context.Update(report);
 

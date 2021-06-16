@@ -253,11 +253,11 @@
                                 {
                                     @if (Model.DontAllowMultiple)
                                     {
-                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" disabled />
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" disabled formtarget="_blank" />
                                     }
                                     else
                                     {
-                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" multiple disabled />
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" multiple disabled formtarget="_blank"/>
                                     }
                                 }
                                 else
@@ -265,11 +265,11 @@
                                     @if (Model.DontAllowMultiple)
                                     {
 
-                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" />
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" formtarget="_blank"/>
                                     }
                                     else
                                     {
-                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" multiple />
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" multiple formtarget="_blank" />
                                     }
                                 }
 
