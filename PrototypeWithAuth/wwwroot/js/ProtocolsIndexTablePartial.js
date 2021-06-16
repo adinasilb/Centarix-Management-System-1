@@ -55,20 +55,6 @@ $(".load-protocol").click(function(e){
 
 });
 
-$(".share-object").on("click", function (e) {
-		var url = "/Protocols/ShareModal?ID=" + $(this).val() + "&ModelsEnum=Protocol"; 
-		$.ajax({
-			async: true,
-			url: url,
-			type: 'GET',
-			cache: true,
-			success: function (data) {
-				$.fn.OpenModal("shared-modal", "share-modal", data);
-				$.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs')
-			}
-		});
-	});
-
 var protocolFavoritesHasRun = false; //This is preventing the double click
 $(".protocol-favorite").off("click").on("click", function (e) {
 	//$(this).off("click");
@@ -76,7 +62,7 @@ $(".protocol-favorite").off("click").on("click", function (e) {
 	if (!protocolFavoritesHasRun) {
 		protocolFavoritesHasRun = true;
 		$("#loading").show();
-		var requestFavorite = $(this);
+		var protocolFavorite = $(this);
 		//alert(" in favorite request fx");
 		var emptyHeartClass = "icon-favorite_border-24px";
 		var fullHeartClass = "icon-favorite-24px";
@@ -84,20 +70,20 @@ $(".protocol-favorite").off("click").on("click", function (e) {
 		var title = "Favorite";
 		var FavType = "favorite";
 		var sidebarType = $('#masterSidebarType').val();
-		if (requestFavorite.hasClass("request-unlike")) {
+		if (protocolFavorite.hasClass("protocol-unlike")) {
 			FavType = "unlike";
 			$.ajax({
 				async: true,
-				url: "/Protocols/ProtocolFavorite/?protocolID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
+				url: "/Protocols/FavoriteProtocol/?protocolID=" + protocolFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
 				traditional: true,
 				type: "GET",
 				cache: false,
 				success: function (data) {
 					protocolFavoritesHasRun = false;
-					requestFavorite.children("i").addClass(emptyHeartClass);
-					requestFavorite.children("i").removeClass(fullHeartClass);
-					requestFavorite.attr("data-original-title", title);
-					requestFavorite.removeClass(unfav);
+					protocolFavorite.children("i").addClass(emptyHeartClass);
+					protocolFavorite.children("i").removeClass(fullHeartClass);
+					protocolFavorite.attr("data-original-title", title);
+					protocolFavorite.removeClass(unfav);
 					$("#loading").hide();
 					if (sidebarType == 'Favorites') {
 						$('[data-toggle="tooltip"]').tooltip('dispose'); //is this the right syntax?
@@ -110,16 +96,16 @@ $(".protocol-favorite").off("click").on("click", function (e) {
 			title = "Unfavorite";
 			$.ajax({
 				async: true,
-				url: "/Requests/RequestFavorite/?requestID=" + requestFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
+				url: "/Protocols/FavoriteProtocol/?protocolID=" + protocolFavorite.attr("value") + "&Favtype=" + FavType + '&sidebarType=' + sidebarType,
 				traditional: true,
 				type: "GET",
 				cache: false,
 				success: function (data) {
 					protocolFavoritesHasRun = false;
-					requestFavorite.children("i").removeClass(emptyHeartClass);
-					requestFavorite.children("i").addClass(fullHeartClass);
-					requestFavorite.attr("data-original-title", title);
-					requestFavorite.addClass(unfav);
+					protocolFavorite.children("i").removeClass(emptyHeartClass);
+					protocolFavorite.children("i").addClass(fullHeartClass);
+					protocolFavorite.attr("data-original-title", title);
+					protocolFavorite.addClass(unfav);
 					$("#loading").hide();
 
 				}
