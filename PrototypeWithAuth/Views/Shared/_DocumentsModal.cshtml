@@ -174,7 +174,13 @@
                                                     <div class="col-12 col-md-4 m-0">
                                                         @if (ModelCount > i)
                                                         {
-                                                            <div class="card iframe-container document-border m-0">
+                                                            var iframeFilestring = "\\"+Model.FileStrings[i];
+                                                            var ext = iframeFilestring.Split(".").Last();
+                                                            if ( ext== "pptx" || ext == "ppt")
+                                                            {
+                                                                iframeFilestring = "";
+                                                            }
+                                                                <div class="card iframe-container document-border m-0">
                                                                 <div class="card-body responsive-iframe-container">
                                                                     @*<img class="card-img-top" src="@Model.FileStrings[i]" alt="Card image cap">*@
 
@@ -253,11 +259,11 @@
                                 {
                                     @if (Model.DontAllowMultiple)
                                     {
-                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" disabled formtarget="_blank" />
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" disabled />
                                     }
                                     else
                                     {
-                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" multiple disabled formtarget="_blank"/>
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf .docx .doc" multiple disabled/>
                                     }
                                 }
                                 else
@@ -265,11 +271,11 @@
                                     @if (Model.DontAllowMultiple)
                                     {
 
-                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" formtarget="_blank"/>
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" />
                                     }
                                     else
                                     {
-                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" multiple formtarget="_blank" />
+                                        <input type="file" asp-for="FilesToSave" class="file-select h-100" accept=".png, .jpg, .jpeg, .pdf, .pptx, .ppt" multiple />
                                     }
                                 }
 

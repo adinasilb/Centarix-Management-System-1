@@ -378,6 +378,7 @@
 
   <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.1" />
+    <PackageReference Include="Aspose.Slides.NET" Version="21.5.0" />
     <PackageReference Include="bootstrap" Version="4.5.0" />
     <PackageReference Include="Chart.Mvc.Core" Version="1.1.0" />
     <PackageReference Include="EmguCV" Version="3.1.0.1" />
