@@ -1360,17 +1360,15 @@ namespace PrototypeWithAuth.Controllers
 
             ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
 
-            //ResourcesListIndexViewModel.ResourcesWithFavorites =
-                var f = _context.Resources
-                .Include(r => r.FavoriteResources);
-
-                //.Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
-                //.Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
-                //.Select(r => new ResourceWithFavorite
-                //{
-                //    Resource = r,
-                //    IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
-                //}).ToList();
+            ResourcesListIndexViewModel.ResourcesWithFavorites = _context.Resources
+                .Include(r => r.FavoriteResources)
+                .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
+                .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
+                .Select(r => new ResourceWithFavorite
+                {
+                    Resource = r,
+                    IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
+                }).ToList();
             ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Library;
             ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
             {

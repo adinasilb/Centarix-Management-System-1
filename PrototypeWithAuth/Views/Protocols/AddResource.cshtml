@@ -15,7 +15,7 @@
             break;
     }
 
-    var hiddenElementClass = "ResourceTagsHidden HiddenCategoryBool";
+    var hec = "ResourceTagsHidden HiddenCategoryBool";
 
 }
 <script src="~/js/AddResource.js"></script>
@@ -95,7 +95,7 @@
                     @foreach (var mainCategory in Model.ResourceCategories.Where(rc => rc.IsMain))
                     {
                         counter++;
-                        hiddenElementClass += mainCategory.ResourceCategoryID;
+                        var hiddenElementClass = hec + mainCategory.ResourceCategoryID;
                         <div class="col-3">
                             <span class="resources-tags-big light-gray-background-color add-padding w-100" id="@mainCategory.ResourceCategoryID">
                                 @mainCategory.ResourceCategoryDescription
@@ -110,7 +110,7 @@
                         @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain))
                         {
                             counter++;
-                            hiddenElementClass += category.ResourceCategoryID;
+                            var hiddenElementClass = hec + category.ResourceCategoryID;
                             <span class="resources-tags-big light-gray-background-color mx-2 my-1" id="@category.ResourceCategoryID">
                                 @category.ResourceCategoryDescription
                             </span>
