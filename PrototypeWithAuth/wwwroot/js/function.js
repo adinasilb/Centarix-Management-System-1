@@ -107,9 +107,10 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
                 $(".report-text-div").html(data);
                 if (!removing) {
                     var newDiv = $(".added-div");
+                    console.log(newDiv[0].nextSibling == null)
 
                     var newDivText = newDiv.next().html();
-                    if (newDivText == null && newDiv[0].nextSibling) {
+                    if (newDivText == null) {
                         console.log("no div")
                         newDivText = newDiv[0].nextSibling.textContent;
                     }
