@@ -9,6 +9,14 @@
 	$(".file-select").on("change", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
+		if(window.stop !== undefined) 
+		{
+			window.stop();
+		}
+		else if(document.execCommand !== undefined)
+		{
+			document.execCommand("Stop", false);
+		}
 		console.log("upload file submitted");
 		var dontAllowMultipleFiles = $("#DontAllowMultiple").val();
 		if (dontAllowMultipleFiles == false) {
