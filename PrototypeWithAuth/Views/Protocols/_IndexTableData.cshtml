@@ -33,20 +33,59 @@
                             }
                             else if (col.Icons != null)
                             {
-                                <div class="d-inline-flex">
+                        <div class="d-inline-flex">
 
-                                    @foreach (var icon in col.Icons)
-                                    {
-                                        <div class="table-icon-div">
 
-                                            <a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
-                                               title="@icon.TooltipTitle" value="@col.AjaxID">
-                                                <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
-                                            </a>
-
-                                        </div>
-                                    }
-                                </div>
+                            @foreach (var icon in col.Icons)
+                            {
+                                //if (icon. !col.Favorite)
+                                if (icon.IconPopovers?.Count >= 1)
+                                {
+                                    <div class="table-icon-div">
+                                        <ul class="list-unstyled p-0 m-0">
+                                            <li>
+                                                <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" value="@(col.AjaxID + "more")">
+                                                    <i class="@icon.IconClass hover-bold px-1" style="font-size:2rem;">
+                                                    </i>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <div style="display:none;" id="@(col.AjaxID + "more")">
+                                                    @foreach (var iconpopover in icon.IconPopovers)
+                                                    {
+                                                        <div class="row px-3 icon-more-popover accounting-popover">
+                                                            @*<a asp-action="@iconpopover.Action" asp-controller="@iconpopover.Controller" asp-route-currentStatus="@iconpopover.CurrentLocation"
+                                           asp-route-request="@col.AjaxID" asp-route-newStatus="@iconpopover.Description" class="btn-link text no-hover">
+                                            <i class="@iconpopover.Icon" style="@iconpopover.Color"></i>
+                                            <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                        </a>*@
+                                                            <a class="btn-link text no-hover requests @iconpopover.AjaxCall" value="@col.AjaxID" data-action="@iconpopover.Action" data-controller="@iconpopover.Controller" data-route-currentStatus="@iconpopover.CurrentLocation" data-share-resource-id="@col.AjaxID"
+                                                               data-route-request="@col.AjaxID" data-route-newStatus="@iconpopover.Description">
+                                                                <i class="@iconpopover.Icon @iconpopover.AjaxCall" style="color: @iconpopover.Color"></i>
+                                                                <label class="m-2">@Html.DisplayFor(e => iconpopover.Description)</label>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                    @*<a class="btn p-0 m-0 no-box-shadow @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                   title="@icon.TooltipTitle" value="@col.AjaxID">
+                                    <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                </a>*@
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="table-icon-div">
+                                        <a class="btn p-0 m-0 no-box-shadow requests @icon.IconAjaxLink" data-toggle="tooltip" data-placement="top"
+                                           title="@icon.TooltipTitle" value="@col.AjaxID">
+                                            <i style="font-size:2rem; color:@icon.Color" class="@icon.IconClass hover-bold"></i>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                        </div>
                             }
                             else
                             {

@@ -166,25 +166,51 @@ namespace PrototypeWithAuth.Controllers
         private async Task<IPagedList<ProtocolsIndexPartialRowViewModel>> GetProtocolsColumnsAndRows(ProtocolsIndexObject protocolsIndexObject, IPagedList<ProtocolsIndexPartialRowViewModel> onePageOfProtocols, IQueryable<Protocol> ProtocolPassedInWithInclude)
         {
             List<IconColumnViewModel> iconList = new List<IconColumnViewModel>();
-            var defaultImage = "/images/css/CategoryImages/placeholder.png";
+            var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "#5F79E2", "protocol-favorite", "Favorite");
+            var popoverMoreIcon = new IconColumnViewModel("icon-more_vert-24px", "black", "popover-more", "More");
+            var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
+            var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Protocols", AppUtility.PopoverEnum.None, "share-protocol-fx");
+            var user = await _userManager.GetUserAsync(User);
             switch (protocolsIndexObject.PageType)
             {
                 case AppUtility.PageTypeEnum.ProtocolsProtocols:
                     switch (protocolsIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.List:
+                            iconList.Add(favoriteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
-    .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);
+    .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject, iconList,  _context.FavoriteProtocols.Where(fr => fr.ProtocolID == p.ProtocolID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user)).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);                            
                             break;
                         case AppUtility.SidebarEnum.MyProtocols:
+                            iconList.Add(favoriteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
-  .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, protocolsIndexObject)).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);
+  .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, protocolsIndexObject, iconList,
+     _context.FavoriteProtocols.Where(fr => fr.ProtocolID == p.ProtocolID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user)).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);
 
                             break;
                         case AppUtility.SidebarEnum.Favorites:
+                            iconList.Add(favoriteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare };
+                            iconList.Add(popoverMoreIcon);
+                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
+   .Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, p.ApplicationUserCreator, protocolsIndexObject, iconList, 
+                                                 _context.ShareProtocols
+                .Where(fr => fr.ProtocolID == p.ProtocolID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(),
+                                                  _context.FavoriteProtocols.Where(fr => fr.ProtocolID == p.ProtocolID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(), user
+                                        )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25);
                             break;
                         case AppUtility.SidebarEnum.SharedWithMe:
-                            break;
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare};
+                            iconList.Add(popoverMoreIcon);
+                            onePageOfProtocols = await ProtocolPassedInWithInclude.OrderByDescending(p => p.CreationDate)
+.Select(p => new ProtocolsIndexPartialRowViewModel(p, p.ProtocolType, p.ProtocolSubCategory, protocolsIndexObject, iconList, p.ApplicationUserCreator,
+                                              _context.ShareProtocols
+             .Where(fr => fr.ProtocolID == p.ProtocolID).Where(sr => sr.ToApplicationUserID == user.Id).Include(sr => sr.FromApplicationUser).FirstOrDefault(), user
+                                     )).ToPagedListAsync(protocolsIndexObject.PageNumber == 0 ? 1 : protocolsIndexObject.PageNumber, 25); break;
                         case AppUtility.SidebarEnum.LastProtocol:
                             break;
                     }
@@ -2219,40 +2245,64 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> FavoriteProtocol(int ProtocolID, bool Favorite = true)
+        public async Task<IActionResult> FavoriteProtocol(int protocolID, string FavType, AppUtility.SidebarEnum sidebarType)
         {
-            //The system for checks is strict b/c the calls are dependent upon icon names in code and jquery that can break or be changed one day
-            string retString = null;
-            using (var transaction = _context.Database.BeginTransaction())
+            var userID = _userManager.GetUserId(User);
+            if (FavType == "favorite")
             {
-                try
+                var favoriteProtocol = _context.FavoriteProtocols.Where(fr => fr.ProtocolID == protocolID && fr.ApplicationUserID == userID).FirstOrDefault();
+                if (favoriteProtocol == null)
                 {
-                    if (Favorite)
+                    using (var transaction = _context.Database.BeginTransaction())
                     {
-                        FavoriteProtocol favoriteProtocol = _context.FavoriteProtocols.Where(fr => fr.ProtocolID == ProtocolID && fr.ApplicationUserID == _userManager.GetUserId(User)).FirstOrDefault();
-                        if (favoriteProtocol != null) { _context.Remove(favoriteProtocol); } //check is here so it doesn't crash
-                                                                                             //if it doesn't exist the jquery will then cont and leave an empty icon which is ok b/c its empty
-                    }
-                    else
-                    {
-                        //check for favorite
-                        if (_context.FavoriteProtocols.Where(fr => fr.ProtocolID == ProtocolID && fr.ApplicationUserID == _userManager.GetUserId(User)) != null)
+                        try
                         {
-                            FavoriteProtocol favoriteProtocol = new FavoriteProtocol()
+                            favoriteProtocol = new FavoriteProtocol()
                             {
-                                ProtocolID = ProtocolID,
-                                ApplicationUserID = _userManager.GetUserId(User)
+                                ProtocolID = protocolID,
+                                ApplicationUserID = userID
                             };
-                            _context.Update(favoriteProtocol);
+                            _context.Add(favoriteProtocol);
+                            await _context.SaveChangesAsync();
+                            await transaction.CommitAsync();
                         }
-                        //if the favorite exists the jquery will then cont and leave a full icon which is ok b/c its full
+                        //throw new Exception(); //check this after!
+                        catch (Exception e)
+                        {
+                            await transaction.RollbackAsync();
+                            await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                        }
                     }
-                    await _context.SaveChangesAsync();
-                    transaction.Commit();
                 }
-                catch (Exception e)
+            }
+            else if (FavType == "unlike")
+            {
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    transaction.Rollback();
+                    try
+                    {
+                        var favoriteRequest = _context.FavoriteProtocols
+                            .Where(fr => fr.ApplicationUserID == userID)
+                            .Where(fr => fr.ProtocolID == protocolID).FirstOrDefault();
+                        _context.Remove(favoriteRequest);
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    //throw new Exception(); //check this after!
+                    catch (Exception e)
+                    {
+                        await transaction.RollbackAsync();
+                        await Response.WriteAsync(AppUtility.GetExceptionMessage(e));
+                    }
+                }
+                if (sidebarType == AppUtility.SidebarEnum.Favorites)
+                {
+                    ProtocolsIndexObject requestIndexObject = new ProtocolsIndexObject()
+                    {
+                        PageType = AppUtility.PageTypeEnum.ProtocolsProtocols,
+                        SidebarType = sidebarType
+                    };
+                    return RedirectToAction("_IndexTable", requestIndexObject);
                 }
             }
             return new EmptyResult();
