@@ -354,7 +354,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ProtocolsFavorites()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyProtocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
             var viewmodel = await GetProtocolsIndexViewModel(
                 new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.Favorites, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
@@ -1217,6 +1217,23 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _IndexTableWithEditProtocol(int protocolID)
         {
             CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(0, protocolID);
+            return PartialView(viewmodel);
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _IndexTable(bool IsFavorite = false)
+        {
+            ProtocolsIndexViewModel viewmodel; 
+            if (IsFavorite)
+            {
+                viewmodel = await GetProtocolsIndexViewModel(
+                new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.Favorites, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
+
+            }
+            else
+            {
+                viewmodel = await GetProtocolsIndexViewModel(new ProtocolsIndexObject() { });
+            }
             return PartialView(viewmodel);
         }
 
@@ -2330,7 +2347,7 @@ namespace PrototypeWithAuth.Controllers
                         PageType = AppUtility.PageTypeEnum.ProtocolsProtocols,
                         SidebarType = sidebarType
                     };
-                    return RedirectToAction("_IndexTable", requestIndexObject);
+                    return RedirectToAction("_IndexTable", new { IsFavorite = true });
                 }
             }
             return new EmptyResult();
