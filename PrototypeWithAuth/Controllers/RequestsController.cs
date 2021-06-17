@@ -662,7 +662,6 @@ namespace PrototypeWithAuth.Controllers
                                         additionalRequests = false;
                                     }
                                     MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
-                                    MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.ParentQuotes, additionalRequests);
                                     await transaction.CommitAsync();
                                     RemoveRequestWithCommentsAndEmailSessions();
                                 }
@@ -1027,7 +1026,6 @@ namespace PrototypeWithAuth.Controllers
                 //} while (commentExists);
                 //await _context.SaveChangesAsync();
                 MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests);
-                MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.ParentQuotes);
 
                 newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
                 RequestNotification requestNotification = new RequestNotification();
@@ -1307,7 +1305,6 @@ namespace PrototypeWithAuth.Controllers
                                     additionalRequests = false;
                                 }
                                 MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
-                                MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.ParentQuotes);
                                 request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                                 if (!needsToBeApproved)
                                 {
@@ -4466,7 +4463,7 @@ namespace PrototypeWithAuth.Controllers
             uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
             uploadQuoteViewModel.RequestIndexObject = requestIndexObject;
 
-            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.ParentQuotes.ToString());
+            string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
             string uploadFolderQuotes = Path.Combine(uploadFolder2, AppUtility.FolderNamesEnum.Quotes.ToString());
 
@@ -4493,7 +4490,7 @@ namespace PrototypeWithAuth.Controllers
             if (isCancel)
             {
                 RemoveRequestWithCommentsAndEmailSessions();
-                DeleteTemporaryDocuments(AppUtility.ParentFolderName.ParentQuotes);
+                DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
                 return PartialView("Default");
             }
             try

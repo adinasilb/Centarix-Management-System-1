@@ -91,7 +91,7 @@ namespace PrototypeWithAuth.AppData
         public enum CommentTypeEnum { Warning, Comment }
         public enum TempDataTypes { MenuType, PageType, SidebarType }
         public enum FolderNamesEnum {Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
-        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports, ParentQuotes }
+        public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
         public static string AspDateFormatString = "{0:d MMM yyyy}";
         public static List<StringWithName> RequestRoleEnums()
