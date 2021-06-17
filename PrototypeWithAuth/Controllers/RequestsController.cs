@@ -68,7 +68,8 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests, Operations")]
         // GET: Requests
         public async Task<IActionResult> Index(RequestIndexObject requestIndexObject)
-        {
+        { 
+
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = requestIndexObject.PageType;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = requestIndexObject.SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = requestIndexObject.SidebarType;
@@ -564,7 +565,6 @@ namespace PrototypeWithAuth.Controllers
         {
             try
             {
-                RemoveRequestWithCommentsAndEmailSessions();
                 var vendor = _context.Vendors.FirstOrDefault(v => v.VendorID == requestItemViewModel.Requests.FirstOrDefault().Product.VendorID);
                 var categoryType = 1;
                 var serialLetter = "L";
