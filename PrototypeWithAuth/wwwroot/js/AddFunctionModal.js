@@ -1,10 +1,12 @@
 ﻿ $(function(){
      $(".protocol, .product, input.unique-number").change(function () {
+        
+         console.log($(".unique-number").valid())
          if($(".unique-number").valid())
              {
         $.ajax({
             async: true,
-            url: "/Protocols/_AddFunctionModal?objectID=" + $(this).val() + "&functionTypeID=" + $(".function-typeID").val()+"&uniqueNumber="+$(".unique-number").val(),
+            url: "/Protocols/_AddFunctionModal?objectID=" + $(".product").val() + "&functionTypeID=" + $(".function-typeID").val()+"&uniqueNumber="+$(".unique-number").val(),
             type: 'GET',
             cache: true,
             success: function (data) {
@@ -12,8 +14,8 @@
                 $("._AddFunctionModal .mdb-select").materialSelect();
                 return;
             }
-        });
-             }
+             });
+         }
         return;
     });
 
