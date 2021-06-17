@@ -152,15 +152,14 @@ namespace PrototypeWithAuth
             }
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
+            app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
 
-            app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
-            app.UseRouting();
 
-
-            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
