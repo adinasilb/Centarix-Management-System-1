@@ -7,6 +7,7 @@ namespace PrototypeWithAuth.AppData
 {
     public class RequestIndexObject
     {
+        //do not put any extra complex objects into this class
         public string ErrorMessage { get; set; }
         private int _PageNumber;
         private int _RequestStatusID;
