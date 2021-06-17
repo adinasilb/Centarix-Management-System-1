@@ -60,6 +60,7 @@ namespace PrototypeWithAuth.Data
         public IEnumerable<FavoriteRequest> FavoriteRequests { get; set; }
         public IEnumerable<FavoriteProtocol> FavoriteProtocols { get; set; }
         public IEnumerable<FavoriteResource> FavoriteResources { get; set; }
+        public IEnumerable<TempRequestJson> TempRequestJsons { get; set; }
 
         // public string URLPic { get; set; }
 

@@ -1685,7 +1685,6 @@ namespace PrototypeWithAuth.Controllers
             return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
         }
 
-
         private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
         {
             var newIconList = AppUtility.DeepClone(iconList);
@@ -2365,7 +2364,7 @@ namespace PrototypeWithAuth.Controllers
             return PartialView(reorderViewModel);
         }
 
-        
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ConfirmEmailModal(int id, RequestIndexObject requestIndexObject)
@@ -3530,7 +3529,7 @@ namespace PrototypeWithAuth.Controllers
                 FolderName = RequestFolderNameEnum,
                 IsEdittable = IsEdittable,
                 ParentFolderName = AppUtility.ParentFolderName.Requests,
-                ObjectID = id =="" ? "0" : id,
+                ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
                 ShowSwitch = showSwitch
             };

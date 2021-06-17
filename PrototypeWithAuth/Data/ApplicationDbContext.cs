@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<TempRequestJson> TempRequestJsons { get; set; }
         public DbSet<ShareProtocol> ShareProtocols { get; set; }
         public DbSet<ShareResource> ShareResources { get; set; }
         public DbSet<FavoriteResource> FavoriteResources { get; set; }
@@ -382,6 +383,8 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Report>().Property(r => r.ReportText).HasColumnType("ntext");
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
+            modelBuilder.Entity<TempRequestJson>().Property(t => t.RequestJson).HasColumnType("ntext");
+
             modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
             //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
             modelBuilder.Seed();
