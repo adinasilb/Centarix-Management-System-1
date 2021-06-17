@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrototypeWithAuth.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -93,5 +94,6 @@ namespace PrototypeWithAuth.AppData
             set { _Years = value; }
         }
         public int ReportCategoryID { get; set; }
+        public ResourceCategory ReportCategory { get; set; }
     }
 }

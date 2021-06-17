@@ -115,7 +115,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
                         console.log("no div")
                         newDivText = newDiv[0].nextSibling.textContent;
                     }
-                    newDiv.html(newDivText)
+                    newDiv.html(newDiv.html()+newDivText)
                     newDiv[0].nextSibling?.remove();
                     newDiv.removeClass("added-div");
                 }
