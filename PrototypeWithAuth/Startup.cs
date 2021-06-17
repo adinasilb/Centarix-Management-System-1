@@ -128,7 +128,11 @@ namespace PrototypeWithAuth
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
                 options.Cookie.Name = "LoginCookie";
-            });
+            }); 
+
+            //CookieOptions cookieOptions = new CookieOptions();
+            //string GUID = new Guid().ToString();
+            //string Key = "SessionCookie";
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

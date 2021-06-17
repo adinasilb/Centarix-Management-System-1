@@ -25,5 +25,6 @@ namespace PrototypeWithAuth.AppData
             var value = jsonRequest.RequestJson;
             return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
         }
+
     }
 }

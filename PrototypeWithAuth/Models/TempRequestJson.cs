@@ -14,5 +14,7 @@ namespace PrototypeWithAuth.Models
         public String ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public String RequestJson { get; set; }
+
+
     }
 }
