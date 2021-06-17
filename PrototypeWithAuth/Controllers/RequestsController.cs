@@ -1083,7 +1083,21 @@ namespace PrototypeWithAuth.Controllers
 
             return true;
         }
-
+      
+        public async Task SetTempRequestAsync( TempRequestJson tempRequestJson)
+        {
+            _context.Update(tempRequestJson);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<TempRequestJson> GetTempRequestAsync(string cookieID)
+        {
+            return await _context.TempRequestJsons.Where(t => t.CookieGUID == cookieID).FirstOrDefaultAsync();
+        }
+        public async Task RemoveTempRequestAsync(TempRequestJson tempRequestJson)
+        {
+            _context.Remove(tempRequestJson);
+            await _context.SaveChangesAsync();
+        }
         [Authorize(Roles = "Requests, Operations")]
         public async Task<TermsViewModel> GetTermsViewModelAsync(int vendorID, RequestIndexObject requestIndexObject)
         {

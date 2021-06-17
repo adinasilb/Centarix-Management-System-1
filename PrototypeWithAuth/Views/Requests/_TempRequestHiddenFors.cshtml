@@ -78,4 +78,11 @@
     @Html.HiddenFor(r => r.Comments[i].CommentID)
     @Html.HiddenFor(r => r.Comments[i].CommentType)
 }
-
+@Html.HiddenFor(model => model.RequestIndexObject.PageType)
+@Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+@Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+@Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+@*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+@Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+@Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+@Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
