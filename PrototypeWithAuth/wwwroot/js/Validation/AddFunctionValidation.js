@@ -10,6 +10,7 @@
 				remote:{
 					url: '/Protocols/CheckIfSerialNumberExists',
 					type: 'POST',
+					async: false,
 					data: { "SerialNumber":function(){ return $("#FunctionLine_Product_SerialNumber").val()}},
 				}
 			},				
@@ -17,6 +18,7 @@
 				remote:{
 					url: '/Protocols/CheckIfProtocolUniqueNumberExists',
 					type: 'POST',
+					async: false,
 					data: { "UniqueNumber":function(){ return $("#FunctionLine_Protocol_UniqueCode").val()}},
 				}
 			}

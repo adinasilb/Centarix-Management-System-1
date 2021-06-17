@@ -1,21 +1,27 @@
 ﻿ $(function(){
      $(".protocol, .product, input.unique-number").change(function () {
-        
-         console.log($(".unique-number").valid())
-         if($(".unique-number").valid())
+         var uniqueNumber = $(".unique-number").val();
+         var objectID =$("select.object").val();
+         if(!$(".unique-number").valid())
+         {
+            uniqueNumber="";
+             if(objectID ==0 
+                 || $(this).hasClass("unique-number"))
              {
-        $.ajax({
-            async: true,
-            url: "/Protocols/_AddFunctionModal?objectID=" + $(".product").val() + "&functionTypeID=" + $(".function-typeID").val()+"&uniqueNumber="+$(".unique-number").val(),
-            type: 'GET',
-            cache: true,
-            success: function (data) {
-                $("._AddFunctionModal").html(data)
-                $("._AddFunctionModal .mdb-select").materialSelect();
                 return;
-            }
-             });
+             }
          }
+            $.ajax({
+                    async: true,
+                    url: "/Protocols/_AddFunctionModal?objectID=" + objectID+ "&functionTypeID=" + $(".function-typeID").val()+"&uniqueNumber="+uniqueNumber,
+                    type: 'GET',
+                    cache: true,
+                    success: function (data) {
+                        $("._AddFunctionModal").html(data)
+                        $("._AddFunctionModal .mdb-select").materialSelect();
+                        return;
+                    }
+                 });
         return;
     });
 
