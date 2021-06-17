@@ -51,7 +51,7 @@ namespace PrototypeWithAuth
             ////Set database Connection from application json file
 
             //add identity
-            
+
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
@@ -109,10 +109,8 @@ namespace PrototypeWithAuth
                 config.Filters.Add(new AuthorizeFilter(policy));
                 // config.AllowValidatingTopLevelNodes = true;
             });
-            services.AddSession(/*opts =>
-            {
-                opts.Cookie.IsEssential = true;
-            }*/);
+            services.AddDistributedMemoryCache();
+            services.AddSession();
             ////allow for data anotations validations
             //services.AddMvcCore()
             //   .AddDataAnnotations();
@@ -154,14 +152,15 @@ namespace PrototypeWithAuth
             }
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
-            app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
 
+            app.UseStaticFiles(); //may be here for other reasons but also need to download pdf files
+            app.UseRouting();
 
+
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -170,7 +169,7 @@ namespace PrototypeWithAuth
                 endpoints.MapRazorPages();
             });
 
-             //ChangePassword(serviceProvider).Wait();
+            //ChangePassword(serviceProvider).Wait();
 
             CreateRoles(serviceProvider).Wait();
             //AddRoles(serviceProvider).Wait();
