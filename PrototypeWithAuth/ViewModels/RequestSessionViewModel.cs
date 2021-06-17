@@ -11,5 +11,6 @@ namespace PrototypeWithAuth.ViewModels
         public Request Request { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Payment> Payments {get; set;}
+        public List<String> Emails { get; set; }
     }
 }
