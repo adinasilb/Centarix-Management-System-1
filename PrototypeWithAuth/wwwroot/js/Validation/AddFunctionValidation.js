@@ -5,7 +5,12 @@
 			 return $.trim( value );
 		},
 		rules:{
-
+			"FunctionLine.ProductID" : {
+				selectRequired: true	
+			},	
+			"FunctionLine.ProtocolID" : {
+				selectRequired: true	
+			},
 			"FunctionLine.Product.SerialNumber": {
 				remote:{
 					url: '/Protocols/CheckIfSerialNumberExists',

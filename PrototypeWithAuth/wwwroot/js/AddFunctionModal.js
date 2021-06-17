@@ -1,16 +1,18 @@
 ﻿ $(function(){
      $(".protocol, .product, input.unique-number").change(function () {
-         var uniqueNumber = $(".unique-number").val();
-         var objectID =$("select.object").val();
-         if(!$(".unique-number").valid())
+         if($(this).val()!='')
          {
-            uniqueNumber="";
-             if(objectID ==0 
-                 || $(this).hasClass("unique-number"))
+             var uniqueNumber = $(".unique-number").val();
+             var objectID =$("select.object").val();
+             if(!$(".unique-number").valid())
              {
-                return;
+                uniqueNumber="";
+                 if(objectID ==0 || objectID==''
+                     || $(this).hasClass("unique-number"))
+                 {
+                    return;
+                 }
              }
-         }
             $.ajax({
                     async: true,
                     url: "/Protocols/_AddFunctionModal?objectID=" + objectID+ "&functionTypeID=" + $(".function-typeID").val()+"&uniqueNumber="+uniqueNumber,
@@ -22,6 +24,8 @@
                         return;
                     }
                  });
+         }
+         
         return;
     });
 
