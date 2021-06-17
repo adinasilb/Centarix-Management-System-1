@@ -1682,21 +1682,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddItemView(RequestItemViewModel requestItemViewModel, AppUtility.OrderTypeEnum OrderType, ReceivedModalVisualViewModel receivedModalVisualViewModel = null)
         {
             var redirectToActionResult = SaveAddItemView(requestItemViewModel, OrderType, receivedModalVisualViewModel).Result;
-            RequestSessionViewModel requestSessionViewModel = new RequestSessionViewModel()
-            {
-                Request = new Request() { Product = new Product() { ProductName = "Adinas Session"} },
-                Comments = new List<Comment>() { new Comment() { CommentText="Comment 1 of Adinas Sessiong"} },
-            };
-            return RedirectToAction("TestRequestSessions", "Requests", requestSessionViewModel);
             return RedirectToAction(redirectToActionResult.ActionName, redirectToActionResult.ControllerName, redirectToActionResult.RouteValues);
-        }
-
-        [HttpPost]
-        [HttpGet]
-        [Authorize(Roles ="Requests")]
-        public async Task<IActionResult> TestRequestSessions(RequestSessionViewModel requestSessionViewModel)
-        {
-            return new EmptyResult();
         }
 
         private static List<IconColumnViewModel> GetIconsByIndividualRequest(int RequestID, List<IconColumnViewModel> iconList, bool needsPlaceholder, FavoriteRequest favoriteRequest = null, Request request = null, ApplicationUser user = null)
