@@ -22,19 +22,19 @@
                 break;
             case AppUtility.SidebarEnum.Quotes:
                 bcColor = "lab-man-background-color";
-                ajaxLink = ""; //add
+                ajaxLink = "update-quote-for-selected"; 
                 btnText = "Add To Selected";
                 sectionClass = "labmanage";
                 break;
             case AppUtility.SidebarEnum.Orders:
                 bcColor = "lab-man-background-color";
-                ajaxLink = ""; //add
+                ajaxLink = "load-terms-for-selected"; 
                 btnText = "Order Selected";
                 sectionClass = "labmanage";
                 break;
             case AppUtility.SidebarEnum.Cart:
                 bcColor = "order-inv-background-color";
-                ajaxLink = ""; //add
+                ajaxLink = "upload-quote-for-selected"; 
                 btnText = "Order Selected";
                 sectionClass = "orders-and-inv";
                 break;
@@ -223,7 +223,7 @@
                     </td>
                     @{ var startColumnsToSkip = 0;}
 
-                    @for (int i = startColumnsToSkip; i < requests.FirstOrDefault().Columns.Count() - 6; i++)
+                    @for (int i = startColumnsToSkip; i < requests.FirstOrDefault().Columns.Count() - 7; i++)
                     {
                         <td></td>
                     }

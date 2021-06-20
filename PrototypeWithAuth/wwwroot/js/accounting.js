@@ -130,47 +130,15 @@
 		$.fn.CallModal(itemUrl, "payments-pay");
 	});
 	//$(".pay-invoice-selected").off("click").on("click", function (e) {
-	//	var typeEnum = $(this).attr("type");
-	//	var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
-	//		return $(this).attr("id")
-	//	}).get()
-	//	console.log("arrayOfSelected: " + arrayOfSelected);
-	//	$("#loading").show();
-	//	$.ajax({
-	//		type: "GET",
-	//		url: "/Requests/PaymentsInvoiceModal/?" + "accountingPaymentsEnum=" + typeEnum,
-	//		traditional: true,
-	//		data: { 'requestIds': arrayOfSelected },
-	//		cache: true,
-	//		success: function (data) {
-	//			$.fn.OpenModal("modal", "payments-invoice", data)
-	//			$("#loading").hide();
-	//		}
-	//	});
+
+		//var typeEnum = $(this).attr("type");
+		//var itemUrl = "/Requests/PaymentsInvoiceModal/?accountingPaymentsEnum=" + typeEnum;
+		//$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-invoice");
 	//});
 	$(".pay-selected").off("click").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		//alert('pay selected')
 		var typeEnum = $(this).attr("type");
-		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
-			return $(this).attr("id")
-		}).get()
-		//alert('before loading');
-		console.log("arrayOfSelected: " + arrayOfSelected);
-		$("#loading").show();
-		$.ajax({
-			type: "GET",
-			url: "/Requests/PaymentsPayModal/?" + "accountingPaymentsEnum=" + typeEnum,
-			traditional: true,
-			data: { 'requestIds': arrayOfSelected },
-			cache: true,
-			success: function (data) {
-				//alert('success!');
-				$.fn.OpenModal("modal", "payments-pay", data)
-				$("#loading").hide();
-			}
-		});
+		var itemUrl = "/Requests/PaymentsPayModal/?accountingPaymentsEnum=" + typeEnum;
+		$.fn.LoadModalForSelectedItems(e, itemUrl, "payments-pay");
 	});
 
 	$(".invoice-add-all").off("click").on("click", function (e) {
@@ -183,26 +151,9 @@
 	});
 
 	$(".add-to-selected").off("click").on("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		//alert("add to selected")
-		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
-			return $(this).attr("id")
-		}).get()
-		console.log("arrayOfSelected: " + arrayOfSelected);
-		//var itemUrl = "/Requests/AddInvoiceModal/?requestids=" + arrayOfSelected;
-		$("#loading").show();
-		$.ajax({
-			type: "GET",
-			url: "/Requests/AddInvoiceModal/",
-			traditional: true,
-			data: { 'requestIds': arrayOfSelected },
-			cache: true,
-			success: function (data) {
-				$.fn.OpenModal("modal", "add-invoice", data)
-				$("#loading").hide();
-			}
-		});
+		var itemUrl = "/Requests/AddInvoiceModal/";
+		$.fn.LoadModalForSelectedItems(e, itemUrl, "add-invoice");
+
 	});
 
 	$(".invoice-add-one").off("click").on("click", function (e) {
