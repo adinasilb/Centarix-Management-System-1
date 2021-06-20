@@ -1,14 +1,15 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddFunctionViewModel
 @using PrototypeWithAuth.AppData
 <script src="~/js/site.js"></script>
-
+<script src="~/js/Validation/AddFunctionValidation.js"></script>
+<script src="~/js/validate.js"></script>
 <div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class=" modal-dialog-centered mx-auto" style="width:30%">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-function');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm on-form-modal">
                 <input type="hidden" asp-for="FunctionLine.FunctionTypeID" class="function-typeID" />
                 <input type="hidden" asp-for="FunctionLine.LineID" class="lineID" />
                 <input type="hidden" asp-for="FunctionLine.ID" class="function-lineID" />
@@ -24,14 +25,14 @@
                     </div>
                 </div>
                 <div class="modal-body m-0 p-0 _AddFunctionModal">
-                        @{await Html.RenderPartialAsync("_AddFunctionModal", Model); }
+                    @{await Html.RenderPartialAsync("_AddFunctionModal", Model); }
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
                         <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
                         @if (Model.FunctionLine.ID != 0)
                         {
-                            <input type="submit" class="custom-button custom-cancel removeFunction" value="Remove"/>
+                            <input type="submit" class="custom-button custom-cancel removeFunction" value="Remove" />
                         }
                         else
                         {

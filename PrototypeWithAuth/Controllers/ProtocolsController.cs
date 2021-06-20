@@ -766,6 +766,10 @@ namespace PrototypeWithAuth.Controllers
         {
             return _context.Products.Where(p => p.SerialNumber.Equals(serialNumber)).ToList().Any();
         }
+        public bool CheckIfProtocolUniqueNumberExists(string uniqueNumber)
+        {
+            return _context.Protocols.Where(p => p.UniqueCode.Equals(uniqueNumber)).ToList().Any();
+        }
         private async Task UpdateLineContentAsync(List<TempLine> TempLines)
         {
             foreach (var line in TempLines)
@@ -960,7 +964,7 @@ namespace PrototypeWithAuth.Controllers
             viewmodel.Vendors = _context.Vendors.ToList();
         }
 
-        public async Task<IActionResult> _AddFunctionModal(int objectID, int functionTypeID)
+        public async Task<IActionResult> _AddFunctionModal(int objectID, string uniqueNumber, int functionTypeID)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == functionTypeID).FirstOrDefault();
 
@@ -972,10 +976,10 @@ namespace PrototypeWithAuth.Controllers
             switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(functionType.DescriptionEnum))
             {
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                    var product = _context.Products.Where(p => p.ProductID == objectID)
+                   var product = _context.Products.Where(p => p.ProductID == objectID || p.SerialNumber == uniqueNumber)
                         .Include(p=>p.ProductSubcategory).FirstOrDefault();
                     viewmodel.FunctionLine.Product = product;
-                    viewmodel.FunctionLine.ProductID = objectID;
+                    viewmodel.FunctionLine.ProductID = product.ProductID;
                     viewmodel.ParentCategories = _context.ParentCategories.ToList();
                     viewmodel.ProductSubcategories = _context.ProductSubcategories.Where(ps=>ps.ParentCategoryID==product.ProductSubcategory.ParentCategoryID).ToList();
                     viewmodel.Products = _context.Products.Where(p=>p.ProductSubcategoryID==product.ProductSubcategoryID && product.VendorID ==p.VendorID).ToList();
@@ -983,9 +987,9 @@ namespace PrototypeWithAuth.Controllers
 
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                    var protocol = _context.Protocols.Where(p => p.ProtocolID == objectID).Include(ps=>ps.ProtocolSubCategory).FirstOrDefault();
+                    var protocol = _context.Protocols.Where(p => p.ProtocolID == objectID || p.UniqueCode == uniqueNumber).Include(ps=>ps.ProtocolSubCategory).FirstOrDefault();
                     viewmodel.FunctionLine.Protocol = protocol;
-                    viewmodel.FunctionLine.ProtocolID = objectID;
+                    viewmodel.FunctionLine.ProtocolID = protocol.ProtocolID;
                     viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
                     viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID ==protocol.ProtocolSubCategory.ProtocolCategoryTypeID).ToList();
                     viewmodel.Creators = _context.Users.Select(u =>
@@ -1221,7 +1225,6 @@ namespace PrototypeWithAuth.Controllers
             CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(0, protocolID);
             return PartialView(viewmodel);
         }
-
 
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> KitProtocol()

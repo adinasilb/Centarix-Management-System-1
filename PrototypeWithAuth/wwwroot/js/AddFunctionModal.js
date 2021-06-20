@@ -1,15 +1,43 @@
-﻿    $(".protocol, .product").change(function () {
-        $.ajax({
-            async: true,
-            url: "/Protocols/_AddFunctionModal?objectID=" + $(this).val() + "&functionTypeID=" + $(".function-typeID").val(),
-            type: 'GET',
-            cache: true,
-            success: function (data) {
-                $("._AddFunctionModal").html(data)
-                $("._AddFunctionModal .mdb-select").materialSelect();
-                return;
-            }
-        });
+﻿ $(function(){
+     $(".protocol, .product, input.unique-number").change(function () {
+         if($(this).val()!='')
+         {
+             var uniqueNumber = $(".unique-number").val();
+             var objectID =$("select.object").val();
+             var valid =$(".unique-number").valid() 
+             var valid =$(".unique-number").valid() 
+             if(!valid)
+             {
+                console.log("not valid")
+                uniqueNumber="";
+                 if(objectID ==0 || objectID==''
+                     || $(this).hasClass(".unique-number"))
+                 {
+                    return;
+                 }
+             }
+             else{
+                  console.log("valid")
+                if( $(this).hasClass(".unique-number"))
+                {
+                     objectID = ""
+                }
+                else{
+                    uniqueNumber ="";
+                }
+           }
+                $.ajax({
+                        async: true,
+                        url: "/Protocols/_AddFunctionModal?objectID=" + objectID+ "&functionTypeID=" + $(".function-typeID").val()+"&uniqueNumber="+uniqueNumber,
+                        type: 'GET',
+                        cache: true,
+                        success: function (data) {
+                            $("._AddFunctionModal").html(data)
+                            $("._AddFunctionModal .mdb-select").materialSelect();
+                            return;
+                        }
+                     });
+                }         
         return;
     });
 
@@ -26,7 +54,6 @@ $(".link-product-dropdown").change(function(){
     }
     var url = "/Protocols/FilterLinkToProduct"
     $.getJSON(url, { ParentCategoryID: parentCategoryID,  SubCategoryID :subCategoryID,  VendorID: vendorCategoryID}, function (data) {
-		   console.log(data)
             productSelector.children("option").each(function (i, option) {
 				option.remove();
 			});
@@ -112,3 +139,4 @@ $(".link-protocol-dropdown").change(function(){
 	    });
 
 });
+     });

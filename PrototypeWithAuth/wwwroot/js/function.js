@@ -71,8 +71,18 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
     //}
     //else {
     //$('.activeSubmit').removeClass('disabled-submit')
+      $(".addFunctionForm").data("validator").settings.ignore = "";
+        var valid = $(".addFunctionForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
 
-    var functionFormData = new FormData($(".addFunctionForm")[0]);
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            var functionFormData = new FormData($(".addFunctionForm")[0]);
     var reportFormData = new FormData($(".createReportForm")[0]);
     var protocolFormData = new FormData($(".createProtocolForm")[0]);
 
@@ -134,8 +144,8 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
             return true;
         }
     });
+        }
+        $(".addFunctionForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';    
 
-    //}
-    //$('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 });
 

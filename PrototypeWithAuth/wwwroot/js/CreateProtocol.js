@@ -36,7 +36,9 @@
         }
         else {
             $('.activeSubmit').removeClass('disabled-submit')
-            var selectedTab = $('.tab-pane .active').parent().index() + 1;
+              var tab= $(this);
+            var selectedTab = tab.parent().index() +1;
+          
             console.log(selectedTab);
             $(".selectedTab").val(selectedTab);
             var formData = new FormData($(".createProtocolForm")[0]);
@@ -50,7 +52,7 @@
                 success: function (data) {
                     $("._CreateProtocolTabs").html(data)
                     $(".mdb-select").materialSelect();
-                    if ($(this).hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
+                    if (tab.hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
                         $(".only-protocol-tab.li-function-bar").removeClass("d-none");
                     }
                     else {
