@@ -368,6 +368,9 @@ center-horizontally {
 .clicked-border-orders-inv {
     border: 2px double var(--order-inv-color) !important;
 }
+.clicked-border-lab-man {
+    border: 2px double var(--lab-man-color) !important;
+}
 
 .carousel.vertical .item {
     -webkit-transition: 0.6s ease-in-out top;
@@ -2653,6 +2656,7 @@ a {
 .form-check {
     padding-left: 0 !important; /*Overridding bootstrap*/
 }
+
 /*Login*/
 .login .form-check-input[type="checkbox"].filled-in:checked + label:after, .orders-and-inv label.btn input[type="checkbox"].filled-in:checked + label:after, .order-inv-form .form-check-input[type="checkbox"].filled-in:checked + label:after, .order-inv-form label.btn input[type="checkbox"].filled-in:checked + label:after {
     border: 2px solid black;

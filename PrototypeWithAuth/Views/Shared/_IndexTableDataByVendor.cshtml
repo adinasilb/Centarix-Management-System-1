@@ -4,6 +4,44 @@
 @using PrototypeWithAuth.AppData
 <script src="~/js/accounting.js"></script>
 <form method="post" enctype="multipart/form-data" style="height: 100%;">
+    @{
+        //for button for selected items
+        var btnText = "Pay Selected";
+        var ajaxLink = "pay-selected";
+        var bcColor = "accounting-background-color";
+        var sectionClass = ""; //if no section class, accounting color is default
+
+        switch (Model.SidebarType)
+        {
+            case AppUtility.SidebarEnum.NoInvoice:
+                ajaxLink = "add-to-selected";
+                btnText = "Add To Selected";
+                break;
+            case AppUtility.SidebarEnum.Installments:
+                ajaxLink = "pay-invoice-selected";
+                break;
+            case AppUtility.SidebarEnum.Quotes:
+                bcColor = "lab-man-background-color";
+                ajaxLink = ""; //add
+                btnText = "Add To Selected";
+                sectionClass = "labmanage";
+                break;
+            case AppUtility.SidebarEnum.Orders:
+                bcColor = "lab-man-background-color";
+                ajaxLink = ""; //add
+                btnText = "Order Selected";
+                sectionClass = "labmanage";
+                break;
+            case AppUtility.SidebarEnum.Cart:
+                bcColor = "order-inv-background-color";
+                ajaxLink = ""; //add
+                btnText = "Order Selected";
+                sectionClass = "orders-and-inv";
+                break;
+            default:
+                break;
+        }
+    }
     @foreach (var vendor in Model.RequestsByVendor)
     {
         <table class="table table-headerspaced  table-borderless table-hover mb-5 ">
@@ -16,7 +54,7 @@
 
 
 
-            <tbody>
+            <tbody class="@sectionClass">
                 @{ var requests = vendor.Select(r => r).ToList();}
 
                 @foreach (var row in requests)
@@ -40,13 +78,13 @@
                                                 <div class="table-icon-div">
                                                     <ul class="list-unstyled p-0 m-0">
                                                         <li>
-                                                            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@(col.AjaxID+"more")">
+                                                            <button href="#" type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="btn p-0 m-0 no-box-shadow more" value="@(col.AjaxID + "more")">
                                                                 <i class="icon-more_vert-24px px-1" style="font-size:1.6rem;">
                                                                 </i>
                                                             </button>
                                                         </li>
                                                         <li>
-                                                            <div style="display:none;" id="@(col.AjaxID+"more")">
+                                                            <div style="display:none;" id="@(col.AjaxID + "more")">
                                                                 @if (Model.SidebarType != AppUtility.SidebarEnum.StandingOrders)
                                                                 {
                                                                     var links = AppUtility.GetPaymentsPopoverLinks(Model.SidebarType);
@@ -180,30 +218,11 @@
                     </tr>
                 }
                 <tr class="border-0 mb-5 no-hover">
-                    <td colspan="2">
-                        @if (Model.PageType == AppUtility.PageTypeEnum.AccountingNotifications)
-                        {
-                            <button class="float-left accounting-background-color custom-button-font custom-button px-2rem hidden add-to-selected">Add To Selected</button>
-                        }
-                        else
-                        {
-                            @if (Model.SidebarType == AppUtility.SidebarEnum.Installments)
-                            {
-                                <button class="float-left accounting-background-color custom-button-font custom-button px-2rem hidden pay-invoice-selected" type="@Model.SidebarType" >Pay Selected</button>
-                            }
-                            else
-                            {
-                                <button class="float-left accounting-background-color custom-button-font custom-button px-2rem hidden pay-selected" type="@Model.SidebarType">Pay Selected</button>
-                            }
-                        }
+                    <td colspan="3">
+                        <button class="float-left @bcColor custom-button-font custom-button px-2rem hidden button-for-selected-items @ajaxLink" type="@Model.SidebarType">@btnText</button>
                     </td>
                     @{ var startColumnsToSkip = 0;}
-                    @*@if (Model.PageType == AppUtility.PageTypeEnum.AccountingNotifications)
-                    {
-                        var addToSButton = "add-to-selected " + vendor.Key.VendorID;
-                        <td colspan="2"><button class="accounting-background-color custom-button-font custom-button px-2rem hidden @addToSButton">Add To Selected</button></td>
-                        startColumnsToSkip = 2;
-                    }*@
+
                     @for (int i = startColumnsToSkip; i < requests.FirstOrDefault().Columns.Count() - 6; i++)
                     {
                         <td></td>

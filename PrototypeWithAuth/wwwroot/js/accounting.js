@@ -7,24 +7,14 @@
 		}
 		else {
 			//alert("is checked")
-			$(this).closest("tr").addClass("clicked-border-acc");
+			$.fn.AddBorderBySectionType(this);
 		}
 		var activeVendor = $(".activeVendor").val();
 		if (activeVendor == "" && $(this).is(":checked")) {
 			//	alert("reset vendor")
 			$(".activeVendor").val($(this).attr("vendorid"))
 		}
-		var addToSelectedButton = $(this).closest("tbody").find(".add-to-selected");
-		var paySelectedButton = $(this).closest("tbody").find(".pay-selected");
-
-
-		var selectedButton;
-		if (addToSelectedButton.length > 0) {
-			selectedButton = addToSelectedButton;
-		}
-		else if (paySelectedButton.length > 0) {
-			selectedButton = paySelectedButton;
-		}
+		var selectedButton = $(this).closest("tbody").find(".button-for-selected-items");
 
 		if ($(".form-check.accounting-select .form-check-input:checked").length) {
 			if ($(".activeVendor").val() != $(this).attr("vendorid")) {
@@ -49,6 +39,20 @@
 		}
 	});
 
+	$.fn.AddBorderBySectionType = function (element) {
+		switch ($('#masterSectionType').attr('value')) {
+			case 'LabManagement': 
+				$(element).closest("tr").addClass("clicked-border-lab-man");
+				break;
+			case 'Requests':
+				$(element).closest("tr").addClass("clicked-border-orders-inv");
+				break;
+			case 'Accounting':
+				$(element).closest("tr").addClass("clicked-border-acc");
+				console.log(element)
+				break;
+        }
+    }
 
 	$(".remove-invoice-item").off("click").on("click", function (e) {
 		e.stopPropagation();
