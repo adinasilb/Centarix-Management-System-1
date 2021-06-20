@@ -358,6 +358,7 @@ $.fn.LoadModalForSelectedItems = function (e, itemUrl, modalClass) {
 			$("#loading").hide();
 		}
 	});
+}
 
 function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
 	console.log("in ajax partial index call" + url);

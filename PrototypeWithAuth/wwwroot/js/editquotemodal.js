@@ -3,6 +3,7 @@
     $("#myForm").data("validator").settings.ignore = "";
     var valid = $("#myForm").valid();
     console.log("valid form: " + valid)
+    var formdata = new FormData($("#myForm")[0]);
     console.log(formdata);
     if (!valid) {
 
