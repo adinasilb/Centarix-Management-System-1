@@ -48,7 +48,7 @@
                         </button>
                     </td>
                     <td>
-                        @AppUtility.FormatDate(item.ParentRequest.OrderDate)
+                        @AppUtility.FormatDate(item.ParentRequest?.OrderDate)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ParentRequest.ApplicationUser.FirstName)&nbsp;
