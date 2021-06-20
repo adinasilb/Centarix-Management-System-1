@@ -23,7 +23,6 @@
         $("#TemporaryReportText").val($(this).html())
     })
     $(".report-text").on('click', function (e) {
-        console.log("focus")
         $(".focusedText").remove()
         pasteHtmlAtCaret("<span class='focusedText'></span>")
         $(".report-text").trigger("change")
