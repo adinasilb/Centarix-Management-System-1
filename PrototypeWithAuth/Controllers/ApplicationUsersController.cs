@@ -182,19 +182,17 @@ namespace PrototypeWithAuth.Controllers
                 double vacationHours;
                 TimeSpan hours = new TimeSpan();
                 IEnumerable<EmployeeHours> employeeHoursOfMonthOrYear;
-                if (yearlyMonthlyEnum == YearlyMonthlyEnum.Monthly)
-                {
-                    workingDays = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Count();
-                }
-                else
-                {
-                    workingDays = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Count();
-                }
+
+
+                var workingDaysDates = employee.EmployeeHours.Where(eh => (eh.OffDayTypeID == null) || (eh.IsBonus && eh.OffDayTypeID != null)).Where(eh => (eh.Exit1 != null || eh.TotalHours != null)).Select(eh => eh.Date.Date).ToList();
+                workingDays = workingDaysDates.Count();
+
                 if (employee.Employee.EmployeeStatusID == 1)
                 {
+                    var awaitingApprovalCount = employee.EmployeeHoursAwaitingApproval.Where(ehaa=> !workingDaysDates.Contains(ehaa.Date.Date)).Count();
 
                     missingDays = employee.EmployeeHours.Where(eh => (eh.Entry1 == null && eh.OffDayTypeID == null && eh.TotalHours == null && eh.CompanyDayOffID == null)
-                    || (eh.Entry1 != null && eh.Exit1 == null)).Count() - employee.EmployeeHoursAwaitingApproval.Count();
+                    || (eh.Entry1 != null && eh.Exit1 == null)).Count() - awaitingApprovalCount;
 
                     wholeSickDays = employee.EmployeeHours.Where(eh => eh.OffDayTypeID == 1/*&& eh.IsBonus == false*/).Count();
                     sickHours = employee.EmployeeHours.Where(eh => eh.PartialOffDayTypeID == 1/*&& eh.IsBonus == false*/).Select(eh => (eh.PartialOffDayHours == null ? TimeSpan.Zero : ((TimeSpan)eh.PartialOffDayHours)).TotalHours).ToList().Sum(p => p);
