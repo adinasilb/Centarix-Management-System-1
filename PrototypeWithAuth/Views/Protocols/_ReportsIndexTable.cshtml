@@ -5,8 +5,7 @@
     var years = Enumerable.Range(2017, DateTime.Today.Year - 2016);
     int curYear = DateTime.Today.Year /*Model.CurrentYear*/;
 }
-
-@Html.HiddenFor(m => m.ReportsIndexObject.ReportCategory.ResourceCategoryID)
+<input type="hidden" asp-for="ReportsIndexObject.ReportCategory.ResourceCategoryID" class="reportCategoryID"/>
 <div class="col-5">
     <a style="z-index:2000" href="@Url.Action("ReportsCategories", "Protocols")""
        class="title-label btn-link heading-1 ">

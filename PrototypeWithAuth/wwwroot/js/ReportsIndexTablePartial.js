@@ -12,7 +12,7 @@
 
 	$(".create-report").click(function (e) {
 		var sidebarType = $('#masterSidebarType').val()
-		var reportCategory = $("#ReportsIndexObject_ReportCategoryID").val()
+		var reportCategory = $(".reportCategoryID").val()
 		$.ajax({
 			url: "/Protocols/NewReportModal?reportCategoryId=" + reportCategory + "&sidebarType=" + sidebarType,
 			type: 'GET',

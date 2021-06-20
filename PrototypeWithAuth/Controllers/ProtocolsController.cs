@@ -1951,7 +1951,7 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                     report.ReportNumber = reportNumber;
-                    _context.Update(report);
+                    _context.Entry(report).State = EntityState.Added;
                     await _context.SaveChangesAsync();
 
                     createReportViewModel.ReportID = report.ReportID;
@@ -2076,8 +2076,8 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (addReportsFunctionViewModel.IsRemove)
                     {
-                        addReportsFunctionViewModel.FunctionReport.IsTemporaryDeleted = true;
-                        _context.Entry(addReportsFunctionViewModel.FunctionReport).State = EntityState.Modified;
+                        functionReport.IsTemporaryDeleted = true;
+                        _context.Entry(functionReport).State = EntityState.Modified;
                         report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText;
                         _context.Update(report);
                     }
@@ -2111,9 +2111,13 @@ namespace PrototypeWithAuth.Controllers
 
                                 string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
                                 var replaceableText = "<span class=\"focusedText\"></span>";
-                                var currentSpot = createReportViewModel.Report.TemporaryReportText.IndexOf("<span class=\"focusedText\"></span>");
+                                var nextText = createReportViewModel.Report.TemporaryReportText.Split(replaceableText)[1];
                                 
-                                var addedText = "</div>"+renderedView+ " <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none added-div'></div>";
+                                var addedText = "</div>"+ renderedView+" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none added-div'>";
+                                if(!nextText.StartsWith("</div>"))
+                                {
+                                    addedText += "</div><div>";
+                                }
                                 report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText.Replace(replaceableText, addedText);
                                 _context.Update(report);
 
