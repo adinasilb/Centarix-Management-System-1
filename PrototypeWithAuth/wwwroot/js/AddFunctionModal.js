@@ -11,14 +11,15 @@
                 console.log("not valid")
                 uniqueNumber="";
                  if(objectID ==0 || objectID==''
-                     || $(this).hasClass(".unique-number"))
+                     || $(this).hasClass("unique-number"))
                  {
+                     console.log("return")
                     return;
                  }
              }
              else{
                   console.log("valid")
-                if( $(this).hasClass(".unique-number"))
+                if( $(this).hasClass("unique-number"))
                 {
                      objectID = ""
                 }

@@ -28,6 +28,7 @@
 
 		var fileName = filePath.split("\\")[2]
 		$(".document-name").text(fileName)
+
 		$(".document-name#FileName").val(fileName)
 
 

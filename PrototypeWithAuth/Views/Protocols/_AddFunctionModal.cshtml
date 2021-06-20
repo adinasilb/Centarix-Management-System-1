@@ -2,7 +2,8 @@
 @using PrototypeWithAuth.AppData
 <script src="~/js/Validation/AddFunctionValidation.js"></script>
 <script src="~/js/validate.js"></script>
-@{ var filestring = "";}
+@{ var filestring = "";
+    var containsFile = "";}
 @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionLine.FunctionType.DescriptionEnum))
 {
     case AppUtility.ProtocolFunctionTypes.AddComment:
@@ -12,34 +13,41 @@
         break;
     case AppUtility.ProtocolFunctionTypes.AddFile:
         <div class="col">
+            @{
+             
+                if ((Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.Count ?? 0) != 0)
+                {
+                    containsFile = "contains-file";
+                    filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
+                }
+            }
+            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Files.ToString()Input" name="@AppUtility.FolderNamesEnum.Files.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
             <button type="button" class="my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Files.ToString()"
                     data-id="@Model.FunctionLine.ID"
                     id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false" no-multiple-files="true">
                 Select File
             </button>
-            @{
 
-                if ((Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.Count ?? 0) != 0)
-                {
-                    filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
-                }
-            }
             <span class="document-name pl-2">@filestring</span>
         </div>
         break;
     case AppUtility.ProtocolFunctionTypes.AddImage:
+        {
+
+            if ((Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.Count() ?? 0) != 0)
+            {
+                filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
+                containsFile = "contains-file";
+            }
+        }
         <div class="col">
+            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" name="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
             <button type="button" class=" my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()"
                     data-id="@Model.FunctionLine.ID"
                     id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false" no-multiple-files="true">
                 Select File
             </button>
-            @{
-                if ((Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.Count() ?? 0) != 0)
-                {
-                    filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
-                }
-            }
+
             <span class="document-name pl-2">@filestring</span>
         </div>
         break;

@@ -26,7 +26,13 @@
 					async: false,
 					data: { "UniqueNumber":function(){ return $("#FunctionLine_Protocol_UniqueCode").val()}},
 				}
-			}
+			},
+				PicturesInput :{
+			fileRequired : true			
+		},
+					FilesInput :{
+			fileRequired : true			
+		},
 	},
 	messages:{
 	   "FunctionLine.Product.SerialNumber": {

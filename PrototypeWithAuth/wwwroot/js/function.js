@@ -74,12 +74,12 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
       $(".addFunctionForm").data("validator").settings.ignore = "";
         var valid = $(".addFunctionForm").valid();
         console.log("valid form: " + valid)
-        if (!valid) {
+        if (!valid && !removing) {
 
             if (!$('.activeSubmit').hasClass('disabled-submit')) {
                 $('.activeSubmit').addClass('disabled-submit')
             }
-
+           return;
         }
         else {
             var functionFormData = new FormData($(".addFunctionForm")[0]);
