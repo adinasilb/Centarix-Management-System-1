@@ -241,9 +241,10 @@ namespace PrototypeWithAuth.AppData
         public static double ExchangeRateIfNull = 3.5;
         public static int YearStartedTimeKeeper = 2021;
         public static DateTime DateSoftwareLaunched = new DateTime(2021, 1, 1);
-        public static decimal GetExchangeRateByDate()
+        public static decimal GetExchangeRateByDate(DateTime date)
         {
-            var client = new RestClient("http://data.fixer.io/api/2013-12-24?access_key=cbacbddbd088987b8786d3b18046c755&base=USD&symbols=ILS");
+            var dateString = date.ToString("yyyy-MM-dd");
+            var client = new RestClient("http://api.currencylayer.com/historical?date="+dateString+"&access_key=8a8f7defe393388b7249ffcdb09d6a34");
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             decimal rate = 0.0m;

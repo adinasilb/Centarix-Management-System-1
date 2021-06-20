@@ -35,8 +35,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         public async Task<IActionResult> Index()
-        {
-            //AppUtility.GetExchangeRateByDate();
+        {            
             var user = _context.Employees.Where(u => u.Id == _userManager.GetUserId(User)).FirstOrDefault();
             var usersLoggedIn = _context.Employees.Where(u => u.LastLogin.Date == DateTime.Today.Date).Count();
             var users = _context.Employees.ToList();

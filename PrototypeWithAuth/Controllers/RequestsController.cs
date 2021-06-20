@@ -5640,166 +5640,168 @@ namespace PrototypeWithAuth.Controllers
         //    return true;
         //}
 
-        //[HttpGet]
-        //public void UploadRequestsFromExcel()
-        //{
-        //    var fileName = @"C:\Users\strauss\Desktop\testInventory.xlsx";
-        //    var lineNumber = 0;
+        [HttpGet]
+        public void UploadRequestsFromExcel()
+        {
+            var fileName = @"C:\Users\strauss\Desktop\testInventory.xlsx";
+            var lineNumber = 0;
 
-        //    var excel = new ExcelQueryFactory(fileName);
-        //    try
-        //    {
-        //        var data = from r in excel.Worksheet("Requests") select r;
+            var excel = new ExcelQueryFactory(fileName);
+            try
+            {
+                var data = from r in excel.Worksheet("Requests") select r;
 
-        //        foreach (var r in data)
-        //        {
-        //            lineNumber++;
-        //            using (var transaction = _context.Database.BeginTransaction())
-        //            {
-        //                try
-        //                 {
-        //                    var sample = reader[0]?.ToString().Trim() == "Sample"; //required
-        //                    var productName = reader[1]?.ToString(); //required
-        //                    var vendorID = _context.Vendors.Where(v => v.VendorEnName == (reader[2] != null ? reader[2].ToString() : "")).FirstOrDefault()?.VendorID; //nullable samples
-        //                    var catalogNumber = reader[3]?.ToString().Trim(); //nullable samples
-        //                    var ownerUserID = _context.Employees.Where(e => e.Email == reader[4].ToString().Trim()).FirstOrDefault()?.Id; //required
-        //                    var locationParent = _context.LocationInstances.Where(li => li.LocationInstanceName == reader[5].ToString()).FirstOrDefault(); //required
-        //                    var locationUnits = reader[6]?.ToString().Split(','); //required
-        //                    var currency = reader[7]?.ToString().Trim(); //nullable samples
-        //                    var cost = reader[8] != null ? Convert.ToDecimal(reader[8].ToString().Trim()) : 0; //nullable samples
-        //                    var includeVAT = reader[9]?.ToString().Trim();
-        //                    var unitAmount = reader[10] != null ? Convert.ToUInt32(reader[10].ToString().Trim()) : (uint?)null; //nullable samples
-        //                    var unitTypeID = _context.UnitTypes.Where(ut => ut.UnitTypeDescription == (reader[11] != null ? reader[11].ToString() : "")).FirstOrDefault()?.UnitTypeID; //nullable samples
-        //                    var subunitAmount = reader[12] != null ? Convert.ToUInt32(reader[12]?.ToString().Trim()) : (uint?)null; //nullable
-        //                    var subunitTypeID = _context.UnitTypes.Where(ut => ut.UnitTypeDescription == (reader[13] != null ? reader[13].ToString() : "")).FirstOrDefault()?.UnitTypeID; //nullable
-        //                    var subsubunitAmount = reader[14] != null ? Convert.ToUInt32(reader[14].ToString().Trim()) : (uint?)null; //nullable
-        //                    var subsubunitTypeID = _context.UnitTypes.Where(ut => ut.UnitTypeDescription == (reader[15] != null ? reader[15].ToString() : "")).FirstOrDefault()?.UnitTypeID; //nullable
-        //                    var url = reader[16]?.ToString().Trim();
-        //                    var parentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == reader[17].ToString().Trim()).FirstOrDefault(); //required
-        //                    var productSubcategoryID = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryDescription == reader[18].ToString().Trim() //required
-        //                    && ps.ParentCategoryID == parentCategory.ParentCategoryID).FirstOrDefault().ProductSubcategoryID;
+                foreach (var r in data)
+                {
+                    lineNumber++;
+                    using (var transaction = _context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var sample = reader[0]?.ToString().Trim() == "Sample"; //required
+                            var productName = reader[1]?.ToString(); //required
+                            var vendorID = _context.Vendors.Where(v => v.VendorEnName == (reader[2] != null ? reader[2].ToString() : "")).FirstOrDefault()?.VendorID; //nullable samples
+                            var catalogNumber = reader[3]?.ToString().Trim(); //nullable samples
+                            var ownerUserID = _context.Employees.Where(e => e.Email == reader[4].ToString().Trim()).FirstOrDefault()?.Id; //required
+                            var locationParent = _context.LocationInstances.Where(li => li.LocationInstanceName == reader[5].ToString()).FirstOrDefault(); //required
+                            var locationUnits = reader[6]?.ToString().Split(','); //required
+                            var currency = reader[7]?.ToString().Trim(); //nullable samples
+                            var cost = reader[8] != null ? Convert.ToDecimal(reader[8].ToString().Trim()) : 0; //nullable samples
+                            var includeVAT = reader[9]?.ToString().Trim();
+                            var unitAmount = reader[10] != null ? Convert.ToUInt32(reader[10].ToString().Trim()) : (uint?)null; //nullable samples
+                            var unitTypeID = _context.UnitTypes.Where(ut => ut.UnitTypeDescription == (reader[11] != null ? reader[11].ToString() : "")).FirstOrDefault()?.UnitTypeID; //nullable samples
+                            var subunitAmount = reader[12] != null ? Convert.ToUInt32(reader[12]?.ToString().Trim()) : (uint?)null; //nullable
+                            var subunitTypeID = _context.UnitTypes.Where(ut => ut.UnitTypeDescription == (reader[13] != null ? reader[13].ToString() : "")).FirstOrDefault()?.UnitTypeID; //nullable
+                            var subsubunitAmount = reader[14] != null ? Convert.ToUInt32(reader[14].ToString().Trim()) : (uint?)null; //nullable
+                            var subsubunitTypeID = _context.UnitTypes.Where(ut => ut.UnitTypeDescription == (reader[15] != null ? reader[15].ToString() : "")).FirstOrDefault()?.UnitTypeID; //nullable
+                            var url = reader[16]?.ToString().Trim();
+                            var parentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryDescription == reader[17].ToString().Trim()).FirstOrDefault(); //required
+                            var productSubcategoryID = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryDescription == reader[18].ToString().Trim() //required
+                            && ps.ParentCategoryID == parentCategory.ParentCategoryID).FirstOrDefault().ProductSubcategoryID;
 
-        //                    var productID = 0;
-        //                    var uniqueCatalogNumber = CheckUniqueVendorAndCatalogNumber(vendorID ?? 0, catalogNumber);
-        //                    if (uniqueCatalogNumber)
-        //                    {
-        //                        var product = new Product()
-        //                        {
-        //                            ProductName = productName,
-        //                            VendorID = vendorID,
-        //                            ProductSubcategoryID = productSubcategoryID,
-        //                            CatalogNumber = catalogNumber,
-        //                            SerialNumber = "L" + lastSerialNumber,
-        //                            ProductCreationDate = DateTime.Now
-        //                        };
-        //                        _context.Update(product);
-        //                        _context.SaveChanges();
+                            var productID = 0;
+                            var uniqueCatalogNumber = CheckUniqueVendorAndCatalogNumber(vendorID ?? 0, catalogNumber);
+                            if (uniqueCatalogNumber)
+                            {
+                                var product = new Product()
+                                {
+                                    ProductName = productName,
+                                    VendorID = vendorID,
+                                    ProductSubcategoryID = productSubcategoryID,
+                                    CatalogNumber = catalogNumber,
+                                    SerialNumber = "L" + lastSerialNumber,
+                                    ProductCreationDate = DateTime.Now
+                                };
+                                _context.Update(product);
+                                _context.SaveChanges();
 
-        //                        productID = product.ProductID;
-        //                        lastSerialNumber++;
-        //                    }
-        //                    else
-        //                    {
-        //                        throw new Exception("Catalog Number already exists for this vendor");
-        //                    }
-        //                    var orderType = "";
-        //                    var parentRequest = new ParentRequest();
-        //                    if (!sample)
-        //                    {
-        //                        parentRequest.OrderNumber = lastOrderNumber;
-        //                        parentRequest.ApplicationUserID = ownerUserID;
-        //                        _context.Update(parentRequest);
-        //                        _context.SaveChanges();
+                                productID = product.ProductID;
+                                lastSerialNumber++;
+                            }
+                            else
+                            {
+                                throw new Exception("Catalog Number already exists for this vendor");
+                            }
+                            var orderType = "";
+                            var parentRequest = new ParentRequest();
+                            var exchangeRate = AppUtility.GetExchangeRateByDate(exchangeRateDay);
+                            if (!sample)
+                            {
+                                parentRequest.OrderNumber = lastOrderNumber;
+                                parentRequest.ApplicationUserID = ownerUserID;
+                                _context.Update(parentRequest);
+                                _context.SaveChanges();
 
-        //                        lastOrderNumber++;
-        //                        cost = cost * exchangeRate; //always from quartzy in dollars
-        //                        orderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
-        //                    }
-        //                    else
-        //                    {
-        //                        orderType = AppUtility.OrderTypeEnum.Save.ToString();
-        //                    }
-        //                    var request = new Request()
-        //                    {
-        //                        ProductID = productID,
-        //                        ParentRequestID = parentRequest.ParentRequestID == 0 ? (int?)null : parentRequest.ParentRequestID,
-        //                        ApplicationUserCreatorID = ownerUserID,
-        //                        RequestStatusID = sample ? 7 : 3,
-        //                        Cost = cost,
-        //                        Currency = currency,
-        //                        UnitTypeID = unitTypeID ?? 5,
-        //                        Unit = unitAmount ?? 1,
-        //                        SubUnit = subunitAmount, //nullable
-        //                        SubUnitTypeID = subunitTypeID, //nullable
-        //                        SubSubUnit = subsubunitAmount, //nullable
-        //                        SubSubUnitTypeID = subsubunitTypeID, //nullable
-        //                        ExchangeRate = exchangeRate,
-        //                        ArrivalDate = new DateTime(2020, 1, 1),
-        //                        ApplicationUserReceiverID = ownerUserID,
-        //                        CreationDate = new DateTime(2020, 1, 1),
-        //                        ParentQuoteID = null,
-        //                        OrderType = orderType,
-        //                        IncludeVAT = includeVAT?.ToLower() == "true"
-        //                    };
-        //                    _context.Update(request);
-        //                    _context.SaveChanges();
+                                
+                                lastOrderNumber++;
+                                cost = cost * exchangeRate; //always from quartzy in dollars
+                                orderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
+                            }
+                            else
+                            {
+                                orderType = AppUtility.OrderTypeEnum.Save.ToString();
+                            }
+                            var request = new Request()
+                            {
+                                ProductID = productID,
+                                ParentRequestID = parentRequest.ParentRequestID == 0 ? (int?)null : parentRequest.ParentRequestID,
+                                ApplicationUserCreatorID = ownerUserID,
+                                RequestStatusID = sample ? 7 : 3,
+                                Cost = cost,
+                                Currency = currency,
+                                UnitTypeID = unitTypeID ?? 5,
+                                Unit = unitAmount ?? 1,
+                                SubUnit = subunitAmount, //nullable
+                                SubUnitTypeID = subunitTypeID, //nullable
+                                SubSubUnit = subsubunitAmount, //nullable
+                                SubSubUnitTypeID = subsubunitTypeID, //nullable
+                                ExchangeRate = exchangeRate,
+                                ArrivalDate = new DateTime(2020, 1, 1),
+                                ApplicationUserReceiverID = ownerUserID,
+                                CreationDate = new DateTime(2020, 1, 1),
+                                ParentQuoteID = null,
+                                OrderType = orderType,
+                                IncludeVAT = includeVAT?.ToLower() == "true"
+                            };
+                            _context.Update(request);
+                            _context.SaveChanges();
 
-        //                    foreach (var locationName in locationUnits)
-        //                    {
-        //                        var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceName == locationParent.LocationInstanceName + locationName).FirstOrDefault();
-        //                        var requestLocationInstance = new RequestLocationInstance()
-        //                        {
-        //                            RequestID = request.RequestID,
-        //                            LocationInstanceID = locationInstance.LocationInstanceID,
-        //                            ParentLocationInstanceID = locationParent.LocationInstanceID
-        //                        };
-        //                        if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
-        //                        {
-        //                            locationInstance.IsFull = true;
-        //                        }
-        //                        else
-        //                        {
-        //                            locationInstance.ContainsItems = true;
-        //                        }
-        //                        _context.Update(locationInstance);
-        //                        _context.Add(requestLocationInstance);
-        //                        _context.SaveChanges();
-        //                    }
-        //                    transaction.Commit();
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    var errorFilePath = "C:\\Users\\strauss\\Desktop\\InventoryError.txt";
-        //                    if (!System.IO.File.Exists(errorFilePath))
-        //                    {
-        //                        var errorFile = System.IO.File.Create(errorFilePath);
-        //                        errorFile.Close();
+                            foreach (var locationName in locationUnits)
+                            {
+                                var locationInstance = _context.LocationInstances.Where(li => li.LocationInstanceName == locationParent.LocationInstanceName + locationName).FirstOrDefault();
+                                var requestLocationInstance = new RequestLocationInstance()
+                                {
+                                    RequestID = request.RequestID,
+                                    LocationInstanceID = locationInstance.LocationInstanceID,
+                                    ParentLocationInstanceID = locationParent.LocationInstanceID
+                                };
+                                if (locationInstance.LocationTypeID == 103 || locationInstance.LocationTypeID == 205)
+                                {
+                                    locationInstance.IsFull = true;
+                                }
+                                else
+                                {
+                                    locationInstance.ContainsItems = true;
+                                }
+                                _context.Update(locationInstance);
+                                _context.Add(requestLocationInstance);
+                                _context.SaveChanges();
+                            }
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            var errorFilePath = "C:\\Users\\strauss\\Desktop\\InventoryError.txt";
+                            if (!System.IO.File.Exists(errorFilePath))
+                            {
+                                var errorFile = System.IO.File.Create(errorFilePath);
+                                errorFile.Close();
 
-        //                    }
-        //                    var sw = System.IO.File.AppendText(errorFilePath);
-        //                    sw.WriteLine("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
-        //                    sw.Close();
-        //                    _context.ChangeTracker.Entries()
-        //                        .Where(e => e.Entity != null).ToList()
-        //                        .ForEach(e => e.State = EntityState.Detached);
-        //                }
-                        
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var errorFilePath = "C:\\Users\\strauss\\Desktop\\InventoryError.txt";
-        //        if (!System.IO.File.Exists(errorFilePath))
-        //        {
-        //            var errorFile = System.IO.File.Create(errorFilePath);
-        //            errorFile.Close();
-        //        }
-        //        var sw = System.IO.File.AppendText(errorFilePath);
-        //        sw.WriteLine("Error reading file: " + AppUtility.GetExceptionMessage(ex));
-        //        sw.Close();
-        //    }
-        //}
+                            }
+                            var sw = System.IO.File.AppendText(errorFilePath);
+                            sw.WriteLine("Row " + lineNumber + " failed to enter database: " + AppUtility.GetExceptionMessage(ex));
+                            sw.Close();
+                            _context.ChangeTracker.Entries()
+                                .Where(e => e.Entity != null).ToList()
+                                .ForEach(e => e.State = EntityState.Detached);
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorFilePath = "C:\\Users\\strauss\\Desktop\\InventoryError.txt";
+                if (!System.IO.File.Exists(errorFilePath))
+                {
+                    var errorFile = System.IO.File.Create(errorFilePath);
+                    errorFile.Close();
+                }
+                var sw = System.IO.File.AppendText(errorFilePath);
+                sw.WriteLine("Error reading file: " + AppUtility.GetExceptionMessage(ex));
+                sw.Close();
+            }
+        }
 
         public void UploadVendorsFromExcel()
         {
