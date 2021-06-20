@@ -325,6 +325,40 @@ $(".load-terms-modal").on("click", function (e) {
 	return false;
 });
 
+$('.load-terms-for-selected').on('click', function (e) {
+	var itemUrl = "/Requests/TermsModal/?" + $.fn.getRequestIndexString();
+	$.fn.LoadModalForSelectedItems(e, itemUrl, "terms");
+})
+$('.upload-quote-for-selected').on('click', function (e) {
+	var itemUrl = "/Requests/UploadQuoteModal/?" + $.fn.getRequestIndexString();
+	$.fn.LoadModalForSelectedItems(e, itemUrl, "terms");
+})
+$('.update-quote-for-selected').on('click', function (e) {
+	$.fn.LoadModalForSelectedItems(e, "/Requests/EditQuoteDetails/", "edit-quote");
+})
+
+$.fn.LoadModalForSelectedItems = function (e, itemUrl, modalClass) {
+	e.preventDefault();
+	e.stopPropagation();
+	var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
+		return $(this).attr("id")
+	}).get()
+	//alert('before loading');
+	console.log("arrayOfSelected: " + arrayOfSelected);
+	$("#loading").show();
+	$.ajax({
+		type: "GET",
+		url: itemUrl,
+		traditional: true,
+		data: { 'requestIds': arrayOfSelected },
+		cache: true,
+		success: function (data) {
+			//alert('success!');
+			$.fn.OpenModal("modal", modalClass, data)
+			$("#loading").hide();
+		}
+	});
+
 function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
 	console.log("in ajax partial index call" + url);
 	var selectedPriceSort = [];
