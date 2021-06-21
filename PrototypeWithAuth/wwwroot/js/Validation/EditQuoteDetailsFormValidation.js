@@ -25,3 +25,4 @@ $(".expected-supply-days").each(function () {
 		integer: true
 	});
 });
+
