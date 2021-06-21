@@ -157,6 +157,7 @@
 		var url = '';
 		var section = "";
 		var reloadDiv = $('.partial-div');
+		var currentPermissions = "";
 		var id = $('.turn-edit-on-off').val();
 		if ($('.turn-edit-on-off').hasClass('operations')) {
 			console.log("has class operations");
@@ -172,6 +173,7 @@
 		else if ($('.turn-edit-on-off').hasClass('users')) {
 			//alert("in users");
 			url = "/Admin/EditUserPartial?id=" + id + "&Tab=" + selectedTab;
+			currentPermissions = $(".permissions-checks:visible")[0]?.classList.toString().split(" ").join(".");
 
 		} else if ($('.turn-edit-on-off').hasClass('orders')) {
 			selectedTab = $('.tab-content').children('.active').attr("value");
@@ -198,10 +200,23 @@
 				console.log("cancel edit successful!")
 				//open the confirm edit modal
 				reloadDiv.html(data);
-				
+
 				$('.name').val($('.old-name').val())
 				if ($('.turn-edit-on-off').hasClass('orders') || $('.turn-edit-on-off').hasClass('locations')) {
 					$.fn.LoadEditModalDetails();
+				}
+				else if ($('.turn-edit-on-off').hasClass('users')) {
+					console.log(currentPermissions)
+					$.fn.HideAllPermissionsDivs();
+					if (currentPermissions != null) {
+						$(".main-permissions").hide();
+						$("." + currentPermissions).show()
+					}
+					else {
+						$.fn.ChangeUserPermissionsButtons();
+                    }
+
+					
 				}
 			}
 		});
