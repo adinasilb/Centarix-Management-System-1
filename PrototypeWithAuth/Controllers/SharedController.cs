@@ -463,7 +463,7 @@ namespace PrototypeWithAuth.Controllers
 
                         ReceivedModalSublocationsViewModel receivedModalSublocationsViewModel = new ReceivedModalSublocationsViewModel()
                         {
-                            locationInstancesDepthZero = _context.LocationInstances.OfType<LocationInstance>().Where(li => li.LocationTypeID == locationType.LocationTypeID),
+                            locationInstancesDepthZero = _context.LocationInstances.Where(li => li.LocationTypeID == locationType.LocationTypeID && !(li is TemporaryLocationInstance)),
                             locationTypeNames = new List<string>(),
                             locationInstancesSelected = new List<LocationInstance>()
                         };

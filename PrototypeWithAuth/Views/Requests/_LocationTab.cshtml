@@ -140,7 +140,7 @@
                                                 </span>
                                                 @if (i < depth)
                                                 {
-                                                    name = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationInstanceName;
+                                                    name = Model.ReceivedModalSublocationsViewModel.locationInstancesSelected[depth - 1 - ((i + (count - (count - depth))) - depth)].LocationInstanceAbbrev;
                                                 }
                                                 <span class="overflow-hidden ">@name</span>
 
@@ -154,10 +154,10 @@
                                                         var description = location.LocationInstanceAbbrev;
                                                         if (location.LocationInstanceParent == null)
                                                         {
-                                                            description = location.LocationInstanceName;
+                                                            description = location.LocationInstanceAbbrev;
                                                         }
                                                         <li id="@location.LocationInstanceID" class="SLI-click" data-string="@description" value="@location.LocationInstanceID">
-                                                            @location.LocationInstanceName
+                                                            @location.LocationInstanceAbbrev
                                                         </li>
                                                     }
                                                 }
