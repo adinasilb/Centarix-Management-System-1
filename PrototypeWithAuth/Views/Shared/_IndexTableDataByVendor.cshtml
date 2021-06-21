@@ -2,7 +2,11 @@
 @using System.Text;
 @using System.Globalization;
 @using PrototypeWithAuth.AppData
+
+<script src="~/js/IndexTablePartial.js"></script>
 <script src="~/js/accounting.js"></script>
+<script src="~/js/PricePopoverScript.js"></script>
+<script src="~/js/ConfirmDeleteScript.js"></script>
 <form method="post" enctype="multipart/form-data" style="height: 100%;">
     @{
         //for button for selected items
@@ -22,19 +26,19 @@
                 break;
             case AppUtility.SidebarEnum.Quotes:
                 bcColor = "lab-man-background-color";
-                ajaxLink = "update-quote-for-selected"; 
+                ajaxLink = "update-quote-for-selected";
                 btnText = "Add To Selected";
                 sectionClass = "labmanage";
                 break;
             case AppUtility.SidebarEnum.Orders:
                 bcColor = "lab-man-background-color";
-                ajaxLink = "load-terms-for-selected"; 
+                ajaxLink = "load-terms-for-selected";
                 btnText = "Order Selected";
                 sectionClass = "labmanage";
                 break;
             case AppUtility.SidebarEnum.Cart:
                 bcColor = "order-inv-background-color";
-                ajaxLink = "upload-quote-for-selected"; 
+                ajaxLink = "upload-quote-for-selected";
                 btnText = "Order Selected";
                 sectionClass = "orders-and-inv";
                 break;
@@ -255,7 +259,3 @@
 
     }
 </form>
-<script src="~/js/accounting.js"></script>
-<script src="~/js/IndexTablePartial.js"></script>
-<script src="~/js/PricePopoverScript.js"></script>
-<script src="~/js/ConfirmDeleteScript.js"></script>
