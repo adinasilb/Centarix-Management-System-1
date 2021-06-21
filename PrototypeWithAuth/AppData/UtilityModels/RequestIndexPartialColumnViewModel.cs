@@ -18,6 +18,7 @@ namespace PrototypeWithAuth.ViewModels
         public string AjaxLink { get; set; } = "";
         public AppUtility.FilterEnum FilterEnum { get; set; } = AppUtility.FilterEnum.None;
         public string Note { get; set; } = "";
+        public bool ShowTooltip { get; set; }
 
     }
 }
