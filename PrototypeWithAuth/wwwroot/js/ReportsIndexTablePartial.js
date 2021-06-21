@@ -1,13 +1,13 @@
 ﻿$(function () {
 	$(".change-month").on("change", function () {
-		$.fn.ajaxPartialIndexTable();
+		$.fn.$.fn.ajaxPartialIndexTable();
 	});
 	$(".change-year").on("change", function () {
 		var years = $("#select-years").val();
 		var currency = $("#select-months").val();
 		console.log("year: " + year + " , currency: " + currency);
 		var url = "/Protocols/_ReportsIndexTable?months=" + months + "&years=" + years;
-		$.fn.ajaxPartialIndexTable(url, "._IndexTable", "GET" );
+		$.fn.$.fn.ajaxPartialIndexTable(url, "._IndexTable", "GET" );
 	});
 
 	$(".create-report").click(function (e) {

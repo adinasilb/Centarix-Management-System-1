@@ -62,7 +62,7 @@
         else {
             viewClass = "_IndexTableWithCounts";
         }
-        ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal?id=" + $(this).attr("value"), "._IndexTableData", "POST");
+        $.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/DeleteModal?id=" + $(this).attr("value"), "._IndexTableData", "POST");
         return false;
     });
 </script>

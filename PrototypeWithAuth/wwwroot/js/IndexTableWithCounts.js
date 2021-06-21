@@ -13,12 +13,12 @@
     var pageType = $('#masterPageType').val();
     var viewClass = pageType != 'RequestSummary' ? '_IndexTableWithCounts' : '_IndexTableWithProprietaryTabs';
     console.log("viewclass: " + viewClass);
-    ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, "GET")
+    $.fn.$.fn.ajaxPartialIndexTable(requestStatusId, "/Requests/" + viewClass, "." + viewClass, "GET")
 });
 
 /*$('.view-archived-requests').off('click').on('click', function () {
     $(".active").removeClass("active");
-    ajaxPartialIndexTable
+    $.fn.ajaxPartialIndexTable
 });*/
 //function ajaxCallToPartialTable(status) {
 //    var selectedPriceSort = [];

@@ -193,7 +193,7 @@ $(function () {
 		console.log("approving");
 		e.preventDefault();
 		$("#loading").show();
-		ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/?id=" + $(this).attr("value"), "._IndexTableWithCounts", "GET");
+		$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Operations/Order/?id=" + $(this).attr("value"), "._IndexTableWithCounts", "GET");
 		return false;
 	});
 
@@ -232,7 +232,7 @@ $(function () {
 			})
 		}
 		else {
-			ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/?id=" + val, "._IndexTableWithCounts", "GET");
+			$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/Approve/?id=" + val, "._IndexTableWithCounts", "GET");
 		}
 		return false;
 	});
@@ -324,7 +324,7 @@ $(function () {
 		$("#loading").show();
 		var pageNumber = parseInt($(this).html());
 		$('.page-number').val(pageNumber);
-		ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
+		$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
 		return false;
 	});
 
@@ -333,7 +333,7 @@ $(function () {
 		years = $("#Years").val();
 		var months = [];
 		months = $("#Months").val();
-		ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET", undefined, "", months, years);
+		$.fn.ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET", undefined, "", months, years);
 		return false;
 	});
 
@@ -362,7 +362,7 @@ $(function () {
 
 
 
-	function ajaxPartialIndexTable(status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
+	$.fn.ajaxPartialIndexTable = function(status, url, viewClass, type, formdata, modalClass = "", months, years, isArchive) {
 		console.log("in ajax partial index call" + url);
 		var selectedPriceSort = [];
 		$("#priceSortContent1 .priceSort:checked").each(function (e) {

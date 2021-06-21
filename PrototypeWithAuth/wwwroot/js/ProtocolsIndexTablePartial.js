@@ -1,5 +1,5 @@
 ﻿
-function ajaxPartialIndexTable(url, viewClass, type, formdata, modalClass = "") {
+function $.fn.ajaxPartialIndexTable(url, viewClass, type, formdata, modalClass = "") {
 
 	var contentType = true;
 	var processType = true;
