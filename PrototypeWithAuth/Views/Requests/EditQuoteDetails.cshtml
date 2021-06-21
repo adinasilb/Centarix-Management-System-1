@@ -58,7 +58,7 @@
                         <div class="col-3 offset-2">
                             <div class="form-group d-inline-flex">
                                 <label asp-for="@Model.QuoteNumber" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" min="1" required />
+                                <input asp-for="@Model.QuoteNumber" class="no-arrow-input form-control-plaintext border-bottom align-with-select timeline-light-item-orange p-0 m-0" />
                                 <span asp-validation-for="@Model.QuoteNumber" class="text-danger-centarix"></span>
                             </div>
                         </div>
@@ -199,7 +199,7 @@
                                     </td>
                                     <td width="15%">
                                         <div class="form-group">
-                                            <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days" required />
+                                            <input asp-for="@Model.Requests[i].ExpectedSupplyDays" class="form-control-plaintext border-bottom  expected-supply-days" />
                                             <span asp-validation-for="@Model.Requests[i].ExpectedSupplyDays" class="text-danger-centarix"></span>
                                         </div>
                                     </td>
