@@ -10,6 +10,7 @@ $('.editQuoteDetails').validate({
 			min: 1
 		},
 		"Request.ExpectedSupplyDays": {
+			required: true,
 			min: 0,
 			integer: true
 		},
