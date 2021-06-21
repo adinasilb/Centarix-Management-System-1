@@ -57,7 +57,7 @@
                 $("#loading").hide();
                 $.fn.CloseModal('confirm-archive');
                 $('#location').html(data);
-                ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/_IndexTableWithProprietaryTabs/', "._IndexTableWithProprietaryTabs", "GET", undefined);
+                $.fn.ajaxPartialIndexTable($(".request-status-id").val(), '/Requests/_IndexTableWithProprietaryTabs/', "._IndexTableWithProprietaryTabs", "GET", undefined);
             }
         });
 
