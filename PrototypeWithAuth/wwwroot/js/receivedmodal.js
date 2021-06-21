@@ -64,9 +64,10 @@
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
-
+		var prevName = $(".locationFullName").html()
 		var name = $(this).html();
-		$(".locationFullName").html(name);
+
+		$(".locationFullName").html(prevName + name);
 	});
 
 	function SLI(el) {
@@ -193,7 +194,7 @@
 				}
 				if (field.isEmptyShelf && field.labPartID<=0) {
 					emptyText = " (nr)";
-					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" isNoRack="true" data-string="' + description +'">' + field.locationInstanceAbbrev + emptyText + '</li>'
 				}
 				else if (field.locationTypeID == 501)
 				{
@@ -201,7 +202,7 @@
                 }
 				else
 				{
-					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" data-string="'+description+'" >' + field.locationInstanceName + emptyText + '</li>'
+					item += '<li value="' + field.locationInstanceID + '" id="' + field.locationInstanceID + ' "  class="SLI-click" data-string="' + description +'">' + field.locationInstanceAbbrev + emptyText + '</li>'
 				}
 				
 			});
