@@ -20,13 +20,10 @@
             <a href="@rootPath\/@Model.FileStrings[0]" target="_blank" class="mx-1  view-img">
                 <i class="icon-centarix-icons-09 protocols-color" style="font-size:1.5rem"></i>
             </a>
-            @if (Model.ShowSwitch || Model.IsEdittable)
-            {
-                <a href="" class="remove-function report-file @Model.SectionType.ToString() mx-1" url="@Url.Action("DeleteReportDocumentModal", "Protocols", new { FunctionReportID = Model.ObjectID })">
-                    <i style="font-size:1.5rem;" class="icon-delete-24px documents-delete-icon hover-bold protocols-color"></i>
-                </a>
-            }
+            <a href="" class="remove-function report-file @Model.SectionType.ToString() mx-1" url="@Url.Action("DeleteReportDocumentModal", "Protocols", new { FunctionReportID = Model.ObjectID })">
+                <i style="font-size:1.5rem;" class="icon-delete-24px documents-delete-icon hover-bold protocols-color"></i>
+            </a>
         </div>
     </div>
-    <div class="small">@Model.FileStrings[0].Split("\\").Last()<br /></div>
+    <div contenteditable="false" class="small">@Model.FileStrings[0].Split("\\").Last()<br /></div>
 </div>
