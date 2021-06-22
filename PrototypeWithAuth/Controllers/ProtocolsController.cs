@@ -2005,16 +2005,25 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> CreateReport(CreateReportViewModel createReportViewModel)
         {
-            //add transaction
-            var report = _context.Reports.Where(r => r.ReportID == createReportViewModel.ReportID).FirstOrDefault();
-            report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText;
-            _context.Update(report);
-            await _context.SaveChangesAsync();
-            var saveReportViewModel = new SaveReportViewModel()
+            var saveReportViewModel = new SaveReportViewModel();
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                ReportID = report.ReportID,
-                ReportTitle = createReportViewModel.Report.ReportTitle
-            };
+                try
+                {
+                    var report = _context.Reports.Where(r => r.ReportID == createReportViewModel.ReportID).FirstOrDefault();
+                    report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText;
+                    _context.Update(report);
+                    await _context.SaveChangesAsync();
+
+                    saveReportViewModel.ReportID = report.ReportID;
+                    saveReportViewModel.ReportTitle = createReportViewModel.Report.ReportTitle;
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
             return PartialView("SaveReportModal", saveReportViewModel);
         }
 
