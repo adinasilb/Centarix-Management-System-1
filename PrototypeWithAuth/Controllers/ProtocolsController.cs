@@ -2095,6 +2095,7 @@ namespace PrototypeWithAuth.Controllers
                     viewmodel.Protocols = _context.Protocols.ToList();
                     break;
                 case AppUtility.ProtocolFunctionTypes.AddFile:
+                    DeleteTemporaryDocuments(AppUtility.ParentFolderName.Reports);
                     viewmodel.DocumentsInfo = new List<DocumentFolder>();
                     base.GetExistingFileStrings(viewmodel.DocumentsInfo, AppUtility.FolderNamesEnum.Files, uploadReportsFolder2);
                     break;
