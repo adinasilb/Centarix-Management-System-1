@@ -12,16 +12,17 @@
         <textarea class="border form-control-plaintext " rows="6" asp-for="FunctionLine.Description"></textarea>
         break;
     case AppUtility.ProtocolFunctionTypes.AddFile:
-        <div class="col">
+<div class="text-center"><div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Files.ToString()Input" name="@AppUtility.FolderNamesEnum.Files.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div></div>
+        <div class="col text-center">
             @{
-             
+
                 if ((Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.Count ?? 0) != 0)
                 {
                     containsFile = "contains-file";
                     filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
                 }
             }
-            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Files.ToString()Input" name="@AppUtility.FolderNamesEnum.Files.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
+
             <button type="button" class="my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Files.ToString()"
                     data-id="@Model.FunctionLine.ID"
                     id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false" no-multiple-files="true">
@@ -40,8 +41,9 @@
                 containsFile = "contains-file";
             }
         }
-        <div class="col">
-            <div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" name="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
+<div class="text-center"><div class="d-inline-block" style="max-width:150px"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" name="@AppUtility.FolderNamesEnum.Pictures.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div></div>
+        <div class="col text-center">
+
             <button type="button" class=" my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()"
                     data-id="@Model.FunctionLine.ID"
                     id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false" no-multiple-files="true">
