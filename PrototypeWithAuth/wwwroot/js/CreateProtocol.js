@@ -21,8 +21,7 @@
     });
 
 
-    $(".saveProtocol").on("click", function (e) {
-        
+    $("form").on("click", ".saveProtocol", function (e) {        
         e.preventDefault();
         $('.createProtocolForm').data("validator").settings.ignore = "";
         var valid = $('.createProtocolForm').valid();
