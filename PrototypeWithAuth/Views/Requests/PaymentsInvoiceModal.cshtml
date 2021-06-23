@@ -11,8 +11,9 @@
             <form action="" method="post" enctype="multipart/form-data" class="modal-padding payModalForm accounting-form" id="myForm">
                 <input type="hidden" asp-for="AccountingEnum" />
                 <input type="text" class="d-none" id="currency" value="@Model.Requests[0].Currency.ToString()" />
-                <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate" />
-                <input type="hidden" asp-for="Payment.PaymentID" class="exchange-rate" />
+@*                <input type="hidden" asp-for="Requests[0].ExchangeRate" class="exchange-rate" />*@
+                <input type="hidden" asp-for="Payment.PaymentID" />
+                <input type="hidden" asp-for="AmtLeftToPay" class="amtLeftToPay"/>
                 @for (int i = 0; i < Model.Requests.Count; i++)
                 {
                     <input type="hidden" asp-for="Requests[i].RequestID" />
