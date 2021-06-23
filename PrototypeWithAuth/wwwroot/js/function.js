@@ -149,3 +149,13 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
 
 });
 
+$("form").off("click", ".open-line-product").on("click", ".open-line-product", function (e) {
+	 e.preventDefault();
+	 var url="/Protocols/ProtocolsProductDetails?productID="+$(this).attr("value");
+	 $.fn.CallPageRequest(url, "summary");
+});
+$("form").off("click", ".open-line-protocol").on("click", ".open-line-protocol", function (e) {
+	 e.preventDefault();
+	 var url="/Protocols/ProtocolsDetailsFloatModal?protocolID="+$(this).attr("value");
+	 $.fn.CallPageRequest(url, "protocolFloatModal");
+});

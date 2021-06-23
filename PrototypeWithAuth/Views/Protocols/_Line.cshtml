@@ -21,7 +21,7 @@
                     dNone = "";
                 }
             }
-            <button type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.TempLine?.ParentLineID" lineCount="@Model.Index">
+            <button type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover mark-readonly button-mark-readonly @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.TempLine?.ParentLineID" lineCount="@Model.Index">
                 <i class="protocols-color icon-add_circle-24px" style="  font-size: 3rem;"></i>
             </button>
         </li>
@@ -29,14 +29,14 @@
             @foreach (var item in Model.LineTypes)
             {
                 <div class="row px-2 comment-btn">
-                    <button type="button" value="@item.LineTypeID" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine " style="font-size:1rem; font-weight:400;">
+                    <button type="button" value="@item.LineTypeID" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine mark-readonly" style="font-size:1rem; font-weight:400;">
                         @item.LineTypeDescription
                     </button><hr class="m-0" />
                 </div>
             }
 
             <div class="row px-2 comment-btn">
-                <button type="button" value="-1" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine " style="font-size:1rem; font-weight:400;">
+                <button type="button" value="-1" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine mark-readonly " style="font-size:1rem; font-weight:400;">
                     Delete Current Line
                 </button><hr class="m-0" />
             </div>
@@ -64,7 +64,7 @@
      <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
  
      <div role='textbox'
-          contenteditable='false' line-id='@(dynamicID)Content' class='editable-span line input line-input text-transform-none p-0' data-val='@Model.TempLine?.PermanentLineID'>
+          contenteditable='false' line-id='@(dynamicID)Content' class='editable-span line input line-input text-transform-none p-0 mark-readonly' data-val='@Model.TempLine?.PermanentLineID'>
          @if (Model.TempLine?.Content ==null || Model.TempLine?.Content=="")
          {
              <div role='textbox'
@@ -82,7 +82,7 @@
          {
              foreach (var function in Model.Functions)
              {
-                 <button class="function btn-link btn no-box-shadow p-0 m-0 " type="button" typeID="@function.FunctionTypeID" value="@function.ID" lineID="@function.LineID"> <div functionID="@function.FunctionTypeID" class="@function.FunctionType?.IconActionClass line-function"><i class="@function.FunctionType?.Icon" data-toggle="popover" data-trigger="hover" data-placement="top" data-container="body"></i></div></button>
+                 <button class="function btn-link btn no-box-shadow p-0 m-0" type="button" typeID="@function.FunctionTypeID" value="@function.ID" lineID="@function.LineID"> <div functionID="@function.FunctionTypeID" class="@function.FunctionType?.IconActionClass line-function"><i class="@function.FunctionType?.Icon" data-toggle="popover" data-trigger="hover" data-placement="top" data-container="body"></i></div></button>
 
              }
          }

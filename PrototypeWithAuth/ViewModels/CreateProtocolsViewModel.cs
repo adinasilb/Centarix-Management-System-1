@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.AppData.UtilityModels;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -33,5 +34,6 @@ namespace PrototypeWithAuth.ViewModels
             }
             set { _Tab = value; }
         }
+        public AppUtility.ProtocolModalType ModalType { get; set; }
     }
 }

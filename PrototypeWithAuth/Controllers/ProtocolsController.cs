@@ -391,6 +391,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.ResearchProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(1);
+            viewmodel.ModalType = AppUtility.ProtocolModalType.Create;
             return View(viewmodel);
         }
 
@@ -1187,13 +1188,22 @@ namespace PrototypeWithAuth.Controllers
             return PartialView("_MaterialTab", new MaterialTabViewModel() { Materials = materials.ToList(), MaterialCategories = _context.MaterialCategories, Folders = (Lookup<Material, List<DocumentFolder>>)MaterialFolders.ToLookup(o => o.Key, o => o.Value) });
         }
 
-        [Authorize(Roles = "Requests")]
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> ProtocolsProductDetails(int? productID)
         {
             var requestID = _context.Requests.Where(r => r.ProductID == productID).OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => r.RequestID).FirstOrDefault();
             var requestItemViewModel = await editModalViewFunction(requestID, isEditable: false);
             requestItemViewModel.SectionType = AppUtility.MenuItems.Protocols;
             return PartialView(requestItemViewModel);
+        }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> ProtocolsDetailsFloatModal(int? protocolID)
+        {
+            var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault();
+            var createProtocolsViewModel = await FillCreateProtocolsViewModel(protocol.ProtocolTypeID, protocol.ProtocolID);
+            createProtocolsViewModel.ModalType = AppUtility.ProtocolModalType.Summary;
+            return PartialView(createProtocolsViewModel);
         }
 
         [HttpPost]
@@ -1235,8 +1245,10 @@ namespace PrototypeWithAuth.Controllers
                     }
                     await transaction.CommitAsync();
                     var tab = createProtocolsViewModel.Tab;
+                    var modalType = createProtocolsViewModel.ModalType;
                     createProtocolsViewModel = await FillCreateProtocolsViewModel(createProtocolsViewModel.Protocol.ProtocolTypeID, createProtocolsViewModel.Protocol.ProtocolID);
                     createProtocolsViewModel.Tab = tab;
+                    createProtocolsViewModel.ModalType = modalType;
                     return PartialView("_CreateProtocolTabs", createProtocolsViewModel);
                 }
                 catch (Exception ex)
@@ -1257,6 +1269,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> _IndexTableWithEditProtocol(int protocolID)
         {
             CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(0, protocolID);
+            viewmodel.ModalType = AppUtility.ProtocolModalType.CheckListMode;
             return PartialView(viewmodel);
         }
 
@@ -1277,6 +1290,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.SOPProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(3);
+            viewmodel.ModalType = AppUtility.ProtocolModalType.Create;
             return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
@@ -1286,6 +1300,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.BufferCreating;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(4);
+            viewmodel.ModalType = AppUtility.ProtocolModalType.Create;
             return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
@@ -1295,6 +1310,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.RoboticProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(5);
+            viewmodel.ModalType = AppUtility.ProtocolModalType.Create;
             return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
@@ -1304,6 +1320,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MaintenanceProtocol;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsCreate;
             CreateProtocolsViewModel viewmodel = await FillCreateProtocolsViewModel(6);
+            viewmodel.ModalType = AppUtility.ProtocolModalType.Create;
             return View(viewmodel);
         }
 
