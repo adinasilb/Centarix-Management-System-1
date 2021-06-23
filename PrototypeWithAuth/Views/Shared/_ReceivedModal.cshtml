@@ -279,8 +279,10 @@
     </div>*@
 <!--</div>
 </div>-->
-<input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" />
-
+@if (Model.Request.Product.ProductSubcategory.ParentCategory.CategoryTypeID != 2)
+{
+    <input type="hidden" style="pointer-events:none" id="locationSelected" name="locationSelected" />
+}
 
 <script src="~/js/InitializeDatePicker.js"></script>
 <script>
