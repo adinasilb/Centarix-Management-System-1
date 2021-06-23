@@ -6,7 +6,7 @@
     }
     var url = "";
     if ($("#masterPageType").val() == "ProtocolsReports") {
-            url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val();
+            url = "/Protocols/AddReportFunctionModal?FunctionTypeID=" + $(this).val() + "&ReportID=" + $("#ReportID").val() +"&closingTags="+$('#closingTags').val();
         	$.fn.CallPageRequest( url , "addFunction");
     }
 	/*if ($("#masterPageType").val() == "ProtocolsCreate")*/
@@ -45,7 +45,7 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
             changeToTriggerSelect=$("div.line-input[data-val="+$(".lineID").val()+"]")
          }
          var prev = functionSelect.prev();
-         var next = functionSelect.next();
+        var next = functionSelect.next();
         var html = prev.html() + next.html();
          prev.html(html);
          next.remove();
@@ -119,17 +119,22 @@ $(".add-function").off('click', ".saveFunction, .removeFunction").on('click',".s
                     var newDiv = $(".added-div");
 
                     var newDivText = newDiv.next()?.html()
+                    console.log(newDivText)
                     if (newDivText == null) {
-                        newDivText ="";
-                    }
-                    else if (newDiv.get(0).nextSibling != null) {
-                        console.log("no div")
-                        newDivText = newDiv[0].nextSibling.textContent;
+                        if (newDiv.get(0).nextSibling != null) {
+                            console.log("no div")
+                            newDivText = newDiv[0].nextSibling.textContent;
+                        }
+                        else {
+                            newDivText = "";
+                        }
                     }
                     newDiv.html(newDiv.html()+newDivText)
                     newDiv[0].nextSibling?.remove();
                     newDiv.removeClass("added-div");
+                    $('.report-text').trigger("change")
                 }
+                
                 //functionSelect.append(" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none'></div>")
             }
             else {
