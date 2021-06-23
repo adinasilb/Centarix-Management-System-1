@@ -6,27 +6,44 @@
 
 <div class="col-12">
     <span role="textbox" contenteditable="false" class="editable-span report-text form-control-plaintext h-100 text-transform-none">
-    @if (Model.TemporaryReportText == null)
-    {
-        <div contenteditable="true" class="editable-span form-control-plaintext text-transform-none"><span class='focusedText'></span></div>
-    }
-    else
-    {
-        @Html.Raw(Model.TemporaryReportText) 
-    }
+        @if (Model.TemporaryReportText == null)
+        {
+            <div contenteditable="true" class="editable-span form-control-plaintext text-transform-none start-div"><span class='focusedText'></span></div>
+        }
+        else
+        {
+            @Html.Raw(Model.TemporaryReportText)
+        }
     </span>
     <input type="hidden" id="TemporaryReportText" name="Report.TemporaryReportText" value="@Model.TemporaryReportText" />
+    <input type="hidden" id="closingTags" value="" />
 </div>
 
 <script>
     $(".report-text").on('change', function (e) {
+        var node = $.fn.GetCurrentPositionParents();
+        $('#closingTags').val(node??" ")
+        $(".focusedText").remove()
+        pasteHtmlAtCaret("<span class='focusedText'></span>")
         $("#TemporaryReportText").val($(this).html())
     })
     $(".report-text").on('click', function (e) {
-        $(".focusedText").remove()
-        pasteHtmlAtCaret("<span class='focusedText'></span>")
         $(".report-text").trigger("change")
     })
+
+    //$(".start-div").on('change', function (e) {
+    //    e.stopPropagation();
+    //    console.log(this)
+    //    if ($(this).children("div").length>0) {
+    //        console.log("not start div")
+    //        var text = $(this).children("div").html();
+    //        console.log(text)
+    //        if (text != "" && text!="<br>") {
+    //            //$(this).html($(this).html() + text)
+    //            //$(this).children("div").remove();
+    //        }
+    //    }
+    //})
     function pasteHtmlAtCaret(html) {
         var sel, range;
         if (window.getSelection) {
@@ -50,7 +67,7 @@
                 if (lastNode) {
                     range = range.cloneRange();
                     range.setStartAfter(lastNode);
-                    range.collapse(true);
+                    //range.collapse(false);
                     sel.removeAllRanges();
                     sel.addRange(range);
                 }
@@ -60,8 +77,29 @@
             document.selection.createRange().pasteHTML(html);
         }
     }
+    $.fn.GetCurrentPositionParents = function (e) {
+        var nodeString = "";
+            var target = null;
+        if (window.getSelection) {
+            if (window.getSelection().rangeCount > 0) {
+                target = window.getSelection().getRangeAt(0).commonAncestorContainer;
+                if (target.nodeType != 1) {
+                    target = target.parentNode;
+                }
+                else if (document.selection) {
+                    var target = document.selection.createRange().parentElement();
+                }
+                console.log(target)
+                while (!$(target).hasClass('start-div') && target != null) {
+                    nodeString = nodeString + (target?.tagName?? "") + ",";
+                    target = target.parentNode
+                }
+            }
+        }
+        return nodeString + "div";
+    }
     $(document).ready(function (e) {
-        $(".report-text").trigger("change")
+        //$(".report-text").trigger("change")
         $(".report-text").trigger("focus")
     })
     $('.reports-iframe').on("load", function () {

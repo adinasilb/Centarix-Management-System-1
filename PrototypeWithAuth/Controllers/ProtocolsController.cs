@@ -2079,7 +2079,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID, int FunctionReportID)
+        public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID, int FunctionReportID, string closingTags)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
             
@@ -2091,7 +2091,8 @@ namespace PrototypeWithAuth.Controllers
             var viewmodel = new AddReportFunctionViewModel
             {
                 ReportID = ReportID,
-                FunctionReport = functionReport
+                FunctionReport = functionReport,
+                ClosingTags = closingTags
             };
             string uploadReportsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Reports.ToString());
             string uploadReportsFolder2 = Path.Combine(uploadReportsFolder, functionReport.ID.ToString());
@@ -2172,13 +2173,15 @@ namespace PrototypeWithAuth.Controllers
 
                                 string renderedView = await RenderPartialViewToString("_DocumentCard", documentsModalViewModel);
                                 var replaceableText = "<span class=\"focusedText\"></span>";
-                                var nextText = createReportViewModel.Report.TemporaryReportText.Split(replaceableText)[1];
-                                
-                                var addedText = "</div>"+ renderedView+" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none added-div'>";
-                                if(!nextText.StartsWith("</div>"))
+                                var tags = addReportsFunctionViewModel.ClosingTags?.Split(",")?? new string[0];
+                                var closingTags = "";
+                                var openingTags = "";
+                                foreach(var tag in tags)
                                 {
-                                    addedText += "</div><div>";
+                                    closingTags += "</" + tag + ">";
+                                    openingTags = "<" + tag + ">" + openingTags;
                                 }
+                                var addedText = closingTags + renderedView +" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none added-div start-div'></div>" + openingTags;
                                 report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText.Replace(replaceableText, addedText);
                                 _context.Update(report);
 
