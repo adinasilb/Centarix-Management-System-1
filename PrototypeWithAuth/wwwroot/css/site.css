@@ -1705,7 +1705,7 @@ td .btn {
     top: 15%;
 }
 
-.sm-modal {
+.elixir-modal-sm {
     width: 45.63rem;
     height: 35.31rem;
 }
@@ -2517,6 +2517,10 @@ span.caret {
 
 .elixir-modal-xl {
     width: 93.31rem;
+}
+
+.elixir-modal-md {
+    width: 60rem;
 }
 
 .elixir-modal-xs {
