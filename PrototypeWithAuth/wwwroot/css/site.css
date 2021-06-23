@@ -2515,8 +2515,12 @@ span.caret {
     box-shadow: 6px 0px 10px #0000008C;
 }
 
-.wide-modal {
+.elixir-modal-xl {
     width: 93.31rem;
+}
+
+.elixir-modal-xs {
+    width:32rem;
 }
 
 .add-resource-modal .modal-dialog {
