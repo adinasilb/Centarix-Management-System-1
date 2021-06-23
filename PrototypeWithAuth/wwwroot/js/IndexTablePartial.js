@@ -158,7 +158,7 @@ $(function () {
 		e.preventDefault();
 		e.stopPropagation();
 		$("#loading").show();
-		var $itemurl = "/Requests/EditModalView/?id=" + $(this).val() + "&SectionType=" + $("#masterSectionType").val();
+		var $itemurl = "/Requests/EditModalView/?id=" + $(this).attr('value') + "&SectionType=" + $("#masterSectionType").val();
 		$.fn.CallPageRequest($itemurl, "details");
 		return false;
 	});
