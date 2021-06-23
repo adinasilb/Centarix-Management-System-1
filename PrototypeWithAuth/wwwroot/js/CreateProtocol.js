@@ -20,7 +20,6 @@
         });
     });
 
-
     $("form").on("click", ".saveProtocol", function (e) {        
         e.preventDefault();
         $('.createProtocolForm').data("validator").settings.ignore = "";
