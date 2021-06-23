@@ -9,7 +9,7 @@
     var form = "order-inv-form";
     var deleteDocumentClass = "";
     var sectionType = AppUtility.MenuItems.Requests.ToString();
-    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
@@ -37,15 +37,8 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
-                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
-                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
-                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
-                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
-                @Html.HiddenFor(model => model.RequestIndexObject.OrderType)
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
+                
                 @Html.HiddenFor(model => model.ParentRequest.ApplicationUserID)
                 @Html.HiddenFor(model => model.ParentRequest.OrderNumber)
                 <div>
@@ -109,7 +102,7 @@
                                     </div>
                                 </div>
 
-                                @if (Model.RequestIndexObject.IsReorder)
+                                @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
                                 {
                                     <div class="row">
                                         <div class="col-md-6">

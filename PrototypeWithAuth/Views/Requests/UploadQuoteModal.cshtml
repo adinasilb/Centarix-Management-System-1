@@ -32,14 +32,9 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <form action="" data-string="Requests/DocumentsModal" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="m-5 modal-padding uploadQuoteForm" id="myForm">
-                @Html.HiddenFor(model => model.RequestIndexObject.PageType)
-                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
-                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
-                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+
+                @{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model.TempRequestListViewModel);}
+
                 <div>
                     <div class="modal-header modal-header-padding">
                         <div class="container-fluid">
@@ -97,7 +92,7 @@
                                 <div class="col-md-6">
                                 </div>
                             </div>
-                            @if (Model.RequestIndexObject.IsReorder)
+                            @if (Model.TempRequestListViewModel.RequestIndexObject.IsReorder)
                             {
                                 <div class="row">
                                     <div class=" col-md-6">
@@ -116,12 +111,12 @@
                                 </div>
                             }
                             @*<div class="row">
-                                    <div class="form-group ">
-                                        <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                        <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
-                                        <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
-                                    </div>
-                                </div>*@
+                        <div class="form-group ">
+                            <label asp-for="@Model.ParentQuote.QuoteDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                            <input asp-for="@Model.ParentQuote.QuoteDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" />
+                            <span asp-validation-for="@Model.ParentQuote.QuoteDate" class="text-danger-centarix"></span>
+                        </div>
+                    </div>*@
                         </div>
                     </div>
                 </div>

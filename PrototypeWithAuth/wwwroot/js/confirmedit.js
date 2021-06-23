@@ -251,7 +251,8 @@
 		var formData = {
 			SectionType : $('#masterSectionType').val(),
 			PageType : $('#masterPageType').val(),
-			URL : url
+			URL: url,
+			GUID: $('#GUID').val()
 		}
 		console.log(formData);
 		$.ajax({

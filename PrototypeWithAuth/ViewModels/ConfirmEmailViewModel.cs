@@ -15,6 +15,7 @@ namespace PrototypeWithAuth.ViewModels
         public bool IsResend { get; set; }
         public int VendorId { get; set; }
         public int RequestID { get; set; }
-        public RequestIndexObject RequestIndexObject { get; set; }
+        //public RequestIndexObject RequestIndexObject { get; set; }
+        public TempRequestListViewModel TempRequestListViewModel { get; set; }
     }
 }

@@ -1,40 +1,35 @@
-﻿@model PrototypeWithAuth.ViewModels.TermsViewModel;
+﻿@model PrototypeWithAuth.ViewModels.TermsViewModel
 @using PrototypeWithAuth.AppData
 @{
     Layout = null;
 
     var bcColor = "order-inv-background-color";
     string form = "";
-    if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
+    if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Operations)
     {
         form = "oper-form";
         bcColor = "oper-background-color";
     }
-    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
+    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.LabManagement)
     {
         bcColor = "lab-man-background-color";
         form = "supplier-form";
     }
-    else if (Model.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
+    else if (Model.TempRequestListViewModel.RequestIndexObject.SectionType == AppUtility.MenuItems.Requests)
     {
         //bcColor = "order-inv-background-color";
         //form = "order-inv-form"; //switched to outer terms modal
     }
 }
 
+@{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model);}
+
 <script src="~/js/TermsModal.js"></script>
 <script src="~/js/site.js"></script>
 <script src="~/js/Validation/TermsModalFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
-@Html.HiddenFor(model => model.RequestIndexObject.PageType)
-@Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
-@Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-@Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
-@*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-@Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
-@Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
-@Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+
 <input type="hidden" asp-for="ParentRequest.ParentRequestID" />
 <div class="modal-header modal-header-padding">
     <div class="col-10 float-left">
@@ -57,7 +52,7 @@
 
             <div class="col-3">
                 @{
-                    var currency = Model.RequestIndexObject.SelectedCurrency == AppUtility.CurrencyEnum.NIS ? "&#x20aa;" : "&#36;";
+                    var currency = Model.TempRequestListViewModel.RequestIndexObject.SelectedCurrency == AppUtility.CurrencyEnum.NIS ? "&#x20aa;" : "&#36;";
                 }
                 <label asp-for="ParentRequest.Shipping" class="control-label"></label>
                 <div class="input-group">
