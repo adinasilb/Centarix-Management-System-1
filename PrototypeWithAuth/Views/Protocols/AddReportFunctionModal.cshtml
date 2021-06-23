@@ -43,7 +43,7 @@
                                data-id="@Model.FunctionReport.ID" id="@AppUtility.FolderNamesEnum.Files.ToString()" parentFolder="@AppUtility.ParentFolderName.Reports" data-val="@true" show-switch="false" no-multiple-files="true"
                                value="Select File" />
                         <span class="document-name pl-2">@filestring</span>
-                        <div class="d-inline-block"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Files.ToString()Input" name="@AppUtility.FolderNamesEnum.Files.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none;" /></div>
+                        <div class="d-inline-block"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Files.ToString()Input" name="@AppUtility.FolderNamesEnum.Files.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none; width:0px" /></div>
                         <input type="hidden" class="document-name" asp-for="FileName" />
                     </div>
                             break;
