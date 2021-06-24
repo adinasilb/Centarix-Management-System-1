@@ -293,13 +293,17 @@
         console.log("change price")
         var cost = $(this).val() * $('.exchange-rate').val();
         var index = $(this).attr("index");
-        $('.installment-sum.'+index).val(cost)
+        $('.installment-sum.' + index).val(cost)
+        $.fn.SetTotals();
     });
     $(".installment-sum").change(function (e) {
+        $.fn.SetTotals();
+    })
+    $.fn.SetTotals = function () {
         var currentTotal = 0;
         var vat = 0;
         var exchangeRate = $(".exchange-rate").val()
-        $(".installment-sum").each(function (e) {
+        $('.installment-sum').each(function (e) {
             currentTotal = currentTotal + parseFloat($(this).val());
             console.log($(this).val())
             if ($(this).attr("vat-val") == "True") {
@@ -313,7 +317,7 @@
         $(".vat-dollar").val(parseFloat(vat / exchangeRate).toFixed(2));
         $(".total-vat").val(parseFloat(vat + currentTotal).toFixed(2));
         $(".total-vat-dollar").val(parseFloat((vat + currentTotal) / exchangeRate).toFixed(2));
-    })
+    }
     $("#payInvoice").click(function (e) {
         e.preventDefault();
         $("#myForm").data("validator").settings.ignore = "";
