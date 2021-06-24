@@ -81,7 +81,7 @@
             <div class="col-3 @dNone installments-amount-block">
                 <div class="form-group ">
                     <label asp-for="@Model.InstallmentDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                    <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" disabled asp-format="{0:dd/MM/yyyy}" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
+                    <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" disabled asp-format="@AppUtility.AspDateFormatString" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
                     <span asp-validation-for="@Model.InstallmentDate" class="text-danger-centarix"></span>
                 </div>
             </div>

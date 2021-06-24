@@ -4253,10 +4253,14 @@ namespace PrototypeWithAuth.Controllers
             var requestToPay = _context.Requests.Where(r => r.RequestID == payment.RequestID).Include(r => r.ParentRequest)
                     .Include(r => r.Product).ThenInclude(p => p.Vendor).Include(r => r.Product.ProductSubcategory)
                     .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType).Include(r => r.Payments).ToList();
-            if (payment.InstallmentNumber == requestToPay.FirstOrDefault().Installments)
+            
+            var paidSum = requestToPay.FirstOrDefault().Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
+            var amtLeftToFullPayment = (decimal)requestToPay.FirstOrDefault().Cost - paidSum;
+/*            if (payment.InstallmentNumber == requestToPay.FirstOrDefault().Installments)
+*/
+            if(payment.Sum > amtLeftToFullPayment)
             {
-                var paidSum = requestToPay.FirstOrDefault().Payments.Where(p => p.IsPaid).Select(p => p.Sum).Sum();
-                payment.Sum = (decimal)requestToPay.FirstOrDefault().Cost - paidSum;
+                payment.Sum = amtLeftToFullPayment;
             }
             PaymentsInvoiceViewModel paymentsInvoiceViewModel = new PaymentsInvoiceViewModel()
             {
@@ -4265,13 +4269,13 @@ namespace PrototypeWithAuth.Controllers
                 Payment = payment,
                 PaymentTypes = _context.PaymentTypes.Select(pt => pt).ToList(),
                 CompanyAccounts = _context.CompanyAccounts.Select(ca => ca).ToList(),
+                AmtLeftToPay = amtLeftToFullPayment,
                 Invoice = new Invoice()
                 {
                     InvoiceDate = DateTime.Today
                 }
             };
 
-            //check if payment status type is installments to show the installments in the view model
 
             return PartialView(paymentsInvoiceViewModel);
         }

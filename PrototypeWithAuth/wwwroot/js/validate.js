@@ -312,5 +312,4 @@ $(function () {
 		return $(element).hasClass("contains-file");
 	}, 'Must upload a file before submitting');
 
-
 });
