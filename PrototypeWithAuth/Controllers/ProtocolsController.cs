@@ -1044,6 +1044,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 await UpdateLineContentAsync(TempLines);
                 var line = _context.TempLines.Where(l => l.PermanentLineID == addFunctionViewModel.FunctionLine.LineID).FirstOrDefault();
+                var protocolID = line.ProtocolID;
                 try
                 {
                     if(addFunctionViewModel.IsRemove)
@@ -1081,6 +1082,7 @@ namespace PrototypeWithAuth.Controllers
                       
                     }
                     await _context.SaveChangesAsync();
+
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -1740,8 +1742,9 @@ namespace PrototypeWithAuth.Controllers
                 ParentFolderName = parentFolderName,
                 ObjectID = id == "" ? "0" : id,
                 SectionType = SectionType,
-                IsEdittable = true, 
-                DontAllowMultiple = dontAllowMultipleFiles
+                IsEdittable = IsEdittable, 
+                DontAllowMultiple = dontAllowMultipleFiles,
+                ShowSwitch =showSwitch
             };
 
             base.FillDocumentsViewModel(documentsModalViewModel);
