@@ -93,6 +93,7 @@ namespace PrototypeWithAuth.AppData
         public enum FolderNamesEnum {Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
+        public static string AspDateFormatString = "{0:d MMM yyyy}";
         public static List<StringWithName> RequestRoleEnums()
         {
             List<StringWithName> rre = new List<StringWithName>()
@@ -741,5 +742,16 @@ namespace PrototypeWithAuth.AppData
             return dateRange;
         }
 
+        public static string FormatDate(DateTime? date)
+        {
+            if(date != null)
+            {
+                return date?.ToString("d MMM yyyy");
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
 }

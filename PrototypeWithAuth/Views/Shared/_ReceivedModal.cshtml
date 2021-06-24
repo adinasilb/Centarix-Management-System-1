@@ -28,10 +28,10 @@
 
 
 <div asp-validation-summary="ModelOnly" class="text-danger-centarix"></div>
-@if (TempData["ErrorMessage"] != null)
+@if (Model.ErrorMessage != null)
 {
     <div class="modal-header border-bottom-0 modal-header-padding">
-        <h6 class="text-danger-centarix">@TempData["ErrorMessage"]</h6>
+        <h6 class="text-danger-centarix">@Model.ErrorMessage</h6>
         <br />
     </div>
 }
@@ -60,7 +60,7 @@
             <div class="row">
                 <div class="col-4">
                     <label asp-for="Request.ArrivalDate" class="control-label"></label>
-                    <input asp-for="Request.ArrivalDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="{0:dd/MM/yyyy}" />
+                    <input asp-for="Request.ArrivalDate" type="text" class="form-control-plaintext border-bottom datepicker" asp-format="@AppUtility.AspDateFormatString" />
                     <span asp-validation-for="Request.ArrivalDate" class="text-danger-centarix"></span>
                 </div>
                 <div class="col-4">

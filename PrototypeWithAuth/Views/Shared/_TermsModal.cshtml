@@ -27,72 +27,72 @@
 <script src="~/js/Validation/TermsModalFormValidation.js"></script>
 <script src="~/js/validate.js"></script>
 <script src="~/js/InitializeDatePicker.js"></script>
-    @Html.HiddenFor(model => model.RequestIndexObject.PageType)
-                @Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
-                @Html.HiddenFor(model => model.RequestIndexObject.SectionType)
-                @Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
-                @*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
-                @Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
-                @Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
-                <input type="hidden" asp-for="ParentRequest.ParentRequestID" />
-                <div class="modal-header modal-header-padding">
-                    <div class="col-10 float-left">
-                        <span class="heading-1">Terms</span>
-                    </div>
+@Html.HiddenFor(model => model.RequestIndexObject.PageType)
+@Html.HiddenFor(model => model.RequestIndexObject.PageNumber)
+@Html.HiddenFor(model => model.RequestIndexObject.SectionType)
+@Html.HiddenFor(model => model.RequestIndexObject.SelectedCurrency)
+@*@Html.HiddenFor(model => model.RequestIndexObject.SelectedPriceSort)*@
+@Html.HiddenFor(model => model.RequestIndexObject.RequestStatusID)
+@Html.HiddenFor(model => model.RequestIndexObject.SidebarFilterID)
+@Html.HiddenFor(model => model.RequestIndexObject.SidebarType)
+<input type="hidden" asp-for="ParentRequest.ParentRequestID" />
+<div class="modal-header modal-header-padding">
+    <div class="col-10 float-left">
+        <span class="heading-1">Terms</span>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="container">
+        <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
+        <div class="row">
+
+            <div class="col-3">
+                <label class="control-label">Terms</label>
+                @Html.DropDownListFor(m => m.SelectedTerm,
+                    Model.TermsList,
+                    new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @id = "Terms", @searchable = "default value" }
+                )
+
+            </div>
+
+            <div class="col-3">
+                @{
+                    var currency = Model.RequestIndexObject.SelectedCurrency == AppUtility.CurrencyEnum.NIS ? "&#x20aa;" : "&#36;";
+                }
+                <label asp-for="ParentRequest.Shipping" class="control-label"></label>
+                <div class="input-group">
+                    <span class="input-group-text pr-2">@Html.Raw(currency)</span>
+                    <input asp-for="ParentRequest.Shipping" class="form-control-plaintext border-bottom" />
+                    <span asp-validation-for="ParentRequest.Shipping" class="text-danger-centarix"></span>
                 </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
-                        <div class="row">
-
-                            <div class="col-3">
-                                <label class="control-label">Terms</label>
-                                @Html.DropDownListFor(m => m.SelectedTerm,
-                                    Model.TermsList,
-                                    "Select",
-                                    new { @class = "mdb-select custom select-dropdown form-control-plaintext Terms", @id = "Terms", @searchable = "default value" }
-                                )
-
-                            </div>
-
-                            <div class="col-3">
-                                @{
-                                    var currency = Model.RequestIndexObject.SelectedCurrency == AppUtility.CurrencyEnum.NIS ? "&#x20aa;" : "&#36;";
-                                }
-                                <label asp-for="ParentRequest.Shipping" class="control-label"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text pr-2">@Html.Raw(currency)</span>
-                                    <input asp-for="ParentRequest.Shipping" class="form-control-plaintext border-bottom" />
-                                    <span asp-validation-for="ParentRequest.Shipping" class="text-danger-centarix"></span>
-                                </div>
-                            </div>
-                            @{var dNone = "d-none";
-                                @*var disabled = true;*@}
-                            @*@if (Model.SelectedTerm == 5)
-                                {
-                                    dNone = "";
-                                    disabled = false;
-                                }*@
-                            <div class="col-3 @dNone installments-amount-block">
-                                <label asp-for="Installments" class="control-label"></label>
-                                <input asp-for="Installments" disabled class="form-control-plaintext border-bottom" />
-                                <span asp-validation-for="Installments" class="text-danger-centarix"></span>
-                            </div>
-                            <div class="col-3 @dNone installments-amount-block">
-                                <div class="form-group ">
-                                    <label asp-for="@Model.InstallmentDate" class="control-label m-0 mt-2" style="width:100%;"></label>
-                                    <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" disabled asp-format="{0:dd/MM/yyyy}" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
-                                    <span asp-validation-for="@Model.InstallmentDate" class="text-danger-centarix"></span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+            </div>
+            @{var dNone = "d-none";
+                @*var disabled = true;*@}
+            @*@if (Model.SelectedTerm == 5)
+                {
+                    dNone = "";
+                    disabled = false;
+                }*@
+            <div class="col-3 @dNone installments-amount-block">
+                <label asp-for="Installments" class="control-label"></label>
+                <input asp-for="Installments" disabled class="form-control-plaintext border-bottom" />
+                <span asp-validation-for="Installments" class="text-danger-centarix"></span>
+            </div>
+            <div class="col-3 @dNone installments-amount-block">
+                <div class="form-group ">
+                    <label asp-for="@Model.InstallmentDate" class="control-label m-0 mt-2" style="width:100%;"></label>
+                    <input asp-for="@Model.InstallmentDate" type="text" class="form-control-plaintext border-bottom align-with-select m-0 p-0 datepicker" disabled asp-format="{0:dd/MM/yyyy}" data-val="@Model.InstallmentDate.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="@Model.InstallmentDate" class="text-danger-centarix"></span>
                 </div>
-                <input type="hidden" asp-for="ParentRequest.OrderDate" />
-                <input type="hidden" asp-for="ParentRequest.OrderNumber" />
-                <input type="hidden" asp-for="ParentRequest.ApplicationUserID" />
+            </div>
+
+        </div>
+    </div>
+</div>
+<input type="hidden" asp-for="ParentRequest.OrderDate" />
+<input type="hidden" asp-for="ParentRequest.OrderNumber" />
+<input type="hidden" asp-for="ParentRequest.ApplicationUserID" />
+<input type="hidden" asp-for="RedirectAction" />
 <script>
     $(".terms .mdb-select").materialSelect()</script>
 
@@ -114,6 +114,8 @@
         else {
             $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
+            $("#RedirectAction").val(window.location.href);
+            alert("window: " + window.location.href);
             var formData = new FormData($(".termsModalForm")[0]);
             $.ajax({
                 contentType: false,
@@ -125,13 +127,17 @@
                 type: "POST",
                 cache: false,
                 success: function (data) {
-
-                    if ($("#SectionType").val() == "Operations") {
+                    if ($("#SectionType").val() == "Operations" && data == '') {
+                        console.log("if 1");
                         window.location.href = "/Requests/Index?PageType=OperationsRequest&SectionType=Operations&RequestStatusID=2&SidebarType=List";
                     }
-                    else if ($("#RequestIndexObject_OrderType").val() == "AlreadyPurchased")
-                    {
-                        window.location.href = "/Requests/Index?PageType=RequestRequest&SectionType=Requests&RequestStatusID=2&SidebarType=List";
+                    else if ($("#SectionType").val() == "Requests" && data == '') {
+                        console.log("if 1");
+                        window.location.href = "/Requests/Index?PageType=RequestRequest&SectionType=Requests&RequestStatusID=6&SidebarType=List";
+                    }
+                    else if ($("#RequestIndexObject_OrderType").val() == "AlreadyPurchased" && data == '') {
+                        console.log("if 2");
+                        window.location.href = "/Requests?PageType=RequestRequest&SectionType=Requests&SidebarType=List";
                     }
                     else {
                         $.fn.OpenModal('emailModal', 'confirm-email', data);

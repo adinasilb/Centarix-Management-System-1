@@ -26,8 +26,8 @@ namespace PrototypeWithAuth.Controllers
         private readonly UrlEncoder _urlEncoder;
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder, ICompositeViewEngine viewEngine)
-            : base(context, userManager, hostingEnvironment, viewEngine)
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
             _urlEncoder = urlEncoder;
         }
@@ -265,7 +265,7 @@ namespace PrototypeWithAuth.Controllers
                     requestNotification.IsRead = false;
                     requestNotification.RequestName = request.Product.ProductName;
                     requestNotification.ApplicationUserID = request.ApplicationUserCreatorID;
-                    requestNotification.Description = "should have arrived " + request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0).ToString("dd/MM/yyyy");
+                    requestNotification.Description = "should have arrived " + AppUtility.FormatDate(request.ParentRequest.OrderDate.AddDays(request.ExpectedSupplyDays ?? 0));
                     requestNotification.NotificationStatusID = 1;
                     requestNotification.TimeStamp = DateTime.Now;
                     requestNotification.Controller = "Requests";
@@ -290,7 +290,7 @@ namespace PrototypeWithAuth.Controllers
                     timekeeperNotification.EmployeeHoursID = e.EmployeeHoursID;
                     timekeeperNotification.IsRead = false;
                     timekeeperNotification.ApplicationUserID = e.EmployeeID;
-                    timekeeperNotification.Description = "no hours reported for " + e.Date.ToString("dd/MM/yyyy");
+                    timekeeperNotification.Description = "no hours reported for " + AppUtility.FormatDate(e.Date);
                     timekeeperNotification.NotificationStatusID = 5;
                     timekeeperNotification.TimeStamp = DateTime.Now;
                     timekeeperNotification.Controller = "Timekeeper";

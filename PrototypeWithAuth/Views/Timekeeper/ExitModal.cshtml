@@ -1,43 +1,44 @@
-﻿@model PrototypeWithAuth.Models.EmployeeHours;
-@using System.Globalization;
+﻿@model PrototypeWithAuth.Models.EmployeeHours
+@using System.Globalization
+@using PrototypeWithAuth.AppData
 
-    <script src="~/js/site.js"></script>
-    <div class="modal modal-document fader exitModal" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
-        <div class="modal-dialog-centered modal-sm mx-auto work-from-home-modal">
-            <div class="modal-content d-inline-block modal-box-shadow modal-border-radius modal-padding">
-                <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <div class="modal-padding">
-                    <div class="modal-header px-0 border-0 border-bottom modal-header-padding">
-                        <div class="container p-0">
-                            <div class="">
-                                @{ var totalHours = Model.TotalHours?.ToString(@"hh\:mm");}
-                                <div class="heading-1">Today's Hours, @totalHours</div>
-                            </div>
-                            <div class="">
-                                <hr />
-                            </div>
+
+<script src="~/js/site.js"></script>
+<div class="modal modal-document fader exitModal" id="workFromHomeModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="true">
+    <div class="modal-dialog-centered modal-sm mx-auto work-from-home-modal">
+        <div class="modal-content d-inline-block modal-box-shadow modal-border-radius modal-padding">
+            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$(this).closest('.modal').modal('hide');">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-padding">
+                <div class="modal-header px-0 border-0 border-bottom modal-header-padding">
+                    <div class="container p-0">
+                        <div class="">
+                            @{ var totalHours = Model.TotalHours?.ToString(@"hh\:mm");}
+                            <div class="heading-1">Today's Hours, @totalHours</div>
+                        </div>
+                        <div class="">
+                            <hr />
                         </div>
                     </div>
+                </div>
 
-                    <div class="modal-body border-0 pt-0 rounded">
-                        <div class="row font-weight-bolder" style="font-size:1.5rem;">
-                            @{ var culture = CultureInfo.CreateSpecificCulture("he-IL"); }
-                            @Model.Date.DayOfWeek, @Model.Date.ToString("d", culture)
-                        </div>
-                        <br />
-                        <div class="row" style="font-size:1.25rem;">
-                            @{ var entry2Description = "";}
-                            You have worked from @Model.Entry1?.ToString("HH:mm") - @Model.Exit1?.ToString("HH:mm")
-                            @if (Model.Entry2 != null)
-                            {
-                                entry2Description = ",\n and from " + Model.Entry2?.ToString("HH:mm") + " - " + Model.Exit2?.ToString("HH:mm");
-                            }
-                            @entry2Description
-                        </div>
+                <div class="modal-body border-0 pt-0 rounded">
+                    <div class="row font-weight-bolder" style="font-size:1.5rem;">
+                        @Model.Date.DayOfWeek, @AppUtility.FormatDate(Model.Date)
+                    </div>
+                    <br />
+                    <div class="row" style="font-size:1.25rem;">
+                        @{ var entry2Description = "";}
+                        You have worked from @Model.Entry1?.ToString("HH:mm") - @Model.Exit1?.ToString("HH:mm")
+                        @if (Model.Entry2 != null)
+                        {
+                            entry2Description = ",\n and from " + Model.Entry2?.ToString("HH:mm") + " - " + Model.Exit2?.ToString("HH:mm");
+                        }
+                        @entry2Description
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>

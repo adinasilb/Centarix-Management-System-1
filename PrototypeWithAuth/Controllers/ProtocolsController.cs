@@ -37,8 +37,8 @@ namespace PrototypeWithAuth.Controllers
     public class ProtocolsController : SharedController
     {
         public enum ProtocolIconNamesEnum { Share, Favorite, MorePopover, Edit, RemoveShare }
-        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
-            : base(context, userManager, hostingEnvironment, viewEngine)
+        public ProtocolsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
         }
 
@@ -350,7 +350,7 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyProtocols;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
             var viewmodel = await GetProtocolsIndexViewModel(
-                new ProtocolsIndexObject() {SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.MyProtocols, PageType= AppUtility.PageTypeEnum.ProtocolsProtocols });
+                new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.MyProtocols, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
 
             return View(viewmodel);
         }
@@ -359,7 +359,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> ProtocolsFavorites()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.MyProtocols;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Favorites;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsProtocols;
             var viewmodel = await GetProtocolsIndexViewModel(
                 new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.Favorites, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
@@ -403,7 +403,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var protocol = _context.Protocols
                 .Include(p => p.Urls).Include(p => p.Materials)
-                .ThenInclude(m => m.Product).Include(p=>p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
+                .ThenInclude(m => m.Product).Include(p => p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();
             protocol.Urls ??= new List<Link>();
             protocol.Materials ??= new List<Material>();
 
@@ -543,7 +543,7 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-     
+
 
         private async Task ClearTempLinesTableAsync()
         {
@@ -551,7 +551,7 @@ namespace PrototypeWithAuth.Controllers
 
             await _context.FunctionLines.Where(fl => fl.IsTemporary || fl.Line.IsTemporary).ForEachAsync(fl => { _context.Remove(fl); });
             await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted).ForEachAsync(fl => { fl.IsTemporaryDeleted = false; _context.Update(fl); });
-         
+
             await _context.SaveChangesAsync();
             foreach (var lineType in lineTypes)
             {
@@ -574,7 +574,7 @@ namespace PrototypeWithAuth.Controllers
                     _context.Update(tempDeleted);
                 }
                 await _context.SaveChangesAsync();
-            }         
+            }
 
         }
         private Dictionary<Material, List<DocumentFolder>> FillMaterialDocumentsModel(IEnumerable<Material> Materials, string uploadProtocolsFolder)
@@ -648,21 +648,21 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
-                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Include(tl=>tl.PermanentLine).Where(tl => tl.PermanentLineID == currentLineID).FirstOrDefault();
+                    var currentLine = _context.TempLines.Include(tl => tl.ParentLine).Include(tl => tl.PermanentLine).Where(tl => tl.PermanentLineID == currentLineID).FirstOrDefault();
                     var orderedLineTypes = GetOrderLineTypeFromParentToChild();
                     if (TempLines != null)
                     {
                         //save all temp line data 
                         await UpdateLineContentAsync(TempLines);
                     }
-                    if(lineTypeID ==-1)
+                    if (lineTypeID == -1)
                     {
                         await DeleteTempLineWithChildrenAsync(currentLine);
                     }
                     else
                     {
                         var newLineType = _context.LineTypes.Where(lt => lt.LineTypeID == lineTypeID).FirstOrDefault();
-            
+
                         TempLine newLine = new TempLine();
                         newLine.LineTypeID = lineTypeID;
                         newLine.ProtocolID = protocolID;
@@ -791,7 +791,7 @@ namespace PrototypeWithAuth.Controllers
 
         private List<ProtocolsLineViewModel> OrderLinesForView(int protocolID)
         {
-            var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID && fl.IsTemporaryDeleted==false).Include(fl => fl.FunctionType).ToList();
+            var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID && fl.IsTemporaryDeleted == false).Include(fl => fl.FunctionType).ToList();
             List<ProtocolsLineViewModel> refreshedLines = new List<ProtocolsLineViewModel>();
             Stack<TempLine> parentNodes = new Stack<TempLine>();
             var lineTypes = _context.LineTypes.ToList();
@@ -827,7 +827,7 @@ namespace PrototypeWithAuth.Controllers
                 var linesByType = linesToDelete.Where(n => n.LineTypeID == lineType.LineTypeID);
                 foreach (var line in linesByType)
                 {
-                    _context.Remove(line);                 
+                    _context.Remove(line);
                 }
                 await _context.SaveChangesAsync();
             }
@@ -846,14 +846,14 @@ namespace PrototypeWithAuth.Controllers
                 children.ForEach(tl => { nodes.Push(tl); });
             }
             var lineTypes = GetOrderLineTypeFromChildToParent();
-            foreach(var lineType in lineTypes)
+            foreach (var lineType in lineTypes)
             {
                 var nodesByType = nodeInOrderOfChildrenToParent.Where(n => n.LineTypeID == lineType.LineTypeID);
-                foreach(var node in nodesByType)
+                foreach (var node in nodesByType)
                 {
                     var permanentLine = node.PermanentLine;
                     _context.Remove(node);
-                    if(node.PermanentLine !=null)
+                    if (node.PermanentLine != null)
                     {
                         if (node.PermanentLine.IsTemporary)
                         {
@@ -866,7 +866,7 @@ namespace PrototypeWithAuth.Controllers
                         }
 
                     }
-                 
+
                 }
                 await _context.SaveChangesAsync();
             }
@@ -1020,8 +1020,8 @@ namespace PrototypeWithAuth.Controllers
                     viewmodel.FunctionLine.Product = product;
                     viewmodel.FunctionLine.ProductID = product.ProductID;
                     viewmodel.ParentCategories = _context.ParentCategories.ToList();
-                    viewmodel.ProductSubcategories = _context.ProductSubcategories.Where(ps=>ps.ParentCategoryID==product.ProductSubcategory.ParentCategoryID).ToList();
-                    viewmodel.Products = _context.Products.Where(p=>p.ProductSubcategoryID==product.ProductSubcategoryID && product.VendorID ==p.VendorID).ToList();
+                    viewmodel.ProductSubcategories = _context.ProductSubcategories.Where(ps => ps.ParentCategoryID == product.ProductSubcategory.ParentCategoryID).ToList();
+                    viewmodel.Products = _context.Products.Where(p => p.ProductSubcategoryID == product.ProductSubcategoryID && product.VendorID == p.VendorID).ToList();
                     viewmodel.Vendors = _context.Vendors.ToList();
 
                     break;
@@ -1030,10 +1030,10 @@ namespace PrototypeWithAuth.Controllers
                     viewmodel.FunctionLine.Protocol = protocol;
                     viewmodel.FunctionLine.ProtocolID = protocol.ProtocolID;
                     viewmodel.ProtocolCategories = _context.ProtocolCategories.ToList();
-                    viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID ==protocol.ProtocolSubCategory.ProtocolCategoryTypeID).ToList();
+                    viewmodel.ProtocolSubCategories = _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID == protocol.ProtocolSubCategory.ProtocolCategoryTypeID).ToList();
                     viewmodel.Creators = _context.Users.Select(u =>
                         new SelectListItem() { Value = u.Id, Text = u.FirstName + u.LastName }).ToList();
-                    viewmodel.Protocols = _context.Protocols.Where(p=>p.ProtocolSubCategoryID ==protocol.ProtocolSubCategoryID && p.ApplicationUserCreatorID == protocol.ApplicationUserCreatorID).ToList();
+                    viewmodel.Protocols = _context.Protocols.Where(p => p.ProtocolSubCategoryID == protocol.ProtocolSubCategoryID && p.ApplicationUserCreatorID == protocol.ApplicationUserCreatorID).ToList();
                     break;
             }
             return PartialView(viewmodel);
@@ -1051,7 +1051,7 @@ namespace PrototypeWithAuth.Controllers
                 var protocolID = line.ProtocolID;
                 try
                 {
-                    if(addFunctionViewModel.IsRemove)
+                    if (addFunctionViewModel.IsRemove)
                     {
                         addFunctionViewModel.FunctionLine.IsTemporaryDeleted = true;
                         _context.Entry(addFunctionViewModel.FunctionLine).State = EntityState.Modified;
@@ -1065,11 +1065,11 @@ namespace PrototypeWithAuth.Controllers
                         {
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
                                 var product = _context.Products.Where(p => p.ProductID == addFunctionViewModel.FunctionLine.ProductID).FirstOrDefault();
-                                line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionLine.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
+                                line.Content += " <a href='#' class='open-line-product function-line-node' functionline='" + addFunctionViewModel.FunctionLine.ID + "' value='" + product.ProductID + "'>" + product.ProductName + "</a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>";
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
                                 var protocol = _context.Protocols.Include(p => p.Materials).Where(p => p.ProtocolID == addFunctionViewModel.FunctionLine.ProtocolID).FirstOrDefault();
-                                line.Content += " <a href='#' functionline='"+addFunctionViewModel.FunctionLine.ID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> "+ " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
+                                line.Content += " <a href='#' functionline='" + addFunctionViewModel.FunctionLine.ID + "' class='open-line-protocol function-line-node' value='" + protocol.ProtocolID + "'>" + protocol.Name + " </a> " + " <div role='textbox' contenteditable  class='editable-span line input line-input text-transform-none'> </div>"; ;
                                 break;
                             case AppUtility.ProtocolFunctionTypes.AddFile:
                             case AppUtility.ProtocolFunctionTypes.AddImage:
@@ -1083,7 +1083,7 @@ namespace PrototypeWithAuth.Controllers
                                 break;
                         }
                         _context.Update(line);
-                      
+
                     }
                     await _context.SaveChangesAsync();
 
@@ -1096,13 +1096,13 @@ namespace PrototypeWithAuth.Controllers
                     //  await Response.WriteAsync(AppUtility.GetExceptionMessage(ex));
                 }
                 return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = OrderLinesForView(line.ProtocolID) });
-          
-            }           
+
+            }
         }
 
         private async Task SaveTempFunctionLineAsync(AddFunctionViewModel addFunctionViewModel)
         {
-            if(addFunctionViewModel.FunctionLine.ID == 0)
+            if (addFunctionViewModel.FunctionLine.ID == 0)
             {
                 addFunctionViewModel.FunctionLine.IsTemporary = true;
             }
@@ -1115,7 +1115,7 @@ namespace PrototypeWithAuth.Controllers
         public async Task<JsonResult> FilterLinkToProtocol(int parentCategoryID, int subCategoryID, string creatorID)
         {
             IQueryable<Protocol> protocolsList = _context.Protocols;
-            if(subCategoryID!=0)
+            if (subCategoryID != 0)
             {
                 protocolsList = protocolsList.Where(p => p.ProtocolSubCategoryID == subCategoryID);
             }
@@ -1123,12 +1123,12 @@ namespace PrototypeWithAuth.Controllers
             {
                 protocolsList = protocolsList.Where(p => p.ProtocolSubCategory.ProtocolCategoryTypeID == parentCategoryID);
             }
-            if(creatorID!=null)
+            if (creatorID != null)
             {
                 protocolsList = protocolsList.Where(p => p.ApplicationUserCreatorID == creatorID);
             }
-            var protocolListJson =await protocolsList.Select(p => new { protocolID = p.ProtocolID, name = p.Name }).ToListAsync();
-            var subCategoryList =await  _context.ProtocolSubCategories.Where(ps=>ps.ProtocolCategoryTypeID==parentCategoryID).Select(ps => new { subCategoryID = ps.ProtocolCategoryTypeID, subCategoryDescription = ps.ProtocolSubCategoryTypeDescription }).ToListAsync();
+            var protocolListJson = await protocolsList.Select(p => new { protocolID = p.ProtocolID, name = p.Name }).ToListAsync();
+            var subCategoryList = await _context.ProtocolSubCategories.Where(ps => ps.ProtocolCategoryTypeID == parentCategoryID).Select(ps => new { subCategoryID = ps.ProtocolCategoryTypeID, subCategoryDescription = ps.ProtocolSubCategoryTypeDescription }).ToListAsync();
             return Json(new { ProtocolSubCategories = subCategoryList, Protocols = protocolListJson });
         }
 
@@ -1145,7 +1145,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 products = products.Where(p => p.ProductSubcategory.ParentCategoryID == parentCategoryID);
             }
-            if (vendorID !=0)
+            if (vendorID != 0)
             {
                 products = products.Where(p => p.VendorID == vendorID);
             }
@@ -1280,6 +1280,24 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _IndexTable(bool IsFavorite = false)
+        {
+            ProtocolsIndexViewModel viewmodel; 
+            if (IsFavorite)
+            {
+                viewmodel = await GetProtocolsIndexViewModel(
+                new ProtocolsIndexObject() { SectionType = AppUtility.MenuItems.Protocols, SidebarType = AppUtility.SidebarEnum.Favorites, PageType = AppUtility.PageTypeEnum.ProtocolsProtocols });
+
+            }
+            else
+            {
+                viewmodel = await GetProtocolsIndexViewModel(new ProtocolsIndexObject() { });
+            }
+            return PartialView(viewmodel);
+        }
+
+
+        [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> KitProtocol()
         {
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
@@ -1371,7 +1389,7 @@ namespace PrototypeWithAuth.Controllers
 
             };
             var reportsIndexViewModel = await GetReportsIndexViewModel(reportsIndexObject);
-            
+
             return View(reportsIndexViewModel);
         }
 
@@ -1426,17 +1444,31 @@ namespace PrototypeWithAuth.Controllers
             return View(resourceLibraryViewModel);
         }
 
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> _Library(int? CategoryType = 1)
+        {
+            //TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            //TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
+            //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
+
+            var resourceLibraryViewModel = new ResourceLibraryViewModel();
+
+            resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories;
+            return PartialView(resourceLibraryViewModel);
+        }
+
         [HttpGet]
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> ResourcesList(int? ResourceCategoryID)
+        public async Task<IActionResult> _ResourcesList(int? ResourceCategoryID, bool IsPersonal = false)
         {
-            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
-            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
-            TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
+            //TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
+            //TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Library;
+            //TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
 
             ResourcesListIndexViewModel ResourcesListIndexViewModel = new ResourcesListIndexViewModel() { IsFavoritesPage = false };
 
             ResourcesListIndexViewModel.ResourcesWithFavorites = _context.Resources
+                .Where(r => IsPersonal ? r.ApplicationUserCreatorID == _userManager.GetUserId(User) && r.IsPersonal == true : r.IsPersonal == false)
                 .Include(r => r.FavoriteResources)
                 .Include(r => r.ResourceResourceCategories).ThenInclude(rrc => rrc.ResourceCategory)
                 .Where(r => r.ResourceResourceCategories.Any(rrc => rrc.ResourceCategoryID == ResourceCategoryID))
@@ -1445,6 +1477,12 @@ namespace PrototypeWithAuth.Controllers
                     Resource = r,
                     IsFavorite = r.FavoriteResources.Any(fr => fr.ApplicationUserID == _userManager.GetUserId(User))
                 }).ToList();
+
+            //if (IsPersonal)
+            //{
+            //    ResourcesListIndexViewModel.ResourcesWithFavorites = ResourcesListIndexViewModel.ResourcesWithFavorites.Where(r => r.Resource.ApplicationUserCreatorID == _userManager.GetUserId(User)).ToList();
+            //}
+
             ResourcesListIndexViewModel.SidebarEnum = AppUtility.SidebarEnum.Library;
             ResourcesListIndexViewModel.IconColumnViewModels = GetIconColumnViewModels(new List<IconNamesEnumWithList>()
             {
@@ -1457,9 +1495,16 @@ namespace PrototypeWithAuth.Controllers
                 ResourcesListIndexViewModel = ResourcesListIndexViewModel,
                 PaginationTabs = new List<string>() { "Library", _context.ResourceCategories.Where(rc => rc.ResourceCategoryID == ResourceCategoryID).FirstOrDefault().ResourceCategoryDescription }
             };
+            if (IsPersonal)
+            {
+                resourcesListViewModel.SectionType = AppUtility.SidebarEnum.Personal;
+            }
+            else
+            {
+                resourcesListViewModel.SectionType = AppUtility.SidebarEnum.Library;
+            }
 
-
-            return View(resourcesListViewModel);
+            return PartialView(resourcesListViewModel);
         }
 
         [HttpGet]
@@ -1576,6 +1621,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 try
                 {
+                    addResourceViewModel.Resource.ApplicationUserCreatorID = _userManager.GetUserId(User);
                     _context.Update(addResourceViewModel.Resource);
                     await _context.SaveChangesAsync();
 
@@ -1612,7 +1658,7 @@ namespace PrototypeWithAuth.Controllers
                 }
 
             }
-            return RedirectToAction("Library");
+            return RedirectToAction("_Library");
         }
 
         [Authorize(Roles = "Protocols")]
@@ -1628,7 +1674,10 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Personal;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsResources;
-            return View();
+            var resourceLibraryViewModel = new ResourceLibraryViewModel();
+
+            resourceLibraryViewModel.ResourceCategories = _context.ResourceCategories;
+            return View(resourceLibraryViewModel);
         }
 
         [Authorize(Roles = "Protocols")]
@@ -2089,12 +2138,12 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> AddReportFunctionModal(int FunctionTypeID, int ReportID, int FunctionReportID, string closingTags)
         {
             var functionType = _context.FunctionTypes.Where(ft => ft.FunctionTypeID == FunctionTypeID).FirstOrDefault();
-            
+
             var functionReport = new FunctionReport()
-                {
-                    FunctionType = functionType,
-                    FunctionTypeID = functionType.FunctionTypeID
-                };
+            {
+                FunctionType = functionType,
+                FunctionTypeID = functionType.FunctionTypeID
+            };
             var viewmodel = new AddReportFunctionViewModel
             {
                 ReportID = ReportID,
@@ -2249,7 +2298,7 @@ namespace PrototypeWithAuth.Controllers
 
                 }
             }
-                    return PartialView("_ReportText", report);
+            return PartialView("_ReportText", report);
         }
 
 
@@ -2380,7 +2429,7 @@ namespace PrototypeWithAuth.Controllers
                         PageType = AppUtility.PageTypeEnum.ProtocolsProtocols,
                         SidebarType = sidebarType
                     };
-                    return RedirectToAction("_IndexTable", requestIndexObject);
+                    return RedirectToAction("_IndexTable", new { IsFavorite = true });
                 }
             }
             return new EmptyResult();

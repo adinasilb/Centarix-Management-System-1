@@ -22,7 +22,7 @@
     var requestCategoryType = Model.Requests[0].Product?.ProductSubcategory.ParentCategory.CategoryTypeID;
     var summary = "";
 
-    if (Model.ModalType != AppUtility.RequestModalType.Summary)
+    if (Model.ModalType != AppUtility.RequestModalType.Summary && !Model.IsReorder)
     {
         summary = "hidden";
     }

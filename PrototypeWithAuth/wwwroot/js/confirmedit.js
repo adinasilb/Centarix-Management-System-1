@@ -2,6 +2,7 @@
 	$(".save-request-edits").on("click", function (e) {
 		$.fn.CloseModal("confirm-edit");
 		console.log("save request edits");
+		var visualDiv = "";
 		var formData = new FormData($("#myForm")[0]);
 		$("#myForm").data("validator").settings.ignore = "";
 		var valid = $("#myForm").valid();
@@ -9,6 +10,7 @@
 		if (!valid) {
 			$("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
 			$('.turn-edit-on-off').prop('checked', true);
+			console.log("not valid data");
 			return false;
 		}
 
@@ -28,8 +30,20 @@
 			url = "/Requests/EditModalView";
 		}
 		else if ($('.turn-edit-on-off').hasClass('locations')) {
-			console.log("has class locations");
-			url = "/Requests/ReceivedModalVisual";
+			//console.log("has class locations");
+			//if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
+				$("#loading").show();
+			//	console.log("has class locations in labmanage");
+			//	var visualContainerId = $(".hasVisual").attr("parent-id");
+			//	url = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
+				
+			//	visualDiv = $(".VisualBoxColumn");
+			//}
+			//else {
+				//console.log("has class locations in requests");
+				url = "/Requests/ReceivedModalVisual";
+				visualDiv = $(".visualView");
+            //}
 		}
 		else {
 			alert("didn't go into any edits");
@@ -46,8 +60,31 @@
 			cache: false,
 			success: function (data) {
 				if ($('.turn-edit-on-off').hasClass('locations')) {
+					//alert("got data for locations");
 					//console.log(data)
-					$(".visualView").html(data);
+					if ($('.turn-edit-on-off').attr("section-type") == "LabManagement") {
+						//Reload visual of labmanagement
+						var visualContainerId = $(".hasVisual").attr("parent-id");
+						var urlLocations = "/Locations/VisualLocations/?VisualContainerId=" + visualContainerId;
+						$.ajax({
+							async: true,
+							url: urlLocations,
+							type: 'GET',
+							cache: true,
+							success: function (d) {
+								$(".hasVisual").html(d);
+								$("#loading").hide();
+							}
+						});
+					}
+					else if ($('.turn-edit-on-off').attr("section-type") == "Requests") {
+						console.log("reloading ajax partial view...");
+						ajaxPartialIndexTable($(".request-status-id").val(), "/Requests/_IndexTableData/", "._IndexTableData", "GET");
+                    }
+					else {
+						visualDiv.html(data);
+                    }
+
 				}
 				else {
 					$.fn.getMenuItems();
@@ -119,6 +156,7 @@
 		var selectedTab = $('.nav-tabs .active').parent().index() + 1;
 		var url = '';
 		var section = "";
+		var reloadDiv = $('.partial-div');
 		var id = $('.turn-edit-on-off').val();
 		if ($('.turn-edit-on-off').hasClass('operations')) {
 			console.log("has class operations");
@@ -145,13 +183,13 @@
 			selectedTab = $('.tab-content').children('.active').attr("value");
 			console.log(selectedTab)
 			section = $("#masterSectionType").val();
-			url = "/Requests/ItemData?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section +"&isEditable=false";
+			url = "/Requests/_LocationTab?id=" + id;
+			reloadDiv = $("#location");
 		}
 		else {
 			alert("didn't go into any edits");
 		}
 		console.log("url: " + url);
-
 		$.ajax({
 			url: url,
 			type: 'GET',
@@ -159,10 +197,10 @@
 			success: function (data) {
 				console.log("cancel edit successful!")
 				//open the confirm edit modal
-				$('.partial-div').html(data);
+				reloadDiv.html(data);
 				
 				$('.name').val($('.old-name').val())
-				if ($('.turn-edit-on-off').hasClass('orders')) {
+				if ($('.turn-edit-on-off').hasClass('orders') || $('.turn-edit-on-off').hasClass('locations')) {
 					$.fn.LoadEditModalDetails();
 				}
 			}

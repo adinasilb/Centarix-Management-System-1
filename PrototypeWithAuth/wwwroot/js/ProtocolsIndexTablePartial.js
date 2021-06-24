@@ -115,3 +115,65 @@ $(".protocol-favorite").off("click").on("click", function (e) {
 	}
 });
 
+$(".popover-more").off('click').click(function () {
+	var val = $(this).val();
+	$('[data-toggle="popover"]').popover('dispose');
+	$(this).popover({
+		sanitize: false,
+		placement: 'bottom',
+		html: true,
+		content: function () {
+			return $('#' + val).html();
+		}
+	});
+	$(this).popover('toggle');
+	$(".popover .share-protocol-fx").click(function (e) {
+		e.preventDefault();
+		//switch this to universal share request and the modelsenum send in
+		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request") + "&ModelsEnum=Request";
+		console.log("url: " + url);
+		$.ajax({
+			async: true,
+			url: url,
+			traditional: true,
+			type: "GET",
+			cache: false,
+			success: function (data) {
+				$.fn.OpenModal("shared-modal", "share-modal", data)
+				$.fn.EnableMaterialSelect('#ApplicationUserIDs', 'select-options-ApplicationUserIDs')
+				$("#loading").hide();
+				return false;
+			}
+		})
+	});
+	$(".icon-more-popover").off("click").on("click", ".remove-share", function (e) {
+		var ControllersEnum = "";
+		var shareNum = "Protocols";
+		if ($(this).hasClass("Protocols")) { //THIS IF IS NOT WORKING
+			ControllersEnum = "Protocols";
+		}
+		shareNum = $(this).attr("data-share-resource-id");
+		var url = "/" + ControllersEnum + "/RemoveShare?ID=" + shareNum + "&ModelsEnum=" + $("#masterSectionType").val();
+		alert("url " + url);
+		$.ajax({
+			async: true,
+			url: url,
+			type: 'GET',
+			cache: true,
+			success: function (e) {
+				if (!e) {
+					$.ajax({
+						async: true,
+						url: "/Requests/_IndexSharedTable",
+						type: 'GET',
+						cache: true,
+						success: function (data) {
+							$("._IndexSharedTable").html(data);
+						}
+					})
+				}
+			}
+		});
+	});
+
+});

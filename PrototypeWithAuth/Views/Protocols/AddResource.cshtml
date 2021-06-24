@@ -1,5 +1,8 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddResourceViewModel;
 
+<script src="~/js/Validation/AddResourceFormValidation.js"></script>
+<script src="~/js/validate.js" asp-append-version="true"></script>
+
 @{
     var Heading = "";
     switch (Model.Resource.ResourceTypeID)
@@ -12,6 +15,8 @@
             break;
     }
 
+    var hec = "ResourceTagsHidden HiddenCategoryBool";
+
 }
 <script src="~/js/AddResource.js"></script>
 <div class="modal modal-view fader on-form-modal add-resource-modal protocol-form" id="myModal" data-backdrop="false">
@@ -21,12 +26,17 @@
             <button type="button" class="close modal-close-padding modal-close-style" @*data-dismiss="modal"*@ aria-label="Close" onclick="$.fn.CloseModal('add-resources')">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" id="myForm" class="modal-padding" enctype="multipart/form-data">
+            <form action="" method="post" id="myForm" class="modal-padding add-resource-form" enctype="multipart/form-data">
                 <div class="form-element-border-bottom under-row-margin">
                     <div class="row top-menu under-row-margin">
-                        <div class="col-12 heading-1">
+                        <div class="col-10 heading-1">
                             @Heading
-                            <input type="hidden" asp-for="Resource.ResourceTypeID" />
+                        </div>
+                        <div class="col-2 float-right text">
+                            <div class="custom-control custom-radio mr-4  personal-type">
+                                @Html.CheckBoxFor(model => model.Resource.IsPersonal, htmlAttributes: new { @class = "custom-control-input personal-radio", @name="personal-group", @checked = "checked" })
+                                <label class="radio-button custom-control-label pt-1 pl-2" for="Resource_IsPersonal">Personal</label>
+                            </div>
                         </div>
                     </div>
                     <div class="row under-row-margin">
@@ -79,7 +89,8 @@
                 @*<hr style="box-shadow: 0px 0px .1rem #707070;" />*@
                 <div class="row under-row-margin top-menu">
                     <div class="col-12">
-                        Select Tags
+                        Select Tags<br />
+                        <input type="hidden" asp-for="Resource.ResourceTypeID" />
                     </div>
                 </div>
                 <div class="row mb-1 text-center">
@@ -90,7 +101,7 @@
                     @foreach (var mainCategory in Model.ResourceCategories.Where(rc => rc.IsMain))
                     {
                         counter++;
-                        var hiddenElementClass = "HiddenCategoryBool" + mainCategory.ResourceCategoryID;
+                        var hiddenElementClass = hec + mainCategory.ResourceCategoryID;
                         <div class="col-3">
                             <span class="resources-tags-big light-gray-background-color add-padding w-100" id="@mainCategory.ResourceCategoryID">
                                 @mainCategory.ResourceCategoryDescription
@@ -105,7 +116,7 @@
                         @foreach (var category in Model.ResourceCategories.Where(rc => !rc.IsMain))
                         {
                             counter++;
-                            var hiddenElementClass = "HiddenCategoryBool" + category.ResourceCategoryID;
+                            var hiddenElementClass = hec + category.ResourceCategoryID;
                             <span class="resources-tags-big light-gray-background-color mx-2 my-1" id="@category.ResourceCategoryID">
                                 @category.ResourceCategoryDescription
                             </span>
@@ -135,7 +146,7 @@
                 </div>
                 <div class="row">
                     <div class="modal-footer-mt mx-auto">
-                        <input type="submit" class="custom-button custom-cancel protocols-filter" asp-action="AddResource" />
+                        <input type="submit" class="custom-button custom-cancel protocols-filter activeSubmit addResourceSubmit" @*asp-action="AddResource"*@ />
                         <button type="button" class="custom-button custom-cancel" onclick="$.fn.CloseModal('add-resources')">Cancel</button>
                     </div>
                 </div>
@@ -145,3 +156,49 @@
         </div>
     </div>
 </div>
+<script>
+    $(".addResourceSubmit").click(function (e) {
+        console.log("in add resource submit click");
+        e.preventDefault();
+        $("#myForm").data("validator").settings.ignore = "";
+        var valid = $("#myForm").valid();
+        console.log("valid form: " + valid)
+        if (!valid) {
+            e.preventDefault();
+            if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                $('.activeSubmit').addClass('disabled-submit')
+            }
+
+        }
+        else {
+            $("#loading").show();
+            $('.activeSubmit ').removeClass('disabled-submit')
+            var formData = new FormData($("#myForm")[0]);
+            $.ajax({
+                contentType: false,
+                processData: false,
+                async: true,
+                url: "/Protocols/AddResource",
+                data: formData,
+                traditional: true,
+                type: "POST",
+                timeout: 540000,
+                cache: false,
+                success: function (data) {
+                    $("#loading").hide();
+                    $.fn.CloseModal('add-resources');
+                    $('.render-body').html(data);
+                    return true;
+                },
+                error: function (x, t, m) {
+                    if (t === "timeout") {
+                        alert("browser timed out. you may not see resource for another couple minutes")
+                        $.fn.CloseModal('add-resources');
+                    }
+                }
+            })
+        }
+        $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+
+    })
+</script>

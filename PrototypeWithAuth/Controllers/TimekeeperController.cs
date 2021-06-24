@@ -19,9 +19,9 @@ namespace PrototypeWithAuth.Controllers
     public class TimekeeperController : SharedController
     {
 
-        public TimekeeperController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
-            : base(context, userManager, hostingEnvironment, viewEngine)
-        {            
+        public TimekeeperController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
+        {
         }
         public IActionResult Index()
         {
@@ -488,7 +488,15 @@ namespace PrototypeWithAuth.Controllers
                     ehaa.EmployeeHoursStatusEntry1ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID;
                     ehaa.EmployeeHoursStatusEntry2ID = updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry2ID;
                     ehaa.PartialOffDayTypeID = updateHoursViewModel.EmployeeHour.PartialOffDayTypeID;
-                    ehaa.PartialOffDayHours = updateHoursViewModel.EmployeeHour.PartialOffDayHours;
+                    if (updateHoursViewModel.EmployeeHour.PartialOffDayTypeID != null && updateHoursViewModel.EmployeeHour.PartialOffDayHours == null)
+                    {
+                        var employeeTime = _context.Employees.Include(e => e.SalariedEmployee).Where(e => e.Id == updateHoursViewModel.EmployeeHour.EmployeeID).FirstOrDefault().SalariedEmployee.HoursPerDay;
+                        ehaa.PartialOffDayHours = TimeSpan.FromHours(employeeTime) - updateHoursViewModel.EmployeeHour.TotalHours;
+                    }
+                    else
+                    {
+                        ehaa.PartialOffDayHours = updateHoursViewModel.EmployeeHour.PartialOffDayHours;
+                    }
                     ehaa.IsDenied = false;
                     //mark as forgot to report if bool is true and not work from home
                     if (updateHoursViewModel.IsForgotToReport && updateHoursViewModel.EmployeeHour.EmployeeHoursStatusEntry1ID != 1)
@@ -951,7 +959,7 @@ namespace PrototypeWithAuth.Controllers
                                     EmployeeHoursID = employeeHoursID,
                                     IsRead = false,
                                     ApplicationUserID = newEmployeeHour.EmployeeID,
-                                    Description = "no hours reported for " + newEmployeeHour.Date.ToString("dd/MM/yyyy"),
+                                    Description = "no hours reported for " + AppUtility.FormatDate(newEmployeeHour.Date),
                                     NotificationStatusID = 5,
                                     TimeStamp = DateTime.Now,
                                     Controller = "Timekeeper",

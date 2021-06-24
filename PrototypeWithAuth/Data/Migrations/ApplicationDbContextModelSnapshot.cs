@@ -4331,11 +4331,17 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApplicationUserCreatorID")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstAuthor")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPersonal")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Journal")
                         .HasColumnType("nvarchar(max)");
@@ -4359,6 +4365,8 @@ namespace PrototypeWithAuth.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ResourceID");
+
+                    b.HasIndex("ApplicationUserCreatorID");
 
                     b.HasIndex("ResourceTypeID");
 
@@ -6519,6 +6527,11 @@ namespace PrototypeWithAuth.Data.Migrations
 
             modelBuilder.Entity("PrototypeWithAuth.Models.Resource", b =>
                 {
+                    b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserCreatorID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("PrototypeWithAuth.Models.ResourceType", "ResourceType")
                         .WithMany()
                         .HasForeignKey("ResourceTypeID")
