@@ -5,9 +5,14 @@
 @{
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
+    var disabled = "disabled";
     if (modalType == AppUtility.RequestModalType.Edit)
     {
         markReadOnlyClass = "mark-readonly";
+    } 
+    else if(modalType == AppUtility.RequestModalType.Create)
+    {
+        disabled = "";
     }
 
     var dynamicID = "Requests_" + Model.RequestIndex + "__";
@@ -59,7 +64,7 @@
                     }
                 }
                 <label class="control-label">Category</label>
-                <select id="@parentCategoryID" name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" searchable="Select Category">
+                <select id="@parentCategoryID" @disabled name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" searchable="Select Category">
                     @if (Model.Request.Product?.ProductSubcategory.ParentCategoryID == 0 || Model.Request.Product?.ProductSubcategory.ParentCategoryID == null)
                     {
                         <option class="disabled-color" disabled selected>Select Category</option>
@@ -109,7 +114,7 @@
                         subCategoryID = dynamicID + "Product_ProductSubcategory_ProductSubcategoryID";
                     }
                 }
-                <select id="@subCategoryID" name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" searchable="Select Subcategory">
+                <select id="@subCategoryID" @disabled name="@(dynamicName)Product.ProductSubcategory.ProductSubcategoryID" class="mdb-select custom select-dropdown form-control-plaintext mdb-select-sublist sublist @mdbSelect @markReadOnlyClass sub-category" searchable="Select Subcategory">
                     @if (Model.Request.Product?.ProductSubcategoryID == 0 || Model.Request.Product?.ProductSubcategoryID == null)
                     {
                         <option class="disabled-color" disabled selected>Select Subcategory</option>
@@ -148,7 +153,7 @@
     <div class="row">
         <div class="col-12">
             <label class="control-label">Item Name</label>
-            <input id="@(dynamicID)Product_ProductName" name="@(dynamicName)Product.ProductName" class="form-control-plaintext border-bottom product-name  @markReadOnlyClass" value="@Model.Request.Product?.ProductName" />
+            <input id="@(dynamicID)Product_ProductName" name="@(dynamicName)Product.ProductName" @disabled class="form-control-plaintext border-bottom product-name  @markReadOnlyClass" value="@Model.Request.Product?.ProductName" />
             <span for="@(dynamicID)Product_ProductName" class="text-danger-centarix"></span>
         </div>
     </div>
@@ -156,7 +161,7 @@
     <div class="row">
         <div class="col-12">
             <label class="control-label">Item Hebrew Name</label>
-            <input id="@(dynamicID)Product_ProductHebrewName" name="@(dynamicName)Product.ProductHebrewName" class="form-control-plaintext border-bottom product-hebrew-name  @markReadOnlyClass" value="@Model.Request.Product?.ProductHebrewName" />
+            <input id="@(dynamicID)Product_ProductHebrewName" name="@(dynamicName)Product.ProductHebrewName" class="form-control-plaintext border-bottom product-hebrew-name  @markReadOnlyClass" @disabled value="@Model.Request.Product?.ProductHebrewName" />
             <span for="@(dynamicID)Product_ProductHebrewName" class="text-danger-centarix"></span>
         </div>
     </div>
@@ -165,7 +170,7 @@
     <div class="row">
         <div class="col-md-6">
             <label class="control-label">Catalog Number</label>
-            <input id="@(dynamicID)Product_CatalogNumber" name="@(dynamicName)Product.CatalogNumber" class="form-control-plaintext border-bottom  @markReadOnlyClass catalog-number" value="@Model.Request.Product?.CatalogNumber" />
+            <input id="@(dynamicID)Product_CatalogNumber" name="@(dynamicName)Product.CatalogNumber" class="form-control-plaintext border-bottom  @markReadOnlyClass catalog-number" @disabled value="@Model.Request.Product?.CatalogNumber" />
             <span for="@(dynamicID)Product_CatalogNumber" class="text-danger-centarix"></span>
         </div>
         @if (Model.ModalType == AppUtility.RequestModalType.Create)
@@ -194,7 +199,7 @@
 
         <div class="col-md-2 form-group">
             <label class="control-label">Amount</label>
-            <input type="number" id="@(dynamicID)Unit" name="@(dynamicName)Unit" class="form-control-plaintext border-bottom @markReadOnlyClass unit" value="@Model.Request.Unit?" />
+            <input type="number" id="@(dynamicID)Unit" name="@(dynamicName)Unit"  class="form-control-plaintext border-bottom  @markReadOnlyClass  unit" @disabled value="@Model.Request.Unit" />
             <span for="@(dynamicID)Unit" class="text-danger-centarix"></span>
         </div>
         <input type="hidden" id="@(dynamicID)UnitTypeID" name="@(dynamicName)UnitTypeID" value="5" />
@@ -212,7 +217,7 @@
                 <label class="control-label"></label>
                 <div class="input-group">
                     <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
-                    <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="form-control-plaintext border-bottom requestPriceQuote shekel-cost cost" min="1" value="@(Model.Request!= null ? Model.Request.Cost ?? 0 : 0)" />
+                    <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="@markReadOnlyClass form-control-plaintext border-bottom requestPriceQuote shekel-cost cost" min="1" value="@(Model.Request!= null ? Model.Request.Cost ?? 0 : 0)"  @disabled />
                     @*<span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>*@
                 </div>
             </div>
@@ -227,11 +232,11 @@
             }
         }
         <div class="custom-control custom-radio mr-4 ml-4">
-            <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="IncludeVAT@(Model.RequestIndex)" name="IncludeVATRadio@(Model.RequestIndex)" type="radio" index="@Model.RequestIndex" @includeVatChecked value="@Model.Request?.IncludeVAT">
+            <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="IncludeVAT@(Model.RequestIndex)" @disabled name="IncludeVATRadio@(Model.RequestIndex)" type="radio" index="@Model.RequestIndex" @includeVatChecked value="@Model.Request?.IncludeVAT">
             <label class="radio-button custom-control-label pt-1 pl-2" for="IncludeVAT@(Model.RequestIndex)">Include VAT</label>
         </div>
         <div class="custom-control custom-radio mr-4 ml-4">
-            <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="NoVAT@(Model.RequestIndex)" name="IncludeVATRadio@(Model.RequestIndex)" type="radio" index="@Model.RequestIndex" @noVatChecked value="@(!Model.Request?.IncludeVAT)">
+            <input class="custom-control-input include-vat-radio @markReadOnlyClass" id="NoVAT@(Model.RequestIndex)" @disabled name="IncludeVATRadio@(Model.RequestIndex)" type="radio" index="@Model.RequestIndex" @noVatChecked value="@(!Model.Request?.IncludeVAT)">
             <label class="radio-button custom-control-label pt-1 pl-2" for="NoVAT@(Model.RequestIndex)">No VAT</label>
         </div>
         <input type="hidden" id="@(dynamicID)IncludeVAT" name="@(dynamicName)IncludeVAT" value="true" />
