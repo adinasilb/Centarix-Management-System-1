@@ -19,6 +19,8 @@ namespace PrototypeWithAuth.Models
         public DateTime EndDate { get; set; }
         public int CurrentLineID { get; set; }
         public Line CurrentLine { get; set; }
+        public string ResultDescription { get; set; }
+        public string TemporaryResultDescription { get; set; }
 
     }
 }

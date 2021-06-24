@@ -14,8 +14,8 @@ namespace PrototypeWithAuth.Controllers
     public class CompanyAccountsController : SharedController
     {
 
-        public CompanyAccountsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
-            : base(context, userManager, hostingEnvironment, viewEngine)
+        public CompanyAccountsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
         }
         public JsonResult GetAccountsByBank(int CompanyAccountID)

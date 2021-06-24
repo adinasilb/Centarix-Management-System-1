@@ -2,43 +2,43 @@
 @using PrototypeWithAuth.AppData
 @{
 
-            string nonProprietaryText = "";
-            string proprietaryText = "";
+    string nonProprietaryText = "";
+    string proprietaryText = "";
 
 
-            string nonProprietaryClass = "";
-            string proprietaryClass = "";
+    string nonProprietaryClass = "";
+    string proprietaryClass = "";
 
 
-            int requestStatusID = Model.RequestStatusID;
+    int requestStatusID = Model.RequestStatusID;
 
-            nonProprietaryText = "Main [" + Model.NonProprietaryCount + "]";
-            proprietaryText = "Samples [" + Model.ProprietaryCount + "]";
-
-
-            nonProprietaryClass = "new-button pt-4 ";
-            proprietaryClass = "new-button pt-4 ";
+    nonProprietaryText = "Main";// [" + Model.NonProprietaryCount + "]";
+    proprietaryText = "Samples";// [" + Model.ProprietaryCount + "]";
 
 
-            var activeClasses = "new-button active  pt-4";
-            if (Model.PageType == AppUtility.PageTypeEnum.OperationsRequest)
-            {
-                activeClasses += " new-oper-button ";
-                nonProprietaryClass += " new-oper-button ";
-                proprietaryClass += " new-oper-button ";
+    nonProprietaryClass = "new-button pt-4 ";
+    proprietaryClass = "new-button pt-4 ";
 
-            }
 
-            switch (Model.RequestStatusID)
-            {
+    var activeClasses = "new-button active  pt-4";
+    if (Model.PageType == AppUtility.PageTypeEnum.OperationsRequest)
+    {
+        activeClasses += " new-oper-button ";
+        nonProprietaryClass += " new-oper-button ";
+        proprietaryClass += " new-oper-button ";
 
-                case 7:
-                    proprietaryClass = activeClasses;
-                    break;
-                default:
-                    nonProprietaryClass = activeClasses;
-                    break;
-            }
+    }
+
+    switch (Model.RequestStatusID)
+    {
+
+        case 7:
+            proprietaryClass = activeClasses;
+            break;
+        default:
+            nonProprietaryClass = activeClasses;
+            break;
+    }
 
 
         }
@@ -52,9 +52,9 @@
                 <a class="@proprietaryClass countStatus" value="7" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@proprietaryText</label> </a>
             </li>
             <li class="list-inline-item m-0">@{ await Html.RenderPartialAsync("_IndexFilter", Model.InventoryFilterViewModel);}</li>
-            <li class="list-inline-item m-0 float-right">
+            @*<li class="list-inline-item m-0 float-right">
                 <button class="custom-button custom-button-font order-inv-background-color countStatus archive-button" value="7">Archive</button>
-            </li>
+            </li>*@
         </ul>
     </div>
 </div>

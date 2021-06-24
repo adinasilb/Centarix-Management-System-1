@@ -22,11 +22,18 @@
                     <div class="modal-body">
                         <div class="row ">
                             <div class="col-10 offset-1">
+                                @*<select asp-for="ApplicationUserIDs" class="mdb-select custom select-dropdown form-control-plaintext" searchable="Search User">
+                                    <option disabled selected class="d-none" value="">Select User</option>
+                                    @foreach (var user in Model.ApplicationUsers)
+                                    {
+                                        @user
+                                    }
+                                </select>*@
                                 @Html.DropDownListFor(vm => vm.ApplicationUserIDs, Model.ApplicationUsers,
-        htmlAttributes: new { @class = "mdb-select custom-select-dropdown form-control-plaintext float-right", @searchable = "Search here...", @multiple = "multiple" })
+        htmlAttributes: new { @class = "mdb-select custom-select-dropdown form-control-plaintext float-right", @multiple = "multiple" })
                                 @*@Html.DropDownListFor(m => m.ApplicationUserID,
-                                    Model.ApplicationUsers, "Select User",
-                                    new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "userlist", @searchable = "Select User" })*@
+        Model.ApplicationUsers, "Select User",
+        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "userlist", @searchable = "Select User" })*@
                             </div>
                         </div>
                         <div class="row mt-5">

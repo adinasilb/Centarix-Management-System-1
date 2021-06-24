@@ -414,6 +414,7 @@
             $('.mark-edditable').data("val", true);
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
+            $('.location-icon').removeClass('d-none');
 
             //turn off document modals
             if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
@@ -571,6 +572,7 @@
             $("." + modalClass + ' .edit-mode-switch-description').text("Edit Mode Off");
             $("." + modalClass + ' .turn-edit-on-off').attr('name', 'details')
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
+            $("." + modalClass + ' .location-icon').addClass('d-none');
         };
 
         $.fn.LoadEditModalDetails = function () {
@@ -799,23 +801,6 @@
 
 
 
-        $("#openNotifications").click(function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $('[data-toggle="popover"]').popover('dispose');
-            $('[data-toggle="popover"]').popover({
-                sanitize: false,
-                placement: 'bottom',
-                html: true,
-                content: function () {
-                    return $('#notifications-popover').html();
-                }
-            });
-            $('#openNotifications').popover('toggle');
-
-        });
-
-
         //$(document).popover({
         //    selector: '[data-toggle=popover]',
         //    html: true,
@@ -1016,7 +1001,11 @@
             });
             $('#openNotifications').popover('toggle');
             $.fn.UpdateNotificationLastRead();
-
+            $(".popover-close").on("click", function (e) {
+                console.log(" popover click")
+                $('[data-toggle="popover"]').popover('dispose');
+                $('body').removeClass('popover-open');
+            });
         });
 
         $.fn.CallModal = function (url, modalClass) {
@@ -1170,6 +1159,12 @@
             $('.' + modalDivClass + ' button[type="submit"]').addClass("activeSubmit");
 
         }
+
+        $.fn.removeOpenPopovers = function () {
+            console.log("remove open popovers");
+            $('.popover').remove();
+        }
+
         $.fn.CloseModal = function (modalDivClass) {
             $('.' + modalDivClass).html('');
             if ($('.modal').length == 0) {
@@ -1178,17 +1173,17 @@
             }
         }
         $.fn.BindSelectedFilters = function () {
+            console.log('in bind selected filters');
             var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedOwner = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner }
+            var archived = $('.archive-check').val();
+            console.log('archived ' + archived);
+            return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived }
         }
-        $("body").on("click", ".popover-close", function (e) {
-            $('[data-toggle="popover"]').popover('dispose');
-            $('body').removeClass('popover-open');
-        });
+        
 
         $.fn.ClearFilter = function (sectionType, isProprietary) {
             //alert(sectionType);

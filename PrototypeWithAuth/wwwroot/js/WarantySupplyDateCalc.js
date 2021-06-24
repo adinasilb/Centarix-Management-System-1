@@ -2,16 +2,16 @@
 	$(".expected-supply-days").change(function () {
 		var OrderDate; 
 		if ($('.for-supply-date-calc').length > 0) {
-			OrderDate =moment($('.for-supply-date-calc').val().split("/").reverse().join("-"));
+			OrderDate =moment($('.for-supply-date-calc').val()/*.split("/").reverse().join("-")*/);
 			
 		} else {
 			OrderDate = moment();
 			
 		}
-		var supplyDate = OrderDate.add($(this).val(), "d").format('DD/MM/yyyy');
+		var supplyDate = OrderDate.add($(this).val(), "d").format("D MMM YYYY");
 		console.log(supplyDate)
 		$("input[name='expected-supply-days']").val(supplyDate);
-		$("input[name='expected-supply-days']").attr("data-val",supplyDate.split("/").reverse().join("-"));
+		$("input[name='expected-supply-days']").attr("data-val",supplyDate/*.split("/").reverse().join("-")*/);
 
 	});
 

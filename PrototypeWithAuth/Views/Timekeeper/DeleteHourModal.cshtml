@@ -22,7 +22,7 @@
                 @Html.HiddenFor(model => model.EmployeeHour.EmployeeID)
 
                 <div class="modal-header border-bottom modal-header-padding">
-                    <span class="heading-1">Are you sure you would like to delete the following information for @Model.EmployeeHour.Date.Date.ToString("dd'/'MM'/'yyyy") ?</span>
+                    <span class="heading-1">Are you sure you would like to delete the following information for @AppUtility.FormatDate(Model.EmployeeHour.Date) ?</span>
                 </div>
 
                 <div class="modal-body">

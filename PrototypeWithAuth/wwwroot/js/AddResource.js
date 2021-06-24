@@ -1,18 +1,23 @@
 ﻿
 $(function () {
 	$(".resources-tags-big").on("click", function (e) {
+		console.log("in resource tags big click");
 		var inputID = $(this).attr("id");
+		console.log("input id: " + inputID);
 		var hiddenClass = "HiddenCategoryBool" + inputID;
+		console.log("hiddenClass: " + hiddenClass);
 		var hiddenElementBool = $("." + hiddenClass);
 		//alert("hiddenElementBool id" + hiddenElementBool.attr("id"));
 		//alert("hiddenElementBool value " + hiddenElementBool.attr("value"));
 		if ($(this).hasClass("selected")) {
-			hiddenElementBool.val("false");
+			console.log("has class selected");
+			hiddenElementBool.attr("value", "false");
 			//alert("hiddenElementBool value changed to " + hiddenElementBool.attr("value"));
 			$(this).removeClass("selected");
 		}
 		else {
-			hiddenElementBool.val("true");
+			hiddenElementBool.attr("value", "true");
+			console.log("does not have class selected");
 			//alert("hiddenElementBool value changed to " + hiddenElementBool.attr("value"));
 			$(this).addClass("selected");
 		}

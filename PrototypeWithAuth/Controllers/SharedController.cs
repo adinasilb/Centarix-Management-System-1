@@ -27,19 +27,21 @@ namespace PrototypeWithAuth.Controllers
     public class SharedController : Controller
     {
         protected readonly ApplicationDbContext _context;
-        protected readonly UserManager<ApplicationUser> _userManager;       
+        protected readonly UserManager<ApplicationUser> _userManager;
         protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
         protected ICompositeViewEngine _viewEngine;
-        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine)
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
             _userManager = userManager;
             _viewEngine = viewEngine;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType)
+        protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
         {
             var user = await _userManager.GetUserAsync(User);
             bool Allowed = false;
@@ -56,7 +58,17 @@ namespace PrototypeWithAuth.Controllers
                 (SectionType.Equals(AppUtility.MenuItems.Users) && await _userManager.IsInRoleAsync(user, AppUtility.MenuItems.Users.ToString()))
                 )
             {
-                Allowed = true;
+                if (innerRole == null)
+                {
+                    Allowed = true;
+                }
+                else
+                {
+                    if (await _userManager.IsInRoleAsync(user, SectionType + innerRole))
+                    {
+                        Allowed = true;
+                    }
+                }
             }
             return Allowed;
         }
@@ -191,14 +203,15 @@ namespace PrototypeWithAuth.Controllers
             return offDaysLeft;
         }
 
-            protected void RemoveRequestWithCommentsAndEmailSessions()
+        protected void RemoveRequestWithCommentsAndEmailSessions()
         {
-            var requiredKeys = HttpContext.Session.Keys.Where(x => x.StartsWith(AppData.SessionExtensions.SessionNames.Request.ToString()) ||
-                x.StartsWith(AppData.SessionExtensions.SessionNames.Comment.ToString()) ||
-                 x.StartsWith(AppData.SessionExtensions.SessionNames.Email.ToString()));
+            var sessionNames = Enum.GetNames(typeof(AppData.SessionExtensions.SessionNames)).Cast<string>().Select(x => x.ToString()).ToList();
+            var allKeys = _httpContextAccessor.HttpContext.Session.Keys;
+            //the following will work as long as all #s are less than 1000 (b/c they only allow for 3 digits, meaning less than 1000 of each type at a time)
+            var requiredKeys = allKeys.Where(ak => sessionNames.Contains(ak.Substring(0, ak.Length - 1)) || sessionNames.Contains(ak.Substring(0, ak.Length - 2)) || sessionNames.Contains(ak.Substring(0, ak.Length - 3)));
             foreach (var k in requiredKeys)
             {
-                HttpContext.Session.Remove(k); //will clear the session for the future
+                _httpContextAccessor.HttpContext.Session.Remove(k); //will clear the session for the future
             }
         }
         protected decimal GetExchangeRate()
@@ -302,7 +315,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [Authorize(Roles = "Requests Protocols")]
+        [Authorize(Roles = "Requests, Protocols")]
         public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null, bool isProprietary = false)
         {
@@ -342,7 +355,7 @@ namespace PrototypeWithAuth.Controllers
                 isProprietary = true;
             }
 
-            var requestsByProduct = _context.Requests.Where(r => r.ProductID == productId && (r.RequestStatusID == 3))
+            var requestsByProduct = _context.Requests.Where(r => r.ProductID == productId)
                  .Include(r => r.Product.ProductSubcategory).Include(r => r.Product.ProductSubcategory.ParentCategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Include(r => r.ParentRequest)
@@ -367,6 +380,11 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 requestItemViewModel.ModalType = AppUtility.RequestModalType.Summary;
+            }
+
+            if (_context.Requests.Where(r => r.ProductID == request.ProductID).Count() > 1)
+            {
+                requestItemViewModel.IsReorder = true;
             }
 
             ModalViewType = "Edit";
@@ -563,11 +581,12 @@ namespace PrototypeWithAuth.Controllers
                                   }
                               ).ToList()
             };
+            shareModalViewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
 
             return shareModalViewModel;
         }
 
-         protected void FillDocumentsInfo(RequestItemViewModel requestItemViewModel, string uploadFolder, ProductSubcategory productSubcategory)
+        protected void FillDocumentsInfo(RequestItemViewModel requestItemViewModel, string uploadFolder, ProductSubcategory productSubcategory)
         {
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
@@ -620,7 +639,7 @@ namespace PrototypeWithAuth.Controllers
             }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             IQueryable<Request> fullRequestsList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText ?? "")).Include(r => r.ApplicationUserCreator)
-         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Where(r => r.IsArchived == requestIndexObject.IsArchive);
+         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == requestIndexObject.IsArchive)*/;
 
             int sideBarID = 0;
             if (requestIndexObject.SidebarType != AppUtility.SidebarEnum.Owner)
@@ -822,8 +841,16 @@ namespace PrototypeWithAuth.Controllers
                 {
                     fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
                 }
+                
             }
-
+            if (selectedFilters?.Archived == true)
+            {
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.IsArchived == true);
+            }
+            else
+            {
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.IsArchived == false);
+            }
             return fullRequestsListProprietary;
         }
 
@@ -835,6 +862,7 @@ namespace PrototypeWithAuth.Controllers
             var deleteIcon = new IconColumnViewModel(" icon-delete-24px ", "black", "load-confirm-delete", "Delete");
             var receiveIcon = new IconColumnViewModel(" icon-done-24px ", "#00CA72", "load-receive-and-location", "Receive");
             var approveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#00CA72", "approve-order", "Approve");
+            var CantApproveIcon = new IconColumnViewModel(" icon-centarix-icons-03 ", "#E5E5E5", "", "Needs Approval");
             var equipmentIcon = new IconColumnViewModel(" icon-settings-24px-1 ", "var(--lab-man-color);", "create-calibration", "Create Calibration");
             var favoriteIcon = new IconColumnViewModel(" icon-favorite_border-24px", "#5F79E2", "request-favorite", "Favorite");
 
@@ -843,6 +871,8 @@ namespace PrototypeWithAuth.Controllers
             var popoverReorder = new IconPopoverViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", AppUtility.PopoverDescription.Reorder, "Reorder", "Requests", AppUtility.PopoverEnum.None, "load-order-details");
             var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
             var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
+
+
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             var user = await _userManager.GetUserAsync(User);
             switch (requestIndexObject.PageType)
@@ -851,8 +881,17 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.RequestStatusID)
                     {
                         case 6:
-                            iconList.Add(approveIcon);
-                            iconList.Add(deleteIcon);
+                            if (await this.IsAuthorizedAsync(requestIndexObject.SectionType, "ApproveOrders"))
+                            {
+                                iconList.Add(approveIcon);
+                            }
+                            else
+                            {
+                                iconList.Add(CantApproveIcon);
+                            }
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Select(r =>
                                     new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Approved,
                                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
@@ -861,7 +900,9 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case 2:
                             iconList.Add(receiveIcon);
-                            iconList.Add(deleteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Ordered,
                                r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                             r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
@@ -886,7 +927,9 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case 2:
                             iconList.Add(receiveIcon);
-                            iconList.Add(deleteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.OrderedOperations,
                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, user)
@@ -894,7 +937,9 @@ namespace PrototypeWithAuth.Controllers
 
                             break;
                         case 3:
-                            iconList.Add(deleteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryOperations,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, user)
@@ -903,8 +948,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     break;
                 case AppUtility.PageTypeEnum.RequestInventory:
-                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder };
-                    iconList.Add(deleteIcon);
+                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
                     iconList.Add(popoverMoreIcon);
                     onePageOfProducts = onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
@@ -918,9 +962,9 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.RequestStatusID)
                     {
                         case 7:
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { /*popoverShare, popoverReorder,*/ popoverDelete };
                             iconList.Add(favoriteIcon);
-                            iconList.Add(deleteIcon);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.SummaryProprietary,
                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
@@ -945,7 +989,9 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.OperationsInventory:
                     iconList.Add(orderOperations);
-                    iconList.Add(deleteIcon);
+                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                    popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                    iconList.Add(popoverMoreIcon);
                     onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryOperations,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)
@@ -953,8 +999,7 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.LabManagementEquipment:
                     iconList.Add(equipmentIcon);
-                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder };
-                    iconList.Add(deleteIcon);
+                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
                     iconList.Add(popoverMoreIcon);
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
@@ -973,8 +1018,9 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Favorites:
-                            iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverReorder, popoverShare, popoverDelete };
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                            new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryFavorites,
                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
@@ -982,8 +1028,10 @@ namespace PrototypeWithAuth.Controllers
                                          user, r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
                             break;
                         case AppUtility.SidebarEnum.SharedRequests:
-                            iconList.Add(reorderIcon);
+                            //iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverReorder, popoverShare, popoverRemoveShare, popoverDelete };
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryShared,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
@@ -1024,7 +1072,9 @@ namespace PrototypeWithAuth.Controllers
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
-                    SectionType = sectionType
+                    SectionType = sectionType,
+                    Archive = selectedFilters.Archived, 
+                    IsProprietary = isProprietary
                 };
                 if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
                 {
@@ -1053,7 +1103,8 @@ namespace PrototypeWithAuth.Controllers
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
-                    SectionType = sectionType
+                    SectionType = sectionType,
+                    IsProprietary = isProprietary
                 };
             }
         }
