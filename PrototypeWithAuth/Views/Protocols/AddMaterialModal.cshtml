@@ -118,7 +118,7 @@
                 processData: false,
                 type: "POST",
                 success: function (data) {
-                    $("#Materials").html(data);
+                    $("._MaterialTab").html(data);
                     $.fn.CloseModal('add-material');
                     $(".saveProtocol").bind("click");
                     return true;

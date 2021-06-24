@@ -172,7 +172,7 @@ new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-contro
     </div>
 </div>
 
-<div id="Materials@(Model.ModalType)" class="tab-pane fade in @material">
+<div id="Materials@(Model.ModalType)" class="_MaterialTab tab-pane fade in @material">
     @{ await Html.RenderPartialAsync("_MaterialTab", new MaterialTabViewModel { Materials = Model.Protocol.Materials.ToList(), MaterialCategories = Model.MaterialCategories, Folders = Model.MaterialDocuments, ModalType = Model.ModalType });
     }
 </div>

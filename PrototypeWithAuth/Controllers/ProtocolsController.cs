@@ -397,6 +397,7 @@ namespace PrototypeWithAuth.Controllers
 
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(int typeID, int protocolID = 0)
         {
+            DeleteTemporaryDocuments(AppUtility.ParentFolderName.Protocols);
             var protocol = _context.Protocols
                 .Include(p => p.Urls).Include(p => p.Materials)
                 .ThenInclude(m => m.Product).Include(p=>p.ProtocolSubCategory).Where(p => p.ProtocolID == protocolID).FirstOrDefault() ?? new Protocol();

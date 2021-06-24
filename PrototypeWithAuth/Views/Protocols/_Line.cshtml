@@ -29,7 +29,7 @@
             @foreach (var item in Model.LineTypes)
             {
                 <div class="row px-2 comment-btn">
-                    <button type="button" value="@item.LineTypeID" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine mark-readonly" style="font-size:1rem; font-weight:400;">
+                    <button type="button" value="@item.LineTypeID" current-line-id="@(Model.TempLine?.PermanentLineID??Model.TempLine?.LineID??0)" class="no-box-shadow btn bg-transparent row p-0 text-capitalize text-dark addLine mark-readonly w-100" style="font-size:1rem; font-weight:400;">
                         @item.LineTypeDescription
                     </button><hr class="m-0" />
                 </div>

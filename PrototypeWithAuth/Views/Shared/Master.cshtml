@@ -496,7 +496,7 @@
                         case "summary":
                             //$.fn.OnOpenModalView();
                             $.fn.OpenModal('modal', 'edits', modal)
-                            $.fn.LoadSummaryModal('.edits');
+                            $.fn.LoadSummaryModal('edits');
                             $('.modal-content a:first').tab('show');
                             break;
                         case "create":
@@ -561,16 +561,16 @@
                 //}
             });
         }
-        $.fn.TurnToDetails = function () {
+        $.fn.TurnToDetails = function (modalClass) {
 
-            $('.mark-readonly').prop("disabled", true);
-            $('.mark-readonly input').prop("disabled", true);
-            $('.choose-location').addClass("disable-custom-mdbselect");
-            $('.visual-locations td.mark-readonly').addClass("disabled");
-            $('.mark-edditable').attr("data-val", false)
-            $('.edit-mode-switch-description').text("Edit Mode Off");
-            $('.turn-edit-on-off').attr('name', 'details')
-            $('.open-document-modal').attr("data-val", false);
+            $("." + modalClass+ ' .mark-readonly').prop("disabled", true);
+            $("." + modalClass + ' .mark-readonly input').prop("disabled", true);
+            $("." + modalClass + ' .choose-location').addClass("disable-custom-mdbselect");
+            $("." + modalClass + ' .visual-locations td.mark-readonly').addClass("disabled");
+            $("." + modalClass + ' .mark-edditable').attr("data-val", false)
+            $("." + modalClass + ' .edit-mode-switch-description').text("Edit Mode Off");
+            $("." + modalClass + ' .turn-edit-on-off').attr('name', 'details')
+            $("." + modalClass + ' .open-document-modal').attr("data-val", false);
         };
 
         $.fn.LoadEditModalDetails = function () {
@@ -579,7 +579,7 @@
             console.log(category)
             $("." + category).removeClass("d-none");
             console.log("in detilas of case")
-            $.fn.TurnToDetails();
+            $.fn.TurnToDetails("edit");
             $('.open-document-modal').attr("showSwitch", true);
             $('.edits .mdb-select').materialSelect();
             $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
@@ -592,9 +592,9 @@
             console.log(category)
             $("." + category).removeClass("d-none");
             console.log("in details of case")
-            $.fn.TurnToDetails();
-            $(modalClass + ' .mdb-select:not(.ignore-mdb)').materialSelect();
-            $(modalClass + ' .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            $.fn.TurnToDetails(modalClass);
+            $("."+modalClass + ' .mdb-select:not(.ignore-mdb)').materialSelect();
+            $("." +modalClass + ' .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
 
