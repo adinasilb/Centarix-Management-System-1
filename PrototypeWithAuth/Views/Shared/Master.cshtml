@@ -563,7 +563,7 @@
             });
         }
         $.fn.TurnToDetails = function (modalClass) {
-
+            console.log("turn to details " + modalClass)
             $("." + modalClass+ ' .mark-readonly').prop("disabled", true);
             $("." + modalClass + ' .mark-readonly input').prop("disabled", true);
             $("." + modalClass + ' .choose-location').addClass("disable-custom-mdbselect");
@@ -581,7 +581,7 @@
             console.log(category)
             $("." + category).removeClass("d-none");
             console.log("in detilas of case")
-            $.fn.TurnToDetails("edit");
+            $.fn.TurnToDetails("edits");
             $('.open-document-modal').attr("showSwitch", true);
             $('.edits .mdb-select').materialSelect();
             $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
