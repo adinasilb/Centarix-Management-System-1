@@ -27,7 +27,10 @@
             required: true,
             number: true,
             min: 1,
-            max: $('.amtLeftToPay').val()
+            max: function () {
+                console.log($('.amtLeftToPay').val())
+                return parseFloat($('.amtLeftToPay').val());
+                }
         }
     },
     messages: {
