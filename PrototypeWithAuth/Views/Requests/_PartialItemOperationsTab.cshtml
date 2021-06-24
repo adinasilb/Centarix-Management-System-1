@@ -64,7 +64,7 @@
                     }
                 }
                 <label class="control-label">Category</label>
-                <select id="@parentCategoryID" @disabled name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" searchable="Select Category">
+                <select id="@parentCategoryID" @disabled name="@(dynamicName)Product.ProductSubcategory.ParentCategory.ParentCategoryID" class="mdb-select custom select-dropdown form-control-plaintext parentlist @parentSelect @markReadOnlyClass parent-category" request-index="@Model.RequestIndex" searchable="Select Category" data-stop-refresh ="true">
                     @if (Model.Request.Product?.ProductSubcategory.ParentCategoryID == 0 || Model.Request.Product?.ProductSubcategory.ParentCategoryID == null)
                     {
                         <option class="disabled-color" disabled selected>Select Category</option>
