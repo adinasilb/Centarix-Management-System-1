@@ -103,6 +103,7 @@ namespace PrototypeWithAuth.Controllers
                             fullProtocolsList = fullProtocolsList.Where(frl => shareProtocols.Contains(frl.ProtocolID));
                             break;
                         case AppUtility.SidebarEnum.LastProtocol:
+                            
                             break;
                     }
                     break;
