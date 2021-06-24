@@ -27,8 +27,9 @@ namespace PrototypeWithAuth.Controllers
 {
     public class VendorsController : SharedController
     {
-        public VendorsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-            : base(context, userManager, hostingEnvironment)
+        public VendorsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
+
         {
         }
         // GET: Vendors
@@ -36,17 +37,17 @@ namespace PrototypeWithAuth.Controllers
         public async Task<IActionResult> Index(AppUtility.PageTypeEnum PageType = AppUtility.PageTypeEnum.RequestRequest, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests)
         {
             var categoryType = 1;
-            if(SectionType == AppUtility.MenuItems.Operations)
+            if (SectionType == AppUtility.MenuItems.Operations)
             {
                 categoryType = 2;
             }
             if (categoryType == 1)
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;                
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
             }
             else
             {
-                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;               
+                TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Operations;
             }
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = PageType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Vendors;
@@ -105,17 +106,17 @@ namespace PrototypeWithAuth.Controllers
                 Vendors = _context.Vendors.ToList(),
                 SectionType = SectionType
             };
-     
+
             //tempdata page type for active tab link
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
             if (SectionType == AppUtility.MenuItems.LabManagement)
-            {                
+            {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
             }
             else if (SectionType == AppUtility.MenuItems.Accounting)
             {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;            
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
             }
             //return View(vendorSearchViewModel);
             if (AppUtility.IsAjaxRequest(this.Request))
@@ -198,11 +199,11 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Search;
             if (vendorSearchViewModel.SectionType == AppUtility.MenuItems.LabManagement)
             {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;            
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
             }
             else if (vendorSearchViewModel.SectionType == AppUtility.MenuItems.Accounting)
             {
-                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;   
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingSuppliers;
             }
             return View("IndexForPayment", filteredVendors.ToList());
         }
@@ -225,7 +226,7 @@ namespace PrototypeWithAuth.Controllers
             if (SectionType == AppUtility.MenuItems.LabManagement)
             {
                 TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
-                
+
             }
             else if (SectionType == AppUtility.MenuItems.Accounting)
             {
@@ -319,7 +320,7 @@ namespace PrototypeWithAuth.Controllers
                         //throw new Exception();
                         await transaction.CommitAsync();
                         return RedirectToAction(nameof(IndexForPayment), new { SectionType = createSupplierViewModel.SectionType });
-                        
+
                     }
                     else
                     {
@@ -364,48 +365,48 @@ namespace PrototypeWithAuth.Controllers
         }
         public async Task<IActionResult> editFunction(int? id, AppUtility.MenuItems SectionType, int? Tab = 0)
         {
-                    if (id == null)
-                    {
-                        return NotFound();
-                    }
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-                    CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
-                    createSupplierViewModel.Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == id).FirstOrDefaultAsync();
-                    createSupplierViewModel.SectionType = SectionType;
-                    createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
-                    createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
-                    createSupplierViewModel.Tab = Tab ?? 0;
-                    //var count = createSupplierViewModel.Vendor.VendorCategoryTypes.Count();
-                    //if (count == 2)
-                    //{
+            CreateSupplierViewModel createSupplierViewModel = new CreateSupplierViewModel();
+            createSupplierViewModel.Vendor = await _context.Vendors.Include(v => v.VendorCategoryTypes).Where(v => v.VendorID == id).FirstOrDefaultAsync();
+            createSupplierViewModel.SectionType = SectionType;
+            createSupplierViewModel.CategoryTypes = _context.CategoryTypes.ToList();
+            createSupplierViewModel.VendorCategoryTypes = createSupplierViewModel.Vendor.VendorCategoryTypes.Select(vc => vc.CategoryTypeID).ToList();
+            createSupplierViewModel.Tab = Tab ?? 0;
+            //var count = createSupplierViewModel.Vendor.VendorCategoryTypes.Count();
+            //if (count == 2)
+            //{
 
-                    //}
-                    // createSupplierViewModel.CategoryTypeID = createSupplierViewModel.Vendor.VendorCategoryTypes
-                    if (createSupplierViewModel.Vendor == null)
-                    {
-                        return NotFound();
-                    }
-                    createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
-                    createSupplierViewModel.VendorContacts = _context.VendorContacts.Where(c => c.VendorID == id).ToList()
-                        .Select(vc => new VendorContactWithDeleteViewModel()
-                        {
-                            VendorContact = vc,
-                            Delete = false
-                        }).ToList();
-                    createSupplierViewModel.VendorComments = await _context.VendorComments.Where(c => c.VendorID == id).ToListAsync();
-                    TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
-                    TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.AllSuppliers;
-                    //tempdata page type for active tab link
-                    if (SectionType == AppUtility.MenuItems.LabManagement)
-                    {
-                        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
-                    }
-                    else if (SectionType == AppUtility.MenuItems.Accounting)
-                    {
-                        TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
-                    }
-                    return PartialView(createSupplierViewModel);
-                
+            //}
+            // createSupplierViewModel.CategoryTypeID = createSupplierViewModel.Vendor.VendorCategoryTypes
+            if (createSupplierViewModel.Vendor == null)
+            {
+                return NotFound();
+            }
+            createSupplierViewModel.CommentTypes = Enum.GetValues(typeof(AppUtility.CommentTypeEnum)).Cast<AppUtility.CommentTypeEnum>().ToList();
+            createSupplierViewModel.VendorContacts = _context.VendorContacts.Where(c => c.VendorID == id).ToList()
+                .Select(vc => new VendorContactWithDeleteViewModel()
+                {
+                    VendorContact = vc,
+                    Delete = false
+                }).ToList();
+            createSupplierViewModel.VendorComments = await _context.VendorComments.Where(c => c.VendorID == id).ToListAsync();
+            TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
+            TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.AllSuppliers;
+            //tempdata page type for active tab link
+            if (SectionType == AppUtility.MenuItems.LabManagement)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
+            }
+            else if (SectionType == AppUtility.MenuItems.Accounting)
+            {
+                TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementSuppliers;
+            }
+            return PartialView(createSupplierViewModel);
+
         }
         // POST: Vendors/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -481,7 +482,7 @@ namespace PrototypeWithAuth.Controllers
                     else
                     {
                         throw new ModelStateInvalidException();
-                    }                   
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -568,7 +569,7 @@ namespace PrototypeWithAuth.Controllers
         {
             VendorComment comment = new VendorComment();
             comment.CommentType = type;
-            AddCommentViewModel addCommentViewModel = new AddCommentViewModel { VendorComment = comment, Index = index};
+            AddCommentViewModel addCommentViewModel = new AddCommentViewModel { VendorComment = comment, Index = index };
             return PartialView(addCommentViewModel);
         }
         [HttpGet]

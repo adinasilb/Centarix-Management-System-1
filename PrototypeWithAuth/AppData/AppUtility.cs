@@ -93,6 +93,7 @@ namespace PrototypeWithAuth.AppData
         public enum FolderNamesEnum {Files, Orders, Invoices, Shipments, Quotes, Info, Pictures, Returns, Credits, More, Warranty, Manual, S, Map, Details } //Listed in the site.js (if you change here must change there)
         public enum ParentFolderName { Protocols, Requests, Materials, FunctionLine, Reports }
         public enum MenuItems { Requests, Protocols, Operations, Biomarkers, TimeKeeper, LabManagement, Accounting, Reports, Income, Users }
+        public static string AspDateFormatString = "{0:d MMM yyyy}";
         public static List<StringWithName> RequestRoleEnums()
         {
             List<StringWithName> rre = new List<StringWithName>()
@@ -142,14 +143,15 @@ namespace PrototypeWithAuth.AppData
         public enum CategoryTypeEnum { Operations, Lab }
         public enum ParentCategoryEnum { Consumables, ReagentsAndChemicals, Samples, Reusables, Equipment, Operation, Biological, Safety, General, Clinical }
         public enum RequestModalType { Create, Edit, Summary }
+        public enum ProtocolModalType { Create, CheckListMode, Summary, Edit }
         public enum OrderTypeEnum { RequestPriceQuote, OrderNow, AddToCart, AskForPermission, AlreadyPurchased, Save, SaveOperations }
         public enum OffDayTypeEnum { VacationDay, SickDay, MaternityLeave, SpecialDay, UnpaidLeave }
-        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare }
+        public enum PopoverDescription { More, Share, Delete, Reorder, RemoveShare, Start, Continue }
         public enum PopoverEnum { None }
         public enum FavoriteModels { Resources, Requests, Protocols }
         public enum FavoriteTables { FavoriteResources, FavoriteRequests, FavoriteProtocols }
         public enum FavoriteIconTitle { FilledIn, Empty }
-        public enum ProtocolFunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddTable, AddTemplate, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
+        public enum ProtocolFunctionTypes { AddImage, AddTimer, AddComment, AddWarning, AddTip, AddStop, AddLinkToProduct, AddLinkToProtocol, AddFile }
         public enum ReportsFunctionTypes {AddFile }
         public enum ReportTypes {Daily, Weekly, Monthly}
         public static List<StringWithName> FavoriteIcons()
@@ -740,5 +742,16 @@ namespace PrototypeWithAuth.AppData
             return dateRange;
         }
 
+        public static string FormatDate(DateTime? date)
+        {
+            if(date != null)
+            {
+                return date?.ToString("d MMM yyyy");
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
 }

@@ -371,11 +371,16 @@
     <Compile Remove="Data\Migrations\20210606111514_ParentLineLinqconfig3.Designer.cs" />
     <Compile Remove="Data\Migrations\20210608062849_testmerge.cs" />
     <Compile Remove="Data\Migrations\20210608062849_testmerge.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210610055638_TestMerge.cs" />
+    <Compile Remove="Data\Migrations\20210610055638_TestMerge.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210616055936_resourcesreceived.cs" />
+    <Compile Remove="Data\Migrations\20210616055936_resourcesreceived.Designer.cs" />
   </ItemGroup>
 
 
   <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.1" />
+    <PackageReference Include="Aspose.Slides.NET" Version="21.5.0" />
     <PackageReference Include="bootstrap" Version="4.5.0" />
     <PackageReference Include="Chart.Mvc.Core" Version="1.1.0" />
     <PackageReference Include="EmguCV" Version="3.1.0.1" />

@@ -19,6 +19,7 @@ namespace PrototypeWithAuth.Data
         {
 
         }
+        public DbSet<ShareProtocol> ShareProtocols { get; set; }
         public DbSet<ShareResource> ShareResources { get; set; }
         public DbSet<FavoriteResource> FavoriteResources { get; set; }
         public DbSet<FavoriteProtocol> FavoriteProtocols { get; set; }
@@ -26,7 +27,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<ResourceCategory> ResourceCategories { get; set; }
         public DbSet<FavoriteRequest> FavoriteRequests { get; set; }
         public DbSet<ShareRequest> ShareRequests { get; set; }
-        public DbSet<ProtocolInstanceResult> ProtocolInstanceResults { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<AuthorProtocol> AuthorProtocols { get; set; }
         public DbSet<ProtocolType> ProtocolTypes { get; set; }
@@ -36,12 +36,6 @@ namespace PrototypeWithAuth.Data
         public DbSet<Report> Reports { get; set; }
         public DbSet<ReportType> ReportTypes { get; set; }
         public DbSet<FunctionReport> FunctionReports { get; set; }
-        public DbSet<ReportSection> ReportSections { get; set; }
-        public DbSet<Paragraph> Paragraphs { get; set; }
-        public DbSet<RequestLink> RequestLinks { get; set; }
-        public DbSet<ProtocolLink> ProtocolLinks { get; set; }
-        public DbSet<ReportFile> ReportFiles { get; set; }
-        public DbSet<ReportImage> ReportImages { get; set; }
         public DbSet<ResourceType> ResourceTypes { get; set; }
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Material> Materials { get; set; }
@@ -381,7 +375,7 @@ namespace PrototypeWithAuth.Data
             modelBuilder.Entity<Report>().Property(r => r.ReportText).HasColumnType("ntext");
             modelBuilder.Entity<Resource>().Property(r => r.Summary).HasColumnType("ntext");
             modelBuilder.Entity<ResourceNote>().Property(r => r.Note).HasColumnType("ntext");
-            modelBuilder.Entity<ProtocolInstanceResult>().Property(r => r.ResultDesciption).HasColumnType("ntext");
+            modelBuilder.Entity<ProtocolInstance>().Property(r => r.ResultDescription).HasColumnType("ntext");
             //modelBuilder.Entity<TempLine>().HasIndex(r => r.PermanentLineID).IsUnique();
             modelBuilder.Seed();
 

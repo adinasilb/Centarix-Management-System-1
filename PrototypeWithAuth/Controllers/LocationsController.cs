@@ -30,8 +30,10 @@ namespace PrototypeWithAuth.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment) : base(context: context, userManager: userManager, hostingEnvironment: hostingEnvironment)
+        public LocationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
+
             _context = context;
             _userManager = userManager;
         }
@@ -131,7 +133,8 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Requests")]
+        [HttpPost]
+        [Authorize(Roles = "Requests, LabManagement")]
         public IActionResult VisualLocations(int VisualContainerId)
         {
             VisualLocationsViewModel visualLocationsViewModel = new VisualLocationsViewModel()

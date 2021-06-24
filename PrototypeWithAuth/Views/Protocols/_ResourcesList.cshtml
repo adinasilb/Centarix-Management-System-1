@@ -1,0 +1,24 @@
+﻿@model PrototypeWithAuth.ViewModels.ResourcesListViewModel;
+
+@*@{
+    ViewData["Title"] = "ResourcesList";
+    Layout = "~/Views/Shared/RequestNavView.cshtml";
+}*@
+<div class="row under-row-margin side-menu black-text">
+    @for (int i = 0; i < Model.PaginationTabs.Count; i++)
+    {
+        var action = "Library";
+        if (Model.SectionType == PrototypeWithAuth.AppData.AppUtility.SidebarEnum.Personal)
+        {
+            action = "Personal";
+        }
+        <a href="@Url.Action(action, "Protocols")" class="black-text">
+            @Model.PaginationTabs[i]
+            @if (i < Model.PaginationTabs.Count - 1)
+            {
+                <span>&nbsp;>&nbsp;</span>
+            }
+        </a>
+    }
+</div>
+@{ await Html.RenderPartialAsync("_ResourcesListIndex", Model.ResourcesListIndexViewModel);}

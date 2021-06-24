@@ -17,6 +17,7 @@ using static PrototypeWithAuth.AppData.AppUtility;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PrototypeWithAuth.Controllers
@@ -24,8 +25,8 @@ namespace PrototypeWithAuth.Controllers
     public class ApplicationUsersController : SharedController
     {
 
-        public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-            : base(context, userManager, hostingEnvironment)
+        public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+            : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
         }
         // GET: /<controller>/
@@ -528,7 +529,7 @@ namespace PrototypeWithAuth.Controllers
                     EmployeeHoursID = employeeHoursBeingApproved.EmployeeHoursID,
                     IsRead = false,
                     ApplicationUserID = employeeHoursBeingApproved.EmployeeID,
-                    Description = "update hours request denied for " + employeeHoursBeingApproved.Date.ToString("dd/MM/yyyy"),
+                    Description = "update hours request denied for " + AppUtility.FormatDate(employeeHoursBeingApproved.Date),
                     NotificationStatusID = 5,
                     TimeStamp = DateTime.Now,
                     Controller = "Timekeeper",

@@ -1,59 +1,78 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddMaterialViewModel
-<div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
-    <div class="sm-modal modal-dialog-centered mx-auto">
-        <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('material-info');">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form materialForm">
-                @Html.HiddenFor(r => r.Material.MaterialID)
-                <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
-                    <div class="container p-0">
-                        <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
 
-                        <div>
-                            <span class="heading-1">Link To Product</span>
+
+    <script src="~/js/Validation/AddMaterialValidation.js"></script>
+    <script src="~/js/validate.js"></script>
+    <div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
+        <div class="sm-modal modal-dialog-centered mx-auto">
+            <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
+                <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('material-info');">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding on-form-modal protocol-form materialForm">
+                    @Html.HiddenFor(r => r.Material.MaterialID)
+                    <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
+                        <div class="container p-0">
+                            <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
+
+                            <div>
+                                <span class="heading-1">Link To Product</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-body m-0 p-0">
-                    <label asp-for="Material.Product.SerialNumber" class="control-label mb-2"></label>
-                    <input class=" border-bottom border form-control-plaintext  " asp-for="Material.Product.SerialNumber" />
-              
-                </div>
-                <div class="modal-footer border-0 p-0">
-                    <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin save-material-info" value="Save" />
-                        <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('material-info');">Cancel</button>
+                    <div class="modal-body m-0 p-0">
+                        <label asp-for="Material.Product.SerialNumber" class="control-label mb-2"></label>
+                        <input class=" border-bottom border form-control-plaintext  " asp-for="Material.Product.SerialNumber" />
+
                     </div>
-                </div>
-            </form>
+                    <div class="modal-footer border-0 p-0">
+                        <div class="mx-auto modal-footer-mt">
+                            <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin save-material-info" value="Save" />
+                            <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('material-info');">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-<script>
+    <script>
 
-    $(".save-material-info").click(function (e) {
-        e.preventDefault();
-        var formData = new FormData($(".materialForm")[0]);
-        $.ajax({
-            url: "/Protocols/LinkMaterialToProductModal",
-            traditional: true,
-            data: formData,
-            contentType: false,
-            processData: false,
-            type: "POST",
-            success: function (data) {
-                $("#Materials").html(data);
-                $.fn.CloseModal('material-info');
-            },
-            error: function (jqxhr) {
-                if (jqxhr.status == 500) {
-                    $.fn.OpenModal('modal', 'material-info', jqxhr.responseText);
+        $(".save-material-info").click(function (e) {
+            e.preventDefault();
+            $('.materialForm').data("validator").settings.ignore = "";
+            var valid = $('.materialForm').valid();
+            console.log("valid form: " + valid)
+            if (!valid) {
+                e.preventDefault();
+                if (!$('.activeSubmit').hasClass('disabled-submit')) {
+                    $('.activeSubmit').addClass('disabled-submit')
                 }
-                return true;
-            }
-        });
-    });
 
-</script>
+            }
+            else {
+                $('.activeSubmit').removeClass('disabled-submit')
+                var formData = new FormData($(".materialForm")[0]);
+                $.ajax({
+                    url: "/Protocols/LinkMaterialToProductModal",
+                    traditional: true,
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    type: "POST",
+                    success: function (data) {
+                        $("._MaterialTab").html(data);
+                        $.fn.CloseModal('material-info');
+                    },
+                    error: function (jqxhr) {
+                        if (jqxhr.status == 500) {
+                            $.fn.OpenModal('modal', 'material-info', jqxhr.responseText);
+                        }
+                        return true;
+                    }
+                });
+            }
+            $('.materialForm').data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
+        });
+           
+
+    </script>

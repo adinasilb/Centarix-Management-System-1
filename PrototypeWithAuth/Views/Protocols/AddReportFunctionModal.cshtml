@@ -1,190 +1,210 @@
 ﻿@model PrototypeWithAuth.ViewModels.AddReportFunctionViewModel
 @using PrototypeWithAuth.AppData
 <script src="~/js/site.js"></script>
+<script src="~/js/Validation/AddFunctionValidation.js"></script>
+<script src="~/js/validate.js"></script>
 <div class="modal modal-document fader" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
     <div class=" modal-dialog-centered mx-auto" style="width:30%">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
-            <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('add-function');">
+            <button type="button" class="close modal-close-padding modal-close-style"  aria-label="Close" onclick="$.fn.CloseModal('add-function');">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm">
+            <form action="" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;" class="modal-padding protocol-form addFunctionForm on-form-modal">
                 <input type="hidden" asp-for="ReportID" />
-                <input type="hidden" asp-for="ReportTempText" />
-                <input type="hidden" asp-for="FunctionType.FunctionTypeID" />
+                <input type="hidden" asp-for="FunctionReport.FunctionTypeID" />
+                <input type="hidden" asp-for="FunctionReport.ID" class="function-reportID" />
+                <input type="hidden" asp-for="IsRemove" class="isRemove" />
+                <input type="hidden" asp-for="ClosingTags" />
+
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding text-center">
                     <div class="container p-0">
 
                         <label class="text-danger-centarix p-2" style="width:100%; text-align: center">@Model.ErrorMessage</label>
 
                         <div>
-                            <span class="heading-1"><i class="@Model.FunctionType.Icon"></i>&ensp;@Model.FunctionType.FunctionDescription</span>
+                            <span class="heading-1"><i class="@Model.FunctionReport.FunctionType.Icon"></i>&ensp;@Model.FunctionReport.FunctionType.FunctionDescription</span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-body m-0 p-0">
-                    @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionType.DescriptionEnum))
+                    @switch (Enum.Parse<AppUtility.ProtocolFunctionTypes>(Model.FunctionReport.FunctionType.DescriptionEnum))
                     {
                         case AppUtility.ProtocolFunctionTypes.AddFile:
-                    <div class="col">
-                        <button type="button" class="my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Files.ToString()"
-                                data-id="@Model.ReportID"
-                                id="@AppUtility.FolderNamesEnum.Files.ToString()" parentFolder="@AppUtility.ParentFolderName.Reports" data-val="@true" show-switch="@false">
-                            Select File
-                        </button>
-                        <span class="document-name pl-2" name="FileName"></span>
-                        <input type="hidden" class="document-name" asp-for="FileName"/>
+
+                    <div class="col text-center">
+                        @{
+                            var filestring = "";
+                            var containsFile = "";
+                            if ((Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.Count ?? 0) != 0)
+                            {
+                                filestring = AppUtility.GetLastFiles(Model.DocumentsInfo.FirstOrDefault()?.FileStrings?.FirstOrDefault(), 1);
+                                containsFile = "contains-file";
+                            }
+                        }
+                        <input type="button" class="my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Files.ToString()"
+                               data-id="@Model.FunctionReport.ID" id="@AppUtility.FolderNamesEnum.Files.ToString()" parentFolder="@AppUtility.ParentFolderName.Reports" data-val="@true" show-switch="false" no-multiple-files="true"
+                               value="Select File" />
+                        <span class="document-name pl-2">@filestring</span>
+                        <div class="d-inline-block"><input type="text" readonly id="@AppUtility.FolderNamesEnum.Files.ToString()Input" name="@AppUtility.FolderNamesEnum.Files.ToString()Input" class="@containsFile" style="pointer-events:none; background:none; border:none; width:0px" /></div>
+                        <input type="hidden" class="document-name" asp-for="FileName" />
                     </div>
                             break;
                             @*case AppUtility.ProtocolFunctionTypes.AddImage:
-                        <div class="col">
-                            <button type="button" class=" my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()"
-                                    data-id="@Model.FunctionLine.FunctionLineID"
-                                    id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false">
-                                Select File
-                            </button>
-                            <span class="document-name pl-2"></span>
-                        </div>
-                        break;
-                    case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label asp-for="FunctionLine.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
-                                    @Html.DropDownListFor(vm => vm.FunctionLine.Product.ProductSubcategory.ParentCategoryID,
-                                 new SelectList(
-                                 Model.ParentCategories,
-                                 "ParentCategoryID",
-                                 "ParentCategoryDescription"
-                                 ), "Select Category",
-                                 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "parentlist", @searchable = "Select Category" })
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group sublist">
-                                    <label asp-for="FunctionLine.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
-                                    @Html.DropDownListFor(vm => vm.FunctionLine.Product.ProductSubcategory.ProductSubcategoryID,
-                                        new SelectList(
-                                        Model.ProductSubcategories,
-                                        dataValueField: "ProductSubcategoryID",
-                                        dataTextField: "ProductSubcategoryDescription"
-                                        ), "Select Sub Category",
-                                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "sublist", @searchable = "Select Sub Category" })
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label asp-for="FunctionLine.Product.Vendor" class="control-label"></label>
-                                    @Html.DropDownListFor(
-                        vm => vm.FunctionLine.Product.VendorID,
-                        new SelectList(
-                        Model.Vendors,
-                        dataValueField: "VendorID",
-                        dataTextField: "VendorEnName"),
-                        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-                        "Select a Vendor",
-                        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext ", @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
-                        )
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label asp-for="FunctionLine.Product.ProductName" class="control-label"></label>
-                                    @Html.DropDownListFor(
-                        vm => vm.FunctionLine.ProductID,
-                        new SelectList(
-                        Model.Products,
-                        dataValueField: "ProductID",
-                        dataTextField: "ProductName"),
-                        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-                        "Select a Product",
-                        htmlAttributes: new { @class = " productList mdb-select custom select-dropdown form-control-plaintext ", @id = "prodictList", @size = 1, @searchable = "Select A Product" }
-                        )
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <label asp-for="FunctionLine.Product.SerialNumber" class="control-label"></label>
-                                <input class="border-bottom form-control-plaintext " rows="6" asp-for="FunctionLine.Product.SerialNumber" />
-                            </div>
-                        </div>
-                        break;
-                    case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label asp-for="FunctionLine.Protocol.ProtocolSubCategory.ProtocolCategoryType" class="control-label"></label>
-                                    @Html.DropDownListFor(vm => vm.FunctionLine.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID,
-                                 new SelectList(
-                                 Model.ProtocolCategories,
-                                 dataValueField: "ProtocolCategoryTypeID",
-                                 dataTextField: "ProtocolCategoryDescription"
-                                 ), "Select Category",
-                                 new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocol-categories", @searchable = "Select Category" })
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group sublist">
-                                    <label asp-for="FunctionLine.Protocol.ProtocolSubCategory" class="control-label"></label>
-                                    @Html.DropDownListFor(vm => vm.FunctionLine.Protocol.ProtocolSubCategoryID,
-                                        new SelectList(
-                                        Model.ProtocolSubCategories,
-                                        dataValueField: "ProtocolSubCategoryTypeID",
-                                        dataTextField: "ProtocolSubCategoryTypeDescription"
-                                        ), "Select Sub Category",
-                                        new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocol-subCategory", @searchable = "Select Sub Category" })
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label asp-for="FunctionLine.Protocol.ApplicationUserCreator" class="control-label"></label>
-                                    @Html.DropDownListFor(
-                        vm => vm.FunctionLine.Protocol.ApplicationUserCreatorID,
-                       Model.Creators,
-                        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-                        "Select a Creator",
-                        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext ", @id = "creatorsList", @size = 1, @searchable = "Select A Creator" }
-                        )
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label asp-for="FunctionLine.Protocol" class="control-label"></label>
-                                    @Html.DropDownListFor(
-                        vm => vm.FunctionLine.ProtocolID,
-                        new SelectList(
-                        Model.Protocols,
-                        dataValueField: "ProtocolID",
-                        dataTextField: "Name"),
-                        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-                        "Select a Protocol",
-                        htmlAttributes: new { @class = "  mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolList", @size = 1, @searchable = "Select A Protocol" }
-                        )
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <label asp-for="FunctionLine.Product.SerialNumber" class="control-label"></label>
-                                <input class="border form-control-plaintext " rows="6" asp-for="FunctionLine.Product.SerialNumber" />
-                            </div>
-                        </div>
-                        break;*@
+                                    <div class="col">
+                                        <button type="button" class=" my-2 protocols-background-color custom-button-font custom-button open-document-modal mark-edditable" data-string="@AppUtility.FolderNamesEnum.Pictures.ToString()"
+                                                data-id="@Model.FunctionLine.FunctionLineID"
+                                                id="@AppUtility.FolderNamesEnum.Pictures.ToString()" parentFolder="@AppUtility.ParentFolderName.FunctionLine" data-val="@true" show-switch="@false">
+                                            Select File
+                                        </button>
+                                        <span class="document-name pl-2"></span>
+                                    </div>
+                                    break;
+                                case AppUtility.ProtocolFunctionTypes.AddLinkToProduct:
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label asp-for="FunctionLine.Product.ProductSubcategory.ParentCategory.ParentCategoryDescription" class="control-label"></label>
+                                                @Html.DropDownListFor(vm => vm.FunctionLine.Product.ProductSubcategory.ParentCategoryID,
+                                             new SelectList(
+                                             Model.ParentCategories,
+                                             "ParentCategoryID",
+                                             "ParentCategoryDescription"
+                                             ), "Select Category",
+                                             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "parentlist", @searchable = "Select Category" })
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group sublist">
+                                                <label asp-for="FunctionLine.Product.ProductSubcategory.ProductSubcategoryDescription" class="control-label"></label>
+                                                @Html.DropDownListFor(vm => vm.FunctionLine.Product.ProductSubcategory.ProductSubcategoryID,
+                                                    new SelectList(
+                                                    Model.ProductSubcategories,
+                                                    dataValueField: "ProductSubcategoryID",
+                                                    dataTextField: "ProductSubcategoryDescription"
+                                                    ), "Select Sub Category",
+                                                    new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "sublist", @searchable = "Select Sub Category" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label asp-for="FunctionLine.Product.Vendor" class="control-label"></label>
+                                                @Html.DropDownListFor(
+                                    vm => vm.FunctionLine.Product.VendorID,
+                                    new SelectList(
+                                    Model.Vendors,
+                                    dataValueField: "VendorID",
+                                    dataTextField: "VendorEnName"),
+                                    //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+                                    "Select a Vendor",
+                                    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext ", @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
+                                    )
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label asp-for="FunctionLine.Product.ProductName" class="control-label"></label>
+                                                @Html.DropDownListFor(
+                                    vm => vm.FunctionLine.ProductID,
+                                    new SelectList(
+                                    Model.Products,
+                                    dataValueField: "ProductID",
+                                    dataTextField: "ProductName"),
+                                    //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+                                    "Select a Product",
+                                    htmlAttributes: new { @class = " productList mdb-select custom select-dropdown form-control-plaintext ", @id = "prodictList", @size = 1, @searchable = "Select A Product" }
+                                    )
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label asp-for="FunctionLine.Product.SerialNumber" class="control-label"></label>
+                                            <input class="border-bottom form-control-plaintext " rows="6" asp-for="FunctionLine.Product.SerialNumber" />
+                                        </div>
+                                    </div>
+                                    break;
+                                case AppUtility.ProtocolFunctionTypes.AddLinkToProtocol:
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label asp-for="FunctionLine.Protocol.ProtocolSubCategory.ProtocolCategoryType" class="control-label"></label>
+                                                @Html.DropDownListFor(vm => vm.FunctionLine.Protocol.ProtocolSubCategory.ProtocolCategoryTypeID,
+                                             new SelectList(
+                                             Model.ProtocolCategories,
+                                             dataValueField: "ProtocolCategoryTypeID",
+                                             dataTextField: "ProtocolCategoryDescription"
+                                             ), "Select Category",
+                                             new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocol-categories", @searchable = "Select Category" })
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group sublist">
+                                                <label asp-for="FunctionLine.Protocol.ProtocolSubCategory" class="control-label"></label>
+                                                @Html.DropDownListFor(vm => vm.FunctionLine.Protocol.ProtocolSubCategoryID,
+                                                    new SelectList(
+                                                    Model.ProtocolSubCategories,
+                                                    dataValueField: "ProtocolSubCategoryTypeID",
+                                                    dataTextField: "ProtocolSubCategoryTypeDescription"
+                                                    ), "Select Sub Category",
+                                                    new { @class = "mdb-select-sublist mdb-select custom select-dropdown form-control-plaintext ", @id = "protocol-subCategory", @searchable = "Select Sub Category" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label asp-for="FunctionLine.Protocol.ApplicationUserCreator" class="control-label"></label>
+                                                @Html.DropDownListFor(
+                                    vm => vm.FunctionLine.Protocol.ApplicationUserCreatorID,
+                                   Model.Creators,
+                                    //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+                                    "Select a Creator",
+                                    htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext ", @id = "creatorsList", @size = 1, @searchable = "Select A Creator" }
+                                    )
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label asp-for="FunctionLine.Protocol" class="control-label"></label>
+                                                @Html.DropDownListFor(
+                                    vm => vm.FunctionLine.ProtocolID,
+                                    new SelectList(
+                                    Model.Protocols,
+                                    dataValueField: "ProtocolID",
+                                    dataTextField: "Name"),
+                                    //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
+                                    "Select a Protocol",
+                                    htmlAttributes: new { @class = "  mdb-select custom select-dropdown form-control-plaintext ", @id = "protocolList", @size = 1, @searchable = "Select A Protocol" }
+                                    )
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label asp-for="FunctionLine.Product.SerialNumber" class="control-label"></label>
+                                            <input class="border form-control-plaintext " rows="6" asp-for="FunctionLine.Product.SerialNumber" />
+                                        </div>
+                                    </div>
+                                    break;*@
 
                     }
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
-                        <button type="button" class="custom-button custom-cancel " data-dismiss="modal" onclick="$.fn.CloseModal('add-function');">Cancel</button>
+                        <input type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
+                        @if (Model.FunctionReport.ID != 0)
+                        {
+                            <input type="button" class="custom-button custom-cancel removeFunction" value="Remove" />
+                        }
+                        else
+                        {
+                            <button type="button" class="custom-button custom-cancel "  onclick="$.fn.CloseModal('add-function');">Cancel</button>
+                        }
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<script src="~/js/function.js"></script>

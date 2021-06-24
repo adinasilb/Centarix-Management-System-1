@@ -14,8 +14,8 @@
 			//	alert("reset vendor")
 			$(".activeVendor").val($(this).attr("vendorid"))
 		}
-		var addToSelectedButton = $("#add-to-selected");
-		var paySelectedButton = $("#pay-selected");
+		var addToSelectedButton = $(this).closest("tbody").find(".add-to-selected");
+		var paySelectedButton = $(this).closest("tbody").find(".pay-selected");
 
 
 		var selectedButton;
@@ -28,7 +28,7 @@
 
 		if ($(".form-check.accounting-select .form-check-input:checked").length) {
 			if ($(".activeVendor").val() != $(this).attr("vendorid")) {
-				//	alert("active vendors are ot equal - not doing anything")
+				//	alert("active vendors are not equal - not doing anything")
 				$(this).removeAttr("checked");
 				$(this).prop("checked", false);
 				//alert("count checked: "+$(".form-check.accounting-select .form-check-input:checked").length)
@@ -125,7 +125,7 @@
 		$("#loading").show();
 		$.fn.CallModal(itemUrl, "payments-pay");
 	});
-	//$("#pay-invoice-selected").off("click").on("click", function (e) {
+	//$(".pay-invoice-selected").off("click").on("click", function (e) {
 	//	var typeEnum = $(this).attr("type");
 	//	var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
 	//		return $(this).attr("id")
@@ -144,11 +144,15 @@
 	//		}
 	//	});
 	//});
-	$("#pay-selected").off("click").on("click", function (e) {
+	$(".pay-selected").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		//alert('pay selected')
 		var typeEnum = $(this).attr("type");
 		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
 			return $(this).attr("id")
 		}).get()
+		//alert('before loading');
 		console.log("arrayOfSelected: " + arrayOfSelected);
 		$("#loading").show();
 		$.ajax({
@@ -158,6 +162,7 @@
 			data: { 'requestIds': arrayOfSelected },
 			cache: true,
 			success: function (data) {
+				//alert('success!');
 				$.fn.OpenModal("modal", "payments-pay", data)
 				$("#loading").hide();
 			}
@@ -173,7 +178,9 @@
 		$.fn.CallModal(itemUrl, "add-invoice");
 	});
 
-	$("#add-to-selected").off("click").on("click", function (e) {
+	$(".add-to-selected").off("click").on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
 		//alert("add to selected")
 		var arrayOfSelected = $(".form-check.accounting-select .form-check-input:checked").map(function () {
 			return $(this).attr("id")

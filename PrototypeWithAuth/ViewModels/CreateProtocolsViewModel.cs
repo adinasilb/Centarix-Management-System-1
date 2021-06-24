@@ -1,4 +1,5 @@
-﻿using PrototypeWithAuth.AppData.UtilityModels;
+﻿using PrototypeWithAuth.AppData;
+using PrototypeWithAuth.AppData.UtilityModels;
 using PrototypeWithAuth.Models;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,20 @@ namespace PrototypeWithAuth.ViewModels
         public Lookup<Material, List<DocumentFolder>> MaterialDocuments { get; set; }
         public List<LineType> LineTypes { get; set; }
         public IEnumerable<ProtocolsLineViewModel> TempLines { get; set; }
-        public IEnumerable<FunctionType> FunctionTypes {get ;set;}
+        public IEnumerable<FunctionType> FunctionTypes { get; set; }
+        private int _Tab;
+        public int Tab
+        {
+            get
+            {
+                if (_Tab == 0) { return 1; }
+                else
+                {
+                    return _Tab;
+                }
+            }
+            set { _Tab = value; }
+        }
+        public AppUtility.ProtocolModalType ModalType { get; set; }
     }
 }

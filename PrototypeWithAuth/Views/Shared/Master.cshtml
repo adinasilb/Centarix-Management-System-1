@@ -414,6 +414,7 @@
             $('.mark-edditable').data("val", true);
             $('.edit-mode-switch-description').text("Edit Mode On");
             $('.turn-edit-on-off').attr('name', 'edit');
+            $('.location-icon').removeClass('d-none');
 
             //turn off document modals
             if ($(element).hasClass('operations') || $(element).hasClass('orders')) {
@@ -496,7 +497,7 @@
                         case "summary":
                             //$.fn.OnOpenModalView();
                             $.fn.OpenModal('modal', 'edits', modal)
-                            $.fn.LoadSummaryModal('.edits');
+                            $.fn.LoadSummaryModal('edits');
                             $('.modal-content a:first').tab('show');
                             break;
                         case "create":
@@ -538,6 +539,13 @@
                             $.fn.LoadSummaryModal('.history-item');
                             $('.modal-content a:first').tab('show');
                             break;
+                        case "protocolFloatModal":
+                            $.fn.OpenModal('modal', 'protocol-details', modal)
+                            $(".protocol-details .mark-readonly").attr("disabled", true);
+                            $(".protocol-details div.mark-readonly").attr("contenteditable", true);
+                            $(".protocol-details .button-mark-readonly").addClass("d-none");
+                            $('.protocol-details .open-document-modal').attr("data-val", false);
+                            break
                  
                     }
 
@@ -554,16 +562,17 @@
                 //}
             });
         }
-        $.fn.TurnToDetails = function () {
+        $.fn.TurnToDetails = function (modalClass) {
 
-            $('.mark-readonly').prop("disabled", true);
-            $('.mark-readonly input').prop("disabled", true);
-            $('.choose-location').addClass("disable-custom-mdbselect");
-            $('.visual-locations td.mark-readonly').addClass("disabled");
-            $('.mark-edditable').attr("data-val", false)
-            $('.edit-mode-switch-description').text("Edit Mode Off");
-            $('.turn-edit-on-off').attr('name', 'details')
-            $('.open-document-modal').attr("data-val", false);
+            $("." + modalClass+ ' .mark-readonly').prop("disabled", true);
+            $("." + modalClass + ' .mark-readonly input').prop("disabled", true);
+            $("." + modalClass + ' .choose-location').addClass("disable-custom-mdbselect");
+            $("." + modalClass + ' .visual-locations td.mark-readonly').addClass("disabled");
+            $("." + modalClass + ' .mark-edditable').attr("data-val", false)
+            $("." + modalClass + ' .edit-mode-switch-description').text("Edit Mode Off");
+            $("." + modalClass + ' .turn-edit-on-off').attr('name', 'details')
+            $("." + modalClass + ' .open-document-modal').attr("data-val", false);
+            $("." + modalClass + ' .location-icon').addClass('d-none');
         };
 
         $.fn.LoadEditModalDetails = function () {
@@ -572,7 +581,7 @@
             console.log(category)
             $("." + category).removeClass("d-none");
             console.log("in detilas of case")
-            $.fn.TurnToDetails();
+            $.fn.TurnToDetails("edit");
             $('.open-document-modal').attr("showSwitch", true);
             $('.edits .mdb-select').materialSelect();
             $('.edits .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
@@ -585,9 +594,9 @@
             console.log(category)
             $("." + category).removeClass("d-none");
             console.log("in details of case")
-            $.fn.TurnToDetails();
-            $(modalClass + ' .mdb-select:not(.ignore-mdb)').materialSelect();
-            $(modalClass + ' .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
+            $.fn.TurnToDetails(modalClass);
+            $("."+modalClass + ' .mdb-select:not(.ignore-mdb)').materialSelect();
+            $("." +modalClass + ' .mdb-select').focus(function () { $('.search-wrap input.search').focus() });
         }
 
 
@@ -1068,21 +1077,21 @@
         }
 
 
-        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch, parentFolder) {
+        $.fn.OpenDocumentsModal = function (enumString, requestId, isEdittable, section, showSwitch, parentFolder, dontAllowMultipleFiles) {
             $('#loading').show();
             //alert("in documents modal in document modal js")
             //$(".modal-backdrop").first().removeClass();
             //alert(parentFolder)
             var urltogo = $("#documentSubmit").attr("url");
             if (urltogo == "") {
-                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName="+parentFolder;
+                urltogo = "/Requests/DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
 	        }
             else {
                 //var urlToGo = "DocumentsModal?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable;*/
                 console.log("urltogo: " + urltogo);
-                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder;;
+                urltogo = urltogo + "?id=" + requestId + "&RequestFolderNameEnum=" + enumString + "&IsEdittable=" + isEdittable + "&SectionType=" + section + "&showSwitch=" + showSwitch + "&parentFolderName=" + parentFolder + "&dontAllowMultipleFiles=" + dontAllowMultipleFiles;
             }
-
+            console.log(urltogo);
             $.ajax({
                 async: true,
                 url: urltogo,
@@ -1091,10 +1100,18 @@
                 success: function (data) {
                     $('#loading').hide();
                     $.fn.OpenModal('documentsModal', 'documents', data)
-                    var length = $('.iframe-container').length;
-			        if (length < 1) {
+                    var numCards = $(".documentsModal .card.document-border").length;
+                    console.log("numcards: " + numCards);
+                    if (numCards < 1) {
                         $.fn.RemoveColorsOfDocs(enumString);
-			        }
+                    }
+                    else if (dontAllowMultipleFiles == 'True' || dontAllowMultipleFiles == 'true') {
+                        console.log("don't allow multiples")
+                        $(".upload-file").attr('disabled', true)
+                        $(".upload-file").addClass('disabled-background-color')   
+                        $(".upload-file").removeClass('protocols-background-color')  
+                        $(".file-select").attr('disabled', true)
+                    }
                     return true;
                 }
             });
@@ -1142,6 +1159,12 @@
             $('.' + modalDivClass + ' button[type="submit"]').addClass("activeSubmit");
 
         }
+
+        $.fn.removeOpenPopovers = function () {
+            console.log("remove open popovers");
+            $('.popover').remove();
+        }
+
         $.fn.CloseModal = function (modalDivClass) {
             $('.' + modalDivClass).html('');
             if ($('.modal').length == 0) {
@@ -1150,12 +1173,15 @@
             }
         }
         $.fn.BindSelectedFilters = function () {
+            console.log('in bind selected filters');
             var selectedVendor = $(".popover .vendor-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedOwner = $(".popover .owner-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedLocation = $(".popover .location-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedCategory = $(".popover .category-col .selected button").map(function () { return $(this).attr("value"); }).get();
             var selectedSubCategory = $(".popover .subcategory-col .selected button").map(function () { return $(this).attr("value"); }).get();
-            return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner }
+            var archived = $('.archive-check').val();
+            console.log('archived ' + archived);
+            return { SelectedCategoriesIDs: selectedCategory, SelectedSubCategoriesIDs: selectedSubCategory, SelectedLocationsIDs: selectedLocation, SelectedVendorsIDs: selectedVendor, SelectedOwnersIDs: selectedOwner, Archived: archived }
         }
         
 

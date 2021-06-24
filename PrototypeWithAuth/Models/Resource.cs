@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PrototypeWithAuth.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,6 +20,10 @@ namespace PrototypeWithAuth.Models
         public string PubMedID { get; set; }
         public string City { get; set; }
         public string Journal { get; set; }
+
+        public bool IsPersonal { get; set; }
+        public string ApplicationUserCreatorID { get; set; }
+        public ApplicationUser ApplicationUserCreator { get; set; }
 
         //public IEnumerable<TagArticle> TagArticles { get; set; }
         public int ResourceTypeID { get; set; }

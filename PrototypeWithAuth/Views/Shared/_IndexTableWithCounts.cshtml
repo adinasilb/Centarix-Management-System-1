@@ -12,11 +12,11 @@
     string receivedActiveClass = "";
     string approvedActiveClass = "";
     int requestStatusID = Model.RequestStatusID;
-@*
-    newButtonText = "For Approval [" + Model.NewCount + "]";*@
-    orderedButtonText = "Ordered [" + Model.OrderedCount + "]";
-    receivedButtonText = "Received [" + Model.ReceivedCount + "]";
-    approvedButtonText = "Requests [" + Model.ApprovedCount + "]";
+    @*
+        newButtonText = "For Approval [" + Model.NewCount + "]";*@
+    orderedButtonText = "Ordered"; // [" + Model.OrderedCount + "]";
+    receivedButtonText = "Received"; // [" + Model.ReceivedCount + "]";
+    approvedButtonText = "Requests";// [" + Model.ApprovedCount + "]";
 
     @*newActiveClass = "new-button pt-4 ";*@
     orderedActiveClass = "new-button pt-4 ";
@@ -35,10 +35,10 @@
 
     switch (Model.RequestStatusID)
     {
-        
+
         case 4:
         case 5:
-            @*newActiveClass = activeClasses;
+        @*newActiveClass = activeClasses;
             break;*@
         case 2:
             orderedActiveClass = activeClasses;
@@ -61,8 +61,8 @@
             @if (Model.PageType != AppUtility.PageTypeEnum.OperationsRequest)
             {
                 @*<li class="list-inline-item active m-0">
-                    <a class="@newActiveClass countStatus" value="1" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
-                </li>*@
+                        <a class="@newActiveClass countStatus" value="1" href="#"><i class="new-icon icon-centarix-icons-04"></i>  <label class="new-button-text">@newButtonText</label> </a>
+                    </li>*@
                 <li class="list-inline-item m-0">
                     <a class="@approvedActiveClass countStatus" value="6" href="#"> <i class="new-icon icon-approve-24px"></i><label class="new-button-text">@approvedButtonText</label> </a>
 

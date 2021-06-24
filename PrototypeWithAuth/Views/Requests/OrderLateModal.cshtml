@@ -1,7 +1,9 @@
-﻿@model PrototypeWithAuth.Models.Request;
+﻿@model PrototypeWithAuth.Models.Request
+@using PrototypeWithAuth.AppData
+
 
 <div class="modal modal-document fader" id="orderLateModal" @*role="dialog" aria-labelledby="Request"*@ data-backdrop="false">
-    <div class="sm-modal modal-dialog-centered mx-auto" >
+    <div class="sm-modal modal-dialog-centered mx-auto">
         <div class="modal-content d-inline-block modal-border-radius modal-box-shadow ">
             <button type="button" class="close modal-close-padding modal-close-style" data-dismiss="modal" aria-label="Close" onclick="$.fn.CloseModal('late-order');">
                 <span aria-hidden="true">&times;</span>
@@ -10,27 +12,27 @@
                 @Html.HiddenFor(r => r.RequestID)
                 <div class="modal-header border-0 pt-0 px-0 modal-header-padding">
                     <div class="container p-0">
-                        <div >
+                        <div>
                             <span class="heading-1">Send Message to @Model.Product.Vendor.VendorEnName.ToLower()</span>
                         </div>
                     </div>
                 </div>
-                @{ 
+                @{
                     var supposedtToArriveDate = Model.ParentRequest.OrderDate.AddDays((double)Model.ExpectedSupplyDays).Date;
                 }
                 <div class="modal-body border rounded m-0 p-0">
                     <p class="p-3 text">
-                        Hello, <br /> Order number @Model.ParentRequest.OrderNumber for @Model.Product.ProductName which was scheduled to arrive on @supposedtToArriveDate.ToString("dd/MM/yyyy"), has not arrived yet.<br />
+                        Hello, <br /> Order number @Model.ParentRequest.OrderNumber for @Model.Product.ProductName which was scheduled to arrive on @AppUtility.FormatDate(supposedtToArriveDate), has not arrived yet.<br />
                         Please update us on the matter.<br />
                         Best regards,<br />
                         @Model.ApplicationUserCreator.FirstName @Model.ApplicationUserCreator.LastName <br />
                         Centarix
                     </p>
                 </div>
-                <div class="modal-footer border-0 p-0" >
+                <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
                         <input type="submit" class="custom-button custom-button-font order-inv-background-color between-button-margin" asp-action="OrderLateModal" value="Send" />
-                        <button type="button" class="custom-button custom-cancel cancel-email" data-dismiss="modal"  onclick="$.fn.CloseModal('late-order');">Cancel</button>
+                        <button type="button" class="custom-button custom-cancel cancel-email" data-dismiss="modal" onclick="$.fn.CloseModal('late-order');">Cancel</button>
                     </div>
                 </div>
             </form>

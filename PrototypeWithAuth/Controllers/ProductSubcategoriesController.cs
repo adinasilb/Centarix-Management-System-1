@@ -19,8 +19,8 @@ namespace PrototypeWithAuth.Controllers
 {
     public class ProductSubcategoriesController : SharedController
     {
-        public ProductSubcategoriesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-            : base(context, userManager, hostingEnvironment)
+        public ProductSubcategoriesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor, ICompositeViewEngine viewEngine)
+           : base(context, userManager, hostingEnvironment, viewEngine, httpContextAccessor)
         {
         }
 

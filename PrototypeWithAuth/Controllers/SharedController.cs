@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Aspose.Slides;
+using Aspose.Slides.Export;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using PrototypeWithAuth.AppData;
 using PrototypeWithAuth.AppData.UtilityModels;
@@ -24,14 +27,18 @@ namespace PrototypeWithAuth.Controllers
     public class SharedController : Controller
     {
         protected readonly ApplicationDbContext _context;
-        protected readonly UserManager<ApplicationUser> _userManager;       
+        protected readonly UserManager<ApplicationUser> _userManager;
         protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
         protected string AccessDeniedPath = "~/Identity/Account/AccessDenied";
-        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+        protected ICompositeViewEngine _viewEngine;
+        protected SharedController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, ICompositeViewEngine viewEngine, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
             _userManager = userManager;
+            _viewEngine = viewEngine;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         protected async Task<bool> IsAuthorizedAsync(AppUtility.MenuItems SectionType, string innerRole = null)
@@ -196,14 +203,15 @@ namespace PrototypeWithAuth.Controllers
             return offDaysLeft;
         }
 
-            protected void RemoveRequestWithCommentsAndEmailSessions()
+        protected void RemoveRequestWithCommentsAndEmailSessions()
         {
-            var requiredKeys = HttpContext.Session.Keys.Where(x => x.StartsWith(AppData.SessionExtensions.SessionNames.Request.ToString()) ||
-                x.StartsWith(AppData.SessionExtensions.SessionNames.Comment.ToString()) ||
-                 x.StartsWith(AppData.SessionExtensions.SessionNames.Email.ToString()));
+            var sessionNames = Enum.GetNames(typeof(AppData.SessionExtensions.SessionNames)).Cast<string>().Select(x => x.ToString()).ToList();
+            var allKeys = _httpContextAccessor.HttpContext.Session.Keys;
+            //the following will work as long as all #s are less than 1000 (b/c they only allow for 3 digits, meaning less than 1000 of each type at a time)
+            var requiredKeys = allKeys.Where(ak => sessionNames.Contains(ak.Substring(0, ak.Length - 1)) || sessionNames.Contains(ak.Substring(0, ak.Length - 2)) || sessionNames.Contains(ak.Substring(0, ak.Length - 3)));
             foreach (var k in requiredKeys)
             {
-                HttpContext.Session.Remove(k); //will clear the session for the future
+                _httpContextAccessor.HttpContext.Session.Remove(k); //will clear the session for the future
             }
         }
         protected decimal GetExchangeRate()
@@ -278,7 +286,7 @@ namespace PrototypeWithAuth.Controllers
                 {
                     dir.Delete(true);
                 }
-                Directory.Delete(requestFolder);
+                Directory.Delete(requestFolder, true);
             }
             Directory.CreateDirectory(requestFolder);
         }
@@ -297,7 +305,8 @@ namespace PrototypeWithAuth.Controllers
                 documentsModalViewModel.FileStrings = new List<String>();
                 foreach (var docfile in docfilesfound)
                 {
-                    string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);
+
+                    string newFileString = AppUtility.GetLastFiles(docfile.FullName, 4);                    
                     documentsModalViewModel.FileStrings.Add(newFileString);
                     //documentsModalViewModel.Files.Add(docfile);
                 }
@@ -306,7 +315,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
 
-        [Authorize(Roles = "Requests Protocols")]
+        [Authorize(Roles = "Requests, Protocols")]
         public async Task<RequestItemViewModel> editModalViewFunction(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests,
             bool isEditable = true, List<string> selectedPriceSort = null, string selectedCurrency = null, bool isProprietary = false)
         {
@@ -339,12 +348,14 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.ApplicationUserReceiver)
                 //.Include(r => r.Payments) //do we have to have a separate list of payments to include thefix c inside things (like company account and payment types?)
                 .SingleOrDefault(x => x.RequestID == id);
+            
+          
             if (request.RequestStatusID == 7)
             {
                 isProprietary = true;
             }
 
-            var requestsByProduct = _context.Requests.Where(r => r.ProductID == productId && (r.RequestStatusID == 3))
+            var requestsByProduct = _context.Requests.Where(r => r.ProductID == productId)
                  .Include(r => r.Product.ProductSubcategory).Include(r => r.Product.ProductSubcategory.ParentCategory)
                     .Include(r => r.ApplicationUserCreator) //do we have to have a separate list of payments to include the inside things (like company account and payment types?)
                     .Include(r => r.ParentRequest)
@@ -369,6 +380,11 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 requestItemViewModel.ModalType = AppUtility.RequestModalType.Summary;
+            }
+
+            if (_context.Requests.Where(r => r.ProductID == request.ProductID).Count() > 1)
+            {
+                requestItemViewModel.IsReorder = true;
             }
 
             ModalViewType = "Edit";
@@ -565,12 +581,12 @@ namespace PrototypeWithAuth.Controllers
                                   }
                               ).ToList()
             };
-            shareModalViewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" } );
+            shareModalViewModel.ApplicationUsers.Insert(0, new SelectListItem() { Selected = true, Disabled = true, Text = "Select User" });
 
             return shareModalViewModel;
         }
 
-         protected void FillDocumentsInfo(RequestItemViewModel requestItemViewModel, string uploadFolder, ProductSubcategory productSubcategory)
+        protected void FillDocumentsInfo(RequestItemViewModel requestItemViewModel, string uploadFolder, ProductSubcategory productSubcategory)
         {
             requestItemViewModel.DocumentsInfo = new List<DocumentFolder>();
 
@@ -623,7 +639,7 @@ namespace PrototypeWithAuth.Controllers
             }
             IQueryable<Request> RequestsPassedIn = Enumerable.Empty<Request>().AsQueryable();
             IQueryable<Request> fullRequestsList = _context.Requests.Where(r => r.Product.ProductName.Contains(searchText ?? "")).Include(r => r.ApplicationUserCreator)
-         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID).Where(r => r.IsArchived == requestIndexObject.IsArchive);
+         .Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == categoryID)/*.Where(r => r.IsArchived == requestIndexObject.IsArchive)*/;
 
             int sideBarID = 0;
             if (requestIndexObject.SidebarType != AppUtility.SidebarEnum.Owner)
@@ -825,8 +841,16 @@ namespace PrototypeWithAuth.Controllers
                 {
                     fullRequestsListProprietary = fullRequestsListProprietary.Where(r => selectedFilters.SelectedOwnersIDs.Contains(r.ApplicationUserCreatorID));
                 }
+                
             }
-
+            if (selectedFilters?.Archived == true)
+            {
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.IsArchived == true);
+            }
+            else
+            {
+                fullRequestsListProprietary = fullRequestsListProprietary.Where(r => r.IsArchived == false);
+            }
             return fullRequestsListProprietary;
         }
 
@@ -847,6 +871,8 @@ namespace PrototypeWithAuth.Controllers
             var popoverReorder = new IconPopoverViewModel(" icon-add_circle_outline-24px1 ", "#00CA72", AppUtility.PopoverDescription.Reorder, "Reorder", "Requests", AppUtility.PopoverEnum.None, "load-order-details");
             var popoverRemoveShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.RemoveShare, ajaxcall: "remove-share");
             var popoverShare = new IconPopoverViewModel("icon-share-24px1", "black", AppUtility.PopoverDescription.Share, "ShareModal", "Requests", AppUtility.PopoverEnum.None, "share-request-fx");
+
+
             var defaultImage = "/images/css/CategoryImages/placeholder.png";
             var user = await _userManager.GetUserAsync(User);
             switch (requestIndexObject.PageType)
@@ -855,7 +881,7 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.RequestStatusID)
                     {
                         case 6:
-                            if(await this.IsAuthorizedAsync(requestIndexObject.SectionType, "ApproveOrders"))
+                            if (await this.IsAuthorizedAsync(requestIndexObject.SectionType, "ApproveOrders"))
                             {
                                 iconList.Add(approveIcon);
                             }
@@ -863,7 +889,9 @@ namespace PrototypeWithAuth.Controllers
                             {
                                 iconList.Add(CantApproveIcon);
                             }
-                            iconList.Add(deleteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Select(r =>
                                     new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Approved,
                                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
@@ -872,7 +900,9 @@ namespace PrototypeWithAuth.Controllers
                             break;
                         case 2:
                             iconList.Add(receiveIcon);
-                            iconList.Add(deleteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.Ordered,
                                r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                             r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
@@ -897,7 +927,9 @@ namespace PrototypeWithAuth.Controllers
                     {
                         case 2:
                             iconList.Add(receiveIcon);
-                            iconList.Add(deleteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.OrderedOperations,
                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, user)
@@ -905,7 +937,9 @@ namespace PrototypeWithAuth.Controllers
 
                             break;
                         case 3:
-                            iconList.Add(deleteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                            popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryOperations,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, user)
@@ -914,8 +948,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     break;
                 case AppUtility.PageTypeEnum.RequestInventory:
-                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder };
-                    iconList.Add(deleteIcon);
+                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
                     iconList.Add(popoverMoreIcon);
                     onePageOfProducts = onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ArrivalDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
@@ -929,9 +962,9 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.RequestStatusID)
                     {
                         case 7:
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { /*popoverShare, popoverReorder,*/ popoverDelete };
                             iconList.Add(favoriteIcon);
-                            iconList.Add(deleteIcon);
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.CreationDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.SummaryProprietary,
                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                          r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, _context.FavoriteRequests.Where(fr => fr.RequestID == r.RequestID).Where(fr => fr.ApplicationUserID == user.Id).FirstOrDefault(),
@@ -956,7 +989,9 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.OperationsInventory:
                     iconList.Add(orderOperations);
-                    iconList.Add(deleteIcon);
+                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>();
+                    popoverMoreIcon.IconPopovers.Add(popoverDelete);
+                    iconList.Add(popoverMoreIcon);
                     onePageOfProducts = onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryOperations,
                              r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
                                           r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest)
@@ -964,8 +999,7 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.LabManagementEquipment:
                     iconList.Add(equipmentIcon);
-                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder };
-                    iconList.Add(deleteIcon);
+                    popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverShare, popoverReorder, popoverDelete };
                     iconList.Add(popoverMoreIcon);
                     onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventory,
@@ -984,8 +1018,9 @@ namespace PrototypeWithAuth.Controllers
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Favorites:
-                            iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverReorder, popoverShare, popoverDelete };
+                            iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                            new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryFavorites,
                             r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory, r.Product.ProductSubcategory.ParentCategory,
@@ -993,9 +1028,9 @@ namespace PrototypeWithAuth.Controllers
                                          user, r.RequestLocationInstances.FirstOrDefault().LocationInstance, r.RequestLocationInstances.FirstOrDefault().LocationInstance.LocationInstanceParent, r.ParentRequest)).ToPagedListAsync(requestIndexObject.PageNumber == 0 ? 1 : requestIndexObject.PageNumber, 25);
                             break;
                         case AppUtility.SidebarEnum.SharedRequests:
-                            iconList.Add(reorderIcon);
+                            //iconList.Add(reorderIcon);
                             iconList.Add(favoriteIcon);
-                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverRemoveShare };
+                            popoverMoreIcon.IconPopovers = new List<IconPopoverViewModel>() { popoverReorder, popoverShare, popoverRemoveShare, popoverDelete };
                             iconList.Add(popoverMoreIcon);
                             onePageOfProducts = await RequestPassedInWithInclude.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r =>
                             new RequestIndexPartialRowViewModel(AppUtility.IndexTableTypes.ReceivedInventoryShared,
@@ -1037,7 +1072,9 @@ namespace PrototypeWithAuth.Controllers
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
-                    SectionType = sectionType
+                    SectionType = sectionType,
+                    Archive = selectedFilters.Archived, 
+                    IsProprietary = isProprietary
                 };
                 if (inventoryFilterViewModel.SelectedCategories.Count() > 0)
                 {
@@ -1066,7 +1103,8 @@ namespace PrototypeWithAuth.Controllers
                     //Projects = _context.Projects.ToList(),
                     //SubProjects = _context.SubProjects.ToList()
                     NumFilters = numFilters,
-                    SectionType = sectionType
+                    SectionType = sectionType,
+                    IsProprietary = isProprietary
                 };
             }
         }
@@ -1109,13 +1147,13 @@ namespace PrototypeWithAuth.Controllers
             {
                 if (Directory.Exists(requestFolderTo))
                 {
-                    Directory.Delete(requestFolderTo);
+                    Directory.Delete(requestFolderTo, true);
                 }
                 if (additionalRequests)
                 {
                     AppUtility.DirectoryCopy(requestFolderFrom, requestFolderTo, true);
                 }
-                else
+                else if(requestFolderFrom != requestFolderTo)
                 {
                     Directory.Move(requestFolderFrom, requestFolderTo);
                 }
@@ -1172,6 +1210,34 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.PaymentTypes = paymenttypes;
             requestItemViewModel.CompanyAccounts = companyaccounts;
             return requestItemViewModel;
+        }
+
+        [Authorize(Roles = "Requests")]
+        protected async Task<string> RenderPartialViewToString(string viewName, object model)
+        {
+            if (string.IsNullOrEmpty(viewName))
+                viewName = ControllerContext.ActionDescriptor.ActionName;
+
+            ViewData.Model = model;
+
+            using (var writer = new StringWriter())
+            {
+                ViewEngineResult viewResult =
+                    _viewEngine.FindView(ControllerContext, viewName, false);
+
+                ViewContext viewContext = new ViewContext(
+                    ControllerContext,
+                    viewResult.View,
+                    ViewData,
+                    TempData,
+                    writer,
+                    new HtmlHelperOptions()
+                );
+
+                await viewResult.View.RenderAsync(viewContext);
+
+                return writer.GetStringBuilder().ToString();
+            }
         }
         //[HttpPost]
         //[Authorize(Roles = "Requests")]
