@@ -20,19 +20,20 @@ namespace PrototypeWithAuth.ViewModels
         private ApplicationUser user;
         private FavoriteProtocol favoriteProtocol;
         private ShareProtocol shareProtocol;
+        private ProtocolInstance protocolInstance;
 
         public ProtocolsIndexPartialRowViewModel() { }
-        public ProtocolsIndexPartialRowViewModel( Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ApplicationUser userCreator,  ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, FavoriteProtocol favoriteProtocol, ApplicationUser user) : this(protocol, protocolType, protocolSubCategory, userCreator, protocolsIndexObject, iconList,  null, favoriteProtocol, user)
+        public ProtocolsIndexPartialRowViewModel( Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ApplicationUser userCreator,  ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, FavoriteProtocol favoriteProtocol, ApplicationUser user, ProtocolInstance protocolInstance) : this(protocol, protocolType, protocolSubCategory, userCreator, protocolsIndexObject, iconList,  null, favoriteProtocol, user, protocolInstance)
         {         
         }
 
-        public ProtocolsIndexPartialRowViewModel(Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, FavoriteProtocol favoriteProtocol, ApplicationUser user) : this(protocol, protocolType, protocolSubCategory, null, protocolsIndexObject, iconList, favoriteProtocol, user)
+        public ProtocolsIndexPartialRowViewModel(Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, FavoriteProtocol favoriteProtocol, ApplicationUser user, ProtocolInstance protocolInstance) : this(protocol, protocolType, protocolSubCategory, null, protocolsIndexObject, iconList, favoriteProtocol, user, protocolInstance)
         {
         }
-        public ProtocolsIndexPartialRowViewModel(Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, ApplicationUser userCreator, ShareProtocol shareProtocol, ApplicationUser user) : this(protocol, protocolType, protocolSubCategory, userCreator, protocolsIndexObject, iconList, shareProtocol, null, user)
+        public ProtocolsIndexPartialRowViewModel(Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, ApplicationUser userCreator, ShareProtocol shareProtocol, ApplicationUser user, ProtocolInstance protocolInstance) : this(protocol, protocolType, protocolSubCategory, userCreator, protocolsIndexObject, iconList, shareProtocol, null, user, protocolInstance)
         {
         }
-        public ProtocolsIndexPartialRowViewModel(Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ApplicationUser userCreator, ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, ShareProtocol shareProtocol, FavoriteProtocol favoriteProtocol, ApplicationUser user)
+        public ProtocolsIndexPartialRowViewModel(Protocol protocol, ProtocolType protocolType, ProtocolSubCategory protocolSubCategory, ApplicationUser userCreator, ProtocolsIndexObject protocolsIndexObject, List<IconColumnViewModel> iconList, ShareProtocol shareProtocol, FavoriteProtocol favoriteProtocol, ApplicationUser user, ProtocolInstance protocolInstance)
         {
             p = protocol;
             ProtocolsIndexPartialRowViewModel.protocolsIndexObject = protocolsIndexObject;
@@ -43,6 +44,8 @@ namespace PrototypeWithAuth.ViewModels
             p.ProtocolType = protocolType;
             this.favoriteProtocol = favoriteProtocol;
             this.shareProtocol = shareProtocol;
+            this.protocolInstance = protocolInstance;
+
             switch (protocolsIndexObject.SidebarType)
             {
                 case AppUtility.SidebarEnum.List:
@@ -78,7 +81,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user),
+                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user, protocolInstance),
                 AjaxID = p.ProtocolID
             };  }
 
@@ -95,7 +98,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user),
+                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user, protocolInstance),
                 AjaxID = p.ProtocolID
             };
         }
@@ -115,7 +118,7 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user),
+                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user, protocolInstance),
                 AjaxID = p.ProtocolID
             };
         }
@@ -133,11 +136,12 @@ namespace PrototypeWithAuth.ViewModels
             {
                 Title = "",
                 Width = 10,
-                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user),
+                Icons = GetIconsByIndividualProtocol(favoriteProtocol, user, protocolInstance),
                 AjaxID = p.ProtocolID
             };
         }
-        private static List<IconColumnViewModel> GetIconsByIndividualProtocol( FavoriteProtocol favoriteProtocol = null, ApplicationUser user = null)
+        private static List<IconColumnViewModel> GetIconsByIndividualProtocol( FavoriteProtocol favoriteProtocol, ApplicationUser user, ProtocolInstance protocolInstance
+            )
         {
             var newIconList = AppUtility.DeepClone(iconList);
             //favorite icon
@@ -147,6 +151,15 @@ namespace PrototypeWithAuth.ViewModels
             {
                 var unLikeIcon = new IconColumnViewModel(" icon-favorite-24px", "#5F79E2", "protocol-favorite protocol-unlike", "Unfavorite");
                 newIconList[favIconIndex] = unLikeIcon;
+            }
+            var morePopoverIndex = newIconList.FindIndex(ni => ni.IconAjaxLink.Contains("popover-more"));
+            if (morePopoverIndex != -1)
+            {
+                var startIndex = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Description==AppUtility.PopoverDescription.Start);
+                if(startIndex !=-1 && protocolInstance!=null)
+                {
+
+                }
             }
             return newIconList;
         }

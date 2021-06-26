@@ -175,5 +175,25 @@ $(".popover-more").off('click').click(function () {
 			}
 		});
 	});
-
+	$(".popover .start-protocol-fx").click(function (e) {
+		e.preventDefault();
+		//switch this to universal share request and the modelsenum send in
+		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request");
+		$.ajax({
+			async: true,
+			url: url,
+			traditional: true,
+			type: "GET",
+			cache: false,
+			success: function (data) {
+				$("._IndexTable").html(data);
+				$(".mdb-select").materialSelect();
+				$(".mark-readonly").attr("disabled", true);
+                $("div.mark-readonly").attr("contenteditable", false);
+                $(".button-mark-readonly").addClass("d-none");
+                $('.open-document-modal').attr("data-val", false);		
+				return false;
+			}
+		})
+	});
 });

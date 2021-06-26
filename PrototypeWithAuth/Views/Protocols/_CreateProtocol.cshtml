@@ -1,5 +1,7 @@
 ﻿@model PrototypeWithAuth.ViewModels.CreateProtocolsViewModel
 @using PrototypeWithAuth.ViewModels
+@using PrototypeWithAuth.AppData
+
 @{
     string theory = "";
     string material = "";
@@ -43,27 +45,33 @@
                     <label class="new-button-text">Protocols</label>
                 </a>
             </li>
-            <li class="only-protocol-tab li-function-bar  d-none">
-                <div class=" function-bar">
-                    @foreach (var type in Model.FunctionTypes)
-                    {
-                        <button class="function" type="button" typeID="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
-                    }
-                </div>
-            </li>
-            <li class="only-protocol-tab  d-none li-function-bar">
-                <div class="h-100 d-flex ml-6" style=" align-items: center;">
-                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
-                </div>
-            </li>
-            <li class="only-protocol-tab saving-spinner  d-none">
-                <div class="spinner-border protocols-color" role="status">
-                    <span class="sr-only"></span>Saving...
-                </div>
-            </li>
-            <li class="only-protocol-tab saving-done  d-none">
-                <span class="protocols-color pt-3"> Saved</span>
-            </li>
+
+            @if (Model.ModalType != AppUtility.ProtocolModalType.CheckListMode)
+            {
+                <li class="only-protocol-tab li-function-bar  d-none">
+                    <div class=" function-bar">
+                        @foreach (var type in Model.FunctionTypes)
+                        {
+                            <button class="function" type="button" typeID="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
+                        }
+                    </div>
+                </li>
+                <li class="only-protocol-tab   d-none li-function-bar">
+                    <div class="h-100 d-flex ml-6" style=" align-items: center;">
+                        <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
+                    </div>
+                </li>
+                <li class="only-protocol-tab saving-spinner d-none">
+                    <div class="spinner-border protocols-color" role="status">
+                        <span class="sr-only"></span>Saving...
+                    </div>
+                </li>
+                <li class="only-protocol-tab saving-done  d-none">
+                    <span class="protocols-color pt-3"> Saved</span>
+                </li>
+            }
+            
+
         </ul>
     </div>
     <div class="tab-content _CreateProtocolTabs">

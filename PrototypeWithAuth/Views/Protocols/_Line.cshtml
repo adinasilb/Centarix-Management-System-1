@@ -1,6 +1,6 @@
 ﻿@model PrototypeWithAuth.ViewModels.ProtocolsLineViewModel
 @using System
-
+@using PrototypeWithAuth.AppData
 @{
     var dynamicID = "TempLines_" + Model.Index + "__";
     var dynamicName = "TempLines[" + Model.Index + "].";
@@ -61,23 +61,29 @@
     }
 <div class="d-flex line-div
      @typeClass">
-     <div class=" d-flex align-items-center lineNumberString ">@Model.LineNumberString</div>
- 
-     <div role='textbox'
-          contenteditable='false' line-id='@(dynamicID)Content' class='editable-span line input line-input text-transform-none p-0 mark-readonly' data-val='@Model.TempLine?.PermanentLineID'>
-         @if (Model.TempLine?.Content ==null || Model.TempLine?.Content=="")
-         {
-             <div role='textbox'
-                  contenteditable class='editable-span line input line-input text-transform-none p-0'>
-                 &ensp;
-             </div>
-         }
-         else
-         {
-             @Html.Raw(Model.TempLine?.Content)
-         }
 
-     </div>
+    @if (Model.ModalType == AppUtility.ProtocolModalType.CheckListMode)
+    {
+        <div class=" d-flex align-items-center  mr-2">  <span class="move-to-next-step checklist-mode-only"><i class="icon-done-24px"></i></span></div>
+        <div class=" d-flex align-items-center mr-2 ">  <span class="add-change checklist-mode-only"><i class="icon-sync-24px"></i></span></div>
+    }
+
+    <div class=" d-flex align-items-center  ">@Model.LineNumberString</div>
+    <div role='textbox'
+         contenteditable='false' line-id='@(dynamicID)Content' class='editable-span line input line-input text-transform-none p-0 mark-readonly' data-val='@Model.TempLine?.PermanentLineID'>
+        @if (Model.TempLine?.Content == null || Model.TempLine?.Content == "")
+        {
+            <div role='textbox'
+                 contenteditable class='editable-span line input line-input text-transform-none p-0 mark-readonly'>
+                &ensp;
+            </div>
+        }
+        else
+        {
+            @Html.Raw(Model.TempLine?.Content)
+        }
+
+    </div>
          @if (Model.Functions != null)
          {
              foreach (var function in Model.Functions)
