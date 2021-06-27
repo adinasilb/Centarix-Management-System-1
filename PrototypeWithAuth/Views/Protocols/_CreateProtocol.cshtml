@@ -19,6 +19,12 @@
             break;
 
     }
+
+    var saveProtocolClass = "saveProtocol";
+    if(Model.ModalType == AppUtility.ProtocolModalType.CheckListMode || Model.ModalType == AppUtility.ProtocolModalType.Summary)
+    {
+        saveProtocolClass = "";
+    }
 }
 
 <form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
@@ -34,13 +40,13 @@
                 </a>
             </li>
             <li class="list-inline-item m-0 nav-item">
-                <a data-toggle="tab" href="#Materials@(Model.ModalType)" class="next-tab nav-link new-button Materials saveProtocol new-protocols-button protocol-tab @material">
+                <a data-toggle="tab" href="#Materials@(Model.ModalType)" class="next-tab nav-link new-button Materials @saveProtocolClass new-protocols-button protocol-tab @material">
                     <i class=" new-icon icon-centarix-icons-03"></i>
                     <label class="new-button-text">Material</label>
                 </a>
             </li>
             <li class="list-inline-item m-0 nav-item">
-                <a data-toggle="tab" href="#Protocol@(Model.ModalType)" class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab saveProtocol @protocols">
+                <a data-toggle="tab" href="#Protocol@(Model.ModalType)" class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab @saveProtocolClass @protocols">
                     <i class="new-icon icon-protocol-tab-24px"></i>
                     <label class="new-button-text">Protocols</label>
                 </a>

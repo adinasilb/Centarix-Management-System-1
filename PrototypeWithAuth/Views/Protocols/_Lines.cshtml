@@ -46,10 +46,14 @@
         });
     });
     $(".line").click(function () {
-        $(".addLinePopover").addClass("d-none");
-        $("." + $(this).attr("line-id") + "LinePopoverButton").removeClass("d-none");
-        $(".line").removeClass("focused-line");
-        $(this).addClass("focused-line");
+        var modalType = $("#ModalType").val();
+        if(modalType!="CheckListMode" && modalType !="Summary")
+        {
+            $(".addLinePopover").addClass("d-none");
+            $("." + $(this).attr("line-id") + "LinePopoverButton").removeClass("d-none");
+            $(".line").removeClass("focused-line");
+            $(this).addClass("focused-line");
+        }
     });
 
     $(".line").change(function () {

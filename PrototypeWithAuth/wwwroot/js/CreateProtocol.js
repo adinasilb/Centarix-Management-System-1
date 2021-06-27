@@ -50,12 +50,14 @@
                 success: function (data) {
                     $("._CreateProtocolTabs").html(data)
                     $(".mdb-select").materialSelect();
+
                     if (tab.hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
                         $(".only-protocol-tab.li-function-bar").removeClass("d-none");
                     }
                     else {
                         $(".only-protocol-tab").addClass("d-none");
                     }
+                    
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {

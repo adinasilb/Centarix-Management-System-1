@@ -187,13 +187,10 @@ $(".popover-more").off('click').click(function () {
 			cache: false,
 			success: function (data) {
 				$("._IndexTable").html(data);
-				$(".mdb-select").materialSelect();
-				$(".mark-readonly").attr("disabled", true);
-                $("div.mark-readonly").attr("contenteditable", false);
-                $(".button-mark-readonly").addClass("d-none");
-                $('.open-document-modal').attr("data-val", false);		
+				$.fn. ProtocolsMarkReadonly("_IndexTable");		
 				return false;
 			}
 		})
 	});
 });
+
