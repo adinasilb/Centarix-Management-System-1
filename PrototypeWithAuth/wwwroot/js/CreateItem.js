@@ -247,7 +247,7 @@
         $("#Requests_" + index + "__IsReceived").attr("value", checked)
     })
 
-    $('body').on('click', "#addRequestComment", function () {
+    $('.ordersItemForm').on('click', "#addRequestComment", function () {
         console.log("clicked!");
         console.log($('#popover-content').html())
         $('[data-toggle="popover"]').popover('dispose');
