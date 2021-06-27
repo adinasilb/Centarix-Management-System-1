@@ -158,7 +158,8 @@ namespace PrototypeWithAuth.ViewModels
                 var startIndex = newIconList.ElementAt(morePopoverIndex).IconPopovers.FindIndex(ni => ni.Description==AppUtility.PopoverDescription.Start);
                 if(startIndex !=-1 && protocolInstance!=null)
                 {
-
+                    var continueIcon = new IconPopoverViewModel("icon-play_circle_outline-24px-1", "#4CAF50", AppUtility.PopoverDescription.Continue, "StartProtocol", "Protocols", AppUtility.PopoverEnum.None, "start-protocol-fx");
+                    newIconList[morePopoverIndex].IconPopovers[startIndex] = continueIcon;
                 }
             }
             return newIconList;

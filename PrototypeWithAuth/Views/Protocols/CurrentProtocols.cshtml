@@ -1,4 +1,34 @@
-﻿@{
+﻿@model List<ProtocolInstance>
+@{
     ViewData["Title"] = "Current Protocols";
     Layout = "~/Views/Shared/RequestNavView.cshtml";
 }
+    <div class="_IndexTable">
+        <div class="container-fluid">
+            <label class="m-2 heading-1 mb-lg-4">Current Protocols</label>
+            <div class="under-row-margin row text-center">
+                @foreach (var workflow in Model)
+                {
+                    <div class="card-border material-cards">
+                        <div class="text ">@workflow.Protocol.Name</div>
+                        <hr class="mb-2 mt-2" />
+                        <div class=" d-flex text-center   align-items-center justify-content-sm-around">
+                            <a class="btn-link text no-hover requests start-protocol-fx" value="@workflow.ProtocolID">
+                                <i class="icon-play_circle_outline-24px-1 start-protocol-fx" style="color: #4CAF50"></i>
+                                <label class="m-2">Continue</label>
+                            </a>
+                        </div>
+
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+<script>
+    $(".start-protocol-fx").off("click").click(function (e) {
+        e.preventDefault();
+        //switch this to universal share request and the modelsenum send in
+        $.fn.StartProtocol($(this).attr("value"));
+    });
+</script>

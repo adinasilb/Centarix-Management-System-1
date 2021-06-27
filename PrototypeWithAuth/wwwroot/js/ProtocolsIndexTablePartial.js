@@ -178,19 +178,8 @@ $(".popover-more").off('click').click(function () {
 	$(".popover .start-protocol-fx").click(function (e) {
 		e.preventDefault();
 		//switch this to universal share request and the modelsenum send in
-		var url = "/" + $(this).attr("data-controller") + "/" + $(this).attr("data-action") + "/?ID=" + $(this).attr("data-route-request");
-		$.ajax({
-			async: true,
-			url: url,
-			traditional: true,
-			type: "GET",
-			cache: false,
-			success: function (data) {
-				$("._IndexTable").html(data);
-				$.fn. ProtocolsMarkReadonly("_IndexTable");		
-				return false;
-			}
-		})
+		$.fn.StartProtocol($(this).attr("data-route-request"));
 	});
 });
 
+ 

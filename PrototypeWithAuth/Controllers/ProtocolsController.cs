@@ -320,7 +320,9 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Protocols;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.CurrentProtocols;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.ProtocolsWorkflow;
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            var viewmodel = _context.ProtocolInstances.Where(p => p.ApplicationUserID == user.Id).Include(p=>p.Protocol).ToList();
+            return View(viewmodel);
         }
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> Projects()
@@ -412,6 +414,8 @@ namespace PrototypeWithAuth.Controllers
             if (viewmodel.ProtocolInstance == null)
             {
                 viewmodel.ProtocolInstance = new ProtocolInstance { ProtocolID = ID, StartDate = DateTime.Now, ApplicationUserID = user.Id, CurrentLineID = _context.Lines.Where(l => l.ProtocolID == ID && l.ParentLineID == null && l.LineNumber == 1).FirstOrDefault().LineID };
+                _context.Add(viewmodel.ProtocolInstance);
+                await _context.SaveChangesAsync();
             }
             viewmodel.ModalType = AppUtility.ProtocolModalType.CheckListMode;
             await FillCreateProtocolsViewModel(viewmodel, protocol.ProtocolTypeID, ID);         
@@ -1247,7 +1251,10 @@ namespace PrototypeWithAuth.Controllers
                     {
                         _context.Entry(createProtocolsViewModel.Protocol).State = EntityState.Added;
                         await _context.SaveChangesAsync();
-                        _context.Add(new Line() {ProtocolID =  createProtocolsViewModel.Protocol.ProtocolID, LineNumber =1, LineTypeID = 1});
+                        var tempLine = new TempLine() { ProtocolID = createProtocolsViewModel.Protocol.ProtocolID, LineNumber = 1, LineTypeID = 1 };
+                        _context.Add(tempLine);
+                        await _context.SaveChangesAsync();
+                        _context.Add(TurnTempLineToLine(tempLine));
                         await _context.SaveChangesAsync();
                     }
                     else

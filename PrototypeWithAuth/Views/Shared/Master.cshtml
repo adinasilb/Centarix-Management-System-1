@@ -647,7 +647,22 @@
 
         }
 
-      
+        $.fn.StartProtocol = function (id) {
+            var url = "/Protocols/StartProtocol?ID=" +id;
+            $.ajax({
+                async: true,
+                url: url,
+                traditional: true,
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $("._IndexTable").html(data);
+                    $.fn.ProtocolsMarkReadonly("_IndexTable");
+                    return false;
+                }
+            });
+        }
+
 
         $(".load-confirm-email").on("click", function (e) {
             e.preventDefault();
