@@ -159,10 +159,7 @@
 		var reloadDiv = $('.partial-div');
 		var currentPermissions = "";
 		var id = $('.turn-edit-on-off').val();
-		if ($('.turn-edit-on-off').hasClass('operations')) {
-			console.log("has class operations");
-			url = "/Operations/EditModalViewPartial?id=" + id + "&Tab=" + selectedTab;
-		} else if ($('.turn-edit-on-off').hasClass('suppliers')) {
+		if ($('.turn-edit-on-off').hasClass('suppliers')) {
 			section = "LabManagement";
 			url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
 
@@ -202,6 +199,8 @@
 				reloadDiv.html(data);
 
 				$('.name').val($('.old-name').val())
+				console.log($('.name').val())
+				console.log($('.old-name').val())
 				if ($('.turn-edit-on-off').hasClass('orders') || $('.turn-edit-on-off').hasClass('locations')) {
 					$.fn.LoadEditModalDetails();
 				}

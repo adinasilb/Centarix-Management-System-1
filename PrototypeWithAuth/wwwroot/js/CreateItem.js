@@ -204,7 +204,8 @@
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
        
     })
-    $('body').off('click', 'remove-item').on('click','.remove-item', function (e) {
+    $('body').off('click', 'remove-item').on('click', '.remove-item', function (e) {
+        console.log('remove item');
         var index = $(this).attr('data-val');
         var items = $('.partial-item-tab').length
         if (items > 1) {
@@ -244,6 +245,7 @@
         var index = $(this).attr("index");
         var checked = $(this).is(":checked");
         console.log(index)
+        console.log('checked!!!!')
         $("#Requests_" + index + "__IsReceived").attr("value", checked)
     })
 
