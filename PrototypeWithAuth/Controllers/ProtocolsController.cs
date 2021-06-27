@@ -2238,7 +2238,7 @@ namespace PrototypeWithAuth.Controllers
                                     closingTags += "</" + tag + ">";
                                     openingTags = "<" + tag + ">" + openingTags;
                                 }
-                                var addedText = closingTags + renderedView +" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none added-div start-div'></div>" + openingTags;
+                                var addedText = closingTags + renderedView +" <div contenteditable='true' class= 'editable-span form-control-plaintext text-transform-none text added-div start-div'></div>" + openingTags;
                                 report.TemporaryReportText = createReportViewModel.Report.TemporaryReportText.Replace(replaceableText, addedText);
                                 _context.Update(report);
 

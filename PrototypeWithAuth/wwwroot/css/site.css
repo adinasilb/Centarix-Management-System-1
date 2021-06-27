@@ -863,7 +863,7 @@ a.bold-hover-effects {
 }
 
 .text-transform-none {
-    text-transform: none;
+    text-transform: none !important;
 }
 
 a.bold-hover-effects:hover,

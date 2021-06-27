@@ -46,8 +46,8 @@ namespace PrototypeWithAuth.ViewModels
         private static List<IconColumnViewModel> GetIcons()
         {
             var newIconList = new List<IconColumnViewModel>();
-            var editIcon = new IconColumnViewModel("icon-edit_doc-24px", "#009688", "edit-report");
-            newIconList.Add(editIcon);
+            //var editIcon = new IconColumnViewModel("icon-edit_doc-24px", "#009688", "edit-report");
+            //newIconList.Add(editIcon);
             return newIconList;
         }
         private String GetSharedBy(Request request, ShareRequest shareRequest)
@@ -58,7 +58,7 @@ namespace PrototypeWithAuth.ViewModels
 
         private IEnumerable<RequestIndexPartialColumnViewModel> GetWeeklyColumns()
         {
-            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", Width = 10, Value = new List<string>() { r.ReportTitle }, AjaxLink = "", AjaxID = r.ReportID };
+            yield return new RequestIndexPartialColumnViewModel() { Title = "Name", Width = 10, Value = new List<string>() { r.ReportTitle }, AjaxLink = "edit-report", AjaxID = r.ReportID };
             yield return new RequestIndexPartialColumnViewModel() { Title = "Dates", Width = 10, Value = new List<string>() { AppUtility.GetWeekStartEndDates(r.DateCreated) } };
             yield return new RequestIndexPartialColumnViewModel() { Title = "", Width = 5, Icons = GetIcons(), AjaxID = r.ReportID };
         }
