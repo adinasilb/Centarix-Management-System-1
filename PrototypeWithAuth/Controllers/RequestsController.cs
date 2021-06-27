@@ -612,20 +612,18 @@ namespace PrototypeWithAuth.Controllers
                         request.ExchangeRate = exchangeRate;
                         request.Product.SerialNumber = serialLetter + (lastSerialNumber + 1);
                         lastSerialNumber++;
+                        TempRequestViewModel trvm = await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestItemViewModel.TempRequestListViewModel, requestNum: RequestNum);
 
                         using (var saveItemTransaction = _context.Database.BeginTransaction())
                         {
                             try
                             {
-                                saveItemTransaction.Commit();
-                                await AddItemAccordingToOrderType(request, OrderType, isInBudget, requestItemViewModel.TempRequestListViewModel, saveItemTransaction, requestNum: RequestNum);
-
-                                var tempRequestJson = GetTempRequestAsync(requestItemViewModel.TempRequestListViewModel.GUID);
-                                bool isInTempRequestJson = tempRequestJson != null ? true : false;
-                                TempRequestJson trj = new TempRequestJson();
-                                var t = trj.DeserializeJson<List<TempRequestViewModel>>();
+                                //var tempRequestJson = GetTempRequestAsync(requestItemViewModel.TempRequestListViewModel.GUID);
+                                //TempRequestJson trj = new TempRequestJson();
+                                //var t = trj.DeserializeJson<List<TempRequestViewModel>>();
                                 if (requestItemViewModel.Comments != null)
                                 {
+                                    trvm.Comments = new List<Comment>();
                                     foreach (var comment in requestItemViewModel.Comments)
                                     {
                                         if (comment.CommentText.Length != 0)
@@ -635,18 +633,18 @@ namespace PrototypeWithAuth.Controllers
 
                                             comment.RequestID = request.RequestID;
 
-                                            if (!isInTempRequestJson)
-                                            {
-                                                _context.Add(comment);
-                                            }
-                                            else
-                                            {
-                                                t.FirstOrDefault().Comments.Add(comment);
-                                            }
+                                            //if (!isInTempRequestJson)
+                                            //{
+                                            //    _context.Add(comment);
+                                            //}
+                                            //else
+                                            //{
+                                            trvm.Comments.Add(comment);
+                                            //}
                                         }
                                     }
                                 }
-                                if (!isInTempRequestJson)
+                                if (trvm.Request.RequestStatusID == 7)//issavedusingsessions
                                 {
                                     await _context.SaveChangesAsync();
                                     if (receivedModalVisualViewModel.LocationInstancePlaces != null)
@@ -662,17 +660,21 @@ namespace PrototypeWithAuth.Controllers
                                         additionalRequests = false;
                                     }
                                     MoveDocumentsOutOfTempFolder(request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
-                                    await saveItemTransaction.CommitAsync();
+                                    //await saveItemTransaction.CommitAsync();
                                 }
                                 else if (OrderType != AppUtility.OrderTypeEnum.SaveOperations)
                                 {
-                                    foreach (var e in requestItemViewModel.EmailAddresses)
+                                    trvm.Emails = new List<string>();
+                                    foreach (var e in requestItemViewModel.EmailAddresses.Where(e => e != null))
                                     {
-                                        t.FirstOrDefault().Emails.Add(e);
+                                        trvm.Emails.Add(e);
                                     }
 
                                 }
-
+                                TempRequestJson trj = CreateTempRequestJson();
+                                await SetTempRequestAsync(trj,
+                                    new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { trvm } });
+                                saveItemTransaction.CommitAsync();
 
                             }
                             catch (Exception ex)
@@ -681,10 +683,10 @@ namespace PrototypeWithAuth.Controllers
                                 await RollbackCurrentTempAsync(requestItemViewModel.TempRequestListViewModel.GUID);
                                 throw ex;
                             }
+                            RequestNum++;
                         }
-                        RequestNum++;
+                        i++;
                     }
-                    i++;
                 }
             }
             catch (Exception ex)
@@ -872,11 +874,12 @@ namespace PrototypeWithAuth.Controllers
             }
         }
 
-        protected async Task AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, TempRequestListViewModel tempRequestListViewModel, IDbContextTransaction transaction, int requestNum = 1)
+        protected async Task<TempRequestViewModel> AddItemAccordingToOrderType(Request newRequest, AppUtility.OrderTypeEnum OrderTypeEnum, bool isInBudget, TempRequestListViewModel tempRequestListViewModel, int requestNum = 1)
         {
             var context = new ValidationContext(newRequest, null, null);
             var results = new List<ValidationResult>();
             var validatorCreate = Validator.TryValidateObject(newRequest, context, results, true);
+            TempRequestViewModel trvm = new TempRequestViewModel();
             if (validatorCreate)
             {
                 try
@@ -884,22 +887,22 @@ namespace PrototypeWithAuth.Controllers
                     switch (OrderTypeEnum)
                     {
                         case AppUtility.OrderTypeEnum.AddToCart:
-                            await AddToCart(newRequest, isInBudget, tempRequestListViewModel, transaction);
+                            trvm = await AddToCart(newRequest, isInBudget, tempRequestListViewModel);
                             break;
                         case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                            await AlreadyPurchased(newRequest, tempRequestListViewModel, transaction);
+                            trvm = await AlreadyPurchased(newRequest, tempRequestListViewModel);
                             break;
                         case AppUtility.OrderTypeEnum.OrderNow:
-                            await OrderNow(newRequest, isInBudget, tempRequestListViewModel, transaction);
+                            trvm = await OrderNow(newRequest, isInBudget, tempRequestListViewModel);
                             break;
                         case AppUtility.OrderTypeEnum.RequestPriceQuote:
-                            await RequestItem(newRequest, isInBudget, transaction);
+                            await RequestItem(newRequest, isInBudget);
                             break;
                         case AppUtility.OrderTypeEnum.Save:
-                            await SaveItem(newRequest, transaction);
+                            await SaveItem(newRequest);
                             break;
                         case AppUtility.OrderTypeEnum.SaveOperations:
-                            await SaveOperationsItem(newRequest, requestNum, tempRequestListViewModel, transaction);
+                            await SaveOperationsItem(newRequest, requestNum, tempRequestListViewModel);
                             break;
                     }
 
@@ -913,71 +916,84 @@ namespace PrototypeWithAuth.Controllers
                     throw ex;
                 }
             }
-
+            return trvm;
         }
-        protected async Task<bool> AddToCart(Request request, bool isInBudget, TempRequestListViewModel tempRequestListViewModel, IDbContextTransaction transaction)
+        protected async Task<TempRequestViewModel> AddToCart(Request request, bool isInBudget, TempRequestListViewModel tempRequestListViewModel)
         {
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                if (isInBudget)
+                try
                 {
-                    request.RequestStatusID = 6;
+                    if (isInBudget)
+                    {
+                        request.RequestStatusID = 6;
+                    }
+                    else
+                    {
+                        request.RequestStatusID = 1;
+                    }
+                    request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
+                    tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
+                    TempRequestJson tempRequestJson = CreateTempRequestJson();
+                    //TempRequestJson tempRequestJson = new TempRequestJson()
+                    //{
+                    //    CookieGUID = tempRequestListViewModel.GUID,
+                    //    ApplicationUserID = _userManager.GetUserId(User),
+                    //    IsOriginal = true,
+                    //    IsCurrent = true
+                    //};
+                    await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
+                    await transaction.CommitAsync();
                 }
-                else
+                catch (Exception ex)
                 {
-                    request.RequestStatusID = 1;
+                    await transaction.RollbackAsync();
+                    throw ex;
                 }
-                request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
-                tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
-                TempRequestJson tempRequestJson = CreateTempRequestJson();
-                //TempRequestJson tempRequestJson = new TempRequestJson()
-                //{
-                //    CookieGUID = tempRequestListViewModel.GUID,
-                //    ApplicationUserID = _userManager.GetUserId(User),
-                //    IsOriginal = true,
-                //    IsCurrent = true
-                //};
-                await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
-                await transaction.CommitAsync();
-                return true;
             }
-            catch (Exception ex)
+            return new TempRequestViewModel()
             {
-                await transaction.RollbackAsync();
-                throw ex;
-            }
+                Request = request
+            };
         }
 
-        private async Task AlreadyPurchased(Request request, TempRequestListViewModel tempRequestListViewModel, IDbContextTransaction transaction)
+        private async Task<TempRequestViewModel> AlreadyPurchased(Request request, TempRequestListViewModel tempRequestListViewModel)
         {
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                request.RequestStatusID = 2;
-                request.ParentQuoteID = null;
-                request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
-
-                tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel()
+                try
                 {
-                    Request = request
-                });
-                TempRequestJson tempRequestJson = CreateTempRequestJson();
-                //TempRequestJson tempRequestJson = new TempRequestJson()
-                //{
-                //    CookieGUID = tempRequestListViewModel.GUID,
-                //    ApplicationUserID = _userManager.GetUserId(User),
-                //    IsOriginal = true,
-                //    IsCurrent = true
-                //};
-                await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
-                await transaction.CommitAsync();
+                    request.RequestStatusID = 2;
+                    request.ParentQuoteID = null;
+                    request.OrderType = AppUtility.OrderTypeEnum.AlreadyPurchased.ToString();
+
+                    tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel()
+                    {
+                        Request = request
+                    });
+                    TempRequestJson tempRequestJson = CreateTempRequestJson();
+                    //TempRequestJson tempRequestJson = new TempRequestJson()
+                    //{
+                    //    CookieGUID = tempRequestListViewModel.GUID,
+                    //    ApplicationUserID = _userManager.GetUserId(User),
+                    //    IsOriginal = true,
+                    //    IsCurrent = true
+                    //};
+                    await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
             }
-            catch (Exception ex)
+            return new TempRequestViewModel()
             {
-                await transaction.RollbackAsync();
-                throw ex;
-            }
+                Request = request
+            };
         }
-        private async Task OrderNow(Request request, bool isInBudget, TempRequestListViewModel tempRequestListViewModel, IDbContextTransaction transaction)
+        private async Task<TempRequestViewModel> OrderNow(Request request, bool isInBudget, TempRequestListViewModel tempRequestListViewModel)
         {
             try
             {
@@ -1000,129 +1016,142 @@ namespace PrototypeWithAuth.Controllers
                 //    IsOriginal = true,
                 //    IsCurrent = true
                 //};
-                await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
-                await transaction.CommitAsync();
+                //await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
+                //await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                //await transaction.RollbackAsync();
                 throw ex;
             }
+            return new TempRequestViewModel()
+            {
+                Request = request
+            };
         }
-        private async Task<bool> RequestItem(Request newRequest, bool isInBudget, IDbContextTransaction transaction)
+        private async Task RequestItem(Request newRequest, bool isInBudget)
         {
 
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                if (isInBudget)
+                try
                 {
-                    newRequest.RequestStatusID = 6;
+                    if (isInBudget)
+                    {
+                        newRequest.RequestStatusID = 6;
+                    }
+                    else
+                    {
+                        newRequest.RequestStatusID = 1;
+                    }
+                    newRequest.Cost = 0;
+                    newRequest.ParentQuote = new ParentQuote();
+                    newRequest.ParentQuote.QuoteStatusID = 1;
+                    newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote.ToString();
+                    _context.Add(newRequest);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
                 }
-                else
+                catch (DbUpdateException ex)
                 {
-                    newRequest.RequestStatusID = 1;
+                    await transaction.RollbackAsync();
+                    throw ex;
                 }
-                newRequest.Cost = 0;
-                newRequest.ParentQuote = new ParentQuote();
-                newRequest.ParentQuote.QuoteStatusID = 1;
-                newRequest.OrderType = AppUtility.OrderTypeEnum.RequestPriceQuote.ToString();
-                _context.Add(newRequest);
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
             }
-            catch (DbUpdateException ex)
-            {
-                await transaction.RollbackAsync();
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                throw ex;
-            }
-
-            return true;
+            //return new TempRequestViewModel()
+            //{
+            //    Request = request
+            //};
         }
-        private async Task<bool> SaveItem(Request newRequest, IDbContextTransaction transaction)
+        private async Task SaveItem(Request newRequest)
         {
 
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                newRequest.RequestStatusID = 7;
-                newRequest.OrderType = AppUtility.OrderTypeEnum.Save.ToString();
-                newRequest.Unit = 1;
-                newRequest.UnitTypeID = 5;
-                _context.Add(newRequest);
-                await _context.SaveChangesAsync();
-                MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests);
+                try
+                {
+                    newRequest.RequestStatusID = 7;
+                    newRequest.OrderType = AppUtility.OrderTypeEnum.Save.ToString();
+                    newRequest.Unit = 1;
+                    newRequest.UnitTypeID = 5;
+                    _context.Add(newRequest);
+                    await _context.SaveChangesAsync();
+                    MoveDocumentsOutOfTempFolder(newRequest.RequestID, AppUtility.ParentFolderName.Requests);
 
-                newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
-                RequestNotification requestNotification = new RequestNotification();
-                requestNotification.RequestID = newRequest.RequestID;
-                requestNotification.IsRead = false;
-                requestNotification.RequestName = newRequest.Product.ProductName;
-                requestNotification.ApplicationUserID = newRequest.ApplicationUserCreatorID;
-                requestNotification.Description = "item created";
-                requestNotification.NotificationStatusID = 2;
-                requestNotification.TimeStamp = DateTime.Now;
-                requestNotification.Controller = "Requests";
-                requestNotification.Action = "NotificationsView";
-                requestNotification.OrderDate = DateTime.Now;
-                _context.Update(requestNotification);
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
+                    newRequest.Product = await _context.Products.Where(p => p.ProductID == newRequest.ProductID).FirstOrDefaultAsync();
+                    RequestNotification requestNotification = new RequestNotification();
+                    requestNotification.RequestID = newRequest.RequestID;
+                    requestNotification.IsRead = false;
+                    requestNotification.RequestName = newRequest.Product.ProductName;
+                    requestNotification.ApplicationUserID = newRequest.ApplicationUserCreatorID;
+                    requestNotification.Description = "item created";
+                    requestNotification.NotificationStatusID = 2;
+                    requestNotification.TimeStamp = DateTime.Now;
+                    requestNotification.Controller = "Requests";
+                    requestNotification.Action = "NotificationsView";
+                    requestNotification.OrderDate = DateTime.Now;
+                    _context.Update(requestNotification);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (DbUpdateException ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
             }
-            catch (DbUpdateException ex)
-            {
-                await transaction.RollbackAsync();
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                throw ex;
-            }
-
-            return true;
         }
-        private async Task SaveOperationsItem(Request request, int requestNum, TempRequestListViewModel tempRequestListViewModel, IDbContextTransaction transaction)
+        private async Task SaveOperationsItem(Request request, int requestNum, TempRequestListViewModel tempRequestListViewModel)
         {
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                if (request.IsReceived)
+                try
                 {
-                    request.RequestStatusID = 3;
-                    request.ApplicationUserReceiverID = _userManager.GetUserId(User);
-                    request.ArrivalDate = DateTime.Now;
-                }
-                else
-                {
-                    request.RequestStatusID = 2;
-                }
-                request.UnitTypeID = 5;
-                request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
+                    if (request.IsReceived)
+                    {
+                        request.RequestStatusID = 3;
+                        request.ApplicationUserReceiverID = _userManager.GetUserId(User);
+                        request.ArrivalDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        request.RequestStatusID = 2;
+                    }
+                    request.UnitTypeID = 5;
+                    request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
 
-                tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
-                TempRequestJson tempRequestJson = CreateTempRequestJson();
-                //TempRequestJson tempRequestJson = new TempRequestJson()
-                //{
-                //    CookieGUID = tempRequestListViewModel.GUID,
-                //    ApplicationUserID = _userManager.GetUserId(User),
-                //    IsOriginal = true,
-                //    IsCurrent = true
-                //};
-                await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
-                await transaction.CommitAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                await transaction.RollbackAsync();
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                throw ex;
+                    tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
+                    TempRequestJson tempRequestJson = CreateTempRequestJson();
+                    //TempRequestJson tempRequestJson = new TempRequestJson()
+                    //{
+                    //    CookieGUID = tempRequestListViewModel.GUID,
+                    //    ApplicationUserID = _userManager.GetUserId(User),
+                    //    IsOriginal = true,
+                    //    IsCurrent = true
+                    //};
+                    await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
+                    await transaction.CommitAsync();
+                }
+                catch (DbUpdateException ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
             }
         }
         public TempRequestJson CreateTempRequestJson()
@@ -1198,11 +1227,14 @@ namespace PrototypeWithAuth.Controllers
             {
                 var current = allGUIDTRJs.Where(t => t.IsCurrent).FirstOrDefault();
                 var original = allGUIDTRJs.Where(t => t.IsOriginal).FirstOrDefault();
-                current.IsCurrent = false;
-                current.IsOriginal = true;
-                _context.Update(current);
-                _context.Remove(original);
-                await _context.SaveChangesAsync();
+                if(current != null)
+                {
+                    current.IsCurrent = false;
+                    current.IsOriginal = true;
+                    _context.Update(current);
+                    _context.Remove(original);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
         public async Task RemoveTempRequestAsync(Guid GUID)
@@ -2461,7 +2493,7 @@ namespace PrototypeWithAuth.Controllers
                             deserializedTemp.GUID = reorderViewModel.RequestItemViewModel.TempRequestListViewModel.GUID;
                             deserializedTemp.RequestIndexObject = reorderViewModel.RequestItemViewModel.TempRequestListViewModel.RequestIndexObject;
 
-                            await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, deserializedTemp, transaction);
+                            await AddItemAccordingToOrderType(reorderViewModel.RequestItemViewModel.Requests.FirstOrDefault(), OrderTypeEnum, isInBudget, deserializedTemp);
 
                             await transaction.CommitAsync(); //IF SAVEITEM OR REQUEST ITEM
 
@@ -2518,7 +2550,8 @@ namespace PrototypeWithAuth.Controllers
             TempRequestListViewModel trlvm = new TempRequestListViewModel()
             {
                 GUID = tempRequestJson.GuidID,
-                RequestIndexObject = requestIndexObject
+                RequestIndexObject = requestIndexObject,
+                TempRequestViewModels = new List<TempRequestViewModel>()
             };
 
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = SectionType;
