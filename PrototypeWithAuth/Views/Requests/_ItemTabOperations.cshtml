@@ -24,10 +24,7 @@
         //disabled = "";
         disabledText = "";
     }
-    else if (modalType == AppUtility.RequestModalType.Summary)
-    {
-        hiddenSummaryClass = "hidden";
-    }
+    
 }
 
 <div class="operations-item-div">
@@ -63,7 +60,7 @@
 </div>
 @if (Model.ModalType == AppUtility.RequestModalType.Create)
 {
-    <div class="row text-center justify-content-center @hiddenSummaryClass">
+    <div class="row text-center justify-content-center">
         <input type="button" id="addOperationItem" value="+ Add Item" class="btn  btn-rounded border no-box-shadow pt-1 pb-1 pr-5 pl-5 text-capitalize add-item" style="font-size:1rem;" data-val="1" />
     </div>
 }

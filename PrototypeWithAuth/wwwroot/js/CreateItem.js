@@ -244,6 +244,7 @@
         var index = $(this).attr("index");
         var checked = $(this).is(":checked");
         console.log(index)
+        console.log('checked!!!!')
         $("#Requests_" + index + "__IsReceived").attr("value", checked)
     })
 
