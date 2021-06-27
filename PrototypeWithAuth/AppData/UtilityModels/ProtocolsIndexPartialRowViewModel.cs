@@ -161,6 +161,7 @@ namespace PrototypeWithAuth.ViewModels
                 {
                     var continueIcon = new IconPopoverViewModel("icon-play_circle_outline-24px-1", "#4CAF50", AppUtility.PopoverDescription.Continue, "StartProtocol", "Protocols", AppUtility.PopoverEnum.None, "start-protocol-fx");
                     newMorePopoverList[startIndex] = continueIcon;
+                    newIconList[morePopoverIndex].IconPopovers = newMorePopoverList;
                 }
             }
             return newIconList;
