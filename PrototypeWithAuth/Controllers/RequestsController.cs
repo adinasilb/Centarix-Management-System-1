@@ -671,7 +671,7 @@ namespace PrototypeWithAuth.Controllers
                                     }
 
                                 }
-                                TempRequestJson trj = CreateTempRequestJson();
+                                TempRequestJson trj = CreateTempRequestJson(requestItemViewModel.TempRequestListViewModel.GUID);
                                 await SetTempRequestAsync(trj,
                                     new TempRequestListViewModel() { TempRequestViewModels = new List<TempRequestViewModel>() { trvm } });
                                 saveItemTransaction.CommitAsync();
@@ -934,7 +934,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     request.OrderType = AppUtility.OrderTypeEnum.AddToCart.ToString();
                     tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
-                    TempRequestJson tempRequestJson = CreateTempRequestJson();
+                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                     //TempRequestJson tempRequestJson = new TempRequestJson()
                     //{
                     //    CookieGUID = tempRequestListViewModel.GUID,
@@ -971,7 +971,7 @@ namespace PrototypeWithAuth.Controllers
                     {
                         Request = request
                     });
-                    TempRequestJson tempRequestJson = CreateTempRequestJson();
+                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                     //TempRequestJson tempRequestJson = new TempRequestJson()
                     //{
                     //    CookieGUID = tempRequestListViewModel.GUID,
@@ -1008,7 +1008,7 @@ namespace PrototypeWithAuth.Controllers
                 request.OrderType = AppUtility.OrderTypeEnum.OrderNow.ToString();
 
                 tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>() { new TempRequestViewModel() { Request = request } };
-                TempRequestJson tempRequestJson = CreateTempRequestJson();
+                TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                 //TempRequestJson tempRequestJson = new TempRequestJson()
                 //{
                 //    CookieGUID = tempRequestListViewModel.GUID,
@@ -1131,7 +1131,7 @@ namespace PrototypeWithAuth.Controllers
                     request.OrderType = AppUtility.OrderTypeEnum.SaveOperations.ToString();
 
                     tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = request });
-                    TempRequestJson tempRequestJson = CreateTempRequestJson();
+                    TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                     //TempRequestJson tempRequestJson = new TempRequestJson()
                     //{
                     //    CookieGUID = tempRequestListViewModel.GUID,
@@ -1154,11 +1154,11 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
-        public TempRequestJson CreateTempRequestJson()
+        public TempRequestJson CreateTempRequestJson(Guid guid = Guid.NewGuid)
         {
             return new TempRequestJson()
             {
-                GuidID = Guid.NewGuid(),
+                GuidID = guid,
                 ApplicationUserID = _userManager.GetUserId(User),
                 IsCurrent = true,
                 IsOriginal = true
@@ -1285,7 +1285,7 @@ namespace PrototypeWithAuth.Controllers
                 }
                 newTRLVM.GUID = Guid.NewGuid();
 
-                TempRequestJson tempRequestJson = CreateTempRequestJson();
+                TempRequestJson tempRequestJson = CreateTempRequestJson(newTRLVM.GUID);
 
                 await SetTempRequestAsync(tempRequestJson, newTRLVM);
             }
@@ -2616,14 +2616,14 @@ namespace PrototypeWithAuth.Controllers
                     request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
                     request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == request.Product.VendorID).FirstOrDefault();
                 }
-                TempRequestJson tempRequestJson = CreateTempRequestJson();
+                TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                 newTRLVM.TempRequestViewModels = new List<TempRequestViewModel>()
                 {
                     new TempRequestViewModel(){
                         Request = request
                     }
                 };
-                updatedTempRequestJson = CreateTempRequestJson();
+                updatedTempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
                 await SetTempRequestAsync(updatedTempRequestJson, newTRLVM);
                 var payments = _context.Payments.Where(p => p.RequestID == id);
             }
