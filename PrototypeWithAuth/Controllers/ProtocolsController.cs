@@ -421,6 +421,22 @@ namespace PrototypeWithAuth.Controllers
             await FillCreateProtocolsViewModel(viewmodel, protocol.ProtocolTypeID, ID);         
             return PartialView("_IndexTableWithEditProtocol", viewmodel);
         }
+
+        [Authorize(Roles = "Protocols")]
+        public async Task<IActionResult> MoveToNextLine(int protocolInstanceID, int nextLineID)
+        {
+            var protocolInstance = await _context.ProtocolInstances.Where(pi => pi.ProtocolInstanceID == protocolInstanceID).FirstOrDefaultAsync();
+            if(nextLineID>0)
+            {
+                protocolInstance.CurrentLineID = nextLineID;
+                _context.Update(protocolInstance);
+                await _context.SaveChangesAsync();
+            }
+            
+            List<ProtocolsLineViewModel> refreshedLines = OrderLinesForView(protocolInstance.ProtocolID, AppUtility.ProtocolModalType.CheckListMode, protocolInstance);
+
+            return PartialView("_Lines", new ProtocolsLinesViewModel { Lines = refreshedLines });
+        }
         private async Task<CreateProtocolsViewModel> FillCreateProtocolsViewModel(CreateProtocolsViewModel createProtocolsViewModel, int typeID, int protocolID = 0)
         {
             var protocol = _context.Protocols
@@ -454,7 +470,7 @@ namespace PrototypeWithAuth.Controllers
             }
             createProtocolsViewModel.FunctionTypes = functionTypes;
             await CopySelectedLinesToTempLineTable(protocol.ProtocolID);
-            createProtocolsViewModel.TempLines = OrderLinesForView(protocolID, createProtocolsViewModel.ModalType);
+            createProtocolsViewModel.TempLines = OrderLinesForView(protocolID, createProtocolsViewModel.ModalType, createProtocolsViewModel.ProtocolInstance);
             string uploadProtocolsFolder = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Materials.ToString());
             string uploadProtocolsFolder2 = Path.Combine(uploadProtocolsFolder, protocol.ProtocolID.ToString());
             FillDocumentsInfo(createProtocolsViewModel, uploadProtocolsFolder2);
@@ -810,8 +826,9 @@ namespace PrototypeWithAuth.Controllers
             await _context.SaveChangesAsync();
         }
 
-        private List<ProtocolsLineViewModel> OrderLinesForView(int protocolID, AppUtility.ProtocolModalType modalType)
+        private List<ProtocolsLineViewModel> OrderLinesForView(int protocolID, AppUtility.ProtocolModalType modalType, ProtocolInstance protocolInstance =null)
         {
+            var currentLineID = protocolInstance?.CurrentLineID;
             var functionLine = _context.FunctionLines.Where(fl => fl.Line.ProtocolID == protocolID && fl.IsTemporaryDeleted == false).Include(fl => fl.FunctionType).ToList();
             List<ProtocolsLineViewModel> refreshedLines = new List<ProtocolsLineViewModel>();
             Stack<TempLine> parentNodes = new Stack<TempLine>();
@@ -821,7 +838,10 @@ namespace PrototypeWithAuth.Controllers
             while (!parentNodes.IsEmpty())
             {
                 var node = parentNodes.Pop();
-
+                if(currentLineID == node.PermanentLineID)
+                {
+                    refreshedLines.ForEach(l => l.IsDone = true);
+                }
                 refreshedLines.Add(new ProtocolsLineViewModel()
                 {
                     LineTypes = lineTypes,
@@ -831,6 +851,7 @@ namespace PrototypeWithAuth.Controllers
                     Functions = functionLine.Where(fl => fl.LineID == node.PermanentLineID),
                     ModalType = modalType
                 });
+
                 _context.TempLines.Where(c => c.ParentLineID == (node.PermanentLineID)).OrderByDescending(tl => tl.LineNumber).ToList().ForEach(c => { parentNodes.Push(c); });
             }
             if (refreshedLines.Count == 0)

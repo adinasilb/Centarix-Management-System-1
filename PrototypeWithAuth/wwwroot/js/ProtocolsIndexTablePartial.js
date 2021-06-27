@@ -115,8 +115,9 @@ $(".protocol-favorite").off("click").on("click", function (e) {
 	}
 });
 
-$(".popover-more").off('click').click(function () {
-	var val = $(this).val();
+$(".popover-more").off('click').click(function (e) {
+	e.preventDefault();
+	var val = $(this).attr("value");
 	$('[data-toggle="popover"]').popover('dispose');
 	$(this).popover({
 		sanitize: false,
@@ -177,7 +178,7 @@ $(".popover-more").off('click').click(function () {
 	});
 	$(".popover .start-protocol-fx").click(function (e) {
 		e.preventDefault();
-		//switch this to universal share request and the modelsenum send in
+		alert("here")
 		$.fn.StartProtocol($(this).attr("data-route-request"));
 	});
 });

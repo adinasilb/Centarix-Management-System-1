@@ -4,6 +4,12 @@
 @{
     var dynamicID = "TempLines_" + Model.Index + "__";
     var dynamicName = "TempLines[" + Model.Index + "].";
+
+    var moveToNextStepColor = "disabled-color";
+    if(Model.IsDone)
+    {
+        moveToNextStepColor = "protocols-color";
+    }
 }
 @if (Model.TempLine != null)
 {
@@ -21,9 +27,9 @@
                     dNone = "";
                 }
             }
-            <button type="button" data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover mark-readonly button-mark-readonly @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.TempLine?.ParentLineID" lineCount="@Model.Index">
+            <a  data-toggle="popover" data-placement="bottom" data-container="body" data-trigger="focus" class="@dNone no-box-shadow btn p-0 m-0 addLinePopover mark-readonly button-mark-readonly @(dynamicID)ContentLinePopoverButton" lineNumber="@Model.LineNumberString" value="line-content@(Model.Index)" parentLineID="@Model.TempLine?.ParentLineID" lineCount="@Model.Index">
                 <i class="protocols-color icon-add_circle-24px" style="  font-size: 3rem;"></i>
-            </button>
+            </a>
         </li>
         <div style="display:none; " id="line-content@(Model.Index)">
             @foreach (var item in Model.LineTypes)
@@ -67,7 +73,7 @@
 
     @if (Model.ModalType == AppUtility.ProtocolModalType.CheckListMode)
     {
-        <div class=" d-flex align-items-center  mr-2">  <span class="move-to-next-step checklist-mode-only"><i class="icon-done-24px"></i></span></div>
+        <div class=" d-flex align-items-center  mr-2 move-to-next-step pointer-event @moveToNextStepColor" nextLineID ='@("TempLines_"+(Model.Index+1)+"__PermanentLineID")'  > <span class=" checklist-mode-only"><i class="icon-done-24px"></i></span></div>
         <div class=" d-flex align-items-center mr-2 ">  <span class="add-change checklist-mode-only"><i class="icon-sync-24px"></i></span></div>
     }
 

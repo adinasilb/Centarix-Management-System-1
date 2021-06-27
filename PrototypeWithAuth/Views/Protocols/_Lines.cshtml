@@ -16,8 +16,9 @@
 }
 
 <script>
-    $(".addLinePopover").click(function () {
-        var val = $(this).val();
+    $(".addLinePopover").click(function (e) {
+        e.preventDefault()
+        var val = $(this).attr("value");
         $('[data-toggle="popover"]').popover('dispose');
         $(this).popover({
             sanitize: false,
@@ -61,6 +62,19 @@
         $("#" + $(this).attr("line-id")).val(html);
     });
 
+    $(".move-to-next-step").click(function(){
+        $.ajax({
+            url: "/Protocols/MoveToNextLine?protocolInstanceID=" + $(".protocolInstanceID").val() +
+                "&nextLineID=" + $("#"+$(this).attr("nextLineID")).val(),
+            type: 'GET',
+            success: function (data) {
+                $("._Lines").html(data);
+            },
+            error: function (jqxhr) {
+                $("._Lines").html(jqxhr.responseText);
+            }
+        });
+    });
 
 </script>
 <script src="~/js/spanContentEditable.js"></script>
