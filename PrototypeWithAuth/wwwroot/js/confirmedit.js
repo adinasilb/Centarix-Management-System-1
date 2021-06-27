@@ -146,7 +146,7 @@
                 }
 			}
 		});
-		$.fn.TurnToDetails();
+		$.fn.TurnToDetails("edits");
 	});
 
 

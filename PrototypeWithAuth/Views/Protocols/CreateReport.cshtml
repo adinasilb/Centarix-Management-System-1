@@ -3,7 +3,10 @@
 @{
     Layout = null;
 }
-
+<script src="~/js/Validation/CreateReportValidation.js"></script>
+<script src="~/js/validate.js"></script>
+<script src="~/js/site.js"></script>
+<script src="~/js/DocumentModalJS.js"></script>
 <form action="" id="myForm" class=" on-form-modal protocol-form createReportForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
     <div class="row pb-3">
 
@@ -32,6 +35,7 @@
     <div class="row py-3">
         <div class="col-6">
             <input asp-for="Report.ReportTitle" placeholder="Add Title" class="form-control-plaintext border-bottom heading-1 protocols-color" />
+            <span asp-validation-for="Report.ReportTitle" class="text-danger-centarix"></span>
         </div>
     </div>
     <div class="row report-text-div" style="min-height:50px; width:100%">
@@ -39,12 +43,14 @@
             await Html.RenderPartialAsync("_ReportText", Model.Report);
         }
     </div>
- </form>
+</form>
 <script src="~/js/function.js"></script>
-    <script>
-        $(".load-save-report").off("click").on("click", function (e) {
-            console.log(" save report")
-            e.preventDefault();
+<script>
+    $(".load-save-report").off("click").on("click", function (e) {
+        e.preventDefault();
+        $('.createReportForm').data("validator").settings.ignore = "";
+        var valid = $('.createReportForm').valid();
+        if (valid) {
             var formData = new FormData($("#myForm")[0]);
             $.ajax({
                 url: "/Protocols/CreateReport",
@@ -54,17 +60,16 @@
                 data: formData,
                 type: "POST",
                 success: function (data) {
-                    $.fn.OpenModal('save-report-modal','save-report', data)
+                    $.fn.OpenModal('save-report-modal', 'save-report', data)
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
-                       // $.fn.OpenModal('modal', 'add-function', jqxhr.responseText);
+                        // $.fn.OpenModal('modal', 'add-function', jqxhr.responseText);
                     }
                     return true;
                 }
             });
-        })
-    </script>
-    <script src="~/js/site.js"></script>
-    <script src="~/js/DocumentModalJS.js"></script>
-    
+        }
+    })
+</script>
+
