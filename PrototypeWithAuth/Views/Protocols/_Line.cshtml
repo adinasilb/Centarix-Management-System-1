@@ -5,7 +5,7 @@
     var dynamicID = "TempLines_" + Model.Index + "__";
     var dynamicName = "TempLines[" + Model.Index + "].";
 
-    var moveToNextStepColor = "disabled-color";
+    var moveToNextStepColor = "disabled-text";
     if(Model.IsDone)
     {
         moveToNextStepColor = "protocols-color";
@@ -22,7 +22,7 @@
         <li>
             @{
                 var dNone = "d-none";
-                if (Model.Index == 0)
+                if (Model.Index == 0 && (Model.ModalType != AppUtility.ProtocolModalType.CheckListMode && Model.ModalType != AppUtility.ProtocolModalType.Summary))
                 {
                     dNone = "";
                 }
