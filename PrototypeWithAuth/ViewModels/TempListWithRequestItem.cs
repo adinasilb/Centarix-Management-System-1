@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrototypeWithAuth.ViewModels
 {
-    public class TempRequestListWithRequestItemViewModel
+    public class TempListWithRequestItem
     {
         public TempRequestListViewModel TempRequestListViewModel { get; set; }
         public RequestItemViewModel RequestItemViewModel { get; set; }

@@ -10,6 +10,7 @@ namespace PrototypeWithAuth.Models
     public class TempRequestJson
     {
         [Key]
+        public int TempRequestJsonID { get; set; }
         public Guid GuidID { get; set; }
         public String ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }

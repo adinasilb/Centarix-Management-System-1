@@ -97,7 +97,7 @@
 <script src="~/js/site.js"></script>
 
 <script>
-    $(".submitOrder").off('click').on("click", function (e) {
+    $(".submitOrder").on("click").off("click", function () {
         e.preventDefault();
         console.log("submit order");
         //alert("validate form");
@@ -114,34 +114,9 @@
         else {
             $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
-            var formData = new FormData($("#myForm")[0]);
-            console.log(...formData);
             var orderType = $(this).val();
-            $.ajax({
-                contentType: false,
-                processData: false,
-                async: true,
-                url: "/Requests/AddItemView?OrderType=" + orderType,
-                data: formData,
-                traditional: true,
-                type: "POST",
-                cache: false,
-                success: function (data) {
-                    $.fn.OpenModal('modalStep1', 'step-1', data)
-                    $("#loading").hide();
-                    return true;
-                },
-                error: function (jqxhr) {
-                    $("#loading").hide();
-                    if (jqxhr.status == 500) {
-                       // alert("made it to error")
-                        $("#order").html(jqxhr.responseText);
-                        $(".order-tab").trigger("click");
-                    }
-                }
-            });
+            $.fn.SubmitOrderFromAddItemView(orderType);
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
-
-        //return false;
-    });</script>
+    });
+</script>

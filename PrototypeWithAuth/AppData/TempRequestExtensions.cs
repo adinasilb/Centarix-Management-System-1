@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using PrototypeWithAuth.Models;
+using PrototypeWithAuth.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+//using System.Web.Helpers;
 
 namespace PrototypeWithAuth.AppData
 {
@@ -12,11 +14,16 @@ namespace PrototypeWithAuth.AppData
     {
         public static void SerializeViewModel(this TempRequestJson jsonRequest, object value)
         {
-            var jsonstring = JsonConvert.SerializeObject(value,
-                       Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings()
-                       {
-                           ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                       });
+            //var jsonstring = JsonConvert.SerializeObject(value,
+            //           Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings()
+            //           {
+            //               ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            //           });
+            var jsonstring = JsonConvert.SerializeObject(value, Newtonsoft.Json.Formatting.Indented,
+                new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                });
             jsonRequest.RequestJson = jsonstring;
         }
 
@@ -24,6 +31,7 @@ namespace PrototypeWithAuth.AppData
         {
             var value = jsonRequest.RequestJson;
             return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+            //dynamic data = Jso
         }
 
     }
