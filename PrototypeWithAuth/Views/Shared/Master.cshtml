@@ -425,8 +425,6 @@
                 $.fn.EnableMaterialSelect('#currency', 'select-options-currency');
                 $.fn.EnableMaterialSelect('#operationsCategory', 'select-options-operationsCategory');
                 $.fn.EnableMaterialSelect('#operationsSubcategory', 'select-options-operationsSubcategory');
-                $.fn.EnableMaterialSelect('#vendorList', 'select-options-vendorList');
-
             }
             if ($(element).hasClass('orders')) {
                 console.log("orders");
@@ -574,7 +572,7 @@
             var category = $("#categoryDescription").val();
             console.log(category)
             $("." + category).removeClass("d-none");
-            console.log("in detilas of case")
+            console.log("in details of case")
             $.fn.TurnToDetails();
             $('.open-document-modal').attr("showSwitch", true);
             $('.edits .mdb-select').materialSelect();

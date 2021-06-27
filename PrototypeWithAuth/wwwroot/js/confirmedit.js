@@ -15,10 +15,7 @@
 		}
 
 		var url = '';
-		if ($('.turn-edit-on-off').hasClass('operations')) {
-			console.log("has class operations");
-			url = "/Operations/EditModalView";
-		} else if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
+		if ($('.turn-edit-on-off').hasClass('suppliers') || $('.turn-edit-on-off').hasClass('accounting')) {
 			console.log("has class suppliers or accounting");
 			url = "/Vendors/Edit";
 		} else if ($('.turn-edit-on-off').hasClass('users')) {
@@ -159,15 +156,22 @@
 		var reloadDiv = $('.partial-div');
 		var currentPermissions = "";
 		var id = $('.turn-edit-on-off').val();
+		var controller = "/Requests/";
+		var viewClass = "_ItemHeader";
+
 		if ($('.turn-edit-on-off').hasClass('suppliers')) {
 			section = "LabManagement";
 			url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
+			viewClass = "_VendorHeader";
+			controller = "/Vendors/";
 
 		} else if ($('.turn-edit-on-off').hasClass('accounting')) {
 			section = "Accounting";
 			url = "/Vendors/EditPartial?id=" + id + "&SectionType=" + section + "&Tab=" + selectedTab;
-		}
-		else if ($('.turn-edit-on-off').hasClass('users')) {
+			viewClass = "_VendorHeader";
+			controller = "/Vendors/";
+
+		} else if ($('.turn-edit-on-off').hasClass('users')) {
 			//alert("in users");
 			url = "/Admin/EditUserPartial?id=" + id + "&Tab=" + selectedTab;
 			currentPermissions = $(".permissions-checks:visible")[0]?.classList.toString().split(" ").join(".");
@@ -177,15 +181,15 @@
 			console.log(selectedTab)
 			section = $("#masterSectionType").val();
 			url = "/Requests/ItemData?id=" + id + "&Tab=" + selectedTab + "&SectionType=" + section;
-		}
-		else if ($('.turn-edit-on-off').hasClass('locations')) {
+
+		} else if ($('.turn-edit-on-off').hasClass('locations')) {
 			selectedTab = $('.tab-content').children('.active').attr("value");
 			console.log(selectedTab)
 			section = $("#masterSectionType").val();
 			url = "/Requests/_LocationTab?id=" + id;
 			reloadDiv = $("#location");
-		}
-		else {
+
+		} else {
 			alert("didn't go into any edits");
 		}
 		console.log("url: " + url);
@@ -198,13 +202,10 @@
 				//open the confirm edit modal
 				reloadDiv.html(data);
 
-				$('.name').val($('.old-name').val())
-				console.log($('.name').val())
-				console.log($('.old-name').val())
-				if ($('.turn-edit-on-off').hasClass('orders') || $('.turn-edit-on-off').hasClass('locations')) {
-					$.fn.LoadEditModalDetails();
-				}
-				else if ($('.turn-edit-on-off').hasClass('users')) {
+				//$('.name').val($('.old-name').val())
+				
+				if ($('.turn-edit-on-off').hasClass('users')) {
+					$('.userName').val($('#FirstName').val() + " " + $('#LastName').val())
 					console.log(currentPermissions)
 					$.fn.HideAllPermissionsDivs();
 					if (currentPermissions != null) {
@@ -213,10 +214,21 @@
 					}
 					else {
 						$.fn.ChangeUserPermissionsButtons();
-                    }
-
-					
+					}
+				} else {
+					$.ajax({
+						url: controller + viewClass + "?id=" + id + "&SectionType=" + section,
+						type: 'GET',
+						cache: true,
+						success: function (data) {
+							$('.' + viewClass).html(data);
+							if ($('.turn-edit-on-off').hasClass('orders') || $('.turn-edit-on-off').hasClass('locations')) {
+								$.fn.LoadEditModalDetails();
+							}
+						}
+					})
 				}
+
 			}
 		});
 	});

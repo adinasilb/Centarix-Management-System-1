@@ -2031,16 +2031,33 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ItemData(int? id, int? Tab = 0, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true)
         {
-            var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable);
+            List<string> selectedPriceSort = null;
+            selectedPriceSort = new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() };
+            var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable, selectedPriceSort);
             return PartialView(requestItemViewModel);
         }
 
+        [Authorize(Roles = "Requests")]
+        public async Task<IActionResult> _ItemHeader(int? id, AppUtility.MenuItems SectionType)
+        {
+            var categoryTypeId = 1;
+            if (SectionType == AppUtility.MenuItems.Operations)
+            {
+                categoryTypeId = 2;
+            }
+            var requestItemViewModel = new RequestItemViewModel();
+            requestItemViewModel.Vendors = await _context.Vendors.Where(v => v.VendorCategoryTypes.Where(vc => vc.CategoryTypeID == categoryTypeId).Count() > 0).ToListAsync();
+            requestItemViewModel.SectionType = SectionType;
+            var request = _context.Requests.Include(r => r.Product).Include(r => r.Product.Vendor).SingleOrDefault(x => x.RequestID == id);
+            requestItemViewModel.Requests = new List<Request>() { request };
+            return PartialView(requestItemViewModel);
+        }
 
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false)
+        public async Task<IActionResult> EditModalView(int? id, AppUtility.MenuItems SectionType = AppUtility.MenuItems.Requests, bool isEditable = true, List<string> selectedPriceSort = null, bool isProprietary = false, int? Tab = 0)
         {
             selectedPriceSort = selectedPriceSort.Count == 0 ? new List<string>() { AppUtility.PriceSortEnum.Unit.ToString(), AppUtility.PriceSortEnum.TotalVat.ToString() } : selectedPriceSort;
-            var requestItemViewModel = await editModalViewFunction(id, 0, SectionType, isEditable, selectedPriceSort, isProprietary: isProprietary);
+            var requestItemViewModel = await editModalViewFunction(id, Tab, SectionType, isEditable, selectedPriceSort, isProprietary: isProprietary);
             return PartialView(requestItemViewModel);
         }
 
