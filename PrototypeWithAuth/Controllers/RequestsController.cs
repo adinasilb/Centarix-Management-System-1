@@ -1588,6 +1588,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Remove(notification);
                             await _context.SaveChangesAsync();
                         }
+                        //throw new Exception();
                         await transaction.CommitAsync();
                     }
                     catch (Exception e)
@@ -1623,7 +1624,7 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                deleteRequestViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
+                deleteRequestViewModel.RequestIndexObject.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
@@ -1639,7 +1640,11 @@ namespace PrototypeWithAuth.Controllers
                 }
                 else if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                 {
-                    return RedirectToAction("Cart");
+                    return RedirectToAction("Cart", new { deleteRequestViewModel.RequestIndexObject.ErrorMessage });
+                }
+                else if(deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                {
+                    return RedirectToAction("IndexInventory", deleteRequestViewModel.RequestIndexObject);
                 }
                 else
                 {
@@ -3874,12 +3879,12 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> Cart()
+        public async Task<IActionResult> Cart(string errorMessage)
         {
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Cart;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart }));
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart, ErrorMessage = errorMessage }));
         }
 
 
