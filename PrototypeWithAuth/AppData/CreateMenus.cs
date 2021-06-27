@@ -332,20 +332,20 @@ namespace PrototypeWithAuth.AppData
                         Classes = AllClasses,
                         ID = ""
                     });
-                    if (pageType == AppUtility.PageTypeEnum.ProtocolsResources) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
-                    MainMenuItems.Add(new MenuItems()
-                    {
-                        Description = "Resources",
-                        Controller = "Protocols",
-                        Action = "Library",
-                        RouteValues = new RouteValueDictionary()
-                        {
-                        {"PageType", AppUtility.PageTypeEnum.ProtocolsResources },
-                        {"SidebarType", AppUtility.SidebarEnum.Library }
-                        },
-                        Classes = AllClasses,
-                        ID = ""
-                    });
+                    //if (pageType == AppUtility.PageTypeEnum.ProtocolsResources) { AllClasses += ActiveClasses; } else { AllClasses = OrigClasses; }
+                    //MainMenuItems.Add(new MenuItems()
+                    //{
+                    //    Description = "Resources",
+                    //    Controller = "Protocols",
+                    //    Action = "Library",
+                    //    RouteValues = new RouteValueDictionary()
+                    //    {
+                    //    {"PageType", AppUtility.PageTypeEnum.ProtocolsResources },
+                    //    {"SidebarType", AppUtility.SidebarEnum.Library }
+                    //    },
+                    //    Classes = AllClasses,
+                    //    ID = ""
+                    //});
                     break;
                 case AppUtility.MenuItems.Reports:
                     ActiveClasses = " text-dark expenses-filter";
