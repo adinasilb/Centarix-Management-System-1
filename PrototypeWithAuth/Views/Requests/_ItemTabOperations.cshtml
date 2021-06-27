@@ -46,7 +46,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label asp-for="Requests[0].ExchangeRate" class="control-label"></label>
-                        <input asp-for="Requests[0].ExchangeRate" class="form-control-plaintext border-bottom  @markReadOnlyClass"  id="exchangeRate" />
+                        <input name="Requests[0].ExchangeRate" value="@Model.Requests[0].ExchangeRate" class="form-control-plaintext border-bottom @markReadOnlyClass" id="exchangeRate" />
                         <span asp-validation-for="Requests[0].ExchangeRate" class="text-danger-centarix"></span>
                     </div>
                 </div>

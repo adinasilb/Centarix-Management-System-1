@@ -6,14 +6,30 @@
     var modalType = Model.ModalType;
     var markReadOnlyClass = "";
     var disabled = "disabled";
+    var disabledDollarProperty = "disabled";
+    var disabledShekelProperty = "";
+    var disableShekel = "";
+    var disableDollar = "disabled-text";
+    var dollarReadOnly = "";
+    var shekelReadOnly = "";
     if (modalType == AppUtility.RequestModalType.Edit)
     {
+        if (Model.Request.Currency.Equals("USD"))
+        {
+            disableShekel = "disabled-text";
+            disableDollar = "";
+            disabledDollarProperty = "";
+            disabledShekelProperty = "readonly";
+            shekelReadOnly = "";
+            dollarReadOnly = "mark-readonly";
+        }
         markReadOnlyClass = "mark-readonly";
-    } 
+    }
     else if(modalType == AppUtility.RequestModalType.Create)
     {
         disabled = "";
     }
+
 
     var dynamicID = "Requests_" + Model.RequestIndex + "__";
     var dynamicName = "Requests[" + Model.RequestIndex + "].";
@@ -207,8 +223,8 @@
             <div class="form-group">
                 <label class="control-label">Total:</label>
                 <div class="input-group">
-                    <span class="input-group-text request-cost-dollar-icon disabled-text">&#36;</span>
-                    <input class="form-control-plaintext border-bottom @markReadOnlyClass requestPriceQuote dollar-cost cost disabled-text" disabled data-val="@Model.RequestIndex" id="sum-dollars@(Model.RequestIndex)" name="sum-dollars" value="@(Model.Request!= null ? Model.Request.ExchangeRate == 0 ? 0 : Math.Round(Model.Request.Cost??0 / Model.Request.ExchangeRate,2) : 0)" />
+                    <span class="input-group-text request-cost-dollar-icon @disableDollar">&#36;</span>
+                    <input class="form-control-plaintext border-bottom @markReadOnlyClass requestPriceQuote dollar-cost cost @disableDollar" @disabledDollarProperty data-val="@Model.RequestIndex" id="sum-dollars@(Model.RequestIndex)" name="sum-dollars" value="@(Model.Request!= null ? (Model.Request.ExchangeRate == 0 ? 0 : Math.Round((Model.Request.Cost??0) / Model.Request.ExchangeRate,2)) : 0)" />
                 </div>
             </div>
         </div>
@@ -216,8 +232,8 @@
             <div class="form-group">
                 <label class="control-label"></label>
                 <div class="input-group">
-                    <span class="input-group-text request-cost-shekel-icon">&#x20aa;</span>
-                    <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="@markReadOnlyClass form-control-plaintext border-bottom requestPriceQuote shekel-cost cost" min="1" value="@(Model.Request!= null ? Model.Request.Cost ?? 0 : 0)"  @disabled />
+                    <span class="input-group-text request-cost-shekel-icon @disableShekel">&#x20aa;</span>
+                    <input id="@(dynamicID)Cost" name="@(dynamicName)Cost" data-val="@Model.RequestIndex" class="@markReadOnlyClass form-control-plaintext border-bottom requestPriceQuote shekel-cost cost @disableShekel" min="1" value="@(Model.Request!= null ? Model.Request.Cost ?? 0 : 0)"  @disabledShekelProperty />
                     @*<span class="text-danger-centarix" asp-validation-for="Request.Cost"></span>*@
                 </div>
             </div>

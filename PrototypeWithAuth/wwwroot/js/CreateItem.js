@@ -204,7 +204,7 @@
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
        
     })
-    $('body').off('click', 'remove-item').on('click','.remove-item', function (e) {
+    $('.ordersItemForm').off('click', 'remove-item').on('click','.remove-item', function (e) {
         var index = $(this).attr('data-val');
         var items = $('.partial-item-tab').length
         if (items > 1) {
@@ -219,7 +219,7 @@
             $("#" + deletedid).val("true");
         }
     })
-    $('body').off('change', '.include-vat-radio').on('change', '.include-vat-radio', function (e) {
+    $('.ordersItemForm').off('change', '.include-vat-radio').on('change', '.include-vat-radio', function (e) {
         console.log("radio click")
         var index = $(this).attr("index");
         var vatInfoClass = ".vat-info";
@@ -240,14 +240,14 @@
             $(vatInfoClass).removeClass("d-none");
         }
     })
-    $('body').off('click', '.received-check').on('click', '.received-check', function (e) {
+    $('.ordersItemForm').off('click', '.received-check').on('click', '.received-check', function (e) {
         var index = $(this).attr("index");
         var checked = $(this).is(":checked");
         console.log(index)
         $("#Requests_" + index + "__IsReceived").attr("value", checked)
     })
 
-    $('body').on('click', "#addRequestComment", function () {
+    $('.ordersItemForm').on('click', "#addRequestComment", function () {
         console.log("clicked!");
         console.log($('#popover-content').html())
         $('[data-toggle="popover"]').popover('dispose');
