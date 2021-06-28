@@ -55,6 +55,20 @@ $(".load-protocol").click(function(e){
 
 });
 
+$(".update-results").click(function(e){
+	var val = $(this).val();
+	$.ajax({
+		url: "/Protocols/StartProtocol?protocolID="+val+"&IsUpdateResults=true",
+		async: true,
+		type: "GET",
+		success: function (data) {
+			$("._IndexTable").html(data);
+			$(".mdb-select").materialSelect();
+			return true;
+		}
+	});
+});
+
 var protocolFavoritesHasRun = false; //This is preventing the double click
 $(".protocol-favorite").off("click").on("click", function (e) {
 	//$(this).off("click");
@@ -178,7 +192,6 @@ $(".popover-more").off('click').click(function (e) {
 	});
 	$(".popover .start-protocol-fx").click(function (e) {
 		e.preventDefault();
-		alert("here")
 		$.fn.StartProtocol($(this).attr("data-route-request"));
 	});
 });

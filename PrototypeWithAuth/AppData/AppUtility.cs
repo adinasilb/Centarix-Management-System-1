@@ -538,6 +538,11 @@ namespace PrototypeWithAuth.AppData
             return newCopy;
         }
 
+        public static T DeepClone<T>(T obj)
+        {
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj));
+        }
+
         public static List<String> GetAmountColumn(Request request, UnitType unitType, UnitType subUnitType, UnitType subSubUnitType)
         {
             List<String> amountColumn = new List<String>();

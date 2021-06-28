@@ -22,6 +22,7 @@ namespace PrototypeWithAuth.Models
         public string ResultDescription { get; set; }
         public string TemporaryResultDescription { get; set; }
         public bool IsFinished { get; set; }
+        public bool ResultsReported { get; set; }
 
     }
 }
