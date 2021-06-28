@@ -225,10 +225,17 @@
                             </div>
                             <div class="col-3 pl-0">
                                 <div class="form-group payment-date d-none">
+                                    @{ 
+                                        DateTime? paymentDate = null;
+                                        if (Model.Payment.PaymentReferenceDate != new DateTime())
+                                        {
+                                            paymentDate = Model.Payment.PaymentReferenceDate;
+                                        }
+                                    }
                                     <label class="control-label wire d-none">Transfer Date</label>
                                     <label class="control-label credit-card">Reference Date</label>
                                     <label class="control-label bank-check d-none">Cash Out Date</label>
-                                    <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="@((Model.Payment.PaymentReferenceDate != new DateTime()) ? Model.Payment.PaymentReferenceDate.ToShortDateString() : "")" />
+                                    <input class="form-control-plaintext border-bottom datepicker" type="text" asp-for="Payment.PaymentReferenceDate" value="@AppUtility.FormatDate(paymentDate)" />
                                 </div>
                             </div>
                             <div class="col-3 wire d-none">
