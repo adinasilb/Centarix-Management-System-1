@@ -8,12 +8,7 @@
 
     var summary = "";
     var disabled = "";
-    var markReadOnlyClass = "";
     var color = "";
-    if (Model.ModalType == AppUtility.RequestModalType.Edit || Model.ModalType == AppUtility.RequestModalType.Summary)
-    {
-        markReadOnlyClass = "mark-readonly";
-    }
     if (Model.ModalType != AppUtility.RequestModalType.Summary)
     {
         summary = "hidden";
@@ -93,7 +88,6 @@
                         </button>
                     </div>
                     <div class="row modal-title-line justify-content-between">
-                        @*<div class="col-md-2 px-0">*@
                         @if (Model.Requests[0].Product.ProductSubcategory.ImageURL != null)
                         {
                             <img src="@Model.Requests[0].Product.ProductSubcategory.ImageURL" class="top-modal-image" alt="Alternate Text" width="75" />
@@ -102,39 +96,9 @@
                         {
                             <img src="~/images/css/CategoryImages/placeholder.png" alt="Alternate Text" class="top-modal-image" width="75" /> @*this will be the product image and will need to be pulled from wherever it will be located in the DB*@
                         }
-                        @*</div>*@
-                        @if (Model.SectionType != AppUtility.MenuItems.Operations)
-                        {
-                            <div class="modal-product-title" @*style="width: 80%;"*@>
-                                <textarea asp-for="Requests[0].Product.ProductName" class="form-control-plaintext border-bottom heading-1 item-name name mark-readonly" disabled placeholder="(item name)" rows="1" cols="50" maxlength="150" style="resize:none;"></textarea>
-                                <span asp-validation-for="Requests[0].Product.ProductName" class="text-danger-centarix"></span>
-
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="col-md-4 ">
-                                <div class="form-group">
-                                    @Html.DropDownListFor(
-                        vm => vm.Requests[0].Product.VendorID,
-                        new SelectList(
-                        Model.Vendors,
-                        dataValueField: "VendorID",
-                        dataTextField: "VendorEnName"),
-                        //FUTURE: Ask If we should put in the functionality to create a new vendor here rather than just choosing, "Select a Project",
-                        "Select a Vendor",
-                        htmlAttributes: new { @class = " vendorList mdb-select custom select-dropdown form-control-plaintext vendor " + markReadOnlyClass, @id = "vendorList", @size = 1, @searchable = "Select A Vendor" }
-                        )
-                                    <span asp-validation-for="Requests[0].Product.VendorID" class="text-danger-centarix"></span>
-                                </div>
-                            </div>
-                            <input class="" type="hidden" value="" id="vendor-primary-email" />
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <input asp-for="Requests[0].Product.Vendor.VendorBuisnessID" class="vendorBusinessId form-control-plaintext border-bottom " readonly />
-                                </div>
-                            </div>
-                        }
+                        <div class=" col _ItemHeader" >
+                            @{ await Html.RenderPartialAsync("_ItemHeader", Model);}
+                        </div>
                         <div class="form-group">
                             @if ((Model.Requests[0].RequestStatusID == 3 || Model.Requests[0].RequestStatusID == 2) && Model.SectionType == AppUtility.MenuItems.Requests)
                             {
