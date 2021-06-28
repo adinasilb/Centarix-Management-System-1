@@ -23,11 +23,7 @@
     }
     @{
         var inReceivedModal = Model.RequestChildrenLocationInstances == null;
-        var disabledEdit = "";
-        if (Model.IsEditModalTable)
-        {
-            disabledEdit = "disabled mark-readonly";
-        }
+
         var locationsList = Model.ChildrenLocationInstances?.ToList();
         if (Model.ChildrenLocationInstances == null)
         {
@@ -100,7 +96,7 @@
                                 hideIcon = "d-none";
                             }
                         }
-                            <td class="@outerClass @disabledEdit" style="padding:0px;" id="@locationsList[z].LocationInstanceID">
+                            <td class="@outerClass mark-readonly" style="padding:0px;" id="@locationsList[z].LocationInstanceID">
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1"><i class="@iconClass @hideIcon location-icon "></i></div>@*hide till edit on*@
@@ -136,7 +132,7 @@
                                 iconClass = "icon-delete-24px";
                                 hideIcon = "";
                             }
-                            <td class="@outerClass @disabledEdit location-selected @backgroundClass" style="padding:0px;  ">
+                            <td class="@outerClass mark-readonly location-selected @backgroundClass" style="padding:0px;  ">
                                 <div class="">
                                     <input class="@classes @disabled" id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1">
@@ -152,7 +148,7 @@
                         }
                         else
                         {
-                            <td class="@outerClass @disabledEdit" style="padding:0px;">
+                            <td class="@outerClass mark-readonly" style="padding:0px;">
                                 <div>
                                     <input class="@classes " id=@(id+"_IsFull") liid="@liID" name="@(name+".IsFull")" type="checkbox" value="true">
                                     <div class="row-1"> @*hide on load, show when turn edit on*@
