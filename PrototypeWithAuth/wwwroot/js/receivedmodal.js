@@ -60,7 +60,7 @@
 	};
 
 	//FROM THE RECEIVED MODAL SUBLOCATIONS
-	$("body").off("click",".SLI-click").on("click",".SLI-click", function (e) {
+	$("form").off("click",".SLI-click").on("click",".SLI-click", function (e) {
 		//alert("clicked SLI");
 		console.log("clicked SLI")
 		SLI($(this));
