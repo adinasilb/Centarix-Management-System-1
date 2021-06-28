@@ -1630,17 +1630,17 @@ namespace PrototypeWithAuth.Controllers
                 {
                     if (deleteRequestViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                     {
-                        return RedirectToAction("LabManageQuotes");
+                        return RedirectToAction("LabManageQuotes", new { errorMessage = deleteRequestViewModel.RequestIndexObject.ErrorMessage });
                     }
                     else
                     {
-                        return RedirectToAction("LabManageOrders");
+                        return RedirectToAction("LabManageOrders", new { errorMessage = deleteRequestViewModel.RequestIndexObject.ErrorMessage });
                     }
 
                 }
                 else if (deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                 {
-                    return RedirectToAction("Cart", new { deleteRequestViewModel.RequestIndexObject.ErrorMessage });
+                    return RedirectToAction("Cart", new { errorMessage = deleteRequestViewModel.RequestIndexObject.ErrorMessage });
                 }
                 else if(deleteRequestViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
                 {
@@ -2791,19 +2791,15 @@ namespace PrototypeWithAuth.Controllers
                 Response.StatusCode = 500;
                 if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
-                    if (confirmEmailViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
-                    {
-                        return RedirectToAction("LabManageQuotes");
-                    }
-                    else
-                    {
-                        return RedirectToAction("LabManageOrders");
-                    }
-
+                    return RedirectToAction("LabManageOrders", new { errorMessage = confirmEmailViewModel.RequestIndexObject.ErrorMessage });
                 }
                 else if (confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                 {
-                    return RedirectToAction("Cart");
+                    return RedirectToAction("Cart", new { errorMessage = confirmEmailViewModel.RequestIndexObject.ErrorMessage });
+                }
+                else if(confirmEmailViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                {
+                    return RedirectToAction("IndexInventory", confirmEmailViewModel.RequestIndexObject);
                 }
                 else
                 {
@@ -2989,27 +2985,29 @@ namespace PrototypeWithAuth.Controllers
         /*LABMANAGEMENT*/
         [HttpGet]
         [Authorize(Roles = "LabManagement")]
-        public async Task<IActionResult> LabManageQuotes()
+        public async Task<IActionResult> LabManageQuotes(string errorMessage)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Quotes;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Quotes }));
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject 
+                { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Quotes, ErrorMessage = errorMessage }));
         }
 
         public async Task<IActionResult> _LabManageQuotes(RequestIndexPartialViewModelByVendor labManageQuotesViewModel)
         {
-            return PartialView(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Quotes }));
+            return PartialView(await GetIndexViewModelByVendor(new RequestIndexObject 
+                { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Quotes }));
         }
 
         [HttpGet]
         [Authorize(Roles = "LabManagement")]
-        public async Task<IActionResult> LabManageOrders()
+        public async Task<IActionResult> LabManageOrders(string errorMessage)
         {
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.LabManagementQuotes;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Orders;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.LabManagement;
-            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Orders }));
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.LabManagement, PageType = AppUtility.PageTypeEnum.LabManagementQuotes, SidebarType = AppUtility.SidebarEnum.Orders, ErrorMessage = errorMessage }));
         }
         public async Task<IActionResult> _LabManageOrders(RequestIndexPartialViewModelByVendor labManageQuotesViewModel)
         {
@@ -3884,7 +3882,8 @@ namespace PrototypeWithAuth.Controllers
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = AppUtility.SidebarEnum.Cart;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.RequestCart;
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Requests;
-            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart, ErrorMessage = errorMessage }));
+            return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Requests, 
+                PageType = AppUtility.PageTypeEnum.RequestCart, SidebarType = AppUtility.SidebarEnum.Cart, ErrorMessage = errorMessage }));
         }
 
 
