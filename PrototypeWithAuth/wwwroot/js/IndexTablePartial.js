@@ -408,6 +408,7 @@ $(function () {
 			cache: false,
 			success: function (data) {
 				$(viewClass).html(data);
+				$(".tooltip").remove();
 				$("#loading").hide();
 				return true;
 			}
