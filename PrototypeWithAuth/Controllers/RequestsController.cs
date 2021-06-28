@@ -217,7 +217,7 @@ namespace PrototypeWithAuth.Controllers
                     break;
                 case AppUtility.PageTypeEnum.AccountingPayments:
 
-                    var paymentList = GetPaymentRequests(requestIndexObject.SidebarType);
+                    var paymentList = GetPaymentRequests(requestIndexObject.SidebarType).Result;
                     switch (requestIndexObject.SidebarType)
                     {
                         case AppUtility.SidebarEnum.Installments:
@@ -225,9 +225,10 @@ namespace PrototypeWithAuth.Controllers
                             checkboxString = "";
                             iconList.Add(payNowIcon);
                             iconList.Add(popoverMoreIcon);
-                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, r.Payments)
+                            var requestPaymentList = 
+                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.Request.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                             (AppUtility.IndexTableTypes.AccountingPaymentsInstallments, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
+                        r.Request.Product.ProductSubcategory.ParentCategory, r.Request.UnitType, r.Request.SubUnitType, r.Request.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
                             {
                                 ButtonText = "",
@@ -236,10 +237,9 @@ namespace PrototypeWithAuth.Controllers
                         default:
                             iconList.Add(payNowIcon);
                             iconList.Add(popoverMoreIcon);
-                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
-                             (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r, r.Product, r.Product.Vendor, r.Product.ProductSubcategory,
-                        r.Product.ProductSubcategory.ParentCategory, r.UnitType, r.SubUnitType, r.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.ParentRequest, checkboxString, r.Payments)
-
+                            viewModelByVendor.RequestsByVendor = paymentList.OrderByDescending(r => r.Request.ParentRequest.OrderDate).Select(r => new RequestIndexPartialRowViewModel
+                             (AppUtility.IndexTableTypes.AccountingPaymentsDefault, r.Request, r.Request.Product, r.Request.Product.Vendor, r.Request.Product.ProductSubcategory,
+                        r.Request.Product.ProductSubcategory.ParentCategory, r.Request.UnitType, r.Request.SubUnitType, r.Request.SubSubUnitType, requestIndexObject, iconList, defaultImage, r.Request.ParentRequest, checkboxString, new List<Payment>() { r.Payment })
 
                             {
                                 ButtonClasses = " payments-pay-now accounting-background-color ",
@@ -4023,15 +4023,15 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Accounting")]
         public async Task<IActionResult> AccountingPayments(AppUtility.SidebarEnum accountingPaymentsEnum = AppUtility.SidebarEnum.MonthlyPayment)
         {
-            TempData["PayNowCount"] = GetPaymentRequests(AppUtility.SidebarEnum.PayNow).ToList().Count();
+            var payNowCount = await GetPaymentRequests(AppUtility.SidebarEnum.PayNow);
+            TempData["PayNowCount"] = payNowCount.Count();
             TempData[AppUtility.TempDataTypes.MenuType.ToString()] = AppUtility.MenuItems.Accounting;
             TempData[AppUtility.TempDataTypes.PageType.ToString()] = AppUtility.PageTypeEnum.AccountingPayments;
             TempData[AppUtility.TempDataTypes.SidebarType.ToString()] = accountingPaymentsEnum;
             return View(await GetIndexViewModelByVendor(new RequestIndexObject { SectionType = AppUtility.MenuItems.Accounting, PageType = AppUtility.PageTypeEnum.AccountingPayments, SidebarType = accountingPaymentsEnum }));
 
         }
-
-        private IQueryable<Request> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum)
+        private async Task<List<RequestPaymentsViewModel>> GetPaymentRequests(AppUtility.SidebarEnum accountingPaymentsEnum)
         {
             var requests = _context.Requests
                   .Include(r => r.ParentRequest)
@@ -4039,35 +4039,38 @@ namespace PrototypeWithAuth.Controllers
                   .Include(r => r.UnitType).Include(r => r.SubUnitType).Include(r => r.SubSubUnitType)
                   .Include(r => r.Product.ProductSubcategory).ThenInclude(pc => pc.ParentCategory).Include(r => r.Payments)
                   .Where(r => r.RequestStatusID != 7 && r.Payments.Where(p => !p.IsPaid).Count() > 0);
+            var requestList = new List<RequestPaymentsViewModel>();
             switch (accountingPaymentsEnum)
             {
                 case AppUtility.SidebarEnum.MonthlyPayment:
                     requests = requests
                     .Where(r => r.PaymentStatusID == 2 && r.Payments.FirstOrDefault().HasInvoice && r.Payments.FirstOrDefault().IsPaid == false);
+                    await requests.ForEachAsync(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
                     break;
                 case AppUtility.SidebarEnum.PayNow:
                     requests = requests
                     //.Where(r => r.Product.ProductSubcategory.ParentCategory.CategoryTypeID == 1)
                     .Where(r => r.PaymentStatusID == 3 && r.Payments.FirstOrDefault().IsPaid == false);
+                    await requests.ForEachAsync(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
                     break;
                 case AppUtility.SidebarEnum.PayLater:
                     requests = requests
                 .Where(r => r.PaymentStatusID == 4 && r.Payments.FirstOrDefault().IsPaid == false);
+                    await requests.ForEachAsync(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
                     break;
                 case AppUtility.SidebarEnum.Installments:
                     requests = requests
                         .Where(r => r.PaymentStatusID == 5).Where(r => r.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).Count() > 0);
-                    var requestList = requests.ToList();
                     foreach (var request in requests)
                     {
-                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5));
+                        var currentInstallments = request.Payments.Where(p => p.IsPaid == false && p.PaymentDate < DateTime.Now.AddDays(5)).ToList();
+                        requestList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(0) });
                         if (currentInstallments.Count() > 0)
                         {
                             for (var i = 1; i < currentInstallments.Count(); i++)
                             {
-                                requestList.Add(request);
+                                requestList.Add(new RequestPaymentsViewModel { Request = request, Payment = currentInstallments.ElementAt(i) });
                             }
-                            requests = requestList.AsQueryable();
                         }
                     }
 
@@ -4079,9 +4082,10 @@ namespace PrototypeWithAuth.Controllers
                 case AppUtility.SidebarEnum.SpecifyPayment:
                     requests = requests
                 .Where(r => r.PaymentStatusID == 8 && r.Payments.FirstOrDefault().HasInvoice);
+                    await requests.ForEachAsync(r => requestList.Add(new RequestPaymentsViewModel { Request = r, Payment = r.Payments.FirstOrDefault() }));
                     break;
             }
-            return requests;
+            return requestList;
         }
         private IQueryable<Request> GetPaymentNotificationRequests(AppUtility.SidebarEnum accountingNotificationsEnum)
         {
@@ -4170,7 +4174,8 @@ namespace PrototypeWithAuth.Controllers
         {
             string test = "test";
             List<Request> requestsToPay = new List<Request>();
-            var requestsList = GetPaymentRequests(accountingPaymentsEnum);
+            var requestsList = new List<Request>();
+            GetPaymentRequests(accountingPaymentsEnum).Result.ForEach(rp => requestsList.Add(rp.Request));
 
             if (vendorid != null)
             {
