@@ -30,8 +30,14 @@
                 </div>
                 <div class="modal-footer border-0 p-0">
                     <div class="mx-auto modal-footer-mt">
-                        <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
-                        @if (Model.FunctionLine.ID != 0)
+                        @if ((Model.ModalType == AppUtility.ProtocolModalType.Edit ||
+                             Model.ModalType != AppUtility.ProtocolModalType.Create)
+                             && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString()  && Model.FunctionLine.FunctionType.DescriptionEnum != AppUtility.ProtocolFunctionTypes.AddLinkToProduct.ToString() )
+                        {
+                            <input type="submit" class="custom-button custom-button-font protocols-background-color between-button-margin saveFunction" value="Save" />
+                        }
+
+                        @if (Model.ModalType == AppUtility.ProtocolModalType.Edit)
                         {
                             <input type="submit" class="custom-button custom-cancel removeFunction" value="Remove" />
                         }

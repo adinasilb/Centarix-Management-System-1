@@ -58,7 +58,7 @@ $(".load-protocol").click(function(e){
 $(".update-results").click(function(e){
 	var val = $(this).val();
 	$.ajax({
-		url: "/Protocols/StartProtocol?protocolID="+val+"&IsUpdateResults=true",
+		url: "/Protocols/StartProtocol?protocolInstanceID="+val+"&IsUpdateResults=true",
 		async: true,
 		type: "GET",
 		success: function (data) {

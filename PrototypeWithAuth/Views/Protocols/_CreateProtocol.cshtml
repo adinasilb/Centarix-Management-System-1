@@ -25,6 +25,10 @@
     {
         saveProtocolClass = "";
     }
+    var checkListMode = AppUtility.ProtocolModalType.CheckListMode;
+    var editMode = AppUtility.ProtocolModalType.Edit;
+    var summaryMode = AppUtility.ProtocolModalType.Summary;
+    var createModel = AppUtility.ProtocolModalType.Create;
 }
 
 <form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
@@ -51,17 +55,20 @@
                     <label class="new-button-text">Protocols</label>
                 </a>
             </li>
-
-            @if (Model.ModalType != AppUtility.ProtocolModalType.CheckListMode)
-            {
-                <li class="only-protocol-tab li-function-bar  d-none">
-                    <div class=" function-bar">
-                        @foreach (var type in Model.FunctionTypes)
-                        {
-                            <button class="function" type="button" typeID="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
-                        }
-                    </div>
-                </li>
+            <li class="list-inline-item m-0 nav-item @checkListMode has-modal-type d-none">
+                <a data-toggle="tab" href="#Results@(Model.ModalType)" class="next-tab nav-link new-button new-protocols-button protocol-tab lines-tab  ">
+                    <i class="new-icon icon-protocol-tab-24px"></i>
+                    <label class="new-button-text">Results</label>
+                </a>
+            </li>
+            <li class="only-protocol-tab li-function-bar d-none">
+                <div class=" function-bar">
+                    @foreach (var type in Model.FunctionTypes)
+                    {
+                        <button class="function" type="button" typeID="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
+                    }
+                </div>
+            </li>
                 <li class="only-protocol-tab   d-none li-function-bar">
                     <div class="h-100 d-flex ml-6" style=" align-items: center;">
                         <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
@@ -76,9 +83,9 @@
                     <span class="protocols-color pt-3"> Saved</span>
                 </li>
             }
-            
 
-        </ul>
+
+            </ul>
     </div>
     <div class="tab-content _CreateProtocolTabs">
         @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}

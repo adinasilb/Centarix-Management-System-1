@@ -414,8 +414,17 @@ namespace PrototypeWithAuth.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
-            var protocol = _context.Protocols.Where(p => p.ProtocolID == ID).FirstOrDefault();
-            viewmodel.ProtocolInstance = await _context.ProtocolInstances.Where(p => p.ProtocolID == ID && p.ApplicationUserID == user.Id && !p.IsFinished).OrderByDescending(p => p.StartDate).FirstOrDefaultAsync();
+            Protocol protocol = null;
+            if(IsUpdateResults)
+            {
+                viewmodel.ProtocolInstance = await _context.ProtocolInstances.Where(p => p.ProtocolInstanceID == protocolInstanceID).Include(p=>p.Protocol).FirstOrDefaultAsync();
+                protocol = viewmodel.ProtocolInstance.Protocol;
+            }
+            else
+            {
+                protocol = _context.Protocols.Where(p => p.ProtocolID == ID).FirstOrDefault();
+                viewmodel.ProtocolInstance = await _context.ProtocolInstances.Where(p => p.ProtocolID == ID && p.ApplicationUserID == user.Id && !p.IsFinished).OrderByDescending(p => p.StartDate).FirstOrDefaultAsync();
+            }
             if (viewmodel.ProtocolInstance == null)
             {
                 viewmodel.ProtocolInstance = new ProtocolInstance { ProtocolID = ID, StartDate = DateTime.Now, ApplicationUserID = user.Id, CurrentLineID = _context.Lines.Where(l => l.ProtocolID == ID && l.ParentLineID == null && l.LineNumber == 1).FirstOrDefault().LineID };
