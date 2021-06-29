@@ -410,7 +410,7 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> StartProtocol(int ID, int protocolInstanceID, bool isContinue, int tab=3)
+        public async Task<IActionResult> StartProtocol(int ID, bool isContinue, int tab=3)
         {
             var user = await _userManager.GetUserAsync(User);
             CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
@@ -418,7 +418,7 @@ namespace PrototypeWithAuth.Controllers
             Protocol protocol = null;
             if(isContinue)
             {
-                viewmodel.ProtocolInstance = await _context.ProtocolInstances.Where(p => p.ProtocolInstanceID == protocolInstanceID).Include(p=>p.Protocol).FirstOrDefaultAsync();
+                viewmodel.ProtocolInstance = await _context.ProtocolInstances.Where(p => p.ProtocolInstanceID == ID).Include(p=>p.Protocol).FirstOrDefaultAsync();
                 protocol = viewmodel.ProtocolInstance.Protocol;
             }
             else
@@ -430,7 +430,7 @@ namespace PrototypeWithAuth.Controllers
             }
             viewmodel.ModalType = AppUtility.ProtocolModalType.CheckListMode;
             viewmodel.Tab = 3;
-            await FillCreateProtocolsViewModel(viewmodel, protocol.ProtocolTypeID, ID);         
+            await FillCreateProtocolsViewModel(viewmodel, protocol.ProtocolTypeID, protocol.ProtocolID);         
             return PartialView("_IndexTableWithEditProtocol", viewmodel);
         }
 
