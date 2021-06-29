@@ -22,7 +22,7 @@
     }
 }
 
-@{ await Html.RenderPartialAsync("_TempRequestHiddenFors.cshtml", Model);}
+@{ await Html.RenderPartialAsync("_TempRequestHiddenFors", Model.TempRequestListViewModel);}
 
 <script src="~/js/TermsModal.js"></script>
 <script src="~/js/site.js"></script>

@@ -59,10 +59,14 @@
             <span class="small-text">If you want to order multiple items</span>
         </div>
         <div class="col-5">
-            <button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
+            <button type="submit" asp-action="AddItemView" asp-controller="Requests" asp-route-OrderType="@AppUtility.OrderTypeEnum.AddToCart.ToString()"
                     class="text w-100 custom-order-inv custom-button float-right submitOrder ">
                 @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
             </button>
+            @*<button type="submit" name="OrderType" value="@AppUtility.OrderTypeEnum.AddToCart"
+                        class="text w-100 custom-order-inv custom-button float-right submitOrder ">
+                    @AppUtility.GetDisplayNameOfEnumValue(AppUtility.OrderTypeEnum.AddToCart.ToString())
+                </button>*@
 
         </div>
     </div>
@@ -97,9 +101,10 @@
 <script src="~/js/site.js"></script>
 
 <script>
-    $(".submitOrder").on("click").off("click", function () {
+    $(".submitOrder").off("click").on("click", function (e) {
         e.preventDefault();
-        console.log("submit order");
+        e.stopPropagation();
+        console.log("submit order from _ordertab");
         //alert("validate form");
         $("#myForm").data("validator").settings.ignore = "";
         var valid = $("#myForm").valid();
@@ -114,9 +119,43 @@
         else {
             $('.activeSubmit').removeClass('disabled-submit')
             $("#loading").show();
-            var orderType = $(this).val();
+            var orderType = $(this).attr("value");
             $.fn.SubmitOrderFromAddItemView(orderType);
         }
         $("#myForm").data("validator").settings.ignore = ':not(select:hidden, input:visible, textarea:visible)';
     });
+
+    $.fn.SubmitOrderFromAddItemView = function (orderType) {
+        console.log("in submitorderfromadditemview");
+        var formData = new FormData($("#myForm")[0]);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+        $.ajax({
+            contentType: false,
+            processData: false,
+            async: true,
+            url: "/Requests/AddItemView?OrderType=" + orderType,
+            data: formData,
+            traditional: true,
+            type: "POST",
+            cache: false,
+            success: function (data) {
+                console.log("in success of ajax call ");
+                alert("in success of ajax call");
+                $.fn.OpenModal('modalStep1', 'step-1', data)
+                $("#loading").hide();
+                return true;
+            },
+            error: function (jqxhr) {
+                console.log("in error of ajax call ");
+                $("#loading").hide();
+                if (jqxhr.status == 500) {
+                    // alert("made it to error")
+                    $("#order").html(jqxhr.responseText);
+                    $(".order-tab").trigger("click");
+                }
+            }
+        });
+    };
 </script>
