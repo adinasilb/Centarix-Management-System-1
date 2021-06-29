@@ -50,12 +50,14 @@
                 success: function (data) {
                     $("._CreateProtocolTabs").html(data)
                     $(".mdb-select").materialSelect();
+                    var modalType = $(".modalType").val();
                     if (tab.hasClass("lines-tab")/* && $(".createProtocolMasterProtocolID").val()=="0"*/) {
-                        $(".only-protocol-tab.li-function-bar").removeClass("d-none");
+                        $("."+modalType+".only-protocol-tab.li-function-bar").removeClass("d-none");
                     }
                     else {
-                        $(".only-protocol-tab").addClass("d-none");
+                        $("."+modalType+".only-protocol-tab").addClass("d-none");
                     }
+                    
                 },
                 error: function (jqxhr) {
                     if (jqxhr.status == 500) {
@@ -85,7 +87,7 @@
                 $(".saving-spinner").addClass("d-none");
                 $(".saving-done").removeClass("d-none");
                 setTimeout(function () {
-                    $(".saving-done").addClass("d-none");
+                $(".saving-done").addClass("d-none");
                 }, 1000 * 30);
             },
             error: function (jqxhr) {
@@ -96,4 +98,9 @@
         });
     });
 
+    $(".start-protocol-fx").off("click").click(function (e) {
+        e.preventDefault();
+        //switch this to universal share request and the modelsenum send in
+        $.fn.StartProtocol($(this).attr("value"));
+    });
 });

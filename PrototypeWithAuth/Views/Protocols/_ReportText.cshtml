@@ -16,34 +16,20 @@
         }
     </span>
     <input type="hidden" id="TemporaryReportText" name="Report.TemporaryReportText" value="@Model.TemporaryReportText" />
-    <input type="hidden" id="closingTags" value="" />
+    <input type="hidden" id="closingTags" value="div" />
 </div>
 
 <script>
-    $(".report-text").on('change', function (e) {
+    $(".report-text").on('change click', function (e) {
+        console.log("click")
         var node = $.fn.GetCurrentPositionParents();
-        $('#closingTags').val(node??" ")
+        $('#closingTags').val(node ?? " ")
+        $(".focusedText").blur()
         $(".focusedText").remove()
         pasteHtmlAtCaret("<span class='focusedText'></span>")
         $("#TemporaryReportText").val($(this).html())
-    })
-    $(".report-text").on('click', function (e) {
-        $(".report-text").trigger("change")
-    })
 
-    //$(".start-div").on('change', function (e) {
-    //    e.stopPropagation();
-    //    console.log(this)
-    //    if ($(this).children("div").length>0) {
-    //        console.log("not start div")
-    //        var text = $(this).children("div").html();
-    //        console.log(text)
-    //        if (text != "" && text!="<br>") {
-    //            //$(this).html($(this).html() + text)
-    //            //$(this).children("div").remove();
-    //        }
-    //    }
-    //})
+    })
     function pasteHtmlAtCaret(html) {
         var sel, range;
         if (window.getSelection) {
@@ -64,18 +50,15 @@
                 range.insertNode(frag);
 
                 // Preserve the selection
-                if (lastNode) {
-                    range = range.cloneRange();
-                    range.setStartAfter(lastNode);
-                    //range.collapse(false);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                }
+                //if (lastNode) {
+                //    range = range.cloneRange();
+                //    range.setStartAfter(lastNode);
+                //    //range.collapse(false);
+                //    sel.removeAllRanges();
+                //    sel.addRange(range);
+                //}
             }
-        } else if (document.selection && document.selection.type != "Control") {
-            // IE < 9
-            document.selection.createRange().pasteHTML(html);
-        }
+        } 
     }
     $.fn.GetCurrentPositionParents = function (e) {
         var nodeString = "";
@@ -89,7 +72,6 @@
                 else if (document.selection) {
                     var target = document.selection.createRange().parentElement();
                 }
-                console.log(target)
                 while (!$(target).hasClass('start-div') && target != null) {
                     nodeString = nodeString + (target?.tagName?? "") + ",";
                     target = target.parentNode

@@ -3807,11 +3807,17 @@ namespace PrototypeWithAuth.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ProtocolID")
                         .HasColumnType("int");
 
                     b.Property<string>("ResultDescription")
                         .HasColumnType("ntext");
+
+                    b.Property<bool>("ResultsReported")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -6528,7 +6534,7 @@ namespace PrototypeWithAuth.Data.Migrations
             modelBuilder.Entity("PrototypeWithAuth.Models.Resource", b =>
                 {
                     b.HasOne("PrototypeWithAuth.Data.ApplicationUser", "ApplicationUserCreator")
-                        .WithMany()
+                        .WithMany("ResourcesCreated")
                         .HasForeignKey("ApplicationUserCreatorID")
                         .OnDelete(DeleteBehavior.Restrict);
 
