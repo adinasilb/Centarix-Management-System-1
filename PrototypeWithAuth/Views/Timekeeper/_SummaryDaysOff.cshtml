@@ -55,19 +55,19 @@
                     @Math.Round(Model.VacationDays, 2)                    
                 </div>
                 <div class="col">
-                    @Model.VacationDaysTakenCount
+                    @Math.Round(Model.VacationDaysTakenCount, 2)
                 </div>
                 <div class="col">
                     @Math.Round(Model.VacationDaysLeft, 2)
                 </div>
                 <div class="col">
-                    @Model.SickDays
+                    @Math.Round(Model.SickDays, 2)
                 </div>
                 <div class="col">
-                    @Model.SickDaysTakenCount
+                    @Math.Round(Model.SickDaysTakenCount, 2)
                 </div>
                 <div class="col">
-                    @Model.SickDaysLeft
+                    @Math.Round(Model.SickDaysLeft, 2)
                 </div>
             </div>
             <div class="row  mt-6 ">
@@ -79,11 +79,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var vactionDay in Model.VacationDaysTaken)
+                            @foreach (var vacationDay in Model.VacationDaysTaken)
                             {
                                 <tr class="border text-left">
                                     <td class="px-4 py-3">
-                                        <label class="text-left col-6 mb-0 pl-5">@vactionDay.Date.DayOfWeek</label><label class="text-right pr-5 mb-0 col-6">@AppUtility.FormatDate(vactionDay.Date)</label>
+                                        <label class="text-left col-6 mb-0 pl-5">@vacationDay.Date.DayOfWeek</label><label class="text-right pr-5 mb-0 col-6">@AppUtility.FormatDate(vacationDay.Date)</label>
                                     </td>
                                 </tr>
                             }
