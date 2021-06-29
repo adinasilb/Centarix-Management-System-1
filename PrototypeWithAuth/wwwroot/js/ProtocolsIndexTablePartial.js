@@ -47,7 +47,9 @@ $(".load-protocol").click(function(e){
 		type: "GET",
 		success: function (data) {
 			$("._IndexTable").html(data);
-			$(".mdb-select").materialSelect();
+			 $.fn.ProtocolsMarkReadonly("_IndexTable");
+			var modalType = $(".modalType").val();
+			$("."+modalType).removeClass("d-none")
 			return true;
 		}
 	});
@@ -57,16 +59,7 @@ $(".load-protocol").click(function(e){
 
 $(".update-results").click(function(e){
 	var val = $(this).val();
-	$.ajax({
-		url: "/Protocols/StartProtocol?protocolInstanceID="+val+"&IsUpdateResults=true",
-		async: true,
-		type: "GET",
-		success: function (data) {
-			$("._IndexTable").html(data);
-			$(".mdb-select").materialSelect();
-			return true;
-		}
-	});
+    $.fn.StartProtocol(val, true);
 });
 
 var protocolFavoritesHasRun = false; //This is preventing the double click
@@ -192,7 +185,7 @@ $(".popover-more").off('click').click(function (e) {
 	});
 	$(".popover .start-protocol-fx").click(function (e) {
 		e.preventDefault();
-		$.fn.StartProtocol($(this).attr("data-route-request"));
+		$.fn.StartProtocol($(this).attr("data-route-request"), false);
 	});
 });
 

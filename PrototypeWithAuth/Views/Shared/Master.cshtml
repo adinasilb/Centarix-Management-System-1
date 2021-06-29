@@ -531,7 +531,8 @@
                             $.fn.OpenModal('modal', 'material-info', modal)
                             break;
                         case "addFunction":
-                            $.fn.OpenModal('addFunctionModal', 'add-function', modal)
+                            $.fn.OpenModal('addFunctionModal', 'add-function', modal)                     
+                            $(".add-function .mark-readonly").attr("disabled", true);
                             $(".add-function .mdb-select").materialSelect();
                             break;
                         case "historyItem":
@@ -561,12 +562,12 @@
         }
 
 
-        $.fn. ProtocolsMarkReadonly = function(modalClass) {
-            $("." + modalClass + " .mdb-select").materialSelect();
+        $.fn.ProtocolsMarkReadonly = function(modalClass) {
             $("." + modalClass + " .mark-readonly").attr("disabled", true);
             $("." + modalClass + " div.mark-readonly").attr("contenteditable", false);
             $("." + modalClass + " .button-mark-readonly").addClass("d-none");
             $("." + modalClass + ' .open-document-modal').attr("data-val", false);
+            $("." + modalClass + " .mdb-select").materialSelect();
         }
 
 
@@ -646,8 +647,8 @@
 
         }
 
-        $.fn.StartProtocol = function (id) {
-            var url = "/Protocols/StartProtocol?ID=" +id;
+        $.fn.StartProtocol = function (id, isContinue) {
+            var url = "/Protocols/StartProtocol?ID=" +id+"&IsContinue="+isContinue;
             $.ajax({
                 async: true,
                 url: url,

@@ -410,12 +410,12 @@ namespace PrototypeWithAuth.Controllers
         }
 
         [Authorize(Roles = "Protocols")]
-        public async Task<IActionResult> StartProtocol(int ID, int protocolInstanceID, bool IsUpdateResults)
+        public async Task<IActionResult> StartProtocol(int ID, int protocolInstanceID, bool isContinue)
         {
             var user = await _userManager.GetUserAsync(User);
             CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
             Protocol protocol = null;
-            if(IsUpdateResults)
+            if(isContinue)
             {
                 viewmodel.ProtocolInstance = await _context.ProtocolInstances.Where(p => p.ProtocolInstanceID == protocolInstanceID).Include(p=>p.Protocol).FirstOrDefaultAsync();
                 protocol = viewmodel.ProtocolInstance.Protocol;
@@ -423,15 +423,12 @@ namespace PrototypeWithAuth.Controllers
             else
             {
                 protocol = _context.Protocols.Where(p => p.ProtocolID == ID).FirstOrDefault();
-                viewmodel.ProtocolInstance = await _context.ProtocolInstances.Where(p => p.ProtocolID == ID && p.ApplicationUserID == user.Id && !p.IsFinished).OrderByDescending(p => p.StartDate).FirstOrDefaultAsync();
-            }
-            if (viewmodel.ProtocolInstance == null)
-            {
                 viewmodel.ProtocolInstance = new ProtocolInstance { ProtocolID = ID, StartDate = DateTime.Now, ApplicationUserID = user.Id, CurrentLineID = _context.Lines.Where(l => l.ProtocolID == ID && l.ParentLineID == null && l.LineNumber == 1).FirstOrDefault().LineID };
                 _context.Add(viewmodel.ProtocolInstance);
                 await _context.SaveChangesAsync();
             }
             viewmodel.ModalType = AppUtility.ProtocolModalType.CheckListMode;
+            viewmodel.Tab = 3;
             await FillCreateProtocolsViewModel(viewmodel, protocol.ProtocolTypeID, ID);         
             return PartialView("_IndexTableWithEditProtocol", viewmodel);
         }
@@ -579,7 +576,7 @@ namespace PrototypeWithAuth.Controllers
                             _context.Update(TurnTempLineToLine(line));
                         }
                         await _context.SaveChangesAsync();
-                        await _context.FunctionLines.Where(fl => fl.IsTemporary && fl.Line.IsTemporaryDeleted == false).ForEachAsync(fl => fl.IsTemporary = false);
+                        await _context.FunctionLines.Where(fl => fl.IsTemporary && fl.Line.IsTemporaryDeleted == false).ForEachAsync(fl => { fl.IsTemporary = false; _context.Update(fl); });
                         await _context.FunctionLines.Where(fl => fl.IsTemporaryDeleted || fl.Line.IsTemporaryDeleted == true).ForEachAsync(fl => { _context.Remove(fl); });
                         await _context.SaveChangesAsync();
                         await DeleteTemporaryDeletedLinesAsync();
@@ -1274,7 +1271,7 @@ namespace PrototypeWithAuth.Controllers
         {
             var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault();
             var createProtocolsViewModel = new CreateProtocolsViewModel();
-            createProtocolsViewModel.ModalType = AppUtility.ProtocolModalType.Summary;
+            createProtocolsViewModel.ModalType = AppUtility.ProtocolModalType.SummaryFloat;
             await FillCreateProtocolsViewModel(createProtocolsViewModel, protocol.ProtocolTypeID, protocol.ProtocolID);
             return PartialView(createProtocolsViewModel);
         }
@@ -1289,7 +1286,6 @@ namespace PrototypeWithAuth.Controllers
                 try
                 {
                     createProtocolsViewModel.Protocol.Urls = createProtocolsViewModel.Protocol.Urls.Where(u => u.LinkDescription != null && u.Url != null).ToList();
-
                     createProtocolsViewModel.Protocol.CreationDate = DateTime.Now;
                     createProtocolsViewModel.Protocol.ApplicationUserCreatorID = _userManager.GetUserId(User);
                     if (createProtocolsViewModel.Protocol.ProtocolID == 0)
@@ -1315,7 +1311,6 @@ namespace PrototypeWithAuth.Controllers
                             _context.Entry(url).State = EntityState.Added;
                             await _context.SaveChangesAsync();
                             base.MoveDocumentsOutOfTempFolder(createProtocolsViewModel.Protocol.ProtocolID, AppUtility.ParentFolderName.Protocols);
-
                         }
                         else
                         {
@@ -1345,9 +1340,10 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Protocols")]
         public async Task<IActionResult> _IndexTableWithEditProtocol(int protocolID)
         {
-            CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();
+            CreateProtocolsViewModel viewmodel = new CreateProtocolsViewModel();           
+            viewmodel.ModalType = AppUtility.ProtocolModalType.Summary;
+            viewmodel.Tab = 3;
             await FillCreateProtocolsViewModel(viewmodel, 0, protocolID);
-            viewmodel.ModalType = AppUtility.ProtocolModalType.Edit;
             return PartialView(viewmodel);
         }
 

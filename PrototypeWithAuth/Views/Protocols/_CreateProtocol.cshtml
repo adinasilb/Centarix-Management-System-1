@@ -21,14 +21,14 @@
     }
 
     var saveProtocolClass = "saveProtocol";
-    if(Model.ModalType == AppUtility.ProtocolModalType.CheckListMode || Model.ModalType == AppUtility.ProtocolModalType.Summary)
+    if(Model.ModalType == AppUtility.ProtocolModalType.CheckListMode || Model.ModalType == AppUtility.ProtocolModalType.Summary ||  Model.ModalType == AppUtility.ProtocolModalType.SummaryFloat)
     {
         saveProtocolClass = "";
     }
     var checkListMode = AppUtility.ProtocolModalType.CheckListMode;
     var editMode = AppUtility.ProtocolModalType.Edit;
     var summaryMode = AppUtility.ProtocolModalType.Summary;
-    var createModel = AppUtility.ProtocolModalType.Create;
+    var createMode = AppUtility.ProtocolModalType.Create;
 }
 
 <form action="" id="myForm" class=" on-form-modal protocol-form createProtocolForm" method="post" enctype="multipart/form-data" style="height: 100%; overflow: auto;">
@@ -61,30 +61,34 @@
                     <label class="new-button-text">Results</label>
                 </a>
             </li>
-            <li class="only-protocol-tab li-function-bar d-none">
+            <li class="only-protocol-tab li-function-bar  @editMode @createMode d-none">
                 <div class=" function-bar">
                     @foreach (var type in Model.FunctionTypes)
                     {
-                        <button class="function" type="button" typeID="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function" modalType ="@Model.ModalType"><i class="@type.Icon" ></i></div></button>
+                        <button class="function" type="button" typeID="@type.FunctionTypeID" modalType="@Model.ModalType"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
                     }
                 </div>
             </li>
-                <li class="only-protocol-tab   d-none li-function-bar">
-                    <div class="h-100 d-flex ml-6" style=" align-items: center;">
-                        <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
-                    </div>
-                </li>
-                <li class="only-protocol-tab saving-spinner d-none">
-                    <div class="spinner-border protocols-color" role="status">
-                        <span class="sr-only"></span>Saving...
-                    </div>
-                </li>
-                <li class="only-protocol-tab saving-done  d-none">
-                    <span class="protocols-color pt-3"> Saved</span>
-                </li>
+            <li class="only-protocol-tab @editMode @createMode  d-none li-function-bar">
+                <div class="h-100 d-flex ml-6" style=" align-items: center;">
+                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin saveLines" value="Save">Save</button>
+                </div>
+            </li>
+            <li class="only-protocol-tab saving-spinner @editMode @createMode d-none">
+                <div class="spinner-border protocols-color" role="status">
+                    <span class="sr-only"></span>Saving...
+                </div>
+            </li>
+            <li class="only-protocol-tab saving-done @editMode @createMode d-none">
+                <span class="protocols-color pt-3"> Saved</span>
+            </li>
 
-
-            </ul>
+            <li class="only-protocol-tab   d-none li-function-bar @summaryMode">
+                <div class="h-100 d-flex ml-6" style=" align-items: center;">
+                    <button type="button" class="custom-button custom-button-font protocols-background-color between-button-margin start-protocol-fx " value="@Model.Protocol.ProtocolID">Start</button>
+                </div>
+            </li>
+        </ul>
     </div>
     <div class="tab-content _CreateProtocolTabs">
         @{ await Html.RenderPartialAsync("_CreateProtocolTabs", Model);}

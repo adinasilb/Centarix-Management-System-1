@@ -3,13 +3,13 @@
 
 @{ 
     var containerStyle = "width:70%";
-    if(Model.ModalType ==AppUtility.ProtocolModalType.Summary)
+    if(Model.ModalType ==AppUtility.ProtocolModalType.SummaryFloat)
     {
         containerStyle = "";
     }
 
 }
-    <div class="container-fluid  m-0 " style="@containerStyle">
+    <div class="container-fluid material-container m-0 " style="@containerStyle">
         <div class="row text-danger-centarix"> @Model.ErrorMessage </div>
         <div class="row mb-2">
             @foreach (var material in Model.MaterialCategories)
