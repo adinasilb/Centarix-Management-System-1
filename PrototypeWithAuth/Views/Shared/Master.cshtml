@@ -484,6 +484,8 @@
                             $.fn.OpenModal('modal', 'edits', modal)
                             $.fn.LoadEditModalDetails();
                             $('.modal-content a:first').tab('show');
+                            $("[data-toggle='tooltip']").tooltip();
+
                             break;
                         case "reorder":
                             $.fn.OpenModal('reorderModal', 'reorder-item', modal)

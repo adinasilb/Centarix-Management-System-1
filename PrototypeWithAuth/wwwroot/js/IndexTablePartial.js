@@ -85,8 +85,9 @@ $(function () {
 		});
 
 	});
-	$('[data-toggle = "tooltip"]').off('click').on("click", function (e) {
+	$('._IndexTableData [data-toggle = "tooltip"]').off('click').on("click", function (e) {
 		e.preventDefault();
+		console.log('prevent default')
 	});
 	//$("body").off("click", ".share-request").on("click", ".share-request", function (e) {
 	//	alert("share request");
