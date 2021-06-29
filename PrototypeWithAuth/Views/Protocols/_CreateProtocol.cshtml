@@ -65,7 +65,7 @@
                 <div class=" function-bar">
                     @foreach (var type in Model.FunctionTypes)
                     {
-                        <button class="function" type="button" typeID="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function"><i class="@type.Icon"></i></div></button>
+                        <button class="function" type="button" typeID="@type.FunctionTypeID"> <div functionID="@type.FunctionTypeID" class="@type.IconActionClass line-function" modalType ="@Model.ModalType"><i class="@type.Icon" ></i></div></button>
                     }
                 </div>
             </li>
@@ -82,7 +82,6 @@
                 <li class="only-protocol-tab saving-done  d-none">
                     <span class="protocols-color pt-3"> Saved</span>
                 </li>
-            }
 
 
             </ul>

@@ -531,7 +531,7 @@
                             $.fn.OpenModal('modal', 'material-info', modal)
                             break;
                         case "addFunction":
-                            $.fn.OpenModal('modal', 'add-function', modal)
+                            $.fn.OpenModal('addFunctionModal', 'add-function', modal)
                             $(".add-function .mdb-select").materialSelect();
                             break;
                         case "historyItem":
@@ -1161,7 +1161,7 @@
         //}
         $.fn.OpenModal = function (modalClass, modalDivClass, data) {
             console.log("open modal")
-            //console.log(modalClass);
+            console.log(modalClass);
             //console.log(data.text());
             //console.log(modalDivClass)
             var backdrop = "static";

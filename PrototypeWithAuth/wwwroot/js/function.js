@@ -13,7 +13,7 @@
     else {
 	    if(lineID != undefined)
 	    {
-		    url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).attr("typeID") + "&LineID=" + lineID+"&functionLineID="+$(this).attr("value");
+		    url = "/Protocols/AddFunctionModal?FunctionTypeID=" + $(this).attr("typeID") + "&LineID=" + lineID+"&functionLineID="+$(this).attr("value")+"&modalType="+$(this).attr("modaltype");
         	$.fn.CallPageRequest( url , "addFunction"); 
         }
 	}

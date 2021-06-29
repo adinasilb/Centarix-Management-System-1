@@ -1273,8 +1273,8 @@ namespace PrototypeWithAuth.Controllers
         {
             var protocol = _context.Protocols.Where(p => p.ProtocolID == protocolID).FirstOrDefault();
             var createProtocolsViewModel = new CreateProtocolsViewModel();
-            await FillCreateProtocolsViewModel(createProtocolsViewModel, protocol.ProtocolTypeID, protocol.ProtocolID);
             createProtocolsViewModel.ModalType = AppUtility.ProtocolModalType.Summary;
+            await FillCreateProtocolsViewModel(createProtocolsViewModel, protocol.ProtocolTypeID, protocol.ProtocolID);
             return PartialView(createProtocolsViewModel);
         }
 
