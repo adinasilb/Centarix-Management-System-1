@@ -286,14 +286,19 @@
                         @{
                             var saveClass = "";
                             var cancelClass = "d-none";
+                            var saveButtonText = "Save";
                         }
                         @if (disabled)
                         {
                             saveClass = "d-none";
                             cancelClass = "";
                         }
+                         @if(Model.ParentFolderName == AppUtility.ParentFolderName.Reports)
+                         {
+                             saveButtonText = "Add";
+                         }
                         <button type="button" class="custom-button custom-button-font @bcColorToUse @saveClass document-modal-save document-modal-buttons close-document-modal" @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$('.documents').html('');*@>
-                            Save
+                            @saveButtonText
                         </button>
                         <button type="button" class="custom-button custom-cancel @cancelClass  document-modal-cancel close-document-modal" @*data-dismiss="modal"*@ aria-label="Close" @*onclick="$('.documents').html('');*@>
                             Cancel
