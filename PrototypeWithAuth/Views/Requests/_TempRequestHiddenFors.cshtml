@@ -54,37 +54,47 @@
         @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Product.SerialNumber)
         @Html.HiddenFor(r => r.TempRequestViewModels[trID].Request.Product.VendorID)
 
-        for (var paymentID = 0; paymentID < Model.TempRequestViewModels[trID].Payments.Count; paymentID++)
+        if (Model.TempRequestViewModels[trID].Payments != null)
         {
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].CheckNumber)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].CompanyAccountID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].CreditCardID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].HasInvoice)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].InvoiceID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].InstallmentNumber)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].IsPaid)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].PaymentDate)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].PaymentReferenceDate)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].PaymentTypeID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].Reference)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].PaymentTypeID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].RequestID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].Sum)
+            for (var paymentID = 0; paymentID < Model.TempRequestViewModels[trID].Payments.Count; paymentID++)
+            {
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].CheckNumber)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].CompanyAccountID)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].CreditCardID)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].HasInvoice)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].InvoiceID)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].InstallmentNumber)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].IsPaid)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].PaymentDate)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].PaymentReferenceDate)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].PaymentTypeID)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].Reference)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].PaymentTypeID)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].RequestID)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Payments[paymentID].Sum)
+            }
         }
 
-        for (var emailID = 0; emailID < Model.TempRequestViewModels[trID].Emails.Count; emailID++)
+        if (Model.TempRequestViewModels[trID].Emails != null)
         {
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Emails[emailID])
+            for (var emailID = 0; emailID < Model.TempRequestViewModels[trID].Emails.Count; emailID++)
+            {
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Emails[emailID])
+            }
         }
 
-        for (var commentID = 0; commentID < Model.TempRequestViewModels[trID].Comments.Count; commentID++)
+        if (Model.TempRequestViewModels[trID].Comments != null)
         {
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].RequestID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].CommentTimeStamp)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].CommentText)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].ApplicationUserID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].CommentID)
-            @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].CommentType)
+
+            for (var commentID = 0; commentID < Model.TempRequestViewModels[trID].Comments.Count; commentID++)
+            {
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].RequestID)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].CommentTimeStamp)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].CommentText)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].ApplicationUserID)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].CommentID)
+                @Html.HiddenFor(r => r.TempRequestViewModels[trID].Comments[commentID].CommentType)
+            }
         }
     }
 }

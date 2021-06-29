@@ -709,19 +709,20 @@ namespace PrototypeWithAuth.Controllers
             };
             //uncurrent the one we're on
             await KeepTempRequestJsonCurrentAsOriginal(requestItemViewModel.TempRequestListViewModel.GUID);
+            requestItemViewModel.TempRequestListViewModel.RequestIndexObject.GUID = requestItemViewModel.TempRequestListViewModel.GUID;
             switch (OrderType)
             {
                 case AppUtility.OrderTypeEnum.AlreadyPurchased:
-                    return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel);
+                    return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
                 //return new RedirectToActionResult("UploadOrderModal", "Requests", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType, GUID = requestItemViewModel.TempRequestListViewModel.GUID });
                 case AppUtility.OrderTypeEnum.OrderNow:
-                    return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel);
+                    return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
                 //return new RedirectToActionResult("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.AddToCart:
-                    return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel);
+                    return new RedirectToActionResult("UploadQuoteModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
                 //return new RedirectToActionResult("UploadQuoteModal", "Requests", new { OrderType = OrderType });
                 case AppUtility.OrderTypeEnum.SaveOperations:
-                    return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel);
+                    return new RedirectToActionResult("UploadOrderModal", "Requests", requestItemViewModel.TempRequestListViewModel.RequestIndexObject);
                 //return new RedirectToActionResult("UploadOrderModal", "Requests", new { OrderType = OrderType, SectionType = requestItemViewModel.SectionType });
                 default:
                     await RemoveTempRequestAsync(requestItemViewModel.TempRequestListViewModel.GUID);
@@ -1154,7 +1155,7 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
         }
-        public TempRequestJson CreateTempRequestJson(Guid guid = Guid.NewGuid)
+        public TempRequestJson CreateTempRequestJson(Guid guid)
         {
             return new TempRequestJson()
             {
@@ -1166,8 +1167,21 @@ namespace PrototypeWithAuth.Controllers
         }
         public async Task SetTempRequestAsync(TempRequestJson tempRequestJson, TempRequestListViewModel tempRequestListViewModel)
         {
-            tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.ProductSubcategory = null);
-            tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.Vendor = null);
+            foreach (var tempRequest in tempRequestListViewModel.TempRequestViewModels)
+            {
+                if (tempRequest.Request.Product.ProductSubcategory != null)
+                {
+                    tempRequest.Request.Product.ProductSubcategoryID = tempRequest.Request.Product.ProductSubcategory.ProductSubcategoryID;
+                    tempRequest.Request.Product.ProductSubcategory = null;
+                }
+                if (tempRequest.Request.Product.Vendor != null)
+                {
+                    tempRequest.Request.Product.VendorID = tempRequest.Request.Product.Vendor.VendorID;
+                    tempRequest.Request.Product.Vendor = null;
+                }
+            }
+            //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.ProductSubcategory = null && vm.Request.Product.ProductSubcategoryID = vm.Request.Product.ProductSubcategory.ProductSubcategoryID);
+            //tempRequestListViewModel.TempRequestViewModels.ForEach(vm => vm.Request.Product.Vendor = null && vm.Request.Product.VendorID = vm.Request.Product.Vendor.VendorID );
             tempRequestJson.SerializeViewModel(tempRequestListViewModel.TempRequestViewModels);
             _context.Update(tempRequestJson);
             await _context.SaveChangesAsync();
@@ -1219,6 +1233,12 @@ namespace PrototypeWithAuth.Controllers
             var origAndCurrent = allGUIDTRJs.Where(t => t.IsCurrent && t.IsOriginal).FirstOrDefault();
             if (origAndCurrent != null)
             {
+                var olderTemps = allGUIDTRJs.Where(t => !t.IsCurrent);
+                foreach (var temp in olderTemps)
+                {
+                    _context.Remove(temp);
+                };
+                await _context.SaveChangesAsync();
                 origAndCurrent.IsCurrent = false;
                 _context.Update(origAndCurrent);
                 await _context.SaveChangesAsync();
@@ -1227,7 +1247,7 @@ namespace PrototypeWithAuth.Controllers
             {
                 var current = allGUIDTRJs.Where(t => t.IsCurrent).FirstOrDefault();
                 var original = allGUIDTRJs.Where(t => t.IsOriginal).FirstOrDefault();
-                if(current != null)
+                if (current != null)
                 {
                     current.IsCurrent = false;
                     current.IsOriginal = true;
@@ -1250,17 +1270,17 @@ namespace PrototypeWithAuth.Controllers
             //var requ = _httpContextAccessor.HttpContext.Session.GetObject<Request>("Request1");
             //List<Request> requests = new List<Request>();
 
-            var newTRLVM = new TempRequestListViewModel();
-            if (tempRequestListViewModel != null && tempRequestListViewModel.GUID != null)
-            {
-                var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
-                //var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
+            //var newTRLVM = new TempRequestListViewModel();
+            //if (tempRequestListViewModel != null && tempRequestListViewModel.GUID != null)
+            //{
+            //    var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
+            //    //var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
 
-                newTRLVM.TempRequestViewModels = oldTempRequestJson.DeserializeJson<List<TempRequestViewModel>>();
-                newTRLVM.GUID = tempRequestListViewModel.GUID;
-                newTRLVM.RequestIndexObject = tempRequestListViewModel.RequestIndexObject;
-            }
-            else if (vendorID != 0)
+            //    newTRLVM.TempRequestViewModels = oldTempRequestJson.DeserializeJson<List<TempRequestViewModel>>();
+            //    newTRLVM.GUID = tempRequestListViewModel.GUID;
+            //    newTRLVM.RequestIndexObject = tempRequestListViewModel.RequestIndexObject;
+            //}
+            if (vendorID != 0)
             {
                 List<Request> reqsFromDB = new List<Request>();
                 if (tempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Cart)
@@ -1278,16 +1298,13 @@ namespace PrototypeWithAuth.Controllers
                 .Include(r => r.Product).ThenInclude(r => r.Vendor)
                 .Include(r => r.Product.ProductSubcategory).ThenInclude(ps => ps.ParentCategory).ToListAsync();
                 }
-                newTRLVM.TempRequestViewModels = new List<TempRequestViewModel>();
+                tempRequestListViewModel.TempRequestViewModels = new List<TempRequestViewModel>();
                 foreach (var req in reqsFromDB)
                 {
-                    newTRLVM.TempRequestViewModels.Add(new TempRequestViewModel() { Request = req });
+                    tempRequestListViewModel.TempRequestViewModels.Add(new TempRequestViewModel() { Request = req });
                 }
-                newTRLVM.GUID = Guid.NewGuid();
+                tempRequestListViewModel.GUID = Guid.NewGuid();
 
-                TempRequestJson tempRequestJson = CreateTempRequestJson(newTRLVM.GUID);
-
-                await SetTempRequestAsync(tempRequestJson, newTRLVM);
             }
 
             //foreach (var req in requests)
@@ -1296,6 +1313,10 @@ namespace PrototypeWithAuth.Controllers
             //    _httpContextAccessor.HttpContext.Session.SetObject(requestName, req);
             //    requestNum++;
             //}
+
+            TempRequestJson tempRequestJson = CreateTempRequestJson(tempRequestListViewModel.GUID);
+            await SetTempRequestAsync(tempRequestJson, tempRequestListViewModel);
+
 
             var termsList = new List<SelectListItem>() { };
             await _context.PaymentStatuses.ForEachAsync(ps =>
@@ -1313,26 +1334,28 @@ namespace PrototypeWithAuth.Controllers
                 TermsList = termsList,
                 InstallmentDate = DateTime.Now
             };
-            newTRLVM.RequestIndexObject.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum), newTRLVM.TempRequestViewModels.FirstOrDefault().Request.Currency);
-            termsViewModel.TempRequestListViewModel = newTRLVM;
+            tempRequestListViewModel.RequestIndexObject.SelectedCurrency = (AppUtility.CurrencyEnum)Enum.Parse(typeof(AppUtility.CurrencyEnum),
+                tempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Currency);
+            termsViewModel.TempRequestListViewModel = tempRequestListViewModel;
 
-            await KeepTempRequestJsonCurrentAsOriginal(newTRLVM.GUID);
+            await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
 
             return termsViewModel;
         }
 
-        public async Task<RedirectAndModel> SaveTermsModalAsync(TermsViewModel termsViewModel)
+        public async Task<RedirectAndModel> SaveTermsModalAsync(TermsViewModel termsViewModel, TempRequestListViewModel tempRequestListViewModel)
         {
             var controller = "Requests";
             var needsToBeApproved = false;
             try
             {
-                var oldTempRequestJson = await GetTempRequestAsync(termsViewModel.TempRequestListViewModel.GUID);
+                var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
                 var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
+                //var newTRLVM = await LoadTempListFromRequestIndexObjectAsync(tempRequestListViewModel.RequestIndexObject);
 
                 var newTRLVM = new TempRequestListViewModel { TempRequestViewModels = newTempRequestJson.DeserializeJson<List<TempRequestViewModel>>() };
-                newTRLVM.GUID = termsViewModel.TempRequestListViewModel.GUID;
-                newTRLVM.RequestIndexObject = termsViewModel.TempRequestListViewModel.RequestIndexObject;
+                newTRLVM.GUID = tempRequestListViewModel.GUID;
+                newTRLVM.RequestIndexObject = tempRequestListViewModel.RequestIndexObject;
 
                 //var requests = new List<Request>();
                 //var isRequests = true;
@@ -1361,7 +1384,7 @@ namespace PrototypeWithAuth.Controllers
                         foreach (var tempRequest in newTRLVM.TempRequestViewModels)
                         {
                             tempRequest.Request.PaymentStatusID = termsViewModel.SelectedTerm;
-                            tempRequest.Request.Installments = (uint)termsViewModel.Installments != 0 ? (uint)termsViewModel.Installments : 0;
+                            tempRequest.Request.Installments = (uint)termsViewModel.Installments != 0 ? (uint)termsViewModel.Installments : 1;
                             if (newTRLVM.TempRequestViewModels.Count() == 1 && tempRequest.Request.RequestStatusID == 1) //item is ordernow and needs to be approved
                             {
                                 needsToBeApproved = true;
@@ -1423,7 +1446,7 @@ namespace PrototypeWithAuth.Controllers
                                 }
                                 if (SaveUsingTempRequest)
                                 {
-                                    tempRequest.Payments.Add(payment);
+                                    tempRequest.Payments = new List<Payment>() { payment };
                                 }
                                 else
                                 {
@@ -1486,8 +1509,10 @@ namespace PrototypeWithAuth.Controllers
                 //
                 if (!needsToBeApproved)
                 {
+                    await KeepTempRequestJsonCurrentAsOriginal(tempRequestListViewModel.GUID);
                     //get rid of old trlvm?
-                    return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("ConfirmEmailModal", controller, termsViewModel.TempRequestListViewModel) };
+                    tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
+                    return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("ConfirmEmailModal", controller, tempRequestListViewModel.RequestIndexObject) };
                 }
                 else
                 {
@@ -1497,12 +1522,12 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                await RollbackCurrentTempAsync(termsViewModel.TempRequestListViewModel.GUID);
+                await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
                 termsViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 var termsList = new List<SelectListItem>() { };
                 await _context.PaymentStatuses.ForEachAsync(ps => termsList.Add(new SelectListItem() { Value = ps.PaymentStatusID + "", Text = ps.PaymentStatusDescription }));
-                termsViewModel.TermsList = termsList;
+                termsList = termsList;
                 return new RedirectAndModel() { RedirectToActionResult = new RedirectToActionResult("", "", ""), TermsViewModel = termsViewModel };
             }
         }
@@ -1525,8 +1550,6 @@ namespace PrototypeWithAuth.Controllers
             AccountingGeneralViewModel viewModel = new AccountingGeneralViewModel() { RequestIndexPartialViewModel = requestIndexPartialViewModel };
             return PartialView(viewModel);
         }
-
-
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
@@ -1820,7 +1843,7 @@ namespace PrototypeWithAuth.Controllers
             requestItemViewModel.SectionType = SectionType;
             //RemoveRequestWithCommentsAndEmailSessions();
 
-            TempRequestJson tempRequestJson = CreateTempRequestJson();
+            TempRequestJson tempRequestJson = CreateTempRequestJson(Guid.NewGuid());
             TempRequestListViewModel tempRequestListViewModel = new TempRequestListViewModel()
             {
                 GUID = tempRequestJson.GuidID,
@@ -2546,7 +2569,7 @@ namespace PrototypeWithAuth.Controllers
         {
             DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
             //base.RemoveRequestWithCommentsAndEmailSessions();
-            TempRequestJson tempRequestJson = CreateTempRequestJson();
+            TempRequestJson tempRequestJson = CreateTempRequestJson(Guid.NewGuid());
             TempRequestListViewModel trlvm = new TempRequestListViewModel()
             {
                 GUID = tempRequestJson.GuidID,
@@ -2578,8 +2601,10 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ConfirmEmailModal(int id, TempRequestListViewModel tempRequestListViewModel)
+        public async Task<IActionResult> ConfirmEmailModal(int id, RequestIndexObject requestIndexObject)
         {
+
+            TempRequestListViewModel tempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             //var allRequests = new List<Request>();
             //var isRequests = true;
             //var RequestNum = 1;
@@ -2651,6 +2676,7 @@ namespace PrototypeWithAuth.Controllers
                     }
                     else
                     {
+                        tempRequest.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(pc => pc.ProductSubcategoryID == tempRequest.Request.Product.ProductSubcategoryID).FirstOrDefault();
                         tempRequest.Request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == tempRequest.Request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
                         tempRequest.Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == tempRequest.Request.Product.VendorID).FirstOrDefault();
                     }
@@ -2660,8 +2686,21 @@ namespace PrototypeWithAuth.Controllers
                 }
             }
             var allRequests = new List<Request>();
-            newTRLVM.TempRequestViewModels.ForEach(tempRVM => allRequests.Add(tempRVM.Request));
+            //foreach (var temprequest in newTRLVM.TempRequestViewModels)
+            //{
+            //    temprequest.Request.Product.Vendor = _context.Vendors
+            //}
+            foreach(var r in newTRLVM.TempRequestViewModels)
+            {
+                r.Request.Product.ProductSubcategory = _context.ProductSubcategories.Where(ps => ps.ProductSubcategoryID == r.Request.Product.ProductSubcategoryID).FirstOrDefault();
+                r.Request.Product.ProductSubcategory.ParentCategory = _context.ParentCategories.Where(pc => pc.ParentCategoryID == r.Request.Product.ProductSubcategory.ParentCategoryID).FirstOrDefault();
+                r.Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == r.Request.Product.VendorID).FirstOrDefault();
+
+                allRequests.Add(r.Request);
+            }
+            //newTRLVM.TempRequestViewModels.ForEach(tempRVM => allRequests.Add(tempRVM.Request));
             //IMPORTANT!!! Check that payments and comments are coming in
+            newTRLVM.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = pr);
             ConfirmEmailViewModel confirm = new ConfirmEmailViewModel
             {
                 ParentRequest = pr,
@@ -2687,7 +2726,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel)
+        public async Task<IActionResult> ConfirmEmailModal(ConfirmEmailViewModel confirmEmailViewModel, TempRequestListViewModel tempRequestListViewModel)
         {
             try
             {
@@ -2698,7 +2737,7 @@ namespace PrototypeWithAuth.Controllers
                 //var payments = new List<Payment>();
 
 
-                var oldTempRequestJson = await GetTempRequestAsync(confirmEmailViewModel.TempRequestListViewModel.GUID);
+                var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
                 var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
 
                 var deserializedTempRequestListViewModel = new TempRequestListViewModel()
@@ -2706,9 +2745,10 @@ namespace PrototypeWithAuth.Controllers
                     TempRequestViewModels =
                     newTempRequestJson.DeserializeJson<List<TempRequestViewModel>>()
                 };
+                deserializedTempRequestListViewModel.TempRequestViewModels.ForEach(t => t.Request.ParentRequest = tempRequestListViewModel.TempRequestViewModels[0].Request.ParentRequest);
 
                 var action = "Index";
-                if (confirmEmailViewModel.TempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
+                if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestSummary)
                 {
                     action = "IndexInventory";
                 }
@@ -2778,6 +2818,7 @@ namespace PrototypeWithAuth.Controllers
                 string ownerEmail = currentUser.Email;
                 string ownerUsername = currentUser.FirstName + " " + currentUser.LastName;
                 string ownerPassword = currentUser.SecureAppPass;
+                deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor = _context.Vendors.Where(v => v.VendorID == deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.VendorID).FirstOrDefault();
                 string vendorEmail = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.OrdersEmail;
                 //string vendorEmail = /*firstRequest.Product.Vendor.OrdersEmail;*/ emails.Count() < 1 ? requests.FirstOrDefault().Product.Vendor.OrdersEmail : emails[0];
                 string vendorName = deserializedTempRequestListViewModel.TempRequestViewModels.FirstOrDefault().Request.Product.Vendor.VendorEnName;
@@ -2832,6 +2873,7 @@ namespace PrototypeWithAuth.Controllers
                     client.Connect("smtp.gmail.com", 587, false);
                     //var SecureAppPass = _context.Users.Where(u => u.Id == confirmEmail.ParentRequest.ApplicationUserID).FirstOrDefault().SecureAppPass;
                     client.Authenticate(ownerEmail, ownerPassword);// ownerPassword);//
+                    client.Timeout = 500000; // 500 seconds
 
                     /*
                     * SAVE THE INFORMATION HERE
@@ -2865,7 +2907,9 @@ namespace PrototypeWithAuth.Controllers
                                         {
                                             _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.Product).State = EntityState.Added;
                                         }
+                                        _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest).State = EntityState.Added;
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request).State = EntityState.Added;
+                                        //deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest.OrderDate = DateTime.Now;
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentRequest).State = EntityState.Added;
                                         _context.Entry(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.ParentQuote).State = EntityState.Added;
                                     }
@@ -2883,17 +2927,20 @@ namespace PrototypeWithAuth.Controllers
                                         _context.Entry(p).State = EntityState.Added;
                                     }
                                     await _context.SaveChangesAsync();
-                                    foreach (var c in deserializedTempRequestListViewModel.TempRequestViewModels[tr].Comments)
+                                    if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Comments != null)
                                     {
-                                        //DO WE NEED THIS NEXT LINE HERE???
-                                        c.RequestID = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID;
-                                        _context.Add(c);
+                                        foreach (var c in deserializedTempRequestListViewModel.TempRequestViewModels[tr].Comments)
+                                        {
+                                            //DO WE NEED THIS NEXT LINE HERE???
+                                            c.RequestID = deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID;
+                                            _context.Add(c);
+                                        }
+                                        await _context.SaveChangesAsync();
                                     }
-                                    await _context.SaveChangesAsync();
 
                                     if (deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.OrderType == AppUtility.OrderTypeEnum.OrderNow.ToString())
                                     {
-                                        var additionalRequests = tr < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
+                                        var additionalRequests = tr + 1 < deserializedTempRequestListViewModel.TempRequestViewModels.Count() ? true : false;
                                         MoveDocumentsOutOfTempFolder(deserializedTempRequestListViewModel.TempRequestViewModels[tr].Request.RequestID, AppUtility.ParentFolderName.Requests, additionalRequests);
                                     }
 
@@ -2936,14 +2983,14 @@ namespace PrototypeWithAuth.Controllers
                                 //throw new Exception();
                                 await transaction.CommitAsync();
                                 //base.RemoveRequestWithCommentsAndEmailSessions();
-                                await RemoveTempRequestAsync(confirmEmailViewModel.TempRequestListViewModel.GUID);
+                                await RemoveTempRequestAsync(tempRequestListViewModel.GUID);
                             }
                         }
                         catch (Exception ex)
                         {
                             transaction.Rollback();
                             //base.RemoveRequestWithCommentsAndEmailSessions();
-                            await RollbackCurrentTempAsync(confirmEmailViewModel.TempRequestListViewModel.GUID);
+                            await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
                             throw new Exception(AppUtility.GetExceptionMessage(ex));
                         }
 
@@ -2951,16 +2998,16 @@ namespace PrototypeWithAuth.Controllers
 
                 }
 
-                return RedirectToAction(action, confirmEmailViewModel.TempRequestListViewModel.RequestIndexObject);
+                return RedirectToAction(action, tempRequestListViewModel.RequestIndexObject);
             }
             catch (Exception ex)
             {
-                await RollbackCurrentTempAsync(confirmEmailViewModel.TempRequestListViewModel.GUID);
-                confirmEmailViewModel.TempRequestListViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex); //not being used - pass it in....
+                await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
+                tempRequestListViewModel.RequestIndexObject.ErrorMessage += AppUtility.GetExceptionMessage(ex); //not being used - pass it in....
                 Response.StatusCode = 500;
-                if (confirmEmailViewModel.TempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
+                if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.LabManagementQuotes)
                 {
-                    if (confirmEmailViewModel.TempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
+                    if (tempRequestListViewModel.RequestIndexObject.SidebarType == AppUtility.SidebarEnum.Quotes)
                     {
                         return RedirectToAction("LabManageQuotes");
                     }
@@ -2970,13 +3017,13 @@ namespace PrototypeWithAuth.Controllers
                     }
 
                 }
-                else if (confirmEmailViewModel.TempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
+                else if (tempRequestListViewModel.RequestIndexObject.PageType == AppUtility.PageTypeEnum.RequestCart)
                 {
                     return RedirectToAction("Cart");
                 }
                 else
                 {
-                    return RedirectToAction("Index", confirmEmailViewModel.TempRequestListViewModel.RequestIndexObject);
+                    return RedirectToAction("Index", tempRequestListViewModel.RequestIndexObject);
                 }
             }
 
@@ -4646,14 +4693,33 @@ namespace PrototypeWithAuth.Controllers
 
             return RedirectToAction("AccountingNotifications");
         }
+
+        public async Task<TempRequestListViewModel> LoadTempListFromRequestIndexObjectAsync(RequestIndexObject requestIndexObject)
+        {
+            var oldJson = _context.TempRequestJsons.Where(trj => trj.GuidID == requestIndexObject.GUID).FirstOrDefault();
+            return new TempRequestListViewModel()
+            {
+                GUID = requestIndexObject.GUID,
+                RequestIndexObject = requestIndexObject,
+                TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
+            };
+
+        }
+
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(TempRequestListViewModel tempRequestListViewModel)
+        public async Task<IActionResult> UploadQuoteModal(RequestIndexObject requestIndexObject)
         {
             var uploadQuoteViewModel = new UploadQuoteViewModel();
 
-            uploadQuoteViewModel.OrderTypeEnum = tempRequestListViewModel.RequestIndexObject.OrderType;
-            uploadQuoteViewModel.TempRequestListViewModel = tempRequestListViewModel;
+            uploadQuoteViewModel.OrderTypeEnum = requestIndexObject.OrderType;
+            uploadQuoteViewModel.TempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
+            //uploadQuoteViewModel.TempRequestListViewModel = new TempRequestListViewModel()
+            //{
+            //    GUID = requestIndexObject.GUID,
+            //    RequestIndexObject = requestIndexObject,
+            //    TempRequestViewModels = oldJson.DeserializeJson<List<TempRequestViewModel>>()
+            //};
 
             string uploadFolder1 = Path.Combine(_hostingEnvironment.WebRootPath, AppUtility.ParentFolderName.Requests.ToString());
             string uploadFolder2 = Path.Combine(uploadFolder1, "0");
@@ -4677,7 +4743,7 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel, bool isCancel = false)
+        public async Task<IActionResult> UploadQuoteModal(UploadQuoteViewModel uploadQuoteOrderViewModel, TempRequestListViewModel tempRequestListViewModel, bool isCancel = false)
         {
             if (isCancel)
             {
@@ -4688,7 +4754,7 @@ namespace PrototypeWithAuth.Controllers
             try
             {
 
-                var oldTempRequestJson = await GetTempRequestAsync(uploadQuoteOrderViewModel.TempRequestListViewModel.GUID);
+                var oldTempRequestJson = await GetTempRequestAsync(tempRequestListViewModel.GUID);
                 var newTempRequestJson = await CopyToNewCurrentTempRequestAsync(oldTempRequestJson);
 
                 var deserializedTempRequestListViewModel = new TempRequestListViewModel()
@@ -4717,7 +4783,9 @@ namespace PrototypeWithAuth.Controllers
                     //    _httpContextAccessor.HttpContext.Session.SetObject(requestNum, request);
                     await SetTempRequestAsync(newTempRequestJson, deserializedTempRequestListViewModel);
                     await KeepTempRequestJsonCurrentAsOriginal(newTempRequestJson.GuidID);
-                    return RedirectToAction("TermsModal", uploadQuoteOrderViewModel.TempRequestListViewModel);
+                    //tempRequestListViewModel.TempRequestViewModels = deserializedTempRequestListViewModel.TempRequestViewModels;
+                    tempRequestListViewModel.RequestIndexObject.GUID = tempRequestListViewModel.GUID;
+                    return RedirectToAction("TermsModal", tempRequestListViewModel.RequestIndexObject);
                 }
                 else
                 {
@@ -4808,7 +4876,8 @@ namespace PrototypeWithAuth.Controllers
             }
             catch (Exception ex)
             {
-                await RollbackCurrentTempAsync(uploadQuoteOrderViewModel.TempRequestListViewModel.GUID);
+                await RollbackCurrentTempAsync(tempRequestListViewModel.GUID);
+                uploadQuoteOrderViewModel.TempRequestListViewModel = tempRequestListViewModel;
                 uploadQuoteOrderViewModel.ErrorMessage = AppUtility.GetExceptionMessage(ex);
                 Response.StatusCode = 500;
                 return PartialView("UploadQuoteModal", uploadQuoteOrderViewModel);
@@ -4973,17 +5042,17 @@ namespace PrototypeWithAuth.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> TermsModal(int vendorID, TempRequestListViewModel tempRequestListViewModel /*RequestIndexObject requestIndexObject*/) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
+        public async Task<IActionResult> TermsModal(int vendorID, RequestIndexObject requestIndexObject /*RequestIndexObject requestIndexObject*/) //either it'll be a request or parentrequest and then it'll send it to all the requests in that parent request
         {
-
+            TempRequestListViewModel tempRequestListViewModel = await LoadTempListFromRequestIndexObjectAsync(requestIndexObject);
             return PartialView(await GetTermsViewModelAsync(vendorID, tempRequestListViewModel));
         }
 
         [HttpPost]
         [Authorize(Roles = "Requests")]
-        public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel)
+        public async Task<IActionResult> TermsModal(TermsViewModel termsViewModel, TempRequestListViewModel tempRequestListViewModel)
         {
-            var r = await SaveTermsModalAsync(termsViewModel);
+            var r = await SaveTermsModalAsync(termsViewModel, tempRequestListViewModel);
             if (r.RedirectToActionResult.ActionName == "" && r.RedirectToActionResult.ControllerName == "")
             {
                 return PartialView("TermsModal", r.TermsViewModel);
