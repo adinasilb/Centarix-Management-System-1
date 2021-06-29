@@ -2544,7 +2544,11 @@ namespace PrototypeWithAuth.Controllers
         [Authorize(Roles = "Requests")]
         public async Task<IActionResult> ReOrderFloatModalView(RequestIndexObject requestIndexObject, int? id, String SectionType = "")
         {
+            /*Object lockObj = new Object();
+            lock (lockObj)
+            {*/
             DeleteTemporaryDocuments(AppUtility.ParentFolderName.Requests);
+            /*}*/
             //base.RemoveRequestWithCommentsAndEmailSessions();
             TempRequestJson tempRequestJson = CreateTempRequestJson();
             TempRequestListViewModel trlvm = new TempRequestListViewModel()

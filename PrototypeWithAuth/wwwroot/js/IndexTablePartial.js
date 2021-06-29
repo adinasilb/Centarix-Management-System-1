@@ -120,9 +120,10 @@ $(".load-quote-details").on("click", function (e) {
 
 
 $("body").off("click").on("click", ".load-order-details", function (e) {
+	//alert('in function')
 	console.log("in order details");
 	e.preventDefault();
-	e.stopPropagation();
+	e.stopImmediatePropagation();
 	$("#loading").show();
 	var section = $("#masterSectionType").val()
 	//takes the item value and calls the Products controller with the ModalView view to render the modal inside
